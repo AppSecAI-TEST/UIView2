@@ -68,6 +68,7 @@ public abstract class UIIDialogImpl extends UIIViewImpl {
         View xmlRootView = UILayoutImpl.safeAssignView(mDialogRootLayout,
                 inflateDialogView(mDialogRootLayout, inflater));
         xmlRootView.setClickable(true);
+        mDialogRootLayout.setGravity(gravity);
         return mDialogRootLayout;
     }
 
