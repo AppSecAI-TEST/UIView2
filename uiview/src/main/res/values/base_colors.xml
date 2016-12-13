@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme_color_primary">#d81e06</color>
+    <color name="theme_color_primary_dark">#982e20</color>
+    <color name="theme_color_primary_dark_tran">#40982e20</color>
+    <color name="theme_color_accent">#0BD1A0</color>
+
+    <color name="default_base_bg_press">#40000000</color>
+    <color name="default_base_bg_disable">#999999</color>
+    <color name="default_base_bg_dark">#333333</color>
+    <color name="default_base_white">#ffffff</color>
+    <color name="default_base_black">#000000</color>
+    <color name="default_base_line">#e3e3e3</color>
+    <color name="default_base_border">#bfbfbf</color>
+</resources>
