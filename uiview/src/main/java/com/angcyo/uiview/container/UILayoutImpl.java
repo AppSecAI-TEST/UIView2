@@ -2,6 +2,7 @@ package com.angcyo.uiview.container;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
@@ -870,6 +871,12 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
      */
     public ViewPattern getLastShowViewPattern() {
         return mLastShowViewPattern;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mLastShowViewPattern != null) {
+            mLastShowViewPattern.mIView.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     static class AnimRunnable implements Animation.AnimationListener {
