@@ -219,6 +219,6 @@ public class ExEditText extends AppCompatEditText {
      */
     public boolean isPassword() {
         final String string = getText().toString();
-        return !TextUtils.isEmpty(string) && string.matches("^[a-zA-Z0-9_-]{6,18}$");
+        return !TextUtils.isEmpty(string) && string.matches("^[a-zA-Z0-9_-]{6,12}$");
     }
 }

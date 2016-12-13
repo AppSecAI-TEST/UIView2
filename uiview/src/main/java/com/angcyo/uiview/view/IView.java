@@ -19,6 +19,7 @@ public interface IView {
     /**
      * 不需要标题栏,请返回null, 请在实现的时候, 做好缓存
      */
+    @Deprecated
     TitleBarPattern loadTitleBar(Context context);
 
     /**
