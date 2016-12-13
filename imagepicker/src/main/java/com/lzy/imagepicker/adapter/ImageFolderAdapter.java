@@ -23,7 +23,7 @@ import java.util.List;
  * 版    本：1.0
  * 创建日期：2016/5/19
  * 描    述：
- * 修订历史：
+ * 修订历史：2016-12-13
  * ================================================
  */
 public class ImageFolderAdapter extends BaseAdapter {
@@ -90,16 +90,16 @@ public class ImageFolderAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public int getSelectIndex() {
+        return lastSelected;
+    }
+
     public void setSelectIndex(int i) {
         if (lastSelected == i) {
             return;
         }
         lastSelected = i;
         notifyDataSetChanged();
-    }
-
-    public int getSelectIndex() {
-        return lastSelected;
     }
 
     private class ViewHolder {

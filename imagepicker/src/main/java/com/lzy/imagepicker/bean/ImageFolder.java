@@ -2,7 +2,6 @@ package com.lzy.imagepicker.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * ================================================
@@ -10,7 +9,7 @@ import java.util.List;
  * 版    本：1.0
  * 创建日期：2016/5/19
  * 描    述：图片文件夹
- * 修订历史：
+ * 修订历史：2016-12-13
  * ================================================
  */
 public class ImageFolder implements Serializable {
