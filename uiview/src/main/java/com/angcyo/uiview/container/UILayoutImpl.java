@@ -259,6 +259,10 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
         //viewPattern.mView.setVisibility(VISIBLE);
         viewPattern.mView.bringToFront();
+        mLastShowViewPattern = viewPattern;
+
+        mAttachViews.remove(viewPattern);
+        mAttachViews.push(viewPattern);
 
         if (viewPattern.mIView.isDialog()) {
             startDialogAnim(viewPattern, needAnim ? viewPattern.mIView.loadShowAnimation() : null, new Runnable() {
@@ -278,7 +282,6 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
                     }
                 });
             }
-            mLastShowViewPattern = viewPattern;
             safeStartAnim(viewPattern.mView, needAnim ? viewPattern.mIView.loadShowAnimation() : null, new Runnable() {
                 @Override
                 public void run() {
