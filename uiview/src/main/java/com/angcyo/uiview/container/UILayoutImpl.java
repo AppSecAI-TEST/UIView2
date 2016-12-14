@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -180,7 +181,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
         //首先调用IView接口的inflateContentView方法,(inflateContentView请不要初始化View)
         //其次会调用loadContentView方法,用来初始化View.(此方法调用之后, 就支持ButterKnife了)
-        final View view = iView.inflateContentView(context, this, this, LayoutInflater.from(context));
+        final View view = iView.inflateContentView((AppCompatActivity) context, this, this, LayoutInflater.from(context));
         iView.onViewCreate();
 
         View rawView;
@@ -197,7 +198,10 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
     @Override
     public void finishIView(final View view, boolean needAnim) {
-        ViewPattern viewPattern = findViewPatternByView(view);
+        finishIViewInner(findViewPatternByView(view), needAnim);
+    }
+
+    private void finishIViewInner(ViewPattern viewPattern, boolean needAnim) {
         ViewPattern lastViewPattern = findLastShowViewPattern();
 
         if (viewPattern.isAnimToEnd || isFinishing) {
@@ -234,6 +238,16 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     @Override
     public void finishIView(View view) {
         finishIView(view, true);
+    }
+
+    @Override
+    public void finishIView(IView iview) {
+        finishIView(iview, true);
+    }
+
+    @Override
+    public void finishIView(IView iview, boolean needAnim) {
+        finishIViewInner(findViewPatternByIView(iview), needAnim);
     }
 
     @Override
@@ -712,6 +726,15 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     public ViewPattern findViewPatternByView(View view) {
         for (ViewPattern viewPattern : mAttachViews) {
             if (viewPattern.mView == view) {
+                return viewPattern;
+            }
+        }
+        return null;
+    }
+
+    public ViewPattern findViewPatternByIView(IView iview) {
+        for (ViewPattern viewPattern : mAttachViews) {
+            if (viewPattern.mIView == iview) {
                 return viewPattern;
             }
         }

@@ -13,7 +13,7 @@ import android.support.annotation.NonNull;
  * 修改备注：
  * Version: 1.0.0
  */
-public interface IBaseView {
+public interface IBaseView<B> {
     /**
      * 开始加载请求
      */
@@ -27,7 +27,7 @@ public interface IBaseView {
     /**
      * 请求成功
      */
-    void onSuccess();
+    void onSuccess(B bean);
 
     /**
      * 请求错误
