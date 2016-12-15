@@ -2,6 +2,7 @@ package com.angcyo.uiview.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,10 @@ public interface IView {
 
     void onViewLoad();
 
+    @Deprecated
     void onViewShow();
+
+    void onViewShow(final Bundle bundle);//2016-12-15
 
     void onViewHide();
 

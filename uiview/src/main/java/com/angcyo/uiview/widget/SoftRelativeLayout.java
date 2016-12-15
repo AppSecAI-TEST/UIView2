@@ -72,7 +72,6 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
     }
 
 
-
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
@@ -204,13 +203,13 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
     }
 
     @Override
-    public void onViewShow() {
+    public void onLifeViewShow() {
         isViewShow = true;
         lockHeight = false;
     }
 
     @Override
-    public void onViewHide() {
+    public void onLifeViewHide() {
         isViewShow = false;
         lockHeight = true;
     }

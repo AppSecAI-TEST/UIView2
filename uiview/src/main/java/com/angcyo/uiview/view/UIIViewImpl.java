@@ -3,6 +3,7 @@ package com.angcyo.uiview.view;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,8 +115,14 @@ public abstract class UIIViewImpl implements IView {
         L.d(this.getClass().getSimpleName(), "onViewLoad: ");
     }
 
+    @Deprecated
     @Override
     public void onViewShow() {
+        onViewShow(null);
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
         L.d(this.getClass().getSimpleName(), "onViewShow: ");
     }
 
@@ -281,6 +288,24 @@ public abstract class UIIViewImpl implements IView {
             throw new IllegalArgumentException("ILayout 还未初始化");
         }
         mILayout.finishIView(iView, anim, quiet);
+    }
+
+    public void showIView(View view) {
+        showIView(view, true);
+    }
+
+    public void showIView(final View view, final boolean needAnim) {
+        showIView(view, needAnim, null);
+    }
+
+    public void showIView(final View view, final boolean needAnim, final Bundle bundle) {
+        if (view == null) {
+            return;
+        }
+        if (mILayout == null) {
+            throw new IllegalArgumentException("ILayout 还未初始化");
+        }
+        mILayout.showIView(view, needAnim, bundle);
     }
 
     public void post(Runnable action) {

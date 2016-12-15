@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -201,10 +202,18 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     /**
      * @param quiet 如果为true, 上层的视图,将取消生命周期 {@link IView#onViewShow()}  的回调
      */
-    private void finishIViewInner(ViewPattern viewPattern, boolean needAnim, boolean quiet) {
+    private void finishIViewInner(final ViewPattern viewPattern, final boolean needAnim, final boolean quiet) {
         ViewPattern lastViewPattern = findLastShowViewPattern(viewPattern);
 
         if (viewPattern.isAnimToEnd || isFinishing) {
+            if (quiet) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        finishIViewInner(viewPattern, needAnim, quiet);
+                    }
+                });
+            }
             return;
         }
 
@@ -224,10 +233,13 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
             bottomViewStart(lastViewPattern, viewPattern, needAnim, quiet);
         } else {
             if (lastViewPattern != null) {
-                lastViewPattern.mIView.onViewShow();
+
+                if (!quiet) {
+                    lastViewPattern.mIView.onViewShow();
+                }
 
                 if (lastViewPattern.mView instanceof ILifecycle) {
-                    ((ILifecycle) lastViewPattern.mView).onViewShow();
+                    ((ILifecycle) lastViewPattern.mView).onLifeViewShow();
                 }
             }
             removeViewPattern(viewPattern);
@@ -256,13 +268,36 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     }
 
     @Override
+    public void showIView(View view) {
+        showIView(view, true);
+    }
+
+    @Override
     public void showIView(final View view, final boolean needAnim) {
+        showIView(view, needAnim, null);
+    }
+
+    @Override
+    public void showIView(final View view, final boolean needAnim, final Bundle bundle) {
+        if (isFinishing) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    showIView(view, needAnim, bundle);
+                }
+            });
+            return;
+        }
+
         final ViewPattern viewPattern = findViewPatternByView(view);
         if (viewPattern == null) {
             return;
         }
 
         if (viewPattern == mLastShowViewPattern) {
+            if (bundle != null) {
+                viewPattern.mIView.onViewShow(bundle);
+            }
             return;
         }
 
@@ -311,12 +346,17 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     }
 
     @Override
-    public void showIView(View view) {
-        showIView(view, true);
-    }
+    public void hideIView(final View view, final boolean needAnim) {
+        if (isFinishing) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    hideIView(view, needAnim);
+                }
+            });
+            return;
+        }
 
-    @Override
-    public void hideIView(final View view, boolean needAnim) {
         final ViewPattern viewPattern = findViewPatternByView(view);
         if (viewPattern.mIView.isDialog()) {
             finishDialogAnim(viewPattern, needAnim ? viewPattern.mIView.loadHideAnimation() : null, new Runnable() {
@@ -358,7 +398,17 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     }
 
     @Override
-    public void replaceIView(IView iView, boolean needAnim) {
+    public void replaceIView(final IView iView, final boolean needAnim) {
+        if (isFinishing) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    replaceIView(iView, needAnim);
+                }
+            });
+            return;
+        }
+
         if (mLastShowViewPattern != null) {
             safeStartAnim(mLastShowViewPattern.mView, needAnim ? mLastShowViewPattern.mIView.loadFinishAnimation() : null, new Runnable() {
                 @Override
@@ -439,7 +489,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         };
 
         if (topViewPattern.mView instanceof ILifecycle) {
-            ((ILifecycle) topViewPattern.mView).onViewShow();
+            ((ILifecycle) topViewPattern.mView).onLifeViewShow();
         }
 
         if (!anim) {
@@ -470,7 +520,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         topViewPattern.mIView.onViewHide();
 
         if (topViewPattern.mView instanceof ILifecycle) {
-            ((ILifecycle) topViewPattern.mView).onViewHide();
+            ((ILifecycle) topViewPattern.mView).onLifeViewHide();
         }
 
         if (!anim) {
@@ -505,7 +555,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         //bottomViewPattern.mView.setVisibility(VISIBLE);
 
         if (bottomViewPattern.mView instanceof ILifecycle) {
-            ((ILifecycle) bottomViewPattern.mView).onViewShow();
+            ((ILifecycle) bottomViewPattern.mView).onLifeViewShow();
         }
 
         if (!anim || quiet) {
@@ -538,7 +588,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         };
 
         if (bottomViewPattern.mView instanceof ILifecycle) {
-            ((ILifecycle) bottomViewPattern.mView).onViewHide();
+            ((ILifecycle) bottomViewPattern.mView).onLifeViewHide();
         }
 
         if (!anim) {
@@ -591,7 +641,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
                             lastViewPattern.mIView.onViewShow();
 
                             if (lastViewPattern.mView instanceof ILifecycle) {
-                                ((ILifecycle) lastViewPattern.mView).onViewShow();
+                                ((ILifecycle) lastViewPattern.mView).onLifeViewShow();
                             }
                         }
                     });
@@ -604,7 +654,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
                             lastViewPattern.mIView.onViewHide();
 
                             if (lastViewPattern.mView instanceof ILifecycle) {
-                                ((ILifecycle) lastViewPattern.mView).onViewHide();
+                                ((ILifecycle) lastViewPattern.mView).onLifeViewHide();
                             }
                         }
                     });
@@ -919,6 +969,28 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         if (mLastShowViewPattern != null) {
             mLastShowViewPattern.mIView.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    /**
+     * 根据位置, 返回IView
+     */
+    public ViewPattern getViewPattern(int position) {
+        if (position < 0 || position >= mAttachViews.size()) {
+            return null;
+        }
+        return mAttachViews.get(position);
+    }
+
+    /**
+     * 通过类名, 返回最早添加的IView
+     */
+    public ViewPattern getViewPatternWithClass(Class<?> cls) {
+        for (ViewPattern pattern : mAttachViews) {
+            if (pattern.mIView.getClass().getSimpleName().equalsIgnoreCase(cls.getSimpleName())) {
+                return pattern;
+            }
+        }
+        return null;
     }
 
     static class AnimRunnable implements Animation.AnimationListener {

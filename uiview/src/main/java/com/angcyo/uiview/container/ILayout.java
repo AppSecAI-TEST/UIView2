@@ -1,5 +1,6 @@
 package com.angcyo.uiview.container;
 
+import android.os.Bundle;
 import android.view.View;
 
 import com.angcyo.uiview.view.IView;
@@ -37,6 +38,8 @@ public interface ILayout {
     void showIView(View view, boolean needAnim);
 
     void showIView(View view);
+
+    void showIView(final View view, final boolean needAnim, final Bundle bundle);//2016-12-15
 
     /**
      * 替换一个View
