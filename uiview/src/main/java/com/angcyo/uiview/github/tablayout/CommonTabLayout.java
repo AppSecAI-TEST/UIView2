@@ -557,7 +557,7 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
             }
         }
 
-        mLastTab = currentTab == -1 ? 0 : this.mCurrentTab;
+        mLastTab = this.mCurrentTab == -1 ? 0 : this.mCurrentTab;
         this.mCurrentTab = currentTab;
         updateTabSelection(currentTab);
         if (mFragmentChangeManager != null) {
