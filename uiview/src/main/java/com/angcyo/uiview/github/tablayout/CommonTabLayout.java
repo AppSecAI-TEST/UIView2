@@ -49,7 +49,7 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
     private Context mContext;
     private ArrayList<CustomTabEntity> mTabEntitys = new ArrayList<>();
     private LinearLayout mTabsContainer;
-    private int mCurrentTab;
+    private int mCurrentTab = -1;
     private int mLastTab;
     private int mTabCount;
     /**
@@ -215,6 +215,12 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
         this.mTabEntitys.addAll(tabEntitys);
 
         notifyDataSetChanged();
+
+        if (mCurrentTab == -1) {
+            setCurrentTab(0);
+        } else {
+            setCurrentTab(mCurrentTab);
+        }
     }
 
     /**
@@ -262,27 +268,21 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
         int icon = mTabEntitys.get(position).getTabUnselectedIcon();
         if (icon == -1) {
             iv_tab_icon.setVisibility(View.INVISIBLE);
+
+            tabView.setOnClickListener(null);
+            tabView.setClickable(false);
         } else {
             iv_tab_icon.setImageResource(icon);
             iv_tab_icon.setVisibility(View.VISIBLE);
-        }
 
-        tabView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = (Integer) v.getTag();
-                if (mCurrentTab != position) {
+            tabView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = (Integer) v.getTag();
                     setCurrentTab(position);
-                    if (mListener != null) {
-                        mListener.onTabSelect(position);
-                    }
-                } else {
-                    if (mListener != null) {
-                        mListener.onTabReselect(position);
-                    }
                 }
-            }
-        });
+            });
+        }
 
         /** 每一个Tab的布局参数 */
         LinearLayout.LayoutParams lp_tab = mTabSpaceEqual ?
@@ -547,7 +547,17 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
 
     //setter and getter
     public void setCurrentTab(int currentTab) {
-        mLastTab = this.mCurrentTab;
+        if (mCurrentTab != currentTab) {
+            if (mListener != null) {
+                mListener.onTabSelect(currentTab);
+            }
+        } else {
+            if (mListener != null) {
+                mListener.onTabReselect(currentTab);
+            }
+        }
+
+        mLastTab = currentTab == -1 ? 0 : this.mCurrentTab;
         this.mCurrentTab = currentTab;
         updateTabSelection(currentTab);
         if (mFragmentChangeManager != null) {
