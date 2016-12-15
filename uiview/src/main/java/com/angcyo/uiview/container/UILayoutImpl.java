@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.ColorInt;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -34,8 +33,6 @@ import static com.angcyo.uiview.view.UIIViewImpl.DEFAULT_ANIM_TIME;
 
 public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.OnPagerShowListener {
 
-    @ColorInt
-    public static final int DimColor = Color.parseColor("#40000000");
     private static final String TAG = "UILayoutWrapper";
     /**
      * 已经追加到内容层的View
@@ -655,7 +652,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         /*是否变暗*/
         if (dialogPattern.mIView.isDimBehind()) {
             AnimUtil.startArgb(dialogPattern.mView,
-                    Color.TRANSPARENT, DimColor, DEFAULT_ANIM_TIME);
+                    Color.TRANSPARENT, dialogPattern.mIView.getDimColor(), DEFAULT_ANIM_TIME);
         }
 
         if (dialogPattern.mIView.canTouchOnOutside()) {
@@ -679,7 +676,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
           /*是否变暗*/
         if (dialogPattern.mIView.isDimBehind()) {
             AnimUtil.startArgb(dialogPattern.mView,
-                    DimColor, Color.TRANSPARENT, DEFAULT_ANIM_TIME);
+                    dialogPattern.mIView.getDimColor(), Color.TRANSPARENT, DEFAULT_ANIM_TIME);
         }
 
         final View animView;

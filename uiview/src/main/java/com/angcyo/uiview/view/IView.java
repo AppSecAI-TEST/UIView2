@@ -123,4 +123,9 @@ public interface IView {
     void onHideInPager(UIViewPager viewPager);//2016-11-26
 
     void onActivityResult(int requestCode, int resultCode, Intent data);//2016-12-13
+
+    /**
+     * 获取对话框 变暗时的颜色
+     */
+    int getDimColor();//2016-12-15
 }

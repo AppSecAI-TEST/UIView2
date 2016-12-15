@@ -2,6 +2,7 @@ package com.angcyo.uiview.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.FrameLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.resources.AnimUtil;
 import com.angcyo.uiview.widget.UIViewPager;
 
@@ -36,6 +38,11 @@ public abstract class UIIViewImpl implements IView {
      * 根布局
      */
     protected View mRootView;
+
+    /**
+     * 用来管理rootview
+     */
+    protected RBaseViewHolder mViewHolder;
 
     public static void setDefaultConfig(Animation animation) {
         animation.setDuration(DEFAULT_ANIM_TIME);
@@ -63,6 +70,7 @@ public abstract class UIIViewImpl implements IView {
     public void loadContentView(View rootView) {
         L.d(this.getClass().getSimpleName(), "loadContentView: ");
         mRootView = rootView;
+        mViewHolder = new RBaseViewHolder(mRootView);
         try {
             ButterKnife.bind(this, mRootView);
         } catch (Exception e) {
@@ -272,5 +280,10 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+    }
+
+    @Override
+    public int getDimColor() {
+        return Color.parseColor("#60000000");
     }
 }
