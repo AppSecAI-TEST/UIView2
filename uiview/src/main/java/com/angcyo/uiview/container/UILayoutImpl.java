@@ -195,11 +195,14 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
     @Override
     public void finishIView(final View view, boolean needAnim) {
-        finishIViewInner(findViewPatternByView(view), needAnim);
+        finishIViewInner(findViewPatternByView(view), needAnim, false);
     }
 
-    private void finishIViewInner(ViewPattern viewPattern, boolean needAnim) {
-        ViewPattern lastViewPattern = findLastShowViewPattern();
+    /**
+     * @param quiet 如果为true, 上层的视图,将取消生命周期 {@link IView#onViewShow()}  的回调
+     */
+    private void finishIViewInner(ViewPattern viewPattern, boolean needAnim, boolean quiet) {
+        ViewPattern lastViewPattern = findLastShowViewPattern(viewPattern);
 
         if (viewPattern.isAnimToEnd || isFinishing) {
             return;
@@ -218,7 +221,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
             //startViewPatternAnim(viewPattern, lastViewPattern, true, true);
             //startViewPatternAnim(viewPattern, lastViewPattern, false, false);
             topViewFinish(viewPattern, needAnim);
-            bottomViewStart(lastViewPattern, viewPattern, needAnim);
+            bottomViewStart(lastViewPattern, viewPattern, needAnim, quiet);
         } else {
             if (lastViewPattern != null) {
                 lastViewPattern.mIView.onViewShow();
@@ -244,7 +247,12 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
     @Override
     public void finishIView(IView iview, boolean needAnim) {
-        finishIViewInner(findViewPatternByIView(iview), needAnim);
+        finishIView(iview, needAnim, false);
+    }
+
+    @Override
+    public void finishIView(IView iview, boolean needAnim, boolean quiet) {
+        finishIViewInner(findViewPatternByIView(iview), needAnim, quiet);
     }
 
     @Override
@@ -481,14 +489,17 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     /**
      * 底部视图进入动画
      */
-    private void bottomViewStart(final ViewPattern bottomViewPattern, final ViewPattern topViewPattern, boolean anim) {
+    private void bottomViewStart(final ViewPattern bottomViewPattern, final ViewPattern topViewPattern,
+                                 boolean anim, final boolean quiet) {
         if (bottomViewPattern == null) {
             return;
         }
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
-                bottomViewPattern.mIView.onViewShow();
+                if (!quiet) {
+                    bottomViewPattern.mIView.onViewShow();
+                }
             }
         };
         //bottomViewPattern.mView.setVisibility(VISIBLE);
@@ -497,7 +508,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
             ((ILifecycle) bottomViewPattern.mView).onViewShow();
         }
 
-        if (!anim) {
+        if (!anim || quiet) {
             endRunnable.run();
             return;
         }
@@ -740,6 +751,14 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
     public ViewPattern findLastShowViewPattern() {
         return findViewPattern(mAttachViews.size() - 2);
+    }
+
+    public ViewPattern findLastShowViewPattern(final ViewPattern anchor) {
+        if (anchor == mLastShowViewPattern) {
+            return findViewPattern(mAttachViews.size() - 2);
+        } else {
+            return mLastShowViewPattern;
+        }
     }
 
     public ViewPattern findLastViewPattern() {

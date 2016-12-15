@@ -47,7 +47,7 @@ public abstract class UIIViewImpl implements IView {
     public static void setDefaultConfig(Animation animation) {
         animation.setDuration(DEFAULT_ANIM_TIME);
         animation.setInterpolator(new DecelerateInterpolator());
-        animation.setFillAfter(true);
+        animation.setFillAfter(false);
     }
 
     @Override
@@ -263,6 +263,24 @@ public abstract class UIIViewImpl implements IView {
             throw new IllegalArgumentException("ILayout 还未初始化");
         }
         mILayout.startIView(iView, anim);
+    }
+
+    public void finishIView(IView iView) {
+        finishIView(iView, true);
+    }
+
+    public void finishIView(IView iView, boolean anim) {
+        finishIView(iView, anim, false);
+    }
+
+    public void finishIView(IView iView, boolean anim, boolean quiet) {
+        if (iView == null) {
+            return;
+        }
+        if (mILayout == null) {
+            throw new IllegalArgumentException("ILayout 还未初始化");
+        }
+        mILayout.finishIView(iView, anim, quiet);
     }
 
     public void post(Runnable action) {
