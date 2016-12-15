@@ -308,6 +308,20 @@ public abstract class UIIViewImpl implements IView {
         mILayout.showIView(view, needAnim, bundle);
     }
 
+    public void replaceIView(IView iView, boolean needAnim) {
+        if (iView == null) {
+            return;
+        }
+        if (mILayout == null) {
+            throw new IllegalArgumentException("ILayout 还未初始化");
+        }
+        mILayout.replaceIView(iView, needAnim);
+    }
+
+    public void replaceIView(IView iView) {
+        replaceIView(iView, true);
+    }
+
     public void post(Runnable action) {
         if (mRootView != null) {
             mRootView.post(action);

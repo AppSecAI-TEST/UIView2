@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.util.TypedValue;
@@ -254,9 +255,17 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
      */
     private void addTab(final int position, View tabView) {
         TextView tv_tab_title = (TextView) tabView.findViewById(R.id.tv_tab_title);
+        tv_tab_title.setVisibility(TextUtils.isEmpty(
+                mTabEntitys.get(position).getTabTitle()) ? View.INVISIBLE : View.VISIBLE);
         tv_tab_title.setText(mTabEntitys.get(position).getTabTitle());
         ImageView iv_tab_icon = (ImageView) tabView.findViewById(R.id.iv_tab_icon);
-        iv_tab_icon.setImageResource(mTabEntitys.get(position).getTabUnselectedIcon());
+        int icon = mTabEntitys.get(position).getTabUnselectedIcon();
+        if (icon == -1) {
+            iv_tab_icon.setVisibility(View.INVISIBLE);
+        } else {
+            iv_tab_icon.setImageResource(icon);
+            iv_tab_icon.setVisibility(View.VISIBLE);
+        }
 
         tabView.setOnClickListener(new OnClickListener() {
             @Override
@@ -307,7 +316,11 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
             if (mIconVisible) {
                 iv_tab_icon.setVisibility(View.VISIBLE);
                 CustomTabEntity tabEntity = mTabEntitys.get(i);
-                iv_tab_icon.setImageResource(i == mCurrentTab ? tabEntity.getTabSelectedIcon() : tabEntity.getTabUnselectedIcon());
+
+                if (tabEntity.getTabSelectedIcon() != -1 && tabEntity.getTabUnselectedIcon() != -1) {
+                    iv_tab_icon.setImageResource(i == mCurrentTab ? tabEntity.getTabSelectedIcon() : tabEntity.getTabUnselectedIcon());
+                }
+
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         mIconWidth <= 0 ? LinearLayout.LayoutParams.WRAP_CONTENT : (int) mIconWidth,
                         mIconHeight <= 0 ? LinearLayout.LayoutParams.WRAP_CONTENT : (int) mIconHeight);
@@ -336,7 +349,11 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
             tab_title.setTextColor(isSelect ? mTextSelectColor : mTextUnselectColor);
             ImageView iv_tab_icon = (ImageView) tabView.findViewById(R.id.iv_tab_icon);
             CustomTabEntity tabEntity = mTabEntitys.get(i);
-            iv_tab_icon.setImageResource(isSelect ? tabEntity.getTabSelectedIcon() : tabEntity.getTabUnselectedIcon());
+
+            if (tabEntity.getTabSelectedIcon() != -1 && tabEntity.getTabUnselectedIcon() != -1) {
+                iv_tab_icon.setImageResource(isSelect ? tabEntity.getTabSelectedIcon() : tabEntity.getTabUnselectedIcon());
+            }
+
             if (mTextBold == TEXT_BOLD_WHEN_SELECT) {
                 tab_title.getPaint().setFakeBoldText(isSelect);
             }
@@ -825,10 +842,10 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
             }
 
             if (!mIconVisible) {
-                setMsgMargin(position, 2, 2);
+                setMsgMargin(position, 0, 0);
             } else {
-                setMsgMargin(position, 0,
-                        mIconGravity == Gravity.LEFT || mIconGravity == Gravity.RIGHT ? 4 : 0);
+                setMsgMargin(position, -6,
+                        mIconGravity == Gravity.LEFT || mIconGravity == Gravity.RIGHT ? -6 : 6);
             }
 
             mInitSetMap.put(position, true);
@@ -888,10 +905,18 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
 
             if (mIconGravity == Gravity.TOP || mIconGravity == Gravity.BOTTOM) {
                 lp.leftMargin = dp2px(leftPadding);
-                lp.topMargin = mHeight > 0 ? (int) (mHeight - textHeight - iconH - margin) / 2 - dp2px(bottomPadding) : dp2px(bottomPadding);
+                lp.topMargin = mHeight > 0
+                        ?
+                        (int) (mHeight - textHeight - iconH - margin) / 2 - dp2px(bottomPadding)
+                        :
+                        dp2px(bottomPadding);
             } else {
                 lp.leftMargin = dp2px(leftPadding);
-                lp.topMargin = mHeight > 0 ? (int) (mHeight - Math.max(textHeight, iconH)) / 2 - dp2px(bottomPadding) : dp2px(bottomPadding);
+                lp.topMargin = mHeight > 0
+                        ?
+                        (int) (mHeight - Math.max(textHeight, iconH)) / 2 - dp2px(bottomPadding)
+                        :
+                        dp2px(bottomPadding);
             }
 
             tipView.setLayoutParams(lp);
