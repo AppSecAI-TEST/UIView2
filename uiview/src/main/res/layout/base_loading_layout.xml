@@ -17,14 +17,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
+        android:minHeight="@dimen/base_xxxhdpi"
         android:textColor="@android:color/white"
         android:textSize="@dimen/default_text_size"
         tools:text="别怕, 马上就好..."/>
 
     <com.angcyo.uiview.github.load.AVLoadingIndicatorView
         android:id="@+id/base_load_view"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="@dimen/base_xxhdpi"
+        android:layout_height="@dimen/base_xxhdpi"
         android:layout_centerInParent="true"
         android:layout_marginRight="@dimen/base_xhdpi"
         android:layout_toLeftOf="@id/base_load_tip_view"
