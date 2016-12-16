@@ -84,7 +84,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     }
 
     /**
-     * inflate之后, 有时会返回 父布局, 这个时候需要处理一下, 才能拿到真实的RootView
+     * inflate之后, 有时会返回 父布局, 这个时候需要处理一下, 才能拿到真实的RootView.
      */
     public static View safeAssignView(final View parentView, final View childView) {
         if (parentView == childView) {
