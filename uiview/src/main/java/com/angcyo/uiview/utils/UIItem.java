@@ -1,7 +1,6 @@
 package com.angcyo.uiview.utils;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.util.TypedValue;
@@ -44,8 +43,7 @@ public class UIItem {
         textView.setCompoundDrawablePadding((int) dpToPx(context, 8));
         textView.setPadding(0, 0, (int) dpToPx(context, 8), 0);
         textView.setOnClickListener(info.clickListener);
-//        textView.setBackgroundResource(info.backgroundResId);
-        textView.setBackgroundColor(Color.RED);
+        textView.setBackgroundResource(info.backgroundResId);
         return textView;
     }
 
@@ -97,6 +95,7 @@ public class UIItem {
             this.itemHeight = itemHeight;
             this.itemText = itemText;
             this.clickListener = clickListener;
+            this.backgroundResId = backgroundResId;
         }
 
         public ItemInfo setLeftIcoResId(int leftIcoResId) {
