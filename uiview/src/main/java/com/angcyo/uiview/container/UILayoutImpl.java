@@ -58,24 +58,29 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
     public UILayoutImpl(Context context) {
         super(context);
+        initLayout();
     }
 
     public UILayoutImpl(Context context, IView iView) {
         super(context);
+        initLayout();
         startIView(iView, false);
     }
 
     public UILayoutImpl(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initLayout();
     }
 
     public UILayoutImpl(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initLayout();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public UILayoutImpl(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        initLayout();
     }
 
     /**
@@ -93,11 +98,13 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         }
     }
 
+    private void initLayout() {
+        mCompatActivity = (AppCompatActivity) getContext();
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mCompatActivity = (AppCompatActivity) getContext();
-
         setFocusable(true);
         setFocusableInTouchMode(true);
         isAttachedToWindow = true;
