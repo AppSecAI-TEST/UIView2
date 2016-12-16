@@ -61,6 +61,8 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
 
             }
         });
+
+        requestFocus();
     }
 
     @Override

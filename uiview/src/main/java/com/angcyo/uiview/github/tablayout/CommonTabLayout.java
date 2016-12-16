@@ -269,6 +269,7 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
         if (icon == -1) {
             iv_tab_icon.setVisibility(View.INVISIBLE);
 
+            tabView.setVisibility(View.INVISIBLE);
             tabView.setOnClickListener(null);
             tabView.setClickable(false);
         } else {

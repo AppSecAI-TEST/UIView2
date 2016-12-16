@@ -1009,6 +1009,12 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         return null;
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+        return true;
+    }
+
     static class AnimRunnable implements Animation.AnimationListener {
 
         private Runnable mRunnable;
