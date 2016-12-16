@@ -132,4 +132,9 @@ public interface IView {
      * 获取对话框 变暗时的颜色
      */
     int getDimColor();//2016-12-15
+
+    /**
+     * 请求是否可以退出.
+     */
+    boolean onBackPressed();//2016-12-16
 }

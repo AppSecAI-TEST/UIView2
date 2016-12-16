@@ -260,21 +260,26 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
      * 创建并添加tab
      */
     private void addTab(final int position, View tabView) {
-        TextView tv_tab_title = (TextView) tabView.findViewById(R.id.tv_tab_title);
-        tv_tab_title.setVisibility(TextUtils.isEmpty(
-                mTabEntitys.get(position).getTabTitle()) ? View.INVISIBLE : View.VISIBLE);
-        tv_tab_title.setText(mTabEntitys.get(position).getTabTitle());
-        ImageView iv_tab_icon = (ImageView) tabView.findViewById(R.id.iv_tab_icon);
-        int icon = mTabEntitys.get(position).getTabUnselectedIcon();
-        if (icon == -1) {
-            iv_tab_icon.setVisibility(View.INVISIBLE);
+        CustomTabEntity tabEntity = mTabEntitys.get(position);
 
+        TextView tv_tab_title = (TextView) tabView.findViewById(R.id.tv_tab_title);
+        String tabTitle = tabEntity.getTabTitle();
+        tv_tab_title.setVisibility(TextUtils.isEmpty(tabTitle) ? View.INVISIBLE : View.VISIBLE);
+        tv_tab_title.setText(tabTitle);
+        ImageView iv_tab_icon = (ImageView) tabView.findViewById(R.id.iv_tab_icon);
+        int icon = tabEntity.getTabUnselectedIcon();
+
+        if (icon == -1 && TextUtils.isEmpty(tabTitle)) {
             tabView.setVisibility(View.INVISIBLE);
             tabView.setOnClickListener(null);
             tabView.setClickable(false);
         } else {
-            iv_tab_icon.setImageResource(icon);
-            iv_tab_icon.setVisibility(View.VISIBLE);
+            if (icon == -1) {
+                iv_tab_icon.setVisibility(View.GONE);
+            } else {
+                iv_tab_icon.setImageResource(icon);
+                iv_tab_icon.setVisibility(View.VISIBLE);
+            }
 
             tabView.setOnClickListener(new OnClickListener() {
                 @Override
@@ -285,6 +290,18 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
             });
         }
 
+        if (!tabEntity.isShowArrow()) {
+            tv_tab_title.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        }
+
+        if (tabEntity.isHomeNavigation()) {
+            tabView.setBackgroundResource(R.drawable.base_main_color_bg_selector2);
+        }
+
+        if (!tabEntity.isShowBackground()) {
+            tabView.setBackgroundColor(Color.TRANSPARENT);
+        }
+
         /** 每一个Tab的布局参数 */
         LinearLayout.LayoutParams lp_tab = mTabSpaceEqual ?
                 new LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f) :
@@ -292,6 +309,7 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
         if (mTabWidth > 0) {
             lp_tab = new LinearLayout.LayoutParams((int) mTabWidth, LayoutParams.MATCH_PARENT);
         }
+
         mTabsContainer.addView(tabView, position, lp_tab);
     }
 
@@ -339,6 +357,12 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
             } else {
                 iv_tab_icon.setVisibility(View.GONE);
             }
+
+            CustomTabEntity tabEntity = mTabEntitys.get(i);
+            if (tabEntity.isShowArrow()) {
+                tv_tab_title.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                        getResources().getDrawable(i == mCurrentTab ? R.drawable.base_zhankai : R.drawable.base_zhankai_dark), null);
+            }
         }
     }
 
@@ -357,6 +381,11 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
 
             if (mTextBold == TEXT_BOLD_WHEN_SELECT) {
                 tab_title.getPaint().setFakeBoldText(isSelect);
+            }
+
+            if (tabEntity.isShowArrow()) {
+                tab_title.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                        getResources().getDrawable(i == mCurrentTab ? R.drawable.base_zhankai : R.drawable.base_zhankai_dark), null);
             }
         }
     }
@@ -548,13 +577,20 @@ public class CommonTabLayout extends FrameLayout implements ValueAnimator.Animat
 
     //setter and getter
     public void setCurrentTab(int currentTab) {
-        if (mCurrentTab != currentTab) {
-            if (mListener != null) {
-                mListener.onTabSelect(currentTab);
-            }
-        } else {
-            if (mListener != null) {
-                mListener.onTabReselect(currentTab);
+        setCurrentTab(currentTab, true);
+    }
+
+    //setter and getter
+    public void setCurrentTab(int currentTab, boolean notify) {
+        if (notify) {
+            if (mCurrentTab != currentTab) {
+                if (mListener != null) {
+                    mListener.onTabSelect(currentTab);
+                }
+            } else {
+                if (mListener != null) {
+                    mListener.onTabReselect(currentTab);
+                }
             }
         }
 

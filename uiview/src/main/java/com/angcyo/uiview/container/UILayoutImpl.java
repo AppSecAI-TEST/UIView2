@@ -44,15 +44,13 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
      */
     protected ViewPattern mLastShowViewPattern;
     protected boolean isAttachedToWindow = false;
-
+    protected AppCompatActivity mCompatActivity;
     /**
      * 是否正在退出
      */
     private boolean isFinishing = false;
     private ArrayList<IWindowInsetsListener> mIWindowInsetsListeners;
-
     private int[] mInsets = new int[4];
-
     /**
      * 锁定高度, 当键盘弹出的时候, 可以不改变size
      */
@@ -98,6 +96,8 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mCompatActivity = (AppCompatActivity) getContext();
+
         setFocusable(true);
         setFocusableInTouchMode(true);
         isAttachedToWindow = true;
@@ -181,11 +181,10 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
      * 加载IView
      */
     private View loadViewInternal(IView iView) {
-        final Context context = getContext();
 
         //首先调用IView接口的inflateContentView方法,(inflateContentView请不要初始化View)
         //其次会调用loadContentView方法,用来初始化View.(此方法调用之后, 就支持ButterKnife了)
-        final View view = iView.inflateContentView((AppCompatActivity) context, this, this, LayoutInflater.from(context));
+        final View view = iView.inflateContentView(mCompatActivity, this, this, LayoutInflater.from(mCompatActivity));
         iView.onViewCreate();
 
         View rawView;
@@ -228,6 +227,10 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         /*对话框的处理*/
         if (viewPattern.mIView.isDialog() &&
                 !viewPattern.mIView.canCancel()) {
+            return;
+        }
+
+        if (!viewPattern.mIView.onBackPressed()) {
             return;
         }
 
@@ -285,18 +288,38 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
     @Override
     public void showIView(final View view, final boolean needAnim, final Bundle bundle) {
-        if (isFinishing) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    showIView(view, needAnim, bundle);
-                }
-            });
+        final ViewPattern viewPattern = findViewPatternByView(view);
+        showIViewInternal(viewPattern, needAnim, bundle);
+    }
+
+    @Override
+    public void showIView(IView iview, boolean needAnim) {
+        showIView(iview, needAnim, null);
+    }
+
+    @Override
+    public void showIView(IView iview) {
+        showIView(iview, true);
+    }
+
+    @Override
+    public void showIView(IView iview, boolean needAnim, Bundle bundle) {
+        final ViewPattern viewPattern = findViewPatternByIView(iview);
+        showIViewInternal(viewPattern, needAnim, bundle);
+    }
+
+    private void showIViewInternal(final ViewPattern viewPattern, final boolean needAnim, final Bundle bundle) {
+        if (viewPattern == null) {
             return;
         }
 
-        final ViewPattern viewPattern = findViewPatternByView(view);
-        if (viewPattern == null) {
+        if (isFinishing || !isAttachedToWindow) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    showIViewInternal(viewPattern, needAnim, bundle);
+                }
+            });
             return;
         }
 
@@ -304,16 +327,6 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
             if (bundle != null) {
                 viewPattern.mIView.onViewShow(bundle);
             }
-            return;
-        }
-
-        if (!isAttachedToWindow) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    showIView(view, needAnim);
-                }
-            });
             return;
         }
 
@@ -440,7 +453,10 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         replaceIView(iView, true);
     }
 
-    protected ViewPattern getLastViewPattern() {
+    /**
+     * 获取最前显示的视图信息
+     */
+    public ViewPattern getLastViewPattern() {
 //        if (mAttachViews.isEmpty()) {
 //            return null;
 //        }
@@ -974,13 +990,6 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
         manager.showSoftInputFromInputMethod(getWindowToken(), 0);
     }
 
-    /**
-     * 获取最前显示的视图信息
-     */
-    public ViewPattern getLastShowViewPattern() {
-        return mLastShowViewPattern;
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (mLastShowViewPattern != null) {
             mLastShowViewPattern.mIView.onActivityResult(requestCode, resultCode, data);
@@ -1013,6 +1022,29 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
     public boolean onTouchEvent(MotionEvent event) {
         super.onTouchEvent(event);
         return true;
+    }
+
+    @Override
+    public void finishAll() {
+        finishAll(false);
+    }
+
+    @Override
+    public void finishAll(boolean keepLast) {
+        while (!mAttachViews.empty()) {
+            ViewPattern pattern = mAttachViews.pop();
+            if (keepLast && pattern == getLastViewPattern()) {
+                return;
+            } else {
+                finishIViewInner(pattern, false, true);
+            }
+        }
+    }
+
+    @Override
+    public void finish() {
+        finishAll();
+        mCompatActivity.onBackPressed();
     }
 
     static class AnimRunnable implements Animation.AnimationListener {

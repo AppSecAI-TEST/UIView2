@@ -41,6 +41,12 @@ public interface ILayout {
 
     void showIView(final View view, final boolean needAnim, final Bundle bundle);//2016-12-15
 
+    void showIView(IView iview, boolean needAnim);//2016-12-16
+
+    void showIView(IView iview);//2016-12-16
+
+    void showIView(final IView iview, final boolean needAnim, final Bundle bundle);//2016-12-16
+
     /**
      * 替换一个View
      */
@@ -64,4 +70,24 @@ public interface ILayout {
      * 请求返回
      */
     boolean requestBackPressed();
+
+    /**
+     * 结束所有的IView, 不会有动画执行, 最上层的IVew 也不会有 生命周期的回调
+     * {@link ILayout#finishIView(IView, boolean, boolean)} 类似此方法quiet=true 的情况
+     */
+    void finishAll();//2016-12-16
+
+    /**
+     * 结束所有的IView,
+     * 参考
+     * {@link ILayout#finishAll()}
+     *
+     * @param keepLast true 会保留最上层的IView
+     */
+    void finishAll(boolean keepLast);//2016-12-16
+
+    /**
+     * 强制退出
+     */
+    void finish();//2016-12-16
 }

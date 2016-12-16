@@ -247,7 +247,7 @@ public abstract class UIIViewImpl implements IView {
      */
     @Override
     public void onShowInPager(UIViewPager viewPager) {
-
+        L.d(this.getClass().getSimpleName(), "onShowInPager: ");
     }
 
     /**
@@ -255,7 +255,7 @@ public abstract class UIIViewImpl implements IView {
      */
     @Override
     public void onHideInPager(UIViewPager viewPager) {
-
+        L.d(this.getClass().getSimpleName(), "onHideInPager: ");
     }
 
     public void startIView(IView iView) {
@@ -308,6 +308,24 @@ public abstract class UIIViewImpl implements IView {
         mILayout.showIView(view, needAnim, bundle);
     }
 
+    public void showIView(IView iview, boolean needAnim) {
+        showIView(iview, needAnim, null);
+    }
+
+    public void showIView(IView iview) {
+        showIView(iview, true);
+    }
+
+    public void showIView(IView iview, boolean needAnim, Bundle bundle) {
+        if (iview == null) {
+            return;
+        }
+        if (mILayout == null) {
+            throw new IllegalArgumentException("ILayout 还未初始化");
+        }
+        mILayout.showIView(iview, needAnim, bundle);
+    }
+
     public void replaceIView(IView iView, boolean needAnim) {
         if (iView == null) {
             return;
@@ -332,6 +350,14 @@ public abstract class UIIViewImpl implements IView {
         if (mRootView != null) {
             mRootView.postDelayed(action, delayMillis);
         }
+    }
+
+    /**
+     * @return true 允许退出
+     */
+    @Override
+    public boolean onBackPressed() {
+        return true;
     }
 
     @Override
