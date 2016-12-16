@@ -44,6 +44,7 @@ public abstract class UIIViewImpl implements IView {
      * 用来管理rootview
      */
     protected RBaseViewHolder mViewHolder;
+    private boolean mIsRightJumpLeft = false;
 
     public static void setDefaultConfig(Animation animation) {
         animation.setDuration(DEFAULT_ANIM_TIME);
@@ -139,8 +140,14 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public Animation loadStartAnimation() {
         L.d(this.getClass().getSimpleName(), "loadStartAnimation: ");
-        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0,
-                Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        TranslateAnimation translateAnimation;
+        if (mIsRightJumpLeft) {
+            translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0,
+                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        } else {
+            translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0,
+                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        }
         setDefaultConfig(translateAnimation);
         return translateAnimation;
     }
@@ -169,8 +176,14 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public Animation loadOtherExitAnimation() {
         L.d(this.getClass().getSimpleName(), "loadOtherExitAnimation: ");
-        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f,
-                Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        TranslateAnimation translateAnimation;
+        if (mIsRightJumpLeft) {
+            translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1f,
+                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        } else {
+            translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f,
+                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
+        }
         setDefaultConfig(translateAnimation);
         return translateAnimation;
     }
@@ -197,6 +210,12 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public Animation loadLayoutAnimation() {
         L.d(this.getClass().getSimpleName(), "loadLayoutAnimation: ");
+        if (mIsRightJumpLeft) {
+
+        } else {
+
+        }
+
         TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1f,
                 Animation.RELATIVE_TO_PARENT, 0f,
                 Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f);
@@ -363,6 +382,11 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+    }
+
+    @Override
+    public void setIsRightJumpLeft(boolean isRightJumpLeft) {
+        mIsRightJumpLeft = isRightJumpLeft;
     }
 
     @Override

@@ -339,6 +339,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
 
         //viewPattern.mView.setVisibility(VISIBLE);
         viewPattern.mView.bringToFront();
+        final ViewPattern lastShowViewPattern = mLastShowViewPattern;
         mLastShowViewPattern = viewPattern;
 
         mAttachViews.remove(viewPattern);
@@ -352,8 +353,7 @@ public class UILayoutImpl extends FrameLayout implements ILayout, UIViewPager.On
                 }
             });
         } else {
-            if (mLastShowViewPattern != null) {
-                final ViewPattern lastShowViewPattern = mLastShowViewPattern;
+            if (lastShowViewPattern != null) {
                 safeStartAnim(lastShowViewPattern.mView, needAnim ? viewPattern.mIView.loadOtherHideAnimation() : null, new Runnable() {
                     @Override
                     public void run() {

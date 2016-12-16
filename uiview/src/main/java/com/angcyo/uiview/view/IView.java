@@ -137,4 +137,10 @@ public interface IView {
      * 请求是否可以退出.
      */
     boolean onBackPressed();//2016-12-16
+
+    /**
+     * 在导航上, 左边的按钮界面, 调到右边的按钮界面, 或者 右边的按钮界面, 跳到左边的按钮界面.
+     * 用来决定动画是否需要反向执行
+     */
+    void setIsRightJumpLeft(boolean isRightJumpLeft);//2016-12-16
 }
