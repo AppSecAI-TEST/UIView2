@@ -9,6 +9,7 @@ import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -107,12 +108,14 @@ public class ItemInfoLayout extends RelativeLayout {
         mTextView.setTextColor(itemTextColor);
         mTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemTextSize);
         mTextView.setCompoundDrawablePadding(drawPadding);
+        mTextView.setGravity(Gravity.CENTER_VERTICAL);
         setLeftDrawableRes(leftDrawableRes);
 
         mDarkTextView.setText(itemDarkText);
         mDarkTextView.setTextColor(itemDarkTextColor);
         mDarkTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, itemDarkTextSize);
         mDarkTextView.setCompoundDrawablePadding(drawPadding);
+        mDarkTextView.setGravity(Gravity.CENTER_VERTICAL);
         setRightDrawableRes(rightDrawableRes);
         setDarkDrawableRes(darkDrawableRes);
 
@@ -155,7 +158,7 @@ public class ItemInfoLayout extends RelativeLayout {
 
     public void setLeftDrawableRes(int leftDrawableRes) {
         this.leftDrawableRes = leftDrawableRes;
-        final Drawable[] compoundDrawables = mDarkTextView.getCompoundDrawables();
+        final Drawable[] compoundDrawables = mTextView.getCompoundDrawables();
         if (leftDrawableRes == -1) {
             mTextView.setCompoundDrawablesWithIntrinsicBounds(null,
                     compoundDrawables[1], compoundDrawables[2], compoundDrawables[3]);
