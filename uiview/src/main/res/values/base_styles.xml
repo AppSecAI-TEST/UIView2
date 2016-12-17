@@ -47,6 +47,10 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
+    <style name="BaseAvgHStyleM" parent="BaseAvgHStyle">
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
     <!--透明颜色的按钮-->
     <style name="BaseButtonStyle">
         <item name="android:layout_width">wrap_content</item>
