@@ -1,5 +1,6 @@
 package com.angcyo.uiview.container;
 
+import android.animation.ArgbEvaluator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -216,6 +217,22 @@ public class UITitleBarContainer extends FrameLayout {
         animViews(mRightViews, false);
     }
 
+    /**
+     * 根据 scrollY 动态计算背景颜色
+     */
+    public void evaluateBackgroundColor(int scrollY) {
+        setBackgroundColor((Integer) new ArgbEvaluator()
+                .evaluate(Math.min(1, 6 * scrollY * 0.1f / getMeasuredHeight()),
+                        Color.TRANSPARENT, getResources().getColor(R.color.theme_color_primary)));
+    }
+
+    /**
+     * 标题文本视图
+     */
+    public TextView getTitleView() {
+        return mTitleView;
+    }
+
     private void animViews(ArrayList<View> views, boolean left) {
         int itemSize = getResources().getDimensionPixelSize(R.dimen.base_title_bar_item_size);
         int animTime = 300;
@@ -273,7 +290,7 @@ public class UITitleBarContainer extends FrameLayout {
         }
     }
 
-    private ImageView createImageItem(@DrawableRes int res, View.OnClickListener listener) {
+    private ImageView createImageItem(@DrawableRes int res, OnClickListener listener) {
         ImageView item = new ImageView(getContext());
         item.setImageResource(res);
         item.setScaleType(ImageView.ScaleType.CENTER);
@@ -285,7 +302,7 @@ public class UITitleBarContainer extends FrameLayout {
         return item;
     }
 
-    private TextView createTextItem(String text, View.OnClickListener listener) {
+    private TextView createTextItem(String text, OnClickListener listener) {
         TextView item = new TextView(getContext());
         item.setText(text);
         item.setTextColor(Color.WHITE);
