@@ -43,6 +43,14 @@ public class ResUtil {
         return px;
     }
 
+    public static float dpToPx(Context context, float dp) {
+        return dpToPx(context.getResources(), dp);
+    }
+
+    public static float spToPx(Context context, float sp) {
+        return spToPx(context.getResources(), sp);
+    }
+
     /**
      * Generate text color color state list.
      *
@@ -344,7 +352,7 @@ public class ResUtil {
     /**
      * 判断是否包含属性
      *
-     * @see android.view.View#SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+     * @see View#SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
      */
     public static boolean isLayoutFullscreen(Activity activity) {
         final int visibility = activity.getWindow().getDecorView().getSystemUiVisibility();
