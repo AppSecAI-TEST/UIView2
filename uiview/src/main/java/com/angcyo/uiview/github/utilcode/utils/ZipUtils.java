@@ -16,8 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
-import static com.angcyo.uiview.github.utilcode.utils.ConstUtils.KB;
-
+import static com.blankj.utilcode.utils.ConstUtils.KB;
 
 /**
  * <pre>
