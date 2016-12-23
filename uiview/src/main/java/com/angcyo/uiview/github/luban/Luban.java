@@ -1,27 +1,38 @@
 package com.angcyo.uiview.github.luban;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.Log;
 
+import com.angcyo.library.utils.L;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 import static com.angcyo.uiview.github.luban.Preconditions.checkNotNull;
-
 
 public class Luban {
 
@@ -103,6 +114,141 @@ public class Luban {
 
         //create a new image
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+    }
+
+    public static Observable<ArrayList<String>> luban(Context context, String filePath) {
+        if (TextUtils.isEmpty(filePath) || !new File(filePath).exists()) {
+            return Observable.empty();
+        }
+        ArrayList<String> files = new ArrayList<>();
+        files.add(filePath);
+        return luban(context, files);
+    }
+
+    /**
+     * 压缩一个列表的图片, 返回压缩后的图片路径列表
+     */
+    public static Observable<ArrayList<String>> luban(final Context context, ArrayList<String> originFilePathList) {
+        if (originFilePathList == null || originFilePathList.isEmpty()) {
+            return Observable.empty();
+        }
+        return Observable.from(originFilePathList)
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        return Luban.get(context.getApplicationContext()).thirdCompress(new File(s)).getAbsolutePath();
+                    }
+                })
+                .scan(new Func2<String, String, String>() {
+                    @Override
+                    public String call(String s, String s2) {
+                        return s + ":" + s2;
+                    }
+                })
+                .last()
+                .map(new Func1<String, ArrayList<String>>() {
+                    @Override
+                    public ArrayList<String> call(String s) {
+                        ArrayList<String> list = new ArrayList<String>();
+                        String[] split = s.split(":");
+                        for (int i = 0; i < split.length; i++) {
+                            list.add(split[i]);
+                        }
+                        return list;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 保存图片到系统相册目录
+     *
+     * @param bmp        位图对象
+     * @param fileFolder 图片目录
+     * @param filename   图片名称
+     * @return 保存地址
+     */
+    public static String saveImageToSystemAlbum(Context context, Bitmap bmp, String fileFolder, String filename) {
+        OutputStream stream = null;
+        try {
+            File saveDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), fileFolder);
+            if (!saveDirectory.exists()) saveDirectory.mkdirs();
+            File saveFile = new File(saveDirectory, filename);
+            if (!saveFile.exists()) saveFile.createNewFile();
+            stream = new BufferedOutputStream(new FileOutputStream(saveFile.getAbsolutePath()));
+            Bitmap.CompressFormat format = Bitmap.CompressFormat.JPEG;
+            int quality = 100;
+            bmp.compress(format, quality, stream);
+
+            // 发送系统广播更新相册
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri uri = Uri.fromFile(saveFile);
+            intent.setData(uri);
+            context.sendBroadcast(intent);
+            return saveFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String saveImageToSystemAlbum(Context context, File file, String fileFolder, String filename) {
+        OutputStream stream = null;
+        BufferedInputStream bufferedInputStream = null;
+        try {
+            File saveDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), fileFolder);
+            if (!saveDirectory.exists()) saveDirectory.mkdirs();
+            File saveFile = new File(saveDirectory, filename);
+            if (!saveFile.exists()) saveFile.createNewFile();
+
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+            stream = new BufferedOutputStream(new FileOutputStream(saveFile.getAbsolutePath()));
+
+            byte[] read = new byte[1024];
+            while (bufferedInputStream.read(read) != -1) {
+                stream.write(read);
+            }
+            stream.flush();
+
+            // 发送系统广播更新相册
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri uri = Uri.fromFile(saveFile);
+            intent.setData(uri);
+            context.sendBroadcast(intent);
+            return saveFile.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (bufferedInputStream != null) {
+                try {
+                    bufferedInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+    /**
+     * 打印文件大小
+     */
+    public static void logFileSize(Context context, ArrayList<String> files) {
+        for (String s : files) {
+            File file = new File(s);
+            if (file.exists()) {
+                L.e(file.getAbsolutePath() + " " + Formatter.formatFileSize(context, file.length()));
+            }
+        }
     }
 
     public Luban launch() {
@@ -473,4 +619,41 @@ public class Luban {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+//    public static void save() {
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                String zhenNN = "";
+//                if (file.exists()) {
+//                    zhenNN = BmpUtil.saveImageToSystemAlbum(HnPhotoPagerActivity.this, file,
+//                            "ZhenNN", UUID.randomUUID().toString() + ".png");
+//                } else {
+//                    try {
+//                        Bitmap bitmap = Glide.with(HnPhotoPagerActivity.this.getApplicationContext())
+//                                .load(DraweeViewUtil.safeUrl(url))
+//                                .asBitmap()
+//                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+//                                .get();
+//                        zhenNN = BmpUtil.saveImageToSystemAlbum(HnPhotoPagerActivity.this, bitmap,
+//                                "ZhenNN", UUID.randomUUID().toString() + ".png");
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                final String s = zhenNN;
+//                ThreadExecutor.instance().onMain(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (TextUtils.isEmpty(s)) {
+//                            T.show(HnPhotoPagerActivity.this, "保存失败.");
+//                        } else {
+//                            T.show(HnPhotoPagerActivity.this, "已保存至:" + s);
+//                        }
+//                    }
+//                });
+//            }
+//        }.start();
+//    }
 }
