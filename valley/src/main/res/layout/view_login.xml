@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:background="@drawable/login_pic">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/ico_view"
+        style="@style/UserBigIcoStyle"
+        android:layout_marginTop="@dimen/base_xxxhdpi"/>
+
+    <TextView
+        style="@style/WhiteColorTextStyle"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:text="Welcome"/>
+
+    <!--登录 注册部分-->
+    <LinearLayout
+        android:id="@+id/control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="@dimen/base_xxxhdpi"
+        android:layout_marginRight="@dimen/base_xxxhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_weight="1"
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <com.angcyo.uiview.widget.ExEditText
+            android:id="@+id/phone_view"
+            style="@style/PhoneEditStyle"
+            android:drawableLeft="@drawable/cell_phone_icon"
+            android:hint="@string/phone_number_hint"
+            android:textColorHint="@color/white"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi">
+
+            <com.angcyo.uiview.widget.ExEditText
+                android:id="@+id/password_view"
+                style="@style/PasswordEditStyle"
+                android:drawableLeft="@drawable/password_icon"
+                android:hint="@string/password_hint"
+                android:imeOptions="actionDone"
+                android:textColorHint="@color/white"/>
+
+            <CheckBox
+                android:id="@+id/show_password_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base_ldpi"
+                android:button="@drawable/password_checkbox_selector"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/login_view"
+            style="@style/MainColorButtonStyle"
+            android:layout_marginTop="@dimen/base_xxhdpi"
+            android:text="@string/login_button"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi">
+
+            <com.angcyo.uiview.widget.UnderlineTextView
+                android:id="@+id/register_view"
+                style="@style/MainColorTextButtonStyle"
+                android:layout_alignParentLeft="true"
+                android:text="@string/fast_register"
+                android:textColor="@drawable/main_color_text_selector"/>
+
+            <TextView
+                android:id="@+id/forget_view"
+                style="@style/WhiteColorTextButtonStyle"
+                android:layout_alignParentRight="true"
+                android:text="@string/forget_password"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--第三方登录-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/line"/>
+
+            <TextView
+                style="@style/WhiteColorTextStyle"
+                android:layout_centerInParent="true"
+                android:text="第三方登录"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/base_xxhdpi">
+
+            <TextView
+                android:id="@+id/weixin_view"
+                style="@style/SingleButtonStyle"
+                android:background="@drawable/weixin_selector"/>
+
+            <Space
+                android:layout_width="100dp"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:id="@+id/qq_view"
+                style="@style/SingleButtonStyle"
+                android:background="@drawable/qq_selector"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

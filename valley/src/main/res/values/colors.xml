@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/theme_color_primary</color>
+    <color name="colorPrimaryTran">@color/theme_color_primary_dark_tran</color>
+    <color name="colorPrimaryDark">@color/theme_color_primary_dark</color>
+    <color name="colorAccent">@color/theme_color_accent</color>
+
+    <color name="colorDisable">#CBCBCB</color>
+    <color name="colorTranPress">#30000000</color>
+    <color name="transparent">@android:color/transparent</color>
+    <color name="white">@android:color/white</color>
+
+    <color name="main_text_color_dark">#999999</color>
+    <color name="main_text_color">#333333</color>
+    <color name="orange">#fbb03e</color>
+
+    <!--线的颜色-->
+    <color name="line_color">#E0E0E0</color>
+    <!--导航栏字体颜色-->
+    <color name="nav_text_color">#ACBCB8</color>
+    <color name="nav_text_color_press">#0BD1A0</color>
+
+</resources>

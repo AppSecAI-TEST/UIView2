@@ -1,0 +1,98 @@
+apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
+
+android {
+    signingConfigs {
+        dvalley {
+            keyAlias 'dvalley'
+            keyPassword 'dvalley'
+            storeFile file('../dvalley.jks')
+            storePassword 'dvalley'
+        }
+    }
+    compileSdkVersion Integer.parseInt(rootProject.C_SDK)
+    buildToolsVersion rootProject.B_TOOLS
+    defaultConfig {
+        applicationId "com.hn.d.valley"
+        minSdkVersion Integer.parseInt(rootProject.M_SDK)
+        targetSdkVersion Integer.parseInt(rootProject.T_SDK)
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a'
+            //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "305214c2328aad0da32e9726", //JPush上注册的包名对应的appkey.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+        ]
+
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.dvalley
+        }
+        debug {
+            signingConfig signingConfigs.dvalley
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    dexOptions {
+        incremental true
+        preDexLibraries false
+        jumboMode true
+        javaMaxHeapSize "4g"
+    }
+
+    getApplicationVariants().all { variant ->
+        variant.outputs.each { output ->
+            def appName = "DValley-${variant.buildType.name}-${variant.versionName}.apk"
+            output.outputFile = new File(output.outputFile.parent, appName)
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':uiview')
+    compile project(':imagepicker')
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    /*腾讯Bugly依赖*/
+    //compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    /*阿里云OSS依赖*/
+    compile 'com.aliyun.dpa:oss-android-sdk:2.3.0'
+    compile 'cn.jiguang.sdk:jpush:3.0.0'
+    compile 'cn.jiguang.sdk:jcore:1.0.0'
+
+    // 基础功能 (必需)
+    compile 'com.netease.nimlib:basesdk:3.2.0'
+    // 音视频需要
+    compile 'com.netease.nimlib:avchat:3.2.0'
+    // 聊天室需要
+    compile 'com.netease.nimlib:chatroom:3.2.0'
+    // 实时会话服务需要
+    compile 'com.netease.nimlib:rts:3.2.0'
+    // 全文检索服务需要
+    compile 'com.netease.nimlib:lucene:3.2.0'
+}

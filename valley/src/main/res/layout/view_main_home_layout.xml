@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <com.angcyo.uiview.widget.TitleBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_color_accent">
+
+        <com.angcyo.uiview.github.tablayout.CommonTabLayout
+            android:id="@+id/home_nav_layout"
+            android:layout_width="260dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_centerHorizontal="true"
+            app:tl_iconVisible="false"
+            app:tl_indicator_color="@color/white"
+            app:tl_indicator_corner_radius="@dimen/little_round_radius"
+            app:tl_indicator_height="@dimen/base_unline_size"
+            app:tl_indicator_width="@dimen/base_60dpi"
+            app:tl_textSelectColor="@color/white"
+            app:tl_textUnselectColor="@color/nav_text_color"
+            app:tl_textsize="@dimen/main_text_size2"
+            app:tl_underline_height="0dp"/>
+
+    </com.angcyo.uiview.widget.TitleBarLayout>
+
+    <com.angcyo.uiview.widget.UIViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

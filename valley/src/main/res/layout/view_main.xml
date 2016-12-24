@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/bottom_nav_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_60dpi"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white">
+
+        <com.angcyo.uiview.github.tablayout.CommonTabLayout
+            android:id="@+id/bottom_nav_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:tl_indicator_height="0dp"
+            app:tl_textSelectColor="@color/nav_text_color_press"
+            app:tl_textUnselectColor="@color/nav_text_color"
+            app:tl_textsize="@dimen/nav_text_size"
+            app:tl_underline_color="@color/line_color"
+            app:tl_underline_gravity="TOP"
+            app:tl_underline_height="@dimen/base_line"/>
+
+        <ImageView
+            android:id="@+id/nav_center_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/base_main_color_bg_selector2"
+            android:clickable="true"
+            android:minHeight="@dimen/base_60dpi"
+            android:src="@drawable/nav_center_button_selector"/>
+
+    </RelativeLayout>
+
+    <com.angcyo.uiview.container.UILayoutImpl
+        android:id="@+id/main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_nav_root_layout"/>
+
+</RelativeLayout>

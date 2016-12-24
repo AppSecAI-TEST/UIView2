@@ -1,0 +1,166 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <!--启动页样式-->
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/login_pic</item>
+    </style>
+
+    <!--圆角图片-->
+    <style name="CircleImageStyle">
+        <item name="roundAsCircle">true</item>
+        <item name="actualImageScaleType">centerCrop</item>
+        <item name="placeholderImageScaleType">centerInside</item>
+        <item name="placeholderImage">@drawable/login_logo</item>
+    </style>
+
+    <style name="UserBigIcoStyle" parent="CircleImageStyle">
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:background">@drawable/shape_circle_white</item>
+        <item name="android:padding">@dimen/base_dpi</item>
+    </style>
+
+    <style name="UserMidIcoStyle" parent="CircleImageStyle">
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">60dp</item>
+    </style>
+
+    <style name="UserLittleIcoStyle" parent="CircleImageStyle">
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">30dp</item>
+    </style>
+
+    <!--登录输入框的样式-->
+    <style name="EditStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/login_edit_selector</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:drawablePadding">@dimen/base_xhdpi</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:textColorHint">@color/main_text_color_dark</item>
+        <item name="android:paddingLeft">@dimen/base_xhdpi</item>
+        <item name="android:paddingTop">@dimen/base_xhdpi</item>
+        <item name="android:paddingBottom">@dimen/base_xhdpi</item>
+        <item name="android:paddingRight">@dimen/base_xhdpi</item>
+        <item name="android:imeOptions">actionNext</item>
+    </style>
+
+    <!--手机输入框的样式-->
+    <style name="PhoneEditStyle" parent="EditStyle">
+        <item name="android:inputType">number</item>
+        <item name="android:maxLength">11</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <!--密码输入框的样式-->
+    <style name="PasswordEditStyle" parent="EditStyle">
+        <item name="android:paddingLeft">@dimen/base_xhdpi</item>
+        <item name="android:paddingTop">@dimen/base_xhdpi</item>
+        <item name="android:paddingBottom">@dimen/base_xhdpi</item>
+        <item name="android:paddingRight">@dimen/base_35dpi</item>
+        <item name="android:tag">"password|emoji"</item>
+        <item name="android:inputType">textPassword</item>
+        <item name="android:maxLength">@integer/password_count</item>
+    </style>
+
+    <!--验证码输入框的样式-->
+    <style name="VerityEditStyle" parent="PhoneEditStyle">
+        <item name="android:maxLength">@integer/code_count</item>
+    </style>
+
+    <!--主色调的文本-->
+    <style name="MainColorTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+    </style>
+
+    <style name="WhiteColorTextStyle" parent="MainColorTextStyle">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!--主色调文本按钮-->
+    <style name="MainColorTextButtonStyle" parent="MainColorTextStyle">
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/default_bg_selector</item>
+    </style>
+
+    <style name="WhiteColorTextButtonStyle" parent="MainColorTextButtonStyle">
+        <item name="android:textColor">@drawable/white_color_text_selector</item>
+    </style>
+
+    <style name="WhiteColorTextButtonStyle2" parent="WhiteColorTextButtonStyle">
+        <item name="android:background">@drawable/base_main_color_bg_selector2</item>
+    </style>
+
+    <style name="SingleButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/default_bg_selector</item>
+    </style>
+
+    <style name="SingleImageButtonStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:background">@drawable/base_bg2_selector</item>
+    </style>
+
+    <!--主色调颜色按钮-->
+    <style name="MainColorButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/default_button_height</item>
+        <item name="android:background">@drawable/main_color_bg_selector</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <!--次要文本的样式-->
+    <style name="DarkTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:textColor">@color/main_text_color_dark</item>
+    </style>
+
+    <!--主要文本的样式-->
+    <style name="MainTextStyle" parent="DarkTextStyle">
+        <item name="android:textColor">@color/main_text_color</item>
+    </style>
+
+    <style name="DefaultItemInfoStyle" parent="BaseItemInfoStyle">
+        <item name="item_right_res">@drawable/next</item>
+    </style>
+
+</resources>
