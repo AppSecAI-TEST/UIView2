@@ -7,3 +7,7 @@
 /build
 /captures
 .externalNativeBuild
+/.idea/
+/valley/DValley-release-1.0.apk
+/gradlew
+/gradlew.bat
