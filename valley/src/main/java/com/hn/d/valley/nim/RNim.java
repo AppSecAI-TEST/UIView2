@@ -22,8 +22,12 @@ import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -150,7 +154,7 @@ public class RNim {
     /**
      * 自动登录是否成功了
      */
-    public static boolean isAutoLoginSuccessed() {
+    public static boolean isAutoLoginSucceed() {
         StatusCode status = NIMClient.getStatus();
         return status == StatusCode.LOGINED;
     }
@@ -170,5 +174,47 @@ public class RNim {
         AbortableFuture<LoginInfo> login = NIMClient.getService(AuthService.class).login(new LoginInfo(account, token));
         login.setCallback(callback);
         return login;
+    }
+
+    /**
+     * 删除会话
+     */
+    public static void deleteRecentContact(final RecentContact recent) {
+        NIMClient.getService(MsgService.class).deleteRecentContact(recent);
+        //删除历史消息
+        NIMClient.getService(MsgService.class).clearChattingHistory(recent.getContactId(), recent.getSessionType());
+    }
+
+    /**
+     * 添加会话tag
+     */
+    public static void addRecentContactTag(final RecentContact recent, long tag) {
+        tag = recent.getTag() | tag;
+        recent.setTag(tag);
+        NIMClient.getService(MsgService.class).updateRecent(recent);
+    }
+
+    /**
+     * 移除会话tag
+     */
+    public static void removeRecentContactTag(final RecentContact recent, long tag) {
+        tag = recent.getTag() & ~tag;
+        recent.setTag(tag);
+        NIMClient.getService(MsgService.class).updateRecent(recent);
+    }
+
+    /**
+     * 会话tag是否存在
+     */
+    public static boolean isRecentContactTag(final RecentContact recent, long tag) {
+        return (recent.getTag() & tag) == tag;
+    }
+
+
+    /**
+     * 查询会话列表.
+     */
+    public static void queryRecentContacts(final RequestCallbackWrapper<List<RecentContact>> callback) {
+        NIMClient.getService(MsgService.class).queryRecentContacts().setCallback(callback);
     }
 }

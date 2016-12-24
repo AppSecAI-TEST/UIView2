@@ -56,7 +56,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onLoadView() {
-        if (RNim.isAutoLoginSuccessed()) {
+        if (RNim.isAutoLoginSucceed()) {
             startIView(new MainUIView(), true);
         } else {
             startIView(new LoginUIView(), false);
