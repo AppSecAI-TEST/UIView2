@@ -14,29 +14,29 @@ import android.os.Parcelable;
  * 修改备注：
  * Version: 1.0.0
  */
-public class LoginInfo implements Parcelable {
-    public static final Creator<LoginInfo> CREATOR = new Creator<LoginInfo>() {
+public class LoginUserInfo implements Parcelable {
+    public static final Creator<LoginUserInfo> CREATOR = new Creator<LoginUserInfo>() {
         @Override
-        public LoginInfo createFromParcel(Parcel source) {
-            return new LoginInfo(source);
+        public LoginUserInfo createFromParcel(Parcel source) {
+            return new LoginUserInfo(source);
         }
 
         @Override
-        public LoginInfo[] newArray(int size) {
-            return new LoginInfo[size];
+        public LoginUserInfo[] newArray(int size) {
+            return new LoginUserInfo[size];
         }
     };
     public String phone;
     public String pwd;
     public String icoUrl;
 
-    public LoginInfo(String phone, String pwd, String icoUrl) {
+    public LoginUserInfo(String phone, String pwd, String icoUrl) {
         this.phone = phone;
         this.pwd = pwd;
         this.icoUrl = icoUrl;
     }
 
-    protected LoginInfo(Parcel in) {
+    protected LoginUserInfo(Parcel in) {
         this.phone = in.readString();
         this.pwd = in.readString();
         this.icoUrl = in.readString();

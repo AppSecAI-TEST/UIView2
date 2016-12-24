@@ -1,5 +1,6 @@
 package com.hn.d.valley.nim;
 
+import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
@@ -7,8 +8,11 @@ import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.cache.DataCacheManager;
+import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.start.SplashActivity;
 import com.hn.d.valley.utils.RBus;
@@ -16,6 +20,7 @@ import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.StatusCode;
@@ -28,6 +33,8 @@ import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -45,7 +52,7 @@ public class RNim {
         NIMClient.init(app, loginInfo(), options());
     }
 
-    public static void initOnce() {
+    public static void initOnce(Application application) {
         /*云信登录状态监听*/
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode>() {
@@ -56,7 +63,7 @@ public class RNim {
                         }
                         if (status == StatusCode.KICKOUT || status == StatusCode.KICK_BY_OTHER_CLIENT) {
                             //帐号被踢
-                            logout();
+                            LogoutHelper.logout();
                         }
                         RBus.post(status);
                     }
@@ -64,6 +71,15 @@ public class RNim {
 
         /*消息通知打开*/
         NIMClient.toggleNotification(true);
+
+        //注册数据变化监听
+        DataCacheManager.observeSDKDataChanged(true);
+
+        if (!TextUtils.isEmpty(UserCache.getUserAccount())) {
+            DataCacheManager.buildDataCache(); // build data cache on auto login
+        }
+
+        ScreenUtil.init(application);
     }
 
 
@@ -167,6 +183,18 @@ public class RNim {
     }
 
     /**
+     * 测试模式下的登录方法
+     */
+    public static void debugLogin(final Action1<Boolean> action1) {
+        login("50015", "725161648c0116d850e839d22ff69f0b", new RequestCallbackWrapper<LoginInfo>() {
+            @Override
+            public void onResult(int code, LoginInfo result, Throwable exception) {
+                action1.call(code == ResponseCode.RES_SUCCESS);
+            }
+        });
+    }
+
+    /**
      * 登入云信
      */
     public static AbortableFuture<LoginInfo> login(String account, String token, RequestCallbackWrapper<LoginInfo> callback) {
@@ -209,7 +237,6 @@ public class RNim {
     public static boolean isRecentContactTag(final RecentContact recent, long tag) {
         return (recent.getTag() & tag) == tag;
     }
-
 
     /**
      * 查询会话列表.

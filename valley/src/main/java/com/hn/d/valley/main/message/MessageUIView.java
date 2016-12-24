@@ -11,8 +11,11 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.nim.RNim;
+import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.netease.nimlib.sdk.uinfo.UserService;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +72,11 @@ public class MessageUIView extends BaseUIView {
                 public void onResult(int code, List<RecentContact> result, Throwable exception) {
                     L.i("code:" + code + " " + result.size());
                     isLoading = false;
+                    if (result.size() == 0) {
+                        showEmptyLayout();
+                    }
+                    List<NimUserInfo> allUserInfo = NIMClient.getService(UserService.class).getAllUserInfo();
+                    L.i("allUserInfo:" + allUserInfo.size());
                 }
             });
         }

@@ -20,6 +20,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
+import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView;
@@ -78,6 +79,11 @@ public class MainUIView extends BaseUIView {
         inflate(R.layout.view_main);
     }
 
+    @Override
+    public void onViewCreate() {
+        super.onViewCreate();
+        DataCacheManager.buildDataCacheAsync();
+    }
 
     @NonNull
     @Override

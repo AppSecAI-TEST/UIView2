@@ -31,7 +31,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.dialog.SingleDialog;
 import com.hn.d.valley.bean.AmapBean;
 import com.hn.d.valley.bean.LoginBean;
-import com.hn.d.valley.bean.LoginInfo;
+import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.nim.RNim;
@@ -43,6 +43,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
+import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.concurrent.TimeUnit;
@@ -86,6 +87,27 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     protected void initContentLayout() {
         super.initContentLayout();
 
+        if (BuildConfig.DEBUG) {
+            RxView.longClicks(mLoginView)
+                    .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+                    .subscribe(new Action1<Void>() {
+                        @Override
+                        public void call(Void aVoid) {
+                            showLoadView();
+                            RNim.debugLogin(new Action1<Boolean>() {
+                                @Override
+                                public void call(Boolean aBoolean) {
+                                    hideLoadView();
+                                    if (aBoolean) {
+                                        jumpToMain();
+                                    } else {
+                                        T_.show("登录云信失败.");
+                                    }
+                                }
+                            });
+                        }
+                    });
+        }
         /**
          * 登录按钮
          */
@@ -159,9 +181,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 
     @Subscribe()
     public void onEvent(AmapBean bean) {
+        RAmap.stopLocation();
         if (bean.result) {
             L.w(bean.getString());
-            RAmap.stopLocation();
         } else {
             L.w("定位失败");
 //            RealmResults<AmapBean> results = RRealm.where(AmapBean.class).findAll();
@@ -187,7 +209,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
         if (bundle != null) {
-            LoginInfo info = bundle.getParcelable(Constant.LOGIN_INFO);
+            LoginUserInfo info = bundle.getParcelable(Constant.LOGIN_INFO);
             mPhoneView.setText(info.phone);
             mPasswordView.setText(info.pwd);
             showUserIco(info.icoUrl);
@@ -278,9 +300,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 
         //2: 登录云信
         RNim.login(loginBean.getUid(), loginBean.getYx_token(),
-                new RequestCallbackWrapper<com.netease.nimlib.sdk.auth.LoginInfo>() {
+                new RequestCallbackWrapper<LoginInfo>() {
                     @Override
-                    public void onResult(int code, com.netease.nimlib.sdk.auth.LoginInfo result, Throwable exception) {
+                    public void onResult(int code, LoginInfo result, Throwable exception) {
                         if (code == ResponseCode.RES_SUCCESS) {
                             onRequestCancel();
                             jumpToMain();

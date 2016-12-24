@@ -73,7 +73,7 @@ public class ValleyApp extends RApplication {
         JPushInterface.setDebugMode(BuildConfig.DEBUG);
         JPushInterface.init(this);
 
-        RNim.initOnce();
+        RNim.initOnce(this);
 
         RAmap.init(this);
     }
