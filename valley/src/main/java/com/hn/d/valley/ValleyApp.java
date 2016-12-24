@@ -3,6 +3,7 @@ package com.hn.d.valley;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.utils.RAmap;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -60,5 +61,7 @@ public class ValleyApp extends RApplication {
         JPushInterface.init(this);
 
         RNim.init();
+
+        RAmap.init(this);
     }
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.dialog.UILoading;
@@ -27,12 +28,15 @@ import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.dialog.SingleDialog;
+import com.hn.d.valley.bean.AmapBean;
 import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.bean.LoginInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
+import com.hn.d.valley.utils.RAmap;
+import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
 import com.orhanobut.hawk.Hawk;
 
@@ -74,7 +78,6 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @Override
     protected void initContentLayout() {
         super.initContentLayout();
-
 
         /**
          * 登录按钮
@@ -121,6 +124,28 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     public void onViewCreate() {
         super.onViewCreate();
         bindPresenter(new LoginPresenter());
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        RAmap.startLocation();
+    }
+
+    @Subscribe()
+    public void onEvent(AmapBean bean) {
+        if (bean.result) {
+            L.w(bean.getString());
+            RAmap.stopLocation();
+        } else {
+            L.w("定位失败");
+//            RealmResults<AmapBean> results = RRealm.where(AmapBean.class).findAll();
+//            L.e("----------------------------------------------------");
+//            for (AmapBean amap : results) {
+//                L.w(amap.getString());
+//            }
+//            L.e("----------------------------------------------------");
+        }
     }
 
     @OnTextChanged(R.id.phone_view)

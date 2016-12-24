@@ -4,20 +4,21 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.hn.library.utils.L;
-import com.hn.zan.eventbus.AmapEvent;
-import com.hn.zan.eventbus.Bus;
+import com.angcyo.library.utils.L;
+import com.hn.d.valley.bean.AmapBean;
+import com.hn.d.valley.realm.RRealm;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import io.realm.Realm;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -33,7 +34,6 @@ import java.util.Locale;
 public class RAmap {
 
     private static final String TAG = "RAmap";
-    public static AmapEvent lastAmapEvent;
     private static RAmap amap;
     private static SimpleDateFormat sdf = null;
     /**
@@ -41,26 +41,45 @@ public class RAmap {
      */
     AMapLocationListener locationListener = new AMapLocationListener() {
         @Override
-        public void onLocationChanged(AMapLocation loc) {
-            if (null != loc) {
-                if (loc.getErrorCode() == 0) {
+        public void onLocationChanged(final AMapLocation location) {
+            if (null != location) {
+                StringBuilder sb = new StringBuilder();
+                if (location.getErrorCode() == 0) {
                     //定位成功
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(loc.getProvince());
-                    sb.append(loc.getCity());
-                    sb.append(loc.getDistrict());
-                    lastAmapEvent = new AmapEvent(true, String.valueOf(loc.getLatitude()), String.valueOf(loc.getLongitude()), sb.toString());
-                    lastAmapEvent.city = loc.getCity();
-                    Bus.post(lastAmapEvent);
+                    sb.append(location.getProvince());
+                    sb.append(location.getCity());
+                    sb.append(location.getDistrict());
+                    RRealm.exe(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            AmapBean amapBean = realm.createObject(AmapBean.class);
+                            amapBean.address = location.getAddress();
+                            amapBean.city = location.getCity();
+                            amapBean.country = location.getCountry();
+                            amapBean.district = location.getDistrict();
+                            amapBean.latitude = location.getLatitude();
+                            amapBean.longitude = location.getLongitude();
+                            amapBean.province = location.getProvince();
+
+                            RBus.post(amapBean);
+                        }
+                    });
                 } else {
-                    Bus.post(new AmapEvent(0, 0, false));
+                    sb.append("定位失败" + "\n");
+                    sb.append("错误码:" + location.getErrorCode() + "\n");
+                    sb.append("错误信息:" + location.getErrorInfo() + "\n");
+                    sb.append("错误描述:" + location.getLocationDetail() + "\n");
+
+                    L.e(sb.toString());
+                    RBus.post(new AmapBean(false));
                 }
 
                 //解析定位结果
-//                String result = getLocationStr(loc);
+//                String result = getLocationStr(location);
 //                Log.i(TAG, "onLocationChanged: " + result);
             } else {
-                Log.i(TAG, "onLocationChanged: 定位失败，loc is null");
+                L.i(TAG, "onLocationChanged: 定位失败，location is null");
+                RBus.post(new AmapBean(false));
             }
         }
     };
@@ -92,8 +111,6 @@ public class RAmap {
         }
     }
 
-    //------------------------------------无关内容---------------------------------------
-
     /**
      * 获取SHA1值
      */
@@ -122,6 +139,8 @@ public class RAmap {
         }
         return null;
     }
+
+    //------------------------------------无关内容---------------------------------------
 
     /**
      * 根据定位结果返回定位信息的字符串
@@ -191,8 +210,15 @@ public class RAmap {
         return sdf == null ? "NULL" : sdf.format(l);
     }
 
-    //---------------------------------------------------------------------------
+    public static void startLocation() {
+        if (amap == null) {
+            L.e("请先调用init方法.");
+            return;
+        }
+        amap.startLocationInner();
+    }
 
+    //---------------------------------------------------------------------------
 
     /**
      * 开始定位
@@ -200,7 +226,7 @@ public class RAmap {
      * @author hongming.wang
      * @since 2.8.0
      */
-    public void startLocation() {
+    public void startLocationInner() {
         // 设置定位参数
         //locationClient.setLocationOption(locationOption);
         // 启动定位

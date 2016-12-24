@@ -7,6 +7,7 @@ import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.mvp.presenter.IBasePresenter;
 import com.angcyo.uiview.mvp.view.IBaseView;
+import com.hn.d.valley.utils.RBus;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -44,10 +45,16 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
         T_.show(msg);
     }
 
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        RBus.register(this);
+    }
 
     @Override
     public void onViewUnload() {
         super.onViewUnload();
+        RBus.unregister(this);
         if (mPresenter != null) {
             mPresenter.onUnload();
         }

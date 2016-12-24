@@ -80,6 +80,9 @@
             android:name="com.amap.api.v2.apikey"
             android:value="bf154bf38236648c1dab85090fe17b1d"/>
 
+        <service android:name="com.amap.api.location.APSService" >
+        </service>
+
         <activity
             android:name=".start.SplashActivity"
             android:launchMode="singleTop"
