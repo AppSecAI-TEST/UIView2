@@ -2,6 +2,7 @@ package com.hn.d.valley.cache;
 
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.realm.RRealm;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
 import com.orhanobut.hawk.Hawk;
@@ -63,7 +64,7 @@ public class UserCache {
      * 获取用户头像
      */
     public String getAvatar() {
-        if (mLoginBean == null) {
+        if (getLoginBean() == null) {
             return "";
         }
         return mLoginBean.getAvatar();
@@ -72,11 +73,11 @@ public class UserCache {
     /**
      * 获取用户信息
      */
-    public Observable<LoginBean> getLoginBean() {
+    public Observable<LoginBean> getLoginBeanObservable() {
         return Observable.create(new Observable.OnSubscribe<LoginBean>() {
             @Override
             public void call(Subscriber<? super LoginBean> subscriber) {
-                if (mLoginBean == null) {
+                if (getLoginBean() == null) {
                     subscriber.onError(new NullPointerException("用户信息为空"));
                 } else {
                     subscriber.onNext(mLoginBean);
@@ -87,14 +88,28 @@ public class UserCache {
 
     }
 
+    public LoginBean getLoginBean() {
+        if (mLoginBean == null) {
+            setLoginBean(RRealm.where(LoginBean.class).findAll().last(), false);
+        }
+        return mLoginBean;
+    }
 
     /**
      * 缓存用户信息
      */
     public void setLoginBean(LoginBean loginBean) {
+        setLoginBean(loginBean, true);
+    }
+
+    public void setLoginBean(LoginBean loginBean, boolean save) {
         mLoginBean = loginBean;
         setUserAccount(loginBean.getUid());
         setUserToken(loginBean.getYx_token());
+
+        if (save) {
+            RRealm.save(loginBean);
+        }
     }
 
     private static class Holder {

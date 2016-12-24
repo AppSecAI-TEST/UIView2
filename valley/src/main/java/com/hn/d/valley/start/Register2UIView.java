@@ -96,7 +96,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         super.initContentLayout();
 
         RxView.clicks(mFinishView)
-                .debounce(700, TimeUnit.MILLISECONDS)
+                .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {

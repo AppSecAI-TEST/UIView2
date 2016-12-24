@@ -105,7 +105,7 @@ public class MeUIView extends BaseUIView {
         initScrollLayout();
         initViewPager();
         mSingleTextIndicatorView.setupViewPager(mViewPager);
-        UserCache.instance().getLoginBean().subscribe(new Action1<LoginBean>() {
+        UserCache.instance().getLoginBeanObservable().subscribe(new Action1<LoginBean>() {
             @Override
             public void call(LoginBean loginBean) {
                 //mFollowerNumView.setText(loginBean.get);

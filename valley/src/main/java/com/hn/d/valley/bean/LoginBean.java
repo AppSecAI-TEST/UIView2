@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import io.realm.RealmObject;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -11,7 +13,7 @@ package com.hn.d.valley.bean;
  * 修改备注：
  * Version: 1.0.0
  */
-public class LoginBean {
+public class LoginBean extends RealmObject {
 
     /**
      * uid : 50000

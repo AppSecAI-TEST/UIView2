@@ -27,4 +27,9 @@ public class Constant {
      */
     public static final String USER_ACCOUNT = "user_account";
     public static final String USER_TOKEN = "user_token";
+
+    /**
+     * 抖动时间, 多虑时间之内的事件
+     */
+    public static final long DEBOUNCE_TIME = 100;
 }
