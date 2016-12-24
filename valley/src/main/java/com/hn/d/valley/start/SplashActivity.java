@@ -1,12 +1,8 @@
 package com.hn.d.valley.start;
 
 import com.hn.d.valley.base.BaseActivity;
-
-import java.util.concurrent.TimeUnit;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
+import com.hn.d.valley.main.MainUIView;
+import com.hn.d.valley.nim.RNim;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -22,15 +18,22 @@ import rx.functions.Action1;
 public class SplashActivity extends BaseActivity {
     @Override
     protected void onLoadView() {
-        Observable.timer(100, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Long>() {
-                    @Override
-                    public void call(Long aLong) {
-                        //MainActivity.launcher(SplashActivity.this);
-                        startIView(new LoginUIView(), false);
-                    }
-                });
+        if (RNim.isAutoLoginSuccessed()) {
+            startIView(new MainUIView(), true);
+        } else {
+            startIView(new LoginUIView(), false);
+        }
+
+
+//        Observable.timer(100, TimeUnit.MILLISECONDS)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Long>() {
+//                    @Override
+//                    public void call(Long aLong) {
+//                        //MainActivity.launcher(SplashActivity.this);
+//                        startIView(new LoginUIView(), false);
+//                    }
+//                });
     }
 
     @Override

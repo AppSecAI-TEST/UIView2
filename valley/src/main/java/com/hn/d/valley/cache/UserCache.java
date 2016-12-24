@@ -6,7 +6,9 @@ import com.hn.d.valley.realm.RRealm;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
 import com.orhanobut.hawk.Hawk;
+import com.tencent.bugly.crashreport.CrashReport;
 
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -85,12 +87,14 @@ public class UserCache {
                 }
             }
         });
-
     }
 
     public LoginBean getLoginBean() {
         if (mLoginBean == null) {
-            setLoginBean(RRealm.where(LoginBean.class).findAll().last(), false);
+            RealmResults<LoginBean> all = RRealm.where(LoginBean.class).findAll();
+            if (!all.isEmpty()) {
+                setLoginBean(all.last(), false);
+            }
         }
         return mLoginBean;
     }
@@ -106,6 +110,8 @@ public class UserCache {
         mLoginBean = loginBean;
         setUserAccount(loginBean.getUid());
         setUserToken(loginBean.getYx_token());
+
+        CrashReport.setUserId(loginBean.getUid());
 
         if (save) {
             RRealm.save(loginBean);

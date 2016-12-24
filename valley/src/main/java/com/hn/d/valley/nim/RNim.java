@@ -132,4 +132,13 @@ public class RNim {
             return null;
         }
     }
+
+
+    /**
+     * 自动登录是否成功了
+     */
+    public static boolean isAutoLoginSuccessed() {
+        StatusCode status = NIMClient.getStatus();
+        return status == StatusCode.LOGINED;
+    }
 }

@@ -2,14 +2,16 @@ package com.hn.d.valley;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
+import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import cn.jpush.android.api.JPushInterface;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -43,18 +45,24 @@ public class ValleyApp extends RApplication {
     protected void onInit() {
         L.init(BuildConfig.DEBUG, "dvalley");
 
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .name("valley.realm")
-                .schemaVersion(1)
-                .build();
-        Realm.setDefaultConfiguration(config);
+        RRealm.init(this);
 
         CrashReport.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
         //CrashReport.initCrashReport(getApplicationContext(), "207e18ac24", BuildConfig.DEBUG);
         Bugly.init(getApplicationContext(), "207e18ac24", BuildConfig.DEBUG);
 
-        CrashReport.setUserId(getIMEI());  //该用户本次启动后的异常日志用户ID都将是9527
+        UserCache.instance().getLoginBeanObservable()
+                .subscribe(new Action1<LoginBean>() {
+                    @Override
+                    public void call(LoginBean loginBean) {
+                        CrashReport.setUserId(loginBean.getUid());  //该用户本次启动后的异常日志用户ID都将是9527
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        CrashReport.setUserId(String.valueOf(System.currentTimeMillis()));
+                    }
+                });
 
           /*极光*/
         JPushInterface.setDebugMode(BuildConfig.DEBUG);

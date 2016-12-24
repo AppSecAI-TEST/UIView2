@@ -1,8 +1,15 @@
 package com.hn.d.valley.realm;
 
+import com.angcyo.library.utils.L;
+import com.hn.d.valley.ValleyApp;
+
+import io.realm.DynamicRealm;
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmMigration;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
+import io.realm.RealmSchema;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -73,5 +80,38 @@ public class RRealm {
     public static <E extends RealmObject> RealmQuery<E> where(Class<E> clazz) {
         Realm realm = Realm.getDefaultInstance();
         return realm.where(clazz);
+    }
+
+    /**
+     * 初始化
+     */
+    public static void init(ValleyApp valleyApp) {
+        Realm.init(valleyApp);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .name("valley.realm")
+                .migration(new RealmMigration() {
+                    @Override
+                    public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+                        L.e("数据库升级:" + oldVersion + "->" + newVersion);
+                        RealmSchema schema = realm.getSchema();
+//                        if (oldVersion == 0) {
+//                            schema.create("Person")
+//                                    .addField("name", String.class)
+//                                    .addField("age", int.class);
+//                            oldVersion++;
+//                        }
+//
+//                        if (oldVersion == 1) {
+//                            schema.get("Person")
+//                                    .addField("id", long.class, FieldAttribute.PRIMARY_KEY)
+//                                    .addRealmObjectField("favoriteDog", schema.get("Dog"))
+//                                    .addRealmListField("dogs", schema.get("Dog"));
+//                            oldVersion++;
+//                        }
+                    }
+                })
+                .schemaVersion(2)
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 }

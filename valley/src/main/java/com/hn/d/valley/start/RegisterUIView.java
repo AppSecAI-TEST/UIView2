@@ -9,6 +9,7 @@ import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.VerifyButton;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
@@ -50,6 +51,14 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
     @Override
     protected UIBaseView.LayoutState getDefaultLayoutState() {
         return LayoutState.CONTENT;
+    }
+
+    @Override
+    protected void initContentLayout() {
+        super.initContentLayout();
+        if (BuildConfig.DEBUG) {
+            mCodeView.setText("888888");
+        }
     }
 
     /**

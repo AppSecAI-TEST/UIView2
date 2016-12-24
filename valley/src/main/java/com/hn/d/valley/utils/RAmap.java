@@ -107,6 +107,7 @@ public class RAmap {
     public static void stopLocation() {
         // 停止定位
         if (amap != null) {
+            L.d("停止定位...");
             amap.stopLocationInternal();
         }
     }
@@ -215,6 +216,7 @@ public class RAmap {
             L.e("请先调用init方法.");
             return;
         }
+        L.d("开始定位...");
         amap.startLocationInner();
     }
 
@@ -226,7 +228,7 @@ public class RAmap {
      * @author hongming.wang
      * @since 2.8.0
      */
-    public void startLocationInner() {
+    private void startLocationInner() {
         // 设置定位参数
         //locationClient.setLocationOption(locationOption);
         // 启动定位
@@ -239,7 +241,7 @@ public class RAmap {
      * @author hongming.wang
      * @since 2.8.0
      */
-    public void stopLocationInternal() {
+    private void stopLocationInternal() {
         // 停止定位
         locationClient.stopLocation();
     }

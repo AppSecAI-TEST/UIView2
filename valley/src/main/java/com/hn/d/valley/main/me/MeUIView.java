@@ -114,6 +114,11 @@ public class MeUIView extends BaseUIView {
                 DraweeViewUtil.setDraweeViewHttp(mUserIcoView, loginBean.getAvatar());
                 mPersonAuthLayout.setItemDarkText("未认证");
             }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+                T_.show("用户信息异常!");
+            }
         });
     }
 

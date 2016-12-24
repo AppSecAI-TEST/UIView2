@@ -102,6 +102,24 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                     }
                 });
 
+        UserCache.instance().getLoginBeanObservable()
+                .subscribe(new Action1<LoginBean>() {
+                    @Override
+                    public void call(LoginBean loginBean) {
+                        mPhoneView.setText(loginBean.getPhone());
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        if (BuildConfig.DEBUG) {
+                            mPhoneView.setText("18888888888");
+                        }
+                    }
+                });
+
+        if (BuildConfig.DEBUG) {
+            mPasswordView.setText("123456");
+        }
     }
 
     @Override
@@ -167,11 +185,6 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
             mPasswordView.setText(info.pwd);
             DraweeViewUtil.setDraweeViewHttp(mIcoView, info.icoUrl);
             mLoginView.callOnClick();
-        } else {
-            if (BuildConfig.DEBUG) {
-                mPhoneView.setText("18888888885");
-                mPasswordView.setText("123456");
-            }
         }
     }
 

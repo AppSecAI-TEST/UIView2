@@ -26,7 +26,7 @@
     <style name="CircleImageStyle">
         <item name="roundAsCircle">true</item>
         <item name="actualImageScaleType">centerCrop</item>
-        <item name="placeholderImageScaleType">centerInside</item>
+        <item name="placeholderImageScaleType">centerCrop</item>
         <item name="placeholderImage">@drawable/login_logo</item>
     </style>
 

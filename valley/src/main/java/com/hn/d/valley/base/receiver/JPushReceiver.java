@@ -8,7 +8,9 @@ import android.os.Bundle;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.Json;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.start.SplashActivity;
+import com.orhanobut.hawk.Hawk;
 
 import cn.jpush.android.api.JPushInterface;
 
@@ -47,6 +49,8 @@ public class JPushReceiver extends BroadcastReceiver {
             //极光注册广播
             Bundle bundle = intent.getExtras();
             mRegistrationId = bundle.getString(JPushInterface.EXTRA_REGISTRATION_ID);
+
+            Hawk.put(Constant.JPUSH_ID, mRegistrationId);
         } else if (action.equalsIgnoreCase("cn.jpush.android.intent.NOTIFICATION_OPENED")) {
             context.startActivity(getMainIntent(context));
 

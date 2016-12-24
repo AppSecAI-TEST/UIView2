@@ -30,6 +30,6 @@ public class BaseSubscriber<O extends Object, B extends Bean<O>> extends SingleS
      * 请求成功
      */
     public void onSuccess(B b) {
-        L.d("订阅成功->" + this.getClass().getSimpleName() + "\n" + Json.to(b));
+        L.d("订阅成功->" + this.getClass().getSimpleName() + "\n" + Json.to(b) + "\n");
     }
 }

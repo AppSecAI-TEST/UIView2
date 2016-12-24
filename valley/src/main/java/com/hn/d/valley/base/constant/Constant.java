@@ -22,6 +22,12 @@ public class Constant {
      * 登录界面信息
      */
     public static final String LOGIN_INFO = "login_info";
+
+    /**
+     * 最后一次用户登录的手机号码
+     */
+    public static final String USER_LOGIN_PHONE = "user_phone";
+
     /**
      * 用户登录信息
      */
@@ -32,4 +38,9 @@ public class Constant {
      * 抖动时间, 多虑时间之内的事件
      */
     public static final long DEBOUNCE_TIME = 100;
+
+    /**
+     * 极光注册返回的id
+     */
+    public static final String JPUSH_ID = "jpush_id";
 }
