@@ -9,10 +9,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.dialog.UILoading;
@@ -30,16 +30,19 @@ import com.hn.d.valley.base.rx.SingleSubscriber;
 import com.hn.d.valley.bean.LoginInfo;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
+import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImagePickerHelper;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTouch;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -72,6 +75,8 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     String phone, code;
 
     int sex = 1;//1:男  2;女
+    @BindView(R.id.finish_view)
+    TextView mFinishView;
 
     public Register2UIView(IView registerIView, String phone, String code) {
         mRegisterIView = registerIView;
@@ -87,13 +92,27 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     }
 
     @Override
+    protected void initContentLayout() {
+        super.initContentLayout();
+
+        RxView.clicks(mFinishView)
+                .debounce(700, TimeUnit.MILLISECONDS)
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        onFinishClick();
+                    }
+                });
+    }
+
+    @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.register)).setShowBackImageView(true);
     }
 
     @NonNull
     @Override
-    protected UIBaseView.LayoutState getDefaultLayoutState() {
+    protected LayoutState getDefaultLayoutState() {
         return LayoutState.CONTENT;
     }
 
@@ -118,9 +137,8 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     }
 
     /**
-     * 完成
+     * 完成, 开始注册
      */
-    @OnClick(R.id.finish_view)
     public void onFinishClick() {
 
         if (TextUtils.isEmpty(mIcoFilePath)) {
