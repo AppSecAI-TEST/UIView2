@@ -17,7 +17,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.TitleBarLayout;
 import com.angcyo.uiview.widget.viewpager.DepthPageTransformer;
-import com.angcyo.uiview.widget.viewpager.SingleTextIndicator;
+import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -49,7 +49,7 @@ public class MeUIView extends BaseUIView {
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
     @BindView(R.id.single_text_indicator_view)
-    SingleTextIndicator mSingleTextIndicatorView;
+    TextIndicator mTextIndicatorView;
     @BindView(R.id.title_bar_layout)
     TitleBarLayout mTitleBarLayout;
     @BindView(R.id.user_ico_view)
@@ -105,7 +105,7 @@ public class MeUIView extends BaseUIView {
         super.initContentLayout();
         initScrollLayout();
         initViewPager();
-        mSingleTextIndicatorView.setupViewPager(mViewPager);
+        mTextIndicatorView.setupViewPager(mViewPager);
         UserCache.instance().getLoginBeanObservable().subscribe(new Action1<LoginBean>() {
             @Override
             public void call(LoginBean loginBean) {
