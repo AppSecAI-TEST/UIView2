@@ -217,7 +217,6 @@ public class UITitleBarContainer extends FrameLayout {
         animViews(mRightViews, false);
     }
 
-
     public void evaluateBackgroundColor(int scrollY) {
         evaluateBackgroundColor(scrollY, null);
     }

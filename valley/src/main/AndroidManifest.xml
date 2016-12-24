@@ -76,6 +76,10 @@
             android:name="com.netease.nim.appKey"
             android:value="ed3dfb32bb3c353f751b3354523e98e7"/>
 
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="bf154bf38236648c1dab85090fe17b1d"/>
+
         <activity
             android:name=".start.SplashActivity"
             android:launchMode="singleTop"

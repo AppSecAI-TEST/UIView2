@@ -1020,7 +1020,6 @@ public class BmpUtil {
         return res;
     }
 
-
 //    public static void save() {
 //        new Thread() {
 //            @Override
