@@ -25,7 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"/>
 
-                <com.angcyo.uiview.widget.SingleTextIndicator
+                <com.angcyo.uiview.widget.viewpager.SingleTextIndicator
                     android:id="@+id/single_text_indicator_view"
                     style="@style/WhiteColorTextStyle"
                     android:layout_alignParentBottom="true"

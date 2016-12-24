@@ -12,8 +12,9 @@ import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.view.IView;
-import com.angcyo.uiview.widget.UIPagerAdapter;
-import com.angcyo.uiview.widget.UIViewPager;
+import com.angcyo.uiview.widget.viewpager.FadeInOutPageTransformer;
+import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
+import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.main.home.circle.CircleUIView;
@@ -56,6 +57,7 @@ public class HomeUIView extends BaseUIView {
     }
 
     private void initViewPager() {
+        mViewPager.setPageTransformer(true, new FadeInOutPageTransformer());
         mViewPager.setAdapter(new UIPagerAdapter() {
             @Override
             protected IView getIView(int position) {

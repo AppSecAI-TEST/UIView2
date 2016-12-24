@@ -17,6 +17,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.SingleTextIndicator;
 import com.angcyo.uiview.widget.TitleBarLayout;
+import com.angcyo.uiview.widget.viewpager.DepthPageTransformer;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -134,7 +135,7 @@ public class MeUIView extends BaseUIView {
     }
 
     private void initViewPager() {
-        mViewPager.setPageTransformer(true, new SingleTextIndicator.DepthPageTransformer());
+        mViewPager.setPageTransformer(true, new DepthPageTransformer());
         mViewPager.setAdapter(new SingleFrescoImageAdapter(R.drawable.login_pic) {
             @Override
             protected String getImageUrl(int position) {

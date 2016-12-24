@@ -58,6 +58,7 @@ public class RNim {
                     }
                 }, true);
 
+        /*消息通知打开*/
         NIMClient.toggleNotification(true);
     }
 

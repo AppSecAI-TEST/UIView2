@@ -3,7 +3,7 @@ package com.hn.d.valley.main.home.circle;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.widget.UIViewPager;
+import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.NoTitleBarUIView;
 

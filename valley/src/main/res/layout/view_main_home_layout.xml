@@ -29,7 +29,7 @@
 
     </com.angcyo.uiview.widget.TitleBarLayout>
 
-    <com.angcyo.uiview.widget.UIViewPager
+    <com.angcyo.uiview.widget.viewpager.UIViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
