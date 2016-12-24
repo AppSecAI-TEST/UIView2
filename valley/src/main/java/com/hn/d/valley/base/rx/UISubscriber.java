@@ -22,22 +22,21 @@ public class UISubscriber<O extends Object, B extends Bean<O>, V extends IBaseVi
         mBaseView = baseView;
     }
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        mBaseView.onRequestStart();
+//    }
+
     @Override
     public void onError(int code, String msg) {
         super.onError(code, msg);
-        mBaseView.onFinishLoad();
-        mBaseView.onError(code, msg);
+        mBaseView.onRequestError(code, msg);
     }
 
     @Override
     public void onSuccess(B b) {
         super.onSuccess(b);
-        mBaseView.onFinishLoad();
-    }
-
-    @Override
-    public void onUnsubscribe() {
-        super.onUnsubscribe();
-        mBaseView.onFinishLoad();
+        mBaseView.onRequestFinish();
     }
 }

@@ -31,17 +31,17 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
     }
 
     @Override
-    public void onStartLoad() {
+    public void onRequestStart() {
         showLoadView();
     }
 
     @Override
-    public void onFinishLoad() {
+    public void onRequestFinish() {
         hideLoadView();
     }
 
     @Override
-    public void onError(int code, @NonNull String msg) {
+    public void onRequestError(int code, @NonNull String msg) {
         T_.show(msg);
     }
 
@@ -62,10 +62,15 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
 
     @Override
     public void onDismiss() {
-        onCancel();
+        onRequestCancel();
         if (mPresenter != null) {
             mPresenter.onCancel();
         }
+    }
+
+    @Override
+    public void onRequestCancel() {
+        onRequestFinish();
     }
 
     @Override

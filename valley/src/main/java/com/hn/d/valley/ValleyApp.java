@@ -7,6 +7,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
+import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -28,6 +29,10 @@ public class ValleyApp extends RApplication {
 
     @Override
     public void onCreate() {
+           /*sp持久化库*/
+        Hawk.init(this)
+                .build();
+        RNim.init(this);
         super.onCreate();
     }
 
@@ -68,7 +73,7 @@ public class ValleyApp extends RApplication {
         JPushInterface.setDebugMode(BuildConfig.DEBUG);
         JPushInterface.init(this);
 
-        RNim.init();
+        RNim.initOnce();
 
         RAmap.init(this);
     }

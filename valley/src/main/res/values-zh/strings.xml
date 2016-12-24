@@ -38,4 +38,6 @@
     <string name="level">等级</string>
     <string name="my_favor">我的收藏</string>
     <string name="my_status">我的动态</string>
+    <string name="welcome">欢迎</string>
+    <string name="other_login">第三方登录</string>
 </resources>

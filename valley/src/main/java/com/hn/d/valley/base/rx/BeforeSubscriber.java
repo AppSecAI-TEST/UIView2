@@ -1,5 +1,6 @@
 package com.hn.d.valley.base.rx;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.mvp.view.IBaseView;
 import com.angcyo.uiview.net.base.Network;
 import com.hn.d.valley.ValleyApp;
@@ -32,8 +33,9 @@ public class BeforeSubscriber<V extends IBaseView> implements Action0 {
 
     @Override
     public void call() {
+        L.i("正在检查网络状态..." + this.getClass().getSimpleName());
         if (Network.isConnected(ValleyApp.getApp())) {
-            mBaseView.onStartLoad();
+            mBaseView.onRequestStart();
         } else {
             throw new NonetException();
         }

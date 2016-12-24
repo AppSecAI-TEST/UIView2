@@ -26,6 +26,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.dialog.SingleDialog;
 import com.hn.d.valley.bean.AmapBean;
@@ -33,11 +34,15 @@ import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.bean.LoginInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.MainUIView;
+import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.utils.RAmap;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
+import com.netease.nimlib.sdk.AbortableFuture;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.concurrent.TimeUnit;
@@ -68,6 +73,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     ExEditText mPasswordView;
     @BindView(R.id.login_view)
     TextView mLoginView;
+
+    AbortableFuture loginFuture;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -183,9 +190,13 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
             LoginInfo info = bundle.getParcelable(Constant.LOGIN_INFO);
             mPhoneView.setText(info.phone);
             mPasswordView.setText(info.pwd);
-            DraweeViewUtil.setDraweeViewHttp(mIcoView, info.icoUrl);
+            showUserIco(info.icoUrl);
             mLoginView.callOnClick();
         }
+    }
+
+    private void showUserIco(String icoUrl) {
+        DraweeViewUtil.setDraweeViewHttp(mIcoView, icoUrl);
     }
 
     @OnClick(R.id.ico_view)
@@ -256,20 +267,43 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 
     @Override
     public void onLoginSuccess(Bean<LoginBean> bean) {
-        //T_.show("登录成功:" + bean.data.getUsername());
+        LoginBean loginBean = bean.data;
+        L.i("登录成功:" + loginBean.getUsername());
+
+        showUserIco(loginBean.getAvatar());
+
         //登录成功, 保存用户的头像
-        Hawk.put(bean.data.getPhone(), bean.data.getAvatar());
-        UserCache.instance().setLoginBean(bean.data);
-        jumpToMain();
+        Hawk.put(loginBean.getPhone(), loginBean.getAvatar());
+        UserCache.instance().setLoginBean(loginBean);
+
+        //2: 登录云信
+        RNim.login(loginBean.getUid(), loginBean.getYx_token(),
+                new RequestCallbackWrapper<com.netease.nimlib.sdk.auth.LoginInfo>() {
+                    @Override
+                    public void onResult(int code, com.netease.nimlib.sdk.auth.LoginInfo result, Throwable exception) {
+                        if (code == ResponseCode.RES_SUCCESS) {
+                            onRequestCancel();
+                            jumpToMain();
+                        } else {
+                            T_.show("登录失败!");
+                            onRequestCancel();
+                        }
+                    }
+                });
     }
 
     @Override
-    public void onStartLoad() {
+    public void onRequestStart() {
         UILoading.build().addDismissListener(this).show(mILayout);
     }
 
     @Override
-    public void onFinishLoad() {
+    public void onRequestFinish() {
+        //云信登录成功后, 再取消对话框
+    }
+
+    @Override
+    public void onRequestCancel() {
         UILoading.hide(mILayout);
     }
 

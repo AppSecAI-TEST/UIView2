@@ -6,13 +6,12 @@ import android.text.TextUtils;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.mvp.presenter.BasePresenter;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.TransformUtils;
 import com.angcyo.uiview.net.rsa.RSA;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.receiver.JPushReceiver;
-import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.UISubscriber;
 import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.start.service.StartService;
@@ -75,10 +74,7 @@ public class LoginPresenter extends BasePresenter<Start.ILoginView> implements S
                 };
         mCompositeSubscription.add(RRetrofit.create(StartService.class)
                 .login(Param.map(map))
-                .compose(TransformUtils.<Bean<LoginBean>>defaultSchedulers())
-                .doOnSubscribe(BeforeSubscriber.build(mBaseView))
-                .doOnUnsubscribe(subscriber)
+                .compose(Transform.<Bean<LoginBean>, Start.ILoginView>defaultSchedulers(mBaseView))
                 .subscribe(subscriber));
-
     }
 }

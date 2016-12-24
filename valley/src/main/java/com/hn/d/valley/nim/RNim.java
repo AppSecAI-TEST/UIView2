@@ -11,11 +11,15 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.start.SplashActivity;
+import com.hn.d.valley.utils.RBus;
+import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
 import com.netease.nimlib.sdk.StatusCode;
+import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -33,9 +37,11 @@ import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
  * Version: 1.0.0
  */
 public class RNim {
-    public static void init() {
-        NIMClient.init(ValleyApp.getApp(), loginInfo(), options());
+    public static void init(ValleyApp app) {
+        NIMClient.init(app, loginInfo(), options());
+    }
 
+    public static void initOnce() {
         /*云信登录状态监听*/
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode>() {
@@ -44,11 +50,17 @@ public class RNim {
                         if (status.wontAutoLogin()) {
                             // 被踢出、账号被禁用、密码错误等情况，自动登录失败，需要返回到登录界面进行重新登录操作
                         }
+                        if (status == StatusCode.KICKOUT || status == StatusCode.KICK_BY_OTHER_CLIENT) {
+                            //帐号被踢
+                            logout();
+                        }
+                        RBus.post(status);
                     }
                 }, true);
 
         NIMClient.toggleNotification(true);
     }
+
 
     // 如果返回值为 null，则全部使用默认参数。
     private static SDKOptions options() {
@@ -125,7 +137,7 @@ public class RNim {
     private static LoginInfo loginInfo() {
         String account = UserCache.getUserAccount();
         String token = UserCache.getUserToken();
-
+        L.i("account:" + account + " token:" + token);
         if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(token)) {
             return new LoginInfo(account, token);
         } else {
@@ -140,5 +152,22 @@ public class RNim {
     public static boolean isAutoLoginSuccessed() {
         StatusCode status = NIMClient.getStatus();
         return status == StatusCode.LOGINED;
+    }
+
+    /**
+     * 登出云信
+     */
+    public static void logout() {
+        NIMClient.getService(AuthService.class).logout();
+    }
+
+    /**
+     * 登入云信
+     */
+    public static AbortableFuture<LoginInfo> login(String account, String token, RequestCallbackWrapper<LoginInfo> callback) {
+        L.e("登入云信:" + account + " " + token);
+        AbortableFuture<LoginInfo> login = NIMClient.getService(AuthService.class).login(new LoginInfo(account, token));
+        login.setCallback(callback);
+        return login;
     }
 }

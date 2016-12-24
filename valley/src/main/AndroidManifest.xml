@@ -49,6 +49,10 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
+
     <!-- SDK权限申明, 第三方APP接入时，请将com.netease.nim.demo替换为自己的包名 -->
     <!-- 和下面的uses-permission一起加入到你的AndroidManifest文件中。 -->
     <permission
@@ -74,13 +78,13 @@
 
         <meta-data
             android:name="com.netease.nim.appKey"
-            android:value="ed3dfb32bb3c353f751b3354523e98e7"/>
+            android:value="98bc106cc840b07c869ec279a7d58d38"/>
 
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="bf154bf38236648c1dab85090fe17b1d"/>
 
-        <service android:name="com.amap.api.location.APSService" >
+        <service android:name="com.amap.api.location.APSService">
         </service>
 
         <activity

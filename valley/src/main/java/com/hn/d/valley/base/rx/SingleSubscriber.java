@@ -9,7 +9,6 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import rx.Subscriber;
-import rx.functions.Action0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -22,7 +21,7 @@ import rx.functions.Action0;
  * 修改备注：
  * Version: 1.0.0
  */
-public abstract class SingleSubscriber<T> extends Subscriber<T> implements Action0 {
+public abstract class SingleSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onStart() {
@@ -59,24 +58,9 @@ public abstract class SingleSubscriber<T> extends Subscriber<T> implements Actio
     }
 
     /**
-     * 当被取消订阅的时候调用
-     */
-    @Override
-    public void call() {
-        onUnsubscribe();
-    }
-
-    /**
      * 统一错误处理
      */
     public void onError(int code, String msg) {
         L.d("订阅异常->" + this.getClass().getSimpleName() + " " + msg);
-    }
-
-    /**
-     * 当被取消订阅的时候调用
-     */
-    public void onUnsubscribe() {
-        L.d("订阅取消->" + this.getClass().getSimpleName());
     }
 }

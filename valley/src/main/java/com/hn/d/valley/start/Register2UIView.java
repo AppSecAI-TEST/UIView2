@@ -245,8 +245,8 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
                         if (!background) {
-                            onFinishLoad();
-                            Register2UIView.this.onError(code, msg);
+                            onRequestFinish();
+                            Register2UIView.this.onRequestError(code, msg);
                         }
                     }
                 })
@@ -254,12 +254,12 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     }
 
     @Override
-    public void onStartLoad() {
+    public void onRequestStart() {
         UILoading.build().addDismissListener(this).show(mILayout);
     }
 
     @Override
-    public void onFinishLoad() {
+    public void onRequestFinish() {
         UILoading.hide(mILayout);
     }
 

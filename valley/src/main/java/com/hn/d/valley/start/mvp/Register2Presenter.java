@@ -2,11 +2,10 @@ package com.hn.d.valley.start.mvp;
 
 import com.angcyo.uiview.mvp.presenter.BasePresenter;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.TransformUtils;
 import com.angcyo.uiview.net.rsa.RSA;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BeforeSubscriber;
+import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.UISubscriber;
 import com.hn.d.valley.start.service.StartService;
 
@@ -46,9 +45,7 @@ public class Register2Presenter extends BasePresenter<Start.IRegister2View> impl
 
         mCompositeSubscription.add(RRetrofit.create(StartService.class)
                 .register(Param.map(map))
-                .compose(TransformUtils.<Bean<String>>defaultSchedulers())
-                .doOnSubscribe(BeforeSubscriber.build(mBaseView))
-                .doOnUnsubscribe(subscriber)
+                .compose(Transform.<Bean<String>, Start.IRegister2View>defaultSchedulers(mBaseView))
                 .subscribe(subscriber));
     }
 
