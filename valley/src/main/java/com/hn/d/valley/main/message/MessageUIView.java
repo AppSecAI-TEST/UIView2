@@ -34,10 +34,23 @@ import java.util.List;
 public class MessageUIView extends BaseUIView {
 
     private boolean isLoading = false;
+    private RecentContactsHelper mRecentContactsHelper;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_main_message_layout);
+    }
+
+    @Override
+    public void onViewCreate() {
+        super.onViewCreate();
+        mRecentContactsHelper = new RecentContactsHelper();
+    }
+
+    @Override
+    protected void initContentLayout() {
+        super.initContentLayout();
+        mRecentContactsHelper.init(mBaseContentLayout);
     }
 
     @Override

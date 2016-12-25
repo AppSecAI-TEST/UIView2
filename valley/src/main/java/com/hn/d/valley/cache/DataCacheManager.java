@@ -86,8 +86,12 @@ public class DataCacheManager {
         NimUserInfoCache.getInstance().clear();
         TeamDataCache.getInstance().clear();
 
-        // clear avatar cache
-        Glide.get(ValleyApp.getApp()).clearMemory();
+        ThreadExecutor.instance().onMain(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(ValleyApp.getApp()).clearMemory();
+            }
+        });
     }
 
     /**
