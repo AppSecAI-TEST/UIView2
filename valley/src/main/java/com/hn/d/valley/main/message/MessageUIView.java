@@ -11,14 +11,14 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.nim.RNim;
-import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
-import com.netease.nimlib.sdk.uinfo.UserService;
-import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -35,6 +35,8 @@ public class MessageUIView extends BaseUIView {
 
     private boolean isLoading = false;
     private RecentContactsHelper mRecentContactsHelper;
+    private Observer<List<RecentContact>> mRecentContactObserver;
+    private Observer<RecentContact> mRecentContactDeleteObserver;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -44,7 +46,40 @@ public class MessageUIView extends BaseUIView {
     @Override
     public void onViewCreate() {
         super.onViewCreate();
-        mRecentContactsHelper = new RecentContactsHelper();
+        mRecentContactsHelper = new RecentContactsHelper(mActivity, new Action1<RecentContact>() {
+            @Override
+            public void call(RecentContact recentContact) {
+                T_.show(recentContact.getFromNick());
+            }
+        });
+        //会话列表改变监听
+        mRecentContactObserver = new Observer<List<RecentContact>>() {
+            @Override
+            public void onEvent(List<RecentContact> recentContacts) {
+                mRecentContactsHelper.setRecentContact(recentContacts);
+            }
+        };
+        //会话列表被删除
+        mRecentContactDeleteObserver = new Observer<RecentContact>() {
+            @Override
+            public void onEvent(RecentContact recentContact) {
+                mRecentContactsHelper.removeRecentContact(recentContact);
+            }
+        };
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        RNim.msgServiceObserve().observeRecentContact(mRecentContactObserver, true);
+        RNim.msgServiceObserve().observeRecentContactDeleted(mRecentContactDeleteObserver, true);
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        RNim.msgServiceObserve().observeRecentContact(mRecentContactObserver, false);
+        RNim.msgServiceObserve().observeRecentContactDeleted(mRecentContactDeleteObserver, false);
     }
 
     @Override
@@ -87,9 +122,12 @@ public class MessageUIView extends BaseUIView {
                     isLoading = false;
                     if (result.size() == 0) {
                         showEmptyLayout();
+                    } else {
+                        mRecentContactsHelper.setRecentContact(result);
+                        showContentLayout();
                     }
-                    List<NimUserInfo> allUserInfo = NIMClient.getService(UserService.class).getAllUserInfo();
-                    L.i("allUserInfo:" + allUserInfo.size());
+//                    List<NimUserInfo> allUserInfo = NIMClient.getService(UserService.class).getAllUserInfo();
+//                    L.i("allUserInfo:" + allUserInfo.size());
                 }
             });
         }

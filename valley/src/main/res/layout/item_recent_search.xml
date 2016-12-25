@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/base_mdpi"
+    android:paddingEnd="@dimen/base_xhdpi"
+    android:paddingStart="@dimen/base_xhdpi"
+    android:paddingTop="@dimen/base_mdpi">
+
+    <TextView
+        android:id="@+id/search_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_xxxhdpi"
+        android:background="@drawable/base_dark_border_selector"
+        android:drawableLeft="@drawable/search_xuanzhelianxiren"
+        android:drawablePadding="@dimen/base_ldpi"
+        android:paddingLeft="@dimen/base_hdpi"
+        android:text="@string/search"/>
+
+</RelativeLayout>

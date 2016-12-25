@@ -43,8 +43,8 @@
     </style>
 
     <style name="UserLittleIcoStyle" parent="CircleImageStyle">
-        <item name="android:layout_height">30dp</item>
-        <item name="android:layout_width">30dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_width">40dp</item>
     </style>
 
     <!--登录输入框的样式-->
@@ -149,6 +149,7 @@
     <style name="DarkTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:layout_centerVertical">true</item>
         <item name="android:textSize">@dimen/default_text_size</item>
         <item name="android:textColor">@color/main_text_color_dark</item>
@@ -161,6 +162,19 @@
 
     <style name="DefaultItemInfoStyle" parent="BaseItemInfoStyle">
         <item name="item_right_res">@drawable/next</item>
+    </style>
+
+    <!--用户名称样式-->
+    <style name="NameTextStyle" parent="MainTextStyle">
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:maxLength">@integer/code_count</item>
+    </style>
+
+    <style name="SingleDarkTextStyle" parent="DarkTextStyle">
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
 </resources>

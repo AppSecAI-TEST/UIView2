@@ -179,11 +179,17 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         RAmap.startLocation();
     }
 
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        RAmap.stopLocation();
+    }
+
     @Subscribe()
     public void onEvent(AmapBean bean) {
-        RAmap.stopLocation();
         if (bean.result) {
             L.w(bean.getString());
+            RAmap.stopLocation();
         } else {
             L.w("定位失败");
 //            RealmResults<AmapBean> results = RRealm.where(AmapBean.class).findAll();
@@ -334,10 +340,6 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     private void jumpToMain() {
         replaceIView(new MainUIView(500));
-//        postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//            }
-//        }, 20);
     }
+
 }

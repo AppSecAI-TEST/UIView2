@@ -3,6 +3,7 @@ package com.hn.d.valley.main.home;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
@@ -47,6 +48,11 @@ public class HomeUIView extends BaseUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_main_home_layout);
+    }
+
+    @Override
+    public Animation loadLayoutAnimation() {
+        return null;
     }
 
     @Override

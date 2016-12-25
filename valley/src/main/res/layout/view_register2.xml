@@ -41,7 +41,7 @@
             android:background="@drawable/main_color_border_selector"
             android:hint="@string/register_name_hint"
             android:imeOptions="actionNext"
-            android:maxLength="20"
+            android:maxLength="@integer/name_count"
             android:paddingLeft="@dimen/base_60dpi"
             android:textColor="@color/main_text_color"/>
 

@@ -2,4 +2,5 @@
 <resources>
     <integer name="code_count">6</integer>
     <integer name="password_count">12</integer>
+    <integer name="name_count">20</integer>
 </resources>

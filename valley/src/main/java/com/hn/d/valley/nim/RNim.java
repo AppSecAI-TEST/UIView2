@@ -13,6 +13,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.LogoutHelper;
+import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.start.SplashActivity;
 import com.hn.d.valley.utils.RBus;
@@ -28,6 +29,7 @@ import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
@@ -127,7 +129,7 @@ public class RNim {
         options.userInfoProvider = new UserInfoProvider() {
             @Override
             public UserInfo getUserInfo(String account) {
-                return null;
+                return NimUserInfoCache.getInstance().getUserInfo(account);
             }
 
             @Override
@@ -186,6 +188,8 @@ public class RNim {
      * 测试模式下的登录方法
      */
     public static void debugLogin(final Action1<Boolean> action1) {
+        UserCache.setUserAccount("50015");
+        UserCache.setUserToken("725161648c0116d850e839d22ff69f0b");
         login("50015", "725161648c0116d850e839d22ff69f0b", new RequestCallbackWrapper<LoginInfo>() {
             @Override
             public void onResult(int code, LoginInfo result, Throwable exception) {
@@ -243,5 +247,13 @@ public class RNim {
      */
     public static void queryRecentContacts(final RequestCallbackWrapper<List<RecentContact>> callback) {
         NIMClient.getService(MsgService.class).queryRecentContacts().setCallback(callback);
+    }
+
+    public static <T> T service(Class<T> clazz) {
+        return NIMClient.getService(clazz);
+    }
+
+    public static MsgServiceObserve msgServiceObserve() {
+        return RNim.service(MsgServiceObserve.class);
     }
 }
