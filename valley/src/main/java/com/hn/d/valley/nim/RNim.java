@@ -218,6 +218,15 @@ public class RNim {
     }
 
     /**
+     * 删除会话, 会有通知
+     */
+    public static void deleteRecentContact2(final RecentContact recent) {
+        NIMClient.getService(MsgService.class).deleteRecentContact2(recent.getFromAccount(), SessionTypeEnum.P2P);
+        //删除历史消息
+        NIMClient.getService(MsgService.class).clearChattingHistory(recent.getContactId(), recent.getSessionType());
+    }
+
+    /**
      * 添加会话tag
      */
     public static void addRecentContactTag(final RecentContact recent, long tag) {

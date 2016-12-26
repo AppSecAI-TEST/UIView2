@@ -43,7 +43,7 @@ public class Register2Presenter extends BasePresenter<Start.IRegister2View> impl
             }
         };
 
-        mCompositeSubscription.add(RRetrofit.create(StartService.class)
+        add(RRetrofit.create(StartService.class)
                 .register(Param.map(map))
                 .compose(Transform.<Bean<String>, Start.IRegister2View>defaultSchedulers(mBaseView))
                 .subscribe(subscriber));

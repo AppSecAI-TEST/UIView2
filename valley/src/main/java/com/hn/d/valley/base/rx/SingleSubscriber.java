@@ -2,6 +2,7 @@ package com.hn.d.valley.base.rx;
 
 import com.angcyo.library.utils.L;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.hn.d.valley.base.excepetion.NonetException;
 
 import java.net.SocketException;
@@ -46,13 +47,18 @@ public abstract class SingleSubscriber<T> extends Subscriber<T> {
             L.e(e.getMessage());
             errorMsg = "请检查网络连接!";
             errorCode = 40000;
-        } else if (e instanceof JsonParseException) {
+        } else if (e instanceof JsonParseException || e instanceof JsonMappingException) {
             errorMsg = "恐龙君打了个盹，请稍后再试!"; //"数据解析错误:" + e.getMessage();
             errorCode = -40001;
+        } else if (e instanceof RException) {
+            errorMsg = e.getMessage();
+            errorCode = ((RException) e).getCode();
         } else {
             errorMsg = "未知错误:" + e.getMessage();
             errorCode = -40000;
         }
+
+        e.printStackTrace();
 
         onError(errorCode, errorMsg);
     }

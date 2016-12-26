@@ -112,7 +112,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
          * 登录按钮
          */
         RxView.clicks(mLoginView)
-                .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+//                .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
@@ -141,7 +141,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                     @Override
                     public void call(Throwable throwable) {
                         if (BuildConfig.DEBUG) {
-                            mPhoneView.setText("18888888888");
+                            mPhoneView.setText("18888888885");
                         }
                     }
                 });

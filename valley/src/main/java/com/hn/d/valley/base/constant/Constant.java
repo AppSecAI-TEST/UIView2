@@ -43,4 +43,18 @@ public class Constant {
      * 极光注册返回的id
      */
     public static final String JPUSH_ID = "jpush_id";
+
+    /**
+     * 需要更新联系人列表
+     */
+    public static final String TAG_UPDATE_RECENT_CONTACTS = "tag_update_recent_contacts";
+    /**
+     * 需要更新未读消息数量
+     */
+    public static final String TAG_NO_READ_NUM = "tag_no_read_num";
+    public static final int POS_HOME = 0;
+    public static final int POS_FOUND = 1;
+    public static final int POS_MESSAGE = 3;
+    public static final int POS_ME = 4;
+
 }

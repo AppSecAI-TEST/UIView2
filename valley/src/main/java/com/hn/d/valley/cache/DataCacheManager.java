@@ -28,6 +28,9 @@ public class DataCacheManager {
         FriendDataCache.getInstance().registerObservers(register);
         NimUserInfoCache.getInstance().registerObservers(register);
         TeamDataCache.getInstance().registerObservers(register);
+
+        RecentContactsCache.instance().registerObservers(register);
+        MsgCache.instance().registerObservers(register);
     }
 
     /**
@@ -75,6 +78,9 @@ public class DataCacheManager {
         // build self avatar cache
         List<String> accounts = new ArrayList<>(1);
         accounts.add(UserCache.getUserAccount());
+
+        RecentContactsCache.instance().buildCache();
+        MsgCache.instance().buildCache();
     }
 
     /**
@@ -85,6 +91,9 @@ public class DataCacheManager {
         FriendDataCache.getInstance().clear();
         NimUserInfoCache.getInstance().clear();
         TeamDataCache.getInstance().clear();
+
+        RecentContactsCache.instance().clear();
+        MsgCache.instance().clear();
 
         ThreadExecutor.instance().onMain(new Runnable() {
             @Override

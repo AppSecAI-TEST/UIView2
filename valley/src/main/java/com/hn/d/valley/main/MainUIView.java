@@ -1,5 +1,6 @@
 package com.hn.d.valley.main;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -17,17 +18,23 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
+import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.DataCacheManager;
+import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.status.PostStatusUIDialog;
+import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.LoginUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
+import com.hwangjr.rxbus.annotation.Tag;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthService;
@@ -116,40 +123,44 @@ public class MainUIView extends BaseUIView {
             public void onTabSelect(int position) {
                 boolean isRightToLeft = position < lastPosition;
 
-                if (position == 0) {
+                if (position == Constant.POS_HOME) {
                     //首页
                     if (mHomeUIView == null) {
                         mHomeUIView = new HomeUIView();
+                        mHomeUIView.bindOtherILayout(mILayout);
                         mHomeUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.startIView(mHomeUIView);
                     } else {
                         mHomeUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.showIView(mHomeUIView);
                     }
-                } else if (position == 1) {
+                } else if (position == Constant.POS_FOUND) {
                     //发现
                     if (mFoundUIView == null) {
                         mFoundUIView = new FoundUIView();
+                        mFoundUIView.bindOtherILayout(mILayout);
                         mFoundUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.startIView(mFoundUIView);
                     } else {
                         mFoundUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.showIView(mFoundUIView);
                     }
-                } else if (position == 3) {
+                } else if (position == Constant.POS_MESSAGE) {
                     //消息
                     if (mMessageUIView == null) {
                         mMessageUIView = new MessageUIView();
+                        mMessageUIView.bindOtherILayout(mILayout);
                         mMessageUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.startIView(mMessageUIView);
                     } else {
                         mMessageUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.showIView(mMessageUIView);
                     }
-                } else if (position == 4) {
+                } else if (position == Constant.POS_ME) {
                     //我的
                     if (mMeUIView == null) {
                         mMeUIView = new MeUIView();
+                        mMeUIView.bindOtherILayout(mILayout);
                         mMeUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.startIView(mMeUIView);
                     } else {
@@ -167,10 +178,6 @@ public class MainUIView extends BaseUIView {
         });
 
         mBottomNavLayout.setTabData(tabs);
-        mBottomNavLayout.showMsg(0, 0);
-        mBottomNavLayout.showMsg(1, 10);
-        mBottomNavLayout.showMsg(3, 999);
-        mBottomNavLayout.showMsg(4, 99);
     }
 
     @Override
@@ -206,6 +213,20 @@ public class MainUIView extends BaseUIView {
         return false;
     }
 
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        MsgCache.notifyNoreadNum();
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        if (BuildConfig.DEBUG) {
+            RNim.logout();
+        }
+    }
+
     @Subscribe
     public void onEvent(StatusCode status) {
         if (status == StatusCode.KICKOUT || status == StatusCode.KICK_BY_OTHER_CLIENT) {
@@ -230,6 +251,15 @@ public class MainUIView extends BaseUIView {
             startIView(UIDialog.build()
                     .setDialogContent("您的账户在 " + client + " 登录.")
                     .setGravity(Gravity.CENTER));
+        }
+    }
+
+    @Subscribe(tags = {@Tag(Constant.TAG_NO_READ_NUM)})
+    public void onEvent(UpdateDataEvent event) {
+        if (event.num == 0) {
+            mBottomNavLayout.hideMsg(event.position);
+        } else {
+            mBottomNavLayout.showMsg(event.position, event.num);
         }
     }
 }

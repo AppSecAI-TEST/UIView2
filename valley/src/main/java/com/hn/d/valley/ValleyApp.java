@@ -2,6 +2,7 @@ package com.hn.d.valley;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.net.RRetrofit;
 import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
@@ -50,11 +51,13 @@ public class ValleyApp extends RApplication {
     protected void onInit() {
         L.init(BuildConfig.DEBUG, "dvalley");
 
+        RRetrofit.DEBUG = BuildConfig.DEBUG;
+
         RRealm.init(this);
 
         CrashReport.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
         //CrashReport.initCrashReport(getApplicationContext(), "207e18ac24", BuildConfig.DEBUG);
-        Bugly.init(getApplicationContext(), "207e18ac24", BuildConfig.DEBUG);
+        Bugly.init(getApplicationContext(), "207e18ac24", false);
 
         UserCache.instance().getLoginBeanObservable()
                 .subscribe(new Action1<LoginBean>() {

@@ -2,10 +2,8 @@ package com.hn.d.valley.main.message;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.github.swipe.RBaseMenuAdapter;
@@ -16,14 +14,16 @@ import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuCreator;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuItem;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.github.tablayout.MsgView;
+import com.angcyo.uiview.github.tablayout.UnreadMsgUtils;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.T_;
+import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.nim.RNim;
@@ -39,13 +39,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
  * Created by angcyo on 2016-12-25.
  */
 
-public class RecentContactsHelper {
+public class RecentContactsControl {
 
     public static final int ITEM_TYPE_NORMAL = 0x0001;
     public static final int ITEM_TYPE_TOP = 0x0002;
@@ -67,6 +68,7 @@ public class RecentContactsHelper {
     RecentContactsAdapter mRecentContactsAdapter;
     Context mContext;
     Action1<RecentContact> itemAction;
+    Action0 searchAction;
     /**
      * 滑动菜单构造器
      */
@@ -105,10 +107,20 @@ public class RecentContactsHelper {
         }
     };
 
-    public RecentContactsHelper(Context context, Action1<RecentContact> itemAction) {
+    public RecentContactsControl(Context context, Action1<RecentContact> itemAction, Action0 searchAction) {
         mContext = context;
         this.itemAction = itemAction;
+        this.searchAction = searchAction;
         mRecentContactsAdapter = new RecentContactsAdapter(mContext, null);
+    }
+
+    /**
+     * 结束刷新
+     */
+    public void setRefreshEnd() {
+        if (mRefreshLayout != null) {
+            mRefreshLayout.setRefreshEnd();
+        }
     }
 
     public void init(final View rootView) {
@@ -117,6 +129,14 @@ public class RecentContactsHelper {
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
 
         mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
+        mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(@RefreshLayout.Direction int direction) {
+                if (direction == RefreshLayout.TOP) {
+                    RecentContactsCache.instance().buildCache();
+                }
+            }
+        });
 
         final RBaseItemDecoration itemDecoration = new RBaseItemDecoration();
         itemDecoration.setMarginStart(mContext.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi));
@@ -133,21 +153,20 @@ public class RecentContactsHelper {
                 int tag = (int) menuItem.getTag();
                 final RecentContact recentContact = mRecentContactsAdapter.getAllDatas().get(adapterPosition - 1);
                 if (tag == MENU_DELETE) {
-                    RNim.deleteRecentContact(recentContact);
+                    MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount() - recentContact.getUnreadCount());
+                    RNim.deleteRecentContact2(recentContact);
                 } else if (tag == MENU_ADD_TOP) {
                     RNim.addRecentContactTag(recentContact, IS_TOP);
+                    setRecentContact(mRecentContactsAdapter.getAllDatas());
                 } else if (tag == MENU_RM_TOP) {
                     RNim.removeRecentContactTag(recentContact, IS_TOP);
+                    setRecentContact(mRecentContactsAdapter.getAllDatas());
                 }
             }
         });
     }
 
     public void setRecentContact(List<RecentContact> recentContact) {
-        if (recentContact.size() > 4) {
-            RNim.addRecentContactTag(recentContact.get(2), IS_TOP);
-            RNim.addRecentContactTag(recentContact.get(3), IS_TOP);
-        }
         if (!recentContact.isEmpty()) {
             Collections.sort(recentContact, new Comparator<RecentContact>() {
                 @Override
@@ -213,7 +232,8 @@ public class RecentContactsHelper {
                 holder.v(R.id.search_view).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        T_.show("搜索...");
+                        //T_.show("搜索...");
+                        searchAction.call();
                     }
                 });
                 return;
@@ -224,11 +244,16 @@ public class RecentContactsHelper {
             final NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
             final String fromAccount = bean.getFromAccount();
 
-            //头像
-            DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view),
-                    userInfoCache.getUserInfo(fromAccount).getAvatar());
-            //昵称
-            holder.tv(R.id.recent_name_view).setText(userInfoCache.getUserDisplayName(fromAccount));
+            if (userInfoCache != null) {
+                //头像
+                DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view),
+                        userInfoCache.getUserInfo(fromAccount).getAvatar());
+                //昵称
+                holder.tv(R.id.recent_name_view).setText(userInfoCache.getUserDisplayName(fromAccount));
+            } else {
+                DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
+                holder.tv(R.id.recent_name_view).setText("--");
+            }
 
             //最后一条消息内容
             MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), getShowContent(bean));
@@ -242,7 +267,7 @@ public class RecentContactsHelper {
 
             //未读数量
             int unreadNum = bean.getUnreadCount();
-            showUnreadNum((MsgView) holder.v(R.id.msg_num_view), unreadNum);
+            UnreadMsgUtils.showUnreadNum((MsgView) holder.v(R.id.msg_num_view), unreadNum);
 
             //会话item
             final View itemLayout = holder.v(R.id.item_root_layout);
@@ -257,39 +282,6 @@ public class RecentContactsHelper {
                     itemAction.call(bean);
                 }
             });
-        }
-
-        private void showUnreadNum(final MsgView msgView, int num) {
-            if (msgView == null) {
-                return;
-            }
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) msgView.getLayoutParams();
-            DisplayMetrics dm = msgView.getResources().getDisplayMetrics();
-            if (num <= 0) {//圆点,设置默认宽高
-//                msgView.setStrokeWidth(0);
-//                msgView.setText("");
-//
-//                lp.width = (int) (5 * dm.density);
-//                lp.height = (int) (5 * dm.density);
-//                msgView.setLayoutParams(lp);
-                msgView.setVisibility(View.INVISIBLE);
-            } else {
-                msgView.setVisibility(View.VISIBLE);
-                lp.height = (int) (18 * dm.density);
-                if (num > 0 && num < 10) {//圆
-                    lp.width = (int) (18 * dm.density);
-                    msgView.setText(num + "");
-                } else if (num > 9 && num < 100) {//圆角矩形,圆角是高度的一半,设置默认padding
-                    lp.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                    msgView.setPadding((int) (6 * dm.density), 0, (int) (6 * dm.density), 0);
-                    msgView.setText(num + "");
-                } else {//数字超过两位,显示99+
-                    lp.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                    msgView.setPadding((int) (6 * dm.density), 0, (int) (6 * dm.density), 0);
-                    msgView.setText("99+");
-                }
-                msgView.setLayoutParams(lp);
-            }
         }
 
         private void updateMsgStatus(final RecentContact recent, final ImageView imageView) {

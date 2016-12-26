@@ -72,7 +72,8 @@ public class LoginPresenter extends BasePresenter<Start.ILoginView> implements S
                         mBaseView.onLoginSuccess(loginBeanBean);
                     }
                 };
-        mCompositeSubscription.add(RRetrofit.create(StartService.class)
+
+        add(RRetrofit.create(StartService.class)
                 .login(Param.map(map))
                 .compose(Transform.<Bean<LoginBean>, Start.ILoginView>defaultSchedulers(mBaseView))
                 .subscribe(subscriber));
