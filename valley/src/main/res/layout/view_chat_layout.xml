@@ -30,19 +30,22 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:padding="@dimen/base_hdpi">
 
                 <com.angcyo.uiview.widget.ExEditText
                     style="@style/MainTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/dark_input_round_selector"
-                    android:hint="点击输入发送新消息"/>
+                    android:hint="点击输入发送新消息"
+                    android:padding="@dimen/base_ldpi"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/base_dark_border_selector"
+                    android:gravity="center"
                     android:visibility="invisible"/>
 
             </RelativeLayout>
