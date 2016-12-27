@@ -47,5 +47,6 @@
     <string name="search_hint">手机号/ID</string>
     <string name="add_friend">添加好友</string>
     <string name="search_tip">搜索: </string>
+    <string name="location_map">正在定位...</string>
 
 </resources>

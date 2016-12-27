@@ -9,6 +9,14 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.amap.api.maps.model.LatLng;
+import com.amap.api.services.core.AMapException;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.angcyo.library.utils.L;
 import com.hn.d.valley.bean.AmapBean;
 import com.hn.d.valley.realm.RRealm;
@@ -19,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import io.realm.Realm;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -49,21 +58,7 @@ public class RAmap {
                     sb.append(location.getProvince());
                     sb.append(location.getCity());
                     sb.append(location.getDistrict());
-                    RRealm.exe(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            AmapBean amapBean = realm.createObject(AmapBean.class);
-                            amapBean.address = location.getAddress();
-                            amapBean.city = location.getCity();
-                            amapBean.country = location.getCountry();
-                            amapBean.district = location.getDistrict();
-                            amapBean.latitude = location.getLatitude();
-                            amapBean.longitude = location.getLongitude();
-                            amapBean.province = location.getProvince();
-
-                            RBus.post(amapBean);
-                        }
-                    });
+                    saveAmapLocation(location);
                 } else {
                     sb.append("定位失败" + "\n");
                     sb.append("错误码:" + location.getErrorCode() + "\n");
@@ -83,13 +78,52 @@ public class RAmap {
             }
         }
     };
+    private GeocodeSearch geocoderSearch;
     private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
     private Context mContext;
 
     private RAmap(Context context) {
         mContext = context;
+        geocoderSearch = new GeocodeSearch(context);
         initLocation();
+    }
+
+    public static RAmap instance() {
+        if (amap == null) {
+            throw new NullPointerException("请先调用init方法");
+        }
+        return amap;
+    }
+
+    public static AmapBean saveAmapLocation2(final AMapLocation location) {
+        AmapBean amapBean = new AmapBean();
+        amapBean.address = location.getAddress();
+        amapBean.city = location.getCity();
+        amapBean.country = location.getCountry();
+        amapBean.district = location.getDistrict();
+        amapBean.latitude = location.getLatitude();
+        amapBean.longitude = location.getLongitude();
+        amapBean.province = location.getProvince();
+        RRealm.save(amapBean);
+        return amapBean;
+    }
+
+    public static void saveAmapLocation(final AMapLocation location) {
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                AmapBean amapBean = realm.createObject(AmapBean.class);
+                amapBean.address = location.getAddress();
+                amapBean.city = location.getCity();
+                amapBean.country = location.getCountry();
+                amapBean.district = location.getDistrict();
+                amapBean.latitude = location.getLatitude();
+                amapBean.longitude = location.getLongitude();
+                amapBean.province = location.getProvince();
+                RBus.post(amapBean);
+            }
+        });
     }
 
     public static RAmap init(Context context) {
@@ -140,8 +174,6 @@ public class RAmap {
         }
         return null;
     }
-
-    //------------------------------------无关内容---------------------------------------
 
     /**
      * 根据定位结果返回定位信息的字符串
@@ -196,6 +228,8 @@ public class RAmap {
         return sb.toString();
     }
 
+    //------------------------------------无关内容---------------------------------------
+
     public synchronized static String formatUTC(long l, String strPattern) {
         if (TextUtils.isEmpty(strPattern)) {
             strPattern = "yyyy-MM-dd HH:mm:ss";
@@ -220,7 +254,68 @@ public class RAmap {
         amap.startLocationInner();
     }
 
+    /**
+     * 默认的定位参数
+     *
+     * @author hongming.wang
+     * @since 2.8.0
+     */
+    public static AMapLocationClientOption getDefaultOption() {
+        AMapLocationClientOption mOption = new AMapLocationClientOption();
+
+        //Battery_Saving  Device_Sensors  Hight_Accuracy
+        mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
+
+        mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
+        mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
+        mOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
+        mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
+        mOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
+        mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
+        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
+        mOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
+        // 设置是否开启缓存
+        mOption.setLocationCacheEnable(true);
+
+        return mOption;
+    }
+
     //---------------------------------------------------------------------------
+
+    public void queryLatLngAddress(final LatLng latlng, final Action1<AmapBean> action1) {
+        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(latlng.latitude, latlng.longitude),
+                200, GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
+        geocoderSearch.getFromLocationAsyn(query);
+        geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+                if (i == AMapException.CODE_AMAP_SUCCESS) {
+                    if (regeocodeResult != null) {
+                        RegeocodeAddress address = regeocodeResult.getRegeocodeAddress();
+                        if (address != null && address.getFormatAddress() != null) {
+                            AmapBean bean = new AmapBean();
+                            bean.address = address.getFormatAddress();
+                            bean.latitude = latlng.latitude;
+                            bean.longitude = latlng.longitude;
+
+                            action1.call(bean);
+                        } else {
+                            action1.call(null);
+                        }
+                    } else {
+                        action1.call(null);
+                    }
+                } else {
+                    action1.call(null);
+                }
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
+            }
+        });
+    }
 
     /**
      * 开始定位
@@ -278,32 +373,6 @@ public class RAmap {
         locationClient.setLocationOption(getDefaultOption());
         // 设置定位监听
         locationClient.setLocationListener(locationListener);
-    }
-
-    /**
-     * 默认的定位参数
-     *
-     * @author hongming.wang
-     * @since 2.8.0
-     */
-    private AMapLocationClientOption getDefaultOption() {
-        AMapLocationClientOption mOption = new AMapLocationClientOption();
-
-        //Battery_Saving  Device_Sensors  Hight_Accuracy
-        mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);//可选，设置定位模式，可选的模式有高精度、仅设备、仅网络。默认为高精度模式
-
-        mOption.setGpsFirst(false);//可选，设置是否gps优先，只在高精度模式下有效。默认关闭
-        mOption.setHttpTimeOut(30000);//可选，设置网络请求超时时间。默认为30秒。在仅设备模式下无效
-        mOption.setInterval(2000);//可选，设置定位间隔。默认为2秒
-        mOption.setNeedAddress(true);//可选，设置是否返回逆地理地址信息。默认是true
-        mOption.setOnceLocation(false);//可选，设置是否单次定位。默认是false
-        mOption.setOnceLocationLatest(false);//可选，设置是否等待wifi刷新，默认为false.如果设置为true,会自动变为单次定位，持续定位时不要使用
-        AMapLocationClientOption.setLocationProtocol(AMapLocationClientOption.AMapLocationProtocol.HTTP);//可选， 设置网络请求的协议。可选HTTP或者HTTPS。默认为HTTP
-        mOption.setSensorEnable(false);//可选，设置是否使用传感器。默认是false
-        // 设置是否开启缓存
-        mOption.setLocationCacheEnable(true);
-
-        return mOption;
     }
 
 }

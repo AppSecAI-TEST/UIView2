@@ -57,4 +57,9 @@ public class Constant {
     public static final int POS_MESSAGE = 3;
     public static final int POS_ME = 4;
 
+    /**
+     * Amap
+     */
+    public static final int DEFAULT_ZOOM_LEVEL = 15;
+
 }

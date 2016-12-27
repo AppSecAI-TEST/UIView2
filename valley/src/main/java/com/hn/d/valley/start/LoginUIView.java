@@ -28,12 +28,12 @@ import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.base.dialog.SingleDialog;
 import com.hn.d.valley.bean.AmapBean;
 import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.MainUIView;
+import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -112,7 +112,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
          * 登录按钮
          */
         RxView.clicks(mLoginView)
-//                .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+                .debounce(16, TimeUnit.MILLISECONDS)
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
@@ -174,14 +174,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     }
 
     @Override
-    public void onViewLoad() {
-        super.onViewLoad();
-        RAmap.startLocation();
-    }
-
-    @Override
-    public void onViewUnload() {
-        super.onViewUnload();
+    public void onViewHide() {
+        super.onViewHide();
         RAmap.stopLocation();
     }
 
@@ -221,6 +215,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
             showUserIco(info.icoUrl);
             mLoginView.callOnClick();
         }
+        RAmap.startLocation();
     }
 
     private void showUserIco(String icoUrl) {
@@ -280,7 +275,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.weixin_view)
     public void onWeixinClick() {
-        startIView(new SingleDialog());
+        startIView(new AmapUIView());
+//        MainActivity.launcher(mActivity);
     }
 
     /**
