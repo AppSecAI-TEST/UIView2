@@ -38,7 +38,6 @@ public class MessageUIView extends BaseUIView {
     private boolean isLoading = false;
     private RecentContactsControl mRecentContactsControl;
 
-
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_main_message_layout);

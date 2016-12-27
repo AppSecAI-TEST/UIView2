@@ -2,7 +2,7 @@ package com.hn.d.valley.main.message.mvp;
 
 import com.angcyo.uiview.mvp.presenter.IBasePresenter;
 import com.angcyo.uiview.mvp.view.IBaseView;
-import com.hn.d.valley.base.Bean;
+import com.hn.d.valley.bean.SearchUserBean;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -16,13 +16,13 @@ import com.hn.d.valley.base.Bean;
  * Version: 1.0.0
  */
 public interface Search {
-    interface ISearchView<O, B extends Bean<O>> extends IBaseView {
+    interface ISearchView extends IBaseView {
         /**
          * 搜索成功
          *
          * @param bean 搜索成功的用户信息
          */
-        void onSearchSucceed(B bean);
+        void onSearchSucceed(SearchUserBean bean);
     }
 
     interface ISearchPresenter extends IBasePresenter<ISearchView> {

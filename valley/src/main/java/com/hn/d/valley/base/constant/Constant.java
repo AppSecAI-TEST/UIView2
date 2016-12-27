@@ -38,6 +38,7 @@ public class Constant {
      * 抖动时间, 多虑时间之内的事件
      */
     public static final long DEBOUNCE_TIME = 100;
+    public static final long DEBOUNCE_TIME_700 = 700;
 
     /**
      * 极光注册返回的id

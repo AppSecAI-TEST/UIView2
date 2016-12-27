@@ -15,7 +15,6 @@ import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.dialog.UIItemDialog;
-import com.angcyo.uiview.dialog.UILoading;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
@@ -30,6 +29,7 @@ import com.hn.d.valley.base.rx.SingleSubscriber;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
+import com.hn.d.valley.widget.HnLoading;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImagePickerHelper;
 import com.orhanobut.hawk.Hawk;
@@ -255,12 +255,13 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
 
     @Override
     public void onRequestStart() {
-        UILoading.build().addDismissListener(this).show(mILayout);
+        //UILoading.build().addDismissListener(this).show(mILayout);
+        HnLoading.show(mILayout).addDismissListener(this);
     }
 
     @Override
     public void onRequestFinish() {
-        UILoading.hide(mILayout);
+        HnLoading.hide();
     }
 
     @Override

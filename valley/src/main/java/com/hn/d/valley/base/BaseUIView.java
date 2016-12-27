@@ -3,6 +3,7 @@ package com.hn.d.valley.base;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.mvp.presenter.IBasePresenter;
@@ -32,11 +33,13 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
 
     @Override
     public void onRequestStart() {
+        L.i(this.getClass().getSimpleName() + "->请求开始");
         showLoadView();
     }
 
     @Override
     public void onRequestFinish() {
+        L.i(this.getClass().getSimpleName() + "->请求完成");
         hideLoadView();
     }
 
@@ -62,6 +65,7 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
 
     @Override
     public void onDismiss() {
+        L.i(this.getClass().getSimpleName() + "->进度对话框被销毁, 请求取消!");
         onRequestCancel();
         if (mPresenter != null) {
             mPresenter.onCancel();
@@ -70,6 +74,7 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
 
     @Override
     public void onRequestCancel() {
+        L.i(this.getClass().getSimpleName() + "->请求取消");
         onRequestFinish();
     }
 

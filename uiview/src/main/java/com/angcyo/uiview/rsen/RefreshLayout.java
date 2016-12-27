@@ -127,10 +127,14 @@ public class RefreshLayout extends ViewGroup {
             mTargetView.layout(0, 0, r, getMeasuredHeight());
         }
         if (mTopView != null) {
-            mTopView.layout(0, -mTopView.getMeasuredHeight(), r, 0);
+            //自动居中布局
+            mTopView.layout((r - l) / 2 - mTopView.getMeasuredWidth() / 2, -mTopView.getMeasuredHeight(),
+                    (r - l) / 2 + mTopView.getMeasuredWidth() / 2, 0);
         }
         if (mBottomView != null) {
-            mBottomView.layout(0, b, r, b + mBottomView.getMeasuredHeight());
+            //自动居中布局
+            mBottomView.layout((r - l) / 2 - mBottomView.getMeasuredWidth() / 2, b,
+                    (r - l) / 2 + mBottomView.getMeasuredWidth() / 2, b + mBottomView.getMeasuredHeight());
         }
     }
 
@@ -143,14 +147,26 @@ public class RefreshLayout extends ViewGroup {
         mTouchSlop = 0;//ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mTargetView = getChildAt(0);
         mScroller = new OverScroller(getContext(), new DecelerateInterpolator());
-        initView();
+        initRefreshView();
     }
 
-    protected void initView() {
-        mTopView = new BaseRefreshTopView(getContext());
-        mBottomView = new BaseRefreshBottomView(getContext());
+    protected void initRefreshView() {
+        if (mTopView == null) {
+            mTopView = new BaseRefreshTopView(getContext());
+        }
+        if (mBottomView == null) {
+            mBottomView = new BaseRefreshBottomView(getContext());
+        }
         addView(mTopView);
         addView(mBottomView);
+    }
+
+    public void setTopView(View topView) {
+        mTopView = topView;
+    }
+
+    public void setBottomView(View bottomView) {
+        mBottomView = bottomView;
     }
 
     @Override

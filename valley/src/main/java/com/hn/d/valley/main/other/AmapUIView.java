@@ -163,8 +163,6 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
         try {
             mMap = mMapView.getMap();
 
-            setCameraChangeListener();
-
             UiSettings uiSettings = mMap.getUiSettings();
             uiSettings.setZoomControlsEnabled(true);
             // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
@@ -284,6 +282,8 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
                 mLastBean = RAmap.saveAmapLocation2(amapLocation);
 
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+
+                setCameraChangeListener();
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 L.e("AmapErr:" + errText);

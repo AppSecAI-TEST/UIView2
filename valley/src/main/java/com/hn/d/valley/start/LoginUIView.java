@@ -17,7 +17,6 @@ import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
-import com.angcyo.uiview.dialog.UILoading;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -38,6 +37,7 @@ import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.utils.RAmap;
+import com.hn.d.valley.widget.HnLoading;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.AbortableFuture;
@@ -318,7 +318,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 
     @Override
     public void onRequestStart() {
-        UILoading.build().addDismissListener(this).show(mILayout);
+        HnLoading.show(mILayout).addDismissListener(this);
     }
 
     @Override
@@ -328,7 +328,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 
     @Override
     public void onRequestCancel() {
-        UILoading.hide(mILayout);
+        HnLoading.hide();
     }
 
     /**

@@ -3,4 +3,5 @@
     <integer name="code_count">6</integer>
     <integer name="password_count">12</integer>
     <integer name="name_count">20</integer>
+    <integer name="animation_list_time">150</integer>
 </resources>

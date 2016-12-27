@@ -15,7 +15,7 @@
         android:drawablePadding="@dimen/base_xhdpi"
         android:drawableStart="@drawable/search_xuanzhelianxiren"
         android:hint="@string/search_hint"
-        android:imeOptions="actionDone"
+        android:imeOptions="actionSearch"
         android:inputType="number"
         android:paddingEnd="@dimen/base_xhdpi"
         android:paddingStart="@dimen/base_xhdpi"/>
@@ -55,6 +55,15 @@
                 style="@style/BaseHLine"/>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/empty_tip_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/base_xhdpi"/>
     </RelativeLayout>
 
 </LinearLayout>
