@@ -10,25 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--内容-->
-        <com.hn.d.valley.widget.HnRefreshLayout
-            android:id="@+id/refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.angcyo.uiview.recycler.RRecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </com.hn.d.valley.widget.HnRefreshLayout>
-
         <!--输入-->
         <LinearLayout
+            android:id="@+id/input_layout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_title_bar_item_size"
-            android:layout_below="@id/refresh_layout"
+            android:layout_alignParentBottom="true"
             android:orientation="horizontal">
 
+            <!--语音-->
             <CheckBox
                 android:id="@+id/message_voice_box"
                 android:layout_width="@dimen/base_xxxhdpi"
@@ -36,6 +26,7 @@
                 android:layout_marginStart="@dimen/base_xhdpi"
                 android:button="@drawable/message_voice_selector"/>
 
+            <!--文本输入, 语音录制-->
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -55,6 +46,7 @@
 
             </RelativeLayout>
 
+            <!--表情, 功能切换-->
             <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -74,6 +66,20 @@
             </RadioGroup>
 
         </LinearLayout>
+
+        <!--内容-->
+        <com.hn.d.valley.widget.HnRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/input_layout">
+
+            <com.angcyo.uiview.recycler.RRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.hn.d.valley.widget.HnRefreshLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
