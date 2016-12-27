@@ -107,7 +107,8 @@ public class RSoftInputLayout extends ViewGroup {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        int maxHeight = heightSize - getPaddingBottom() - getPaddingTop();
+//        int maxHeight = heightSize - getPaddingBottom() - getPaddingTop();
+        int maxHeight = heightSize - getPaddingTop();
 
         isKeyboardShow = isSoftKeyboardShow();
         if (isKeyboardShow) {
@@ -129,7 +130,7 @@ public class RSoftInputLayout extends ViewGroup {
         }
 
         if (isKeyboardShow) {
-            contentHeight = maxHeight;
+            contentHeight = maxHeight - keyboardHeight;
         } else {
             contentHeight = maxHeight - emojiHeight;
         }
