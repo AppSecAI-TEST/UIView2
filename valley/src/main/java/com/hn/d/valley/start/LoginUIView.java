@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -336,6 +338,15 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     private void jumpToMain() {
         replaceIView(new MainUIView(500));
+    }
+
+    @Override
+    public Animation loadLayoutAnimation() {
+        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1f,
+                Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f);
+        setDefaultConfig(translateAnimation);
+        return translateAnimation;
     }
 
 }
