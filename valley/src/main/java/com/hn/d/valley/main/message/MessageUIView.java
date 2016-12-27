@@ -50,7 +50,7 @@ public class MessageUIView extends BaseUIView {
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
-                        T_.show(recentContact.getFromNick());
+                        ChatUIView.start(mOtherILayout, recentContact.getFromAccount());
                     }
                 },
                 new Action0() {

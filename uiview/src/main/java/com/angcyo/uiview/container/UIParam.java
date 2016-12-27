@@ -14,9 +14,18 @@ import android.os.Bundle;
  * Version: 1.0.0
  */
 public class UIParam {
+
+    public static final int NORMAL = 0;
+    public static final int SINGLE_TOP = 1;//如果已经添加了IView, 则最前显示IView
+
     public boolean mAnim = true;
     public Bundle mBundle;
     public boolean mAsync = true;
+
+    /**
+     * 启动模式
+     */
+    public int start_mode = NORMAL;
 
     public UIParam(boolean anim, boolean async, Bundle bundle) {
         mAnim = anim;
@@ -33,5 +42,13 @@ public class UIParam {
     }
 
     public UIParam() {
+    }
+
+    /**
+     * 设置启动模式
+     */
+    public UIParam setLaunchMode(int mode) {
+        start_mode = mode;
+        return this;
     }
 }

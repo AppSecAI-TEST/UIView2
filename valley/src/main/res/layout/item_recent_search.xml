@@ -13,7 +13,7 @@
         style="@style/DarkTextStyle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_xxxhdpi"
-        android:background="@drawable/base_dark_border_selector"
+        android:background="@drawable/base_dark_selector"
         android:drawableLeft="@drawable/search_xuanzhelianxiren"
         android:drawablePadding="@dimen/base_ldpi"
         android:paddingLeft="@dimen/base_hdpi"

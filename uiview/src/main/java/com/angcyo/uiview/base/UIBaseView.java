@@ -345,6 +345,16 @@ public abstract class UIBaseView extends UIIViewImpl {
         return this;
     }
 
+    /**
+     * 设置标题文本
+     */
+    public void setTitleString(String title) {
+        if (mUITitleBarContainer != null) {
+            mUITitleBarContainer.getTitleView().setText(title);
+        }
+    }
+
+
     @ColorInt
     public int getDefaultBackgroundColor() {
         return Color.TRANSPARENT;

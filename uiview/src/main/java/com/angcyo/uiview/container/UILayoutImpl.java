@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -172,8 +173,28 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     private void startInner(final IView iView, final UIParam param) {
         final ViewPattern oldViewPattern = getLastViewPattern();
-        final ViewPattern newViewPattern = startIViewInternal(iView);
-        startIViewAnim(oldViewPattern, newViewPattern, param);
+
+        if (param.start_mode == UIParam.SINGLE_TOP) {
+            if (oldViewPattern.mIView == iView) {
+                //如果已经是最前显示, 调用onViewShow方法
+                oldViewPattern.mIView.onViewShow(param.mBundle);
+            } else {
+                ViewPattern viewPatternByIView = findViewPatternByIView(iView);
+                if (viewPatternByIView == null) {
+                    //这个IView 还不存在
+                    final ViewPattern newViewPattern = startIViewInternal(iView);
+                    startIViewAnim(oldViewPattern, newViewPattern, param);
+                } else {
+                    //这个IView 存在, 但是不在最前显示
+                    topViewStart(viewPatternByIView, param);
+                    bottomViewFinish(oldViewPattern, viewPatternByIView, param.mAnim);
+                }
+            }
+        } else {
+            //正常的启动模式
+            final ViewPattern newViewPattern = startIViewInternal(iView);
+            startIViewAnim(oldViewPattern, newViewPattern, param);
+        }
     }
 
     @Override
@@ -922,9 +943,13 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     public ViewPattern findViewPatternByIView(IView iview) {
         for (ViewPattern viewPattern : mAttachViews) {
-            if (viewPattern.mIView == iview) {
+            if (TextUtils.equals(viewPattern.mIView.getClass().getSimpleName(), iview.getClass().getSimpleName())) {
                 return viewPattern;
             }
+
+//            if (viewPattern.mIView == iview) {
+//                return viewPattern;
+//            }
         }
         return null;
     }
