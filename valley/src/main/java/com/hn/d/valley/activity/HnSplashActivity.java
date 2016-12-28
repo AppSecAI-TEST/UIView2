@@ -1,4 +1,4 @@
-package com.hn.d.valley.start;
+package com.hn.d.valley.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
-import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.start.LoginUIView;
 import com.hn.d.valley.utils.RBus;
 
 /**
@@ -22,7 +22,7 @@ import com.hn.d.valley.utils.RBus;
  * 修改备注：
  * Version: 1.0.0
  */
-public class SplashActivity extends BaseActivity {
+public class HnSplashActivity extends BaseActivity {
 
     /**
      * 是否被踢
@@ -30,7 +30,7 @@ public class SplashActivity extends BaseActivity {
     private static final String IS_KICKOUT = "is_kick_out";
 
     public static void launcher(Activity activity, boolean isKickOut) {
-        Intent intent = new Intent(activity, SplashActivity.class);
+        Intent intent = new Intent(activity, HnSplashActivity.class);
         intent.putExtra(IS_KICKOUT, isKickOut);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.default_window_tran_enter_anim,
@@ -57,7 +57,9 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onLoadView() {
         if (RNim.isAutoLoginSucceed()) {
-            startIView(new MainUIView(), true);
+            //startIView(new MainUIView(), true);
+            HnMainActivity.launcher(this);
+            finish();
         } else {
             startIView(new LoginUIView(), false);
         }
@@ -68,7 +70,7 @@ public class SplashActivity extends BaseActivity {
 //                .subscribe(new Action1<Long>() {
 //                    @Override
 //                    public void call(Long aLong) {
-//                        //MainActivity.launcher(SplashActivity.this);
+//                        //HnMainActivity.launcher(HnSplashActivity.this);
 //                        startIView(new LoginUIView(), false);
 //                    }
 //                });

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.angcyo.uiview.base.UILayoutActivity;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.utils.RBus;
 import com.orhanobut.hawk.Hawk;
 
 /**
@@ -24,7 +25,12 @@ public abstract class BaseActivity extends UILayoutActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Param.changeLang(Hawk.get(Constant.LANG, 1));
         super.onCreate(savedInstanceState);
+        RBus.register(this);
+    }
 
-        //JPushInterface.requestPermission(this);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RBus.unregister(this);
     }
 }

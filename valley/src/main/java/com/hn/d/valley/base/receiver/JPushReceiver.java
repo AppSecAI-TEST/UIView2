@@ -9,7 +9,7 @@ import android.os.Bundle;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.start.SplashActivity;
+import com.hn.d.valley.activity.HnSplashActivity;
 import com.orhanobut.hawk.Hawk;
 
 import cn.jpush.android.api.JPushInterface;
@@ -33,7 +33,7 @@ public class JPushReceiver extends BroadcastReceiver {
         Intent launcher = new Intent(Intent.ACTION_MAIN);
         launcher.addCategory(Intent.CATEGORY_LAUNCHER);
         launcher.setFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_NEW_TASK);
-        launcher.setComponent(new ComponentName(context, SplashActivity.class));
+        launcher.setComponent(new ComponentName(context, HnSplashActivity.class));
         return launcher;
     }
 

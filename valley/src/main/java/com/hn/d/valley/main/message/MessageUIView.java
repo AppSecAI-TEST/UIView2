@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnChatActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
@@ -50,7 +51,8 @@ public class MessageUIView extends BaseUIView {
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
-                        ChatUIView.start(mOtherILayout, recentContact.getFromAccount());
+                        //ChatUIView.start(mOtherILayout, recentContact.getFromAccount());
+                        HnChatActivity.launcher(mActivity);
                     }
                 },
                 new Action0() {

@@ -66,6 +66,16 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      */
     private int runnableCount = 0;
 
+    /**
+     * 如果只剩下最后一个View, 是否激活滑动删除
+     */
+    private boolean enableRootSwipe = false;
+
+    /**
+     * 是否正在拖拽返回.
+     */
+    private boolean isSwipeDrag = false;
+
     public UILayoutImpl(Context context) {
         super(context);
         initLayout();
@@ -113,10 +123,18 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      */
     @Override
     protected boolean canTryCaptureView(View child) {
-        if (mAttachViews.size() > 1 && !mLastShowViewPattern.mIView.isDialog() && mLastShowViewPattern.mView == child) {
+        if (mAttachViews.size() > 1
+                && !mLastShowViewPattern.mIView.isDialog()
+                && mLastShowViewPattern.mView == child) {
+            return true;
+        } else if (enableRootSwipe) {
             return true;
         }
         return false;
+    }
+
+    public void setEnableRootSwipe(boolean enableRootSwipe) {
+        this.enableRootSwipe = enableRootSwipe;
     }
 
     private void initLayout() {
@@ -1229,27 +1247,36 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     @Override
     protected void onRequestClose() {
         super.onRequestClose();
-        finishIView(mLastShowViewPattern.mIView, false);
+        if (enableRootSwipe && getIViewSize() == 1) {
+            mCompatActivity.finish();
+            mCompatActivity.overridePendingTransition(0, 0);
+        } else {
+            finishIView(mLastShowViewPattern.mIView, false);
+        }
     }
 
     @Override
     protected void onRequestOpened() {
         super.onRequestOpened();
+        isSwipeDrag = false;
         translation(0);
     }
 
     @Override
     protected void onSlideChange(float percent) {
         super.onSlideChange(percent);
+        isSwipeDrag = true;
         translation(percent);
     }
 
     @Override
     protected void onStateDragging() {
         super.onStateDragging();
+        isSwipeDrag = true;
+
         //开始偏移时, 偏移的距离
         final ViewPattern viewPattern = findLastShowViewPattern(mLastShowViewPattern);
-        if (!viewPattern.mIView.isDialog()) {
+        if (viewPattern != null && !viewPattern.mIView.isDialog()) {
             mTranslationOffsetX = getMeasuredWidth() * 0.3f;
             viewPattern.mView.setTranslationX(-mTranslationOffsetX);
         }
@@ -1257,8 +1284,17 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     private void translation(float percent) {
         final ViewPattern viewPattern = findLastShowViewPattern(mLastShowViewPattern);
-        if (!viewPattern.mIView.isDialog()) {
+        if (viewPattern != null && !viewPattern.mIView.isDialog()) {
             viewPattern.mView.setTranslationX(-mTranslationOffsetX * percent);
+        }
+    }
+
+    /**
+     * 移动最后一个可见视图
+     */
+    public void translationLastView(int x) {
+        if (mLastShowViewPattern != null) {
+            mLastShowViewPattern.mView.setTranslationX(x);
         }
     }
 
@@ -1275,10 +1311,14 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      * 获取已经添加IView的数量
      */
     public int getIViewSize() {
-        if (mAttachViews.isEmpty()) {
+        if (mAttachViews == null || mAttachViews.isEmpty()) {
             return 0;
         }
         return mAttachViews.size();
+    }
+
+    public boolean isSwipeDrag() {
+        return isSwipeDrag;
     }
 
     /**

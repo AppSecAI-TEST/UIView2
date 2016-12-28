@@ -15,7 +15,7 @@ import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.start.SplashActivity;
+import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
@@ -92,7 +92,7 @@ public class RNim {
 
         // 如果将新消息通知提醒托管给 SDK 完成，需要添加以下配置。否则无需设置。
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
-        config.notificationEntrance = SplashActivity.class; // 点击通知栏跳转到该Activity
+        config.notificationEntrance = HnSplashActivity.class; // 点击通知栏跳转到该Activity
         config.notificationSmallIconId = R.drawable.login_logo;
         // 呼吸灯配置
         config.ledARGB = Color.GREEN;

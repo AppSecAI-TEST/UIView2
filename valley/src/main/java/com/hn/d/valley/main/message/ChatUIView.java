@@ -74,11 +74,11 @@ public class ChatUIView extends UIContentView {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showLoadView();
-            }
-        }, 2000);
+//        postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                showLoadView();
+//            }
+//        }, 2000);
     }
 }

@@ -24,6 +24,7 @@ import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnMainActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
@@ -33,7 +34,6 @@ import com.hn.d.valley.bean.AmapBean;
 import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.mvp.LoginPresenter;
@@ -278,7 +278,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @OnClick(R.id.weixin_view)
     public void onWeixinClick() {
         startIView(new AmapUIView());
-//        MainActivity.launcher(mActivity);
+//        HnMainActivity.launcher(mActivity);
     }
 
     /**
@@ -337,7 +337,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      * 跳转至主页
      */
     private void jumpToMain() {
-        replaceIView(new MainUIView(500));
+        //replaceIView(new MainUIView(500));
+        HnMainActivity.launcher(mActivity);
+        mActivity.finish();
     }
 
     @Override

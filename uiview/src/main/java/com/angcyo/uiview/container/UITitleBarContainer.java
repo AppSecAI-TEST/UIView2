@@ -188,9 +188,9 @@ public class UITitleBarContainer extends FrameLayout {
                     }
                 }
             });
-            ViewCompat.animate(mBackImageView).rotation(360)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .setDuration(animTime).start();
+//            ViewCompat.animate(mBackImageView).rotation(360)
+//                    .setInterpolator(new DecelerateInterpolator())
+//                    .setDuration(animTime).start();
         } else {
             mBackImageView.setVisibility(GONE);
         }
@@ -213,8 +213,8 @@ public class UITitleBarContainer extends FrameLayout {
         fillViews(mRightControlLayout, mTitleBarPattern.mRightItems, mRightViews);
 
         /*控制按钮的动画*/
-        animViews(mLeftViews, true);
-        animViews(mRightViews, false);
+        //animViews(mLeftViews, true);
+        //animViews(mRightViews, false);
     }
 
     public void evaluateBackgroundColor(int scrollY) {

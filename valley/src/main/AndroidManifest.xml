@@ -88,7 +88,7 @@
         </service>
 
         <activity
-            android:name=".start.SplashActivity"
+            android:name=".activity.HnSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:theme="@style/SplashTheme"
@@ -100,8 +100,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
+            android:name=".activity.HnMainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/BaseTranTheme"/>
+
+        <activity
+            android:name=".activity.HnChatActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/BaseTranTheme"/>
 
         <!--Bugly升级界面-->
         <activity
