@@ -1299,7 +1299,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             mCompatActivity.finish();
             mCompatActivity.overridePendingTransition(0, 0);
         } else {
-            finishIView(mLastShowViewPattern.mIView, new UIParam(false, false, false));
+            finishIView(mLastShowViewPattern.mIView, new UIParam(false, true, false));
         }
     }
 

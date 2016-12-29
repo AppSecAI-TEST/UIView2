@@ -97,7 +97,8 @@
             android:id="@+id/refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/input_layout">
+            android:layout_above="@id/input_layout"
+            android:background="@color/chat_bg_color">
 
             <com.angcyo.uiview.recycler.RRecyclerView
                 android:id="@+id/recycler_view"
@@ -115,7 +116,6 @@
         android:id="@+id/emoji_root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
     </RelativeLayout>
 

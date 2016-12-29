@@ -360,6 +360,9 @@ public abstract class UIBaseView extends UIIViewImpl {
      * 显示键盘
      */
     public void showSoftInput() {
+        if (isSoftKeyboardShow()) {
+            return;
+        }
         InputMethodManager manager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.showSoftInputFromInputMethod(mActivity.getWindow().getDecorView().getWindowToken(), 0);
     }

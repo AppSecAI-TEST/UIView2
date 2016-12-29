@@ -10,6 +10,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 
@@ -184,6 +185,11 @@ public class RSoftInputLayout extends ViewGroup {
     }
 
     @Override
+    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+        return super.onApplyWindowInsets(insets);
+    }
+
+    @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         removeCallbacks(mCheckSizeChanged);
         notifyEmojiLayoutChangeListener(isEmojiShow, isKeyboardShow,
@@ -323,9 +329,10 @@ public class RSoftInputLayout extends ViewGroup {
         manager.hideSoftInputFromWindow(getWindowToken(), 0);
     }
 
-    public void showSoftInput() {
+    public void showSoftInput(View view) {
+        view.requestFocus();
         InputMethodManager manager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        manager.showSoftInputFromInputMethod(getWindowToken(), 0);
+        manager.showSoftInput(view, 0);
     }
 
     /**

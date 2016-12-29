@@ -24,6 +24,7 @@ import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnTestActivity;
 import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
@@ -271,7 +272,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     public void onForgetClick() {
         //HnChatActivity.launcher(mActivity, "50033");
         //HnUIMainActivity.launcher(mActivity);
-        com.hn.d.valley.main.HnMainActivity.launcher(mActivity);
+        //com.hn.d.valley.main.HnMainActivity.launcher(mActivity);
+        HnTestActivity.launcher(mActivity);
     }
 
     /**

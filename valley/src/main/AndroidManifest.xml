@@ -92,7 +92,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:theme="@style/SplashTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -101,8 +101,18 @@
         </activity>
         <activity
             android:name=".activity.HnUIMainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/BaseTranTheme"/>
+            android:theme="@style/BaseAppTheme"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--            android:configChanges="orientation|keyboardHidden|screenSize"
+-->
+
+        <activity android:name=".activity.HnTestActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
 
         <activity
             android:name=".activity.HnChatActivity"

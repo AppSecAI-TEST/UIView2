@@ -1,6 +1,8 @@
 package com.hn.d.valley.main.message;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
@@ -35,9 +37,9 @@ import java.util.List;
  */
 public class ChatControl {
 
-    RBaseViewHolder mViewHolder;
-    ChatAdapter mChatAdapter;
-    RRecyclerView mRecyclerView;
+    public RBaseViewHolder mViewHolder;
+    public ChatAdapter mChatAdapter;
+    public RRecyclerView mRecyclerView;
     HnRefreshLayout mRefreshLayout;
     Observer<List<IMMessage>> incomingMessageObserver = new Observer<List<IMMessage>>() {
         @Override
@@ -47,9 +49,10 @@ public class ChatControl {
             mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount());
         }
     };
-
+    Context mContext;
 
     public ChatControl(Context context, RBaseViewHolder viewHolder) {
+        mContext = context;
         mViewHolder = viewHolder;
         mRecyclerView = mViewHolder.v(R.id.recycler_view);
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
@@ -70,6 +73,16 @@ public class ChatControl {
 
     public void resetData(List<IMMessage> messages) {
         mChatAdapter.resetData(messages);
+        scrollToEnd();
+    }
+
+    public void scrollToEnd() {
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            ((LinearLayoutManager) layoutManager).scrollToPositionWithOffset(mChatAdapter.getItemCount() - 1, 0);
+        } else {
+            mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount() - 1);
+        }
     }
 
     class ChatAdapter extends RBaseAdapter<IMMessage> {
@@ -90,19 +103,27 @@ public class ChatControl {
 
             String avatar = "";
             View itemRootLayout = holder.v(R.id.item_root_layout);
+            View contentRootLayout = holder.v(R.id.msg_content_layout);
             if (bean.getDirect() == MsgDirectionEnum.In) {
                 //收到的消息
                 itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-                itemRootLayout.setBackgroundResource(R.drawable.bubble_box_left_selector);
+                contentRootLayout.setBackgroundResource(R.drawable.bubble_box_left_selector);
                 if (userInfoCache != null) {
                     avatar = userInfoCache.getUserInfo(bean.getFromAccount()).getAvatar();
                 }
             } else {
                 //发出去的消息
                 itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                itemRootLayout.setBackgroundResource(R.drawable.bubble_box_right_selector);
+                contentRootLayout.setBackgroundResource(R.drawable.bubble_box_right_selector);
                 avatar = UserCache.instance().getAvatar();
             }
+
+            itemRootLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
             //头像
             DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.msg_ico_view), avatar);
@@ -115,7 +136,5 @@ public class ChatControl {
             holder.tv(R.id.msg_time_view).setText(timeString);
 
         }
-
-
     }
 }

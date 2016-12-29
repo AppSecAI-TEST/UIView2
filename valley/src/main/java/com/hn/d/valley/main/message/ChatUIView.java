@@ -1,8 +1,12 @@
 package com.hn.d.valley.main.message;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -11,10 +15,14 @@ import com.angcyo.uiview.base.UIContentView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.widget.HnRefreshLayout;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -28,6 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -54,6 +63,14 @@ public class ChatUIView extends UIContentView {
 
     ChatControl mChatControl;
     SessionTypeEnum sessionType;
+    @BindView(R.id.refresh_layout)
+    HnRefreshLayout mRefreshLayout;
+    @BindView(R.id.recycler_view)
+    RRecyclerView mRecyclerView;
+    @BindView(R.id.message_expression_view)
+    RadioButton mMessageExpressionView;
+    @BindView(R.id.message_add_view)
+    RadioButton mMessageAddView;
 
     public ChatUIView(String account, SessionTypeEnum sessionType) {
         this.account = account;
@@ -76,13 +93,71 @@ public class ChatUIView extends UIContentView {
     @Override
     protected void initContentLayout() {
         super.initContentLayout();
-        mGroupView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mChatControl = new ChatControl(mActivity, mViewHolder);
+        mRefreshLayout.setBottomView(new EmptyView(mActivity));
+        mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                mChatRootLayout.showEmojiLayout();
+            public void onRefresh(@RefreshLayout.Direction int direction) {
+                if (direction == RefreshLayout.TOP) {
+                    //加载历史记录
+                    List<IMMessage> allDatas = mChatControl.mChatAdapter.getAllDatas();
+                    IMMessage lastMessage = null;
+                    if (allDatas.isEmpty()) {
+                        lastMessage = getEmptyMessage();
+                    } else {
+                        lastMessage = allDatas.get(0);
+                    }
+                    NIMClient.getService(MsgService.class).queryMessageListEx(lastMessage,
+                            QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
+                            , true)
+                            .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+                                @Override
+                                public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                                    mRefreshLayout.setRefreshEnd();
+                                    if (code == ResponseCode.RES_SUCCESS) {
+                                        if (result.size() == 0) {
+                                            mRefreshLayout.setRefreshDirection(RefreshLayout.BOTTOM);
+                                        } else {
+                                            mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH);
+                                            mChatControl.mChatAdapter.getAllDatas().addAll(0, result);
+                                            mChatControl.mChatAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                }
+                            });
+                } else {
+                    //显示键盘
+                    mRefreshLayout.setRefreshEnd();
+                    if (mInputView.getVisibility() == View.VISIBLE) {
+                        mChatRootLayout.showSoftInput(mInputView);
+                    }
+                }
             }
         });
-        mChatControl = new ChatControl(mActivity, mViewHolder);
+
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mChatRootLayout.requestBackPressed();
+                }
+                return false;
+            }
+        });
+
+        mChatRootLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
+            @Override
+            public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
+                if (isKeyboardShow) {
+                    mChatControl.scrollToEnd();
+                    mMessageAddView.setChecked(false);
+                    mMessageExpressionView.setChecked(false);
+                }
+                if (isEmojiShow) {
+                    mChatControl.scrollToEnd();
+                }
+            }
+        });
     }
 
     @Override
@@ -126,7 +201,7 @@ public class ChatUIView extends UIContentView {
         super.onViewShow(bundle);
         NIMClient.getService(MsgService.class).setChattingAccount(account, sessionType);
         NIMClient.getService(MsgService.class).queryMessageListEx(
-                MessageBuilder.createEmptyMessage(account, sessionType, System.currentTimeMillis()),
+                getEmptyMessage(),
                 QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
                 , true)
                 .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
@@ -139,10 +214,43 @@ public class ChatUIView extends UIContentView {
                 });
     }
 
+    @NonNull
+    private IMMessage getEmptyMessage() {
+        return MessageBuilder.createEmptyMessage(account, sessionType, System.currentTimeMillis());
+    }
+
     @Override
     public void onViewHide() {
         super.onViewHide();
         NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE,
                 SessionTypeEnum.None);
+    }
+
+    @OnClick({R.id.message_expression_view, R.id.message_add_view})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.message_expression_view:
+                if (!mChatRootLayout.isEmojiShow()) {
+                    mChatRootLayout.showEmojiLayout();
+                }
+                break;
+            case R.id.message_add_view:
+                if (!mChatRootLayout.isEmojiShow()) {
+                    mChatRootLayout.showEmojiLayout();
+                }
+                break;
+        }
+    }
+
+    class EmptyView extends View {
+
+        public EmptyView(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+            setMeasuredDimension(1, (int) ResUtil.dpToPx(mActivity, 30));
+        }
     }
 }

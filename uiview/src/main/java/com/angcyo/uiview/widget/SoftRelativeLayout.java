@@ -7,7 +7,6 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowInsets;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
@@ -46,23 +45,23 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
         super(context, attrs);
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        setFitsSystemWindows(true);
-        setClickable(true);
-        setEnabled(true);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        requestFocus();
-    }
+//    @Override
+//    protected void onAttachedToWindow() {
+//        super.onAttachedToWindow();
+////        setFitsSystemWindows(true);
+//        setClickable(true);
+//        setEnabled(true);
+//        setFocusable(true);
+//        setFocusableInTouchMode(true);
+//        setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
+//
+//        requestFocus();
+//    }
 
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
@@ -131,38 +130,38 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
                 .start();
     }
 
-    @Override
-    protected boolean fitSystemWindows(Rect insets) {
-        return super.fitSystemWindows(insets);
-    }
-
-    @Override
-    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mInsets[0] = insets.getSystemWindowInsetLeft();
-            mInsets[1] = insets.getSystemWindowInsetTop();
-            mInsets[2] = insets.getSystemWindowInsetRight();
-            mInsets[3] = insets.getSystemWindowInsetBottom();
-
-            if (isViewShow) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyListener();
-                    }
-                });
-                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
-                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
-            } else {
-                setPadding(getPaddingLeft(), 0, getPaddingRight(), 0);
-                return insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
-                        insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
-            }
-
-        } else {
-            return super.onApplyWindowInsets(insets);
-        }
-    }
+//    @Override
+//    protected boolean fitSystemWindows(Rect insets) {
+//        return super.fitSystemWindows(insets);
+//    }
+//
+//    @Override
+//    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            mInsets[0] = insets.getSystemWindowInsetLeft();
+//            mInsets[1] = insets.getSystemWindowInsetTop();
+//            mInsets[2] = insets.getSystemWindowInsetRight();
+//            mInsets[3] = insets.getSystemWindowInsetBottom();
+//
+//            if (isViewShow) {
+//                post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        notifyListener();
+//                    }
+//                });
+//                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
+//                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
+//            } else {
+//                setPadding(getPaddingLeft(), 0, getPaddingRight(), 0);
+//                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
+//                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
+//            }
+//
+//        } else {
+//            return super.onApplyWindowInsets(insets);
+//        }
+//    }
 
     private void notifyListener() {
          /*键盘弹出监听事件*/

@@ -27,12 +27,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/msg_time_view"
         android:gravity="bottom"
+        android:orientation="horizontal"
         android:paddingStart="@dimen/base_xhdpi">
 
         <!--头像-->
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/msg_ico_view"
-            style="@style/MsgUserMidIcoStyle"/>
+            style="@style/MsgUserLittleIcoStyle"
+            android:layout_marginBottom="@dimen/base_xhdpi"/>
 
         <!--内容-->
         <FrameLayout
@@ -41,22 +43,32 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/base_80dpi">
 
-            <TextView
-                android:id="@+id/msg_text_view"
-                style="@style/MainTextStyle"
-                tools:text="12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd"/>
-
-            <ImageView
-                android:id="@+id/msg_image_view"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:src="@drawable/login_logo"/>
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="@dimen/base_hdpi"
+                android:paddingRight="@dimen/base_hdpi">
+
+                <TextView
+                    android:id="@+id/msg_text_view"
+                    style="@style/MainTextStyle"
+                    tools:text="12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd"/>
+
+            </RelativeLayout>
+
+            <!--<ImageView-->
+            <!--android:id="@+id/msg_image_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--tools:src="@drawable/login_logo"/>-->
         </FrameLayout>
 
         <!--状态-->
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/base_xhdpi"
             android:layout_marginStart="@dimen/base_80dpi_">
 
             <ImageView

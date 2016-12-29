@@ -19,5 +19,7 @@
     <!--导航栏字体颜色-->
     <color name="nav_text_color">#ACBCB8</color>
     <color name="nav_text_color_press">#0BD1A0</color>
+    <!--聊天背景颜色-->
+    <color name="chat_bg_color">#F0F0F5</color>
 
 </resources>
