@@ -64,6 +64,8 @@ public class HnSplashActivity extends BaseActivity {
             startIView(new LoginUIView(), false);
         }
 
+//        ChatUIView.start(mLayout, "50033");
+
 
 //        Observable.timer(100, TimeUnit.MILLISECONDS)
 //                .observeOn(AndroidSchedulers.mainThread())

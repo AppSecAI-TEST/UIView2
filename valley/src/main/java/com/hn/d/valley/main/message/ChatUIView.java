@@ -89,4 +89,9 @@ public class ChatUIView extends UIContentView {
             hideSoftInput();
         }
     }
+
+    @Override
+    public boolean onBackPressed() {
+        return mChatRootLayout.requestBackPressed();
+    }
 }

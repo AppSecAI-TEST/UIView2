@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 
-import com.angcyo.library.utils.L;
-
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -113,7 +111,7 @@ public class RSoftInputLayout extends ViewGroup {
         int maxHeight = heightSize - getPaddingTop();
         int paddingBottom = getPaddingBottom();
 
-        L.w("height:" + heightSize + " paddBottom:" + paddingBottom);
+//        L.w("height:" + heightSize + " paddBottom:" + paddingBottom);
 
         isKeyboardShow = isSoftKeyboardShow();
         if (isKeyboardShow) {
@@ -135,7 +133,7 @@ public class RSoftInputLayout extends ViewGroup {
         }
 
         if (isKeyboardShow) {
-            if (paddingBottom > 0) {
+            if (maxHeight + keyboardHeight > getScreenHeightPixels()) {
                 contentHeight = maxHeight - keyboardHeight;
             } else {
                 contentHeight = maxHeight;
@@ -196,7 +194,7 @@ public class RSoftInputLayout extends ViewGroup {
      * 判断键盘是否显示
      */
     public boolean isSoftKeyboardShow() {
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        int screenHeight = getScreenHeightPixels();
         int keyboardHeight = getSoftKeyboardHeight();
         return screenHeight != keyboardHeight && keyboardHeight > 100;
     }
@@ -205,11 +203,18 @@ public class RSoftInputLayout extends ViewGroup {
      * 获取键盘的高度
      */
     public int getSoftKeyboardHeight() {
-        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        int screenHeight = getScreenHeightPixels();
         Rect rect = new Rect();
         getWindowVisibleDisplayFrame(rect);
         int visibleBottom = rect.bottom;
         return screenHeight - visibleBottom;
+    }
+
+    /**
+     * 屏幕高度(不包含虚拟导航键盘的高度)
+     */
+    private int getScreenHeightPixels() {
+        return getResources().getDisplayMetrics().heightPixels;
     }
 
     private void showEmojiLayoutInner(int height) {

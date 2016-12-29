@@ -195,7 +195,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         final ViewPattern oldViewPattern = getLastViewPattern();
 
         if (param.start_mode == UIParam.SINGLE_TOP) {
-            if (oldViewPattern.mIView == iView) {
+            if (oldViewPattern != null && oldViewPattern.mIView == iView) {
                 //如果已经是最前显示, 调用onViewShow方法
                 oldViewPattern.mIView.onViewShow(param.mBundle);
             } else {
@@ -763,7 +763,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     private void viewHide(final ViewPattern viewPattern) {
         viewPattern.mIView.onViewHide();
-//        viewPattern.mView.setVisibility(GONE);
+        viewPattern.mView.setVisibility(GONE);
     }
 
     private void viewShow(final ViewPattern viewPattern, final Bundle bundle) {
@@ -933,10 +933,6 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         if (view == null) {
             return false;
         }
-
-//        if (BuildConfig.DEBUG) {
-        logLayoutInfo();
-//        }
 
         if (animation == null) {
             if (endRunnable != null) {
@@ -1361,7 +1357,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         void onIViewRemove(final UILayoutImpl uiLayout, final ViewPattern viewPattern);
     }
 
-    static class AnimRunnable implements Animation.AnimationListener {
+    class AnimRunnable implements Animation.AnimationListener {
 
         private Runnable mRunnable;
 
@@ -1379,6 +1375,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             if (mRunnable != null) {
                 mRunnable.run();
             }
+            logLayoutInfo();
         }
 
         @Override
