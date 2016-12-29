@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
@@ -20,6 +21,7 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.util.List;
@@ -51,6 +53,20 @@ public class ChatControl {
     };
     Context mContext;
 
+    Observer<IMMessage> mMessageObserver = new Observer<IMMessage>() {
+        @Override
+        public void onEvent(IMMessage imMessage) {
+            //消息状态发生了改变
+            List<IMMessage> allDatas = mChatAdapter.getAllDatas();
+            for (int i = 0; i < allDatas.size(); i++) {
+                if (allDatas.get(i).isTheSame(imMessage)) {
+                    mChatAdapter.notifyItemChanged(i);
+                    break;
+                }
+            }
+        }
+    };
+
     public ChatControl(Context context, RBaseViewHolder viewHolder) {
         mContext = context;
         mViewHolder = viewHolder;
@@ -64,6 +80,8 @@ public class ChatControl {
     public void onLoad() {
         NIMClient.getService(MsgServiceObserve.class)
                 .observeReceiveMessage(incomingMessageObserver, true);
+        NIMClient.getService(MsgServiceObserve.class)
+                .observeMsgStatus(mMessageObserver, true);
     }
 
     public void onUnload() {
@@ -73,6 +91,11 @@ public class ChatControl {
 
     public void resetData(List<IMMessage> messages) {
         mChatAdapter.resetData(messages);
+        scrollToEnd();
+    }
+
+    public void addData(IMMessage message) {
+        mChatAdapter.addLastItem(message);
         scrollToEnd();
     }
 
@@ -135,6 +158,41 @@ public class ChatControl {
             String timeString = TimeUtil.getTimeShowString(bean.getTime(), false);
             holder.tv(R.id.msg_time_view).setText(timeString);
 
+            //消息状态
+            updateMsgStatus(holder, bean);
+        }
+
+        private void updateMsgStatus(RBaseViewHolder viewHolder, IMMessage bean) {
+            View failView = viewHolder.v(R.id.status_fail_view);
+            View sendingView = viewHolder.v(R.id.status_sending_view);
+
+            failView.setVisibility(View.GONE);
+            sendingView.setVisibility(View.GONE);
+            MsgStatusEnum status = bean.getStatus();
+            switch (status) {
+                case draft:
+                    //草稿
+                    break;
+                case fail:
+                    //失败
+                    failView.setVisibility(View.VISIBLE);
+                    break;
+                case read:
+                    //已读
+                    break;
+                case sending:
+                    //发送中
+                    sendingView.setVisibility(View.VISIBLE);
+                    break;
+                case success:
+                    //成功
+                    break;
+                case unread:
+                    //未读
+                    break;
+            }
+
+            L.e("消息状态:" + status.getValue());
         }
     }
 }

@@ -48,5 +48,6 @@
     <string name="add_friend">添加好友</string>
     <string name="search_tip">搜索: </string>
     <string name="location_map">正在定位...</string>
+    <string name="send">发送</string>
 
 </resources>

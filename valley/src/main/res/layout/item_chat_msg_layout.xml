@@ -23,10 +23,11 @@
 
     <LinearLayout
         android:id="@+id/item_root_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/msg_time_view"
         android:gravity="bottom"
+        android:layoutDirection="rtl"
         android:orientation="horizontal"
         android:paddingStart="@dimen/base_xhdpi">
 
@@ -53,7 +54,7 @@
                 <TextView
                     android:id="@+id/msg_text_view"
                     style="@style/MainTextStyle"
-                    tools:text="12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd"/>
+                    tools:text="1231242"/>
 
             </RelativeLayout>
 
@@ -71,10 +72,20 @@
             android:layout_marginBottom="@dimen/base_xhdpi"
             android:layout_marginStart="@dimen/base_80dpi_">
 
+            <!--发送失败的view-->
             <ImageView
+                android:id="@+id/status_fail_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/nim_ic_failed"/>
+                android:src="@drawable/nim_ic_failed"
+                android:visibility="gone"/>
+
+            <ProgressBar
+                android:id="@+id/status_sending_view"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="@dimen/base_xxxhdpi"
+                android:layout_height="@dimen/base_xxxhdpi"
+                android:visibility="gone"/>
         </FrameLayout>
 
     </LinearLayout>

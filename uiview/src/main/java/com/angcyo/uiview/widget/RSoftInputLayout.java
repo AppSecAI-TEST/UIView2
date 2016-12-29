@@ -89,19 +89,22 @@ public class RSoftInputLayout extends ViewGroup {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (getChildCount() != 2) {
-            throw new IllegalArgumentException("必须含有2个子View.");
+
+        if (!isInEditMode()) {
+            if (getChildCount() != 2) {
+                throw new IllegalArgumentException("必须含有2个子View.");
+            }
+            setFitsSystemWindows(true);
+            setClipToPadding(false);
+
+            if (keyboardHeight == 0) {
+                keyboardHeight = (int) (getResources().getDisplayMetrics().density * 200);
+            }
         }
+
         /*请按顺序布局*/
         contentLayout = getChildAt(0);
         emojiLayout = getChildAt(1);
-
-        setFitsSystemWindows(true);
-        setClipToPadding(false);
-
-        if (keyboardHeight == 0) {
-            keyboardHeight = (int) (getResources().getDisplayMetrics().density * 200);
-        }
     }
 
     @Override
@@ -113,6 +116,16 @@ public class RSoftInputLayout extends ViewGroup {
         int paddingBottom = getPaddingBottom();
 
 //        L.w("height:" + heightSize + " paddBottom:" + paddingBottom);
+
+        if (isInEditMode()) {
+            contentLayout.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
+            setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+            emojiLayout.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY));
+            setMeasuredDimension(widthSize, heightSize);
+            return;
+        }
 
         isKeyboardShow = isSoftKeyboardShow();
         if (isKeyboardShow) {
@@ -152,6 +165,12 @@ public class RSoftInputLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        if (isInEditMode()) {
+            contentLayout.layout(l, t, r, b);
+            emojiLayout.layout(l, b, r, b);
+            return;
+        }
+
         int paddingTop = getPaddingTop();
         t += paddingTop;
         contentLayout.layout(l, t, r, contentLayout.getMeasuredHeight() + paddingTop);

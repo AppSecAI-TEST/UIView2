@@ -3,6 +3,8 @@ package com.hn.d.valley.main.message;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +39,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -71,6 +74,9 @@ public class ChatUIView extends UIContentView {
     RadioButton mMessageExpressionView;
     @BindView(R.id.message_add_view)
     RadioButton mMessageAddView;
+    @BindView(R.id.send_view)
+    TextView mSendView;
+    private String mLastInputText = "";
 
     public ChatUIView(String account, SessionTypeEnum sessionType) {
         this.account = account;
@@ -85,6 +91,10 @@ public class ChatUIView extends UIContentView {
         mLayout.startIView(new ChatUIView(account, sessionType), new UIParam().setLaunchMode(UIParam.SINGLE_TOP));
     }
 
+    public static MsgService msgService() {
+        return NIMClient.getService(MsgService.class);
+    }
+
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_chat_layout);
@@ -96,6 +106,40 @@ public class ChatUIView extends UIContentView {
         mBaseRootLayout.fitsSystemWindows(false);
 
         mChatControl = new ChatControl(mActivity, mViewHolder);
+        initRefreshLayout();
+
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mChatRootLayout.requestBackPressed();
+                }
+                return false;
+            }
+        });
+
+        mChatRootLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
+            @Override
+            public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
+                if (isKeyboardShow) {
+                    mChatControl.scrollToEnd();
+                    mMessageAddView.setChecked(false);
+                    mMessageExpressionView.setChecked(false);
+                }
+                if (isEmojiShow) {
+                    mChatControl.scrollToEnd();
+                }
+
+                if (isKeyboardShow || isEmojiShow) {
+                    if (mRecordView.getVisibility() == View.VISIBLE) {
+                        onMessageVoiceBox(false);
+                    }
+                }
+            }
+        });
+    }
+
+    private void initRefreshLayout() {
         mRefreshLayout.setBottomView(new EmptyView(mActivity));
         mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
             @Override
@@ -109,7 +153,7 @@ public class ChatUIView extends UIContentView {
                     } else {
                         lastMessage = allDatas.get(0);
                     }
-                    NIMClient.getService(MsgService.class).queryMessageListEx(lastMessage,
+                    msgService().queryMessageListEx(lastMessage,
                             QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
                             , true)
                             .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
@@ -136,30 +180,6 @@ public class ChatUIView extends UIContentView {
                 }
             }
         });
-
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mChatRootLayout.requestBackPressed();
-                }
-                return false;
-            }
-        });
-
-        mChatRootLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
-            @Override
-            public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
-                if (isKeyboardShow) {
-                    mChatControl.scrollToEnd();
-                    mMessageAddView.setChecked(false);
-                    mMessageExpressionView.setChecked(false);
-                }
-                if (isEmojiShow) {
-                    mChatControl.scrollToEnd();
-                }
-            }
-        });
     }
 
     @Override
@@ -174,10 +194,14 @@ public class ChatUIView extends UIContentView {
      */
     @OnCheckedChanged(R.id.message_voice_box)
     public void onMessageVoiceBox(boolean isChecked) {
-        mInputView.setVisibility(isChecked ? View.GONE : View.VISIBLE);
         mRecordView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         if (isChecked) {
+            mLastInputText = mInputView.getText().toString();
+            mInputView.setText("");
             hideSoftInput();
+        } else {
+            mInputView.setText(mLastInputText);
+            mInputView.setSelection(mLastInputText.length());
         }
     }
 
@@ -201,8 +225,8 @@ public class ChatUIView extends UIContentView {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        NIMClient.getService(MsgService.class).setChattingAccount(account, sessionType);
-        NIMClient.getService(MsgService.class).queryMessageListEx(
+        msgService().setChattingAccount(account, sessionType);
+        msgService().queryMessageListEx(
                 getEmptyMessage(),
                 QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
                 , true)
@@ -224,12 +248,15 @@ public class ChatUIView extends UIContentView {
     @Override
     public void onViewHide() {
         super.onViewHide();
-        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE,
+        msgService().setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE,
                 SessionTypeEnum.None);
     }
 
+    /**
+     * 表情功能切换
+     */
     @OnClick({R.id.message_expression_view, R.id.message_add_view})
-    public void onClick(View view) {
+    public void onMessageClick(View view) {
         switch (view.getId()) {
             case R.id.message_expression_view:
                 if (!mChatRootLayout.isEmojiShow()) {
@@ -242,6 +269,30 @@ public class ChatUIView extends UIContentView {
                 }
                 break;
         }
+    }
+
+    /**
+     * 输入框文本变化
+     */
+    @OnTextChanged(R.id.input_view)
+    public void onInputTextChanged(Editable editable) {
+        mSendView.setVisibility(TextUtils.isEmpty(editable) ? View.GONE : View.VISIBLE);
+    }
+
+    /**
+     * 发送消息
+     */
+    @OnClick(R.id.send_view)
+    public void onSendClick() {
+        IMMessage imMessage = createTextMessage();
+        msgService().sendMessage(imMessage, false);
+        mChatControl.addData(imMessage);
+        mInputView.setText("");
+    }
+
+    @NonNull
+    private IMMessage createTextMessage() {
+        return MessageBuilder.createTextMessage(account, sessionType, mInputView.getText().toString());
     }
 
     class EmptyView extends View {

@@ -76,14 +76,14 @@
 
                 <RadioButton
                     android:id="@+id/message_expression_view"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/base_xxxhdpi"
                     android:layout_height="@dimen/base_title_bar_item_size"
                     android:layout_marginLeft="@dimen/base_hdpi"
                     android:button="@drawable/message_expression_selector"/>
 
                 <RadioButton
                     android:id="@+id/message_add_view"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/base_xxxhdpi"
                     android:layout_height="@dimen/base_title_bar_item_size"
                     android:layout_marginLeft="@dimen/base_hdpi"
                     android:layout_marginRight="@dimen/base_hdpi"
@@ -91,6 +91,19 @@
             </RadioGroup>
 
         </LinearLayout>
+
+        <!--发送按钮-->
+        <TextView
+            android:id="@+id/send_view"
+            style="@style/MainColorButtonStyle"
+            android:layout_width="@dimen/base_40dpi"
+            android:layout_height="@dimen/base_xxxhdpi"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/base_xhdpi"
+            android:layout_marginRight="@dimen/base_ldpi"
+            android:text="@string/send"
+            android:visibility="gone"/>
 
         <!--内容-->
         <com.hn.d.valley.widget.HnRefreshLayout

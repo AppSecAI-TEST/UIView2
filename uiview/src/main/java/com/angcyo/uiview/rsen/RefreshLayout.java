@@ -107,6 +107,13 @@ public class RefreshLayout extends ViewGroup {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        if (isInEditMode()) {
+            mTargetView.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
+            return;
+        }
+
         if (mTargetView != null) {
             mTargetView.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY),
                     MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
@@ -123,6 +130,12 @@ public class RefreshLayout extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
+
+        if (isInEditMode()) {
+            mTargetView.layout(0, 0, r, getMeasuredHeight());
+            return;
+        }
+
         if (mTargetView != null) {
             mTargetView.layout(0, 0, r, getMeasuredHeight());
         }
@@ -147,7 +160,9 @@ public class RefreshLayout extends ViewGroup {
         mTouchSlop = 0;//ViewConfiguration.get(getContext()).getScaledTouchSlop();
         mTargetView = getChildAt(0);
         mScroller = new OverScroller(getContext(), new DecelerateInterpolator());
-        initRefreshView();
+        if (!isInEditMode()) {
+            initRefreshView();
+        }
     }
 
     protected void initRefreshView() {
@@ -183,7 +198,6 @@ public class RefreshLayout extends ViewGroup {
             }
             scrollTo(mScroller.getCurrX(), currY);
             postInvalidate();
-
         }
     }
 
