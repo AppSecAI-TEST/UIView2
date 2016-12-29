@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -10,12 +11,20 @@ import com.angcyo.uiview.base.UIContentView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
-import com.hn.d.valley.widget.HnRefreshLayout;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
+import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
@@ -36,10 +45,6 @@ public class ChatUIView extends UIContentView {
     String account;
     @BindView(R.id.group_view)
     RadioGroup mGroupView;
-    @BindView(R.id.recycler_view)
-    RRecyclerView mRecyclerView;
-    @BindView(R.id.refresh_layout)
-    HnRefreshLayout mRefreshLayout;
     @BindView(R.id.chat_root_layout)
     RSoftInputLayout mChatRootLayout;
     @BindView(R.id.input_view)
@@ -47,12 +52,20 @@ public class ChatUIView extends UIContentView {
     @BindView(R.id.record_view)
     TextView mRecordView;
 
-    public ChatUIView(String account) {
+    ChatControl mChatControl;
+    SessionTypeEnum sessionType;
+
+    public ChatUIView(String account, SessionTypeEnum sessionType) {
         this.account = account;
+        this.sessionType = sessionType;
     }
 
-    public static void start(ILayout mLayout, String account) {
-        mLayout.startIView(new ChatUIView(account), new UIParam().setLaunchMode(UIParam.SINGLE_TOP));
+    /**
+     * @param account     聊天对象账户
+     * @param sessionType 聊天类型, 群聊, 单聊
+     */
+    public static void start(ILayout mLayout, String account, SessionTypeEnum sessionType) {
+        mLayout.startIView(new ChatUIView(account, sessionType), new UIParam().setLaunchMode(UIParam.SINGLE_TOP));
     }
 
     @Override
@@ -69,6 +82,7 @@ public class ChatUIView extends UIContentView {
                 mChatRootLayout.showEmojiLayout();
             }
         });
+        mChatControl = new ChatControl(mActivity, mViewHolder);
     }
 
     @Override
@@ -93,5 +107,42 @@ public class ChatUIView extends UIContentView {
     @Override
     public boolean onBackPressed() {
         return mChatRootLayout.requestBackPressed();
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        mChatControl.onLoad();
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        mChatControl.onUnload();
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        NIMClient.getService(MsgService.class).setChattingAccount(account, sessionType);
+        NIMClient.getService(MsgService.class).queryMessageListEx(
+                MessageBuilder.createEmptyMessage(account, sessionType, System.currentTimeMillis()),
+                QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
+                , true)
+                .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+                    @Override
+                    public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                        if (code == ResponseCode.RES_SUCCESS) {
+                            mChatControl.resetData(result);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE,
+                SessionTypeEnum.None);
     }
 }

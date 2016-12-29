@@ -15,6 +15,9 @@ import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 
 import java.util.ArrayList;
@@ -50,7 +53,7 @@ public class MessageUIView extends BaseUIView {
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
-                        ChatUIView.start(mOtherILayout, recentContact.getFromAccount());
+                        ChatUIView.start(mOtherILayout, recentContact.getFromAccount(), recentContact.getSessionType());
                         //HnChatActivity.launcher(mActivity, recentContact.getFromAccount());
                     }
                 },
@@ -112,8 +115,19 @@ public class MessageUIView extends BaseUIView {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
+        // 进入最近联系人列表界面，建议放在onResume中
+        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_ALL, SessionTypeEnum.None);
+
         checkEmpty();
         MsgCache.notifyNoreadNum();
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+
+        // 退出聊天界面或离开最近联系人列表界面，建议放在onPause中
+        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, SessionTypeEnum.None);
     }
 
     private void checkEmpty() {

@@ -14,6 +14,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.utils.RBus;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -77,7 +78,7 @@ public class HnChatActivity extends BaseActivity {
                 RBus.post(new SwipeEvent((int) (-getOffsetX() * percent)));
             }
         });
-        startIView(new ChatUIView(mAccount));
+        startIView(new ChatUIView(mAccount, SessionTypeEnum.P2P));
     }
 
     @Override

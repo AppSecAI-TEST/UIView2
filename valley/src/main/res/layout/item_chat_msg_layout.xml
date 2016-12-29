@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/base_hdpi"
+    android:paddingTop="@dimen/base_hdpi">
+
+    <TextView
+        android:id="@+id/msg_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base_hdpi"
+        android:background="@drawable/base_dark2_round_selector"
+        android:paddingBottom="@dimen/base_ldpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_ldpi"
+        android:textColor="@android:color/white"
+        tools:text="上午 19:90"/>
+
+    <LinearLayout
+        android:id="@+id/item_root_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/msg_time_view"
+        android:gravity="bottom"
+        android:paddingStart="@dimen/base_xhdpi">
+
+        <!--头像-->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/msg_ico_view"
+            style="@style/MsgUserMidIcoStyle"/>
+
+        <!--内容-->
+        <FrameLayout
+            android:id="@+id/msg_content_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/base_80dpi">
+
+            <TextView
+                android:id="@+id/msg_text_view"
+                style="@style/MainTextStyle"
+                tools:text="12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd12312341235asdfasdfasdfasd"/>
+
+            <ImageView
+                android:id="@+id/msg_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:src="@drawable/login_logo"/>
+        </FrameLayout>
+
+        <!--状态-->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_80dpi_">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/nim_ic_failed"/>
+        </FrameLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,6 +1,8 @@
 package com.angcyo.uiview.container;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -49,30 +51,66 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     protected ViewPattern mLastShowViewPattern;
     protected boolean isAttachedToWindow = false;
     protected AppCompatActivity mCompatActivity;
+    Application.ActivityLifecycleCallbacks mCallbacks = new Application.ActivityLifecycleCallbacks() {
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            if (activity == mCompatActivity) {
+                viewShow(mLastShowViewPattern, null);
+            }
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+            if (activity == mCompatActivity) {
+                viewHide(mLastShowViewPattern);
+            }
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+
+        }
+    };
     /**
      * 是否正在退出
      */
     private boolean isFinishing = false;
     private ArrayList<IWindowInsetsListener> mIWindowInsetsListeners;
     private ArrayList<OnIViewChangedListener> mOnIViewChangedListeners = new ArrayList<>();
-
     private int[] mInsets = new int[4];
     /**
      * 锁定高度, 当键盘弹出的时候, 可以不改变size
      */
     private boolean lockHeight = false;
     private float mTranslationOffsetX;
-
     /**
      * 记录有多少个Runnable任务在执行
      */
     private int runnableCount = 0;
-
     /**
      * 如果只剩下最后一个View, 是否激活滑动删除
      */
     private boolean enableRootSwipe = false;
-
     /**
      * 是否正在拖拽返回.
      */
@@ -146,6 +184,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mCompatActivity.getApplication().registerActivityLifecycleCallbacks(mCallbacks);
         setFocusable(true);
         setFocusableInTouchMode(true);
         post(new Runnable() {
@@ -160,6 +199,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        mCompatActivity.getApplication().unregisterActivityLifecycleCallbacks(mCallbacks);
         isAttachedToWindow = false;
         unloadViewInternal();
     }
@@ -289,15 +329,15 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         post(new Runnable() {
             @Override
             public void run() {
-                finishIViewInner(findViewPatternByView(view), needAnim, false);
+                finishIViewInner(findViewPatternByView(view), new UIParam(needAnim, false, false));
             }
         });
     }
 
     /**
-     * @param quiet 如果为true, 上层的视图,将取消生命周期 {@link IView#onViewShow()}  的回调
+     * @param param isQuiet 如果为true, 上层的视图,将取消生命周期 {@link IView#onViewShow()}  的回调
      */
-    private void finishIViewInner(final ViewPattern viewPattern, final boolean needAnim, final boolean quiet) {
+    private void finishIViewInner(final ViewPattern viewPattern, final UIParam param) {
         if (viewPattern == null) {
             return;
         }
@@ -305,11 +345,11 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         ViewPattern lastViewPattern = findLastShowViewPattern(viewPattern);
 
         if (viewPattern.isAnimToEnd || isFinishing) {
-            if (quiet) {
+            if (param.isQuiet) {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        finishIViewInner(viewPattern, needAnim, quiet);
+                        finishIViewInner(viewPattern, param);
                     }
                 });
             }
@@ -324,21 +364,21 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             return;
         }
 
-        if (!viewPattern.mIView.onBackPressed()) {
+        if (!param.isSwipeBack && !viewPattern.mIView.onBackPressed()) {
             isFinishing = false;
             return;
         }
 
-        if (needAnim) {
+        if (param.mAnim) {
             viewPattern.isAnimToEnd = true;
             //startViewPatternAnim(viewPattern, lastViewPattern, true, true);
             //startViewPatternAnim(viewPattern, lastViewPattern, false, false);
-            topViewFinish(viewPattern, needAnim);
-            bottomViewStart(lastViewPattern, viewPattern, needAnim, quiet);
+            topViewFinish(viewPattern, true);
+            bottomViewStart(lastViewPattern, viewPattern, param.mAnim, param.isQuiet);
         } else {
             if (lastViewPattern != null) {
 
-                if (!quiet) {
+                if (!param.isQuiet) {
                     viewShow(lastViewPattern, null);
                 }
 
@@ -368,7 +408,12 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     @Override
     public void finishIView(IView iview, boolean needAnim, boolean quiet) {
-        finishIViewInner(findViewPatternByIView(iview), needAnim, quiet);
+        finishIViewInner(findViewPatternByIView(iview), new UIParam(needAnim, false, quiet));
+    }
+
+    @Override
+    public void finishIView(IView iview, UIParam param) {
+        finishIViewInner(findViewPatternByIView(iview), param);
     }
 
     @Override
@@ -762,11 +807,17 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
 
     private void viewHide(final ViewPattern viewPattern) {
+        if (viewPattern == null) {
+            return;
+        }
         viewPattern.mIView.onViewHide();
         viewPattern.mView.setVisibility(GONE);
     }
 
     private void viewShow(final ViewPattern viewPattern, final Bundle bundle) {
+        if (viewPattern == null) {
+            return;
+        }
         viewPattern.mView.setVisibility(VISIBLE);
         viewPattern.mView.bringToFront();
         viewPattern.mIView.onViewShow(bundle);
@@ -1230,7 +1281,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             if (keepLast && pattern == getLastViewPattern()) {
                 return;
             } else {
-                finishIViewInner(pattern, false, true);
+                finishIViewInner(pattern, new UIParam(false, false, true));
             }
         }
     }
@@ -1248,7 +1299,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             mCompatActivity.finish();
             mCompatActivity.overridePendingTransition(0, 0);
         } else {
-            finishIView(mLastShowViewPattern.mIView, false);
+            finishIView(mLastShowViewPattern.mIView, new UIParam(false, false, false));
         }
     }
 

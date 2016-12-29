@@ -58,7 +58,7 @@
                     android:id="@+id/record_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/base_40dpi"
-                    android:background="@drawable/base_dark_selector"
+                    android:background="@drawable/base_dark_round_selector"
                     android:gravity="center"
                     android:text="按住开始录音"
                     android:visibility="invisible"/>
