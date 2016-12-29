@@ -198,10 +198,10 @@ public class UITitleBarContainer extends FrameLayout {
         mTitleView.setText(mTitleBarPattern.mTitleString);
         mTitleBarPattern.setTextViewSize(mTitleView);
         if (!TextUtils.isEmpty(mTitleBarPattern.mTitleString) && mTitleBarPattern.titleAnim) {
-            ViewCompat.setTranslationY(mTitleView, -itemSize);
-            ViewCompat.animate(mTitleView).translationY(0)
-                    .setInterpolator(new DecelerateInterpolator())
-                    .setDuration(animTime).start();
+//            ViewCompat.setTranslationY(mTitleView, -itemSize);
+//            ViewCompat.animate(mTitleView).translationY(0)
+//                    .setInterpolator(new DecelerateInterpolator())
+//                    .setDuration(animTime).start();
         }
 
         clearViews(mLeftControlLayout, mLeftViews);

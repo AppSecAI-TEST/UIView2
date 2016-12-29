@@ -10,10 +10,10 @@ import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.main.MainUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 
-public class HnMainActivity extends BaseActivity {
+public class HnUIMainActivity extends BaseActivity {
 
     public static void launcher(Activity activity) {
-        Intent intent = new Intent(activity, HnMainActivity.class);
+        Intent intent = new Intent(activity, HnUIMainActivity.class);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
                 R.anim.base_tran_to_left_exit);

@@ -2,12 +2,15 @@ package com.hn.d.valley.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.ViewDragHelper;
 
 import com.angcyo.uiview.container.SwipeBackLayout;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.utils.RBus;
@@ -25,8 +28,11 @@ import com.hn.d.valley.utils.RBus;
  */
 public class HnChatActivity extends BaseActivity {
 
-    public static void launcher(Activity activity) {
+    String mAccount;
+
+    public static void launcher(Activity activity, String account) {
         Intent intent = new Intent(activity, HnChatActivity.class);
+        intent.putExtra(Constant.USER_ACCOUNT, account);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
                 R.anim.base_tran_to_left_exit);
@@ -34,6 +40,13 @@ public class HnChatActivity extends BaseActivity {
 
     private int getOffsetX() {
         return (int) (getResources().getDisplayMetrics().widthPixels * 0.3f);
+    }
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAccount = getIntent().getStringExtra(Constant.USER_ACCOUNT);
     }
 
     @Override
@@ -64,7 +77,7 @@ public class HnChatActivity extends BaseActivity {
                 RBus.post(new SwipeEvent((int) (-getOffsetX() * percent)));
             }
         });
-        startIView(new ChatUIView("50033"));
+        startIView(new ChatUIView(mAccount));
     }
 
     @Override

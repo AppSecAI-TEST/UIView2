@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 
+import com.angcyo.library.utils.L;
+
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -109,6 +111,9 @@ public class RSoftInputLayout extends ViewGroup {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 //        int maxHeight = heightSize - getPaddingBottom() - getPaddingTop();
         int maxHeight = heightSize - getPaddingTop();
+        int paddingBottom = getPaddingBottom();
+
+        L.w("height:" + heightSize + " paddBottom:" + paddingBottom);
 
         isKeyboardShow = isSoftKeyboardShow();
         if (isKeyboardShow) {
@@ -130,7 +135,11 @@ public class RSoftInputLayout extends ViewGroup {
         }
 
         if (isKeyboardShow) {
-            contentHeight = maxHeight - keyboardHeight;
+            if (paddingBottom > 0) {
+                contentHeight = maxHeight - keyboardHeight;
+            } else {
+                contentHeight = maxHeight;
+            }
         } else {
             contentHeight = maxHeight - emojiHeight;
         }

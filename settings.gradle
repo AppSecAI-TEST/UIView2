@@ -1,1 +1,1 @@
-include ':uiview', ':library', ':imagepicker', ':valley'
+include ':uiview', ':library', ':imagepicker', ':valley', ':fragmentation'

@@ -1,21 +1,24 @@
 package com.hn.d.valley.main.message;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIContentView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.widget.HnRefreshLayout;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -39,6 +42,10 @@ public class ChatUIView extends UIContentView {
     HnRefreshLayout mRefreshLayout;
     @BindView(R.id.chat_root_layout)
     RSoftInputLayout mChatRootLayout;
+    @BindView(R.id.input_view)
+    ExEditText mInputView;
+    @BindView(R.id.record_view)
+    TextView mRecordView;
 
     public ChatUIView(String account) {
         this.account = account;
@@ -71,14 +78,15 @@ public class ChatUIView extends UIContentView {
                 .setShowBackImageView(true);
     }
 
-    @Override
-    public void onViewShow(Bundle bundle) {
-        super.onViewShow(bundle);
-//        postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                showLoadView();
-//            }
-//        }, 2000);
+    /**
+     * 切换语音输入
+     */
+    @OnCheckedChanged(R.id.message_voice_box)
+    public void onMessageVoiceBox(boolean isChecked) {
+        mInputView.setVisibility(isChecked ? View.GONE : View.VISIBLE);
+        mRecordView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        if (isChecked) {
+            hideSoftInput();
+        }
     }
 }

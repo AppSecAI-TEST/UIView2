@@ -24,7 +24,7 @@ import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
-import com.hn.d.valley.activity.HnMainActivity;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
@@ -269,7 +269,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.forget_view)
     public void onForgetClick() {
-
+        //HnChatActivity.launcher(mActivity, "50033");
+        //HnUIMainActivity.launcher(mActivity);
+        com.hn.d.valley.main.HnMainActivity.launcher(mActivity);
     }
 
     /**
@@ -278,7 +280,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @OnClick(R.id.weixin_view)
     public void onWeixinClick() {
         startIView(new AmapUIView());
-//        HnMainActivity.launcher(mActivity);
+//        HnUIMainActivity.launcher(mActivity);
     }
 
     /**
@@ -338,7 +340,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     private void jumpToMain() {
         //replaceIView(new MainUIView(500));
-        HnMainActivity.launcher(mActivity);
+        HnUIMainActivity.launcher(mActivity);
+//        HnMainActivity.launcher(mActivity);
         mActivity.finish();
     }
 

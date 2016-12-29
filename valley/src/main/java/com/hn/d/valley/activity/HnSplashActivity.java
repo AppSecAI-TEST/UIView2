@@ -58,7 +58,7 @@ public class HnSplashActivity extends BaseActivity {
     protected void onLoadView() {
         if (RNim.isAutoLoginSucceed()) {
             //startIView(new MainUIView(), true);
-            HnMainActivity.launcher(this);
+            HnUIMainActivity.launcher(this);
             finish();
         } else {
             startIView(new LoginUIView(), false);
@@ -70,7 +70,7 @@ public class HnSplashActivity extends BaseActivity {
 //                .subscribe(new Action1<Long>() {
 //                    @Override
 //                    public void call(Long aLong) {
-//                        //HnMainActivity.launcher(HnSplashActivity.this);
+//                        //HnUIMainActivity.launcher(HnSplashActivity.this);
 //                        startIView(new LoginUIView(), false);
 //                    }
 //                });

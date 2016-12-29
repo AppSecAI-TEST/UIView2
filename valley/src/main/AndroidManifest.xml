@@ -100,13 +100,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.HnMainActivity"
+            android:name=".activity.HnUIMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/BaseTranTheme"/>
 
         <activity
             android:name=".activity.HnChatActivity"
             android:launchMode="singleTop"
+            android:theme="@style/BaseTranTheme"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity
+            android:name=".main.HnMainActivity"
             android:theme="@style/BaseTranTheme"/>
 
         <!--Bugly升级界面-->

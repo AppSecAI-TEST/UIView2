@@ -146,6 +146,7 @@ public class MainUIView extends BaseUIView {
                         mMainUILayout.showIView(mFoundUIView);
                     }
                 } else if (position == Constant.POS_MESSAGE) {
+//                    HnChatActivity.launcher(mActivity, "50033");
                     //消息
                     if (mMessageUIView == null) {
                         mMessageUIView = new MessageUIView();

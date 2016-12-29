@@ -12,15 +12,10 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.viewpager.FadeInOutPageTransformer;
-import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
-import com.hn.d.valley.main.home.circle.CircleUIView;
-import com.hn.d.valley.main.home.nearby.NearbyUIView;
-import com.hn.d.valley.main.home.recommend.RecommendUIView;
 
 import java.util.ArrayList;
 
@@ -64,23 +59,23 @@ public class HomeUIView extends BaseUIView {
 
     private void initViewPager() {
         mViewPager.setPageTransformer(true, new FadeInOutPageTransformer());
-        mViewPager.setAdapter(new UIPagerAdapter() {
-            @Override
-            protected IView getIView(int position) {
-                if (position == 1) {
-                    return new RecommendUIView();
-                }
-                if (position == 2) {
-                    return new NearbyUIView();
-                }
-                return new CircleUIView();
-            }
-
-            @Override
-            public int getCount() {
-                return 3;
-            }
-        });
+//        mViewPager.setAdapter(new UIPagerAdapter() {
+//            @Override
+//            protected IView getIView(int position) {
+//                if (position == 1) {
+//                    return new RecommendUIView();
+//                }
+//                if (position == 2) {
+//                    return new NearbyUIView();
+//                }
+//                return new CircleUIView();
+//            }
+//
+//            @Override
+//            public int getCount() {
+//                return 3;
+//            }
+//        });
         mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
