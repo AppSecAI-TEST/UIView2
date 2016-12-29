@@ -93,6 +93,8 @@ public class ChatUIView extends UIContentView {
     @Override
     protected void initContentLayout() {
         super.initContentLayout();
+        mBaseRootLayout.fitsSystemWindows(false);
+
         mChatControl = new ChatControl(mActivity, mViewHolder);
         mRefreshLayout.setBottomView(new EmptyView(mActivity));
         mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {

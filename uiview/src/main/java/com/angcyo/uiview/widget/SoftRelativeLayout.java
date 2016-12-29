@@ -7,6 +7,7 @@ import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowInsets;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
  */
 public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
     boolean isViewShow = false;
+    boolean mFitSystemWindow = false;
     private ArrayList<IWindowInsetsListener> mOnWindowInsetsListeners;
     private int[] mInsets = new int[4];
     /**
@@ -39,29 +41,37 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
 
     public SoftRelativeLayout(Context context) {
         super(context);
+        initView();
     }
 
     public SoftRelativeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView();
     }
 
-//    @Override
-//    protected void onAttachedToWindow() {
-//        super.onAttachedToWindow();
-////        setFitsSystemWindows(true);
-//        setClickable(true);
-//        setEnabled(true);
-//        setFocusable(true);
-//        setFocusableInTouchMode(true);
-//        setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
-//
-//        requestFocus();
-//    }
+    private void initView() {
+        setClickable(true);
+        setEnabled(true);
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+    public void fitsSystemWindows(boolean fit) {
+        mFitSystemWindow = fit;
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        setFitsSystemWindows(mFitSystemWindow);
+        requestFocus();
+    }
 
     @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
@@ -130,38 +140,38 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
                 .start();
     }
 
-//    @Override
-//    protected boolean fitSystemWindows(Rect insets) {
-//        return super.fitSystemWindows(insets);
-//    }
-//
-//    @Override
-//    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            mInsets[0] = insets.getSystemWindowInsetLeft();
-//            mInsets[1] = insets.getSystemWindowInsetTop();
-//            mInsets[2] = insets.getSystemWindowInsetRight();
-//            mInsets[3] = insets.getSystemWindowInsetBottom();
-//
-//            if (isViewShow) {
-//                post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        notifyListener();
-//                    }
-//                });
-//                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
-//                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
-//            } else {
-//                setPadding(getPaddingLeft(), 0, getPaddingRight(), 0);
-//                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
-//                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
-//            }
-//
-//        } else {
-//            return super.onApplyWindowInsets(insets);
-//        }
-//    }
+    @Override
+    protected boolean fitSystemWindows(Rect insets) {
+        return super.fitSystemWindows(insets);
+    }
+
+    @Override
+    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mInsets[0] = insets.getSystemWindowInsetLeft();
+            mInsets[1] = insets.getSystemWindowInsetTop();
+            mInsets[2] = insets.getSystemWindowInsetRight();
+            mInsets[3] = insets.getSystemWindowInsetBottom();
+
+            if (isViewShow) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyListener();
+                    }
+                });
+                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
+                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
+            } else {
+                setPadding(getPaddingLeft(), 0, getPaddingRight(), 0);
+                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
+                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
+            }
+
+        } else {
+            return super.onApplyWindowInsets(insets);
+        }
+    }
 
     private void notifyListener() {
          /*键盘弹出监听事件*/
@@ -217,21 +227,24 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
         manager.hideSoftInputFromWindow(getWindowToken(), 0);
     }
 
-    public void showSoftInput() {
+    public void showSoftInput(View view) {
+        view.requestFocus();
         InputMethodManager manager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        manager.showSoftInputFromInputMethod(getWindowToken(), 0);
+        manager.showSoftInput(view, 0);
     }
 
     @Override
     public void onLifeViewShow() {
         isViewShow = true;
         lockHeight = false;
+        setFitsSystemWindows(mFitSystemWindow);
     }
 
     @Override
     public void onLifeViewHide() {
         isViewShow = false;
         lockHeight = true;
+        setFitsSystemWindows(false);
     }
 
     @Override
