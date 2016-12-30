@@ -86,7 +86,7 @@ public class RecentContactsControl {
             for (int i = 0; i < allDatas.size(); i++) {
                 RecentContact recentContact = allDatas.get(i);
                 if (TextUtils.equals(recentContact.getRecentMessageId(), imMessage.getUuid())) {
-                    recentContact.setMsgStatus(MsgStatusEnum.success);
+                    recentContact.setMsgStatus(imMessage.getStatus());
                     mRecentContactsAdapter.notifyItemChanged(i + getTopItemCount());
                     RBaseViewHolder viewHolder = (RBaseViewHolder) mSwipeMenuRecyclerView.findViewHolderForAdapterPosition(i + getTopItemCount());
                     if (viewHolder != null) {
@@ -375,7 +375,8 @@ public class RecentContactsControl {
                         holder.tv(R.id.recent_name_view).setText(contactId);
                     } else {
                         //头像
-                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), teamById.getIcon());
+                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view),
+                                teamById.getIcon());
                         //昵称
                         holder.tv(R.id.recent_name_view).setText(teamDataCache.getTeamName(contactId));
                     }

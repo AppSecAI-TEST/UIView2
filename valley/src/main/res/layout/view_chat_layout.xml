@@ -123,6 +123,7 @@
             style="@style/BaseHLine"
             android:layout_below="@id/refresh_layout"/>
 
+        <!--录音时间覆盖-->
         <FrameLayout
             android:id="@+id/over_layout"
             android:layout_width="match_parent"
@@ -164,6 +165,7 @@
                 </LinearLayout>
             </FrameLayout>
         </FrameLayout>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -171,6 +173,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </RelativeLayout>
+        <!--表情布局-->
+        <RelativeLayout
+            android:id="@+id/emoji_control_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+            <HorizontalScrollView
+                android:id="@+id/emoji_tab_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_title_bar_item_size"
+                android:background="@android:color/white"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/emoji_tab_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/base_title_bar_item_size"
+                    android:orientation="horizontal"/>
+            </HorizontalScrollView>
+
+            <com.angcyo.uiview.widget.viewpager.UIViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/emoji_tab_view_container"/>
+
+        </RelativeLayout>
+
+        <!--功能布局-->
+        <RelativeLayout
+            android:id="@+id/command_control_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 </com.angcyo.uiview.widget.RSoftInputLayout>
