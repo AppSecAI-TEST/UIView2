@@ -22,6 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
+import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
@@ -44,7 +45,6 @@ import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTouch;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -163,19 +163,24 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         }
 
         if (TextUtils.isEmpty(mIcoFilePathUrl)) {
+            mSubscriptions.clear();
             mSubscriptions.add(OssHelper.uploadAvatorImg(mIcoFilePath)
-                    .map(new Func1<String, String>() {
+                    .doOnSubscribe(BeforeSubscriber.build(this))
+                    .subscribe(new SingleSubscriber<String>() {
                         @Override
-                        public String call(String s) {
+                        public void onNext(String s) {
                             mIcoFilePathUrl = OssHelper.getAvatorUrl(s);
                             Hawk.put(phone, mIcoFilePathUrl);
                             mPresenter.register(mNameView.string(), mPasswordView.string(),
                                     phone, mIcoFilePathUrl, String.valueOf(sex), code);
-                            return mIcoFilePathUrl;
+                        }
+
+                        @Override
+                        public void onError(int code, String msg) {
+                            super.onError(code, msg);
+                            T_.show(mActivity.getString(R.string.register_fial_tip) + code);
                         }
                     })
-                    .doOnSubscribe(BeforeSubscriber.build(this))
-                    .subscribe()
             );
         } else {
             mPresenter.register(mNameView.string(), mPasswordView.string(),
@@ -200,17 +205,17 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
 
     private void selectorSex() {
         startIView(UIItemDialog.build()
-                .addItem("男", new View.OnClickListener() {
+                .addItem(mActivity.getString(R.string.man), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mSexView.setText("男");
+                        mSexView.setText(R.string.man);
                         sex = 1;
                     }
                 })
-                .addItem("女", new View.OnClickListener() {
+                .addItem(mActivity.getString(R.string.women), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mSexView.setText("女");
+                        mSexView.setText(R.string.women);
                         sex = 2;
                     }
                 }));

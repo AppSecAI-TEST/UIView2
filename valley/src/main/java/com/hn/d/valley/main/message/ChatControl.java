@@ -19,6 +19,7 @@ import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
@@ -156,7 +157,7 @@ public class ChatControl {
             DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.msg_ico_view), avatar);
 
             //消息内容
-            MoonUtil.show(mContext, holder.tv(R.id.msg_text_view), bean.getContent());
+            updateMsgContent(holder, bean);
 
             //时间
             TextView timeTextView = holder.tv(R.id.msg_time_view);
@@ -173,9 +174,38 @@ public class ChatControl {
             updateMsgStatus(holder, bean);
         }
 
-        private void updateMsgStatus(RBaseViewHolder viewHolder, IMMessage bean) {
-            View failView = viewHolder.v(R.id.status_fail_view);
-            View sendingView = viewHolder.v(R.id.status_sending_view);
+        private void updateMsgContent(RBaseViewHolder holder, IMMessage bean) {
+            switch (bean.getMsgType()) {
+                case audio:
+                    break;
+                case avchat://音视频通话
+                    break;
+                case custom://第三方APP自定义消息
+                    break;
+                case file:
+                    break;
+                case image:
+                    break;
+                case location:
+                    break;
+                case notification:
+                    break;
+                case text:
+                    MoonUtil.show(mContext, holder.tv(R.id.msg_text_view), bean.getContent());
+                    break;
+                case tip:
+                    break;
+                case undef://未知消息类型
+                    break;
+                case video://视频消息
+                    break;
+
+            }
+        }
+
+        private void updateMsgStatus(RBaseViewHolder viewHolder, final IMMessage bean) {
+            final View failView = viewHolder.v(R.id.status_fail_view);
+            final View sendingView = viewHolder.v(R.id.status_sending_view);
 
             failView.setVisibility(View.GONE);
             sendingView.setVisibility(View.GONE);
@@ -187,6 +217,14 @@ public class ChatControl {
                 case fail:
                     //失败
                     failView.setVisibility(View.VISIBLE);
+                    failView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            NIMClient.getService(MsgService.class).sendMessage(bean, true);
+                            failView.setVisibility(View.GONE);
+                            sendingView.setVisibility(View.VISIBLE);
+                        }
+                    });
                     break;
                 case read:
                     //已读

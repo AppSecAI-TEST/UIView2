@@ -36,7 +36,8 @@ public abstract class SingleSubscriber<T> extends Subscriber<T> {
     }
 
     @Override
-    public void onError(Throwable e) {
+    final public void onError(Throwable e) {
+        L.e("----------------------------------------异常处理----------------------------------------");
         int errorCode;
         String errorMsg;
 
@@ -61,6 +62,7 @@ public abstract class SingleSubscriber<T> extends Subscriber<T> {
         e.printStackTrace();
 
         onError(errorCode, errorMsg);
+        L.e("-----------------------------------------End-------------------------------------------");
     }
 
     /**
