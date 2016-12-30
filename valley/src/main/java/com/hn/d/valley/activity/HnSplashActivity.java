@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.LoginUIView;
 import com.hn.d.valley.utils.RBus;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.auth.AuthService;
+import com.netease.nimlib.sdk.auth.ClientType;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -28,24 +33,27 @@ public class HnSplashActivity extends BaseActivity {
      * 是否被踢
      */
     private static final String IS_KICKOUT = "is_kick_out";
+    Intent mIntent;
 
     public static void launcher(Activity activity, boolean isKickOut) {
         Intent intent = new Intent(activity, HnSplashActivity.class);
         intent.putExtra(IS_KICKOUT, isKickOut);
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.default_window_tran_enter_anim,
-                R.anim.default_window_tran_exit_anim);
+        activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
+                R.anim.base_tran_to_left_exit);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        mIntent = intent;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         RBus.register(this);
+        mIntent = getIntent();
     }
 
     @Override
@@ -64,6 +72,8 @@ public class HnSplashActivity extends BaseActivity {
             startIView(new LoginUIView(), false);
         }
 
+        onParseIntent();
+
 //        ChatUIView.start(mLayout, "50033");
 
 
@@ -81,5 +91,31 @@ public class HnSplashActivity extends BaseActivity {
     @Override
     protected boolean enableWindowAnim() {
         return false;
+    }
+
+    private void onParseIntent() {
+        boolean isKickout = mIntent.getBooleanExtra(IS_KICKOUT, false);
+        if (isKickout) {
+            //帐号被踢
+            int type = NIMClient.getService(AuthService.class).getKickedClientType();
+            String client;
+            switch (type) {
+                case ClientType.Web:
+                    client = "网页端";
+                    break;
+                case ClientType.Windows:
+                    client = "电脑端";
+                    break;
+                case ClientType.REST:
+                    client = "服务端";
+                    break;
+                default:
+                    client = "其他移动设备";
+                    break;
+            }
+            startIView(UIDialog.build()
+                    .setDialogContent("您的账户在 " + client + " 登录.")
+                    .setGravity(Gravity.CENTER));
+        }
     }
 }

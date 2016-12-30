@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -24,19 +25,23 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.RecentContactsCache;
+import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.nim.RNim;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.attachment.NotificationAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.netease.nimlib.sdk.team.model.Team;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import rx.functions.Action0;
@@ -69,6 +74,30 @@ public class RecentContactsControl {
     Context mContext;
     Action1<RecentContact> itemAction;
     Action0 searchAction;
+
+    /**
+     * 监听消息的状态改变
+     */
+    Observer<IMMessage> mMessageObserver = new Observer<IMMessage>() {
+        @Override
+        public void onEvent(IMMessage imMessage) {
+            //消息状态发生了改变
+            List<RecentContact> allDatas = mRecentContactsAdapter.getAllDatas();
+            for (int i = 0; i < allDatas.size(); i++) {
+                RecentContact recentContact = allDatas.get(i);
+                if (TextUtils.equals(recentContact.getRecentMessageId(), imMessage.getUuid())) {
+                    recentContact.setMsgStatus(MsgStatusEnum.success);
+                    mRecentContactsAdapter.notifyItemChanged(i + getTopItemCount());
+                    RBaseViewHolder viewHolder = (RBaseViewHolder) mSwipeMenuRecyclerView.findViewHolderForAdapterPosition(i + getTopItemCount());
+                    if (viewHolder != null) {
+                        mRecentContactsAdapter.updateMsgStatus(recentContact, viewHolder);
+                    }
+                    break;
+                }
+            }
+        }
+    };
+
     /**
      * 滑动菜单构造器
      */
@@ -112,6 +141,16 @@ public class RecentContactsControl {
         this.itemAction = itemAction;
         this.searchAction = searchAction;
         mRecentContactsAdapter = new RecentContactsAdapter(mContext, null);
+
+        NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(mMessageObserver, true);
+    }
+
+    private int getTopItemCount() {
+        return 1;
+    }
+
+    public void unLoad() {
+        NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(mMessageObserver, false);
     }
 
     /**
@@ -149,43 +188,59 @@ public class RecentContactsControl {
         mSwipeMenuRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mSwipeMenuRecyclerView.setSwipeMenuCreator(mSwipeMenuCreator);
         mSwipeMenuRecyclerView.setAdapter(mRecentContactsAdapter);
-        mSwipeMenuRecyclerView.setSwipeMenuItemClickListener(new OnSwipeMenuItemClickListener() {
-            @Override
-            public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition,
-                                    @SwipeMenuRecyclerView.DirectionMode int direction, SwipeMenuItem menuItem) {
-                closeable.smoothCloseMenu();
-                //T_.show(adapterPosition + " -- " + menuPosition + " " + menuItem.getText());
-                int tag = (int) menuItem.getTag();
-                final RecentContact recentContact = mRecentContactsAdapter.getAllDatas().get(adapterPosition - 1);
-                if (tag == MENU_DELETE) {
-                    MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount() - recentContact.getUnreadCount());
-                    RNim.deleteRecentContact2(recentContact);
-                } else if (tag == MENU_ADD_TOP) {
-                    RNim.addRecentContactTag(recentContact, IS_TOP);
-                    setRecentContact(mRecentContactsAdapter.getAllDatas());
-                } else if (tag == MENU_RM_TOP) {
-                    RNim.removeRecentContactTag(recentContact, IS_TOP);
-                    setRecentContact(mRecentContactsAdapter.getAllDatas());
+        mSwipeMenuRecyclerView.setSwipeMenuItemClickListener(
+                new OnSwipeMenuItemClickListener() {
+                    @Override
+                    public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition,
+                                            @SwipeMenuRecyclerView.DirectionMode int direction, SwipeMenuItem menuItem) {
+                        closeable.smoothCloseMenu();
+                        //T_.show(adapterPosition + " -- " + menuPosition + " " + menuItem.getText());
+                        int tag = (int) menuItem.getTag();
+                        final RecentContact recentContact = mRecentContactsAdapter.getAllDatas().get(adapterPosition - getTopItemCount());
+                        if (tag == MENU_DELETE) {
+                            MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount() - recentContact.getUnreadCount());
+                            mViewHolder.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mRecentContactsAdapter.deleteItem(recentContact);
+                                    RNim.deleteRecentContact(recentContact);
+                                }
+                            });
+                        } else {
+                            if (tag == MENU_ADD_TOP) {
+                                RNim.addRecentContactTag(recentContact, IS_TOP);
+                            } else if (tag == MENU_RM_TOP) {
+                                RNim.removeRecentContactTag(recentContact, IS_TOP);
+                            }
+
+                            mViewHolder.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setRecentContact(mRecentContactsAdapter.getAllDatas());
+                                }
+                            });
+                        }
+
+                    }
                 }
-            }
-        });
+        );
     }
 
     public void setRecentContact(List<RecentContact> recentContact) {
-        if (!recentContact.isEmpty()) {
-            Collections.sort(recentContact, new Comparator<RecentContact>() {
-                @Override
-                public int compare(RecentContact o1, RecentContact o2) {
-                    if (RNim.isRecentContactTag(o2, IS_TOP)) {
-                        return 1;
-                    }
-                    if (RNim.isRecentContactTag(o1, IS_TOP)) {
-                        return -1;
-                    }
-                    return 0;
-                }
-            });
-        }
+//        if (!recentContact.isEmpty()) {
+//            Collections.sort(recentContact, new Comparator<RecentContact>() {
+//                @Override
+//                public int compare(RecentContact o1, RecentContact o2) {
+//                    if (RNim.isRecentContactTag(o2, IS_TOP)) {
+//                        return 1;
+//                    }
+//                    if (RNim.isRecentContactTag(o1, IS_TOP)) {
+//                        return -1;
+//                    }
+//                    return 0;
+//                }
+//            });
+//        }
         mRecentContactsAdapter.resetData(recentContact);
     }
 
@@ -217,7 +272,7 @@ public class RecentContactsControl {
             if (position == 0) {
                 return ITEM_TYPE_SEARCH;
             }
-            if (RNim.isRecentContactTag(mAllDatas.get(position - 1), IS_TOP)) {
+            if (RNim.isRecentContactTag(mAllDatas.get(position - getTopItemCount()), IS_TOP)) {
                 return ITEM_TYPE_TOP;
             }
             return ITEM_TYPE_NORMAL;
@@ -244,35 +299,22 @@ public class RecentContactsControl {
                 return;
             }
 
-            final RecentContact bean = mAllDatas.get(position - 1);
+            final RecentContact bean = mAllDatas.get(position - getTopItemCount());
 
-            final NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-            final String fromAccount = bean.getFromAccount();
-
-            if (userInfoCache != null) {
-                //头像
-                DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view),
-                        userInfoCache.getUserInfo(fromAccount).getAvatar());
-                //昵称
-                holder.tv(R.id.recent_name_view).setText(userInfoCache.getUserDisplayName(fromAccount));
-            } else {
-                DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
-                holder.tv(R.id.recent_name_view).setText("--");
-            }
+            updateUserInfo(holder, bean);
 
             //最后一条消息内容
             MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), getShowContent(bean));
 
             //消息发送状态
-            updateMsgStatus(bean, holder.imgV(R.id.msg_status_view));
+            updateMsgStatus(bean, holder);
 
             //时间
             String timeString = TimeUtil.getTimeShowString(bean.getTime(), true);
             holder.tv(R.id.msg_time_view).setText(timeString);
 
             //未读数量
-            int unreadNum = bean.getUnreadCount();
-            UnreadMsgUtils.showUnreadNum((MsgView) holder.v(R.id.msg_num_view), unreadNum);
+            showUnreadNum(holder, bean);
 
             //会话item
             final View itemLayout = holder.v(R.id.item_root_layout);
@@ -289,7 +331,67 @@ public class RecentContactsControl {
             });
         }
 
-        private void updateMsgStatus(final RecentContact recent, final ImageView imageView) {
+        private void showUnreadNum(RBaseViewHolder holder, RecentContact bean) {
+            int unreadNum = bean.getUnreadCount();
+            UnreadMsgUtils.showUnreadNum((MsgView) holder.v(R.id.msg_num_view), unreadNum);
+        }
+
+        /**
+         * 头像, 昵称信息
+         */
+        private void updateUserInfo(RBaseViewHolder holder, RecentContact bean) {
+            final NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+            TeamDataCache teamDataCache = TeamDataCache.getInstance();
+
+            final String fromAccount = bean.getFromAccount();
+            final String contactId = bean.getContactId();
+
+            if (bean.getSessionType() == SessionTypeEnum.P2P) {
+                //单聊
+                if (userInfoCache != null) {
+
+                    final NimUserInfo userInfo = userInfoCache.getUserInfo(contactId);
+                    if (userInfo == null) {
+                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
+                        holder.tv(R.id.recent_name_view).setText(contactId);
+                    } else {
+                        //头像
+                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), userInfo.getAvatar());
+                        //昵称
+                        holder.tv(R.id.recent_name_view).setText(userInfoCache.getUserDisplayName(contactId));
+                    }
+                } else {
+                    DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
+                    holder.tv(R.id.recent_name_view).setText(contactId);
+                }
+            } else if (bean.getSessionType() == SessionTypeEnum.Team) {
+                //群聊
+                if (teamDataCache != null) {
+                    final Team teamById = teamDataCache.getTeamById(contactId);
+                    if (teamById == null) {
+                        //头像
+                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
+                        //昵称
+                        holder.tv(R.id.recent_name_view).setText(contactId);
+                    } else {
+                        //头像
+                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), teamById.getIcon());
+                        //昵称
+                        holder.tv(R.id.recent_name_view).setText(teamDataCache.getTeamName(contactId));
+                    }
+
+                } else {
+                    DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
+                    holder.tv(R.id.recent_name_view).setText(contactId);
+                }
+            }
+        }
+
+        /**
+         * 消息状态
+         */
+        private void updateMsgStatus(final RecentContact recent, final RBaseViewHolder holder) {
+            final ImageView imageView = holder.imgV(R.id.msg_status_view);
             MsgStatusEnum status = recent.getMsgStatus();
             switch (status) {
                 case fail:
@@ -306,6 +408,9 @@ public class RecentContactsControl {
             }
         }
 
+        /**
+         * 最后一条消息内容
+         */
         private String getShowContent(final RecentContact recent) {
             switch (recent.getMsgType()) {
                 case text:

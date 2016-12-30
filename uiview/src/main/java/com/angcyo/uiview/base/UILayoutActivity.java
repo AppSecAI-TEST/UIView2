@@ -47,6 +47,7 @@ public abstract class UILayoutActivity extends StyleActivity {
                 Manifest.permission.ACCESS_WIFI_STATE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.RECORD_AUDIO,
                 Manifest.permission.CAMERA)
                 .map(new Func1<Permission, String>() {
                     @Override

@@ -28,6 +28,12 @@ public class HnLoading extends UIIDialogImpl {
     static HnLoading mUILoading;
     private View mLoadView;
 
+    private boolean canCancel = true;
+
+    public HnLoading(boolean canCancel) {
+        this.canCancel = canCancel;
+    }
+
     /**
      * 显示
      */
@@ -42,11 +48,15 @@ public class HnLoading extends UIIDialogImpl {
      * 显示
      */
     public static HnLoading show(ILayout layout) {
+        return show(layout, true);
+    }
+
+    public static HnLoading show(ILayout layout, boolean canCancel) {
         if (isShowing) {
 
         } else {
             if (mUILoading == null) {
-                mUILoading = new HnLoading();
+                mUILoading = new HnLoading(canCancel);
             }
             layout.startIView(mUILoading);
             isShowing = true;
@@ -83,5 +93,10 @@ public class HnLoading extends UIIDialogImpl {
     @Override
     public boolean canCanceledOnOutside() {
         return false;
+    }
+
+    @Override
+    public boolean canCancel() {
+        return canCancel;
     }
 }

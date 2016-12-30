@@ -2,7 +2,6 @@ package com.hn.d.valley.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,8 +10,6 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.UILayoutImpl;
-import com.angcyo.uiview.container.UIParam;
-import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
@@ -20,6 +17,7 @@ import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
@@ -32,13 +30,9 @@ import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.status.PostStatusUIDialog;
 import com.hn.d.valley.nim.RNim;
-import com.hn.d.valley.start.LoginUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
-import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
-import com.netease.nimlib.sdk.auth.AuthService;
-import com.netease.nimlib.sdk.auth.ClientType;
 
 import java.util.ArrayList;
 
@@ -232,26 +226,29 @@ public class MainUIView extends BaseUIView {
     public void onEvent(StatusCode status) {
         if (status == StatusCode.KICKOUT || status == StatusCode.KICK_BY_OTHER_CLIENT) {
             //帐号被踢
-            int type = NIMClient.getService(AuthService.class).getKickedClientType();
-            String client;
-            switch (type) {
-                case ClientType.Web:
-                    client = "网页端";
-                    break;
-                case ClientType.Windows:
-                    client = "电脑端";
-                    break;
-                case ClientType.REST:
-                    client = "服务端";
-                    break;
-                default:
-                    client = "其他移动设备";
-                    break;
-            }
-            replaceIView(new LoginUIView(), new UIParam(true, true));
-            startIView(UIDialog.build()
-                    .setDialogContent("您的账户在 " + client + " 登录.")
-                    .setGravity(Gravity.CENTER));
+            HnSplashActivity.launcher(mActivity, true);
+            mActivity.finish();
+
+//            int type = NIMClient.getService(AuthService.class).getKickedClientType();
+//            String client;
+//            switch (type) {
+//                case ClientType.Web:
+//                    client = "网页端";
+//                    break;
+//                case ClientType.Windows:
+//                    client = "电脑端";
+//                    break;
+//                case ClientType.REST:
+//                    client = "服务端";
+//                    break;
+//                default:
+//                    client = "其他移动设备";
+//                    break;
+//            }
+//            replaceIView(new LoginUIView(), new UIParam(true, true));
+//            startIView(UIDialog.build()
+//                    .setDialogContent("您的账户在 " + client + " 登录.")
+//                    .setGravity(Gravity.CENTER));
         }
     }
 

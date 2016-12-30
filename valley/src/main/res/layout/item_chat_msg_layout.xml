@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/base_hdpi"
-    android:paddingTop="@dimen/base_hdpi">
+    android:paddingBottom="@dimen/base_ldpi"
+    android:paddingTop="@dimen/base_ldpi"
+    tools:background="@android:color/darker_gray">
 
     <TextView
         android:id="@+id/msg_time_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/base_hdpi"
+        android:layout_marginBottom="@dimen/base_ldpi"
         android:background="@drawable/base_dark2_round_selector"
         android:paddingBottom="@dimen/base_ldpi"
         android:paddingEnd="@dimen/base_xhdpi"
@@ -42,7 +43,8 @@
             android:id="@+id/msg_content_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/base_80dpi">
+            android:layout_marginEnd="@dimen/base_80dpi"
+            tools:background="@drawable/bubble_box_right_selector">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -83,9 +85,9 @@
             <ProgressBar
                 android:id="@+id/status_sending_view"
                 style="?android:attr/progressBarStyleSmall"
-                android:layout_width="@dimen/base_xxxhdpi"
-                android:layout_height="@dimen/base_xxxhdpi"
-                android:visibility="gone"/>
+                android:layout_width="@dimen/base_xxhdpi"
+                android:layout_height="@dimen/base_xxhdpi"
+                android:visibility="visible"/>
         </FrameLayout>
 
     </LinearLayout>

@@ -36,6 +36,16 @@ public class RecentContactsCache implements ICache {
             mRecentContactList.clear();
             mRecentContactList.addAll(RNim.service(MsgService.class).queryRecentContactsBlock());
 //            mRecentContactList.addAll(recentContacts);
+
+            List<String> users = new ArrayList<>();
+            for (RecentContact contact : recentContacts) {
+                if (NimUserInfoCache.getInstance().getUserInfo(contact.getContactId()) == null) {
+                    users.add(contact.getContactId());
+                }
+            }
+
+            NimUserInfoCache.getInstance().fetchUserInfoFromRemote(users);
+
             RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
         }
     };

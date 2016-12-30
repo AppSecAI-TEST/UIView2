@@ -53,7 +53,7 @@ public class MessageUIView extends BaseUIView {
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
-                        ChatUIView.start(mOtherILayout, recentContact.getFromAccount(), recentContact.getSessionType());
+                        ChatUIView.start(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
                         //HnChatActivity.launcher(mActivity, recentContact.getFromAccount());
                     }
                 },
@@ -74,6 +74,7 @@ public class MessageUIView extends BaseUIView {
     @Override
     public void onViewUnload() {
         super.onViewUnload();
+        mRecentContactsControl.unLoad();
     }
 
     @Override

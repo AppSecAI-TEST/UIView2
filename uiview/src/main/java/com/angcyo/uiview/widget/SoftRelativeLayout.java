@@ -164,8 +164,10 @@ public class SoftRelativeLayout extends RelativeLayout implements ILifecycle {
                         insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
             } else {
                 setPadding(getPaddingLeft(), 0, getPaddingRight(), 0);
-                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
-                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
+//                return super.onApplyWindowInsets(insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
+//                        insets.getSystemWindowInsetRight(), lockHeight ? 0 : insets.getSystemWindowInsetBottom()));
+                return insets.replaceSystemWindowInsets(insets.getSystemWindowInsetLeft(), 0,
+                        insets.getSystemWindowInsetRight(), insets.getSystemWindowInsetBottom());
             }
 
         } else {

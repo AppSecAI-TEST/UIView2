@@ -4,9 +4,9 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
@@ -108,6 +108,10 @@ public class ChatControl {
         }
     }
 
+    private boolean needShowTime(long oldTime, long nowTime) {
+        return nowTime - oldTime > 60 * 1000;
+    }
+
     class ChatAdapter extends RBaseAdapter<IMMessage> {
 
 
@@ -155,8 +159,15 @@ public class ChatControl {
             MoonUtil.show(mContext, holder.tv(R.id.msg_text_view), bean.getContent());
 
             //时间
+            TextView timeTextView = holder.tv(R.id.msg_time_view);
             String timeString = TimeUtil.getTimeShowString(bean.getTime(), false);
-            holder.tv(R.id.msg_time_view).setText(timeString);
+            timeTextView.setText(timeString);
+            if (position == 0) {
+                timeTextView.setVisibility(View.VISIBLE);
+            } else {
+                final IMMessage preMessage = mAllDatas.get(position - 1);
+                timeTextView.setVisibility(needShowTime(preMessage.getTime(), bean.getTime()) ? View.VISIBLE : View.GONE);
+            }
 
             //消息状态
             updateMsgStatus(holder, bean);
@@ -192,7 +203,7 @@ public class ChatControl {
                     break;
             }
 
-            L.e("消息状态:" + status.getValue());
+//            L.e("消息状态:" + status.getValue());
         }
     }
 }

@@ -25,6 +25,7 @@ import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
+import com.hn.d.valley.base.rx.EmptyAction;
 import com.hn.d.valley.base.rx.SingleSubscriber;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.start.mvp.Register2Presenter;
@@ -230,7 +231,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
 
     private void uploadFile(final boolean background) {
         mSubscriptions.add(OssHelper.uploadAvatorImg(mIcoFilePath)
-                .doOnSubscribe(background ? null : BeforeSubscriber.build(this))
+                .doOnSubscribe(background ? EmptyAction.build() : BeforeSubscriber.build(this))
                 .subscribe(new SingleSubscriber<String>() {
                     @Override
                     public void onNext(String s) {

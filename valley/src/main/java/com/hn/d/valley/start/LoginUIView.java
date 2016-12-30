@@ -20,6 +20,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
@@ -240,6 +241,23 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                     public void onClick(View v) {
                         Param.changeLang(3);
                         mActivity.recreate();
+                    }
+                })
+                .addItem("内网", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RRetrofit.BASE_URL = RRetrofit.DEBUG_URL;
+                    }
+                })
+                .addItem("外网", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        RRetrofit.BASE_URL = RRetrofit.RELEASE_URL;
+                    }
+                })
+                .addItem("当前地址:" + RRetrofit.BASE_URL, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                     }
                 })
         );

@@ -4,6 +4,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.angcyo.library.utils.L;
+import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
+import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -143,6 +146,17 @@ public class NimUserInfoCache {
         });
     }
 
+    public void fetchUserInfoFromRemote(List<String> accounts) {
+        NIMClient.getService(UserService.class).fetchUserInfo(accounts).setCallback(new RequestCallbackWrapper<List<NimUserInfo>>() {
+            @Override
+            public void onResult(int code, List<NimUserInfo> result, Throwable exception) {
+                if (code == ResponseCode.RES_SUCCESS) {
+                    RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
+                }
+            }
+        });
+    }
+
     /**
      * ******************************* 业务接口（获取缓存的用户信息） *********************************
      */
@@ -174,7 +188,9 @@ public class NimUserInfoCache {
             return null;
         }
 
-        return account2UserMap.get(account);
+        final NimUserInfo nimUserInfo = account2UserMap.get(account);
+
+        return nimUserInfo;
     }
 
     public boolean hasUser(String account) {
