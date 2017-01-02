@@ -52,7 +52,8 @@
                     android:hint="点击输入发送新消息"
                     android:maxHeight="@dimen/base_80dpi"
                     android:minHeight="@dimen/base_40dpi"
-                    android:padding="@dimen/base_ldpi"/>
+                    android:padding="@dimen/base_ldpi"
+                    android:textSize="@dimen/default_text_size16"/>
 
                 <TextView
                     android:id="@+id/record_view"
@@ -72,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:orientation="horizontal"
-                android:paddingBottom="@dimen/base_ldpi">
+                android:paddingBottom="@dimen/base_mdpi">
 
                 <RadioButton
                     android:id="@+id/message_expression_view"
@@ -150,7 +151,7 @@
                 <LinearLayout
                     android:id="@+id/timer_tip_container"
                     android:layout_width="188dp"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/base_40dpi"
                     android:layout_gravity="bottom"
                     android:gravity="center">
 
@@ -183,14 +184,13 @@
                 android:id="@+id/emoji_tab_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base_title_bar_item_size"
-                android:background="@android:color/white"
+                android:layout_alignParentBottom="true"
                 android:scrollbars="none">
 
-                <LinearLayout
+                <com.hn.d.valley.widget.EmojiTabLayout
                     android:id="@+id/emoji_tab_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/base_title_bar_item_size"
-                    android:orientation="horizontal"/>
+                    android:layout_height="@dimen/base_title_bar_item_size"/>
             </HorizontalScrollView>
 
             <com.angcyo.uiview.widget.viewpager.UIViewPager

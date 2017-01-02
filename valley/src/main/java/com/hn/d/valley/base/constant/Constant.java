@@ -62,5 +62,8 @@ public class Constant {
      * Amap
      */
     public static final int DEFAULT_ZOOM_LEVEL = 15;
-
+    /**
+     * 键盘的高度
+     */
+    public static String KEYBOARD_HEIGHT = "keyboard_height";
 }

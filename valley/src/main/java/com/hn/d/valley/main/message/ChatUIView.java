@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIContentView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
@@ -32,7 +33,9 @@ import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.T_;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -45,6 +48,7 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
+import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.util.List;
@@ -99,10 +103,15 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     FrameLayout mLayoutPlayAudio;
     @BindView(R.id.over_layout)
     FrameLayout mOverLayout;
+    @BindView(R.id.emoji_control_layout)
+    RelativeLayout mEmojiControlLayout;
+    @BindView(R.id.command_control_layout)
+    RelativeLayout mCommandControlLayout;
     private String mLastInputText = "";
     private boolean touched;
     private boolean started;
     private boolean cancelled;
+    private EmojiLayoutControl mEmojiLayoutControl;
 
     public ChatUIView(String account, SessionTypeEnum sessionType) {
         this.account = account;
@@ -145,9 +154,19 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
         mBaseRootLayout.fitsSystemWindows(false);
 
         mChatControl = new ChatControl(mActivity, mViewHolder);
+        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
+            @Override
+            public void onEmojiText(String emoji) {
+                final int selectionStart = mInputView.getSelectionStart();
+                mInputView.getText().insert(selectionStart, emoji);
+                MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
+                mInputView.setSelection(selectionStart + emoji.length());
+                mInputView.requestFocus();
+            }
+        });
         initRefreshLayout();
 
-        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+        mRecyclerView.setOnInterceptTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -157,13 +176,16 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
             }
         });
 
+        mChatRootLayout.setKeyboardHeight(Hawk.get(Constant.KEYBOARD_HEIGHT, 0));
         mChatRootLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
             @Override
             public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
+                L.w("表情:" + isEmojiShow + " 键盘:" + isKeyboardShow + " 高度:" + height);
                 if (isKeyboardShow) {
                     mChatControl.scrollToEnd();
                     mMessageAddView.setChecked(false);
                     mMessageExpressionView.setChecked(false);
+                    Hawk.put(Constant.KEYBOARD_HEIGHT, height);
                 }
                 if (isEmojiShow) {
                     mChatControl.scrollToEnd();
@@ -438,11 +460,15 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
                 }
+                mCommandControlLayout.setVisibility(View.GONE);
+                mEmojiControlLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.message_add_view:
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
                 }
+                mCommandControlLayout.setVisibility(View.VISIBLE);
+                mEmojiControlLayout.setVisibility(View.GONE);
                 break;
         }
     }

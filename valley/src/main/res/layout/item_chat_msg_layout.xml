@@ -50,12 +50,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingLeft="@dimen/base_hdpi"
-                android:paddingRight="@dimen/base_hdpi">
+                android:layoutDirection="ltr"
+                android:paddingLeft="@dimen/base_mdpi"
+                android:paddingRight="@dimen/base_mdpi">
 
                 <TextView
                     android:id="@+id/msg_text_view"
                     style="@style/MainTextStyle"
+                    android:gravity="left"
                     tools:text="1231242"/>
 
             </RelativeLayout>

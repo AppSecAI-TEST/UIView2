@@ -91,6 +91,7 @@
             android:name=".activity.HnSplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
@@ -102,6 +103,7 @@
         <activity
             android:name=".activity.HnUIMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/BaseAppTheme"
             android:windowSoftInputMode="adjustResize"/>
         <!--
@@ -118,6 +120,7 @@
         <activity
             android:name=".activity.HnChatActivity"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/BaseTranTheme"
             android:windowSoftInputMode="adjustResize"/>
 

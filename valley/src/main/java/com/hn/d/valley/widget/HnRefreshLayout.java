@@ -34,7 +34,10 @@ public class HnRefreshLayout extends RefreshLayout {
 
     private void initView() {
 //        setRefreshDirection(BOTH);
-        setTopView(new HnTopView(getContext()));
+
+        if (!isInEditMode()) {
+            setTopView(new HnTopView(getContext()));
+        }
     }
 
     private class HnTopView extends View implements RefreshLayout.OnTopViewMoveListener {
