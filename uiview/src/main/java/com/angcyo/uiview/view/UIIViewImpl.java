@@ -298,6 +298,16 @@ public abstract class UIIViewImpl implements IView {
         finishIView(iView, true);
     }
 
+    public void finishIView(IView iView, final UIParam param) {
+        if (iView == null) {
+            return;
+        }
+        if (mILayout == null) {
+            throw new IllegalArgumentException("ILayout 还未初始化");
+        }
+        mILayout.finishIView(iView, param);
+    }
+
     public void finishIView(IView iView, boolean anim) {
         finishIView(iView, anim, false);
     }

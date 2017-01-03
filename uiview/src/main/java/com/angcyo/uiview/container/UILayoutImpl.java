@@ -768,7 +768,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                 }
             }
         };
-        //bottomViewPattern.mView.setVisibility(VISIBLE);
+        bottomViewPattern.mView.setVisibility(VISIBLE);
 
         if (bottomViewPattern.mView instanceof ILifecycle) {
             ((ILifecycle) bottomViewPattern.mView).onLifeViewShow();

@@ -85,12 +85,12 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
         super.initContentLayout();
         mMapView.onCreate(null);
         initAmap();
-        post(new Runnable() {
+        postDelayed(new Runnable() {
             @Override
             public void run() {
                 initLocation();
             }
-        });
+        }, 500);
     }
 
     @Override
@@ -102,6 +102,7 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
                 if (mTargetBean == null) {
                     T_.show("还未获取到有效位置信息.");
                 } else {
+//                    finishIView(AmapUIView.this, new UIParam(true, false));
                     if (mBeanAction1 != null) {
                         mBeanAction1.call(mTargetBean);
                     }

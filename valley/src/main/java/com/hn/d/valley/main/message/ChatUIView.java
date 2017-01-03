@@ -498,18 +498,6 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     public void onViewLoad() {
         super.onViewLoad();
         mChatControl.onLoad();
-    }
-
-    @Override
-    public void onViewUnload() {
-        super.onViewUnload();
-        mChatControl.onUnload();
-    }
-
-    @Override
-    public void onViewShow(Bundle bundle) {
-        super.onViewShow(bundle);
-        msgService().setChattingAccount(account, sessionType);
         msgService().queryMessageListEx(
                 getEmptyMessage(),
                 QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
@@ -522,6 +510,18 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        mChatControl.onUnload();
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        msgService().setChattingAccount(account, sessionType);
     }
 
     @NonNull
