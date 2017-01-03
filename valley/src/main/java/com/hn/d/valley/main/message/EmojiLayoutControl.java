@@ -16,7 +16,7 @@ import com.angcyo.uiview.widget.viewpager.RPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.emoji.EmojiManager;
-import com.hn.d.valley.widget.EmojiTabLayout;
+import com.angcyo.uiview.widget.EmojiTabLayout;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.

@@ -178,7 +178,8 @@
         <RelativeLayout
             android:id="@+id/emoji_control_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <HorizontalScrollView
                 android:id="@+id/emoji_tab_view_container"
@@ -187,7 +188,7 @@
                 android:layout_alignParentBottom="true"
                 android:scrollbars="none">
 
-                <com.hn.d.valley.widget.EmojiTabLayout
+                <com.angcyo.uiview.widget.EmojiTabLayout
                     android:id="@+id/emoji_tab_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/base_title_bar_item_size"/>
@@ -205,7 +206,22 @@
         <RelativeLayout
             android:id="@+id/command_control_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <com.angcyo.uiview.recycler.RecyclerViewPager
+                android:id="@+id/recycler_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:tag="GH2"/>
+
+            <com.angcyo.uiview.recycler.RecyclerViewPagerIndicator
+                android:id="@+id/recycler_view_pager_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/base_xhdpi"/>
 
         </RelativeLayout>
 

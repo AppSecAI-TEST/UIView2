@@ -185,7 +185,7 @@ public class UITitleBarContainer extends FrameLayout {
                 @Override
                 public void onClick(View v) {
                     if (mILayout != null) {
-                        mILayout.requestBackPressed();
+                        mILayout.requestBackPressed(new UIParam(true, true, false));
                     }
                 }
             });

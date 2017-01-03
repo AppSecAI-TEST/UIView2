@@ -1,4 +1,4 @@
-package com.hn.d.valley.widget;
+package com.angcyo.uiview.widget;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.hn.d.valley.R;
+import com.angcyo.uiview.R;
+
 
 /**
  * Created by angcyo on 2016-12-31 00:11.

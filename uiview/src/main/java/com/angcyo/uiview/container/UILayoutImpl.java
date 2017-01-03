@@ -570,6 +570,11 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     @Override
     public boolean requestBackPressed() {
+        return requestBackPressed(new UIParam());
+    }
+
+    @Override
+    public boolean requestBackPressed(final UIParam param) {
         if (mAttachViews.size() <= 0) {
             return true;
         }
@@ -580,7 +585,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                 return mLastShowViewPattern.mIView.onBackPressed();
             }
         }
-        finishIView(mLastShowViewPattern.mView);
+        finishIView(mLastShowViewPattern.mIView, param);
         return false;
     }
 

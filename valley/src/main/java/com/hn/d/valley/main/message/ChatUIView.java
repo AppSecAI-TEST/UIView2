@@ -34,8 +34,10 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -51,12 +53,14 @@ import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -112,6 +116,8 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     private boolean started;
     private boolean cancelled;
     private EmojiLayoutControl mEmojiLayoutControl;
+    private CommandLayoutControl mCommandLayoutControl;
+    private int mLastId = View.NO_ID;
 
     public ChatUIView(String account, SessionTypeEnum sessionType) {
         this.account = account;
@@ -164,6 +170,9 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                 mInputView.requestFocus();
             }
         });
+
+        mCommandLayoutControl = new CommandLayoutControl(mActivity, mViewHolder, createCommandItems());
+
         initRefreshLayout();
 
         mRecyclerView.setOnInterceptTouchListener(new View.OnTouchListener() {
@@ -183,12 +192,18 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                 L.w("表情:" + isEmojiShow + " 键盘:" + isKeyboardShow + " 高度:" + height);
                 if (isKeyboardShow) {
                     mChatControl.scrollToEnd();
-                    mMessageAddView.setChecked(false);
-                    mMessageExpressionView.setChecked(false);
                     Hawk.put(Constant.KEYBOARD_HEIGHT, height);
                 }
+
+                if (isKeyboardShow || !isEmojiShow) {
+                    mMessageAddView.setChecked(false);
+                    mMessageExpressionView.setChecked(false);
+                }
+
                 if (isEmojiShow) {
                     mChatControl.scrollToEnd();
+                    mCommandLayoutControl.fixHeight(height);
+                    mCommandLayoutControl.init();
                 }
 
                 if (isKeyboardShow || isEmojiShow) {
@@ -200,6 +215,81 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
         });
 
         initAudioRecordButton();
+    }
+
+    private List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
+        List<CommandLayoutControl.CommandItemInfo> items = new ArrayList<>();
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_photo_normal, "图片", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //发送图片
+
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_video_normal, "视频", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //视频
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_location_normal, "位置", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //位置
+                startIView(new AmapUIView(new Action1<AmapBean>() {
+                    @Override
+                    public void call(AmapBean bean) {
+                        final IMMessage locationMessage = MessageBuilder.createLocationMessage(account, sessionType, bean.latitude, bean.longitude, bean.address);
+                        sendMessage(locationMessage);
+//                        final IMMessage message = MessageBuilder.createTextMessage(account, sessionType, "测试");
+//                        sendMessage(message);
+                    }
+                }));
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_audio_chat_normal, "语音通话", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //语音通话
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_video_chat_normal, "视频通话", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //视频通话
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_rts_normal, "白板", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //白板
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_snapchat_normal, "阅后即焚", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //阅后即焚
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_guess_normal, "猜拳", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //猜拳
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_file_normal, "发送文件", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //发送文件
+            }
+        }));
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_tip_normal, "Tip", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Tip
+            }
+        }));
+        return items;
     }
 
     /**
@@ -457,18 +547,30 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
 
         switch (view.getId()) {
             case R.id.message_expression_view:
+
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
+                } else if (mLastId == R.id.message_expression_view && mChatRootLayout.isEmojiShow()) {
+                    mChatRootLayout.hideEmojiLayout();
+                    return;
                 }
+                mLastId = R.id.message_expression_view;
+
                 mCommandControlLayout.setVisibility(View.GONE);
                 mEmojiControlLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.message_add_view:
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
+                } else if (mLastId == R.id.message_add_view && mChatRootLayout.isEmojiShow()) {
+                    mChatRootLayout.hideEmojiLayout();
+                    return;
                 }
+                mLastId = R.id.message_add_view;
+
                 mCommandControlLayout.setVisibility(View.VISIBLE);
                 mEmojiControlLayout.setVisibility(View.GONE);
+                mCommandLayoutControl.requestLayout();
                 break;
         }
     }
@@ -486,7 +588,11 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
      */
     @OnClick(R.id.send_view)
     public void onSendClick() {
-        IMMessage imMessage = createTextMessage();
+        final String string = mInputView.getText().toString();
+        if (TextUtils.isEmpty(string)) {
+            return;
+        }
+        IMMessage imMessage = createTextMessage(string);
         sendMessage(imMessage);
         mInputView.setText("");
     }
@@ -497,8 +603,8 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     }
 
     @NonNull
-    private IMMessage createTextMessage() {
-        return MessageBuilder.createTextMessage(account, sessionType, mInputView.getText().toString());
+    private IMMessage createTextMessage(String text) {
+        return MessageBuilder.createTextMessage(account, sessionType, text);
     }
 
     @Override

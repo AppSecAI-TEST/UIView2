@@ -175,29 +175,40 @@ public class ChatControl {
         }
 
         private void updateMsgContent(RBaseViewHolder holder, IMMessage bean) {
+            final TextView contentView = holder.tv(R.id.msg_text_view);
             switch (bean.getMsgType()) {
                 case audio:
+                    contentView.setText("[音频消息]");
                     break;
                 case avchat://音视频通话
+                    contentView.setText("[音视频通话]");
                     break;
                 case custom://第三方APP自定义消息
+                    contentView.setText("[第三方APP自定义消息]");
                     break;
                 case file:
+                    contentView.setText("[文件消息]");
                     break;
                 case image:
+                    contentView.setText("[图片消息]");
                     break;
                 case location:
+                    contentView.setText("[位置消息]");
                     break;
                 case notification:
+                    contentView.setText("[通知消息]");
                     break;
                 case text:
-                    MoonUtil.show(mContext, holder.tv(R.id.msg_text_view), bean.getContent());
+                    MoonUtil.show(mContext, contentView, bean.getContent());
                     break;
                 case tip:
+                    contentView.setText("[提醒类型消息]");
                     break;
                 case undef://未知消息类型
+                    contentView.setText("[未知消息类型]");
                     break;
                 case video://视频消息
+                    contentView.setText("[视频消息]");
                     break;
 
             }
