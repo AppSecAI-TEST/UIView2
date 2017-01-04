@@ -196,6 +196,10 @@ public class ChatControl {
         public void onViewDetachedFromWindow(RBaseViewHolder holder) {
             super.onViewDetachedFromWindow(holder);
             final View view = holder.v(R.id.message_item_audio_playing_animation);
+            selectDrawable(view);
+        }
+
+        private void selectDrawable(View view) {
             if (view != null) {
                 if (view.getBackground() instanceof AnimationDrawable) {
                     AnimationDrawable animation = (AnimationDrawable) view.getBackground();
@@ -301,6 +305,8 @@ public class ChatControl {
                         imageView.setBackgroundResource(R.drawable.nim_audio_animation_list_right);
                         timeView.setTextColor(Color.WHITE);
                     }
+
+                    selectDrawable(imageView);
 
                     final AudioViewControl audioViewControl = new AudioViewControl(mContext, holder, this, bean);
 
