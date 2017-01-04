@@ -1,12 +1,15 @@
 package com.hn.d.valley.main.message;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
@@ -22,11 +25,14 @@ import com.angcyo.uiview.utils.media.ImageUtil;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.message.audio.MessageAudioControl;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnRefreshLayout;
+import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -41,6 +47,7 @@ import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -167,7 +174,13 @@ public class ChatControl {
         return nowTime - oldTime > 60 * 1000;
     }
 
-    class ChatAdapter extends RBaseAdapter<IMMessage> {
+    static class Images {
+        public int positon;
+        public ArrayList<ImageItem> images;
+
+    }
+
+    public class ChatAdapter extends RBaseAdapter<IMMessage> {
 
 
         public ChatAdapter(Context context, List<IMMessage> datas) {
@@ -177,6 +190,34 @@ public class ChatControl {
         @Override
         protected int getItemLayoutId(int viewType) {
             return R.layout.item_chat_msg_layout;
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(RBaseViewHolder holder) {
+            super.onViewDetachedFromWindow(holder);
+            final View view = holder.v(R.id.message_item_audio_playing_animation);
+            if (view != null) {
+                if (view.getBackground() instanceof AnimationDrawable) {
+                    AnimationDrawable animation = (AnimationDrawable) view.getBackground();
+                    animation.stop();
+                    animation.selectDrawable(2);
+                }
+            }
+        }
+
+        @Override
+        public void onViewAttachedToWindow(RBaseViewHolder holder) {
+            super.onViewAttachedToWindow(holder);
+            final View view = holder.v(R.id.message_item_audio_playing_animation);
+            final int position = holder.getAdapterPosition();
+            final IMMessage imMessage = getAllDatas().get(position);
+            if (view != null && imMessage != null) {
+                final boolean playing = AudioViewControl.isMessagePlaying(MessageAudioControl.getInstance(mContext), imMessage);
+                if (playing && view.getBackground() instanceof AnimationDrawable) {
+                    AnimationDrawable animation = (AnimationDrawable) view.getBackground();
+                    animation.start();
+                }
+            }
         }
 
         @Override
@@ -229,21 +270,47 @@ public class ChatControl {
             updateMsgStatus(holder, bean);
         }
 
-        private void updateMsgContent(RBaseViewHolder holder, IMMessage bean) {
+        private void updateMsgContent(RBaseViewHolder holder, final IMMessage bean) {
+            final View msgContentLayout = holder.v(R.id.msg_content_layout);
             final View msgTextLayout = holder.v(R.id.msg_text_layout);
             final View msgImageLayout = holder.v(R.id.msg_image_layout);
             final View msgLocationLayout = holder.v(R.id.msg_location_layout);
-            final View msgContentLayout = holder.v(R.id.msg_content_layout);
+            final View msgAudioLayout = holder.v(R.id.msg_audio_layout);
 
             msgImageLayout.setVisibility(View.GONE);
             msgLocationLayout.setVisibility(View.GONE);
             msgTextLayout.setVisibility(View.GONE);
+            msgAudioLayout.setVisibility(View.GONE);
+
+            /*语音消息,未读提醒*/
+            holder.v(R.id.message_item_audio_unread_indicator).setVisibility(View.GONE);
 
             final TextView contentView = holder.tv(R.id.msg_text_view);
             switch (bean.getMsgType()) {
                 case audio:
-                    msgTextLayout.setVisibility(View.VISIBLE);
-                    contentView.setText("[音频消息]");
+                    msgAudioLayout.setVisibility(View.VISIBLE);
+                    ImageView imageView = holder.v(R.id.message_item_audio_playing_animation);
+                    final TextView timeView = holder.tv(R.id.message_item_audio_duration);
+
+                    if (isReceivedMessage(bean)) {
+                        msgAudioLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                        imageView.setBackgroundResource(R.drawable.nim_audio_animation_list_left);
+                        timeView.setTextColor(Color.BLACK);
+                    } else {
+                        msgAudioLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                        imageView.setBackgroundResource(R.drawable.nim_audio_animation_list_right);
+                        timeView.setTextColor(Color.WHITE);
+                    }
+
+                    final AudioViewControl audioViewControl = new AudioViewControl(mContext, holder, this, bean);
+
+                    msgContentLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            audioViewControl.onItemClick();
+                        }
+                    });
+
                     break;
                 case avchat://音视频通话
                     msgTextLayout.setVisibility(View.VISIBLE);
@@ -261,9 +328,9 @@ public class ChatControl {
                     msgImageLayout.setVisibility(View.VISIBLE);
                     final SimpleDraweeView draweeView = holder.v(R.id.msg_image_view);
 
-                    FileAttachment msgAttachment = (FileAttachment) bean.getAttachment();
-                    String path = msgAttachment.getPath();
-                    String thumbPath = msgAttachment.getThumbPath();
+                    final FileAttachment msgAttachment = (FileAttachment) bean.getAttachment();
+                    final String path = msgAttachment.getPath();
+                    final String thumbPath = msgAttachment.getThumbPath();
                     if (!TextUtils.isEmpty(thumbPath)) {
                         setImageSize(draweeView, bean, thumbPath);
                         DraweeViewUtil.setDraweeViewFile(draweeView, thumbPath);
@@ -271,9 +338,17 @@ public class ChatControl {
                         setImageSize(draweeView, bean, path);
                         DraweeViewUtil.setDraweeViewFile(draweeView, path);
                     } else {
-                        DraweeViewUtil.setDraweeViewHttp(draweeView, "");
+                        DraweeViewUtil.setDraweeViewHttp(draweeView, msgAttachment.getUrl());
                         downloadAttachment(bean);
                     }
+
+                    msgContentLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Images images = getAllImageMessage(bean);
+                            ImagePagerUIView.start(mUIBaseView, v, images.images, images.positon);
+                        }
+                    });
 
                     break;
                 case location:
@@ -359,6 +434,40 @@ public class ChatControl {
         protected void downloadAttachment(IMMessage message) {
             if (message.getAttachment() != null && message.getAttachment() instanceof FileAttachment)
                 NIMClient.getService(MsgService.class).downloadAttachment(message, true);
+        }
+
+        // 判断消息方向，是否是接收到的消息
+        protected boolean isReceivedMessage(IMMessage message) {
+            return message.getDirect() == MsgDirectionEnum.In;
+        }
+
+        private Images getAllImageMessage(IMMessage messageAnchor) {
+            Images imagesBean = new Images();
+
+            final List<IMMessage> allDatas = getAllDatas();
+            ArrayList<ImageItem> images = new ArrayList<>();
+
+            for (int i = 0; i < allDatas.size(); i++) {
+                final IMMessage message = allDatas.get(i);
+                if (message.getMsgType() == MsgTypeEnum.image) {
+                    FileAttachment msgAttachment = (FileAttachment) message.getAttachment();
+                    String path2 = msgAttachment.getPath();
+                    String thumbPath2 = msgAttachment.getThumbPath();
+
+                    if (messageAnchor.isTheSame(message)) {
+                        imagesBean.positon = images.size();
+                    }
+
+                    final ImageItem imageItem = new ImageItem();
+                    imageItem.path = path2;
+                    imageItem.thumbPath = thumbPath2;
+                    imageItem.url = msgAttachment.getUrl();
+                    images.add(imageItem);
+                }
+            }
+
+            imagesBean.images = images;
+            return imagesBean;
         }
     }
 }

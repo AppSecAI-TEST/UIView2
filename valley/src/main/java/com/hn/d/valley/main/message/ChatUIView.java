@@ -495,6 +495,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
             mChatRootLayout.requestBackPressed();
         } else {
             mInputView.setText(mLastInputText);
+            MoonUtil.show(mActivity, mInputView, mLastInputText);
             mInputView.setSelection(mLastInputText.length());
         }
     }
@@ -536,6 +537,9 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
         msgService().setChattingAccount(account, sessionType);
+        if (mChatControl != null) {
+            mChatControl.mChatAdapter.notifyDataSetChanged();
+        }
     }
 
     @NonNull

@@ -59,5 +59,7 @@
     <string name="register_fial_tip">注册失败:</string>
     <string name="man">男</string>
     <string name="women">女</string>
+    <string name="empty"></string>
+    <string name="sdcard_not_exist_error">请插入SD卡</string>
 
 </resources>

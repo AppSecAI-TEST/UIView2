@@ -284,25 +284,29 @@ public abstract class UIIViewImpl implements IView {
         L.d(this.getClass().getSimpleName(), "onHideInPager: ");
     }
 
-    public void startIView(IView iView) {
+    public void startIView(final IView iView) {
         startIView(iView, true);
     }
 
-    public void startIView(IView iView, boolean anim) {
+    public void startIView(final IView iView, boolean anim) {
+        startIView(iView, new UIParam(anim));
+    }
+
+    public void startIView(final IView iView, final UIParam param) {
         if (iView == null) {
             return;
         }
         if (mILayout == null) {
             throw new IllegalArgumentException("ILayout 还未初始化");
         }
-        mILayout.startIView(iView, new UIParam(anim));
+        mILayout.startIView(iView, param);
     }
 
-    public void finishIView(IView iView) {
+    public void finishIView(final IView iView) {
         finishIView(iView, true);
     }
 
-    public void finishIView(IView iView, final UIParam param) {
+    public void finishIView(final IView iView, final UIParam param) {
         if (iView == null) {
             return;
         }
@@ -312,11 +316,11 @@ public abstract class UIIViewImpl implements IView {
         mILayout.finishIView(iView, param);
     }
 
-    public void finishIView(IView iView, boolean anim) {
+    public void finishIView(final IView iView, boolean anim) {
         finishIView(iView, anim, false);
     }
 
-    public void finishIView(IView iView, boolean anim, boolean quiet) {
+    public void finishIView(final IView iView, boolean anim, boolean quiet) {
         if (iView == null) {
             return;
         }
@@ -326,7 +330,7 @@ public abstract class UIIViewImpl implements IView {
         mILayout.finishIView(iView, anim, quiet);
     }
 
-    public void showIView(View view) {
+    public void showIView(final View view) {
         showIView(view, true);
     }
 

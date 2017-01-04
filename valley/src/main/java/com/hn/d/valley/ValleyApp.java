@@ -3,11 +3,13 @@ package com.hn.d.valley;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.utils.storage.StorageUtil;
 import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
+import com.lzy.imagepicker.ImagePickerHelper;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -79,5 +81,9 @@ public class ValleyApp extends RApplication {
         RNim.initOnce(this);
 
         RAmap.init(this);
+
+        ImagePickerHelper.init();
+
+        StorageUtil.init(this, null);
     }
 }

@@ -55,12 +55,20 @@
             <!--地理位置消息-->
             <include
                 android:id="@+id/msg_location_layout"
-                layout="@layout/msg_location_layout"/>
+                layout="@layout/msg_location_layout"
+                android:visibility="gone"/>
 
             <!--图片消息-->
             <include
                 android:id="@+id/msg_image_layout"
-                layout="@layout/msg_image_layout"/>
+                layout="@layout/msg_image_layout"
+                android:visibility="gone"/>
+
+            <!--音频消息-->
+            <include
+                android:id="@+id/msg_audio_layout"
+                layout="@layout/msg_audio_layout"
+                android:visibility="gone"/>
 
             <!--<ImageView-->
             <!--android:id="@+id/msg_image_view"-->
@@ -70,27 +78,55 @@
         </FrameLayout>
 
         <!--状态-->
-        <FrameLayout
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/base_xxhdpi"
-            android:layout_marginStart="@dimen/base_80dpi_">
+            android:layout_marginStart="@dimen/base_80dpi_"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/base_xxhdpi"
+            android:orientation="horizontal">
 
-            <!--发送失败的view-->
-            <ImageView
-                android:id="@+id/status_fail_view"
+            <!--语音消息未读提示-->
+            <FrameLayout
+                android:id="@+id/message_item_audio_unread_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/nim_ic_failed"
-                android:visibility="gone"/>
+                android:paddingEnd="@dimen/base_xhdpi"
+                android:visibility="gone">
 
-            <ProgressBar
-                android:id="@+id/status_sending_view"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="@dimen/base_xxhdpi"
-                android:layout_height="@dimen/base_xxhdpi"
-                android:visibility="visible"/>
-        </FrameLayout>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/nim_new_message_notify"
+                    android:contentDescription="@string/empty"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:longClickable="true"/>
+            </FrameLayout>
 
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <!--发送失败的view-->
+                <ImageView
+                    android:id="@+id/status_fail_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/nim_ic_failed"
+                    android:visibility="gone"/>
+
+                <ProgressBar
+                    android:id="@+id/status_sending_view"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="@dimen/base_xxhdpi"
+                    android:layout_height="@dimen/base_xxhdpi"
+                    android:visibility="visible"/>
+            </FrameLayout>
+
+
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

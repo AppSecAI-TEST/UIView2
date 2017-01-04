@@ -2,10 +2,13 @@ package com.lzy.imagepicker;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -28,6 +31,11 @@ import java.util.ArrayList;
  * Version: 1.0.0
  */
 public class ImagePickerHelper {
+    public static void init() {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new GlideImageLoader());
+    }
+
     public static void startImagePicker(Activity activity, boolean crop, boolean multiMode, int selectLimit) {
         startImagePicker(activity, true, crop, multiMode, selectLimit);
     }
@@ -80,13 +88,38 @@ public class ImagePickerHelper {
     public static class GlideImageLoader implements ImageLoader {
 
         @Override
-        public void displayImage(Activity activity, String path, ImageView imageView, int width, int height) {
-            Glide.with(activity)                             //配置上下文
-                    .load(Uri.fromFile(new File(path)))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                    .error(R.mipmap.default_image)           //设置错误图片
-                    .placeholder(R.mipmap.default_image)     //设置占位图片
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
-                    .into(imageView);
+        public void displayImage(Activity activity, String path, String thumbPath, String url, ImageView imageView, int width, int height) {
+
+            if (TextUtils.isEmpty(path)) {
+                final DrawableRequestBuilder<String> drawableRequestBuilder = Glide.with(activity)                             //配置上下文
+                        .load(url)                                       //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                        .error(R.mipmap.default_image)                    //设置错误图片
+                        .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+                if (TextUtils.isEmpty(thumbPath)) {
+                    drawableRequestBuilder.placeholder(R.mipmap.default_image)     //设置占位图片
+                            .into(imageView);
+                } else {
+                    drawableRequestBuilder.placeholder(new BitmapDrawable(activity.getResources(), thumbPath))
+                            .into(imageView);
+                }
+            } else {
+
+                final DrawableRequestBuilder<Uri> requestBuilder = Glide.with(activity)                             //配置上下文
+                        .load(Uri.fromFile(new File(path)))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                        .error(R.mipmap.default_image)           //设置错误图片
+                        .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+                if (TextUtils.isEmpty(thumbPath)) {
+                    requestBuilder.placeholder(R.mipmap.default_image)     //设置占位图片
+                            .into(imageView);
+                } else {
+                    requestBuilder.placeholder(new BitmapDrawable(activity.getResources(), thumbPath))
+                            .into(imageView);
+                }
+            }
+
+
         }
 
         @Override
@@ -98,7 +131,7 @@ public class ImagePickerHelper {
     public static class PicassoImageLoader implements ImageLoader {
 
         @Override
-        public void displayImage(Activity activity, String path, ImageView imageView, int width, int height) {
+        public void displayImage(Activity activity, String path, String thumbPath, String url, ImageView imageView, int width, int height) {
 //            Picasso.with(activity)//
 //                    .load(new File(path))//
 //                    .placeholder(R.mipmap.default_image)//
