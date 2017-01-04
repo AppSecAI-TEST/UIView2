@@ -39,6 +39,11 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     public static final int REQUEST_PERMISSION_STORAGE = 0x01;
     public static final int REQUEST_PERMISSION_CAMERA = 0x02;
 
+    /**
+     * 清空之前的选择
+     */
+    public static final String CLEAR_SELECTOR = "clear_selector";
+
     private ImagePicker imagePicker;
 
     private boolean isOrigin = false;  //是否选中原图
@@ -57,8 +62,12 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_grid);
 
+        final boolean clear = getIntent().getBooleanExtra(CLEAR_SELECTOR, true);
+
         imagePicker = ImagePicker.getInstance();
-        imagePicker.clear();
+        if (clear) {
+            imagePicker.clear();
+        }
         imagePicker.addOnImageSelectedListener(this);
 
         findViewById(R.id.btn_back).setOnClickListener(this);
@@ -153,7 +162,9 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
         }
     }
 
-    /** 创建弹出的ListView */
+    /**
+     * 创建弹出的ListView
+     */
     private void createPopupFolderList() {
         mFolderPopupWindow = new FolderPopUpWindow(this, mImageFolderAdapter);
         mFolderPopupWindow.setOnItemClickListener(new FolderPopUpWindow.OnItemClickListener() {

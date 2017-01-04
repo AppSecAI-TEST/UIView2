@@ -117,6 +117,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
         if (id == R.id.btn_ok) {
             Intent intent = new Intent();
             intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imagePicker.getSelectedImages());
+            intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
             setResult(ImagePicker.RESULT_CODE_ITEMS, intent);
             finish();
         } else if (id == R.id.btn_back) {
@@ -160,7 +161,9 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
         super.onDestroy();
     }
 
-    /** 单击时，隐藏头和尾 */
+    /**
+     * 单击时，隐藏头和尾
+     */
     @Override
     public void onImageSingleTap() {
         if (topBar.getVisibility() == View.VISIBLE) {
@@ -170,7 +173,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
             bottomBar.setVisibility(View.GONE);
             tintManager.setStatusBarTintResource(R.color.transparent);//通知栏所需颜色
             //给最外层布局加上这个属性表示，Activity全屏显示，且状态栏被隐藏覆盖掉。
-            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= 16)
+                content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         } else {
             topBar.setAnimation(AnimationUtils.loadAnimation(this, R.anim.top_in));
             bottomBar.setAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in));
@@ -178,7 +182,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
             bottomBar.setVisibility(View.VISIBLE);
             tintManager.setStatusBarTintResource(R.color.status_bar);//通知栏所需颜色
             //Activity全屏显示，但状态栏不会被隐藏覆盖，状态栏依然可见，Activity顶端布局部分会被状态遮住
-            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            if (Build.VERSION.SDK_INT >= 16)
+                content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
     }
 }

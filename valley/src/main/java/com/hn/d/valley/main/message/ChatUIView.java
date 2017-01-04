@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -25,6 +26,7 @@ import com.angcyo.uiview.base.UIContentView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
+import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.resources.ResUtil;
@@ -38,7 +40,9 @@ import com.hn.d.valley.bean.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
+import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -60,6 +64,7 @@ import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -159,7 +164,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
         super.initContentLayout();
         mBaseRootLayout.fitsSystemWindows(false);
 
-        mChatControl = new ChatControl(mActivity, mViewHolder);
+        mChatControl = new ChatControl(mActivity, mViewHolder, this);
         mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
             @Override
             public void onEmojiText(String emoji) {
@@ -175,7 +180,16 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
 
         initRefreshLayout();
 
-        mRecyclerView.setOnInterceptTouchListener(new View.OnTouchListener() {
+//        mRecyclerView.setOnInterceptTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    mChatRootLayout.requestBackPressed();
+//                }
+//                return false;
+//            }
+//        });
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -223,7 +237,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
             @Override
             public void onClick(View v) {
                 //发送图片
-
+                ImagePickerHelper.startImagePicker(mActivity, false, false, 9);
             }
         }));
         items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_video_normal, "视频", new View.OnClickListener() {
@@ -244,7 +258,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
 //                        final IMMessage message = MessageBuilder.createTextMessage(account, sessionType, "测试");
 //                        sendMessage(message);
                     }
-                }));
+                }, null, true));
             }
         }));
         items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_audio_chat_normal, "语音通话", new View.OnClickListener() {
@@ -646,6 +660,36 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                     }
                 })
                 .setGravity(Gravity.CENTER));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        final ArrayList<String> images = ImagePickerHelper.getImages(mActivity, requestCode, resultCode, data);
+        final boolean origin = ImagePickerHelper.isOrigin(requestCode, resultCode, data);
+        if (images.isEmpty()) {
+            return;
+        }
+        HnLoading.show(mILayout);
+        Luban.luban(mActivity, images)
+                .subscribe(new Action1<ArrayList<String>>() {
+                    @Override
+                    public void call(ArrayList<String> strings) {
+                        final IMMessage imageMessage =
+                                MessageBuilder.createImageMessage(account, sessionType, new File(strings.get(0)));
+                        sendMessage(imageMessage);
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        HnLoading.hide();
+                    }
+                }, new Action0() {
+                    @Override
+                    public void call() {
+                        HnLoading.hide();
+                    }
+                });
     }
 
     class EmptyView extends View {

@@ -192,4 +192,8 @@
         <item name="android:textColor">@color/main_text_color</item>
     </style>
 
+    <style name="SingleWhiteTextStyle" parent="SingleDarkTextStyle">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

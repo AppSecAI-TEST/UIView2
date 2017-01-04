@@ -11,6 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.loader.ImageLoader;
 import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.lzy.imagepicker.ui.ImagePreviewActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,6 +29,10 @@ import java.util.ArrayList;
  */
 public class ImagePickerHelper {
     public static void startImagePicker(Activity activity, boolean crop, boolean multiMode, int selectLimit) {
+        startImagePicker(activity, true, crop, multiMode, selectLimit);
+    }
+
+    public static void startImagePicker(Activity activity, boolean clear, boolean crop, boolean multiMode, int selectLimit) {
         ImagePicker imagePicker = ImagePicker.getInstance();
         imagePicker.setImageLoader(new GlideImageLoader());
         imagePicker.setCrop(crop);
@@ -38,9 +43,13 @@ public class ImagePickerHelper {
         imagePicker.setFocusWidth(600);
         imagePicker.setFocusHeight(600);
         Intent intent = new Intent(activity, ImageGridActivity.class);
+        intent.putExtra(ImageGridActivity.CLEAR_SELECTOR, clear);
         activity.startActivityForResult(intent, 100);
     }
 
+    /**
+     * 拿到原始的图片磁盘路径
+     */
     public static ArrayList<String> getImages(Activity activity, int requestCode, int resultCode, Intent data) {
         ArrayList<String> list = new ArrayList<>();
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
@@ -54,6 +63,18 @@ public class ImagePickerHelper {
             }
         }
         return list;
+    }
+
+    /**
+     * 是否是原图
+     */
+    public static boolean isOrigin(int requestCode, int resultCode, Intent data) {
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            if (data != null && requestCode == 100) {
+                return data.getBooleanExtra(ImagePreviewActivity.ISORIGIN, false);
+            }
+        }
+        return false;
     }
 
     public static class GlideImageLoader implements ImageLoader {

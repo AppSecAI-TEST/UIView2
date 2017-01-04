@@ -4,6 +4,7 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.mvp.presenter.BasePresenter;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.rsa.RSA;
@@ -63,6 +64,7 @@ public class LoginPresenter extends BasePresenter<Start.ILoginView> implements S
 
         map.put("os_version", Build.VERSION.RELEASE);
         map.put("phone_model", Build.MODEL);
+        map.put("device_id", RApplication.getIMEI());
 
         UISubscriber<LoginBean, Bean<LoginBean>, Start.ILoginView> subscriber =
                 new UISubscriber<LoginBean, Bean<LoginBean>, Start.ILoginView>(mBaseView) {

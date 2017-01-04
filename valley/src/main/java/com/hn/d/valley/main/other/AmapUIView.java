@@ -67,11 +67,15 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
     private AMapLocationClient mLocationClient;
     private Action1<AmapBean> mBeanAction1;
     private int mState = ViewDragHelper.STATE_IDLE;
+    private boolean mSend = false;//是否需要发送位置
+    private LatLng mLatlng;
 
     public AmapUIView() {
     }
 
-    public AmapUIView(Action1<AmapBean> beanAction1) {
+    public AmapUIView(Action1<AmapBean> beanAction1, LatLng latlng, boolean send) {
+        mLatlng = latlng;
+        mSend = send;
         mBeanAction1 = beanAction1;
     }
 
@@ -89,6 +93,7 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
             @Override
             public void run() {
                 initLocation();
+                setCameraChangeListener();
             }
         }, 500);
     }
@@ -96,20 +101,22 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> items = new ArrayList<>();
-        items.add(TitleBarPattern.TitleBarItem.build().setText("发送").setListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mTargetBean == null) {
-                    T_.show("还未获取到有效位置信息.");
-                } else {
+        if (mSend) {
+            items.add(TitleBarPattern.TitleBarItem.build().setText("发送").setListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mTargetBean == null) {
+                        T_.show("还未获取到有效位置信息.");
+                    } else {
 //                    finishIView(AmapUIView.this, new UIParam(true, false));
-                    if (mBeanAction1 != null) {
-                        mBeanAction1.call(mTargetBean);
+                        if (mBeanAction1 != null) {
+                            mBeanAction1.call(mTargetBean);
+                        }
+                        finishIView(AmapUIView.this);
                     }
-                    finishIView(AmapUIView.this);
                 }
-            }
-        }));
+            }));
+        }
         return super.getTitleBar().setTitleString("我的位置").setShowBackImageView(true).setRightItems(items);
     }
 
@@ -210,16 +217,19 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
      * 定位到最后一次的位置
      */
     private void initLocation() {
-        LatLng latlng = null;
 
-        RealmResults<AmapBean> all = RRealm.where(AmapBean.class).findAll();
-        if (all.size() > 0) {
-            mLastBean = all.last();
-            mMarkerAddress.setText(mLastBean.address);
-            moveToLocation(mLastBean);
+        if (mLatlng == null) {
+            RealmResults<AmapBean> all = RRealm.where(AmapBean.class).findAll();
+            if (all.size() > 0) {
+                mLastBean = all.last();
+                mMarkerAddress.setText(mLastBean.address);
+                moveToLocation(mLastBean);
+            } else {
+                mLatlng = new LatLng(39.90923, 116.397428);
+                moveToLocation(mLatlng);
+            }
         } else {
-            latlng = new LatLng(39.90923, 116.397428);
-            moveToLocation(latlng);
+            moveToLocation(mLatlng);
         }
     }
 
@@ -288,8 +298,6 @@ public class AmapUIView extends UIContentView implements AMap.OnCameraChangeList
                 mLastBean = RAmap.saveAmapLocation2(amapLocation);
 
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-
-                setCameraChangeListener();
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
                 L.e("AmapErr:" + errText);

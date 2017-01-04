@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layoutDirection="ltr">
+
+    <ImageView
+        android:id="@+id/location_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/nim_location_bk"/>
+
+    <TextView
+        android:id="@+id/location_address_view"
+        style="@style/SingleWhiteTextStyle"
+        android:layout_alignBaseline="@id/location_image_view"
+        android:layout_alignBottom="@id/location_image_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:gravity="center"
+        android:maxWidth="180dp"
+        tools:text="123124212312421231242123124212312421231242"/>
+
+</RelativeLayout>

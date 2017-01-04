@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_msg_chat_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/base_ldpi"
@@ -46,21 +47,20 @@
             android:layout_marginEnd="@dimen/base_80dpi"
             tools:background="@drawable/bubble_box_right_selector">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layoutDirection="ltr"
-                android:paddingLeft="@dimen/base_mdpi"
-                android:paddingRight="@dimen/base_mdpi">
+            <!--文本消息-->
+            <include
+                android:id="@+id/msg_text_layout"
+                layout="@layout/msg_text_layout"/>
 
-                <TextView
-                    android:id="@+id/msg_text_view"
-                    style="@style/MainTextStyle"
-                    android:gravity="left"
-                    tools:text="1231242"/>
+            <!--地理位置消息-->
+            <include
+                android:id="@+id/msg_location_layout"
+                layout="@layout/msg_location_layout"/>
 
-            </RelativeLayout>
+            <!--图片消息-->
+            <include
+                android:id="@+id/msg_image_layout"
+                layout="@layout/msg_image_layout"/>
 
             <!--<ImageView-->
             <!--android:id="@+id/msg_image_view"-->

@@ -11,7 +11,6 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -59,26 +58,30 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
         @Override
         public void onActivityStarted(Activity activity) {
-
-        }
-
-        @Override
-        public void onActivityResumed(Activity activity) {
             if (activity == mCompatActivity) {
                 viewShow(mLastShowViewPattern, null);
             }
         }
 
         @Override
+        public void onActivityResumed(Activity activity) {
+//            if (activity == mCompatActivity) {
+//                viewShow(mLastShowViewPattern, null);
+//            }
+        }
+
+        @Override
         public void onActivityPaused(Activity activity) {
-            if (activity == mCompatActivity) {
-                viewHide(mLastShowViewPattern);
-            }
+//            if (activity == mCompatActivity) {
+//                viewHide(mLastShowViewPattern);
+//            }
         }
 
         @Override
         public void onActivityStopped(Activity activity) {
-
+            if (activity == mCompatActivity) {
+                viewHide(mLastShowViewPattern);
+            }
         }
 
         @Override
@@ -223,17 +226,18 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     @Override
     public void startIView(final IView iView, final UIParam param) {
         runnableCount++;
+        iView.onAttachedToILayout(this);
+        final Runnable endRunnable = new Runnable() {
+            @Override
+            public void run() {
+                startInner(iView, param);
+                runnableCount--;
+            }
+        };
         if (param.mAsync) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    startInner(iView, param);
-                    runnableCount--;
-                }
-            });
+            post(endRunnable);
         } else {
-            startInner(iView, param);
-            runnableCount--;
+            endRunnable.run();
         }
     }
 
@@ -332,12 +336,17 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         if (view == null) {
             return;
         }
-        post(new Runnable() {
-            @Override
-            public void run() {
-                finishIViewInner(findViewPatternByView(view), new UIParam(needAnim, false, false));
-            }
-        });
+        final ViewPattern viewPatternByView = findViewPatternByView(view);
+        if (viewPatternByView == null) {
+//            post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    finishIView(view, needAnim);
+//                }
+//            });
+            return;
+        }
+        finishIView(viewPatternByView.mIView, new UIParam(needAnim, false, false));
     }
 
     /**
@@ -350,15 +359,13 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
         ViewPattern lastViewPattern = findLastShowViewPattern(viewPattern);
 
-        if (viewPattern.isAnimToEnd || isFinishing) {
-            if (param.isQuiet) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        finishIViewInner(viewPattern, param);
-                    }
-                });
-            }
+        if (viewPattern.isAnimToStart || viewPattern.isAnimToEnd || isFinishing) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    finishIViewInner(viewPattern, param);
+                }
+            });
             return;
         }
 
@@ -418,12 +425,25 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     @Override
     public void finishIView(IView iview, boolean needAnim, boolean quiet) {
-        finishIViewInner(findViewPatternByIView(iview), new UIParam(needAnim, false, quiet));
+        finishIView(iview, new UIParam(needAnim, false, quiet));
     }
 
     @Override
-    public void finishIView(IView iview, UIParam param) {
-        finishIViewInner(findViewPatternByIView(iview), param);
+    public void finishIView(final IView iview, final UIParam param) {
+        if (iview == null) {
+            return;
+        }
+        final Runnable endRunnable = new Runnable() {
+            @Override
+            public void run() {
+                finishIViewInner(findViewPatternByIView(iview), param);
+            }
+        };
+        if (param.mAsync) {
+            post(endRunnable);
+            return;
+        }
+        endRunnable.run();
     }
 
     @Override
@@ -695,6 +715,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             @Override
             public void run() {
                 viewShow(topViewPattern, param.mBundle);
+                topViewPattern.isAnimToStart = false;
             }
         };
 
@@ -703,6 +724,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         }
 
         topViewPattern.mView.bringToFront();
+        topViewPattern.isAnimToStart = true;
 
         if (!param.mAnim) {
             endRunnable.run();
@@ -1005,6 +1027,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      */
     private boolean safeStartAnim(final View view, final Animation animation, final Runnable endRunnable) {
         if (view == null) {
+            if (endRunnable != null) {
+                endRunnable.run();
+            }
             return false;
         }
 
@@ -1033,13 +1058,13 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     public ViewPattern findViewPatternByIView(IView iview) {
         for (ViewPattern viewPattern : mAttachViews) {
-            if (TextUtils.equals(viewPattern.mIView.getClass().getSimpleName(), iview.getClass().getSimpleName())) {
-                return viewPattern;
-            }
-
-//            if (viewPattern.mIView == iview) {
+//            if (TextUtils.equals(viewPattern.mIView.getClass().getSimpleName(), iview.getClass().getSimpleName())) {
 //                return viewPattern;
 //            }
+
+            if (viewPattern.mIView == iview) {
+                return viewPattern;
+            }
         }
         return null;
     }

@@ -3,28 +3,44 @@ package com.hn.d.valley.main.message;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.amap.api.maps.model.LatLng;
 import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.utils.media.BitmapDecoder;
+import com.angcyo.uiview.utils.media.ImageUtil;
+import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
+import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
+import com.netease.nimlib.sdk.msg.attachment.LocationAttachment;
+import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -53,6 +69,7 @@ public class ChatControl {
         }
     };
     Context mContext;
+    UIBaseView mUIBaseView;
 
     Observer<IMMessage> mMessageObserver = new Observer<IMMessage>() {
         @Override
@@ -68,14 +85,51 @@ public class ChatControl {
         }
     };
 
-    public ChatControl(Context context, RBaseViewHolder viewHolder) {
+    public ChatControl(Context context, RBaseViewHolder viewHolder, UIBaseView uiBaseView) {
         mContext = context;
         mViewHolder = viewHolder;
+        mUIBaseView = uiBaseView;
         mRecyclerView = mViewHolder.v(R.id.recycler_view);
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
         mChatAdapter = new ChatAdapter(context, null);
         mRecyclerView.setItemAnim(false);
         mRecyclerView.setAdapter(mChatAdapter);
+    }
+
+    public static int getImageMaxEdge() {
+        return (int) (165.0 / 320.0 * ScreenUtil.screenWidth);
+    }
+
+    public static int getImageMinEdge() {
+        return (int) (76.0 / 320.0 * ScreenUtil.screenWidth);
+    }
+
+    /**
+     * 根据图片路径大小, 自动设置View的宽高
+     */
+    public static void setImageSize(final View view, final IMMessage message, String path) {
+        int[] bounds = null;
+        if (path != null) {
+            bounds = BitmapDecoder.decodeBound(new File(path));
+        }
+        if (bounds == null) {
+            if (message.getMsgType() == MsgTypeEnum.image) {
+                ImageAttachment attachment = (ImageAttachment) message.getAttachment();
+                bounds = new int[]{attachment.getWidth(), attachment.getHeight()};
+            } else if (message.getMsgType() == MsgTypeEnum.video) {
+                VideoAttachment attachment = (VideoAttachment) message.getAttachment();
+                bounds = new int[]{attachment.getWidth(), attachment.getHeight()};
+            }
+        }
+
+        if (bounds != null) {
+            ImageUtil.ImageSize imageSize = ImageUtil.getThumbnailDisplaySize(bounds[0], bounds[1], getImageMaxEdge(), getImageMinEdge());
+
+            ViewGroup.LayoutParams maskParams = view.getLayoutParams();
+            maskParams.width = imageSize.width;
+            maskParams.height = imageSize.height;
+            view.setLayoutParams(maskParams);
+        }
     }
 
     public void onLoad() {
@@ -146,10 +200,11 @@ public class ChatControl {
                 avatar = UserCache.instance().getAvatar();
             }
 
-            itemRootLayout.setOnClickListener(new View.OnClickListener() {
+            itemRootLayout.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-
+                public boolean onTouch(View v, MotionEvent event) {
+                    ((RSoftInputLayout) mViewHolder.v(R.id.chat_root_layout)).requestBackPressed();
+                    return true;
                 }
             });
 
@@ -175,39 +230,82 @@ public class ChatControl {
         }
 
         private void updateMsgContent(RBaseViewHolder holder, IMMessage bean) {
+            final View msgTextLayout = holder.v(R.id.msg_text_layout);
+            final View msgImageLayout = holder.v(R.id.msg_image_layout);
+            final View msgLocationLayout = holder.v(R.id.msg_location_layout);
+            final View msgContentLayout = holder.v(R.id.msg_content_layout);
+
+            msgImageLayout.setVisibility(View.GONE);
+            msgLocationLayout.setVisibility(View.GONE);
+            msgTextLayout.setVisibility(View.GONE);
+
             final TextView contentView = holder.tv(R.id.msg_text_view);
             switch (bean.getMsgType()) {
                 case audio:
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[音频消息]");
                     break;
                 case avchat://音视频通话
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[音视频通话]");
                     break;
                 case custom://第三方APP自定义消息
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[第三方APP自定义消息]");
                     break;
                 case file:
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[文件消息]");
                     break;
                 case image:
-                    contentView.setText("[图片消息]");
+                    msgImageLayout.setVisibility(View.VISIBLE);
+                    final SimpleDraweeView draweeView = holder.v(R.id.msg_image_view);
+
+                    FileAttachment msgAttachment = (FileAttachment) bean.getAttachment();
+                    String path = msgAttachment.getPath();
+                    String thumbPath = msgAttachment.getThumbPath();
+                    if (!TextUtils.isEmpty(thumbPath)) {
+                        setImageSize(draweeView, bean, thumbPath);
+                        DraweeViewUtil.setDraweeViewFile(draweeView, thumbPath);
+                    } else if (!TextUtils.isEmpty(path)) {
+                        setImageSize(draweeView, bean, path);
+                        DraweeViewUtil.setDraweeViewFile(draweeView, path);
+                    } else {
+                        DraweeViewUtil.setDraweeViewHttp(draweeView, "");
+                        downloadAttachment(bean);
+                    }
+
                     break;
                 case location:
-                    contentView.setText("[位置消息]");
+                    msgLocationLayout.setVisibility(View.VISIBLE);
+                    final LocationAttachment attachment = (LocationAttachment) bean.getAttachment();
+                    holder.tV(R.id.location_address_view).setText(attachment.getAddress());
+                    msgContentLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mUIBaseView.startIView(new AmapUIView(null,
+                                    new LatLng(attachment.getLatitude(), attachment.getLongitude()), false));
+                        }
+                    });
                     break;
                 case notification:
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[通知消息]");
                     break;
                 case text:
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     MoonUtil.show(mContext, contentView, bean.getContent());
                     break;
                 case tip:
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[提醒类型消息]");
                     break;
                 case undef://未知消息类型
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[未知消息类型]");
                     break;
                 case video://视频消息
+                    msgTextLayout.setVisibility(View.VISIBLE);
                     contentView.setText("[视频消息]");
                     break;
 
@@ -253,6 +351,14 @@ public class ChatControl {
             }
 
 //            L.e("消息状态:" + status.getValue());
+        }
+
+        /**
+         * 下载附件/缩略图
+         */
+        protected void downloadAttachment(IMMessage message) {
+            if (message.getAttachment() != null && message.getAttachment() instanceof FileAttachment)
+                NIMClient.getService(MsgService.class).downloadAttachment(message, true);
         }
     }
 }

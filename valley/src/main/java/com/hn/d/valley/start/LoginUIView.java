@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -44,6 +42,7 @@ import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnLoading;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
+import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -258,6 +257,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                 .addItem("当前地址:" + RRetrofit.BASE_URL, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        HnLoading.show(mILayout);
                     }
                 })
         );
@@ -308,9 +308,12 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.qq_view)
     public void onQqClick() {
-        startIView(UIDialog.build()
-                .setDialogContent(mActivity.getString(R.string.account_exception))
-                .setGravity(Gravity.CENTER_VERTICAL));
+//        startIView(UIDialog.build()
+//                .setDialogContent(mActivity.getString(R.string.account_exception))
+//                .setGravity(Gravity.CENTER_VERTICAL));
+
+        //HnLoading.show(mILayout);
+        ImagePickerHelper.startImagePicker(mActivity, false, true, true, 50);
     }
 
     @Override

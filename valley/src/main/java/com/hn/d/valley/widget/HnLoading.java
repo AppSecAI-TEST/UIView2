@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
@@ -40,6 +41,7 @@ public class HnLoading extends UIIDialogImpl {
     public static void hide() {
         if (isShowing && mUILoading != null) {
             mUILoading.finishDialog();
+            mUILoading = null;
             isShowing = false;
         }
     }
@@ -55,9 +57,7 @@ public class HnLoading extends UIIDialogImpl {
         if (isShowing) {
 
         } else {
-            if (mUILoading == null) {
-                mUILoading = new HnLoading(canCancel);
-            }
+            mUILoading = new HnLoading(canCancel);
             layout.startIView(mUILoading);
             isShowing = true;
         }
@@ -71,11 +71,15 @@ public class HnLoading extends UIIDialogImpl {
 
     @Override
     protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+        FrameLayout frameLayout = new FrameLayout(mActivity);
+
         mLoadView = new View(mActivity);
         mLoadView.setBackgroundResource(R.drawable.load_animation_list);
         int size = (int) ResUtil.dpToPx(mActivity, 88);
-        dialogRootLayout.addView(mLoadView, new ViewGroup.LayoutParams(size, size));
-        return mLoadView;
+
+        frameLayout.addView(mLoadView, new ViewGroup.LayoutParams(size, size));
+        dialogRootLayout.addView(frameLayout, new ViewGroup.LayoutParams(-2, -2));
+        return frameLayout;
     }
 
     @Override
@@ -88,6 +92,7 @@ public class HnLoading extends UIIDialogImpl {
     public void onViewUnload() {
         super.onViewUnload();
         ((AnimationDrawable) mLoadView.getBackground()).stop();
+        isShowing = false;
     }
 
     @Override

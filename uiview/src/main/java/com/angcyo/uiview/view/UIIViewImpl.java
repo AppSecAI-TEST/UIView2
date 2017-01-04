@@ -61,10 +61,14 @@ public abstract class UIIViewImpl implements IView {
     }
 
     @Override
+    public void onAttachedToILayout(ILayout iLayout) {
+        mILayout = iLayout;
+    }
+
+    @Override
     public View inflateContentView(AppCompatActivity activity, ILayout iLayout, FrameLayout container, LayoutInflater inflater) {
         L.d(this.getClass().getSimpleName(), "inflateContentView: ");
         mActivity = activity;
-        mILayout = iLayout;
         return inflateBaseView(container, inflater);
     }
 
