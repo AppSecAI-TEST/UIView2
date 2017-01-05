@@ -23,8 +23,8 @@ public class AVLoadingIndicatorView extends View {
 
     private static final LineSpinFadeLoaderIndicator DEFAULT_INDICATOR = new LineSpinFadeLoaderIndicator();
 
-    private static final int MIN_SHOW_TIME = 500; // ms
-    private static final int MIN_DELAY = 500; // ms
+    private static final int MIN_SHOW_TIME = 100; // ms
+    private static final int MIN_DELAY = 100; // ms
     int mMinWidth;
     int mMaxWidth;
     int mMinHeight;
@@ -185,6 +185,7 @@ public class AVLoadingIndicatorView extends View {
 
     public void hide() {
         mDismissed = true;
+        mPostedShow = false;
         removeCallbacks(mDelayedShow);
         long diff = System.currentTimeMillis() - mStartTime;
         if (diff >= MIN_SHOW_TIME || mStartTime == -1) {

@@ -42,6 +42,8 @@ import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rx.functions.Action0;
@@ -276,20 +278,20 @@ public class RecentContactsControl {
     }
 
     public void setRecentContact(List<RecentContact> recentContact) {
-//        if (!recentContact.isEmpty()) {
-//            Collections.sort(recentContact, new Comparator<RecentContact>() {
-//                @Override
-//                public int compare(RecentContact o1, RecentContact o2) {
-//                    if (RNim.isRecentContactTag(o2, IS_TOP)) {
-//                        return 1;
-//                    }
-//                    if (RNim.isRecentContactTag(o1, IS_TOP)) {
-//                        return -1;
-//                    }
-//                    return 0;
-//                }
-//            });
-//        }
+        if (!recentContact.isEmpty()) {
+            Collections.sort(recentContact, new Comparator<RecentContact>() {
+                @Override
+                public int compare(RecentContact o1, RecentContact o2) {
+                    if (RNim.isRecentContactTag(o2, IS_TOP)) {
+                        return 1;
+                    }
+                    if (RNim.isRecentContactTag(o1, IS_TOP)) {
+                        return -1;
+                    }
+                    return 0;
+                }
+            });
+        }
         mRecentContactsAdapter.resetData(recentContact);
     }
 
