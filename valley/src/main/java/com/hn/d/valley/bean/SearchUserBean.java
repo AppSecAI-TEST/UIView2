@@ -80,6 +80,11 @@ public class SearchUserBean {
     private String job;
     private String industry;
     private String signature;
+    /**
+     * auth_desc : 歌手佟丽娅
+     */
+
+    private String auth_desc;
 
     public int getIs_attention() {
         return is_attention;
@@ -335,5 +340,13 @@ public class SearchUserBean {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getAuth_desc() {
+        return auth_desc;
+    }
+
+    public void setAuth_desc(String auth_desc) {
+        this.auth_desc = auth_desc;
     }
 }

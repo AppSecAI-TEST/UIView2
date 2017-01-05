@@ -142,6 +142,16 @@ public class TitleBarPattern {
         return this;
     }
 
+    public TitleBarPattern addLeftItem(TitleBarItem leftItem) {
+        mLeftItems.add(leftItem);
+        return this;
+    }
+
+    public TitleBarPattern addRightItem(TitleBarItem rightItem) {
+        mRightItems.add(rightItem);
+        return this;
+    }
+
     public static class TitleBarItem {
         public String text;
         @DrawableRes

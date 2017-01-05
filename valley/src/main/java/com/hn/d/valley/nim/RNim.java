@@ -188,9 +188,18 @@ public class RNim {
      * 测试模式下的登录方法
      */
     public static void debugLogin(final Action1<Boolean> action1) {
-        UserCache.setUserAccount("50015");
-        UserCache.setUserToken("725161648c0116d850e839d22ff69f0b");
-        login("50015", "725161648c0116d850e839d22ff69f0b", new RequestCallbackWrapper<LoginInfo>() {
+//        UserCache.setUserAccount("50015");
+//        UserCache.setUserToken("725161648c0116d850e839d22ff69f0b");
+//        login("50015", "725161648c0116d850e839d22ff69f0b", new RequestCallbackWrapper<LoginInfo>() {
+//            @Override
+//            public void onResult(int code, LoginInfo result, Throwable exception) {
+//                action1.call(code == ResponseCode.RES_SUCCESS);
+//            }
+//        });
+
+        UserCache.setUserAccount("50033");
+        UserCache.setUserToken("1ad6c5e17b3150f7398bb9846664b8ba");
+        login("50033", "1ad6c5e17b3150f7398bb9846664b8ba", new RequestCallbackWrapper<LoginInfo>() {
             @Override
             public void onResult(int code, LoginInfo result, Throwable exception) {
                 action1.call(code == ResponseCode.RES_SUCCESS);

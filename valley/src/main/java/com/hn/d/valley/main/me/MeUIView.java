@@ -11,12 +11,11 @@ import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.library.adapter.SingleFrescoImageAdapter;
 import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.uiview.control.PhotoPagerControl;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.TitleBarLayout;
-import com.angcyo.uiview.widget.viewpager.DepthPageTransformer;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
@@ -26,6 +25,7 @@ import com.hn.d.valley.bean.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import butterknife.BindView;
@@ -78,6 +78,7 @@ public class MeUIView extends BaseUIView {
     ItemInfoLayout mPersonAuthLayout;
     @BindView(R.id.setting_layout)
     ItemInfoLayout mSettingLayout;
+    private PhotoPagerControl mPhotoPagerControl;
 
 
     @Override
@@ -105,7 +106,6 @@ public class MeUIView extends BaseUIView {
         super.initContentLayout();
         initScrollLayout();
         initViewPager();
-        mTextIndicatorView.setupViewPager(mViewPager);
         UserCache.instance().getLoginBeanObservable().subscribe(new Action1<LoginBean>() {
             @Override
             public void call(LoginBean loginBean) {
@@ -135,18 +135,11 @@ public class MeUIView extends BaseUIView {
     }
 
     private void initViewPager() {
-        mViewPager.setPageTransformer(true, new DepthPageTransformer());
-        mViewPager.setAdapter(new SingleFrescoImageAdapter(R.drawable.login_pic) {
-            @Override
-            protected String getImageUrl(int position) {
-                return UserCache.instance().getAvatar();
-            }
-
-            @Override
-            public int getCount() {
-                return 10;
-            }
-        });
+        ArrayList<String> photos = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            photos.add(UserCache.instance().getAvatar());
+        }
+        mPhotoPagerControl = new PhotoPagerControl(mTextIndicatorView, mViewPager, photos);
     }
 
     @NonNull

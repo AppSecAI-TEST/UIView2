@@ -98,18 +98,17 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                     .subscribe(new Action1<Void>() {
                         @Override
                         public void call(Void aVoid) {
-                            showLoadView();
                             RNim.debugLogin(new Action1<Boolean>() {
                                 @Override
                                 public void call(Boolean aBoolean) {
-                                    hideLoadView();
-                                    if (aBoolean) {
-                                        jumpToMain();
-                                    } else {
-                                        T_.show("登录云信失败.");
-                                    }
+//                                    if (aBoolean) {
+//                                        jumpToMain();
+//                                    } else {
+//                                        T_.show("登录云信失败.");
+//                                    }
                                 }
                             });
+                            jumpToMain();
                         }
                     });
         }
@@ -335,12 +334,12 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                 new RequestCallbackWrapper<LoginInfo>() {
                     @Override
                     public void onResult(int code, LoginInfo result, Throwable exception) {
+                        HnLoading.hide();
+
                         if (code == ResponseCode.RES_SUCCESS) {
-                            onRequestCancel();
                             jumpToMain();
                         } else {
                             T_.show("登录失败!");
-                            onRequestCancel();
                         }
                     }
                 });
@@ -354,11 +353,6 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @Override
     public void onRequestFinish() {
         //云信登录成功后, 再取消对话框
-    }
-
-    @Override
-    public void onRequestCancel() {
-        HnLoading.hide();
     }
 
     /**

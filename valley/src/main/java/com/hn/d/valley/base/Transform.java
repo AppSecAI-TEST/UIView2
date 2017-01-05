@@ -59,11 +59,12 @@ public class Transform {
                             @Override
                             public T call(ResponseBody stringResponse) {
                                 T bean;
-                                String body = "";
+                                String body;
                                 try {
                                     body = stringResponse.string();
 
-                                    L.e("接口返回数据-->\n" + body);
+                                    //"接口返回数据-->\n" +
+                                    L.json(body);
 
                                     JSONObject jsonObject = new JSONObject(body);
                                     int result = jsonObject.getInt("result");

@@ -156,8 +156,10 @@ public class FriendDataCache {
     public void buildCache() {
         // 获取我所有的好友关系
         List<Friend> friends = NIMClient.getService(FriendService.class).getFriends();
-        for (Friend f : friends) {
-            friendMap.put(f.getAccount(), f);
+        if (friends != null) {
+            for (Friend f : friends) {
+                friendMap.put(f.getAccount(), f);
+            }
         }
 
         // 获取我所有好友的帐号

@@ -181,12 +181,17 @@ public class RBaseViewHolder extends RecyclerView.ViewHolder {
             String name = f.getName();
             try {
                 View view = viewByName(name);
-                if (view instanceof TextView) {
-                    ((TextView) view).setText(f.get(bean).toString());
-                } else if (view instanceof ImageView) {
-
+                if (view == null) {
+                    view = viewByName(name + "_view");
                 }
 
+                if (view != null) {
+                    if (view instanceof TextView) {
+                        ((TextView) view).setText(f.get(bean).toString());
+                    } else if (view instanceof ImageView) {
+
+                    }
+                }
             } catch (Exception e) {
             }
         }

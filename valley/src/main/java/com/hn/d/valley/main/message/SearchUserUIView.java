@@ -24,6 +24,7 @@ import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.mvp.Search;
 import com.hn.d.valley.main.message.mvp.SearchPresenter;
+import com.hn.d.valley.sub.UserInfoUIView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
@@ -158,14 +159,14 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
         }
 
         @Override
-        protected void onBindView(RBaseViewHolder holder, int position, SearchUserBean bean) {
+        protected void onBindView(RBaseViewHolder holder, int position, final SearchUserBean bean) {
             DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), bean.getAvatar());
             holder.tv(R.id.recent_name_view).setText(bean.getUsername());
 
             holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    startIView(new UserInfoUIView(bean));
                 }
             });
         }

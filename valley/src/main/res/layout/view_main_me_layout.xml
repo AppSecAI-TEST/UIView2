@@ -20,18 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="314dp">
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"/>
-
-                <com.angcyo.uiview.widget.viewpager.TextIndicator
-                    android:id="@+id/single_text_indicator_view"
-                    style="@style/WhiteColorTextStyle"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="74dp"
-                    android:layout_marginRight="@dimen/base_xhdpi"/>
+                <include layout="@layout/layout_photo_pager"/>
 
                 <!--按钮信息-->
                 <LinearLayout
