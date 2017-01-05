@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.angcyo.uiview.widget.RSoftInputLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chat_root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -123,6 +124,26 @@
         <View
             style="@style/BaseHLine"
             android:layout_below="@id/refresh_layout"/>
+
+        <RelativeLayout
+            android:id="@+id/recent_contact_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/base_main_color_white_bg_selector"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/recent_recent_content_view"
+                style="@style/SingleMainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:padding="@dimen/base_ldpi"
+                android:textColor="@color/colorPrimary"
+                tools:text="angcyo:angcyo"/>
+
+        </RelativeLayout>
 
         <!--录音时间覆盖-->
         <FrameLayout

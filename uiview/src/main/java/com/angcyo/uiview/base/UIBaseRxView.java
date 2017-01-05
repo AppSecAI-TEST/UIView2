@@ -23,6 +23,11 @@ public abstract class UIBaseRxView extends UIBaseDataView {
     }
 
     @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+    }
+
+    @Override
     public void onViewUnload() {
         super.onViewUnload();
         if (!mSubscriptions.isUnsubscribed()) {

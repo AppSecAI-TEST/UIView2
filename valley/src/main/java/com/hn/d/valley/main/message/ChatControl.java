@@ -26,11 +26,13 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.NIMClient;
@@ -67,17 +69,23 @@ public class ChatControl {
     public ChatAdapter mChatAdapter;
     public RRecyclerView mRecyclerView;
     HnRefreshLayout mRefreshLayout;
+    Context mContext;
+    UIBaseView mUIBaseView;
+    String mSessionId = "";
     Observer<List<IMMessage>> incomingMessageObserver = new Observer<List<IMMessage>>() {
         @Override
         public void onEvent(List<IMMessage> messages) {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
-            mChatAdapter.appendData(messages);
-            mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount());
+            for (IMMessage message : messages) {
+                if (TextUtils.equals(mSessionId, message.getSessionId())) {
+                    mChatAdapter.appendData(messages);
+                    mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount());
+                } else {
+                    RBus.post(new LastMessageEvent(message));
+                }
+            }
         }
     };
-    Context mContext;
-    UIBaseView mUIBaseView;
-
     Observer<IMMessage> mMessageObserver = new Observer<IMMessage>() {
         @Override
         public void onEvent(IMMessage imMessage) {
@@ -139,7 +147,9 @@ public class ChatControl {
         }
     }
 
-    public void onLoad() {
+    public void onLoad(String sessionId) {
+        this.mSessionId = sessionId;
+        onUnload();
         NIMClient.getService(MsgServiceObserve.class)
                 .observeReceiveMessage(incomingMessageObserver, true);
         NIMClient.getService(MsgServiceObserve.class)
@@ -149,6 +159,7 @@ public class ChatControl {
     public void onUnload() {
         NIMClient.getService(MsgServiceObserve.class)
                 .observeReceiveMessage(incomingMessageObserver, false);
+        MessageAudioControl.getInstance(mContext).stopAudio();
     }
 
     public void resetData(List<IMMessage> messages) {

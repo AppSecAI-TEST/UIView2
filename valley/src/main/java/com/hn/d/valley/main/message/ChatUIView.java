@@ -2,9 +2,11 @@ package com.hn.d.valley.main.message;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -22,7 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.UIContentView;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
@@ -34,14 +36,17 @@ import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.AmapBean;
+import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
+import com.hwangjr.rxbus.annotation.Subscribe;
 import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -78,10 +83,12 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class ChatUIView extends UIContentView implements IAudioRecordCallback {
+public class ChatUIView extends BaseContentUIView implements IAudioRecordCallback {
 
+    private static final String KEY_SESSION_ID = "key_account";
+    private static final String KEY_SESSION_TYPE = "key_sessiontype";
     protected AudioRecorder audioMessageHelper;
-    String account;
+    String mSessionId;
     @BindView(R.id.group_view)
     RadioGroup mGroupView;
     @BindView(R.id.chat_root_layout)
@@ -124,17 +131,23 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     private CommandLayoutControl mCommandLayoutControl;
     private int mLastId = View.NO_ID;
 
-    public ChatUIView(String account, SessionTypeEnum sessionType) {
-        this.account = account;
-        this.sessionType = sessionType;
+    public ChatUIView() {
     }
 
+//    public ChatUIView(String mSessionId, SessionTypeEnum sessionType) {
+//        this.mSessionId = mSessionId;
+//        this.sessionType = sessionType;
+//    }
+
     /**
-     * @param account     聊天对象账户
+     * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
-    public static void start(ILayout mLayout, String account, SessionTypeEnum sessionType) {
-        mLayout.startIView(new ChatUIView(account, sessionType), new UIParam().setLaunchMode(UIParam.SINGLE_TOP));
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType) {
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_SESSION_ID, sessionId);
+        bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
+        mLayout.startIView(new ChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
     public static MsgService msgService() {
@@ -253,9 +266,9 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                 startIView(new AmapUIView(new Action1<AmapBean>() {
                     @Override
                     public void call(AmapBean bean) {
-                        final IMMessage locationMessage = MessageBuilder.createLocationMessage(account, sessionType, bean.latitude, bean.longitude, bean.address);
+                        final IMMessage locationMessage = MessageBuilder.createLocationMessage(mSessionId, sessionType, bean.latitude, bean.longitude, bean.address);
                         sendMessage(locationMessage);
-//                        final IMMessage message = MessageBuilder.createTextMessage(account, sessionType, "测试");
+//                        final IMMessage message = MessageBuilder.createTextMessage(mSessionId, sessionType, "测试");
 //                        sendMessage(message);
                     }
                 }, null, true));
@@ -479,7 +492,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
-                .setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(account))
+                .setTitleString("")
                 .setShowBackImageView(true);
     }
 
@@ -512,19 +525,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        mChatControl.onLoad();
-        msgService().queryMessageListEx(
-                getEmptyMessage(),
-                QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
-                , true)
-                .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
-                    @Override
-                    public void onResult(int code, List<IMMessage> result, Throwable exception) {
-                        if (code == ResponseCode.RES_SUCCESS) {
-                            mChatControl.resetData(result);
-                        }
-                    }
-                });
+        mChatControl.onLoad(mSessionId);
     }
 
     @Override
@@ -536,15 +537,40 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        msgService().setChattingAccount(account, sessionType);
-        if (mChatControl != null) {
-            mChatControl.mChatAdapter.notifyDataSetChanged();
+        if (bundle != null) {
+            final String lastId = mSessionId;
+
+            mSessionId = bundle.getString(KEY_SESSION_ID);
+            sessionType = SessionTypeEnum.typeOfValue(bundle.getInt(KEY_SESSION_TYPE));
+
+            setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
+
+            if (!TextUtils.equals(lastId, mSessionId)) {
+                msgService().queryMessageListEx(
+                        getEmptyMessage(),
+                        QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
+                        , true)
+                        .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+                            @Override
+                            public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                                if (code == ResponseCode.RES_SUCCESS) {
+                                    mChatControl.resetData(result);
+                                }
+                            }
+                        });
+            }
+            if (mChatControl != null) {
+                mChatControl.mChatAdapter.notifyDataSetChanged();
+            }
         }
+
+        msgService().setChattingAccount(mSessionId, sessionType);
+        mActivity.setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放
     }
 
     @NonNull
     private IMMessage getEmptyMessage() {
-        return MessageBuilder.createEmptyMessage(account, sessionType, System.currentTimeMillis());
+        return MessageBuilder.createEmptyMessage(mSessionId, sessionType, System.currentTimeMillis());
     }
 
     @Override
@@ -622,7 +648,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
 
     @NonNull
     private IMMessage createTextMessage(String text) {
-        return MessageBuilder.createTextMessage(account, sessionType, text);
+        return MessageBuilder.createTextMessage(mSessionId, sessionType, text);
     }
 
     @Override
@@ -637,7 +663,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
 
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
-        IMMessage audioMessage = MessageBuilder.createAudioMessage(account, sessionType, audioFile, audioLength);
+        IMMessage audioMessage = MessageBuilder.createAudioMessage(mSessionId, sessionType, audioFile, audioLength);
         sendMessage(audioMessage);
     }
 
@@ -680,7 +706,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                     @Override
                     public void call(ArrayList<String> strings) {
                         final IMMessage imageMessage =
-                                MessageBuilder.createImageMessage(account, sessionType, new File(strings.get(0)));
+                                MessageBuilder.createImageMessage(mSessionId, sessionType, new File(strings.get(0)));
                         sendMessage(imageMessage);
                     }
                 }, new Action1<Throwable>() {
@@ -696,7 +722,71 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
                 });
     }
 
-    class EmptyView extends View {
+//    @Subscribe
+//    public void onEvent(LastContactsEvent lastContactsEvent) {
+//        if (lastContactsEvent.mRecentContact != null) {
+//            final View layout = mViewHolder.v(R.id.recent_contact_layout);
+//            final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
+//
+//            final RecentContactsControl.RecentContactsInfo info = RecentContactsControl.getRecentContactsInfo(lastContactsEvent.mRecentContact);
+//            MoonUtil.show(mActivity, content, info.name + ":" + info.lastContent);
+//
+//            if (layout.getVisibility() == View.GONE) {
+//                layout.setVisibility(View.VISIBLE);
+//                layout.setTranslationY(-layout.getMeasuredHeight());
+//                ViewCompat.animate(layout).translationY(0).setDuration(UIBaseView.DEFAULT_ANIM_TIME).start();
+//            }
+//            layout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    T_.show(info.lastContent);
+//                }
+//            });
+//        }
+//    }
+
+    @Subscribe
+    public void onEvent(final LastMessageEvent lastMessageEvent) {
+        if (lastMessageEvent.mMessage != null) {
+            final View layout = mViewHolder.v(R.id.recent_contact_layout);
+            final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
+
+            final RecentContactsControl.RecentContactsInfo info = RecentContactsControl.getRecentContactsInfo(lastMessageEvent.mMessage);
+
+            MoonUtil.show(mActivity, content, info.name + ":" + info.lastContent);
+
+            if (layout.getVisibility() == View.GONE) {
+                layout.setVisibility(View.VISIBLE);
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        layout.setTranslationY(-layout.getMeasuredHeight());
+                        ViewCompat.animate(layout).translationY(0).setDuration(UIBaseView.DEFAULT_ANIM_TIME).start();
+                    }
+                });
+            }
+            layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString(KEY_SESSION_ID, lastMessageEvent.mMessage.getSessionId());
+                    bundle.putInt(KEY_SESSION_TYPE, lastMessageEvent.mMessage.getSessionType().getValue());
+                    onViewShow(bundle);
+
+                    ViewCompat.animate(layout).translationY(-layout.getMeasuredHeight())
+                            .setDuration(UIBaseView.DEFAULT_ANIM_TIME)
+                            .withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    layout.setVisibility(View.GONE);
+                                }
+                            }).start();
+                }
+            });
+        }
+    }
+
+    static class EmptyView extends View {
 
         public EmptyView(Context context) {
             super(context);
@@ -704,7 +794,7 @@ public class ChatUIView extends UIContentView implements IAudioRecordCallback {
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            setMeasuredDimension(1, (int) ResUtil.dpToPx(mActivity, 30));
+            setMeasuredDimension(1, (int) ResUtil.dpToPx(getResources(), 30));
         }
     }
 }

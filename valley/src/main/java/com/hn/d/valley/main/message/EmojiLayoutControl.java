@@ -12,11 +12,11 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.widget.EmojiTabLayout;
 import com.angcyo.uiview.widget.viewpager.RPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.emoji.EmojiManager;
-import com.angcyo.uiview.widget.EmojiTabLayout;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -33,6 +33,7 @@ public class EmojiLayoutControl {
     RBaseViewHolder mViewHolder;
     UIViewPager mUIViewPager;
     EmojiTabLayout mTabLayout;
+    OnEmojiSelectListener mOnEmojiSelectListener;
 
     public EmojiLayoutControl(RBaseViewHolder viewHolder, OnEmojiSelectListener listener) {
         mViewHolder = viewHolder;
@@ -66,6 +67,7 @@ public class EmojiLayoutControl {
             @Override
             protected View getView(LayoutInflater from, ViewGroup container, int position) {
                 RRecyclerView recyclerView = new RRecyclerView(container.getContext());
+                recyclerView.setItemAnim(false);
                 recyclerView.setAdapter(new EmojiAdapter(container.getContext()));
                 recyclerView.setTag("GV8");
                 container.addView(recyclerView);
@@ -89,6 +91,10 @@ public class EmojiLayoutControl {
 
     public void init() {
 //        mUIViewPager.setAdapter();
+    }
+
+    public interface OnEmojiSelectListener {
+        void onEmojiText(String emoji);
     }
 
     class EmojiAdapter extends RBaseAdapter<String> {
@@ -137,11 +143,5 @@ public class EmojiLayoutControl {
                 }
             });
         }
-    }
-
-    OnEmojiSelectListener mOnEmojiSelectListener;
-
-    public interface OnEmojiSelectListener {
-        void onEmojiText(String emoji);
     }
 }

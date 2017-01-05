@@ -78,7 +78,7 @@ public class HnChatActivity extends BaseActivity {
                 RBus.post(new SwipeEvent((int) (-getOffsetX() * percent)));
             }
         });
-        startIView(new ChatUIView(mAccount, SessionTypeEnum.P2P));
+        ChatUIView.start(mLayout, mAccount, SessionTypeEnum.P2P);
     }
 
     @Override

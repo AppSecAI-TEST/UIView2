@@ -25,10 +25,10 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.NaviPara;
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.UIContentView;
 import com.angcyo.uiview.container.SwipeBackLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.AmapBean;
@@ -53,7 +53,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class AmapUIView extends UIContentView implements AMap.OnCameraChangeListener, LocationSource, AMapLocationListener {
+public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChangeListener, LocationSource, AMapLocationListener {
 
     @BindView(R.id.map_view)
     TextureMapView mMapView;

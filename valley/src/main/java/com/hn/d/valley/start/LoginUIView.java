@@ -55,6 +55,7 @@ import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
@@ -93,6 +94,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         if (BuildConfig.DEBUG) {
             RxView.longClicks(mLoginView)
                     .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Action1<Void>() {
                         @Override
                         public void call(Void aVoid) {
@@ -116,6 +118,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
          */
         RxView.clicks(mLoginView)
                 .debounce(16, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {

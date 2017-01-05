@@ -253,12 +253,14 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                 if (viewPatternByIView == null) {
                     //这个IView 还不存在
                     final ViewPattern newViewPattern = startIViewInternal(iView);
-                    startIViewAnim(oldViewPattern, newViewPattern, param);
+//                    startIViewAnim(oldViewPattern, newViewPattern, param);
+                    viewPatternByIView = newViewPattern;
                 } else {
                     //这个IView 存在, 但是不在最前显示
-                    topViewStart(viewPatternByIView, param);
-                    bottomViewFinish(oldViewPattern, viewPatternByIView, param);
+//                    bottomViewFinish(oldViewPattern, viewPatternByIView, param);
+//                    topViewStart(viewPatternByIView, param);
                 }
+                startIViewAnim(oldViewPattern, viewPatternByIView, param);
             }
         } else {
             //正常的启动模式
@@ -683,8 +685,8 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
             //startViewPatternAnim(newViewPattern, oldViewPattern, false, true);
             //startViewPatternAnim(newViewPattern, oldViewPattern, true, false);
-            topViewStart(newViewPattern, param);
-            bottomViewFinish(oldViewPattern, newViewPattern, param);
+            bottomViewFinish(oldViewPattern, newViewPattern, param);//先执行Bottom
+            topViewStart(newViewPattern, param);//后执行Top
         } else {
 //            for (ViewPattern viewPattern : mAttachViews) {
 //                viewPattern.mView.setVisibility(INVISIBLE);

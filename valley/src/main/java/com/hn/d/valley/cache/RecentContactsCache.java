@@ -3,6 +3,7 @@ package com.hn.d.valley.cache;
 import android.text.TextUtils;
 
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.event.LastContactsEvent;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.utils.RBus;
@@ -33,6 +34,10 @@ public class RecentContactsCache implements ICache {
     private Observer<List<RecentContact>> mRecentContactObserver = new Observer<List<RecentContact>>() {
         @Override
         public void onEvent(List<RecentContact> recentContacts) {
+            if (recentContacts.isEmpty()) {
+                return;
+            }
+
             mRecentContactList.clear();
             mRecentContactList.addAll(RNim.service(MsgService.class).queryRecentContactsBlock());
 //            mRecentContactList.addAll(recentContacts);
@@ -47,6 +52,8 @@ public class RecentContactsCache implements ICache {
             NimUserInfoCache.getInstance().fetchUserInfoFromRemote(users);
 
             RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
+
+            RBus.post(new LastContactsEvent(recentContacts.get(recentContacts.size() - 1)));
         }
     };
     //会话列表被删除

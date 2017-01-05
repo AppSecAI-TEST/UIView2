@@ -145,6 +145,55 @@ public class RecentContactsControl {
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(mMessageObserver, true);
     }
 
+    public static RecentContactsInfo getRecentContactsInfo(RecentContact bean) {
+        return getRecentContactsInfo(bean.getContactId(), bean.getFromAccount(), bean.getSessionType(), bean.getContent());
+    }
+
+    public static RecentContactsInfo getRecentContactsInfo(IMMessage bean) {
+        return getRecentContactsInfo(bean.getSessionId(), bean.getFromAccount(), bean.getSessionType(), bean.getContent());
+    }
+
+    public static RecentContactsInfo getRecentContactsInfo(String contactId, String fromAccount,
+                                                           SessionTypeEnum sessionTypeEnum, String lastContent) {
+        final NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+        TeamDataCache teamDataCache = TeamDataCache.getInstance();
+
+        RecentContactsInfo info = new RecentContactsInfo();
+        info.lastContent = lastContent;
+
+        if (sessionTypeEnum == SessionTypeEnum.P2P) {
+            //单聊
+            if (userInfoCache != null) {
+
+                final NimUserInfo userInfo = userInfoCache.getUserInfo(contactId);
+                if (userInfo == null) {
+                    info.name = contactId;
+                } else {
+                    info.name = userInfoCache.getUserDisplayName(contactId);
+                    info.icoUrl = userInfo.getAvatar();
+                }
+            } else {
+                info.name = contactId;
+            }
+        } else if (sessionTypeEnum == SessionTypeEnum.Team) {
+            //群聊
+            if (teamDataCache != null) {
+                final Team teamById = teamDataCache.getTeamById(contactId);
+                if (teamById == null) {
+                    info.name = contactId + fromAccount;
+                } else {
+                    info.name = teamDataCache.getTeamName(contactId) +
+                            teamDataCache.getTeamMemberDisplayName(contactId, fromAccount);
+                    info.icoUrl = teamById.getIcon();
+                }
+
+            } else {
+                info.name = contactId;
+            }
+        }
+        return info;
+    }
+
     private int getTopItemCount() {
         return 1;
     }
@@ -251,6 +300,24 @@ public class RecentContactsControl {
         mRecentContactsAdapter.deleteItem(recentContact);
     }
 
+    public static class RecentContactsInfo {
+        public String name = "";//显示的名称
+        public String icoUrl = "";//显示的头像
+        public String lastContent = "";//最后一条信息
+
+        public RecentContactsInfo(String name, String icoUrl) {
+            this.name = name;
+            this.icoUrl = icoUrl;
+        }
+
+        public RecentContactsInfo(String name) {
+            this.name = name;
+        }
+
+        public RecentContactsInfo() {
+        }
+    }
+
     /**
      * 数据适配器
      */
@@ -340,52 +407,10 @@ public class RecentContactsControl {
          * 头像, 昵称信息
          */
         private void updateUserInfo(RBaseViewHolder holder, RecentContact bean) {
-            final NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-            TeamDataCache teamDataCache = TeamDataCache.getInstance();
+            final RecentContactsInfo recentContactsInfo = getRecentContactsInfo(bean);
 
-            final String fromAccount = bean.getFromAccount();
-            final String contactId = bean.getContactId();
-
-            if (bean.getSessionType() == SessionTypeEnum.P2P) {
-                //单聊
-                if (userInfoCache != null) {
-
-                    final NimUserInfo userInfo = userInfoCache.getUserInfo(contactId);
-                    if (userInfo == null) {
-                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
-                        holder.tv(R.id.recent_name_view).setText(contactId);
-                    } else {
-                        //头像
-                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), userInfo.getAvatar());
-                        //昵称
-                        holder.tv(R.id.recent_name_view).setText(userInfoCache.getUserDisplayName(contactId));
-                    }
-                } else {
-                    DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
-                    holder.tv(R.id.recent_name_view).setText(contactId);
-                }
-            } else if (bean.getSessionType() == SessionTypeEnum.Team) {
-                //群聊
-                if (teamDataCache != null) {
-                    final Team teamById = teamDataCache.getTeamById(contactId);
-                    if (teamById == null) {
-                        //头像
-                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
-                        //昵称
-                        holder.tv(R.id.recent_name_view).setText(contactId);
-                    } else {
-                        //头像
-                        DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view),
-                                teamById.getIcon());
-                        //昵称
-                        holder.tv(R.id.recent_name_view).setText(teamDataCache.getTeamName(contactId));
-                    }
-
-                } else {
-                    DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), "");
-                    holder.tv(R.id.recent_name_view).setText(contactId);
-                }
-            }
+            DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), recentContactsInfo.icoUrl);
+            holder.tv(R.id.recent_name_view).setText(recentContactsInfo.name);
         }
 
         /**

@@ -88,6 +88,8 @@ public class ImagePagerUIView extends UIIViewImpl {
     public void onViewLoad() {
         super.onViewLoad();
         startAnimation();
+        final View decorView = mActivity.getWindow().getDecorView();
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
@@ -97,6 +99,8 @@ public class ImagePagerUIView extends UIIViewImpl {
             mValueAnimator.cancel();
             mValueAnimator = null;
         }
+        final View decorView = mActivity.getWindow().getDecorView();
+        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
 
     @Override
@@ -123,6 +127,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         }
         isToFinish = true;
         mMCircleIndicator.setVisibility(View.GONE);
+        mMCircleIndicator.setAlpha(0);
         AnimUtil.startArgb(mMRootLayout, Color.BLACK, Color.TRANSPARENT, UIIViewImpl.DEFAULT_ANIM_TIME);
         ViewCompat.animate(mMViewPager).alpha(0).scaleX(0.2f).scaleY(0.2f)
                 .setInterpolator(new AccelerateInterpolator())
