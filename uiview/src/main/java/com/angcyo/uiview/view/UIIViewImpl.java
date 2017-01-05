@@ -273,7 +273,7 @@ public abstract class UIIViewImpl implements IView {
      */
     @Override
     public void onShowInPager(UIViewPager viewPager) {
-        L.d(this.getClass().getSimpleName(), "onShowInPager: ");
+        L.i(this.getClass().getSimpleName(), "onShowInPager: ");
     }
 
     /**
@@ -281,7 +281,7 @@ public abstract class UIIViewImpl implements IView {
      */
     @Override
     public void onHideInPager(UIViewPager viewPager) {
-        L.d(this.getClass().getSimpleName(), "onHideInPager: ");
+        L.i(this.getClass().getSimpleName(), "onHideInPager: ");
     }
 
     public void startIView(final IView iView) {

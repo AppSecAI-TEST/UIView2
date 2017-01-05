@@ -30,7 +30,6 @@
                     android:id="@+id/message_voice_box"
                     android:layout_width="@dimen/base_xxxhdpi"
                     android:layout_height="@dimen/base_title_bar_item_size"
-                    android:layout_marginBottom="@dimen/base_ldpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:button="@drawable/message_voice_selector"/>
             </RelativeLayout>
@@ -130,6 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/base_main_color_white_bg_selector"
+            android:minHeight="@dimen/base_40dpi"
             android:visibility="gone">
 
             <TextView
