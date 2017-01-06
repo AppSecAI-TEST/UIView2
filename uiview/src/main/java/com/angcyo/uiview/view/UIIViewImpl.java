@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,7 @@ public abstract class UIIViewImpl implements IView {
 
     protected abstract View inflateBaseView(FrameLayout container, LayoutInflater inflater);
 
+    @CallSuper
     @Override
     public void loadContentView(View rootView) {
         L.d(this.getClass().getSimpleName(), "loadContentView: ");
