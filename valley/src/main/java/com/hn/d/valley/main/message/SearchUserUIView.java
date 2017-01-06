@@ -24,7 +24,7 @@ import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.mvp.Search;
 import com.hn.d.valley.main.message.mvp.SearchPresenter;
-import com.hn.d.valley.sub.UserInfoUIView;
+import com.hn.d.valley.sub.user.UserInfoUIView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;

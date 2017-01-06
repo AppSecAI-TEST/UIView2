@@ -1,16 +1,28 @@
 package com.hn.d.valley.cache;
 
+import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.RRetrofit;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.realm.LoginBean;
+import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hwangjr.rxbus.RxBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Func1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -29,6 +41,7 @@ public class UserCache {
      * 登录成功后的用户信息
      */
     LoginBean mLoginBean;
+    UserInfoBean mUserInfoBean;
 
     private UserCache() {
 
@@ -116,6 +129,60 @@ public class UserCache {
         if (save) {
             RRealm.save(loginBean);
         }
+    }
+
+    public UserInfoBean getUserInfoBean() {
+        if (mUserInfoBean == null) {
+            mUserInfoBean = getUserInfoBean(getUserAccount());
+        }
+        return mUserInfoBean;
+    }
+
+    public void setUserInfoBean(UserInfoBean bean) {
+        mUserInfoBean = bean;
+        RRealm.save(bean);
+    }
+
+    public UserInfoBean getUserInfoBean(String uid) {
+        RealmResults<UserInfoBean> all = RRealm.where(UserInfoBean.class).equalTo("uid", uid).findAll();
+        return all.last(null);
+    }
+
+    /**
+     * 从服务器拉取用户信息
+     */
+    public void updateUserInfo(String to_uid) {
+        fetchUserInfo(to_uid).subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+            @Override
+            public void onNext(UserInfoBean userInfoBean) {
+                L.i("更新用户数据库信息:" + userInfoBean.getUid() + " " + userInfoBean.getUsername() + " 成功.");
+                RxBus.get().post(userInfoBean);
+            }
+        });
+    }
+
+    public void updateUserInfo() {
+        updateUserInfo(getUserAccount());
+    }
+
+    public Observable<UserInfoBean> fetchUserInfo(String to_uid) {
+        Map<String, String> map = new HashMap<>();
+        map.put("uid", getUserAccount());
+        map.put("to_uid", to_uid);
+        return RRetrofit.create(UserInfoService.class)
+                .userInfo(Param.map(map))
+                .compose(Transform.defaultStringSchedulers(UserInfoBean.class))
+                .map(new Func1<UserInfoBean, UserInfoBean>() {
+                    @Override
+                    public UserInfoBean call(UserInfoBean userInfoBean) {
+                        RRealm.save(userInfoBean);
+                        return userInfoBean;
+                    }
+                });
+    }
+
+    public Observable<UserInfoBean> fetchUserInfo() {
+        return fetchUserInfo(getUserAccount());
     }
 
     private static class Holder {

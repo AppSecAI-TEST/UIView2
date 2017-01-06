@@ -61,5 +61,8 @@
     <string name="women">女</string>
     <string name="empty"></string>
     <string name="sdcard_not_exist_error">请插入SD卡</string>
+    <string name="ta_dynamic_state">TA的动态</string>
+    <string name="me_dynamic_state">我的动态</string>
+    <string name="default_empty_tip">亲~这里啥也没有!</string>
 
 </resources>

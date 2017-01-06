@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
-import com.angcyo.uiview.control.PhotoPagerControl;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.utils.Utils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.TitleBarLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
@@ -21,9 +21,11 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
-import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.bean.realm.LoginBean;
+import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
+import com.hn.d.valley.utils.PhotoPager;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -78,7 +80,6 @@ public class MeUIView extends BaseUIView {
     ItemInfoLayout mPersonAuthLayout;
     @BindView(R.id.setting_layout)
     ItemInfoLayout mSettingLayout;
-    private PhotoPagerControl mPhotoPagerControl;
 
 
     @Override
@@ -136,10 +137,12 @@ public class MeUIView extends BaseUIView {
 
     private void initViewPager() {
         ArrayList<String> photos = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            photos.add(UserCache.instance().getAvatar());
+        photos.add(UserCache.instance().getAvatar());
+        final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+        if (userInfoBean != null) {
+            photos.addAll(Utils.split(userInfoBean.getPhotos()));
         }
-        mPhotoPagerControl = new PhotoPagerControl(mTextIndicatorView, mViewPager, photos);
+        PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, photos);
     }
 
     @NonNull

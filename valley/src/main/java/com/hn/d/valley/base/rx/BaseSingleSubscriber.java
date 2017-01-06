@@ -3,6 +3,7 @@ package com.hn.d.valley.base.rx;
 import com.angcyo.library.utils.L;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.excepetion.NonetException;
 
 import java.net.SocketException;
@@ -22,7 +23,7 @@ import rx.Subscriber;
  * 修改备注：
  * Version: 1.0.0
  */
-public abstract class SingleSubscriber<T> extends Subscriber<T> {
+public abstract class BaseSingleSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onStart() {
@@ -33,6 +34,7 @@ public abstract class SingleSubscriber<T> extends Subscriber<T> {
     @Override
     public void onCompleted() {
         L.d("订阅完成->" + this.getClass().getSimpleName());
+        onEnd();
     }
 
     @Override
@@ -70,5 +72,14 @@ public abstract class SingleSubscriber<T> extends Subscriber<T> {
      */
     public void onError(int code, String msg) {
         L.d("订阅异常->" + this.getClass().getSimpleName() + " " + msg);
+        T_.show(msg);
+        onEnd();
+    }
+
+    /**
+     * 不管是成功订阅,还是异常,都会执行的方法
+     */
+    protected void onEnd() {
+
     }
 }

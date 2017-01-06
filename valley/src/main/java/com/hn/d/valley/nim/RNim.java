@@ -59,7 +59,7 @@ public class RNim {
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode>() {
                     public void onEvent(StatusCode status) {
-                        L.w("User status changed to: " + status);
+                        L.w("UserInfoService status changed to: " + status);
                         if (status.wontAutoLogin()) {
                             // 被踢出、账号被禁用、密码错误等情况，自动登录失败，需要返回到登录界面进行重新登录操作
                         }
@@ -78,7 +78,7 @@ public class RNim {
         DataCacheManager.observeSDKDataChanged(true);
 
         if (!TextUtils.isEmpty(UserCache.getUserAccount())) {
-            DataCacheManager.buildDataCache(); // build data cache on auto login
+            DataCacheManager.buildDataCache(); // build data cache on auto userLogin
         }
 
         ScreenUtil.init(application);
@@ -190,7 +190,7 @@ public class RNim {
     public static void debugLogin(final Action1<Boolean> action1) {
 //        UserCache.setUserAccount("50015");
 //        UserCache.setUserToken("725161648c0116d850e839d22ff69f0b");
-//        login("50015", "725161648c0116d850e839d22ff69f0b", new RequestCallbackWrapper<LoginInfo>() {
+//        userLogin("50015", "725161648c0116d850e839d22ff69f0b", new RequestCallbackWrapper<LoginInfo>() {
 //            @Override
 //            public void onResult(int code, LoginInfo result, Throwable exception) {
 //                action1.call(code == ResponseCode.RES_SUCCESS);

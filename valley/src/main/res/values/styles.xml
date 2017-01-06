@@ -22,12 +22,19 @@
         <item name="android:windowBackground">@drawable/login_pic</item>
     </style>
 
-    <!--圆角图片-->
-    <style name="CircleImageStyle">
-        <item name="roundAsCircle">true</item>
+    <!--图片-->
+    <style name="ImageStyle">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="actualImageScaleType">centerCrop</item>
         <item name="placeholderImageScaleType">centerCrop</item>
-        <item name="placeholderImage">@drawable/login_logo</item>
+        <item name="placeholderImage">@drawable/zhanweitu_1</item>
+    </style>
+
+    <!--圆角图片-->
+    <style name="CircleImageStyle" parent="ImageStyle">
+        <item name="roundAsCircle">true</item>
+        <item name="placeholderImage">@drawable/default_avatar</item>
     </style>
 
     <style name="UserBigIcoStyle" parent="CircleImageStyle">
@@ -166,9 +173,24 @@
         <item name="android:textColorHint">@color/base_text_color_dark</item>
     </style>
 
+    <style name="DarkTextButtonStyle" parent="DarkTextStyle">
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/default_bg_selector</item>
+        <item name="android:paddingLeft">@dimen/base_ldpi</item>
+        <item name="android:paddingRight">@dimen/base_ldpi</item>
+    </style>
+
     <!--主要文本的样式-->
     <style name="MainTextStyle" parent="DarkTextStyle">
         <item name="android:textColor">@color/main_text_color</item>
+    </style>
+
+    <!--地址文本样式-->
+    <style name="AddressTextStyle" parent="DarkTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawableLeft">@drawable/address</item>
+        <item name="android:drawablePadding">@dimen/base_ldpi</item>
     </style>
 
     <style name="DefaultItemInfoStyle" parent="BaseItemInfoStyle">

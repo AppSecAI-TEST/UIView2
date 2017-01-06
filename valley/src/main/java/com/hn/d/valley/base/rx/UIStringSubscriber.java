@@ -13,7 +13,7 @@ import com.angcyo.uiview.mvp.view.IBaseView;
  * 修改备注：
  * Version: 1.0.0
  */
-public abstract class UIStringSubscriber<T, V extends IBaseView> extends SingleSubscriber<T> {
+public abstract class UIStringSubscriber<T, V extends IBaseView> extends BaseSingleSubscriber<T> {
 
     V mBaseView;
 

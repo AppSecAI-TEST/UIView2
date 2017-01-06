@@ -22,7 +22,7 @@
         android:textSize="@dimen/default_text_size"
         tools:text="别怕, 马上就好..."/>
 
-    <com.angcyo.uiview.github.load.AVLoadingIndicatorView
+    <com.angcyo.uiview.widget.LoadingImageView
         android:id="@+id/base_load_view"
         android:layout_width="@dimen/base_xxhdpi"
         android:layout_height="@dimen/base_xxhdpi"

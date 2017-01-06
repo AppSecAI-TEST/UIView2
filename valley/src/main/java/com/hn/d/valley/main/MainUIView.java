@@ -24,6 +24,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.MsgCache;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView;
@@ -84,6 +85,7 @@ public class MainUIView extends BaseUIView {
     public void onViewCreate() {
         super.onViewCreate();
         DataCacheManager.buildDataCacheAsync();
+        UserCache.instance().updateUserInfo();
     }
 
     @NonNull

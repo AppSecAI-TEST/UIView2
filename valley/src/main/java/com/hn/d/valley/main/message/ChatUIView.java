@@ -39,7 +39,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.AmapBean;
+import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.emoji.MoonUtil;
@@ -728,8 +728,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 //            final View layout = mViewHolder.v(R.id.recent_contact_layout);
 //            final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
 //
-//            final RecentContactsControl.RecentContactsInfo info = RecentContactsControl.getRecentContactsInfo(lastContactsEvent.mRecentContact);
-//            MoonUtil.show(mActivity, content, info.name + ":" + info.lastContent);
+//            final RecentContactsControl.RecentContactsInfo userInfo = RecentContactsControl.getRecentContactsInfo(lastContactsEvent.mRecentContact);
+//            MoonUtil.show(mActivity, content, userInfo.name + ":" + userInfo.lastContent);
 //
 //            if (layout.getVisibility() == View.GONE) {
 //                layout.setVisibility(View.VISIBLE);
@@ -739,7 +739,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 //            layout.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
-//                    T_.show(info.lastContent);
+//                    T_.show(userInfo.lastContent);
 //                }
 //            });
 //        }

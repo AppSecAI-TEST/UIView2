@@ -1,12 +1,22 @@
 package com.hn.d.valley.cache;
 
+import android.text.TextUtils;
+
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.utils.RBus;
+import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
+import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 
 import java.util.List;
 
@@ -36,6 +46,30 @@ public class MsgCache implements ICache {
 
     public static void notifyNoreadNum(int num) {
         RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(num, Constant.POS_MESSAGE));
+    }
+
+    public static MsgService msgService() {
+        return NIMClient.getService(MsgService.class);
+    }
+
+    public void setMsgUnread(final String messageUuid, String sessionId, SessionTypeEnum sessionType) {
+        msgService().queryMessageListEx(
+                MessageBuilder.createEmptyMessage(sessionId, sessionType, System.currentTimeMillis()),
+                QueryDirectionEnum.QUERY_OLD, 10, true)
+                .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+                    @Override
+                    public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                        if (code == ResponseCode.RES_SUCCESS) {
+                            for (IMMessage message : result) {
+                                if (TextUtils.equals(messageUuid, message.getUuid())) {
+                                    message.setConfig(new CustomMessageConfig());
+                                    notifyNoreadNum();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

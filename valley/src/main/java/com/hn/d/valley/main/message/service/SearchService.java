@@ -20,5 +20,5 @@ import rx.Observable;
  */
 public interface SearchService {
     @POST("contact/searchUser")
-    Observable<ResponseBody> search(@QueryMap Map<String, String> map);
+    Observable<ResponseBody> searchUser(@QueryMap Map<String, String> map);
 }

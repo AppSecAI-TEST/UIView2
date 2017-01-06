@@ -32,6 +32,8 @@ public class RRealm {
         realm.beginTransaction();
         realm.copyToRealm(object);
         realm.commitTransaction();
+
+        L.i("保存至数据库:" + object.toString());
     }
 
 
@@ -110,7 +112,7 @@ public class RRealm {
 //                        }
                     }
                 })
-                .schemaVersion(2)
+                .schemaVersion(1)
                 .build();
         Realm.setDefaultConfiguration(config);
     }

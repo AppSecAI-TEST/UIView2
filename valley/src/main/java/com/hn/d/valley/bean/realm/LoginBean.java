@@ -1,4 +1,4 @@
-package com.hn.d.valley.bean;
+package com.hn.d.valley.bean.realm;
 
 import io.realm.RealmObject;
 

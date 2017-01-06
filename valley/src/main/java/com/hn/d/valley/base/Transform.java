@@ -83,9 +83,53 @@ public class Transform {
                                                 errorObject.getString("msg"),
                                                 errorObject.getString("more"));
                                     }
-                                } catch (IOException e) {
+                                } catch (IOException | JSONException e) {
                                     e.printStackTrace();
-                                } catch (JSONException e) {
+                                }
+                                return null;
+                            }
+                        })
+                        .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
+    }
+
+    public static <T> Observable.Transformer<ResponseBody, T> defaultStringSchedulers(final Class<T> type) {
+        return new Observable.Transformer<ResponseBody, T>() {
+
+            @Override
+            public Observable<T> call(Observable<ResponseBody> responseObservable) {
+                return responseObservable.unsubscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.io())
+                        .map(new Func1<ResponseBody, T>() {
+                            @Override
+                            public T call(ResponseBody stringResponse) {
+                                T bean;
+                                String body;
+                                try {
+                                    body = stringResponse.string();
+
+                                    //"接口返回数据-->\n" +
+                                    L.json(body);
+
+                                    JSONObject jsonObject = new JSONObject(body);
+                                    int result = jsonObject.getInt("result");
+                                    if (result == 1) {
+                                        //请求成功
+                                        String data = jsonObject.getString("data");
+                                        if (!TextUtils.isEmpty(data)) {
+                                            bean = Json.from(data, type);
+                                            return bean;
+                                        }
+                                    } else {
+                                        //请求成功, 但是有错误
+                                        JSONObject errorObject = jsonObject.getJSONObject("error");
+
+                                        throw new RException(errorObject.getInt("code"),
+                                                errorObject.getString("msg"),
+                                                errorObject.getString("more"));
+                                    }
+                                } catch (JSONException | IOException e) {
                                     e.printStackTrace();
                                 }
                                 return null;

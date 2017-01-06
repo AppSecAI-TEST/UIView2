@@ -1,7 +1,7 @@
 package com.hn.d.valley.start.service;
 
 import com.hn.d.valley.base.Bean;
-import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.bean.realm.LoginBean;
 
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public interface StartService {
      * code	是	string	验证码【6位数字】
      */
     @POST("user/register")
-    Observable<Bean<String>> register(@QueryMap Map<String, String> map);
+    Observable<Bean<String>> userRegister(@QueryMap Map<String, String> map);
 
 
     /**
@@ -46,5 +46,5 @@ public interface StartService {
      * os_version	是	string	操作系统版本号【如ISO10.1.1】
      */
     @POST("user/login")
-    Observable<Bean<LoginBean>> login(@QueryMap Map<String, String> map);
+    Observable<Bean<LoginBean>> userLogin(@QueryMap Map<String, String> map);
 }

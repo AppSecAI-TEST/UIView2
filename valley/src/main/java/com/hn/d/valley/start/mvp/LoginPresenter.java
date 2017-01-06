@@ -14,7 +14,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.receiver.JPushReceiver;
 import com.hn.d.valley.base.rx.UISubscriber;
-import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.start.service.StartService;
 
 import java.util.HashMap;
@@ -76,7 +76,7 @@ public class LoginPresenter extends BasePresenter<Start.ILoginView> implements S
                 };
 
         add(RRetrofit.create(StartService.class)
-                .login(Param.map(map))
+                .userLogin(Param.map(map))
                 .compose(Transform.<Bean<LoginBean>, Start.ILoginView>defaultSchedulers(mBaseView))
                 .subscribe(subscriber));
     }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -48,31 +47,31 @@ public class HnTestActivity extends AppCompatActivity {
         rRecyclerView.setAdapter(adapter);
         final InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        view(R.id.show).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editText.requestFocus();
-                manager.showSoftInput(editText, 0);
-            }
-        });
-        view(R.id.hide).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                manager.hideSoftInputFromWindow(rRecyclerView.getWindowToken(), 0);
-            }
-        });
-        view(R.id.scroll).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((LinearLayoutManager) rRecyclerView.getLayoutManager()).scrollToPositionWithOffset(adapter.getItemCount() - 1, 0);
-            }
-        });
-        view(R.id.scroll2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                rRecyclerView.smoothScrollToPosition(3);
-            }
-        });
+//        view(R.id.show).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                editText.requestFocus();
+//                manager.showSoftInput(editText, 0);
+//            }
+//        });
+//        view(R.id.hide).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                manager.hideSoftInputFromWindow(rRecyclerView.getWindowToken(), 0);
+//            }
+//        });
+//        view(R.id.scroll).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                ((LinearLayoutManager) rRecyclerView.getLayoutManager()).scrollToPositionWithOffset(adapter.getItemCount() - 1, 0);
+//            }
+//        });
+//        view(R.id.scroll2).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                rRecyclerView.smoothScrollToPosition(3);
+//            }
+//        });
 
     }
 

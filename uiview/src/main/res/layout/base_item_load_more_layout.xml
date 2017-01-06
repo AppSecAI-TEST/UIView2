@@ -16,7 +16,7 @@
         android:tag="load_view"
         android:visibility="visible">
 
-        <com.angcyo.uiview.github.load.AVLoadingIndicatorView
+        <com.angcyo.uiview.widget.LoadingImageView
             android:id="@+id/load_view"
             android:layout_width="@dimen/base_xxhdpi"
             android:layout_height="@dimen/base_xxhdpi"/>

@@ -29,6 +29,11 @@ public class TitleBarPattern {
     public boolean titleAnim = false;
 
     /**
+     * 隐藏标题
+     */
+    public boolean titleHide = false;
+
+    /**
      * 标题是否显示在内容的上面, 否则内容就会显示在标题的下面
      */
     public boolean isFloating = false;
@@ -64,6 +69,7 @@ public class TitleBarPattern {
         to.titleAnim = from.titleAnim;
         to.isFloating = from.isFloating;
         to.isFixContentHeight = from.isFixContentHeight;
+        to.titleHide = from.titleHide;
         if (to.mTitleSize == -1) {
             to.mTitleSize = from.mTitleSize;
         }
@@ -119,6 +125,11 @@ public class TitleBarPattern {
 
     public TitleBarPattern setTitleAnim(boolean titleAnim) {
         this.titleAnim = titleAnim;
+        return this;
+    }
+
+    public TitleBarPattern setTitleHide(boolean titleHide) {
+        this.titleHide = titleHide;
         return this;
     }
 

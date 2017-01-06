@@ -88,7 +88,9 @@ public class TeamDataCache {
     public void buildCache() {
         final List<Team> teams = NIMClient.getService(TeamService.class).queryTeamListBlock();
         L.i("start build TeamDataCache");
-
+        if (teams == null || teams.isEmpty()) {
+            return;
+        }
         addOrUpdateTeam(teams);
 
         L.i("build TeamDataCache completed, team count = " + teams.size());

@@ -92,7 +92,7 @@ public class MessageUIView extends BaseUIView {
         leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_add_friends).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //T_.show(mActivity.getString(R.string.search));
+                //T_.show(mActivity.getString(R.string.searchUser));
                 startSearch();
             }
         }));

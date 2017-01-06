@@ -30,8 +30,8 @@ import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.AmapBean;
-import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.bean.realm.AmapBean;
+import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.other.AmapUIView;
@@ -353,6 +353,12 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @Override
     public void onRequestFinish() {
         //云信登录成功后, 再取消对话框
+    }
+
+    @Override
+    public void onRequestError(int code, @NonNull String msg) {
+        super.onRequestError(code, msg);
+        HnLoading.hide();
     }
 
     /**

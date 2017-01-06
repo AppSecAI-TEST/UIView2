@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-        android:color="@color/default_base_bg_press">
+        android:color="@color/theme_color_accent">
     <item>
         <selector>
-            <item
-                android:drawable="@android:color/white"
-                android:state_pressed="true"/>
-            <item android:drawable="@color/theme_color_primary_dark_tran"/>
+            <!--<item-->
+                <!--android:drawable="@android:color/white"-->
+                <!--android:state_pressed="true"/>-->
+            <item android:drawable="@color/default_base_bg_dark2"/>
         </selector>
     </item>
 

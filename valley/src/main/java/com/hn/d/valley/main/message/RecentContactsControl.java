@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -56,12 +57,14 @@ import rx.functions.Action1;
 public class RecentContactsControl {
 
     public static final int ITEM_TYPE_NORMAL = 0x0001;
-    public static final int ITEM_TYPE_TOP = 0x0002;
+    public static final int ITEM_TYPE_TOP = ITEM_TYPE_NORMAL << 1;
+    public static final int ITEM_TYPE_NOREAD = ITEM_TYPE_TOP << 1;
     public static final int ITEM_TYPE_SEARCH = 0x1000;
 
     public static final int MENU_DELETE = 1;
     public static final int MENU_ADD_TOP = 2;
     public static final int MENU_RM_TOP = 3;
+    public static final int MENU_NO_READ = 4;
 
     /**
      * 会话是否置顶
@@ -119,21 +122,31 @@ public class RecentContactsControl {
 
             SwipeMenuItem deleteItem = new SwipeMenuItem(mContext);
             SwipeMenuItem topItem = new SwipeMenuItem(mContext);
+            SwipeMenuItem noReadItem = new SwipeMenuItem(mContext);
 
             RBaseViewHolder.fill(menuItem, deleteItem);
             RBaseViewHolder.fill(menuItem, topItem);
+            RBaseViewHolder.fill(menuItem, noReadItem);
 
             deleteItem.setBackgroundDrawable(R.drawable.base_red_color_bg_selector)
                     .setText("删除").setTag(MENU_DELETE);
-            topItem.setBackgroundDrawable(R.drawable.base_orange_color_bg_selector);
+            topItem.setBackgroundDrawable(R.drawable.base_dark_color_bg_selector);
+            noReadItem.setBackgroundDrawable(R.drawable.base_orange_color_bg_selector);
 
-            if (viewType == ITEM_TYPE_TOP) {
+            if ((viewType & ITEM_TYPE_TOP) == ITEM_TYPE_TOP) {
                 topItem.setText("取消置顶").setTag(MENU_RM_TOP);
             } else {
                 topItem.setText("置顶").setTag(MENU_ADD_TOP);
             }
 
+            if ((viewType & ITEM_TYPE_NOREAD) == ITEM_TYPE_NOREAD) {
+                noReadItem.setText("标为已读").setTag(MENU_NO_READ);
+            } else {
+                noReadItem.setText("标为未读").setTag(MENU_NO_READ);
+            }
+
             swipeRightMenu.addMenuItem(topItem);
+            swipeRightMenu.addMenuItem(noReadItem);
             swipeRightMenu.addMenuItem(deleteItem);
         }
     };
@@ -243,7 +256,8 @@ public class RecentContactsControl {
                 new OnSwipeMenuItemClickListener() {
                     @Override
                     public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition,
-                                            @SwipeMenuRecyclerView.DirectionMode int direction, SwipeMenuItem menuItem) {
+                                            @SwipeMenuRecyclerView.DirectionMode int direction,
+                                            SwipeMenuItem menuItem) {
                         closeable.smoothCloseMenu();
                         //T_.show(adapterPosition + " -- " + menuPosition + " " + menuItem.getText());
                         int tag = (int) menuItem.getTag();
@@ -257,6 +271,22 @@ public class RecentContactsControl {
                                     RNim.deleteRecentContact(recentContact);
                                 }
                             });
+                        } else if (tag == MENU_NO_READ) {
+                            if (recentContact.getUnreadCount() > 0) {
+                                recentContact.setMsgStatus(MsgStatusEnum.read);
+                                NIMClient.getService(MsgService.class).clearUnreadCount(recentContact.getContactId(), recentContact.getSessionType());
+                            } else {
+                                recentContact.setMsgStatus(MsgStatusEnum.unread);
+                                MsgCache.instance().setMsgUnread(recentContact.getRecentMessageId(),
+                                        recentContact.getContactId(),
+                                        recentContact.getSessionType());
+                            }
+                            final RecyclerView.ViewHolder viewHolder = mSwipeMenuRecyclerView.findViewHolderForAdapterPosition(adapterPosition);
+                            if (viewHolder != null) {
+                                mRecentContactsAdapter.showUnreadNum(mViewHolder, recentContact);
+                            }
+                            //更新导航页,未读消息数量
+                            MsgCache.notifyNoreadNum();
                         } else {
                             if (tag == MENU_ADD_TOP) {
                                 RNim.addRecentContactTag(recentContact, IS_TOP);
@@ -341,10 +371,21 @@ public class RecentContactsControl {
             if (position == 0) {
                 return ITEM_TYPE_SEARCH;
             }
-            if (RNim.isRecentContactTag(mAllDatas.get(position - getTopItemCount()), IS_TOP)) {
-                return ITEM_TYPE_TOP;
+            int viewType = 0;
+            final RecentContact contact = mAllDatas.get(position - getTopItemCount());
+            if (RNim.isRecentContactTag(contact, IS_TOP)) {
+                viewType |= ITEM_TYPE_TOP;
+            } else {
+                viewType |= ITEM_TYPE_NORMAL;
             }
-            return ITEM_TYPE_NORMAL;
+
+            if (contact.getUnreadCount() > 0) {
+                viewType |= ITEM_TYPE_NOREAD;
+            } else {
+                viewType &= ~ITEM_TYPE_NORMAL;
+            }
+
+            return viewType;
         }
 
         @Override

@@ -231,6 +231,20 @@ public abstract class RExBaseAdapter<H, T, F> extends RBaseAdapter<T> {
         notifyItemRangeChanged(startPosition, getItemCount());
     }
 
+    /**
+     * 重置中间标准数据
+     */
+    public void resetAllData(List<T> allDatas) {
+        resetData(allDatas);
+    }
+
+    /**
+     * 追加中间标准数据
+     */
+    public void appendAllData(List<T> allDatas) {
+        appendData(allDatas);
+    }
+
 
     //-------------------------------操作--------------------------------//
 
@@ -345,5 +359,12 @@ public abstract class RExBaseAdapter<H, T, F> extends RBaseAdapter<T> {
         this.mAllDatas.addAll(datas);
         notifyItemRangeInserted(startPosition, datas.size());
         notifyItemRangeChanged(startPosition, getItemCount());
+    }
+
+    public interface ObjectEmpty {
+        /**
+         * 如果想要添加一个空数据的item, 实现此接口返回true
+         */
+        boolean isDataEmpty();
     }
 }

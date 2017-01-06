@@ -30,7 +30,7 @@ public class SearchPresenter extends BasePresenter<Search.ISearchView> implement
         map.put("key", key);
 
         add(RRetrofit.create(SearchService.class)
-                .search(Param.map(map))
+                .searchUser(Param.map(map))
                 .compose(Transform.defaultStringSchedulers(mBaseView, SearchUserBean.class))
                 .subscribe(new UIStringSubscriber<SearchUserBean, Search.ISearchView>(mBaseView) {
                     @Override

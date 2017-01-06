@@ -781,6 +781,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         }
     }
 
+    /**
+     * 为了确保任务都行执行完了, 延迟打印堆栈信息
+     */
     private void printLog() {
         postDelayed(new Runnable() {
             @Override

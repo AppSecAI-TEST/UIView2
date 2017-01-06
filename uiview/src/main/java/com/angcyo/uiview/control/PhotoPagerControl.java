@@ -68,6 +68,11 @@ public class PhotoPagerControl {
             @Override
             protected void onItemClick(View view, int position) {
                 super.onItemClick(view, position);
+                if (mItemClickListener == null) {
+
+                } else {
+                    mItemClickListener.onItemClick(view, position, getImageUrl(position));
+                }
             }
         };
         mViewPager.setAdapter(mFrescoImageAdapter);

@@ -4,7 +4,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.storage.StorageUtil;
-import com.hn.d.valley.bean.LoginBean;
+import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;

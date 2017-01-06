@@ -12,7 +12,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.resources.AnimUtil;
 import com.angcyo.uiview.resources.ResUtil;
@@ -51,7 +51,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         this.startPosition = startPosition;
     }
 
-    public static void start(UIBaseView iView, final View view, ArrayList<ImageItem> imageItems, int startPosition) {
+    public static void start(ILayout iLayout, final View view, ArrayList<ImageItem> imageItems, int startPosition) {
         int[] rt = new int[2];
         view.getLocationOnScreen(rt);
 
@@ -66,7 +66,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         imagePagerUIView.mStartY = rt[1];
         imagePagerUIView.mStartW = (int) w;
         imagePagerUIView.mStartH = (int) h;
-        iView.startIView(imagePagerUIView, new UIParam(false).setHideLastIView(false));
+        iLayout.startIView(imagePagerUIView, new UIParam(false).setHideLastIView(false));
     }
 
     @Override

@@ -18,7 +18,7 @@ import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.angcyo.library.utils.L;
-import com.hn.d.valley.bean.AmapBean;
+import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.realm.RRealm;
 
 import java.security.MessageDigest;

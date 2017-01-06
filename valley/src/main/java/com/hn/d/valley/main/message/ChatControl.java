@@ -363,7 +363,7 @@ public class ChatControl {
                         @Override
                         public void onClick(View v) {
                             final Images images = getAllImageMessage(bean);
-                            ImagePagerUIView.start(mUIBaseView, v, images.images, images.positon);
+                            ImagePagerUIView.start(mUIBaseView.getILayout(), v, images.images, images.positon);
                         }
                     });
 

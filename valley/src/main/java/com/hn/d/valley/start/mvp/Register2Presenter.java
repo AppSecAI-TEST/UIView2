@@ -44,7 +44,7 @@ public class Register2Presenter extends BasePresenter<Start.IRegister2View> impl
         };
 
         add(RRetrofit.create(StartService.class)
-                .register(Param.map(map))
+                .userRegister(Param.map(map))
                 .compose(Transform.<Bean<String>, Start.IRegister2View>defaultSchedulers(mBaseView))
                 .subscribe(subscriber));
     }

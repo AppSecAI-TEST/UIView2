@@ -27,7 +27,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.EmptyAction;
-import com.hn.d.valley.base.rx.SingleSubscriber;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -166,7 +166,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
             mSubscriptions.clear();
             mSubscriptions.add(OssHelper.uploadAvatorImg(mIcoFilePath)
                     .doOnSubscribe(BeforeSubscriber.build(this))
-                    .subscribe(new SingleSubscriber<String>() {
+                    .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
                         public void onNext(String s) {
                             mIcoFilePathUrl = OssHelper.getAvatorUrl(s);
@@ -237,7 +237,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     private void uploadFile(final boolean background) {
         mSubscriptions.add(OssHelper.uploadAvatorImg(mIcoFilePath)
                 .doOnSubscribe(background ? EmptyAction.build() : BeforeSubscriber.build(this))
-                .subscribe(new SingleSubscriber<String>() {
+                .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onNext(String s) {
                         mIcoFilePathUrl = OssHelper.getAvatorUrl(s);

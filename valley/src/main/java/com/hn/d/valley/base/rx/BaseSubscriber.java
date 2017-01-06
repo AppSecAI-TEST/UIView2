@@ -15,7 +15,7 @@ import com.hn.d.valley.base.Bean;
  * 修改备注：
  * Version: 1.0.0
  */
-public class BaseSubscriber<O extends Object, B extends Bean<O>> extends SingleSubscriber<B> {
+public class BaseSubscriber<O extends Object, B extends Bean<O>> extends BaseSingleSubscriber<B> {
 
     @Override
     public void onNext(B b) {

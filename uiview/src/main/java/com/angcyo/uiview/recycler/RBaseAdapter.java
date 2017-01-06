@@ -23,6 +23,11 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
      */
     protected boolean mEnableLoadMore = false;
     protected ILoadMore mLoadMore;
+    protected OnAdapterLoadMoreListener mLoadMoreListener;
+    /**
+     * 当前加载状态
+     */
+    int mLoadState = ILoadMore.NORMAL;
 
     public RBaseAdapter(Context context) {
         mAllDatas = new ArrayList<>();
@@ -32,6 +37,11 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
     public RBaseAdapter(Context context, List<T> datas) {
         this.mAllDatas = datas == null ? new ArrayList<T>() : datas;
         this.mContext = context;
+    }
+
+    public RBaseAdapter setLoadMoreListener(OnAdapterLoadMoreListener loadMoreListener) {
+        mLoadMoreListener = loadMoreListener;
+        return this;
     }
 
     /**
@@ -62,7 +72,8 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
     public RBaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View item;
         if (mEnableLoadMore && viewType == 666) {
-            item = LayoutInflater.from(mContext).inflate(R.layout.base_item_load_more_layout, parent, false);
+            item = LayoutInflater.from(mContext)
+                    .inflate(R.layout.base_item_load_more_layout, parent, false);
             mLoadMore = (ILoadMore) item;
         } else {
             int itemLayoutId = getItemLayoutId(viewType);
@@ -98,10 +109,20 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
     }
 
     private void onBindLoadMore() {
-        if (mLoadMore.getLoadState() != ILoadMore.LOAD_MORE &&
-                mLoadMore.getLoadState() != ILoadMore.NO_MORE) {
-            mLoadMore.setLoadState(ILoadMore.LOAD_MORE);
+        if (mLoadState == ILoadMore.NORMAL
+                || mLoadState == ILoadMore.LOAD_ERROR) {
+            mLoadState = ILoadMore.LOAD_MORE;
             onLoadMore();
+            if (mLoadMoreListener != null) {
+                mLoadMoreListener.onAdapterLodeMore(this);
+            }
+        }
+        updateLoadMoreView();
+    }
+
+    private void updateLoadMoreView() {
+        if (mLoadMore != null) {
+            mLoadMore.setLoadState(mLoadState);
         }
     }
 
@@ -116,15 +137,18 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
      * 结束加载更多的标识, 方便下一次回调
      */
     public void setLoadMoreEnd() {
-        mLoadMore.setLoadState(ILoadMore.NORMAL);
+        mLoadState = ILoadMore.NORMAL;
+        updateLoadMoreView();
     }
 
     public void setLoadError() {
-        mLoadMore.setLoadState(ILoadMore.LOAD_ERROR);
+        mLoadState = ILoadMore.LOAD_ERROR;
+        updateLoadMoreView();
     }
 
     public void setNoMore() {
-        mLoadMore.setLoadState(ILoadMore.NO_MORE);
+        mLoadState = ILoadMore.NO_MORE;
+//        updateLoadMoreView();//不需要及时刷新
     }
 
     private boolean isLast(int position) {
@@ -286,5 +310,9 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
 
     public List<T> getAllDatas() {
         return mAllDatas;
+    }
+
+    public interface OnAdapterLoadMoreListener {
+        void onAdapterLodeMore(RBaseAdapter baseAdapter);
     }
 }
