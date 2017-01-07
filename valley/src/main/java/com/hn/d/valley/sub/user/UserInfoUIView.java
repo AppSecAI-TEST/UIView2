@@ -9,10 +9,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.utils.Utils;
@@ -28,11 +26,11 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
-import com.hn.d.valley.widget.HnItemTextView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
@@ -83,8 +81,6 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
         super.initRecyclerView();
         mRExBaseAdapter.setHeaderData(mSearchUserBean);
         mRecyclerView.setBackgroundResource(R.color.line_color);
-        mRecyclerView.addItemDecoration(new RBaseItemDecoration(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi))
-                .setDrawLastLine(true));
     }
 
     @Override
@@ -103,37 +99,64 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
     @Override
     public void onViewLoad() {
         super.onViewLoad();
+        initCommandView();
+    }
+
+    private void initCommandView() {
         final String to_uid = mSearchUserBean.getUid();
         final String uid = UserCache.getUserAccount();
         if (TextUtils.equals(uid, to_uid)) {
             mCommandImageView.setVisibility(View.GONE);
         } else {
             mCommandImageView.setVisibility(View.VISIBLE);
-            if (mSearchUserBean.getIs_contact() == 1) {
-                //是联系人
-                mCommandImageView.setImageResource(R.drawable.send_message_selector);
-                mCommandImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ChatUIView.start(getILayout(), to_uid, SessionTypeEnum.P2P);
-                    }
-                });
+            if (mSearchUserBean.getIs_attention() == 1) {
+                //已关注
+                if (mSearchUserBean.getIs_contact() == 1) {
+                    //是联系人
+                    mCommandImageView.setImageResource(R.drawable.send_message_selector);
+                    mCommandImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ChatUIView.start(getILayout(), to_uid, SessionTypeEnum.P2P);
+                        }
+                    });
+                } else {
+                    //不是联系人
+                    mCommandImageView.setImageResource(R.drawable.add_contact2_selector);
+                    mCommandImageView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            add(RRetrofit.create(UserInfoService.class)
+                                    .addContact(Param.buildMap("uid:" + uid, "to_uid:" + to_uid,
+                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
+                                                    UserCache.instance().getUserInfoBean().getUsername())))
+                                    .compose(Transform.defaultStringSchedulers(String.class))
+                                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                                        @Override
+                                        public void onNext(String bean) {
+                                            T_.show(bean);
+                                        }
+                                    }));
+                        }
+                    });
+                }
             } else {
-                //不是联系人
-                mCommandImageView.setImageResource(R.drawable.add_contact2_selector);
+                //未关注
+                mCommandImageView.setImageResource(R.drawable.attention_selector);
                 mCommandImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         add(RRetrofit.create(UserInfoService.class)
-                                .addContact(Param.buildMap("uid:" + uid, "to_uid:" + to_uid,
-                                        "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
-                                                UserCache.instance().getUserInfoBean().getUsername())))
+                                .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
                                 .compose(Transform.defaultStringSchedulers(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
                                     public void onNext(String bean) {
                                         T_.show(bean);
+                                        mSearchUserBean.setIs_attention(1);
+                                        initCommandView();
                                     }
                                 }));
                     }
@@ -162,7 +185,14 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
 
                     @Override
                     public void onNext(UserDiscussListBean userDiscussListBean) {
-                        onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
+                        List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
+                        if (data_list != null && data_list.size() > 0) {
+                            UserDiscussListBean.DataListBean lastBean = data_list.get(data_list.size() - 1);
+                            mSearchUserBean.setIs_attention(lastBean.getUser_info().getIs_attention());
+                            mSearchUserBean.setIs_contact(lastBean.getUser_info().getIs_contact());
+                            initCommandView();
+                        }
+                        onUILoadDataEnd(data_list, userDiscussListBean.getData_count());
                     }
 
                     @Override
@@ -235,35 +265,20 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 return;
             }
 
-            holder.fillView(tBean, true);
-            holder.fillView(tBean.getUser_info(), true);
+            UserDiscussItemControl.initItem(holder, tBean);
 
-            final TextView isMe = holder.tV(R.id.is_me_view);
-            final TextView mediaCountView = holder.tV(R.id.media_count_view);
             final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
-            final View mediaControlLayout = holder.v(R.id.media_control_layout);
-
             final List<String> medias = Utils.split(tBean.getMedia());
-            if (medias.isEmpty()) {
-                mediaControlLayout.setVisibility(View.GONE);
-            } else {
-                mediaControlLayout.setVisibility(View.VISIBLE);
-                mediaCountView.setText("" + medias.size());
-                if ("3".equalsIgnoreCase(tBean.getMedia_type())) {
-                    mediaImageType.setVisibility(View.VISIBLE);
-                    DraweeViewUtil.setDraweeViewHttp(mediaImageType, medias.get(0));
-
-                    mediaImageType.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ImagePagerUIView.start(getILayout(), v, PhotoPager.getImageItems(medias), 0);
-                        }
-                    });
-                } else {
-                    mediaImageType.setVisibility(View.GONE);
-                }
+            if ("3".equalsIgnoreCase(tBean.getMedia_type())) {
+                mediaImageType.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ImagePagerUIView.start(getILayout(), v, PhotoPager.getImageItems(medias), 0);
+                    }
+                });
             }
 
+            final TextView isMe = holder.tV(R.id.is_me_view);
             if (posInData == 0) {
                 isMe.setVisibility(View.VISIBLE);
                 if (TextUtils.equals(tBean.getUser_info().getUid(), UserCache.getUserAccount())) {
@@ -273,23 +288,6 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 }
             } else {
                 isMe.setVisibility(View.GONE);
-            }
-
-            HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
-            HnItemTextView like_cnt = holder.v(R.id.fav_cnt);
-
-            if (tBean.getIs_collect() == 1) {
-                //是否收藏
-                fav_cnt.setLeftIco(R.drawable.collection_icon_s);
-            } else {
-                fav_cnt.setLeftIco(R.drawable.collection_icon_n);
-            }
-
-            if (tBean.getIs_like() == 1) {
-                //是否点赞
-                like_cnt.setLeftIco(R.drawable.thumb_up_icon_s);
-            } else {
-                like_cnt.setLeftIco(R.drawable.thumb_up_icon_n);
             }
         }
     }

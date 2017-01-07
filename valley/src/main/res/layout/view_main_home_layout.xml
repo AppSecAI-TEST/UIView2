@@ -23,7 +23,7 @@
             app:tl_indicator_height="@dimen/base_unline_size"
             app:tl_indicator_width="@dimen/base_60dpi"
             app:tl_textSelectColor="@color/white"
-            app:tl_textUnselectColor="@color/nav_text_color"
+            app:tl_textUnselectColor="@color/line_color"
             app:tl_textsize="@dimen/main_text_size2"
             app:tl_underline_height="0dp"/>
 

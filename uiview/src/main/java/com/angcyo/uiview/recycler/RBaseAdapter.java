@@ -39,6 +39,13 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
         this.mContext = context;
     }
 
+    public static int getListSize(List list) {
+        if (list == null) {
+            return 0;
+        }
+        return list.size();
+    }
+
     public RBaseAdapter setLoadMoreListener(OnAdapterLoadMoreListener loadMoreListener) {
         mLoadMoreListener = loadMoreListener;
         return this;
@@ -50,6 +57,8 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
     public boolean isEnableLoadMore() {
         return mEnableLoadMore;
     }
+
+    //--------------标准的方法-------------//
 
     /**
      * 启用加载更多功能
@@ -64,8 +73,6 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
             notifyItemRemoved(getLastPosition());
         }
     }
-
-    //--------------标准的方法-------------//
 
     @Override
     public int getItemViewType(int position) {
@@ -101,7 +108,6 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
             onBindView(holder, position, mAllDatas.size() > position ? mAllDatas.get(position) : null);
         }
     }
-
 
     @Override
     public void onViewAttachedToWindow(RBaseViewHolder holder) {
@@ -176,6 +182,8 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
         return 0;
     }
 
+    //--------------需要实现的方法------------//
+
     @Override
     public int getItemCount() {
         int size = mAllDatas == null ? 0 : mAllDatas.size();
@@ -184,8 +192,6 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
         }
         return size;
     }
-
-    //--------------需要实现的方法------------//
 
     /**
      * 当 {@link #getItemLayoutId(int)} 返回0的时候, 会调用此方法
@@ -196,17 +202,17 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
 
     protected abstract int getItemLayoutId(int viewType);
 
-    protected abstract void onBindView(RBaseViewHolder holder, int position, T bean);
-
     //---------------滚动事件的处理--------------------//
+
+    protected abstract void onBindView(RBaseViewHolder holder, int position, T bean);
 
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
     }
 
+    //----------------Item 数据的操作-----------------//
+
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
     }
-
-    //----------------Item 数据的操作-----------------//
 
     /**
      * 在最后的位置插入数据
@@ -301,12 +307,16 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
      * 重置数据
      */
     public void resetData(List<T> datas) {
+        int oldSize = getListSize(mAllDatas);
+        int newSize = getListSize(datas);
+
         if (datas == null) {
             this.mAllDatas = new ArrayList<>();
         } else {
             this.mAllDatas = datas;
         }
-        notifyItemRangeChanged(0, getItemCount());
+        notifyItemRangeChanged(0, oldSize == newSize ? oldSize : getItemCount());
+
     }
 
     /**

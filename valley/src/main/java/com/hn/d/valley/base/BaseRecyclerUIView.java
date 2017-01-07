@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseAdapter;
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
@@ -44,6 +45,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected int data_count;//服务返回的数据库中数据的条数,用来翻页
     protected int page = 1;//当前请求第几页
     protected int next = 1;//下一页
+    protected long loadTime = 0;//加载数据的时间
 
     public static void initEmpty(final RBaseViewHolder viewHolder, boolean isEmpty, String tip) {
         if (viewHolder != null) {
@@ -68,18 +70,39 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected void initRecyclerView() {
         mRecyclerView = getRecyclerView();
         mRExBaseAdapter = initRExBaseAdapter();
-        mRecyclerView.setItemAnim(false);
 
         mRExBaseAdapter.setNoMore();//默认没有更多
         mRExBaseAdapter.setLoadMoreListener(this);
 
+        if (hasDecoration()) {
+            mRecyclerView.addItemDecoration(
+                    new RBaseItemDecoration(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi))
+                            .setDrawLastLine(hasLastDecoration()));
+        }
+        mRecyclerView.setItemAnim(false);
         mRecyclerView.setAdapter(mRExBaseAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                mUITitleBarContainer.evaluateBackgroundColorSelf(recyclerView.computeVerticalScrollOffset());
+                if (mUITitleBarContainer != null) {
+                    mUITitleBarContainer.evaluateBackgroundColorSelf(recyclerView.computeVerticalScrollOffset());
+                }
             }
         });
+    }
+
+    /**
+     * 是否添加分割线
+     */
+    protected boolean hasDecoration() {
+        return true;
+    }
+
+    /**
+     * 最后一个Item是否具有分割线
+     */
+    protected boolean hasLastDecoration() {
+        return true;
     }
 
     @Override
@@ -130,9 +153,19 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @Override
     public void onShowInPager(UIViewPager viewPager) {
         super.onShowInPager(viewPager);
-        if (isDelayLoad()) {
+        if (isDelayLoad() && delayTime()) {
             loadData();
         }
+    }
+
+    /**
+     * 2次加载数据的时间间隔是否大于30秒
+     */
+    protected boolean delayTime() {
+        if (System.currentTimeMillis() - loadTime > 30 * 1000) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -190,8 +223,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         }
     }
 
+    @CallSuper
     public void loadData() {
         //mRExBaseAdapter.setNoMore();
+        loadTime = System.currentTimeMillis();
         page = 1;
         onCancel();//刷新数据,取消之前的加载更多请求
         onUILoadData(getPage());
@@ -224,8 +259,13 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     }
 
     protected String getEmptyTipString() {
-        return mActivity.getResources().getString(R.string.default_empty_tip);
+        return mActivity.getResources().getString(getEmptyTipStringId());
     }
+
+    protected int getEmptyTipStringId() {
+        return R.string.default_empty_tip;
+    }
+
 
     /**
      * 接口返回数据后,请调用此方法设置数据

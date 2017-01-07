@@ -12,7 +12,7 @@
         style="@style/MainColorTextStyle"
         android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_marginTop="@dimen/base_xhdpi"
-        android:text=" "/>
+        android:visibility="gone"/>
 
     <include layout="@layout/layout_user_item"/>
 

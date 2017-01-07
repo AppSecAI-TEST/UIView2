@@ -84,7 +84,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_login);
-        fixInsersTop();
+        fixInsertsTop();
     }
 
     @Override

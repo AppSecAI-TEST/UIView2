@@ -1,11 +1,25 @@
 package com.hn.d.valley.main.home.circle;
 
-import android.view.LayoutInflater;
-import android.widget.RelativeLayout;
+import android.view.View;
 
-import com.angcyo.uiview.widget.viewpager.UIViewPager;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.utils.Utils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.NoTitleBarUIView;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.Transform;
+import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
+import com.hn.d.valley.main.home.UserDiscussAdapter;
+import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.utils.PhotoPager;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -18,14 +32,47 @@ import com.hn.d.valley.base.NoTitleBarUIView;
  * 修改备注：
  * Version: 1.0.0
  */
-public class CircleUIView extends NoTitleBarUIView {
+public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
+
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
-        inflate(R.layout.view_home_circle_layout);
+    protected RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> initRExBaseAdapter() {
+        return new UserDiscussAdapter(mActivity) {
+            @Override
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean tBean) {
+                super.onBindDataView(holder, posInData, tBean);
+                final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
+                final List<String> medias = Utils.split(tBean.getMedia());
+                if ("3".equalsIgnoreCase(tBean.getMedia_type())) {
+                    mediaImageType.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ImagePagerUIView.start(mOtherILayout, v, PhotoPager.getImageItems(medias), 0);
+                        }
+                    });
+                }
+            }
+        };
     }
 
     @Override
-    public void onShowInPager(UIViewPager viewPager) {
-        super.onShowInPager(viewPager);
+    protected int getEmptyTipStringId() {
+        return R.string.default_empty_circle_tip;
+    }
+
+    @Override
+    protected void onUILoadData(String page) {
+        add(RRetrofit.create(UserInfoService.class)
+                .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
+                        "type:" + 1, "page:" + page))
+                .compose(Transform.defaultStringSchedulers(UserDiscussListBean.class))
+                .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
+
+                    @Override
+                    public void onNext(UserDiscussListBean userDiscussListBean) {
+                        showContentLayout();
+                        onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
+                    }
+
+                }));
     }
 }

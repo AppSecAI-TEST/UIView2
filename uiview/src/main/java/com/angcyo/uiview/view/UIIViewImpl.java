@@ -429,7 +429,8 @@ public abstract class UIIViewImpl implements IView {
         return Color.parseColor("#60000000");
     }
 
-    public void bindOtherILayout(ILayout otherILayout) {
+    public IView bindOtherILayout(ILayout otherILayout) {
         mOtherILayout = otherILayout;
+        return this;
     }
 }

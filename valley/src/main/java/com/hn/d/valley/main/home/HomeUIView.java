@@ -64,16 +64,17 @@ public class HomeUIView extends BaseUIView {
 
     private void initViewPager() {
         mViewPager.setPageTransformer(true, new FadeInOutPageTransformer());
+        mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(new UIPagerAdapter() {
             @Override
             protected IView getIView(int position) {
                 if (position == 1) {
-                    return new RecommendUIView();
+                    return new RecommendUIView().bindOtherILayout(mOtherILayout);
                 }
                 if (position == 2) {
-                    return new NearbyUIView();
+                    return new NearbyUIView().bindOtherILayout(mOtherILayout);
                 }
-                return new CircleUIView();
+                return new CircleUIView().bindOtherILayout(mOtherILayout);
             }
 
             @Override

@@ -262,7 +262,11 @@ public class RecentContactsControl {
                         //T_.show(adapterPosition + " -- " + menuPosition + " " + menuItem.getText());
                         int tag = (int) menuItem.getTag();
                         final RecentContact recentContact = mRecentContactsAdapter.getAllDatas().get(adapterPosition - getTopItemCount());
+                        String messageId = recentContact.getRecentMessageId();
+                        String contactId = recentContact.getContactId();
+
                         if (tag == MENU_DELETE) {
+                            UnreadMessageControl.removeMessageUnread(contactId);
                             MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount() - recentContact.getUnreadCount());
                             mViewHolder.post(new Runnable() {
                                 @Override
@@ -272,8 +276,7 @@ public class RecentContactsControl {
                                 }
                             });
                         } else if (tag == MENU_NO_READ) {
-                            String messageId = recentContact.getRecentMessageId();
-                            String contactId = recentContact.getContactId();
+
                             if (recentContact.getUnreadCount() + UnreadMessageControl.getMessageUnreadCount(messageId) > 0) {
                                 recentContact.setMsgStatus(MsgStatusEnum.read);
                                 NIMClient.getService(MsgService.class).clearUnreadCount(contactId,

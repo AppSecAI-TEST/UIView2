@@ -64,6 +64,7 @@
     <string name="ta_dynamic_state">TA的动态</string>
     <string name="me_dynamic_state">我的动态</string>
     <string name="default_empty_tip">亲~这里啥也没有!</string>
+    <string name="default_empty_circle_tip">亲~您还没有关注用户!</string>
     <string name="add_contact_tip">我是 %1$s</string>
     <string name="default_empty_no_status_tip">亲~没有动态可以查看!</string>
 
