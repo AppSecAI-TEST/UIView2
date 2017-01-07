@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import rx.functions.Action0;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -157,6 +159,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                                         T_.show(bean);
                                         mSearchUserBean.setIs_attention(1);
                                         initCommandView();
+                                        loadData();
                                     }
                                 }));
                     }
@@ -198,6 +201,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     @Override
                     protected void onEnd() {
                         hideLoadView();
+                        onUILoadDataFinish();
                     }
                 }));
     }
@@ -259,13 +263,16 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean tBean) {
+        protected void onBindDataView(RBaseViewHolder holder, final int posInData, UserDiscussListBean.DataListBean tBean) {
             if (holder.getItemViewType() == 100) {
                 initEmpty(holder, true, getEmptyTipString());
                 return;
             }
 
-            UserDiscussItemControl.initItem(holder, tBean);
+            final String uid = UserCache.getUserAccount();
+            final String to_uid = tBean.getUser_info().getUid();
+
+            //UserDiscussItemControl.initItem(holder, tBean);
 
             final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
             final List<String> medias = Utils.split(tBean.getMedia());
@@ -281,13 +288,66 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             final TextView isMe = holder.tV(R.id.is_me_view);
             if (posInData == 0) {
                 isMe.setVisibility(View.VISIBLE);
-                if (TextUtils.equals(tBean.getUser_info().getUid(), UserCache.getUserAccount())) {
+                if (TextUtils.equals(to_uid, uid)) {
                     isMe.setText(R.string.me_dynamic_state);
                 } else {
                     isMe.setText(R.string.ta_dynamic_state);
                 }
             } else {
                 isMe.setVisibility(View.GONE);
+            }
+
+            //bindCommandItemView(holder, posInData, tBean, uid, to_uid);
+            UserDiscussItemControl.initItem(mSubscriptions, holder, tBean, new Action0() {
+                @Override
+                public void call() {
+                    loadData();
+                }
+            });
+        }
+
+        /**
+         * 关注和取消关注
+         */
+        private void bindCommandItemView(RBaseViewHolder holder, final int posInData,
+                                         UserDiscussListBean.DataListBean tBean,
+                                         final String uid, final String to_uid) {
+            TextView commandItemView = holder.v(R.id.command_item_view);
+            commandItemView.setVisibility(View.VISIBLE);
+            if (tBean.getUser_info().getIs_attention() == 1) {
+                commandItemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        add(RRetrofit.create(UserInfoService.class)
+                                .unAttention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
+                                .compose(Transform.defaultStringSchedulers(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+
+                                    @Override
+                                    public void onNext(String bean) {
+                                        T_.show(bean);
+                                        notifyItemChanged(getHeaderCount() + posInData);
+                                    }
+                                }));
+                    }
+                });
+            } else {
+                commandItemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        add(RRetrofit.create(UserInfoService.class)
+                                .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
+                                .compose(Transform.defaultStringSchedulers(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+
+                                    @Override
+                                    public void onNext(String bean) {
+                                        T_.show(bean);
+                                        notifyItemChanged(getHeaderCount() + posInData);
+                                    }
+                                }));
+                    }
+                });
             }
         }
     }

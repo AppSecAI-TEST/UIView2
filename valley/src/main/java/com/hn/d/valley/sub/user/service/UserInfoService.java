@@ -64,4 +64,13 @@ public interface UserInfoService {
      */
     @POST("contact/attention")
     Observable<ResponseBody> attention(@QueryMap Map<String, String> map);
+
+    /**
+     * 取消关注
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	被关注的人
+     */
+    @POST("contact/unAttention")
+    Observable<ResponseBody> unAttention(@QueryMap Map<String, String> map);
 }

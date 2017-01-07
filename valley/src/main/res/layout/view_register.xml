@@ -23,7 +23,7 @@
         <com.angcyo.uiview.widget.ExEditText
             android:id="@+id/phone_view"
             style="@style/PhoneEditStyle"
-            android:background="@drawable/main_color_border_selector"
+            android:background="@drawable/base_main_color_border_selector"
             android:hint="@string/input_phone_hint"
             android:imeOptions="actionNext"
             android:paddingLeft="@dimen/base_60dpi"
@@ -47,7 +47,7 @@
             style="@style/VerityEditStyle"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/main_color_border_selector"
+            android:background="@drawable/base_main_color_border_selector"
             android:drawablePadding="@dimen/base_40dpi"
             android:hint="@string/input_code_hint"
             android:imeOptions="actionDone"

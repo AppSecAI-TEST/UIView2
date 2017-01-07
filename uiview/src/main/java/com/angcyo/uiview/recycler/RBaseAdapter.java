@@ -315,8 +315,11 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
         } else {
             this.mAllDatas = datas;
         }
-        notifyItemRangeChanged(0, oldSize == newSize ? oldSize : getItemCount());
-
+        if (oldSize == newSize) {
+            notifyItemRangeChanged(0, oldSize);
+        } else {
+            notifyDataSetChanged();
+        }
     }
 
     /**

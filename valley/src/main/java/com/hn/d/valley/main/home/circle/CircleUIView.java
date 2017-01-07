@@ -14,12 +14,15 @@ import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 
 import java.util.List;
+
+import rx.functions.Action0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -39,7 +42,13 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
         return new UserDiscussAdapter(mActivity) {
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean tBean) {
-                super.onBindDataView(holder, posInData, tBean);
+                //super.onBindDataView(holder, posInData, tBean);
+                UserDiscussItemControl.initItem(mSubscriptions, holder, tBean, new Action0() {
+                    @Override
+                    public void call() {
+                        loadData();
+                    }
+                });
                 final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
                 final List<String> medias = Utils.split(tBean.getMedia());
                 if ("3".equalsIgnoreCase(tBean.getMedia_type())) {
@@ -71,6 +80,11 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                     public void onNext(UserDiscussListBean userDiscussListBean) {
                         showContentLayout();
                         onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
+                    }
+
+                    @Override
+                    protected void onEnd() {
+                        onUILoadDataFinish();
                     }
 
                 }));

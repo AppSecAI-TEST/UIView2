@@ -159,10 +159,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     }
 
     /**
-     * 2次加载数据的时间间隔是否大于30秒
+     * 2次加载数据的时间间隔是否大于60秒
      */
     protected boolean delayTime() {
-        if (System.currentTimeMillis() - loadTime > 30 * 1000) {
+        if (System.currentTimeMillis() - loadTime > 60 * 1000) {
             return true;
         }
         return false;
@@ -266,12 +266,18 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         return R.string.default_empty_tip;
     }
 
+    /**
+     * 初始化控件状态
+     */
+    public void onUILoadDataFinish() {
+        mRefreshLayout.setRefreshEnd();
+        //mRExBaseAdapter.setLoadMoreEnd();
+    }
 
     /**
      * 接口返回数据后,请调用此方法设置数据
      */
     public void onUILoadDataEnd(List<T> datas, int data_count) {
-        mRefreshLayout.setRefreshEnd();
         this.data_count = data_count;
         boolean isEmptyData;
 
@@ -284,6 +290,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
 
         onEmptyData(isEmptyData);
         if (isEmptyData) {
+            mRExBaseAdapter.resetAllData(datas);
             mRExBaseAdapter.setEnableLoadMore(false);
         } else {
             if (page <= 1) {

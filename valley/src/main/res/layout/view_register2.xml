@@ -38,7 +38,7 @@
         <com.angcyo.uiview.widget.ExEditText
             android:id="@+id/name_view"
             style="@style/EditStyle"
-            android:background="@drawable/main_color_border_selector"
+            android:background="@drawable/base_main_color_border_selector"
             android:hint="@string/register_name_hint"
             android:imeOptions="actionNext"
             android:maxLength="@integer/name_count"
@@ -63,7 +63,7 @@
             style="@style/EditStyle"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/main_color_border_selector"
+            android:background="@drawable/base_main_color_border_selector"
             android:drawablePadding="@dimen/base_40dpi"
             android:editable="false"
             android:hint="请选择性别"
@@ -99,7 +99,7 @@
         <com.angcyo.uiview.widget.ExEditText
             android:id="@+id/password_view"
             style="@style/PasswordEditStyle"
-            android:background="@drawable/main_color_border_selector"
+            android:background="@drawable/base_main_color_border_selector"
             android:hint="@string/register_password_hint"
             android:imeOptions="actionDone"
             android:paddingLeft="@dimen/base_60dpi"

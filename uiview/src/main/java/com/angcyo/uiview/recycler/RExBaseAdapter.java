@@ -194,7 +194,12 @@ public abstract class RExBaseAdapter<H, T, F> extends RBaseAdapter<T> {
         } else {
             this.mAllHeaderDatas = headerDatas;
         }
-        notifyItemRangeChanged(0, oldSize == newSize ? oldSize : getItemCount());
+
+        if (oldSize == newSize) {
+            notifyItemRangeChanged(0, oldSize);
+        } else {
+            notifyDataSetChanged();
+        }
     }
 
     /**
@@ -226,7 +231,11 @@ public abstract class RExBaseAdapter<H, T, F> extends RBaseAdapter<T> {
             this.mAllFooterDatas = footerDatas;
         }
 
-        notifyItemRangeChanged(getHeaderCount() + getDataCount(), oldSize == newSize ? oldSize : getItemCount());
+        if (oldSize == newSize) {
+            notifyItemRangeChanged(getHeaderCount() + getDataCount(), oldSize);
+        } else {
+            notifyDataSetChanged();
+        }
     }
 
     /**
@@ -357,7 +366,11 @@ public abstract class RExBaseAdapter<H, T, F> extends RBaseAdapter<T> {
         } else {
             this.mAllDatas = datas;
         }
-        notifyItemRangeChanged(getHeaderCount(), oldSize == newSize ? oldSize : getItemCount());
+        if (oldSize == newSize) {
+            notifyItemRangeChanged(getHeaderCount(), oldSize);
+        } else {
+            notifyDataSetChanged();
+        }
     }
 
     /**

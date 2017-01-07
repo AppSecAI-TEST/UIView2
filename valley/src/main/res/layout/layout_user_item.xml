@@ -56,4 +56,19 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/command_item_view"
+            style="@style/BaseCommandButtonStyle"
+            android:layout_marginTop="@dimen/base_hdpi"
+            android:visibility="gone"
+            tools:text="取消关注"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

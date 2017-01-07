@@ -235,7 +235,7 @@ public class UITitleBarContainer extends FrameLayout {
     public void evaluateBackgroundColor(int scrollY, View titleView) {
         float factor = 6 * scrollY * 0.1f / getMeasuredHeight();
         if (titleView != null) {
-            titleView.setVisibility(factor > 0.8 ? View.VISIBLE : View.INVISIBLE);
+            titleView.setVisibility(factor > 0.8 ? View.VISIBLE : View.GONE);
         }
         setBackgroundColor((Integer) new ArgbEvaluator()
                 .evaluate(Math.min(1, factor),

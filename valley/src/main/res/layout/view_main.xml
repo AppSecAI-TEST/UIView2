@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/bottom_nav_root_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_60dpi"
+        android:layout_height="@dimen/base_50dpi"
         android:layout_alignParentBottom="true"
         android:background="@android:color/white">
 

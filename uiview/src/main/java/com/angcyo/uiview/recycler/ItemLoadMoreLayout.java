@@ -27,7 +27,6 @@ public class ItemLoadMoreLayout extends RelativeLayout implements ILoadMore {
         setLoadState(loadState);
     }
 
-
     private void initView() {
         for (int i = 0; i < getChildCount(); i++) {
             final View view = getChildAt(i);
