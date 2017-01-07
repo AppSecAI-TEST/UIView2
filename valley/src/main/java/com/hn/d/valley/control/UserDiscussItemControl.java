@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.Utils;
@@ -15,6 +16,7 @@ import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.widget.HnItemTextView;
 
@@ -38,7 +40,9 @@ public class UserDiscussItemControl {
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
                                 UserDiscussListBean.DataListBean dataListBean, final Action0 commandAction) {
         initItem(holder, dataListBean);
-        bindCommandItemView(subscription, holder, dataListBean, commandAction);
+        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
+        bindFavItemView(subscription, holder, dataListBean);
+        bindLikeItemView(subscription, holder, dataListBean);
     }
 
     public static void initItem(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
@@ -64,9 +68,9 @@ public class UserDiscussItemControl {
         }
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
-        HnItemTextView like_cnt = holder.v(R.id.fav_cnt);
+        HnItemTextView like_cnt = holder.v(R.id.like_cnt);
 
-        if (dataListBean.getIs_collect() == 1) {
+        if (dataListBean.getIs_collection() == 1) {
             //是否收藏
             fav_cnt.setLeftIco(R.drawable.collection_icon_s);
         } else {
@@ -98,10 +102,10 @@ public class UserDiscussItemControl {
     /**
      * 关注和取消关注
      */
-    private static void bindCommandItemView(final CompositeSubscription subscription,
-                                            RBaseViewHolder holder,
-                                            UserDiscussListBean.DataListBean tBean,
-                                            final Action0 commandAction) {
+    private static void bindAttentionItemView(final CompositeSubscription subscription,
+                                              RBaseViewHolder holder,
+                                              UserDiscussListBean.DataListBean tBean,
+                                              final Action0 commandAction) {
 
         final String uid = UserCache.getUserAccount();
         final String to_uid = tBean.getUser_info().getUid();
@@ -144,6 +148,163 @@ public class UserDiscussItemControl {
                             }));
                 }
             });
+        }
+    }
+
+
+    /**
+     * 收藏
+     */
+    private static void initFavView(final HnItemTextView itemTextView,
+                                    final UserDiscussListBean.DataListBean tBean,
+                                    final CompositeSubscription subscription) {
+        final String uid = UserCache.getUserAccount();
+
+        itemTextView.setLeftIco(R.drawable.collection_icon_s);
+        itemTextView.setText(tBean.getFav_cnt());
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .unCollect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                T_.show(bean);
+                                tBean.setIs_collection(0);
+                                tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
+                                initUnFavView(itemTextView, tBean, subscription);
+                            }
+                        }));
+            }
+        });
+    }
+
+    /**
+     * 取消收藏
+     */
+    private static void initUnFavView(final HnItemTextView itemTextView,
+                                      final UserDiscussListBean.DataListBean tBean,
+                                      final CompositeSubscription subscription) {
+        final String uid = UserCache.getUserAccount();
+
+        itemTextView.setLeftIco(R.drawable.collection_icon_n);
+        itemTextView.setText(tBean.getFav_cnt());
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .collect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                T_.show(bean);
+                                GoodView.build(itemTextView);
+                                tBean.setIs_collection(1);
+                                tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
+                                initFavView(itemTextView, tBean, subscription);
+                            }
+                        }));
+            }
+        });
+    }
+
+    /**
+     * 收藏和取消收藏
+     */
+    private static void bindFavItemView(final CompositeSubscription subscription,
+                                        RBaseViewHolder holder,
+                                        UserDiscussListBean.DataListBean tBean) {
+
+        HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
+
+        if (tBean.getIs_collection() == 1) {
+            //是否收藏
+            initFavView(fav_cnt, tBean, subscription);
+        } else {
+            initUnFavView(fav_cnt, tBean, subscription);
+        }
+    }
+
+    /**
+     * 点赞
+     */
+    private static void initLikeView(final HnItemTextView itemTextView,
+                                     final UserDiscussListBean.DataListBean tBean,
+                                     final CompositeSubscription subscription) {
+        final String uid = UserCache.getUserAccount();
+
+        itemTextView.setLeftIco(R.drawable.thumb_up_icon_s);
+        itemTextView.setText(tBean.getLike_cnt());
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .dislike(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                T_.show(bean);
+                                tBean.setIs_like(0);
+                                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) - 1));
+                                initUnLikeView(itemTextView, tBean, subscription);
+                            }
+                        }));
+            }
+        });
+    }
+
+    /**
+     * 取消点赞
+     */
+    private static void initUnLikeView(final HnItemTextView itemTextView,
+                                       final UserDiscussListBean.DataListBean tBean,
+                                       final CompositeSubscription subscription) {
+        final String uid = UserCache.getUserAccount();
+
+        itemTextView.setLeftIco(R.drawable.thumb_up_icon_n);
+        itemTextView.setText(tBean.getLike_cnt());
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .like(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                T_.show(bean);
+                                GoodView.build(itemTextView);
+                                tBean.setIs_like(1);
+                                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) + 1));
+                                initLikeView(itemTextView, tBean, subscription);
+                            }
+                        }));
+            }
+        });
+    }
+
+    /**
+     * 点赞和取消点赞
+     */
+    private static void bindLikeItemView(final CompositeSubscription subscription,
+                                         RBaseViewHolder holder,
+                                         UserDiscussListBean.DataListBean tBean) {
+
+        HnItemTextView like_cnt = holder.v(R.id.like_cnt);
+
+        if (tBean.getIs_like() == 1) {
+            //是否点赞
+            initLikeView(like_cnt, tBean, subscription);
+        } else {
+            initUnLikeView(like_cnt, tBean, subscription);
         }
     }
 }

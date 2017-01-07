@@ -19,7 +19,7 @@ public class UserDiscussListBean {
 
     /**
      * data_count : 12
-     * data_list : [{"discuss_id":"14","uid":"50004","tags_name":"搞笑,励志,感动","content":"深圳市恐龙谷网络科技有限公司","media":"http://static.bzsns.cn/pic/M00/01/12/CixiMlhTPgCAaDUXAAF8vDAwf2Q184.jpg","media_type":"3","like_cnt":"0","fav_cnt":"0","comment_cnt":"0","forward_cnt":"0","view_cnt":"0","share_original_type":"","share_original_item_id":"0","parent_item_id":"0","is_top":"1","created":"1481871094","address":"深圳大冲国际","lng":"113.961974","lat":"22.547832","user_info":{"uid":"50004","username":"大鹏","sex":"0","avatar":"http://static.bzsns.cn/pic/M00/00/69/CixiMlctybOAWCO9AAAbZx76WXw10.JPEG?w=200&h=200&s=1","grade":"1","is_contact":1,"contact_mark":"张伟","is_attention":1},"is_like":1,"is_collect":1,"original_info":[],"show_time":"2小时前"}]
+     * data_list : [{"discuss_id":"14","uid":"50004","tags_name":"搞笑,励志,感动","content":"深圳市恐龙谷网络科技有限公司","media":"http://static.bzsns.cn/pic/M00/01/12/CixiMlhTPgCAaDUXAAF8vDAwf2Q184.jpg","media_type":"3","like_cnt":"0","fav_cnt":"0","comment_cnt":"0","forward_cnt":"0","view_cnt":"0","share_original_type":"","share_original_item_id":"0","parent_item_id":"0","is_top":"1","created":"1481871094","address":"深圳大冲国际","lng":"113.961974","lat":"22.547832","user_info":{"uid":"50004","username":"大鹏","sex":"0","avatar":"http://static.bzsns.cn/pic/M00/00/69/CixiMlctybOAWCO9AAAbZx76WXw10.JPEG?w=200&h=200&s=1","grade":"1","is_contact":1,"contact_mark":"张伟","is_attention":1},"is_like":1,"is_collection":1,"original_info":[],"show_time":"2小时前"}]
      */
 
     private int data_count;
@@ -65,7 +65,7 @@ public class UserDiscussListBean {
          * lat : 22.547832
          * user_info : {"uid":"50004","username":"大鹏","sex":"0","avatar":"http://static.bzsns.cn/pic/M00/00/69/CixiMlctybOAWCO9AAAbZx76WXw10.JPEG?w=200&h=200&s=1","grade":"1","is_contact":1,"contact_mark":"张伟","is_attention":1}
          * is_like : 1
-         * is_collect : 1
+         * is_collection : 1
          * original_info : []
          * show_time : 2小时前
          */
@@ -91,7 +91,7 @@ public class UserDiscussListBean {
         private String lat;
         private UserInfoBean user_info;
         private int is_like;
-        private int is_collect;
+        private int is_collection;
         private String show_time;
 
         public DataListBean() {
@@ -269,12 +269,12 @@ public class UserDiscussListBean {
             this.is_like = is_like;
         }
 
-        public int getIs_collect() {
-            return is_collect;
+        public int getIs_collection() {
+            return is_collection;
         }
 
-        public void setIs_collect(int is_collect) {
-            this.is_collect = is_collect;
+        public void setIs_collection(int is_collection) {
+            this.is_collection = is_collection;
         }
 
         public String getShow_time() {
