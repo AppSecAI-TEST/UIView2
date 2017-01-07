@@ -11,7 +11,6 @@ import com.angcyo.uiview.utils.Utils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
@@ -125,7 +124,7 @@ public class UserDiscussItemControl {
 
                                 @Override
                                 public void onNext(String bean) {
-                                    T_.show(bean);
+                                    //T_.show(bean);
                                     commandAction.call();
                                 }
                             }));
@@ -142,7 +141,7 @@ public class UserDiscussItemControl {
 
                                 @Override
                                 public void onNext(String bean) {
-                                    T_.show(bean);
+                                    //T_.show(bean);
                                     commandAction.call();
                                 }
                             }));
@@ -172,7 +171,7 @@ public class UserDiscussItemControl {
 
                             @Override
                             public void onNext(String bean) {
-                                T_.show(bean);
+                                //T_.show(bean);
                                 tBean.setIs_collection(0);
                                 tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
                                 initUnFavView(itemTextView, tBean, subscription);
@@ -202,7 +201,7 @@ public class UserDiscussItemControl {
 
                             @Override
                             public void onNext(String bean) {
-                                T_.show(bean);
+                                //T_.show(bean);
                                 GoodView.build(itemTextView);
                                 tBean.setIs_collection(1);
                                 tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
@@ -250,7 +249,7 @@ public class UserDiscussItemControl {
 
                             @Override
                             public void onNext(String bean) {
-                                T_.show(bean);
+                                //T_.show(bean);
                                 tBean.setIs_like(0);
                                 tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) - 1));
                                 initUnLikeView(itemTextView, tBean, subscription);
@@ -280,7 +279,7 @@ public class UserDiscussItemControl {
 
                             @Override
                             public void onNext(String bean) {
-                                T_.show(bean);
+                                //T_.show(bean);
                                 GoodView.build(itemTextView);
                                 tBean.setIs_like(1);
                                 tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) + 1));
