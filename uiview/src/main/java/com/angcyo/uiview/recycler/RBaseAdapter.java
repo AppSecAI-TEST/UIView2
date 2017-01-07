@@ -55,7 +55,14 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
      * 启用加载更多功能
      */
     public void setEnableLoadMore(boolean enableLoadMore) {
+        boolean loadMore = mEnableLoadMore;
         mEnableLoadMore = enableLoadMore;
+
+        if (enableLoadMore && !loadMore) {
+            notifyItemInserted(getLastPosition());
+        } else if (!enableLoadMore && loadMore) {
+            notifyItemRemoved(getLastPosition());
+        }
     }
 
     //--------------标准的方法-------------//
@@ -138,21 +145,28 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
      */
     public void setLoadMoreEnd() {
         mLoadState = ILoadMore.NORMAL;
+        setEnableLoadMore(true);
         updateLoadMoreView();
     }
 
     public void setLoadError() {
         mLoadState = ILoadMore.LOAD_ERROR;
+        setEnableLoadMore(true);
         updateLoadMoreView();
     }
 
     public void setNoMore() {
         mLoadState = ILoadMore.NO_MORE;
+        setEnableLoadMore(true);
 //        updateLoadMoreView();//不需要及时刷新
     }
 
     private boolean isLast(int position) {
-        return position == getItemCount() - 1;
+        return position == getLastPosition();
+    }
+
+    private int getLastPosition() {
+        return getItemCount() - 1;
     }
 
     /**
@@ -263,6 +277,9 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
         }
     }
 
+    /**
+     * 是否可以删除bean
+     */
     protected boolean onDeleteItem(T bean) {
         return true;
     }

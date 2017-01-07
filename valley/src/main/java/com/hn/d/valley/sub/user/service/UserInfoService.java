@@ -20,6 +20,7 @@ import rx.Observable;
  */
 public interface UserInfoService {
     /**
+     * 获取用户信息【包括自己】
      * 参数名	必选	类型	说明
      * uid	是	int	用户id
      * to_uid	是	int	要查看的用户id【uid=to_uid就是查看自己的信息】
@@ -28,6 +29,12 @@ public interface UserInfoService {
     Observable<ResponseBody> userInfo(@QueryMap Map<String, String> map);
 
     /**
+     * 动态列表
+     * <p>
+     * 全部动态中 黑名单列表用户发布的动态不会出现
+     * <p>
+     * 对方把自己加入了黑名单 不会出现在列表中
+     * <p>
      * 参数名	必选	类型	说明
      * uid	是	int	用户id
      * to_uid	否	int	具体获取哪个人的【可以为自己】
@@ -38,4 +45,14 @@ public interface UserInfoService {
      */
     @POST("discuss/list")
     Observable<ResponseBody> discussList(@QueryMap Map<String, String> map);
+
+    /**
+     * 请求添加为联系人申请
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	对方id
+     * tip	是	发给对方的提示	如: 我是张三
+     */
+    @POST("contact/addContact")
+    Observable<ResponseBody> addContact(@QueryMap Map<String, String> map);
 }

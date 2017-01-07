@@ -198,7 +198,7 @@ public class UITitleBarContainer extends FrameLayout {
         mTitleView.setText(mTitleBarPattern.mTitleString);
         mTitleBarPattern.setTextViewSize(mTitleView);
         if (mTitleBarPattern.titleHide) {
-            mTitleView.setVisibility(INVISIBLE);
+            mTitleView.setVisibility(GONE);
         }
 
         if (!TextUtils.isEmpty(mTitleBarPattern.mTitleString) && mTitleBarPattern.titleAnim) {

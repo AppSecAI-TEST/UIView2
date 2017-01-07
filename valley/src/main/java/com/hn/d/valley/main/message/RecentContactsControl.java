@@ -2,7 +2,6 @@ package com.hn.d.valley.main.message;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,6 +26,7 @@ import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.cache.TeamDataCache;
+import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.nim.RNim;
@@ -272,21 +272,34 @@ public class RecentContactsControl {
                                 }
                             });
                         } else if (tag == MENU_NO_READ) {
-                            if (recentContact.getUnreadCount() > 0) {
+                            String messageId = recentContact.getRecentMessageId();
+                            String contactId = recentContact.getContactId();
+                            if (recentContact.getUnreadCount() + UnreadMessageControl.getMessageUnreadCount(messageId) > 0) {
                                 recentContact.setMsgStatus(MsgStatusEnum.read);
-                                NIMClient.getService(MsgService.class).clearUnreadCount(recentContact.getContactId(), recentContact.getSessionType());
+                                NIMClient.getService(MsgService.class).clearUnreadCount(contactId,
+                                        recentContact.getSessionType());
+                                UnreadMessageControl.removeMessageUnread(contactId);
                             } else {
                                 recentContact.setMsgStatus(MsgStatusEnum.unread);
-                                MsgCache.instance().setMsgUnread(recentContact.getRecentMessageId(),
-                                        recentContact.getContactId(),
-                                        recentContact.getSessionType());
+//                                MsgCache.instance().setMsgUnread(messageId,
+//                                        contactId,
+//                                        recentContact.getSessionType());
+                                UnreadMessageControl.addMessageUnread(messageId, contactId);
                             }
-                            final RecyclerView.ViewHolder viewHolder = mSwipeMenuRecyclerView.findViewHolderForAdapterPosition(adapterPosition);
-                            if (viewHolder != null) {
-                                mRecentContactsAdapter.showUnreadNum(mViewHolder, recentContact);
-                            }
+
+//                            final RecyclerView.ViewHolder viewHolder = mSwipeMenuRecyclerView.findViewHolderForAdapterPosition(adapterPosition);
+//                            if (viewHolder != null) {
+//                                viewHolder.itemView.post(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        mRecentContactsAdapter.showUnreadNum(mViewHolder, recentContact);
+//                                    }
+//                                });
+//                            }
                             //更新导航页,未读消息数量
                             MsgCache.notifyNoreadNum();
+
+                            mRecentContactsAdapter.notifyItemChanged(adapterPosition);
                         } else {
                             if (tag == MENU_ADD_TOP) {
                                 RNim.addRecentContactTag(recentContact, IS_TOP);
@@ -379,7 +392,8 @@ public class RecentContactsControl {
                 viewType |= ITEM_TYPE_NORMAL;
             }
 
-            if (contact.getUnreadCount() > 0) {
+            int unreadCount = contact.getUnreadCount() + UnreadMessageControl.getMessageUnreadCount(contact.getRecentMessageId());
+            if (unreadCount > 0) {
                 viewType |= ITEM_TYPE_NOREAD;
             } else {
                 viewType &= ~ITEM_TYPE_NORMAL;
@@ -397,7 +411,7 @@ public class RecentContactsControl {
         }
 
         @Override
-        protected void onBindView(RBaseViewHolder holder, int position, final RecentContact b) {
+        protected void onBindView(final RBaseViewHolder holder, final int position, final RecentContact b) {
             if (holder.getItemViewType() == ITEM_TYPE_SEARCH) {
                 holder.v(R.id.search_view).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -436,13 +450,15 @@ public class RecentContactsControl {
             itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    UnreadMessageControl.removeMessageUnread(bean.getContactId());
                     itemAction.call(bean);
+                    notifyItemChanged(position);
                 }
             });
         }
 
         private void showUnreadNum(RBaseViewHolder holder, RecentContact bean) {
-            int unreadNum = bean.getUnreadCount();
+            int unreadNum = bean.getUnreadCount() + UnreadMessageControl.getMessageUnreadCount(bean.getRecentMessageId());
             UnreadMsgUtils.showUnreadNum((MsgView) holder.v(R.id.msg_num_view), unreadNum);
         }
 

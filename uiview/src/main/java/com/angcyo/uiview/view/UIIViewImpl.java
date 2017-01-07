@@ -64,6 +64,9 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public void onAttachedToILayout(ILayout iLayout) {
         mILayout = iLayout;
+        if (mOtherILayout == null) {
+            mOtherILayout = iLayout;
+        }
     }
 
     @Override
@@ -133,6 +136,11 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public void onViewShow(Bundle bundle) {
         L.d(this.getClass().getSimpleName(), "onViewShow: ");
+    }
+
+    @Override
+    public void onViewReShow(Bundle bundle) {
+        L.d(this.getClass().getSimpleName(), "onViewReShow: ");
     }
 
     @Override

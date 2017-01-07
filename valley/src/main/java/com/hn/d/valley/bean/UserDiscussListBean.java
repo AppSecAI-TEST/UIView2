@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import com.angcyo.uiview.recycler.RExBaseAdapter;
+
 import java.util.List;
 
 /**
@@ -39,7 +41,8 @@ public class UserDiscussListBean {
         this.data_list = data_list;
     }
 
-    public static class DataListBean {
+    public static class DataListBean implements RExBaseAdapter.ObjectEmpty {
+        boolean isEmpty = false;
         /**
          * discuss_id : 14
          * uid : 50004
@@ -90,6 +93,13 @@ public class UserDiscussListBean {
         private int is_like;
         private int is_collect;
         private String show_time;
+
+        public DataListBean() {
+        }
+
+        public DataListBean(boolean isEmpty) {
+            this.isEmpty = isEmpty;
+        }
 
         public String getDiscuss_id() {
             return discuss_id;
@@ -273,6 +283,11 @@ public class UserDiscussListBean {
 
         public void setShow_time(String show_time) {
             this.show_time = show_time;
+        }
+
+        @Override
+        public boolean isDataEmpty() {
+            return isEmpty;
         }
 
         public static class UserInfoBean {

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
+import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
@@ -45,7 +46,8 @@ public class MsgCache implements ICache {
     }
 
     public static void notifyNoreadNum(int num) {
-        RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(num, Constant.POS_MESSAGE));
+        RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(num + UnreadMessageControl.getUnreadCount(),
+                Constant.POS_MESSAGE));
     }
 
     public static MsgService msgService() {

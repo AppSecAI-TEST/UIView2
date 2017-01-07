@@ -19,6 +19,12 @@ import rx.Observable;
  * Version: 1.0.0
  */
 public interface SearchService {
+    /**
+     * 添加好友【搜索用户】
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * key	是	string	手机或用户id
+     */
     @POST("contact/searchUser")
     Observable<ResponseBody> searchUser(@QueryMap Map<String, String> map);
 }

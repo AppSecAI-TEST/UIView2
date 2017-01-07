@@ -3,7 +3,10 @@ package com.hn.d.valley.sub.user;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
@@ -18,16 +21,19 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnItemTextView;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +53,7 @@ import java.util.Map;
 public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscussListBean.DataListBean, String> {
 
     SearchUserBean mSearchUserBean;
+    private ImageView mCommandImageView;
 
     public UserInfoUIView(SearchUserBean searchUserBean) {
         mSearchUserBean = searchUserBean;
@@ -81,9 +88,64 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
     }
 
     @Override
+    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        mCommandImageView = new ImageView(mActivity);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.setMargins(0, 0,
+                mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xxhdpi),
+                mActivity.getResources().getDimensionPixelOffset(R.dimen.base_60dpi));
+        mCommandImageView.setVisibility(View.GONE);
+        baseContentLayout.addView(mCommandImageView, params);
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        final String to_uid = mSearchUserBean.getUid();
+        final String uid = UserCache.getUserAccount();
+        if (TextUtils.equals(uid, to_uid)) {
+            mCommandImageView.setVisibility(View.GONE);
+        } else {
+            mCommandImageView.setVisibility(View.VISIBLE);
+            if (mSearchUserBean.getIs_contact() == 1) {
+                //是联系人
+                mCommandImageView.setImageResource(R.drawable.send_message_selector);
+                mCommandImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ChatUIView.start(getILayout(), to_uid, SessionTypeEnum.P2P);
+                    }
+                });
+            } else {
+                //不是联系人
+                mCommandImageView.setImageResource(R.drawable.add_contact2_selector);
+                mCommandImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        add(RRetrofit.create(UserInfoService.class)
+                                .addContact(Param.buildMap("uid:" + uid, "to_uid:" + to_uid,
+                                        "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
+                                                UserCache.instance().getUserInfoBean().getUsername())))
+                                .compose(Transform.defaultStringSchedulers(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+
+                                    @Override
+                                    public void onNext(String bean) {
+                                        T_.show(bean);
+                                    }
+                                }));
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-        Map<String, String> map = getMap();
+        Map<String, String> map = getPageMap();
         map.put("uid", UserCache.getUserAccount());
         map.put("to_uid", mSearchUserBean.getUid());
 
@@ -110,6 +172,21 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 }));
     }
 
+    @Override
+    protected String getEmptyTipString() {
+        return mActivity.getResources().getString(R.string.default_empty_no_status_tip);
+    }
+
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        if (isEmpty) {
+            List<UserDiscussListBean.DataListBean> datas = new ArrayList<>();
+            UserDiscussListBean.DataListBean empty = new UserDiscussListBean.DataListBean(true);
+            datas.add(empty);
+            mRExBaseAdapter.resetAllData(datas);
+        }
+    }
+
     private class UserInfoAdapter extends RExBaseAdapter<SearchUserBean, UserDiscussListBean.DataListBean, String> {
 
         public UserInfoAdapter(Context context) {
@@ -120,8 +197,19 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
         protected int getItemLayoutId(int viewType) {
             if (viewType == TYPE_HEADER) {
                 return R.layout.item_search_user_top_layout;
+            } else if (viewType == 100) {
+                return R.layout.layout_default_pager;
             }
             return R.layout.item_search_user_item_layout;
+        }
+
+        @Override
+        protected int getDataItemType(int posInData) {
+            final UserDiscussListBean.DataListBean dataListBean = getAllDatas().get(posInData);
+            if (dataListBean.isDataEmpty()) {
+                return 100;
+            }
+            return super.getDataItemType(posInData);
         }
 
         @Override
@@ -132,7 +220,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             PhotoPager.init(mILayout,
                     ((TextIndicator) holder.v(R.id.single_text_indicator_view)),
                     (ViewPager) holder.v(R.id.view_pager), photos);
-            holder.fillView(hBean);
+            holder.fillView(hBean, true);
             HnGenderView hnGenderView = holder.v(R.id.grade);
             hnGenderView.setGender(hBean.getSex(), hBean.getGrade());
 
@@ -142,6 +230,11 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
 
         @Override
         protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean tBean) {
+            if (holder.getItemViewType() == 100) {
+                initEmpty(holder, true, getEmptyTipString());
+                return;
+            }
+
             holder.fillView(tBean, true);
             holder.fillView(tBean.getUser_info(), true);
 

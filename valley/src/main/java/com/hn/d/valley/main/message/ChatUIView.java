@@ -39,9 +39,10 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.event.LastMessageEvent;
+import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
@@ -563,6 +564,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                 mChatControl.mChatAdapter.notifyDataSetChanged();
             }
         }
+
+        UnreadMessageControl.removeMessageUnread(mSessionId);
 
         msgService().setChattingAccount(mSessionId, sessionType);
         mActivity.setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放

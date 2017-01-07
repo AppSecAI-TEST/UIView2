@@ -14,6 +14,7 @@ import com.orhanobut.hawk.Hawk;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -123,5 +124,58 @@ public class Param {
      */
     public static String safe(StringBuilder stringBuilder) {
         return stringBuilder.substring(0, Math.max(0, stringBuilder.length() - 1));
+    }
+
+    public static <T> String connect(List<T> list) {
+        if (list == null) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (T bean : list) {
+            builder.append(bean);
+            builder.append(",");
+        }
+
+        return safe(builder);
+    }
+
+    /**
+     * 组装参数之后, 并签名
+     */
+    public static Map<String, String> buildMap(String... args) {
+        return map(build(args));
+    }
+
+    /**
+     * 组装参数
+     */
+    public static Map<String, String> build(String... args) {
+        final Map<String, String> map = new HashMap<>();
+        foreach(new OnPutValue() {
+            @Override
+            public void onValue(String key, String value) {
+                if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+                    map.put(key, value);
+                }
+            }
+        }, args);
+        return map;
+    }
+
+    private static void foreach(OnPutValue onPutValue, String... args) {
+        if (onPutValue == null || args == null) {
+            return;
+        }
+        for (String str : args) {
+            String[] split = str.split(":");
+            if (split.length >= 2) {
+                String first = split[0];
+                onPutValue.onValue(first, str.substring(first.length() + 1));
+            }
+        }
+    }
+
+    interface OnPutValue {
+        void onValue(String key, String value);
     }
 }

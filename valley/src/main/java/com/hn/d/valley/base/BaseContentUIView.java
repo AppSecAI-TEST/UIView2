@@ -1,5 +1,7 @@
 package com.hn.d.valley.base;
 
+import android.support.annotation.CallSuper;
+
 import com.angcyo.uiview.base.UIContentView;
 import com.hn.d.valley.utils.RBus;
 
@@ -15,12 +17,15 @@ import com.hn.d.valley.utils.RBus;
  * Version: 1.0.0
  */
 public abstract class BaseContentUIView extends UIContentView {
+
+    @CallSuper
     @Override
     public void onViewLoad() {
         super.onViewLoad();
         RBus.register(this);
     }
 
+    @CallSuper
     @Override
     public void onViewUnload() {
         super.onViewUnload();
