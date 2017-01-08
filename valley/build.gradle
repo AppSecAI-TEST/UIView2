@@ -95,4 +95,7 @@ dependencies {
     // 全文检索服务需要
     compile 'com.netease.nimlib:lucene:3.2.0'
     compile project(':fragmentation')
+
+    //汉字转拼音 https://github.com/promeG/TinyPinyin
+    compile 'com.github.promeg:tinypinyin:2.0.0' // ~80KB
 }

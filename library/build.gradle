@@ -28,6 +28,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:' + rootProject.S_VER
     compile 'com.android.support:design:' + rootProject.S_VER
+    compile 'com.android.support:cardview-v7:' + rootProject.S_VER
 
     /*https://github.com/square/retrofit*/
     compile "com.squareup.retrofit2:retrofit:${retrofit_version}"
