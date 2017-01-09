@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,15 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.ScreenUtil;
+import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.realm.Tag;
+import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
@@ -34,7 +38,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import rx.Observable;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -51,8 +57,17 @@ public class PublishDynamicUIView extends BaseContentUIView {
     private static int MAX_COUNT = 3;//最多多少列
     @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
+    @BindView(R.id.tag_layout)
+    ItemInfoLayout mTagLayout;
+    @BindView(R.id.top_box)
+    SwitchCompat mTopBox;
+    @BindView(R.id.share_box)
+    SwitchCompat mShareBox;
+    boolean isFirst = true;
     private ResizeAdapter mResizeAdapter;
     private ArrayList<Luban.ImageItem> photos;
+    private List<Tag> mSelectorTags = new ArrayList<>();
+    private Action1<List<Tag>> mListAction1;
 
     public PublishDynamicUIView(ArrayList<Luban.ImageItem> photos) {
         this.photos = photos;
@@ -118,6 +133,31 @@ public class PublishDynamicUIView extends BaseContentUIView {
         mRecyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6),
                 Color.TRANSPARENT));
         mResizeAdapter.resetData(photos);
+
+        mListAction1 = new Action1<List<Tag>>() {
+            @Override
+            public void call(List<Tag> tags) {
+                if (tags.isEmpty()) {
+                } else {
+                    Tag tag = tags.get(0);
+                    mSelectorTags.clear();
+                    if (isFirst) {
+                        mSelectorTags.add(tag);
+                        mTagLayout.setItemDarkText(tag.getName());
+                    } else {
+                        StringBuilder builder = new StringBuilder();
+                        for (Tag t : tags) {
+                            builder.append(t.getName());
+                            builder.append(" ");
+                        }
+                        mSelectorTags.addAll(tags);
+                        mTagLayout.setItemDarkText(builder.toString());
+                    }
+                }
+                isFirst = false;
+            }
+        };
+        TagsControl.getTags(mListAction1);
     }
 
     @Override
@@ -137,6 +177,7 @@ public class PublishDynamicUIView extends BaseContentUIView {
     public void onViewCreate() {
         super.onViewCreate();
         //ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
+        TagsControl.getTags(null);//拉取一下标签
     }
 
     @Override
@@ -178,6 +219,27 @@ public class PublishDynamicUIView extends BaseContentUIView {
     public void onViewUnload() {
         super.onViewUnload();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
+
+    @OnClick({R.id.top_layout, R.id.share_layout})
+    public void onLayoutClick(View view) {
+        switch (view.getId()) {
+            case R.id.top_layout:
+                mTopBox.setChecked(!mTopBox.isChecked());
+                break;
+            case R.id.share_layout:
+                mShareBox.setChecked(!mShareBox.isChecked());
+                break;
+        }
+    }
+
+    /**
+     * 选择标签
+     */
+    @OnClick(R.id.tag_layout)
+    public void onTagClick() {
+        isFirst = false;
+        startIView(new TagsUIView(mListAction1, mSelectorTags));
     }
 
     /**

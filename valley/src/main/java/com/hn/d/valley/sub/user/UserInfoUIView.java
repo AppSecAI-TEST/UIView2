@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.utils.Utils;
@@ -20,7 +21,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.T_;
-import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.SearchUserBean;
@@ -132,7 +132,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                                     .addContact(Param.buildMap("uid:" + uid, "to_uid:" + to_uid,
                                             "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
                                                     UserCache.instance().getUserInfoBean().getUsername())))
-                                    .compose(Transform.defaultStringSchedulers(String.class))
+                                    .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
                                         @Override
@@ -151,7 +151,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     public void onClick(View v) {
                         add(RRetrofit.create(UserInfoService.class)
                                 .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
-                                .compose(Transform.defaultStringSchedulers(String.class))
+                                .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
@@ -177,7 +177,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
 
         add(RRetrofit.create(UserInfoService.class)
                 .discussList(Param.map(map))
-                .compose(Transform.defaultStringSchedulers(UserDiscussListBean.class))
+                .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
                     @Override
@@ -320,7 +320,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     public void onClick(View v) {
                         add(RRetrofit.create(UserInfoService.class)
                                 .unAttention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
-                                .compose(Transform.defaultStringSchedulers(String.class))
+                                .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
@@ -337,7 +337,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     public void onClick(View v) {
                         add(RRetrofit.create(UserInfoService.class)
                                 .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
-                                .compose(Transform.defaultStringSchedulers(String.class))
+                                .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override

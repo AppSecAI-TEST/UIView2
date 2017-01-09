@@ -312,9 +312,14 @@ public abstract class UIIViewImpl implements IView {
         mILayout.startIView(iView, param);
     }
 
+    public void finishIView() {
+        finishIView(this);
+    }
+
     public void finishIView(final IView iView) {
         finishIView(iView, true);
     }
+
 
     public void finishIView(final IView iView, final UIParam param) {
         if (iView == null) {

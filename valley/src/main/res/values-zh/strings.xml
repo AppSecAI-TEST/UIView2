@@ -70,5 +70,12 @@
     <string name="code_error_tip">请输入正确的验证码!</string>
     <string name="code_send_tip">验证码已发送, 请注意查收.</string>
     <string name="publish_image_empty_tip">至少需要发布一张图片.</string>
+    <string name="school">校园</string>
+    <string name="add_tag">添加标签</string>
+    <string name="top">置顶</string>
+    <string name="share_gps">公开地理位置</string>
+    <string name="add_tags_text">添加标签</string>
+    <string name="ok">确定</string>
+    <string name="tag_empty_tip">至少需要一个标签!</string>
 
 </resources>

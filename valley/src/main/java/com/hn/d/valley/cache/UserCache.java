@@ -2,8 +2,8 @@ package com.hn.d.valley.cache;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.LoginBean;
@@ -171,7 +171,7 @@ public class UserCache {
         map.put("to_uid", to_uid);
         return RRetrofit.create(UserInfoService.class)
                 .userInfo(Param.map(map))
-                .compose(Transform.defaultStringSchedulers(UserInfoBean.class))
+                .compose(Rx.transformer(UserInfoBean.class))
                 .map(new Func1<UserInfoBean, UserInfoBean>() {
                     @Override
                     public UserInfoBean call(UserInfoBean userInfoBean) {

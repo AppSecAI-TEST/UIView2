@@ -30,14 +30,19 @@ public class RRealm {
      */
     public static <R extends RealmObject> void save(R object) {
         Realm realm = getRealm();
-        realm.beginTransaction();
-        realm.copyToRealm(object);
-        realm.commitTransaction();
+        try {
+            realm.beginTransaction();
+            realm.copyToRealm(object);
+            realm.commitTransaction();
+        } finally {
+            realm.close();
+        }
 
         L.i("保存至数据库:" + object.toString());
     }
 
     public static Realm getRealm() {
+        Realm.getDefaultInstance().close();
         return Realm.getDefaultInstance();
     }
 
@@ -47,9 +52,13 @@ public class RRealm {
      */
     public static <R extends RealmObject> void save(Iterable<R> objects) {
         Realm realm = getRealm();
-        realm.beginTransaction();
-        realm.copyToRealm(objects);
-        realm.commitTransaction();
+        try {
+            realm.beginTransaction();
+            realm.copyToRealm(objects);
+            realm.commitTransaction();
+        } finally {
+            realm.close();
+        }
     }
 
     /**
@@ -57,7 +66,11 @@ public class RRealm {
      */
     public static void exe(final Realm.Transaction transaction) {
         Realm realm = getRealm();
-        realm.executeTransaction(transaction);
+        try {
+            realm.executeTransaction(transaction);
+        } finally {
+            realm.close();
+        }
     }
 
     /**

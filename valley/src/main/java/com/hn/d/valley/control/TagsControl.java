@@ -1,17 +1,19 @@
 package com.hn.d.valley.control;
 
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.TagsListBean;
+import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.user.service.SocialService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import rx.functions.Func1;
+import io.realm.RealmResults;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -26,59 +28,37 @@ import rx.functions.Func1;
  */
 public class TagsControl {
 
-    public static void getTags() {
+    public static void getTags(final Action1<List<Tag>> listAction1) {
+        RealmResults<Tag> results = RRealm.where(Tag.class).findAll();
+        if (results.size() != 0 && listAction1 != null) {
+            List<Tag> tags = new ArrayList<>();
+            for (Tag t : results) {
+                Tag tag = new Tag();
+                tag.setId(t.getId());
+                tag.setName(t.getName());
+                tags.add(tag);
+            }
+            listAction1.call(tags);
+        }
+
         RRetrofit.create(SocialService.class)
                 .getTags(Param.buildMap())
-                .compose(Transform.defaultStringSchedulers(TagsListBean.class))
-                .map(new Func1<TagsListBean, Boolean>() {
+                .compose(Rx.transformerList(Tag.class))
+                .subscribe(new BaseSingleSubscriber<List<Tag>>() {
                     @Override
-                    public Boolean call(TagsListBean tagsListBean) {
-                        if (tagsListBean.getData().isEmpty()) {
-                            return false;
-                        }
+                    public void onNext(List<Tag> tags) {
+                        /**先清空*/
+                        final RealmResults<Tag> results = RRealm.where(Tag.class).findAll();
+
+                        /**后保存*/
                         Realm realm = RRealm.getRealm();
                         realm.beginTransaction();
-                        for (TagsControl.Tag tag : tagsListBean.getData()) {
+                        results.deleteAllFromRealm();
+                        for (Tag tag : tags) {
                             realm.copyToRealm(tag);
                         }
                         realm.commitTransaction();
-                        return true;
-                    }
-                })
-                .subscribe(new BaseSingleSubscriber<Boolean>() {
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-
                     }
                 });
-    }
-
-
-    public static class Tag extends RealmObject {
-
-        /**
-         * id : 1
-         * name : 搞笑
-         */
-
-        @PrimaryKey
-        private String id;
-        private String name;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 }

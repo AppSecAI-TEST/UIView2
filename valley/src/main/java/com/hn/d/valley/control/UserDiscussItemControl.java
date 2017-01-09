@@ -6,12 +6,12 @@ import android.widget.TextView;
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.Utils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
@@ -119,7 +119,7 @@ public class UserDiscussItemControl {
                 public void onClick(View v) {
                     subscription.add(RRetrofit.create(UserInfoService.class)
                             .unAttention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
-                            .compose(Transform.defaultStringSchedulers(String.class))
+                            .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
 
                                 @Override
@@ -136,7 +136,7 @@ public class UserDiscussItemControl {
                 public void onClick(View v) {
                     subscription.add(RRetrofit.create(UserInfoService.class)
                             .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
-                            .compose(Transform.defaultStringSchedulers(String.class))
+                            .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
 
                                 @Override
@@ -166,7 +166,7 @@ public class UserDiscussItemControl {
             public void onClick(View v) {
                 subscription.add(RRetrofit.create(SocialService.class)
                         .unCollect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
@@ -196,7 +196,7 @@ public class UserDiscussItemControl {
             public void onClick(View v) {
                 subscription.add(RRetrofit.create(SocialService.class)
                         .collect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
@@ -244,7 +244,7 @@ public class UserDiscussItemControl {
             public void onClick(View v) {
                 subscription.add(RRetrofit.create(SocialService.class)
                         .dislike(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
@@ -274,7 +274,7 @@ public class UserDiscussItemControl {
             public void onClick(View v) {
                 subscription.add(RRetrofit.create(SocialService.class)
                         .like(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                        .compose(Transform.defaultStringSchedulers(String.class))
+                        .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override

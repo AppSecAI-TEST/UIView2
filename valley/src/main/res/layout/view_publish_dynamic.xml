@@ -29,22 +29,25 @@
             android:padding="@dimen/base_round_radius"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/tag_layout"
             style="@style/DefaultItemInfoStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_title_bar_item_size"
             android:layout_marginTop="@dimen/base_xhdpi"
-            app:item_dark_text="校园"
-            app:item_text="添加标签"/>
+            app:item_dark_text="@string/school"
+            app:item_text="@string/add_tag"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/top_layout"
             style="@style/DefaultItemInfoStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_title_bar_item_size"
             android:layout_marginTop="@dimen/base_xhdpi"
             app:item_right_res="@null"
-            app:item_text="置顶">
+            app:item_text="@string/top">
 
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/top_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -53,14 +56,16 @@
         </com.angcyo.uiview.widget.ItemInfoLayout>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/share_layout"
             style="@style/DefaultItemInfoStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_title_bar_item_size"
             android:layout_marginTop="@dimen/base_xhdpi"
             app:item_right_res="@null"
-            app:item_text="公开地理位置">
+            app:item_text="@string/share_gps">
 
             <android.support.v7.widget.SwitchCompat
+                android:id="@+id/share_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

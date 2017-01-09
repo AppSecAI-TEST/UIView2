@@ -9,6 +9,7 @@ import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.VerifyButton;
 import com.hn.d.valley.BuildConfig;
@@ -16,7 +17,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.T_;
-import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -119,7 +119,7 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
         mVerifyView.run();
         add(RRetrofit.create(OtherService.class)
                 .sendPhoneVerifyCode(Param.buildMap("phone:" + mPhoneView.string(), "type:register"))
-                .compose(Transform.defaultStringSchedulers(String.class))
+                .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onNext(String s) {

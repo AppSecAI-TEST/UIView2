@@ -3,13 +3,13 @@ package com.hn.d.valley.main.home.recommend;
 import android.view.View;
 
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.utils.Utils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
@@ -70,7 +70,7 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
         add(RRetrofit.create(UserInfoService.class)
                 .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
                         "type:" + 2, "page:" + page))
-                .compose(Transform.defaultStringSchedulers(UserDiscussListBean.class))
+                .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
                     @Override

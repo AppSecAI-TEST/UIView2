@@ -1,6 +1,6 @@
 package com.hn.d.valley.bean;
 
-import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.bean.realm.Tag;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class TagsListBean {
      */
 
     private int result;
-    private List<TagsControl.Tag> data;
+    private List<Tag> data;
 
     public int getResult() {
         return result;
@@ -33,11 +33,11 @@ public class TagsListBean {
         this.result = result;
     }
 
-    public List<TagsControl.Tag> getData() {
+    public List<Tag> getData() {
         return data;
     }
 
-    public void setData(List<TagsControl.Tag> data) {
+    public void setData(List<Tag> data) {
         this.data = data;
     }
 
