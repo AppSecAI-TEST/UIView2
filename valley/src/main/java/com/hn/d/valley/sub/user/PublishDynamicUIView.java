@@ -168,7 +168,7 @@ public class PublishDynamicUIView extends BaseContentUIView {
                 .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.send_forward_dynamic_n, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        //
                     }
                 }));
     }

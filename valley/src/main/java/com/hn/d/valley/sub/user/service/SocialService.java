@@ -60,4 +60,22 @@ public interface SocialService {
      */
     @POST("discuss/getTags")
     Observable<ResponseBody> getTags(@QueryMap Map<String, String> map);
+
+    /**
+     * 发布动态
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * tags	否	string	标签id集合【多个以，分割,如1,2,3】
+     * media_type	否	int	默认1【1-纯文字 ；2-视频/视频+文字； 3-图片/图片+文字】
+     * media	否	string	图片或者视频地址集合;多张图片以，分割【如http://www.webosss.com/xx.jpg,http://www.webosss.com/xx2.jpg】
+     * is_top	否	int	是否置顶；默认0【0-不置顶 1-置顶】
+     * content	否	string	文字内容
+     * open_location	否	int	默认0，是否公开位置【0-不公开 1-公开】
+     * address	否	string	公开的地址【如深圳大冲国际】
+     * lng	否	string	公开的地址经度【如113.961974】
+     * lat	否	string	公开的地址纬度【如22.547832】
+     */
+    @POST("discuss/publish")
+    Observable<ResponseBody> publish(@QueryMap Map<String, String> map);
+
 }

@@ -508,7 +508,7 @@ public class Utils {
         }
         StringBuilder builder = new StringBuilder();
         for (T bean : list) {
-            builder.append(bean);
+            builder.append(bean.toString());
             builder.append(",");
         }
 

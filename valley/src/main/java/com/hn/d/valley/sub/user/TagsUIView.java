@@ -104,8 +104,6 @@ public class TagsUIView extends BaseContentUIView {
                         checkView.setText(data.getName());
                         checkView.setTextColor(mActivity.getResources().getColorStateList(R.color.base_dark_to_main_color_selector));
                         checkView.setTag(data);
-                        int padding = (int) ResUtil.dpToPx(mActivity, 20);
-                        checkView.setPadding(padding, padding, padding, padding);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -2);
                         params.leftMargin = (int) ResUtil.dpToPx(mActivity, 20);
                         params.bottomMargin = (int) ResUtil.dpToPx(mActivity, 20);

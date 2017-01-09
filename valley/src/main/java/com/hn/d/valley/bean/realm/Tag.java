@@ -36,4 +36,9 @@ public class Tag extends RealmObject {
     public boolean equals(Object obj) {
         return TextUtils.equals(id, ((Tag) obj).id);
     }
+
+    @Override
+    public String toString() {
+        return id;
+    }
 }
