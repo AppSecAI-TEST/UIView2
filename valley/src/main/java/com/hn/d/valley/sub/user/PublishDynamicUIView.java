@@ -92,6 +92,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
      */
     private Action1<List<Tag>> mListAction1;
     private OssControl mOssControl;
+    private AmapBean mLastLocation;
 
     public PublishDynamicUIView(ArrayList<Luban.ImageItem> photos) {
         this.photos = photos;
@@ -236,27 +237,33 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     }
 
     private String getAddress() {
-        AmapBean lastLocation = RAmap.getLastLocation();
-        if (lastLocation == null) {
+        if (mLastLocation == null) {
+            mLastLocation = RAmap.getLastLocation();
+        }
+        if (mLastLocation == null) {
             return "";
         }
-        return lastLocation.address;
+        return mLastLocation.address;
     }
 
     private String getLatitude() {
-        AmapBean lastLocation = RAmap.getLastLocation();
-        if (lastLocation == null) {
+        if (mLastLocation == null) {
+            mLastLocation = RAmap.getLastLocation();
+        }
+        if (mLastLocation == null) {
             return "";
         }
-        return String.valueOf(lastLocation.latitude);
+        return String.valueOf(mLastLocation.latitude);
     }
 
     private String getLongitude() {
-        AmapBean lastLocation = RAmap.getLastLocation();
-        if (lastLocation == null) {
+        if (mLastLocation == null) {
+            mLastLocation = RAmap.getLastLocation();
+        }
+        if (mLastLocation == null) {
             return "";
         }
-        return String.valueOf(lastLocation.longitude);
+        return String.valueOf(mLastLocation.longitude);
     }
 
     @Override
