@@ -238,6 +238,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     @Override
     public void startIView(final IView iView, final UIParam param) {
+        L.w("请求启动:" + iView.getClass().getSimpleName());
         runnableCount++;
         iView.onAttachedToILayout(this);
         final Runnable endRunnable = new Runnable() {
@@ -247,7 +248,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                 runnableCount--;
             }
         };
-        if (mLastShowViewPattern != null && mLastShowViewPattern.mIView.isDialog()) {
+        if (isFinishing || (mLastShowViewPattern != null && mLastShowViewPattern.mIView.isDialog())) {
             //如果在对话框上,启动一个IView的时候
             runnableCount--;
             postDelayed(new Runnable() {
@@ -379,13 +380,15 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      * @param param isQuiet 如果为true, 上层的视图,将取消生命周期 {@link IView#onViewShow()}  的回调
      */
     private void finishIViewInner(final ViewPattern viewPattern, final UIParam param) {
-        if (viewPattern == null) {
+        if (viewPattern == null || viewPattern.isAnimToEnd) {
             return;
         }
 
+        L.w("请求关闭2:" + viewPattern.mIView.getClass().getSimpleName());
+
         ViewPattern lastViewPattern = findLastShowViewPattern(viewPattern);
 
-        if (viewPattern.isAnimToStart || viewPattern.isAnimToEnd || isFinishing) {
+        if (viewPattern.isAnimToStart || isFinishing) {
             post(new Runnable() {
                 @Override
                 public void run() {
@@ -394,8 +397,6 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             });
             return;
         }
-
-        isFinishing = true;
 
         if (param.isSwipeBack) {
 
@@ -466,6 +467,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         if (iview == null) {
             return;
         }
+        L.w("请求关闭:" + iview.getClass().getSimpleName());
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
@@ -757,6 +759,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
+                L.w(topViewPattern.mIView.getClass().getSimpleName() + " 启动完毕.");
                 viewShow(topViewPattern, param.mBundle);
                 topViewPattern.isAnimToStart = false;
                 printLog();
@@ -792,6 +795,8 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
+                L.w(topViewPattern.mIView.getClass().getSimpleName() + " 关闭完成.");
+
                 topViewPattern.isAnimToEnd = false;
                 isFinishing = false;
                 viewHide(topViewPattern);
@@ -811,7 +816,10 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             return;
         }
 
+        isFinishing = true;
+
         topViewPattern.isAnimToEnd = true;
+        topViewPattern.isAnimToStart = false;
 
         if (topViewPattern.mIView.isDialog()) {
             //对话框的启动动画,作用在第一个子View上
