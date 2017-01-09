@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 
 import com.angcyo.uiview.net.rsa.RSA;
-import com.angcyo.uiview.utils.Utils;
+import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.constant.Constant;
 import com.orhanobut.hawk.Hawk;
@@ -91,7 +91,7 @@ public class Param {
         }
 
         /*版本信息*/
-        String versionName = Utils.getAppVersionName(ValleyApp.getApp());
+        String versionName = RUtils.getAppVersionName(ValleyApp.getApp());
         signList.add("app_version=" + versionName);
         result.put("app_version", versionName);
 

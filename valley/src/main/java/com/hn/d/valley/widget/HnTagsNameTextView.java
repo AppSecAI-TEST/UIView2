@@ -6,7 +6,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.angcyo.uiview.utils.Utils;
+import com.angcyo.uiview.utils.RUtils;
 
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class HnTagsNameTextView extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
-        final List<String> split = Utils.split(String.valueOf(text));
+        final List<String> split = RUtils.split(String.valueOf(text));
         StringBuilder stringBuilder = new StringBuilder("#");
         for (String s : split) {
             stringBuilder.append("    ");

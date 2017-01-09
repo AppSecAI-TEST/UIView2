@@ -25,7 +25,7 @@ import java.util.Random;
 /**
  * Created by angcyo on 15-12-16 016 15:41 下午.
  */
-public class Utils {
+public class RUtils {
 
 
     private static final String[][] MIME_MapTable = {
@@ -502,7 +502,7 @@ public class Utils {
         return stringBuilder.substring(0, Math.max(0, stringBuilder.length() - 1));
     }
 
-    public static <T> String safe(List<T> list) {
+    public static <T> String connect(List<T> list) {
         if (list == null) {
             return "";
         }

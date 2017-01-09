@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.functions.Action1;
 
 /**
@@ -94,6 +95,18 @@ public class RAmap {
             throw new NullPointerException("请先调用init方法");
         }
         return amap;
+    }
+
+    /**
+     * 返回数据库中最后一个位置信息
+     */
+    public static AmapBean getLastLocation() {
+        AmapBean bean = null;
+        RealmResults<AmapBean> all = RRealm.where(AmapBean.class).findAll();
+        if (all.size() > 0) {
+            bean = all.last();
+        }
+        return bean;
     }
 
     public static AmapBean saveAmapLocation2(final AMapLocation location) {

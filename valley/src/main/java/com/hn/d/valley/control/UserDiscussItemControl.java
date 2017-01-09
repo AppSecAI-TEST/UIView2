@@ -8,7 +8,7 @@ import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.utils.Utils;
+import com.angcyo.uiview.utils.RUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -52,7 +52,7 @@ public class UserDiscussItemControl {
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
         final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
 
-        final List<String> medias = Utils.split(dataListBean.getMedia());
+        final List<String> medias = RUtils.split(dataListBean.getMedia());
         if (medias.isEmpty()) {
             mediaControlLayout.setVisibility(View.GONE);
         } else {

@@ -14,7 +14,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
-import com.angcyo.uiview.utils.Utils;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
@@ -250,7 +250,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
         protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, SearchUserBean hBean) {
             ArrayList<String> photos = new ArrayList<>();
             photos.add(hBean.getAvatar());
-            photos.addAll(Utils.split(hBean.getPhotos()));
+            photos.addAll(RUtils.split(hBean.getPhotos()));
             PhotoPager.init(mILayout,
                     ((TextIndicator) holder.v(R.id.single_text_indicator_view)),
                     (ViewPager) holder.v(R.id.view_pager), photos);
@@ -275,7 +275,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             //UserDiscussItemControl.initItem(holder, tBean);
 
             final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
-            final List<String> medias = Utils.split(tBean.getMedia());
+            final List<String> medias = RUtils.split(tBean.getMedia());
             if ("3".equalsIgnoreCase(tBean.getMedia_type())) {
                 mediaImageType.setOnClickListener(new View.OnClickListener() {
                     @Override

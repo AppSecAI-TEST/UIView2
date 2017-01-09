@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.utils.Utils;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.TitleBarLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
@@ -140,7 +140,7 @@ public class MeUIView extends BaseUIView {
         photos.add(UserCache.instance().getAvatar());
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
         if (userInfoBean != null) {
-            photos.addAll(Utils.split(userInfoBean.getPhotos()));
+            photos.addAll(RUtils.split(userInfoBean.getPhotos()));
         }
         PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, photos);
     }
