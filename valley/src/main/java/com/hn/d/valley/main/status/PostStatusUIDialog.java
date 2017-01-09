@@ -47,7 +47,7 @@ public class PostStatusUIDialog extends UIIDialogImpl {
 
     @OnClick(R.id.video_view)
     public void onVideoClick() {
-        T_.show("发布视频");
+        T_.show("莫慌, 马上就能发布视频了...");
         finishDialog();
     }
 }

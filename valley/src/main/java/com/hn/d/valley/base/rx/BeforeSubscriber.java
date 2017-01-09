@@ -35,6 +35,10 @@ public class BeforeSubscriber<V extends IBaseView> implements Action0 {
     public void call() {
         L.i("正在检查网络状态..." + this.getClass().getSimpleName());
         if (Network.isConnected(ValleyApp.getApp())) {
+            L.i("\n网络类型:" + Network.getNetTypeName(ValleyApp.getApp())
+                    + " \nIP:" + Network.getMobileIP()
+                    + " \nWIFI:" + Network.getWifiIp(ValleyApp.getApp())
+                    + " \nTEL:" + Network.getTelNumber(ValleyApp.getApp()));
             mBaseView.onRequestStart();
         } else {
             throw new NonetException();
