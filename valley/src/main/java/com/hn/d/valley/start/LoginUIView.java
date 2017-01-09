@@ -115,7 +115,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
          * 登录按钮
          */
         RxView.clicks(mLoginView)
-                .debounce(16, TimeUnit.MILLISECONDS)
+//                .debounce(16, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
                     @Override

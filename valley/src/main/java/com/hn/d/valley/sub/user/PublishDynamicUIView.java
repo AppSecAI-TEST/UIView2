@@ -1,9 +1,7 @@
 package com.hn.d.valley.sub.user;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -18,13 +16,12 @@ import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.ResizeAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.bumptech.glide.Glide;
@@ -65,7 +62,6 @@ import rx.functions.Action1;
  * Version: 1.0.0
  */
 public class PublishDynamicUIView extends BaseContentUIView implements OssControl.OnUploadListener, UIIDialogImpl.OnDismissListener {
-    private static int MAX_COUNT = 3;//最多多少列
     @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
     @BindView(R.id.tag_layout)
@@ -77,7 +73,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     boolean isFirst = true;
     @BindView(R.id.input_view)
     ExEditText mInputView;
-    private ResizeAdapter mResizeAdapter;
+    private ResizeAdapter mImageAdapter;
     /**
      * 选择的图片
      */
@@ -98,52 +94,6 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         this.photos = photos;
     }
 
-    private static void setHeight(View view, int height) {
-        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        if (layoutParams != null) {
-            layoutParams.height = height;
-            view.setLayoutParams(layoutParams);
-        }
-    }
-
-    /**
-     * 根据数量, 返回多少列
-     */
-    private static int getColumnCount(int size) {
-        int count;
-        if (size == 4) {
-            count = 2;
-        } else if (size >= MAX_COUNT) {
-            count = MAX_COUNT;
-        } else {
-            count = size % MAX_COUNT;
-        }
-        return count;
-    }
-
-    /**
-     * 根据数量, 返回多少行
-     */
-    private static int getLineCount(int size) {
-        int count;
-        if (size == 4) {
-            count = 2;
-        } else {
-            count = (int) Math.ceil(size * 1.f / MAX_COUNT);
-        }
-        return count;
-    }
-
-    /**
-     * 通过数量, 计算出对应的高度
-     */
-    private static int getHeight(int count) {
-        int height;
-        int screenWidth = ScreenUtil.screenWidth;
-        height = screenWidth / getColumnCount(count);
-        return height;
-    }
-
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_publish_dynamic);
@@ -152,12 +102,13 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     @Override
     protected void initContentLayout() {
         super.initContentLayout();
-        mResizeAdapter = new ResizeAdapter(mActivity);
+        mImageAdapter = new ImageAdapter(mRecyclerView);
+        mImageAdapter.setDividerHeight((int) ResUtil.dpToPx(mActivity.getResources(), 6));
         mRecyclerView.setItemAnim(false);
-        mRecyclerView.setAdapter(mResizeAdapter);
+        mRecyclerView.setAdapter(mImageAdapter);
         mRecyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6),
                 Color.TRANSPARENT));
-        mResizeAdapter.resetData(photos);
+        mImageAdapter.resetData(photos);
 
         mListAction1 = new Action1<List<Tag>>() {
             @Override
@@ -291,7 +242,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                         Luban.logFileItems(mActivity, strings);
                     }
                     photos = strings;
-                    mResizeAdapter.resetData(strings);
+                    mImageAdapter.resetData(strings);
                 }
 
                 @Override
@@ -365,12 +316,12 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     /**
      * 适配器
      */
-    public class ResizeAdapter extends RBaseAdapter<Luban.ImageItem> {
+    public class ImageAdapter extends ResizeAdapter<Luban.ImageItem> {
 
         private boolean isDeleteModel = false;
 
-        public ResizeAdapter(Context context) {
-            super(context);
+        public ImageAdapter(RRecyclerView recyclerView) {
+            super(recyclerView);
         }
 
         @Override
@@ -380,9 +331,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
 
         @Override
         protected View createContentView(ViewGroup parent, int viewType) {
-            int size = getHeight(mAllDatas.size());
             RelativeLayout relativeLayout = new RelativeLayout(mContext);
-            relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(-1, size));
 
             ImageView imageView = new ImageView(mContext);
             imageView.setId(R.id.image_view);
@@ -392,7 +341,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             deleteImageView.setImageResource(R.drawable.base_delete);
             deleteImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             deleteImageView.setId(R.id.delete_image_vie);
-            deleteImageView.setBackgroundResource(R.drawable.base_main_color_bg_selector2);
+            deleteImageView.setBackgroundResource(R.drawable.base_dark_main_color_circle_selector);
 //            deleteImageView.setBackgroundColor(Color.RED);
             int padding = (int) ResUtil.dpToPx(mContext, 6);
             deleteImageView.setPadding(padding, padding, padding, padding);
@@ -413,8 +362,8 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
 
         @Override
         protected void onBindView(RBaseViewHolder holder, int position, final Luban.ImageItem bean) {
-            int size = getHeight(mAllDatas.size());
-            setHeight(holder.itemView, size);
+            super.onBindView(holder, position, bean);
+            int size = getItemHeight();
             Glide.with(mContext).load(bean.thumbPath).override(size, size).placeholder(R.drawable.zhanweitu_1)
                     .into(holder.imgV(R.id.image_view));
             holder.v(R.id.click_view).setOnClickListener(new View.OnClickListener() {
@@ -450,20 +399,14 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     }
                     ImagePickerHelper.deleteItemFromSelected(bean.path);
                     deleteItem(bean);
-                    resetData(mAllDatas);
+                    int itemSize = getItemCount();
+                    if (itemSize == 6) {
+                        resetRecyclerViewHeight();
+                    } else if (itemSize <= 4) {
+                        resetData(mAllDatas);
+                    }
                 }
             });
-        }
-
-        @Override
-        public void resetData(List<Luban.ImageItem> datas) {
-            super.resetData(datas);
-            int size = datas.size();
-            double line = Math.ceil(size * 1.f / MAX_COUNT);
-            setHeight(mRecyclerView, (int) ((int) (line * getHeight(size)) +
-                    Math.max(0, line - 1) * ResUtil.dpToPx(mActivity.getResources(), 6)));
-            ((GridLayoutManager) mRecyclerView.getLayoutManager())
-                    .setSpanCount(getColumnCount(size));
         }
     }
 }
