@@ -1,5 +1,7 @@
 package com.hn.d.valley.base.oss;
 
+import android.text.TextUtils;
+
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
@@ -116,7 +118,13 @@ public class OssHelper {
             // 构造上传请求
             PutObjectRequest put = new PutObjectRequest(bucket, uuid, uploadFilePath);
             try {
-                getAvatorOss().putObject(put);
+                if (TextUtils.equals(bucket, BASE_AVATOR_BUCKET)) {
+                    getAvatorOss().putObject(put);
+                } else if (TextUtils.equals(bucket, BASE_VIDEO_BUCKET)) {
+                    getVideoOss().putObject(put);
+                } else if (TextUtils.equals(bucket, BASE_CIRCLE_BUCKET)) {
+                    getCircleOss().putObject(put);
+                }
                 subscriber.onNext(uuid);
             } catch (Exception e) {
                 e.printStackTrace();
