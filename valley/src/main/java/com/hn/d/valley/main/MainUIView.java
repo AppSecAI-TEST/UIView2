@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.UILayoutImpl;
+import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
@@ -272,9 +273,9 @@ public class MainUIView extends BaseUIView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Observable<ArrayList<String>> observable = Image.onActivityResult(mActivity, requestCode, resultCode, data);
+        Observable<ArrayList<Luban.ImageItem>> observable = Image.onActivityResult(mActivity, requestCode, resultCode, data);
         if (observable != null) {
-            observable.subscribe(new BaseSingleSubscriber<ArrayList<String>>() {
+            observable.subscribe(new BaseSingleSubscriber<ArrayList<Luban.ImageItem>>() {
                 @Override
                 public void onStart() {
                     super.onStart();
@@ -282,7 +283,7 @@ public class MainUIView extends BaseUIView {
                 }
 
                 @Override
-                public void onNext(ArrayList<String> strings) {
+                public void onNext(ArrayList<Luban.ImageItem> strings) {
                     if (!strings.isEmpty()) {
                         HnLoading.hide();
                         startIView(new PublishDynamicUIView(strings));

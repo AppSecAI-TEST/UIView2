@@ -22,12 +22,13 @@ import rx.Observable;
  * Version: 1.0.0
  */
 public class Image {
-    public static Observable<ArrayList<String>> onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+    public static Observable<ArrayList<Luban.ImageItem>> onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         final ArrayList<String> images = ImagePickerHelper.getImages(activity, requestCode, resultCode, data);
         final boolean origin = ImagePickerHelper.isOrigin(requestCode, resultCode, data);
         if (images.isEmpty()) {
             return null;
         }
-        return Luban.luban(activity, images);
+        return Luban.luban2(activity, images);
     }
+
 }

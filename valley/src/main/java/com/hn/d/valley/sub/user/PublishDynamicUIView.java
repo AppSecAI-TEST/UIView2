@@ -8,9 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
@@ -19,6 +21,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.bumptech.glide.Glide;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.T_;
@@ -49,9 +52,9 @@ public class PublishDynamicUIView extends BaseContentUIView {
     @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
     private ResizeAdapter mResizeAdapter;
-    private ArrayList<String> photos;
+    private ArrayList<Luban.ImageItem> photos;
 
-    public PublishDynamicUIView(ArrayList<String> photos) {
+    public PublishDynamicUIView(ArrayList<Luban.ImageItem> photos) {
         this.photos = photos;
     }
 
@@ -68,10 +71,25 @@ public class PublishDynamicUIView extends BaseContentUIView {
      */
     private static int getColumnCount(int size) {
         int count;
-        if (size >= MAX_COUNT) {
+        if (size == 4) {
+            count = 2;
+        } else if (size >= MAX_COUNT) {
             count = MAX_COUNT;
         } else {
             count = size % MAX_COUNT;
+        }
+        return count;
+    }
+
+    /**
+     * 根据数量, 返回多少行
+     */
+    private static int getLineCount(int size) {
+        int count;
+        if (size == 4) {
+            count = 2;
+        } else {
+            count = (int) Math.ceil(size * 1.f / MAX_COUNT);
         }
         return count;
     }
@@ -124,9 +142,9 @@ public class PublishDynamicUIView extends BaseContentUIView {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Observable<ArrayList<String>> observable = Image.onActivityResult(mActivity, requestCode, resultCode, data);
+        Observable<ArrayList<Luban.ImageItem>> observable = Image.onActivityResult(mActivity, requestCode, resultCode, data);
         if (observable != null) {
-            observable.subscribe(new BaseSingleSubscriber<ArrayList<String>>() {
+            observable.subscribe(new BaseSingleSubscriber<ArrayList<Luban.ImageItem>>() {
                 @Override
                 public void onStart() {
                     super.onStart();
@@ -134,7 +152,10 @@ public class PublishDynamicUIView extends BaseContentUIView {
                 }
 
                 @Override
-                public void onNext(ArrayList<String> strings) {
+                public void onNext(ArrayList<Luban.ImageItem> strings) {
+                    if (BuildConfig.DEBUG) {
+                        Luban.logFileItems(mActivity, strings);
+                    }
                     mResizeAdapter.resetData(strings);
                 }
 
@@ -147,7 +168,22 @@ public class PublishDynamicUIView extends BaseContentUIView {
         }
     }
 
-    public class ResizeAdapter extends RBaseAdapter<String> {
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+    }
+
+    /**
+     * 适配器
+     */
+    public class ResizeAdapter extends RBaseAdapter<Luban.ImageItem> {
 
         private boolean isDeleteModel = false;
 
@@ -175,6 +211,7 @@ public class PublishDynamicUIView extends BaseContentUIView {
             deleteImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             deleteImageView.setId(R.id.delete_image_vie);
             deleteImageView.setBackgroundResource(R.drawable.base_main_color_bg_selector2);
+//            deleteImageView.setBackgroundColor(Color.RED);
             int padding = (int) ResUtil.dpToPx(mContext, 6);
             deleteImageView.setPadding(padding, padding, padding, padding);
             deleteImageView.setVisibility(View.GONE);
@@ -182,24 +219,29 @@ public class PublishDynamicUIView extends BaseContentUIView {
             relativeLayout.addView(imageView, new ViewGroup.LayoutParams(-1, -1));
             RelativeLayout.LayoutParams deleteParams = new RelativeLayout.LayoutParams(-2, -2);
             deleteParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
+            View clickView = new View(mContext);
+            clickView.setId(R.id.click_view);
+            clickView.setBackgroundResource(R.drawable.base_bg_selector);
+            relativeLayout.addView(clickView, new ViewGroup.LayoutParams(-1, -1));
             relativeLayout.addView(deleteImageView, deleteParams);
 
             return relativeLayout;
         }
 
         @Override
-        protected void onBindView(RBaseViewHolder holder, int position, final String bean) {
+        protected void onBindView(RBaseViewHolder holder, int position, final Luban.ImageItem bean) {
             int size = getHeight(mAllDatas.size());
             setHeight(holder.itemView, size);
-            Glide.with(mContext).load(bean).override(size, size).placeholder(R.drawable.zhanweitu_1)
+            Glide.with(mContext).load(bean.thumbPath).override(size, size).placeholder(R.drawable.zhanweitu_1)
                     .into(holder.imgV(R.id.image_view));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.v(R.id.click_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ImagePickerHelper.startImagePicker(mActivity, false, false, false, true, 9);
                 }
             });
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.v(R.id.click_view).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (isDeleteModel) {
@@ -224,7 +266,7 @@ public class PublishDynamicUIView extends BaseContentUIView {
                         T_.show(mContext.getString(R.string.publish_image_empty_tip));
                         return;
                     }
-                    ImagePickerHelper.deleteItemFromSelected(bean);
+                    ImagePickerHelper.deleteItemFromSelected(bean.path);
                     deleteItem(bean);
                     resetData(mAllDatas);
                 }
@@ -232,13 +274,14 @@ public class PublishDynamicUIView extends BaseContentUIView {
         }
 
         @Override
-        public void resetData(List<String> datas) {
+        public void resetData(List<Luban.ImageItem> datas) {
             super.resetData(datas);
             int size = datas.size();
             double line = Math.ceil(size * 1.f / MAX_COUNT);
             setHeight(mRecyclerView, (int) ((int) (line * getHeight(size)) +
                     Math.max(0, line - 1) * ResUtil.dpToPx(mActivity.getResources(), 6)));
-            ((GridLayoutManager) mRecyclerView.getLayoutManager()).setSpanCount(getColumnCount(size));
+            ((GridLayoutManager) mRecyclerView.getLayoutManager())
+                    .setSpanCount(getColumnCount(size));
         }
     }
 }

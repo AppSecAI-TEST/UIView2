@@ -54,4 +54,10 @@ public interface SocialService {
      */
     @POST("social/unCollect")
     Observable<ResponseBody> unCollect(@QueryMap Map<String, String> map);
+
+    /**
+     * 获取标签列表
+     */
+    @POST("discuss/getTags")
+    Observable<ResponseBody> getTags(@QueryMap Map<String, String> map);
 }

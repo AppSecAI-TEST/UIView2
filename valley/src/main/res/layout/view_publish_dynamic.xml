@@ -15,17 +15,18 @@
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/base_xhdpi"
             android:background="@android:color/white"
+            android:padding="@dimen/base_xhdpi"
             android:tag="GV1"/>
 
-        <EditText
+        <com.angcyo.uiview.widget.ExEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:gravity="top"
             android:hint="说说分享心得"
-            android:minHeight="100dp"/>
+            android:minHeight="100dp"
+            android:padding="@dimen/base_round_radius"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
             style="@style/DefaultItemInfoStyle"

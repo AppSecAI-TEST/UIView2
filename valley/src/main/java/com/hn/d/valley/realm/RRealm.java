@@ -24,11 +24,12 @@ import io.realm.RealmSchema;
  */
 public class RRealm {
 
+
     /**
      * 同步的方式保存一个realm对象
      */
     public static <R extends RealmObject> void save(R object) {
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = getRealm();
         realm.beginTransaction();
         realm.copyToRealm(object);
         realm.commitTransaction();
@@ -36,12 +37,16 @@ public class RRealm {
         L.i("保存至数据库:" + object.toString());
     }
 
+    public static Realm getRealm() {
+        return Realm.getDefaultInstance();
+    }
+
 
     /**
      * 同步的方式保存一组realm对象
      */
     public static <R extends RealmObject> void save(Iterable<R> objects) {
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = getRealm();
         realm.beginTransaction();
         realm.copyToRealm(objects);
         realm.commitTransaction();
@@ -51,7 +56,7 @@ public class RRealm {
      * 同步执行,并出现错误自动回滚事务
      */
     public static void exe(final Realm.Transaction transaction) {
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = getRealm();
         realm.executeTransaction(transaction);
     }
 
@@ -59,7 +64,7 @@ public class RRealm {
      * 异步执行,并出现错误自动回滚事务
      */
     public static void async(final Realm.Transaction transaction) {
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = getRealm();
         realm.executeTransactionAsync(transaction);
     }
 
@@ -67,7 +72,7 @@ public class RRealm {
      * 异步执行,并出现错误自动回滚事务
      */
     public static void async(final Realm.Transaction transaction, final Realm.Transaction.OnSuccess onSuccess) {
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = getRealm();
         realm.executeTransactionAsync(transaction, onSuccess);
     }
 
@@ -75,12 +80,12 @@ public class RRealm {
      * 异步执行,并出现错误自动回滚事务
      */
     public static void async(final Realm.Transaction transaction, final Realm.Transaction.OnSuccess onSuccess, final Realm.Transaction.OnError onError) {
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = getRealm();
         realm.executeTransactionAsync(transaction, onSuccess, onError);
     }
 
     public static <E extends RealmObject> RealmQuery<E> where(Class<E> clazz) {
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm = getRealm();
         return realm.where(clazz);
     }
 
