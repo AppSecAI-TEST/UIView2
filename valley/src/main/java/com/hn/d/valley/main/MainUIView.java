@@ -1,5 +1,6 @@
 package com.hn.d.valley.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.MsgCache;
@@ -31,6 +33,9 @@ import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.status.PostStatusUIDialog;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.sub.user.PublishDynamicUIView;
+import com.hn.d.valley.utils.Image;
+import com.hn.d.valley.widget.HnLoading;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 import com.netease.nimlib.sdk.StatusCode;
@@ -39,6 +44,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.Observable;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -261,5 +267,34 @@ public class MainUIView extends BaseUIView {
         } else {
             mBottomNavLayout.showMsg(event.position, event.num);
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Observable<ArrayList<String>> observable = Image.onActivityResult(mActivity, requestCode, resultCode, data);
+        if (observable != null) {
+            observable.subscribe(new BaseSingleSubscriber<ArrayList<String>>() {
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    HnLoading.show(mILayout);
+                }
+
+                @Override
+                public void onNext(ArrayList<String> strings) {
+                    if (!strings.isEmpty()) {
+                        startIView(new PublishDynamicUIView(strings));
+                    }
+                }
+
+                @Override
+                protected void onEnd() {
+                    super.onEnd();
+                    HnLoading.hide();
+                }
+            });
+        }
+
     }
 }

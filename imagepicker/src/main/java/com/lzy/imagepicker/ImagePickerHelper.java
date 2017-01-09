@@ -41,10 +41,17 @@ public class ImagePickerHelper {
     }
 
     public static void startImagePicker(Activity activity, boolean clear, boolean crop, boolean multiMode, int selectLimit) {
+        startImagePicker(activity, true, clear, crop, multiMode, selectLimit);
+    }
+
+    public static void startImagePicker(Activity activity, boolean showCamera,
+                                        boolean clear, boolean crop,
+                                        boolean multiMode, int selectLimit) {
         ImagePicker imagePicker = ImagePicker.getInstance();
         imagePicker.setImageLoader(new GlideImageLoader());
         imagePicker.setCrop(crop);
         imagePicker.setMultiMode(multiMode);
+        imagePicker.setShowCamera(showCamera);
         imagePicker.setSelectLimit(selectLimit);
         imagePicker.setOutPutX(800);
         imagePicker.setOutPutY(800);
@@ -71,6 +78,22 @@ public class ImagePickerHelper {
             }
         }
         return list;
+    }
+
+    /**
+     * 根据路径,删除选中的图片
+     */
+    public static void deleteItemFromSelected(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return;
+        }
+        ArrayList<ImageItem> selectedImages = ImagePicker.getInstance().getSelectedImages();
+        for (ImageItem item : selectedImages) {
+            if (TextUtils.equals(item.path, path)) {
+                selectedImages.remove(item);
+                break;
+            }
+        }
     }
 
     /**

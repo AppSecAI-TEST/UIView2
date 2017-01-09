@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.T_;
-import com.hn.d.valley.sub.user.PublishDynamicUIView;
+import com.lzy.imagepicker.ImagePickerHelper;
 
 import butterknife.OnClick;
 
@@ -42,7 +42,7 @@ public class PostStatusUIDialog extends UIIDialogImpl {
     @OnClick(R.id.image_view)
     public void onImageClick() {
         finishDialog();
-        startIView(new PublishDynamicUIView());
+        ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
     }
 
     @OnClick(R.id.video_view)

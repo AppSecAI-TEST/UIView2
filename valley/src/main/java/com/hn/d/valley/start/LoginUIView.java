@@ -23,16 +23,15 @@ import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
-import com.hn.d.valley.activity.HnTestActivity;
 import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.LoginBean;
-import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.nim.RNim;
@@ -293,7 +292,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         //HnChatActivity.launcher(mActivity, "50033");
         //HnUIMainActivity.launcher(mActivity);
         //com.hn.d.valley.main.HnMainActivity.launcher(mActivity);
-        HnTestActivity.launcher(mActivity);
+        //HnTestActivity.launcher(mActivity);
+        T_.show("测试");
     }
 
     /**
