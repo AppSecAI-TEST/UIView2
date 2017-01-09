@@ -1,6 +1,5 @@
 package com.hn.d.valley.main.message;
 
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -31,7 +30,7 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
@@ -448,7 +447,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
      * 上拉, 下拉
      */
     private void initRefreshLayout() {
-        mRefreshLayout.setBottomView(new EmptyView(mActivity));
+        mRefreshLayout.setBottomView(new PlaceholderView(mActivity));
         mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
@@ -786,18 +785,6 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                             }).start();
                 }
             });
-        }
-    }
-
-    static class EmptyView extends View {
-
-        public EmptyView(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            setMeasuredDimension(1, (int) ResUtil.dpToPx(getResources(), 30));
         }
     }
 }

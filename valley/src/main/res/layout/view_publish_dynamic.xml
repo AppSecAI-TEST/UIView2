@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/line_color">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:tag="GV1"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:gravity="top"
+            android:hint="说说分享心得"
+            android:minHeight="100dp"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_title_bar_item_size"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            app:item_dark_text="校园"
+            app:item_text="添加标签"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_title_bar_item_size"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            app:item_text="置顶">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base_xhdpi"/>
+        </com.angcyo.uiview.widget.ItemInfoLayout>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_title_bar_item_size"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            app:item_text="公开地理位置">
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base_xhdpi"/>
+        </com.angcyo.uiview.widget.ItemInfoLayout>
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

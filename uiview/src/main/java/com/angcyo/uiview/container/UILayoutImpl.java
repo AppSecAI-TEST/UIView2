@@ -386,10 +386,12 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         /*对话框的处理*/
         if (viewPattern.mIView.isDialog() &&
                 !viewPattern.mIView.canCancel()) {
+            isFinishing = false;
             return;
         }
 
         if (!param.isSwipeBack && !viewPattern.mIView.onBackPressed()) {
+            //如果不是滑动返回, 并且不能退出
             isFinishing = false;
             return;
         }

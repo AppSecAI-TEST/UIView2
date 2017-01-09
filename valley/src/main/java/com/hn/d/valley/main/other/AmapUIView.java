@@ -153,6 +153,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     public void onViewUnload() {
         super.onViewUnload();
         mMapView.onDestroy();
+        deactivate();
     }
 
     @Override

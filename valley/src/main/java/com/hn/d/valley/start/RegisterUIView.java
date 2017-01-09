@@ -1,19 +1,26 @@
 package com.hn.d.valley.start;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.VerifyButton;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.T_;
+import com.hn.d.valley.base.Transform;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
 import com.hn.d.valley.start.mvp.Start;
+import com.hn.d.valley.sub.user.service.OtherService;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -36,6 +43,11 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
     VerifyButton mVerifyView;
     @BindView(R.id.code_view)
     ExEditText mCodeView;
+
+    /**
+     * 验证码
+     */
+    private String code = "";
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -75,6 +87,14 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
             Anim.band(mCodeView);
             return;
         }
+        if (BuildConfig.DEBUG) {
+        } else {
+            if (TextUtils.equals(code, mCodeView.string())) {
+                Anim.band(mCodeView);
+                T_.show(mActivity.getString(R.string.code_error_tip));
+                return;
+            }
+        }
 
         startIView(new Register2UIView(this, mPhoneView.string(), mCodeView.string()));
     }
@@ -92,6 +112,27 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
      */
     @OnClick(R.id.verify_view)
     public void onVerifyClick() {
+        if (!mPhoneView.isPhone()) {
+            Anim.band(mPhoneView);
+            return;
+        }
         mVerifyView.run();
+        add(RRetrofit.create(OtherService.class)
+                .sendPhoneVerifyCode(Param.buildMap("phone:" + mPhoneView.string(), "type:register"))
+                .compose(Transform.defaultStringSchedulers(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onNext(String s) {
+                        code = s;
+                        T_.show(mActivity.getString(R.string.code_send_tip));
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        mVerifyView.endCountDown();
+                    }
+                })
+        );
     }
 }

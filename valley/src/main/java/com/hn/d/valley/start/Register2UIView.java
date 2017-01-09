@@ -44,6 +44,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
 import butterknife.OnTouch;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
@@ -98,6 +99,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
 
         RxView.clicks(mFinishView)
                 .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {

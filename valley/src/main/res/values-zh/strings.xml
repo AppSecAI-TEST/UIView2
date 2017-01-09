@@ -67,5 +67,7 @@
     <string name="default_empty_circle_tip">亲~您还没有关注用户!</string>
     <string name="add_contact_tip">我是 %1$s</string>
     <string name="default_empty_no_status_tip">亲~没有动态可以查看!</string>
+    <string name="code_error_tip">请输入正确的验证码!</string>
+    <string name="code_send_tip">验证码已发送, 请注意查收.</string>
 
 </resources>

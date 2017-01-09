@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.T_;
+import com.hn.d.valley.sub.user.PublishDynamicUIView;
 
 import butterknife.OnClick;
 
@@ -40,11 +41,13 @@ public class PostStatusUIDialog extends UIIDialogImpl {
 
     @OnClick(R.id.image_view)
     public void onImageClick() {
-        T_.show("发布图片");
+        finishDialog();
+        startIView(new PublishDynamicUIView());
     }
 
     @OnClick(R.id.video_view)
     public void onVideoClick() {
         T_.show("发布视频");
+        finishDialog();
     }
 }

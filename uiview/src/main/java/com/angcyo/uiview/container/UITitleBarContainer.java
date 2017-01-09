@@ -292,7 +292,8 @@ public class UITitleBarContainer extends FrameLayout {
 
         int itemSize = getResources().getDimensionPixelSize(R.dimen.base_title_bar_item_size);
 
-        for (TitleBarPattern.TitleBarItem item : items) {
+        for (int i = 0; i < items.size(); i++) {
+            TitleBarPattern.TitleBarItem item = items.get(i);
             View view;
             if (item.res == -1) {
                 //不是图片, 就创建文本按钮
@@ -301,9 +302,23 @@ public class UITitleBarContainer extends FrameLayout {
                 //创建图片按钮
                 view = createImageItem(item.res, item.listener);
             }
+            view.setTag(i);//方便之后查找这个view
             layout.addView(view, new LinearLayout.LayoutParams(itemSize, -1));
             views.add(view);
         }
+
+//        for (TitleBarPattern.TitleBarItem item : items) {
+//            View view;
+//            if (item.res == -1) {
+//                //不是图片, 就创建文本按钮
+//                view = createTextItem(item.text, item.listener);
+//            } else {
+//                //创建图片按钮
+//                view = createImageItem(item.res, item.listener);
+//            }
+//            layout.addView(view, new LinearLayout.LayoutParams(itemSize, -1));
+//            views.add(view);
+//        }
     }
 
     private ImageView createImageItem(@DrawableRes int res, OnClickListener listener) {
