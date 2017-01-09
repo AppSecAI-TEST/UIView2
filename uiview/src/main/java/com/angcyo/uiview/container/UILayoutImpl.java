@@ -180,8 +180,10 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         if (mAttachViews.size() > 1
                 && !mLastShowViewPattern.mIView.isDialog()
                 && mLastShowViewPattern.mView == child) {
+            hideSoftInput();
             return true;
         } else if (enableRootSwipe) {
+            hideSoftInput();
             return true;
         }
         return false;
