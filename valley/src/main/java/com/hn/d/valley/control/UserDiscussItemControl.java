@@ -1,5 +1,6 @@
 package com.hn.d.valley.control;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -110,7 +111,7 @@ public class UserDiscussItemControl {
         final String to_uid = tBean.getUser_info().getUid();
 
         TextView commandItemView = holder.v(R.id.command_item_view);
-        commandItemView.setVisibility(View.VISIBLE);
+        commandItemView.setVisibility(TextUtils.equals(uid, to_uid) ? View.GONE : View.VISIBLE);
 
 
         if (tBean.getUser_info().getIs_attention() == 1) {
