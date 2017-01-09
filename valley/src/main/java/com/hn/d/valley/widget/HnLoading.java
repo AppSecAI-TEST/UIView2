@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.resources.ResUtil;
 import com.hn.d.valley.R;
 
@@ -40,6 +41,7 @@ public class HnLoading extends UIIDialogImpl {
      */
     public static void hide() {
         if (isShowing && mUILoading != null) {
+//            mUILoading.canCancel = true;
             mUILoading.finishDialog();
             mUILoading = null;
             isShowing = false;
@@ -58,7 +60,7 @@ public class HnLoading extends UIIDialogImpl {
 
         } else {
             mUILoading = new HnLoading(canCancel);
-            layout.startIView(mUILoading);
+            layout.startIView(mUILoading, new UIParam().setLaunchMode(UIParam.SINGLE_TOP));
             isShowing = true;
         }
         return mUILoading;
@@ -102,6 +104,11 @@ public class HnLoading extends UIIDialogImpl {
 
     @Override
     public boolean canCancel() {
+        return true;
+    }
+
+    @Override
+    public boolean onBackPressed() {
         return canCancel;
     }
 }

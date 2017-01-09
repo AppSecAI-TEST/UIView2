@@ -130,7 +130,7 @@ public class PublishDynamicUIView extends BaseContentUIView {
                 @Override
                 public void onStart() {
                     super.onStart();
-                    HnLoading.show(mILayout);
+                    HnLoading.show(mILayout, false);
                 }
 
                 @Override
@@ -174,7 +174,7 @@ public class PublishDynamicUIView extends BaseContentUIView {
             deleteImageView.setImageResource(R.drawable.base_delete);
             deleteImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             deleteImageView.setId(R.id.delete_image_vie);
-            deleteImageView.setBackgroundResource(R.drawable.base_bg2_selector);
+            deleteImageView.setBackgroundResource(R.drawable.base_main_color_bg_selector2);
             int padding = (int) ResUtil.dpToPx(mContext, 6);
             deleteImageView.setPadding(padding, padding, padding, padding);
             deleteImageView.setVisibility(View.GONE);
@@ -226,7 +226,7 @@ public class PublishDynamicUIView extends BaseContentUIView {
                     }
                     ImagePickerHelper.deleteItemFromSelected(bean);
                     deleteItem(bean);
-                    notifyDataSetChanged();
+                    resetData(mAllDatas);
                 }
             });
         }

@@ -278,12 +278,13 @@ public class MainUIView extends BaseUIView {
                 @Override
                 public void onStart() {
                     super.onStart();
-                    HnLoading.show(mILayout);
+                    HnLoading.show(mILayout, false);
                 }
 
                 @Override
                 public void onNext(ArrayList<String> strings) {
                     if (!strings.isEmpty()) {
+                        HnLoading.hide();
                         startIView(new PublishDynamicUIView(strings));
                     }
                 }
