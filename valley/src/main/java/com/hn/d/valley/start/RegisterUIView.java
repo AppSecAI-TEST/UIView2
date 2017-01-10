@@ -96,7 +96,7 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
             }
         }
 
-        startIView(new Register2UIView(this, mPhoneView.string(), mCodeView.string()));
+        replaceIView(new Register2UIView(this, mPhoneView.string(), mCodeView.string()));
     }
 
     /**

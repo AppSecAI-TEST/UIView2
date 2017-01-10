@@ -13,6 +13,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
@@ -36,6 +37,15 @@ import rx.functions.Action0;
  * Version: 1.0.0
  */
 public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
+
+    /**
+     * 需要过滤的tag
+     */
+    private Tag filterTag;
+
+    public void setFilterTag(Tag filterTag) {
+        this.filterTag = filterTag;
+    }
 
     @Override
     protected RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> initRExBaseAdapter() {
@@ -69,7 +79,7 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
     protected void onUILoadData(String page) {
         add(RRetrofit.create(UserInfoService.class)
                 .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
-                        "type:" + 2, "page:" + page))
+                        "type:" + 2, "page:" + page, "tag:" + getFilterTagId()))
                 .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
@@ -85,5 +95,12 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                     }
 
                 }));
+    }
+
+    public String getFilterTagId() {
+        if (filterTag == null) {
+            return "";
+        }
+        return filterTag.getId();
     }
 }

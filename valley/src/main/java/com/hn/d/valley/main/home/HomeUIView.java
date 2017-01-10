@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
@@ -18,13 +17,16 @@ import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
+import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.main.home.recommend.RecommendUIView;
+import com.hn.d.valley.main.home.recommend.TagFilterUIDialog;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -44,6 +46,7 @@ public class HomeUIView extends BaseUIView {
     @BindView(R.id.view_pager)
     UIViewPager mViewPager;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
+    private RecommendUIView mRecommendUIView;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -69,7 +72,8 @@ public class HomeUIView extends BaseUIView {
             @Override
             protected IView getIView(int position) {
                 if (position == 1) {
-                    return new RecommendUIView().bindOtherILayout(mOtherILayout);
+                    mRecommendUIView = new RecommendUIView();
+                    return mRecommendUIView.bindOtherILayout(mOtherILayout);
                 }
                 if (position == 2) {
                     return new NearbyUIView().bindOtherILayout(mOtherILayout);
@@ -105,7 +109,16 @@ public class HomeUIView extends BaseUIView {
 
             @Override
             public void onTabReselect(int position) {
-                L.e("");
+                if (position == 1) {
+                    //推荐 , 弹出标签
+                    new TagFilterUIDialog(new Action1<Tag>() {
+                        @Override
+                        public void call(Tag tag) {
+                            mRecommendUIView.setFilterTag(tag);
+                            mRecommendUIView.loadData();
+                        }
+                    }).showDialog(mOtherILayout);
+                }
             }
         });
 

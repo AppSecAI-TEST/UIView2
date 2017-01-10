@@ -189,6 +189,7 @@ public class MeUIView extends BaseUIView {
     public void onItemInfoClick(View view) {
         switch (view.getId()) {
             case R.id.my_status_layout://我的动态
+
                 break;
             case R.id.my_favor_layout://我的收藏
                 break;

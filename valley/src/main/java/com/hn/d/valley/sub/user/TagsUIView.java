@@ -3,11 +3,8 @@ package com.hn.d.valley.sub.user;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.github.all.base.adapter.ViewGroupUtils;
-import com.angcyo.uiview.github.all.base.adapter.adapter.cache.BaseCacheAdapter;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.widget.RFlowLayout;
@@ -22,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
+import rx.functions.Action2;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -78,6 +76,9 @@ public class TagsUIView extends BaseContentUIView {
                         }));
     }
 
+    /**
+     * 返回选中的tags
+     */
     protected List<Tag> getTags() {
         List<Tag> tags = new ArrayList<>();
         for (int i = 0; i < mFlowLayout.getChildCount(); i++) {
@@ -92,32 +93,10 @@ public class TagsUIView extends BaseContentUIView {
     @Override
     protected void initContentLayout() {
         super.initContentLayout();
-        TagsControl.getTags(new Action1<List<Tag>>() {
+        TagsControl.inflate(mActivity, mFlowLayout, new Action2<RTextCheckView, Tag>() {
             @Override
-            public void call(List<Tag> tags) {
-                if (tags.isEmpty()) {
-                    T_.show(mActivity.getString(R.string.fetch_tag_failed));
-                    return;
-                }
-
-                ViewGroupUtils.addViews(mFlowLayout, new BaseCacheAdapter<Tag>(mActivity, tags) {
-
-                    @Override
-                    public View getView(ViewGroup parent, int pos, Tag data) {
-                        RTextCheckView checkView = new RTextCheckView(mActivity);
-                        checkView.setBackgroundResource(R.drawable.base_dark_color_border_check_selector);
-                        checkView.setText(data.getName());
-                        checkView.setTextColor(mActivity.getResources().getColorStateList(R.color.base_dark_to_main_color_selector));
-                        checkView.setTag(data);
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -2);
-                        params.leftMargin = (int) ResUtil.dpToPx(mActivity, 20);
-                        params.bottomMargin = (int) ResUtil.dpToPx(mActivity, 20);
-                        checkView.setLayoutParams(params);
-
-                        checkView.setChecked(selectorTag.contains(data));
-                        return checkView;
-                    }
-                });
+            public void call(RTextCheckView rTextCheckView, Tag tag) {
+                rTextCheckView.setChecked(selectorTag.contains(tag));
             }
         });
     }

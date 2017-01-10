@@ -291,6 +291,12 @@ public abstract class UIIViewImpl implements IView {
         return mRootView;
     }
 
+    @Override
+    public View getDialogDimView() {
+        //请在对话框中实现
+        return null;
+    }
+
     /**
      * 在inflateContentView之前调用, 返回的都是null
      */
@@ -453,6 +459,11 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public int getDimColor() {
         return Color.parseColor("#60000000");
+    }
+
+    @Override
+    public View getAnimView() {
+        return mRootView;
     }
 
     public IView bindOtherILayout(ILayout otherILayout) {

@@ -124,6 +124,16 @@ public interface IView {
     View getView();
 
     /**
+     * 获取对话框变暗动画的View, 默认是对话框root layout
+     */
+    View getDialogDimView();//星期二 2017-1-10
+
+    /**
+     * 获取动画作用的View
+     */
+    View getAnimView();//星期二 2017-1-10
+
+    /**
      * 获取对应的ILayout接口
      */
     ILayout getILayout();

@@ -783,7 +783,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             //对话框的启动动画,作用在第一个子View上
             startDialogAnim(topViewPattern, animation, endRunnable);
         } else {
-            safeStartAnim(topViewPattern.mView, animation, endRunnable);
+            safeStartAnim(topViewPattern.mIView.getAnimView(), animation, endRunnable);
         }
     }
 
@@ -825,7 +825,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             //对话框的启动动画,作用在第一个子View上
             finishDialogAnim(topViewPattern, animation, endRunnable);
         } else {
-            safeStartAnim(topViewPattern.mView, animation, endRunnable);
+            safeStartAnim(topViewPattern.mIView.getAnimView(), animation, endRunnable);
         }
     }
 
@@ -871,7 +871,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                 endRunnable.run();
             } else {
                 final Animation animation = topViewPattern.mIView.loadOtherEnterAnimation();
-                safeStartAnim(bottomViewPattern.mView, animation, endRunnable);
+                safeStartAnim(bottomViewPattern.mIView.getAnimView(), animation, endRunnable);
             }
         }
     }
@@ -911,7 +911,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         } else {
             if (anim) {
                 final Animation animation = topViewPattern.mIView.loadOtherExitAnimation();
-                safeStartAnim(bottomViewPattern.mView, animation, endRunnable);
+                safeStartAnim(bottomViewPattern.mIView.getAnimView(), animation, endRunnable);
             } else {
                 endRunnable.run();
             }
@@ -1049,7 +1049,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
         /*是否变暗*/
         if (dialogPattern.mIView.isDimBehind()) {
-            AnimUtil.startArgb(dialogPattern.mView,
+            AnimUtil.startArgb(dialogPattern.mIView.getDialogDimView(),
                     Color.TRANSPARENT, dialogPattern.mIView.getDimColor(), DEFAULT_ANIM_TIME);
         }
 
@@ -1064,7 +1064,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             });
         }
 
-        safeStartAnim(((ViewGroup) dialogPattern.mView).getChildAt(0), animation, endRunnable);
+        safeStartAnim(dialogPattern.mIView.getAnimView(), animation, endRunnable);
     }
 
     /**
@@ -1073,16 +1073,11 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     private void finishDialogAnim(final ViewPattern dialogPattern, final Animation animation, final Runnable end) {
           /*是否变暗*/
         if (dialogPattern.mIView.isDimBehind()) {
-            AnimUtil.startArgb(dialogPattern.mView,
+            AnimUtil.startArgb(dialogPattern.mIView.getDialogDimView(),
                     dialogPattern.mIView.getDimColor(), Color.TRANSPARENT, DEFAULT_ANIM_TIME);
         }
 
-        final View animView;
-        if (dialogPattern.mView instanceof ViewGroup) {
-            animView = ((ViewGroup) dialogPattern.mView).getChildAt(0);
-        } else {
-            animView = dialogPattern.mView;
-        }
+        final View animView = dialogPattern.mIView.getAnimView();
 
         final Runnable endRunnable = new Runnable() {
             @Override

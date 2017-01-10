@@ -297,7 +297,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
                     .setCancelText("").setOkText(mActivity.getString(R.string.known))
                     .setCanCanceledOnOutside(false)
-                    .show(this);
+                    .showDialog(this);
             if (!BuildConfig.DEBUG) {
                 isShowTip = true;
             }
