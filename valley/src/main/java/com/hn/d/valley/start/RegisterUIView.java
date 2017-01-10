@@ -89,7 +89,7 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
         }
         if (BuildConfig.DEBUG) {
         } else {
-            if (TextUtils.equals(code, mCodeView.string())) {
+            if (!TextUtils.equals(code, mCodeView.string())) {
                 Anim.band(mCodeView);
                 T_.show(mActivity.getString(R.string.code_error_tip));
                 return;

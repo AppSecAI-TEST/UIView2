@@ -10,6 +10,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmMigration;
 import io.realm.RealmObject;
+import io.realm.RealmSchema;
 import rx.functions.Action1;
 
 /**
@@ -178,10 +179,10 @@ public class RRealm {
                     @Override
                     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
                         L.e("数据库升级 Start:" + oldVersion + "->" + newVersion);
-//                        RealmSchema schema = realm.getSchema();
-//                        realm.removeAllChangeListeners();
-//                        realm.deleteAll();
-//                        schema.close();
+                        RealmSchema schema = realm.getSchema();
+                        realm.removeAllChangeListeners();
+                        realm.deleteAll();
+                        schema.close();
                         Realm.removeDefaultConfiguration();
                         init(valleyApp);
                         L.e("数据库升级 End:" + oldVersion + "->" + newVersion);

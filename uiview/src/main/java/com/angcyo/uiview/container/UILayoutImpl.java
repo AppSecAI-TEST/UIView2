@@ -240,7 +240,6 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     public void startIView(final IView iView, final UIParam param) {
         L.d("请求启动:" + iView.getClass().getSimpleName());
         runnableCount++;
-        iView.onAttachedToILayout(this);
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
@@ -301,6 +300,8 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     private ViewPattern startIViewInternal(final IView iView) {
         hideSoftInput();
+
+        iView.onAttachedToILayout(this);
 
         //1:inflateContentView, 会返回对应IView的RootLayout
         View rawView = loadViewInternal(iView);

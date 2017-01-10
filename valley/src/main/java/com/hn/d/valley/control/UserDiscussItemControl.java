@@ -88,12 +88,12 @@ public class UserDiscussItemControl {
         commandItemView.setVisibility(View.VISIBLE);
         if (dataListBean.getUser_info().getIs_attention() == 1) {
             commandItemView.setText("取消关注");
-            commandItemView.setBackgroundResource(R.drawable.base_dark_color_border_selector);
+            commandItemView.setBackgroundResource(R.drawable.base_dark_color_border_fill_selector);
             commandItemView.setTextColor(commandItemView.getResources().
                     getColorStateList(R.color.base_dark_color_border_selector_color));
         } else {
             commandItemView.setText("+关注");
-            commandItemView.setBackgroundResource(R.drawable.base_main_color_border_selector);
+            commandItemView.setBackgroundResource(R.drawable.base_main_color_border_fill_selector);
             commandItemView.setTextColor(commandItemView.getResources().
                     getColorStateList(R.color.base_main_color_border_selector_color));
         }
@@ -112,7 +112,6 @@ public class UserDiscussItemControl {
 
         TextView commandItemView = holder.v(R.id.command_item_view);
         commandItemView.setVisibility(TextUtils.equals(uid, to_uid) ? View.GONE : View.VISIBLE);
-
 
         if (tBean.getUser_info().getIs_attention() == 1) {
             commandItemView.setOnClickListener(new View.OnClickListener() {
