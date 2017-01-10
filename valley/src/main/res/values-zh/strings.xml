@@ -87,5 +87,6 @@
     <string name="auth_tyrw">体育任务</string>
     <string name="auth_zfry">政府人员</string>
     <string name="chat_empty_tip">亲~您还没有会话!</string>
+    <string name="input_hint_tip">点击输入发送新消息</string>
 
 </resources>

@@ -125,7 +125,7 @@ public class TagFilterUIDialog extends UIIDialogImpl {
     @Override
     public Animation loadLayoutAnimation() {
         Animation animation = super.loadLayoutAnimation();
-        animation.setDuration(16);
+        animation.setDuration(160);
         return animation;
     }
 }

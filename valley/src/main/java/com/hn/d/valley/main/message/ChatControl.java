@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
 import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.library.facebook.RFresco;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -144,6 +145,40 @@ public class ChatControl {
             maskParams.width = imageSize.width;
             maskParams.height = imageSize.height;
             view.setLayoutParams(maskParams);
+        }
+    }
+
+
+    /**
+     * 根据图片路径大小, 自动设置View的宽高
+     */
+    public static void setImageSize(final View view, final View clickView, final IMMessage message, String path) {
+        int[] bounds = null;
+        if (path != null) {
+            bounds = BitmapDecoder.decodeBound(new File(path));
+        }
+        if (bounds == null) {
+            if (message.getMsgType() == MsgTypeEnum.image) {
+                ImageAttachment attachment = (ImageAttachment) message.getAttachment();
+                bounds = new int[]{attachment.getWidth(), attachment.getHeight()};
+            } else if (message.getMsgType() == MsgTypeEnum.video) {
+                VideoAttachment attachment = (VideoAttachment) message.getAttachment();
+                bounds = new int[]{attachment.getWidth(), attachment.getHeight()};
+            }
+        }
+
+        if (bounds != null) {
+            ImageUtil.ImageSize imageSize = ImageUtil.getThumbnailDisplaySize(bounds[0], bounds[1], getImageMaxEdge(), getImageMinEdge());
+
+            ViewGroup.LayoutParams maskParams = view.getLayoutParams();
+            maskParams.width = imageSize.width;
+            maskParams.height = imageSize.height;
+            view.setLayoutParams(maskParams);
+
+            ViewGroup.LayoutParams maskParams2 = clickView.getLayoutParams();
+            maskParams2.width = imageSize.width;
+            maskParams2.height = imageSize.height;
+            clickView.setLayoutParams(maskParams2);
         }
     }
 
@@ -292,6 +327,8 @@ public class ChatControl {
             final View msgLocationLayout = holder.v(R.id.msg_location_layout);
             final View msgAudioLayout = holder.v(R.id.msg_audio_layout);
 
+            msgContentLayout.setVisibility(View.VISIBLE);
+
             msgImageLayout.setVisibility(View.GONE);
             msgLocationLayout.setVisibility(View.GONE);
             msgTextLayout.setVisibility(View.GONE);
@@ -342,24 +379,62 @@ public class ChatControl {
                     contentView.setText("[文件消息]");
                     break;
                 case image:
+                    msgContentLayout.setVisibility(View.GONE);
                     msgImageLayout.setVisibility(View.VISIBLE);
                     final SimpleDraweeView draweeView = holder.v(R.id.msg_image_view);
+                    final View clickView = holder.v(R.id.click_view);
 
                     final FileAttachment msgAttachment = (FileAttachment) bean.getAttachment();
                     final String path = msgAttachment.getPath();
                     final String thumbPath = msgAttachment.getThumbPath();
-                    if (!TextUtils.isEmpty(thumbPath)) {
-                        setImageSize(draweeView, bean, thumbPath);
-                        DraweeViewUtil.setDraweeViewFile(draweeView, thumbPath);
-                    } else if (!TextUtils.isEmpty(path)) {
-                        setImageSize(draweeView, bean, path);
-                        DraweeViewUtil.setDraweeViewFile(draweeView, path);
-                    } else {
-                        DraweeViewUtil.setDraweeViewHttp(draweeView, msgAttachment.getUrl());
+
+                    String fileUri = "";
+                    boolean isFile;
+                    if (TextUtils.isEmpty(thumbPath) && TextUtils.isEmpty(path)) {
+                        isFile = false;
+                        fileUri = msgAttachment.getUrl();
                         downloadAttachment(bean);
+                    } else {
+                        isFile = true;
+                        if (!TextUtils.isEmpty(thumbPath)) {
+                            setImageSize(draweeView, clickView, bean, thumbPath);
+                            //DraweeViewUtil.setDraweeViewFile(draweeView, thumbPath);
+                            fileUri = thumbPath;
+                        } else if (!TextUtils.isEmpty(path)) {
+                            setImageSize(draweeView, clickView, bean, path);
+                            //DraweeViewUtil.setDraweeViewFile(draweeView, path);
+                            fileUri = path;
+                        } else {
+                            //DraweeViewUtil.setDraweeViewHttp(draweeView, msgAttachment.getUrl());
+                        }
+                    }
+
+
+                    if (isReceivedMessage(bean)) {
+                        clickView.setBackgroundResource(R.drawable.bubble_box_left_selector2);
+                        RFresco.mask(mContext, draweeView, R.drawable.bubble_box_left, fileUri, isFile);
+                    } else {
+                        clickView.setBackgroundResource(R.drawable.bubble_box_right_selector2);
+                        RFresco.mask(mContext, draweeView, R.drawable.bubble_box_right_n2, fileUri, isFile);
                     }
 
                     msgContentLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Images images = getAllImageMessage(bean);
+                            ImagePagerUIView.start(mUIBaseView.getILayout(), v, images.images, images.positon);
+                        }
+                    });
+
+                    draweeView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Images images = getAllImageMessage(bean);
+                            ImagePagerUIView.start(mUIBaseView.getILayout(), v, images.images, images.positon);
+                        }
+                    });
+
+                    clickView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             final Images images = getAllImageMessage(bean);

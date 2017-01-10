@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -123,6 +124,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     RelativeLayout mEmojiControlLayout;
     @BindView(R.id.command_control_layout)
     RelativeLayout mCommandControlLayout;
+    @BindView(R.id.message_voice_box)
+    CheckBox mMessageVoiceBox;
     private String mLastInputText = "";
     private boolean touched;
     private boolean started;
@@ -235,7 +238,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 
                 if (isKeyboardShow || isEmojiShow) {
                     if (mRecordView.getVisibility() == View.VISIBLE) {
-                        onMessageVoiceBox(false);
+                        //onMessageVoiceBox(false);
+                        mMessageVoiceBox.setChecked(false);
                     }
                 }
             }
@@ -383,6 +387,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         }
 
         mRecordView.setText(R.string.record_audio_end);
+        mRecordView.setBackgroundResource(R.drawable.shape_round_dark_color);
 
         updateTimerTip(false); // 初始化语音动画状态
         playAudioRecordAnim();
@@ -413,9 +418,9 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
      */
     private void onEndAudioRecord(boolean cancel) {
         mActivity.getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         audioMessageHelper.completeRecord(cancel);
         mRecordView.setText(R.string.record_audio);
+        mRecordView.setBackgroundResource(R.drawable.shape_round_line_color);
         stopAudioRecordAnim();
     }
 
@@ -626,7 +631,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
      */
     @OnTextChanged(R.id.input_view)
     public void onInputTextChanged(Editable editable) {
-        mSendView.setVisibility(TextUtils.isEmpty(editable) ? View.GONE : View.VISIBLE);
+        mSendView.setEnabled(!TextUtils.isEmpty(editable));
     }
 
     /**

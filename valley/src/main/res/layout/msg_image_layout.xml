@@ -14,10 +14,10 @@
         android:layout_width="100dp"
         android:layout_height="160dp"
         app:actualImageScaleType="centerInside"
-        app:placeholderImage="@drawable/sdk_share_dialog_thumb_default"
+        app:placeholderImage="@drawable/default_avatar"
         app:placeholderImageScaleType="fitXY"
         app:progressBarAutoRotateInterval="1000"
-        app:progressBarImage="@drawable/base_load"
+        app:progressBarImage="@drawable/loading"
         app:progressBarImageScaleType="centerInside"
         app:roundAsCircle="false"
         app:roundBottomLeft="true"
@@ -25,5 +25,10 @@
         app:roundTopLeft="true"
         app:roundTopRight="true"
         app:roundedCornerRadius="@dimen/base_xhdpi"/>
+
+    <View
+        android:id="@+id/click_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
