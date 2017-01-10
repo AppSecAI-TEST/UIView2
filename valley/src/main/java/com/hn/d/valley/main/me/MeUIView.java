@@ -109,6 +109,7 @@ public class MeUIView extends BaseUIView {
                 T_.show("用户信息异常!");
             }
         });
+//        initViewPager();
     }
 
     private void initScrollLayout() {
@@ -145,7 +146,6 @@ public class MeUIView extends BaseUIView {
     @Override
     public void onViewCreate() {
         super.onViewCreate();
-        initViewPager();
     }
 
     @Override

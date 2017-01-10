@@ -42,6 +42,11 @@ public class MessageUIView extends BaseUIView {
     private RecentContactsControl mRecentContactsControl;
 
     @Override
+    protected String getBaseEmptyTip() {
+        return mActivity.getResources().getString(R.string.chat_empty_tip);
+    }
+
+    @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_main_message_layout);
     }

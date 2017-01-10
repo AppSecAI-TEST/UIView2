@@ -17,6 +17,7 @@ import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.uiview.R;
 import com.angcyo.uiview.container.UILayoutImpl;
@@ -207,10 +208,22 @@ public abstract class UIBaseView extends UIIViewImpl {
         }
         if (toState == LayoutState.LOAD && mBaseLoadLayout != null) {
 
-        } else if (toState == LayoutState.NONET) {
+        } else if (toState == LayoutState.EMPTY && mBaseEmptyLayout != null) {
+            String tip = getBaseEmptyTip();
+            if (tip != null) {
+                ((TextView) mBaseEmptyLayout.findViewById(R.id.base_empty_tip_view)).setText(tip);
+            }
+        } else if (toState == LayoutState.NONET && mBaseNonetLayout != null) {
             mBaseNonetLayout.findViewById(R.id.base_setting_view).setOnClickListener(mNonetSettingClickListener);
             mBaseNonetLayout.findViewById(R.id.base_refresh_view).setOnClickListener(mNonetRefreshClickListener);
         }
+    }
+
+    /**
+     * 空页面的时候, 提示的字符串
+     */
+    protected String getBaseEmptyTip() {
+        return null;
     }
 
     /**

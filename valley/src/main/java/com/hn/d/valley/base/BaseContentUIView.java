@@ -1,8 +1,12 @@
 package com.hn.d.valley.base;
 
 import android.support.annotation.CallSuper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.angcyo.uiview.base.UIContentView;
+import com.hn.d.valley.R;
 import com.hn.d.valley.utils.RBus;
 
 /**
@@ -17,6 +21,11 @@ import com.hn.d.valley.utils.RBus;
  * Version: 1.0.0
  */
 public abstract class BaseContentUIView extends UIContentView {
+
+    @Override
+    protected View inflateEmptyLayout(FrameLayout baseRootLayout, LayoutInflater inflater) {
+        return inflater.inflate(R.layout.empty_layout, baseRootLayout);
+    }
 
     @CallSuper
     @Override

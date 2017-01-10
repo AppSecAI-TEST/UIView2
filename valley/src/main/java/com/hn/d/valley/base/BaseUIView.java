@@ -1,14 +1,11 @@
 package com.hn.d.valley.base;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.mvp.presenter.IBasePresenter;
 import com.angcyo.uiview.mvp.view.IBaseView;
-import com.hn.d.valley.utils.RBus;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -21,7 +18,7 @@ import com.hn.d.valley.utils.RBus;
  * 修改备注：
  * Version: 1.0.0
  */
-public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
+public abstract class BaseUIView<P extends IBasePresenter> extends BaseContentUIView
         implements IBaseView, UIIDialogImpl.OnDismissListener {
 
     protected P mPresenter;
@@ -51,13 +48,11 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        RBus.register(this);
     }
 
     @Override
     public void onViewUnload() {
         super.onViewUnload();
-        RBus.unregister(this);
         if (mPresenter != null) {
             mPresenter.onUnload();
         }
@@ -78,8 +73,9 @@ public abstract class BaseUIView<P extends IBasePresenter> extends UIBaseRxView
         onRequestFinish();
     }
 
+    @NonNull
     @Override
-    public int getDefaultBackgroundColor() {
-        return Color.WHITE;
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
     }
 }
