@@ -11,10 +11,10 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/msg_image_view"
-        android:layout_width="100dp"
-        android:layout_height="160dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         app:actualImageScaleType="centerInside"
-        app:placeholderImage="@drawable/default_avatar"
+        app:placeholderImage="@drawable/default_image"
         app:placeholderImageScaleType="fitXY"
         app:progressBarAutoRotateInterval="1000"
         app:progressBarImage="@drawable/loading"
