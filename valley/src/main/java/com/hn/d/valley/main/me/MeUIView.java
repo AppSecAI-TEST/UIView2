@@ -2,6 +2,7 @@ package com.hn.d.valley.main.me;
 
 import android.animation.ArgbEvaluator;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.TitleBarLayout;
@@ -28,7 +30,6 @@ import com.hn.d.valley.control.UserControl;
 import com.hn.d.valley.utils.PhotoPager;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,23 +60,10 @@ public class MeUIView extends BaseUIView {
 
     @BindView(R.id.user_id_view)
     TextView mUserIdView;
-    @BindView(R.id.follow_num_view)
-    TextView mFollowNumView;
-    @BindView(R.id.follower_num_view)
-    TextView mFollowerNumView;
 
     @BindView(R.id.scroll_root_layout)
     NestedScrollView mScrollRootLayout;
 
-
-    @BindView(R.id.my_status_layout)
-    ItemInfoLayout mMyStatusLayout;
-    @BindView(R.id.my_favor_layout)
-    ItemInfoLayout mMyFavorLayout;
-    @BindView(R.id.level_layout)
-    ItemInfoLayout mLevelLayout;
-    @BindView(R.id.coin_layout)
-    ItemInfoLayout mCoinLayout;
     @BindView(R.id.person_auth_layout)
     ItemInfoLayout mPersonAuthLayout;
     @BindView(R.id.setting_layout)
@@ -106,7 +94,6 @@ public class MeUIView extends BaseUIView {
     protected void initContentLayout() {
         super.initContentLayout();
         initScrollLayout();
-        initViewPager();
         UserCache.instance().getLoginBeanObservable().subscribe(new Action1<LoginBean>() {
             @Override
             public void call(LoginBean loginBean) {
@@ -143,12 +130,38 @@ public class MeUIView extends BaseUIView {
             photos.addAll(RUtils.split(userInfoBean.getPhotos()));
         }
         PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, photos);
+
+        //
+        mViewHolder.fillView(UserInfoBean.class, userInfoBean, false, true);
+        mPersonAuthLayout.setItemDarkText(UserControl.getAuthString(userInfoBean.getAuth_type()));
     }
 
     @NonNull
     @Override
     protected LayoutState getDefaultLayoutState() {
         return LayoutState.CONTENT;
+    }
+
+    @Override
+    public void onViewCreate() {
+        super.onViewCreate();
+        initViewPager();
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        if (System.currentTimeMillis() - mLastShowTime > 30 * 1000) {
+            //30秒后, 重新拉取新的信息
+            UserCache.instance()
+                    .fetchUserInfo()
+                    .subscribe(new RSubscriber<UserInfoBean>() {
+                        @Override
+                        public void onNext(UserInfoBean userInfoBean) {
+                            initViewPager();
+                        }
+                    });
+        }
+        super.onViewShow(bundle);
     }
 
     /**
@@ -176,23 +189,16 @@ public class MeUIView extends BaseUIView {
     public void onItemInfoClick(View view) {
         switch (view.getId()) {
             case R.id.my_status_layout://我的动态
-                mMyStatusLayout.setItemDarkText("" + new Random().nextInt(100));
                 break;
             case R.id.my_favor_layout://我的收藏
-                mMyFavorLayout.setItemDarkText("" + new Random().nextInt(100));
                 break;
             case R.id.level_layout://等级
-                mLevelLayout.setItemDarkText("V" + new Random().nextInt(100));
                 break;
             case R.id.coin_layout://龙币
-                mCoinLayout.setItemDarkText("" + new Random().nextInt(100));
-                mCoinLayout.setDarkDrawableRes(R.drawable.gift);
                 break;
             case R.id.person_auth_layout://名人认证
-                mPersonAuthLayout.setItemDarkText("");
                 break;
             case R.id.setting_layout://设置
-                mSettingLayout.setLeftDrawableRes(R.drawable.address_book_n);
                 break;
         }
     }

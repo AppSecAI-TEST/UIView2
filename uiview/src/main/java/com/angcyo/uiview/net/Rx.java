@@ -26,6 +26,10 @@ import rx.schedulers.Schedulers;
  * Created by robi on 2016-04-21 15:41.
  */
 public class Rx {
+    /**
+     * 网络请求错误, 重试的次数
+     */
+    public static final long RETRY_COUNT = 3;
 
     public static final Observable.Transformer<T, T> ioSchedulersTransformer = new Observable.Transformer<T, T>() {
         @Override
@@ -118,6 +122,7 @@ public class Rx {
                                 return null;
                             }
                         })
+                        .retry(RETRY_COUNT)
                         .observeOn(AndroidSchedulers.mainThread());
             }
         };
@@ -164,6 +169,7 @@ public class Rx {
                                 return bean;
                             }
                         })
+                        .retry(RETRY_COUNT)
                         .observeOn(AndroidSchedulers.mainThread());
             }
         };

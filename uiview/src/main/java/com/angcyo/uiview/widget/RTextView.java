@@ -38,8 +38,6 @@ public class RTextView extends TextView {
         } else {
             super.setText(text, type);
         }
-
-
     }
 
     public void setLeftIco(@DrawableRes int leftIco) {

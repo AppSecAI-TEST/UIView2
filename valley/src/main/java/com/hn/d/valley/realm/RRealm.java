@@ -38,11 +38,18 @@ public class RRealm {
      * 同步的方式保存一个realm对象
      */
     public static <R extends RealmObject> void save(R object) {
+        if (object == null) {
+            return;
+        }
         Realm realm = checkMainThread() ? realm() : getRealmInstance();
         try {
-            realm.beginTransaction();
-            realm.copyToRealm(object);
-            realm.commitTransaction();
+            if (realm.isInTransaction()) {
+                realm.copyToRealm(object);
+            } else {
+                realm.beginTransaction();
+                realm.copyToRealm(object);
+                realm.commitTransaction();
+            }
         } finally {
             if (!checkMainThread()) {
                 if (realm != null) {
@@ -58,11 +65,18 @@ public class RRealm {
      * 同步的方式保存一组realm对象
      */
     public static <R extends RealmObject> void save(Iterable<R> objects) {
+        if (objects == null) {
+            return;
+        }
         Realm realm = checkMainThread() ? realm() : getRealmInstance();
         try {
-            realm.beginTransaction();
-            realm.copyToRealm(objects);
-            realm.commitTransaction();
+            if (realm.isInTransaction()) {
+                realm.copyToRealm(objects);
+            } else {
+                realm.beginTransaction();
+                realm.copyToRealm(objects);
+                realm.commitTransaction();
+            }
         } finally {
             if (!checkMainThread()) {
                 if (realm != null) {

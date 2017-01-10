@@ -1,5 +1,8 @@
 package com.hn.d.valley.cache;
 
+import android.support.annotation.UiThread;
+import android.text.TextUtils;
+
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -10,7 +13,7 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.user.service.UserInfoService;
-import com.hwangjr.rxbus.RxBus;
+import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
 import com.orhanobut.hawk.Hawk;
@@ -19,7 +22,6 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
@@ -103,19 +105,12 @@ public class UserCache {
         });
     }
 
+    @UiThread
     public LoginBean getLoginBean() {
         if (mLoginBean == null) {
-            Realm realm = null;
-            try {
-                realm = RRealm.getRealmInstance();
-                RealmResults<LoginBean> all = realm.where(LoginBean.class).findAll();
-                if (!all.isEmpty()) {
-                    setLoginBean(all.last(), false);
-                }
-            } finally {
-                if (realm != null) {
-                    realm.close();
-                }
+            RealmResults<LoginBean> all = RRealm.realm().where(LoginBean.class).findAll();
+            if (!all.isEmpty()) {
+                setLoginBean(all.last(), false);
             }
         }
         return mLoginBean;
@@ -140,10 +135,9 @@ public class UserCache {
         }
     }
 
+    @UiThread
     public UserInfoBean getUserInfoBean() {
-        if (mUserInfoBean == null) {
-            mUserInfoBean = getUserInfoBean(getUserAccount());
-        }
+        mUserInfoBean = getUserInfoBean(getUserAccount());
         return mUserInfoBean;
     }
 
@@ -152,28 +146,24 @@ public class UserCache {
         RRealm.save(bean);
     }
 
+    @UiThread
     public UserInfoBean getUserInfoBean(String uid) {
-        Realm realm = null;
-        try {
-            realm = RRealm.getRealmInstance();
-            RealmResults<UserInfoBean> all = realm.where(UserInfoBean.class).equalTo("uid", uid).findAll();
-            return all.last(null);
-        } finally {
-            if (realm != null) {
-                realm.close();
-            }
-        }
+        RealmResults<UserInfoBean> all = RRealm.realm().where(UserInfoBean.class).equalTo("uid", uid).findAll();
+        return all.last(null);
     }
 
     /**
      * 从服务器拉取用户信息
      */
     public void updateUserInfo(String to_uid) {
+        if (TextUtils.isEmpty(to_uid)) {
+            return;
+        }
         fetchUserInfo(to_uid).subscribe(new BaseSingleSubscriber<UserInfoBean>() {
             @Override
             public void onNext(UserInfoBean userInfoBean) {
                 L.i("更新用户数据库信息:" + userInfoBean.getUid() + " " + userInfoBean.getUsername() + " 成功.");
-                RxBus.get().post(userInfoBean);
+                RBus.post(userInfoBean);
             }
         });
     }
@@ -192,10 +182,14 @@ public class UserCache {
                 .map(new Func1<UserInfoBean, UserInfoBean>() {
                     @Override
                     public UserInfoBean call(UserInfoBean userInfoBean) {
+                        if (userInfoBean == null) {
+                            L.e("fetchUserInfo 拉取用户信息失败. ->即将重试");
+                            throw new NullPointerException("fetchUserInfo 拉取用户信息失败.");
+                        }
                         RRealm.save(userInfoBean);
                         return userInfoBean;
                     }
-                });
+                }).retry(Rx.RETRY_COUNT);
     }
 
     public Observable<UserInfoBean> fetchUserInfo() {

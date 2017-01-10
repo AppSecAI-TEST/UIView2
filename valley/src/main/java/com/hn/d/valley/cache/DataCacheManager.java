@@ -81,6 +81,8 @@ public class DataCacheManager {
 
         RecentContactsCache.instance().buildCache();
         MsgCache.instance().buildCache();
+
+        UserCache.instance().updateUserInfo();
     }
 
     /**

@@ -83,7 +83,12 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                     @Override
                     public void onNext(UserDiscussListBean userDiscussListBean) {
                         showContentLayout();
-                        onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
+                        if (userDiscussListBean == null) {
+                            onUILoadDataEnd(null, 0);
+                        } else {
+                            onUILoadDataEnd(userDiscussListBean.getData_list(),
+                                    userDiscussListBean.getData_count());
+                        }
                     }
 
                     @Override
@@ -99,7 +104,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
      */
     @Subscribe(tags = {@Tag(Constant.TAG_UPDATE_CIRCLE)})
     public void onEvent(UpdateDataEvent event) {
-        if (mIViewStaus == STATE_VIEW_SHOW) {
+        if (mIViewStatus == STATE_VIEW_SHOW) {
             loadData();
         }
     }

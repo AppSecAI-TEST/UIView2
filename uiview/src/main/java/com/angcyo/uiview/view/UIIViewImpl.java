@@ -52,7 +52,11 @@ public abstract class UIIViewImpl implements IView {
      * 用来管理rootview
      */
     protected RBaseViewHolder mViewHolder;
-    protected int mIViewStaus = STATE_NORMAL;
+    protected int mIViewStatus = STATE_NORMAL;
+    /**
+     * 最后一次显示的时间
+     */
+    protected long mLastShowTime = 0;
     private boolean mIsRightJumpLeft = false;
 
     public static void setDefaultConfig(Animation animation) {
@@ -132,7 +136,7 @@ public abstract class UIIViewImpl implements IView {
     @CallSuper
     @Override
     public void onViewLoad() {
-        mIViewStaus = STATE_VIEW_LOAD;
+        mIViewStatus = STATE_VIEW_LOAD;
         L.d(this.getClass().getSimpleName(), "onViewLoad: ");
     }
 
@@ -145,7 +149,8 @@ public abstract class UIIViewImpl implements IView {
     @CallSuper
     @Override
     public void onViewShow(Bundle bundle) {
-        mIViewStaus = STATE_VIEW_SHOW;
+        mIViewStatus = STATE_VIEW_SHOW;
+        mLastShowTime = System.currentTimeMillis();
         L.d(this.getClass().getSimpleName(), "onViewShow: ");
     }
 
@@ -158,14 +163,14 @@ public abstract class UIIViewImpl implements IView {
     @CallSuper
     @Override
     public void onViewHide() {
-        mIViewStaus = STATE_VIEW_HIDE;
+        mIViewStatus = STATE_VIEW_HIDE;
         L.d(this.getClass().getSimpleName(), "onViewHide: ");
     }
 
     @CallSuper
     @Override
     public void onViewUnload() {
-        mIViewStaus = STATE_VIEW_UNLOAD;
+        mIViewStatus = STATE_VIEW_UNLOAD;
         L.d(this.getClass().getSimpleName(), "onViewUnload: ");
     }
 

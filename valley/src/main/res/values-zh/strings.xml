@@ -81,5 +81,10 @@
     <string name="known">知道了</string>
     <string name="tip">提示</string>
     <string name="dynamic_top_tip">动态置顶是指该动态会在你的\n动态列表中始终排列在第一位展示, \n每次动态置顶消耗5龙币</string>
+    <string name="not_auth">未认证</string>
+    <string name="auth_zcmr">职场名人</string>
+    <string name="auth_ylmx">娱乐明星</string>
+    <string name="auth_tyrw">体育任务</string>
+    <string name="auth_zfry">政府人员</string>
 
 </resources>

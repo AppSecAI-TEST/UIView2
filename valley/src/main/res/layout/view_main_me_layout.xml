@@ -64,7 +64,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/follow_num_view"
+                                android:id="@+id/attention_count"
                                 style="@style/MainColorTextStyle"
                                 android:text="0"
                                 android:textSize="@dimen/default_text_size16"/>
@@ -90,7 +90,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/follower_num_view"
+                                android:id="@+id/fans_count"
                                 style="@style/MainColorTextStyle"
                                 android:text="0"
                                 android:textSize="@dimen/default_text_size16"/>
@@ -123,6 +123,7 @@
             <com.angcyo.uiview.widget.ItemInfoLayout
                 android:id="@+id/my_status_layout"
                 style="@style/DefaultItemInfoStyle"
+                app:item_dark_id="@+id/discuss_count"
                 app:item_text="@string/my_status"/>
 
             <View
@@ -131,6 +132,7 @@
             <com.angcyo.uiview.widget.ItemInfoLayout
                 android:id="@+id/my_favor_layout"
                 style="@style/DefaultItemInfoStyle"
+                app:item_dark_id="@+id/collect_count"
                 app:item_text="@string/my_favor"/>
 
             <Space
@@ -141,6 +143,8 @@
             <com.angcyo.uiview.widget.ItemInfoLayout
                 android:id="@+id/level_layout"
                 style="@style/DefaultItemInfoStyle"
+                app:item_dark_id="@+id/grade"
+                app:item_dark_tag="V%1$s"
                 app:item_text="@string/level"/>
 
             <View
@@ -149,6 +153,8 @@
             <com.angcyo.uiview.widget.ItemInfoLayout
                 android:id="@+id/coin_layout"
                 style="@style/DefaultItemInfoStyle"
+                app:item_dark_id="@+id/coins"
+                app:item_dark_res="@drawable/gift"
                 app:item_text="@string/coin"/>
 
             <View
@@ -168,7 +174,6 @@
                 app:item_text="@string/setting"/>
 
         </LinearLayout>
-
 
     </android.support.v4.widget.NestedScrollView>
 
