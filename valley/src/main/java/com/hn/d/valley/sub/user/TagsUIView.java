@@ -95,6 +95,11 @@ public class TagsUIView extends BaseContentUIView {
         TagsControl.getTags(new Action1<List<Tag>>() {
             @Override
             public void call(List<Tag> tags) {
+                if (tags.isEmpty()) {
+                    T_.show(mActivity.getString(R.string.fetch_tag_failed));
+                    return;
+                }
+
                 ViewGroupUtils.addViews(mFlowLayout, new BaseCacheAdapter<Tag>(mActivity, tags) {
 
                     @Override

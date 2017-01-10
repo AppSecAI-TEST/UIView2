@@ -4,6 +4,7 @@ import com.hn.d.valley.realm.RRealm;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -22,19 +23,51 @@ public class UnreadMessageControl {
      * 获取所有消息未读的数量
      */
     public static int getUnreadCount() {
-        return RRealm.where(UnreadMessage.class).findAll().size();
+        int size = 0;
+        Realm realm = null;
+        try {
+            realm = RRealm.getRealmInstance();
+            size = realm.where(UnreadMessage.class).findAll().size();
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
+        }
+        return size;
     }
 
     /**
      * 通过消息id, 判断消息是否未读
      */
     public static boolean isMessageUnread(String messageId) {
-        return RRealm.where(UnreadMessage.class).equalTo("messageUid", messageId).findAll().size() > 0;
+        boolean result;
+
+        Realm realm = null;
+        try {
+            realm = RRealm.getRealmInstance();
+            result = realm.where(UnreadMessage.class).equalTo("messageUid", messageId).findAll().size() > 0;
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
+        }
+
+        return result;
     }
 
 
     public static int getMessageUnreadCount(String messageId) {
-        return RRealm.where(UnreadMessage.class).equalTo("messageUid", messageId).findAll().size() > 0 ? 1 : 0;
+        int size = 0;
+        Realm realm = null;
+        try {
+            realm = RRealm.getRealmInstance();
+            size = realm.where(UnreadMessage.class).equalTo("messageUid", messageId).findAll().size() > 0 ? 1 : 0;
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
+        }
+        return size;
     }
 
     /**
@@ -50,11 +83,12 @@ public class UnreadMessageControl {
     /**
      * 移除已读消息
      */
-    public static void removeMessageUnread(String sessionId) {
-        final RealmResults<UnreadMessage> realmResults = RRealm.where(UnreadMessage.class).equalTo("sessionId", sessionId).findAll();
-        RRealm.exe(new Realm.Transaction() {
+    public static void removeMessageUnread(final String sessionId) {
+        RRealm.where(new Action1<Realm>() {
             @Override
-            public void execute(Realm realm) {
+            public void call(Realm realm) {
+                final RealmResults<UnreadMessage> realmResults = realm.where(UnreadMessage.class)
+                        .equalTo("sessionId", sessionId).findAll();
                 realmResults.deleteAllFromRealm();
             }
         });

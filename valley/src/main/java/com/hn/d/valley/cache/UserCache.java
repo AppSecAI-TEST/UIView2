@@ -19,6 +19,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
@@ -104,9 +105,17 @@ public class UserCache {
 
     public LoginBean getLoginBean() {
         if (mLoginBean == null) {
-            RealmResults<LoginBean> all = RRealm.where(LoginBean.class).findAll();
-            if (!all.isEmpty()) {
-                setLoginBean(all.last(), false);
+            Realm realm = null;
+            try {
+                realm = RRealm.getRealmInstance();
+                RealmResults<LoginBean> all = realm.where(LoginBean.class).findAll();
+                if (!all.isEmpty()) {
+                    setLoginBean(all.last(), false);
+                }
+            } finally {
+                if (realm != null) {
+                    realm.close();
+                }
             }
         }
         return mLoginBean;
@@ -144,8 +153,16 @@ public class UserCache {
     }
 
     public UserInfoBean getUserInfoBean(String uid) {
-        RealmResults<UserInfoBean> all = RRealm.where(UserInfoBean.class).equalTo("uid", uid).findAll();
-        return all.last(null);
+        Realm realm = null;
+        try {
+            realm = RRealm.getRealmInstance();
+            RealmResults<UserInfoBean> all = realm.where(UserInfoBean.class).equalTo("uid", uid).findAll();
+            return all.last(null);
+        } finally {
+            if (realm != null) {
+                realm.close();
+            }
+        }
     }
 
     /**

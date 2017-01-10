@@ -10,15 +10,19 @@ import com.angcyo.uiview.utils.RUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
+import com.hwangjr.rxbus.annotation.Subscribe;
+import com.hwangjr.rxbus.annotation.Tag;
 
 import java.util.List;
 
@@ -88,5 +92,15 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                     }
 
                 }));
+    }
+
+    /**
+     * 需要更新数据
+     */
+    @Subscribe(tags = {@Tag(Constant.TAG_UPDATE_CIRCLE)})
+    public void onEvent(UpdateDataEvent event) {
+        if (mIViewStaus == STATE_VIEW_SHOW) {
+            loadData();
+        }
     }
 }

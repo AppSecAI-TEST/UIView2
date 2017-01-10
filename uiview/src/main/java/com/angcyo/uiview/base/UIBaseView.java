@@ -331,7 +331,7 @@ public abstract class UIBaseView extends UIIViewImpl {
             return;
         }
         if (visibility == VISIBLE) {
-            ViewCompat.animate(view).alpha(1).start();
+            ViewCompat.animate(view).alpha(1).scaleX(1).scaleY(1).start();
         }
         view.setVisibility(visibility);
     }
@@ -339,7 +339,7 @@ public abstract class UIBaseView extends UIIViewImpl {
     private void safeSetVisibility(final View view, final int visibility) {
         if (view != null) {
             if (view.getVisibility() == View.VISIBLE) {
-                ViewCompat.animate(view).alpha(0).withEndAction(new Runnable() {
+                ViewCompat.animate(view).scaleX(1.2f).scaleY(1.2f).alpha(0).withEndAction(new Runnable() {
                     @Override
                     public void run() {
                         view.setVisibility(visibility);

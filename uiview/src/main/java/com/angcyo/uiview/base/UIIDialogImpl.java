@@ -233,6 +233,14 @@ public abstract class UIIDialogImpl extends UIIViewImpl {
         return this;
     }
 
+    public void show(UIIViewImpl iView) {
+        iView.startIView(this);
+    }
+
+    public void show(UILayoutImpl uiLayout) {
+        uiLayout.startIView(this);
+    }
+
     public interface OnDismissListener {
         void onDismiss();
     }

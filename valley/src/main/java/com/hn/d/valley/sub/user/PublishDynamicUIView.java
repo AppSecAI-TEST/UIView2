@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -30,8 +31,10 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.T_;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
@@ -39,6 +42,7 @@ import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.RAmap;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
 
@@ -46,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.functions.Action1;
@@ -62,6 +67,10 @@ import rx.functions.Action1;
  * Version: 1.0.0
  */
 public class PublishDynamicUIView extends BaseContentUIView implements OssControl.OnUploadListener, UIIDialogImpl.OnDismissListener {
+    /**
+     * 是否显示过提示
+     */
+    private static boolean isShowTip = false;
     @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
     @BindView(R.id.tag_layout)
@@ -176,6 +185,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     public void onNext(String s) {
                         T_.show(s);
                         finishIView();
+                        RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
                     }
 
                     @Override
@@ -277,6 +287,20 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             case R.id.share_layout:
                 mShareBox.setChecked(!mShareBox.isChecked());
                 break;
+        }
+    }
+
+    @OnCheckedChanged(R.id.top_box)
+    public void onTopCheck(boolean isCheck) {
+        if (isCheck && !isShowTip) {
+            UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
+                    .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
+                    .setCancelText("").setOkText(mActivity.getString(R.string.known))
+                    .setCanCanceledOnOutside(false)
+                    .show(this);
+            if (!BuildConfig.DEBUG) {
+                isShowTip = true;
+            }
         }
     }
 

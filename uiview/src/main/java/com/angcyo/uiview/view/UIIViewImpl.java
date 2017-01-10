@@ -34,6 +34,11 @@ import butterknife.ButterKnife;
 public abstract class UIIViewImpl implements IView {
 
     public static final int DEFAULT_ANIM_TIME = 300;
+    public static final int STATE_NORMAL = 1;
+    public static final int STATE_VIEW_SHOW = 3;
+    public static final int STATE_VIEW_HIDE = 4;
+    public static final int STATE_VIEW_LOAD = 2;
+    public static final int STATE_VIEW_UNLOAD = 5;
 
     protected ILayout mILayout;
     protected ILayout mOtherILayout;
@@ -47,6 +52,7 @@ public abstract class UIIViewImpl implements IView {
      * 用来管理rootview
      */
     protected RBaseViewHolder mViewHolder;
+    protected int mIViewStaus = STATE_NORMAL;
     private boolean mIsRightJumpLeft = false;
 
     public static void setDefaultConfig(Animation animation) {
@@ -117,13 +123,16 @@ public abstract class UIIViewImpl implements IView {
         }
     }
 
+    @CallSuper
     @Override
     public void onViewCreate() {
         L.d(this.getClass().getSimpleName(), "onViewCreate: ");
     }
 
+    @CallSuper
     @Override
     public void onViewLoad() {
+        mIViewStaus = STATE_VIEW_LOAD;
         L.d(this.getClass().getSimpleName(), "onViewLoad: ");
     }
 
@@ -133,23 +142,30 @@ public abstract class UIIViewImpl implements IView {
         onViewShow(null);
     }
 
+    @CallSuper
     @Override
     public void onViewShow(Bundle bundle) {
+        mIViewStaus = STATE_VIEW_SHOW;
         L.d(this.getClass().getSimpleName(), "onViewShow: ");
     }
 
+    @CallSuper
     @Override
     public void onViewReShow(Bundle bundle) {
         L.d(this.getClass().getSimpleName(), "onViewReShow: ");
     }
 
+    @CallSuper
     @Override
     public void onViewHide() {
+        mIViewStaus = STATE_VIEW_HIDE;
         L.d(this.getClass().getSimpleName(), "onViewHide: ");
     }
 
+    @CallSuper
     @Override
     public void onViewUnload() {
+        mIViewStaus = STATE_VIEW_UNLOAD;
         L.d(this.getClass().getSimpleName(), "onViewUnload: ");
     }
 

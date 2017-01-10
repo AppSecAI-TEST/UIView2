@@ -238,7 +238,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     @Override
     public void startIView(final IView iView, final UIParam param) {
-        L.w("请求启动:" + iView.getClass().getSimpleName());
+        L.d("请求启动:" + iView.getClass().getSimpleName());
         runnableCount++;
         iView.onAttachedToILayout(this);
         final Runnable endRunnable = new Runnable() {
@@ -384,7 +384,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             return;
         }
 
-        L.w("请求关闭2:" + viewPattern.mIView.getClass().getSimpleName());
+        L.d("请求关闭2:" + viewPattern.mIView.getClass().getSimpleName());
 
         ViewPattern lastViewPattern = findLastShowViewPattern(viewPattern);
 
@@ -467,7 +467,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         if (iview == null) {
             return;
         }
-        L.w("请求关闭:" + iview.getClass().getSimpleName());
+        L.d("请求关闭:" + iview.getClass().getSimpleName());
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
@@ -759,7 +759,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
-                L.w(topViewPattern.mIView.getClass().getSimpleName() + " 启动完毕.");
+                L.d(topViewPattern.mIView.getClass().getSimpleName() + " 启动完毕.");
                 viewShow(topViewPattern, param.mBundle);
                 topViewPattern.isAnimToStart = false;
                 printLog();
@@ -795,7 +795,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
-                L.w(topViewPattern.mIView.getClass().getSimpleName() + " 关闭完成.");
+                L.d(topViewPattern.mIView.getClass().getSimpleName() + " 关闭完成.");
 
                 topViewPattern.isAnimToEnd = false;
                 isFinishing = false;

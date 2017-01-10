@@ -49,6 +49,11 @@ public class Constant {
      * 需要更新联系人列表
      */
     public static final String TAG_UPDATE_RECENT_CONTACTS = "tag_update_recent_contacts";
+
+    /**
+     * 需要更新圈子
+     */
+    public static final String TAG_UPDATE_CIRCLE = "tag_update_circle";
     /**
      * 需要更新未读消息数量
      */

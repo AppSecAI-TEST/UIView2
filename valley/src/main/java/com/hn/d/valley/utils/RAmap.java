@@ -102,7 +102,7 @@ public class RAmap {
      */
     public static AmapBean getLastLocation() {
         AmapBean bean = null;
-        RealmResults<AmapBean> all = RRealm.where(AmapBean.class).findAll();
+        RealmResults<AmapBean> all = RRealm.realm().where(AmapBean.class).findAll();
         if (all.size() > 0) {
             bean = all.last();
         }

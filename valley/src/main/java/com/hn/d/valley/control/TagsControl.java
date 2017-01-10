@@ -1,5 +1,6 @@
 package com.hn.d.valley.control;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.base.Param;
@@ -29,14 +30,17 @@ import rx.functions.Action1;
 public class TagsControl {
 
     public static void getTags(final Action1<List<Tag>> listAction1) {
-        RealmResults<Tag> results = RRealm.where(Tag.class).findAll();
-        if (results.size() != 0 && listAction1 != null) {
+        RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
+        int size = results.size();
+        L.i("数据库中标签数量:" + size);
+        if (size != 0 && listAction1 != null) {
             List<Tag> tags = new ArrayList<>();
             for (Tag t : results) {
                 Tag tag = new Tag();
                 tag.setId(t.getId());
                 tag.setName(t.getName());
                 tags.add(tag);
+                L.i("->:" + tag.string());
             }
             listAction1.call(tags);
         }
@@ -46,18 +50,25 @@ public class TagsControl {
                 .compose(Rx.transformerList(Tag.class))
                 .subscribe(new BaseSingleSubscriber<List<Tag>>() {
                     @Override
-                    public void onNext(List<Tag> tags) {
+                    public void onNext(final List<Tag> tags) {
+                        if (tags.isEmpty()) {
+                            return;
+                        }
+
                         /**先清空*/
-                        final RealmResults<Tag> results = RRealm.where(Tag.class).findAll();
+                        final RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
 
                         /**后保存*/
-                        Realm realm = RRealm.getRealm();
-                        realm.beginTransaction();
-                        results.deleteAllFromRealm();
-                        for (Tag tag : tags) {
-                            realm.copyToRealm(tag);
-                        }
-                        realm.commitTransaction();
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                results.deleteAllFromRealm();
+
+                                for (Tag tag : tags) {
+                                    realm.copyToRealm(tag);
+                                }
+                            }
+                        });
                     }
                 });
     }

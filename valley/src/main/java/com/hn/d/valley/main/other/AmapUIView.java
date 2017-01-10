@@ -220,7 +220,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     private void initLocation() {
 
         if (mLatlng == null) {
-            RealmResults<AmapBean> all = RRealm.where(AmapBean.class).findAll();
+            RealmResults<AmapBean> all = RRealm.realm().where(AmapBean.class).findAll();
             if (all.size() > 0) {
                 mLastBean = all.last();
                 mMarkerAddress.setText(mLastBean.address);
