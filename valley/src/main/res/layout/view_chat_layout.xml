@@ -243,11 +243,23 @@
             android:layout_height="match_parent"
             android:visibility="gone">
 
-            <com.angcyo.uiview.recycler.RecyclerViewPager
-                android:id="@+id/recycler_view_pager"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:tag="GH2"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.angcyo.uiview.recycler.RecyclerViewPager
+                    android:id="@+id/recycler_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="160dp"
+                    android:tag="GH2"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
 
             <com.angcyo.uiview.recycler.RecyclerViewPagerIndicator
                 android:id="@+id/recycler_view_pager_indicator"

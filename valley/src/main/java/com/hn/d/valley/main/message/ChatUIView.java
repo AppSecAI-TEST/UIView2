@@ -232,9 +232,10 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 
                 if (isEmojiShow) {
                     mChatControl.scrollToEnd();
-                    mCommandLayoutControl.fixHeight(height);
+                    //mCommandLayoutControl.fixHeight(height);
                     mCommandLayoutControl.init();
-                    mRecyclerView.requestLayout();
+//                    mRecyclerView.requestLayout();
+//                    mRecyclerView.getLayoutManager().requestLayout();
                 }
 
                 if (isKeyboardShow || isEmojiShow) {

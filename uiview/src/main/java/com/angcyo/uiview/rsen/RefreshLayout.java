@@ -346,7 +346,7 @@ public class RefreshLayout extends ViewGroup {
      */
     public void setRefreshEnd() {
         /**如果激活了延迟加载, ...*/
-        if (delayLoadEnd && System.currentTimeMillis() - refreshTime < 1000) {
+        if (delayLoadEnd && System.currentTimeMillis() - refreshTime < 600) {
             post(new Runnable() {
                 @Override
                 public void run() {
