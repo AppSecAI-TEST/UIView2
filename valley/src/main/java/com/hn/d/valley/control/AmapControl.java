@@ -19,12 +19,9 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
-import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.resources.ResUtil;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.constant.Constant;
@@ -36,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -111,23 +109,60 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         }
     }
 
+    public static void test() {
+//        FutureTarget<File> future = Glide.with(mContext)
+//                .load("url")
+//                .downloadOnly(500, 500);
+//        try {
+//            File cacheFile = future.get();
+//            String path = cacheFile.getAbsolutePath();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+
+//        Bitmap myBitmap = Glide.with(applicationContext)
+//                .load(yourUrl)
+//                .asBitmap() //必须
+//                .centerCrop()
+//                .into(500, 500)
+//                .get();
+    }
+
     public void addMarks(List<NearUserInfo> userInfos) {
         for (NearUserInfo info : userInfos) {
             LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
             final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.default_avatar)));
 
-            Glide.with(mContext)
-                    .load(info.getAvatar())
-                    .asBitmap()
-                    .override(mMarkerSize, mMarkerSize)
-                    .transform(new GlideCircleTransform(mContext))
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
-                        }
-                    });
+//            Glide.with(mContext)
+//                    .load(info.getAvatar())
+//                    .asBitmap()
+//                    .override(100, 100)
+//                    .centerCrop()
+//                    .transform(new GlideCircleTransform(mContext))
+//                    .into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
+//                        }
+//                    });
+
+            try {
+                Bitmap myBitmap = Glide.with(mContext)
+                        .load(info.getAvatar())
+                        .asBitmap() //必须
+                        .centerCrop()
+                        .into(160, 160)
+                        .get();
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(myBitmap));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
             mMarkerMap.put(info.getUid(), marker);
         }
     }
@@ -194,4 +229,5 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         }
         mLocationClient = null;
     }
+
 }
