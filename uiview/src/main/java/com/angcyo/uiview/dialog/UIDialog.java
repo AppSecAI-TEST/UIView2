@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.R;
+import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.base.UIIDialogImpl;
 
 /**
@@ -41,6 +42,8 @@ public class UIDialog extends UIIDialogImpl {
     View.OnClickListener cancelListener, okListener;
 
     private UIDialog() {
+        cancelText = RApplication.getApp().getString(R.string.base_cancel);
+        okText = RApplication.getApp().getString(R.string.base_ok);
     }
 
     public static UIDialog build() {
@@ -101,8 +104,8 @@ public class UIDialog extends UIIDialogImpl {
         mLineLayout = rootView.findViewById(R.id.line_layout);
 
         //默认文本设置
-        mBaseDialogOkView.setText(mActivity.getResources().getString(R.string.base_cancel));
-        mBaseDialogCancelView.setText(mActivity.getResources().getString(R.string.base_ok));
+        //mBaseDialogOkView.setText(mActivity.getResources().getString(R.string.base_cancel));
+        //mBaseDialogCancelView.setText(mActivity.getResources().getString(R.string.base_ok));
 
         mBaseDialogOkView.setOnClickListener(new View.OnClickListener() {
             @Override

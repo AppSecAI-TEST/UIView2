@@ -89,13 +89,6 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
         super.initOnShowContentLayout();
         mMapView.onCreate(null);
         initAmap();
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                initLocation();
-                setCameraChangeListener();
-            }
-        }, 500);
     }
 
     @Override
@@ -147,6 +140,13 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
                 }
             });
         }
+        mMap.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
+            @Override
+            public void onMapLoaded() {
+                initLocation();
+                setCameraChangeListener();
+            }
+        });
     }
 
     @Override
@@ -218,7 +218,6 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
      * 定位到最后一次的位置
      */
     private void initLocation() {
-
         if (mLatlng == null) {
             RealmResults<AmapBean> all = RRealm.realm().where(AmapBean.class).findAll();
             if (all.size() > 0) {

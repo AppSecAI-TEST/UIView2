@@ -234,6 +234,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                     mChatControl.scrollToEnd();
                     mCommandLayoutControl.fixHeight(height);
                     mCommandLayoutControl.init();
+                    mRecyclerView.requestLayout();
                 }
 
                 if (isKeyboardShow || isEmojiShow) {

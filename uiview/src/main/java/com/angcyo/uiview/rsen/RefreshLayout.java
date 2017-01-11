@@ -338,7 +338,11 @@ public class RefreshLayout extends ViewGroup {
      * 结束刷新
      */
     public void setRefreshEnd() {
-        if (mCurState == FINISH || mCurState == NORMAL || mCurState == MOVE) {
+        if (mCurState == FINISH || mCurState == NORMAL /*|| mCurState == MOVE*/) {
+            return;
+        }
+
+        if (mCurState == MOVE && isTouchDown) {
             return;
         }
 

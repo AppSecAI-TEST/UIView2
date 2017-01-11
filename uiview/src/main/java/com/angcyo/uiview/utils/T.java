@@ -180,7 +180,7 @@ public class T {
 
 
     private static void makeToastFullscreen(Context context, Toast toast) {
-        if (isSupport()) {
+        if (!isSupport()) {
             return;
         }
 

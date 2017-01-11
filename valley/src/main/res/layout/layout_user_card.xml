@@ -39,9 +39,10 @@
 
         <TextView
             style="@style/ShadowStyle"
-            android:layout_width="@dimen/base_ldpi"
-            android:layout_height="@dimen/base_ldpi"
-            android:background="@drawable/base_white_circle_shape"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="·"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/show_time"
