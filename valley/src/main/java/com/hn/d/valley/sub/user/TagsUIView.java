@@ -93,7 +93,7 @@ public class TagsUIView extends BaseContentUIView {
     @Override
     protected void initContentLayout() {
         super.initContentLayout();
-        TagsControl.inflate(mActivity, mFlowLayout, new Action2<RTextCheckView, Tag>() {
+        TagsControl.inflate(mActivity, mFlowLayout, false, new Action2<RTextCheckView, Tag>() {
             @Override
             public void call(RTextCheckView rTextCheckView, Tag tag) {
                 rTextCheckView.setChecked(selectorTag.contains(tag));

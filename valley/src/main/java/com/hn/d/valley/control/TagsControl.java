@@ -13,6 +13,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.widget.RTextCheckView;
 import com.hn.d.valley.R;
+import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -40,6 +41,14 @@ import rx.functions.Action2;
  * Version: 1.0.0
  */
 public class TagsControl {
+
+    public static Tag allTag;
+
+    static {
+        allTag = new Tag();
+        allTag.setId("0");
+        allTag.setName(ValleyApp.getApp().getResources().getString(R.string.all));
+    }
 
     public static void getTags(final Action1<List<Tag>> listAction1) {
         RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
@@ -85,13 +94,18 @@ public class TagsControl {
                 });
     }
 
-    public static void inflate(final AppCompatActivity activity, final ViewGroup rootLayout, final Action2<RTextCheckView, Tag> onAddView) {
+    public static void inflate(final AppCompatActivity activity, final ViewGroup rootLayout,
+                               final boolean showAll, final Action2<RTextCheckView, Tag> onAddView) {
         TagsControl.getTags(new Action1<List<Tag>>() {
             @Override
             public void call(List<Tag> tags) {
                 if (tags.isEmpty()) {
                     T_.show(activity.getString(R.string.fetch_tag_failed));
                     return;
+                }
+
+                if (showAll) {
+                    tags.add(0, allTag);
                 }
 
                 ViewGroupUtils.addViews(rootLayout, new BaseCacheAdapter<Tag>(activity, tags) {

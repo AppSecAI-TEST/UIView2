@@ -29,6 +29,8 @@ import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
 
 import static com.angcyo.uiview.view.UIIViewImpl.DEFAULT_ANIM_TIME;
@@ -130,6 +132,11 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      */
     private boolean isSwipeDrag = false;
 
+    /**
+     * 需要中断IView启动的的列表
+     */
+    private Set<IView> interruptSet;
+
     public UILayoutImpl(Context context) {
         super(context);
         initLayout();
@@ -195,6 +202,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     private void initLayout() {
         mCompatActivity = (AppCompatActivity) getContext();
+        interruptSet = new HashSet<>();
     }
 
     @Override
@@ -239,6 +247,15 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     @Override
     public void startIView(final IView iView, final UIParam param) {
         L.d("请求启动:" + iView.getClass().getSimpleName());
+        iView.onAttachedToILayout(this);
+
+        /**已经被中断启动了*/
+        if (interruptSet.contains(iView)) {
+            interruptSet.remove(iView);
+            L.d("请求启动:" + iView.getClass().getSimpleName() + " --启动被中断!");
+            return;
+        }
+
         runnableCount++;
         final Runnable endRunnable = new Runnable() {
             @Override
@@ -319,6 +336,31 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     }
 
     /**
+     * [add] 星期三 2017-1-11
+     */
+    private ViewPattern startIViewInternal(final ViewPattern viewPattern) {
+        hideSoftInput();
+
+        IView iView = viewPattern.mIView;
+
+        iView.onAttachedToILayout(this);
+
+        //1:inflateContentView, 会返回对应IView的RootLayout
+        View rawView = loadViewInternal(iView);
+        //2:loadContentView
+        iView.loadContentView(rawView);
+
+        viewPattern.setView(rawView);
+        mAttachViews.push(viewPattern);
+
+        for (OnIViewChangedListener listener : mOnIViewChangedListeners) {
+            listener.onIViewAdd(this, viewPattern);
+        }
+
+        return viewPattern;
+    }
+
+    /**
      * 加载所有添加的IView
      */
     protected void loadViewInternal() {
@@ -382,6 +424,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      */
     private void finishIViewInner(final ViewPattern viewPattern, final UIParam param) {
         if (viewPattern == null || viewPattern.isAnimToEnd) {
+            isFinishing = false;
             return;
         }
 
@@ -468,11 +511,18 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         if (iview == null) {
             return;
         }
-        L.d("请求关闭:" + iview.getClass().getSimpleName());
+        L.d("请求关闭/中断:" + iview.getClass().getSimpleName());
+        interruptSet.add(iview);
+
+        final ViewPattern viewPattern = findViewPatternByIView(iview);
+        if (viewPattern != null) {
+            viewPattern.interrupt = true;//中断启动
+        }
+
         final Runnable endRunnable = new Runnable() {
             @Override
             public void run() {
-                finishIViewInner(findViewPatternByIView(iview), param);
+                finishIViewInner(viewPattern, param);
             }
         };
 
@@ -657,6 +707,8 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     @Override
     public void replaceIView(final IView iView, final UIParam param) {
+        iView.onAttachedToILayout(this);
+
         if (isFinishing) {
             post(new Runnable() {
                 @Override
@@ -1400,6 +1452,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             if (keepLast && pattern == getLastViewPattern()) {
                 return;
             } else {
+                pattern.interrupt = true;
                 finishIViewInner(pattern, new UIParam(false, false, true));
             }
         }

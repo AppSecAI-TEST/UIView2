@@ -37,9 +37,15 @@ public class TagFilterUIDialog extends UIIDialogImpl {
     private RelativeLayout mRootLayout;
 
     private Action1<Tag> selectorAction;
+    /**
+     * 当前高亮的tag
+     */
+    private Tag currentTag;
 
-    public TagFilterUIDialog(Action1<Tag> selectorAction) {
+
+    public TagFilterUIDialog(Action1<Tag> selectorAction, Tag currentTag) {
         this.selectorAction = selectorAction;
+        this.currentTag = currentTag;
     }
 
     @Override
@@ -80,9 +86,13 @@ public class TagFilterUIDialog extends UIIDialogImpl {
                 finishDialog();
             }
         });
-        TagsControl.inflate(mActivity, mFlowLayout, new Action2<RTextCheckView, Tag>() {
+        TagsControl.inflate(mActivity, mFlowLayout, true, new Action2<RTextCheckView, Tag>() {
             @Override
             public void call(RTextCheckView rTextCheckView, Tag tag) {
+                if (currentTag.equals(tag)) {
+                    rTextCheckView.setChecked(true);
+                }
+
                 rTextCheckView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

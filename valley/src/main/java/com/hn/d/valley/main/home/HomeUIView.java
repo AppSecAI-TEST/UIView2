@@ -18,6 +18,7 @@ import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.bean.realm.Tag;
+import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.main.home.recommend.RecommendUIView;
@@ -47,6 +48,7 @@ public class HomeUIView extends BaseUIView {
     UIViewPager mViewPager;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
     private RecommendUIView mRecommendUIView;
+    private Tag currentTag;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -114,10 +116,11 @@ public class HomeUIView extends BaseUIView {
                     new TagFilterUIDialog(new Action1<Tag>() {
                         @Override
                         public void call(Tag tag) {
+                            currentTag = tag;
                             mRecommendUIView.setFilterTag(tag);
                             mRecommendUIView.loadData();
                         }
-                    }).showDialog(mOtherILayout);
+                    }, currentTag == null ? TagsControl.allTag : currentTag).showDialog(mOtherILayout);
                 }
             }
         });
