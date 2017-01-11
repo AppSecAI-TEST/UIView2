@@ -3,6 +3,8 @@ package com.hn.d.valley.control;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.util.Log;
+import android.view.animation.Interpolator;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -19,8 +21,12 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.maps.model.animation.Animation;
+import com.amap.api.maps.model.animation.TranslateAnimation;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.BmpUtil;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
@@ -33,7 +39,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import rx.functions.Func1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -64,7 +73,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         this.map = map;
         mMarkerList = new ArrayList<>();
         mMarkerMap = new HashMap<>();
-        mMarkerSize = (int) ResUtil.dpToPx(mContext, 100);
+        mMarkerSize = (int) ResUtil.dpToPx(mContext, 60);
     }
 
     public static Point getPointFromLanLng(final AMap aMap, LatLng latLng) {
@@ -130,12 +139,19 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 //                .get();
     }
 
+    //dip和px转换
+    private static int dip2px(Context context, float dpValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
+    }
+
     public void addMarks(List<NearUserInfo> userInfos) {
-        for (NearUserInfo info : userInfos) {
+        clearMarker();
+
+        for (final NearUserInfo info : userInfos) {
             LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
             final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.default_avatar)));
-
 //            Glide.with(mContext)
 //                    .load(info.getAvatar())
 //                    .asBitmap()
@@ -149,22 +165,41 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 //                        }
 //                    });
 
-            try {
-                Bitmap myBitmap = Glide.with(mContext)
-                        .load(info.getAvatar())
-                        .asBitmap() //必须
-                        .centerCrop()
-                        .into(160, 160)
-                        .get();
-                marker.setIcon(BitmapDescriptorFactory.fromBitmap(myBitmap));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            }
+            Rx.base(new Func1<String, Object>() {
+                @Override
+                public Object call(String s) {
+                    try {
+                        Bitmap myBitmap = Glide.with(mContext)
+                                .load(info.getAvatar())
+                                .asBitmap() //必须
+                                .centerCrop()
+                                //.transform(new GlideCircleTransform(mContext))
+                                .into(mMarkerSize, mMarkerSize)
+                                .get();
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(myBitmap, mMarkerSize)));
+
+                        /**开始动画*/
+                        startJumpAnimation(marker);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+
+                    return null;
+                }
+            });
 
             mMarkerMap.put(info.getUid(), marker);
         }
+    }
+
+    private void clearMarker() {
+        Set<Map.Entry<String, Marker>> entries = mMarkerMap.entrySet();
+        for (Map.Entry<String, Marker> entry : entries) {
+            entry.getValue().destroy();
+        }
+        mMarkerMap.clear();
     }
 
     public void moveToLocation(LatLng latlng) {
@@ -175,6 +210,43 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 
     public void moveToLocation(AmapBean bean) {
         moveToLocation(new LatLng(bean.latitude, bean.longitude));
+    }
+
+    /**
+     * 屏幕中心marker 跳动
+     */
+    public void startJumpAnimation(Marker marker) {
+
+        if (marker != null) {
+            //根据屏幕距离计算需要移动的目标点
+            final LatLng latLng = marker.getPosition();
+            Point point = map.getProjection().toScreenLocation(latLng);
+            point.y -= dip2px(mContext, 125);
+            LatLng target = map.getProjection()
+                    .fromScreenLocation(point);
+            //使用TranslateAnimation,填写一个需要移动的目标点
+            Animation animation = new TranslateAnimation(target);
+            animation.setInterpolator(new Interpolator() {
+                @Override
+                public float getInterpolation(float input) {
+                    // 模拟重加速度的interpolator
+                    if (input <= 0.5) {
+                        return (float) (0.5f - 2 * (0.5 - input) * (0.5 - input));
+                    } else {
+                        return (float) (0.5f - Math.sqrt((input - 0.5f) * (1.5f - input)));
+                    }
+                }
+            });
+            //整个移动所需要的时间
+            animation.setDuration(600);
+            //设置动画
+            marker.setAnimation(animation);
+            //开始动画
+            marker.startAnimation();
+
+        } else {
+            Log.e("ama", "screenMarker is null");
+        }
     }
 
     /**
