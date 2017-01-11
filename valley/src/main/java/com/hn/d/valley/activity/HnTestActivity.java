@@ -8,13 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.widget.RCheckGroup;
 import com.hn.d.valley.R;
 
 /**
@@ -39,13 +38,29 @@ public class HnTestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_layout);
+        setContentView(R.layout.layout_sex_filter);
 
-        final RRecyclerView rRecyclerView = view(R.id.recycler_view);
-        final EditText editText = view(R.id.input_view);
-        final TestAdapter adapter = new TestAdapter(this);
-        rRecyclerView.setAdapter(adapter);
-        final InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        RCheckGroup checkGroup = (RCheckGroup) findViewById(R.id.check_group_view);
+        checkGroup.setOnCheckChangedListener(new RCheckGroup.OnCheckChangedListener() {
+            @Override
+            public void onChecked(View fromm, View to) {
+                if (fromm == null) {
+                    L.e("onChecked fromm:" + null + " ->to:" + to.getId());
+                } else {
+                    L.e("onChecked fromm:" + fromm.getId() + " ->to:" + to.getId());
+                }
+            }
+
+            @Override
+            public void onReChecked(View view) {
+                L.e("onReChecked:" + view.getId());
+            }
+        });
+//        final RRecyclerView rRecyclerView = view(R.id.recycler_view);
+//        final EditText editText = view(R.id.input_view);
+//        final TestAdapter adapter = new TestAdapter(this);
+//        rRecyclerView.setAdapter(adapter);
+//        final InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 //        view(R.id.show).setOnClickListener(new View.OnClickListener() {
 //            @Override

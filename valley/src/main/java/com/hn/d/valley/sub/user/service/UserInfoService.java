@@ -73,4 +73,35 @@ public interface UserInfoService {
      */
     @POST("contact/unAttention")
     Observable<ResponseBody> unAttention(@QueryMap Map<String, String> map);
+
+
+    /**
+     * 上报位置
+     * <p>
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * lat	是	string	精度 【如：116.32715863448607】
+     * lng	是	string	纬度【如：39.990912172420714】
+     * province	否	string	省 【如：北京】
+     * city	否	string	市【如：北京】
+     * town	否	string	区【如：东直门】
+     * street	否	string	街道 【如：大川胡同】
+     * street_number	否	string	街道号【如：20】
+     * address	否	string	具体地址【如：北京市东直门大川胡同30号瑶瑶网吧】
+     * type	是	string	定位方式【gps/ip】
+     */
+    @POST("user/location")
+    Observable<ResponseBody> location(@QueryMap Map<String, String> map);
+
+    /**
+     * 附近的用户
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * lng	是	string	当前经度
+     * lat	是	string	当前纬度
+     * page	是	int	第几页【默认1】
+     * limit	否	int	每页显示的数量【默认20】
+     */
+    @POST("user/nearUser")
+    Observable<ResponseBody> nearUser(@QueryMap Map<String, String> map);
 }

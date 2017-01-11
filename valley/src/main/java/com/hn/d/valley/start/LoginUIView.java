@@ -339,7 +339,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                         if (code == ResponseCode.RES_SUCCESS) {
                             jumpToMain();
                         } else {
-                            T_.show("登录失败!");
+                            T_.show("您的网络有问题, 请稍后重试!");
                         }
                     }
                 });

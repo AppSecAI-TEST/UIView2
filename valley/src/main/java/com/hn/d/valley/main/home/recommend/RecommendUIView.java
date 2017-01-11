@@ -51,9 +51,9 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
     protected RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> initRExBaseAdapter() {
         return new UserDiscussAdapter(mActivity) {
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean tBean) {
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean dataBean) {
                 //super.onBindDataView(holder, posInData, tBean);
-                UserDiscussItemControl.initItem(mSubscriptions, holder, tBean, new Action0() {
+                UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action0() {
                     @Override
                     public void call() {
                         loadData();
@@ -61,8 +61,8 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                 });
 
                 final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
-                final List<String> medias = RUtils.split(tBean.getMedia());
-                if ("3".equalsIgnoreCase(tBean.getMedia_type())) {
+                final List<String> medias = RUtils.split(dataBean.getMedia());
+                if ("3".equalsIgnoreCase(dataBean.getMedia_type())) {
                     mediaImageType.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -85,7 +85,6 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
 
                     @Override
                     public void onNext(UserDiscussListBean userDiscussListBean) {
-                        showContentLayout();
                         onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
                     }
 

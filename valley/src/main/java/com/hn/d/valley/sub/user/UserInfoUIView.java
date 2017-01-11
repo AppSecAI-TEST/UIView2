@@ -247,36 +247,36 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
         }
 
         @Override
-        protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, SearchUserBean hBean) {
+        protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, SearchUserBean headerBean) {
             ArrayList<String> photos = new ArrayList<>();
-            photos.add(hBean.getAvatar());
-            photos.addAll(RUtils.split(hBean.getPhotos()));
+            photos.add(headerBean.getAvatar());
+            photos.addAll(RUtils.split(headerBean.getPhotos()));
             PhotoPager.init(mILayout,
                     ((TextIndicator) holder.v(R.id.single_text_indicator_view)),
                     (ViewPager) holder.v(R.id.view_pager), photos);
-            holder.fillView(hBean, true);
+            holder.fillView(headerBean, true);
             HnGenderView hnGenderView = holder.v(R.id.grade);
-            hnGenderView.setGender(hBean.getSex(), hBean.getGrade());
+            hnGenderView.setGender(headerBean.getSex(), headerBean.getGrade());
 
-            holder.v(R.id.star).setVisibility(1 == hBean.getIs_star() ? View.VISIBLE : View.GONE);
-            holder.v(R.id.auth).setVisibility("1".equalsIgnoreCase(hBean.getIs_auth()) ? View.VISIBLE : View.GONE);
+            holder.v(R.id.star).setVisibility(1 == headerBean.getIs_star() ? View.VISIBLE : View.GONE);
+            holder.v(R.id.auth).setVisibility("1".equalsIgnoreCase(headerBean.getIs_auth()) ? View.VISIBLE : View.GONE);
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, final int posInData, UserDiscussListBean.DataListBean tBean) {
+        protected void onBindDataView(RBaseViewHolder holder, final int posInData, UserDiscussListBean.DataListBean dataBean) {
             if (holder.getItemViewType() == 100) {
                 initEmpty(holder, true, getEmptyTipString());
                 return;
             }
 
             final String uid = UserCache.getUserAccount();
-            final String to_uid = tBean.getUser_info().getUid();
+            final String to_uid = dataBean.getUser_info().getUid();
 
             //UserDiscussItemControl.initItem(holder, tBean);
 
             final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
-            final List<String> medias = RUtils.split(tBean.getMedia());
-            if ("3".equalsIgnoreCase(tBean.getMedia_type())) {
+            final List<String> medias = RUtils.split(dataBean.getMedia());
+            if ("3".equalsIgnoreCase(dataBean.getMedia_type())) {
                 mediaImageType.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -298,7 +298,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             }
 
             //bindCommandItemView(holder, posInData, tBean, uid, to_uid);
-            UserDiscussItemControl.initItem(mSubscriptions, holder, tBean, new Action0() {
+            UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action0() {
                 @Override
                 public void call() {
                     loadData();

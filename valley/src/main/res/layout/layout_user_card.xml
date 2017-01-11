@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="170dp">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/avatar"
+        style="@style/ImageStyle"/>
+
+    <TextView
+        android:id="@+id/signature"
+        style="@style/SingleWhiteTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_xxxhdpi"
+        android:layout_alignParentBottom="true"
+        android:background="@color/default_base_bg_press"
+        android:padding="@dimen/base_ldpi"
+        tools:text="没有永远的敌人, 也没有永恒e(new Exception().getStackTrace()[0].getMethodName());朋友"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/base_ldpi">
+
+        <TextView
+            android:id="@+id/show_distance"
+            style="@style/SingleWhiteTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_xxxhdpi"
+            android:layout_alignParentTop="true"
+            android:padding="@dimen/base_ldpi"
+            tools:text="100m以内"/>
+
+        <View
+            android:layout_width="@dimen/base_ldpi"
+            android:layout_height="@dimen/base_ldpi"
+            android:background="@drawable/base_white_circle_shape"/>
+
+        <TextView
+            android:id="@+id/show_time"
+            style="@style/SingleWhiteTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/base_xxxhdpi"
+            android:padding="@dimen/base_ldpi"
+            tools:text="4分钟前"/>
+
+    </LinearLayout>
+</RelativeLayout>

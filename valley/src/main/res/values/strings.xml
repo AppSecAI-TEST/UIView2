@@ -89,5 +89,6 @@
     <string name="chat_empty_tip">亲~您还没有会话!</string>
     <string name="input_hint_tip">点击输入发送新消息</string>
     <string name="all">全部</string>
+    <string name="default_empty_nearby_tip">亲~附近还木有伙伴!</string>
 
 </resources>

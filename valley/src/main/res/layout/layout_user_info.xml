@@ -18,6 +18,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/star"/>
+
+        <ImageView
+            android:id="@+id/command_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_hdpi"
+            android:background="@drawable/base_bg_selector"
+            android:minHeight="@dimen/base_xxxhdpi"
+            android:minWidth="@dimen/base_xxxhdpi"
+            android:padding="@dimen/base_ldpi"
+            android:src="@drawable/attention_fans_n"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout

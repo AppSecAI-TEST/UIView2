@@ -153,7 +153,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @Override
     public void onShowInPager(UIViewPager viewPager) {
         super.onShowInPager(viewPager);
-        if (isDelayLoad() && delayTime()) {
+        if (mIViewStatus == STATE_VIEW_SHOW && isDelayLoad() && delayTime()) {
             loadData();
         }
     }
@@ -270,7 +270,9 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 初始化控件状态
      */
     public void onUILoadDataFinish() {
-        mRefreshLayout.setRefreshEnd();
+        if (mRefreshLayout != null) {
+            mRefreshLayout.setRefreshEnd();
+        }
         //mRExBaseAdapter.setLoadMoreEnd();
     }
 
@@ -278,6 +280,9 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 接口返回数据后,请调用此方法设置数据
      */
     public void onUILoadDataEnd(List<T> datas, int data_count) {
+        //显示内容布局,因为一开始可能是一个加载布局
+        showContentLayout();
+
         this.data_count = data_count;
         boolean isEmptyData;
 
@@ -305,6 +310,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
                 mRExBaseAdapter.setNoMore();
             }
         }
+    }
+
+    public void onUILoadDataEnd() {
+        onUILoadDataEnd(null, data_count);
     }
 
     /**

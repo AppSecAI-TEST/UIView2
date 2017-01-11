@@ -30,8 +30,8 @@ public class UserDiscussAdapter extends RExBaseAdapter<String, UserDiscussListBe
     }
 
     @Override
-    protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean tBean) {
-        super.onBindDataView(holder, posInData, tBean);
-        UserDiscussItemControl.initItem(holder, tBean);
+    protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean dataBean) {
+        super.onBindDataView(holder, posInData, dataBean);
+        UserDiscussItemControl.initItem(holder, dataBean);
     }
 }

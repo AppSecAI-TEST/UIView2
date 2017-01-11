@@ -10,7 +10,7 @@ import android.widget.TextView;
  * 实现了 checked 状态的 TextView
  * Created by angcyo on 2017-01-01 10:46.
  */
-public class RTextCheckView extends TextView implements View.OnClickListener {
+public class RTextCheckView extends TextView implements View.OnClickListener, RCheckGroup.ICheckView {
 
     private static final int[] CHECKED_STATE_SET = {
             android.R.attr.state_checked
@@ -39,10 +39,12 @@ public class RTextCheckView extends TextView implements View.OnClickListener {
         setPadding(paddStart, paddTop, paddStart, paddTop);
     }
 
+    @Override
     public boolean isChecked() {
         return mChecked;
     }
 
+    @Override
     public void setChecked(boolean checked) {
         if (mChecked == checked) {
             return;

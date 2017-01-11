@@ -63,6 +63,8 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
         e.printStackTrace();
 
         onError(errorCode, errorMsg);
+
+        T_.show("[" + errorCode + "]" + errorMsg);
         L.e("-----------------------------------------End-------------------------------------------");
     }
 
@@ -71,14 +73,13 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
      */
     public void onError(int code, String msg) {
         L.d("订阅异常->" + this.getClass().getSimpleName() + " " + msg);
-        T_.show(msg);
         onEnd();
     }
 
     /**
      * 不管是成功订阅,还是异常,都会执行的方法
      */
-    protected void onEnd() {
+    public void onEnd() {
 
     }
 }

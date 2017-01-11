@@ -3,6 +3,7 @@ package com.hn.d.valley.utils;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.support.annotation.UiThread;
 import android.text.TextUtils;
 
 import com.amap.api.location.AMapLocation;
@@ -18,8 +19,14 @@ import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.REmptySubscriber;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.realm.AmapBean;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.sub.user.service.UserInfoService;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -100,6 +107,7 @@ public class RAmap {
     /**
      * 返回数据库中最后一个位置信息
      */
+    @UiThread
     public static AmapBean getLastLocation() {
         AmapBean bean = null;
         RealmResults<AmapBean> all = RRealm.realm().where(AmapBean.class).findAll();
@@ -137,6 +145,24 @@ public class RAmap {
                 RBus.post(amapBean);
             }
         });
+
+        /**上报地理位置信息*/
+        RRetrofit.create(UserInfoService.class)
+                .location(Param.buildMap(
+                        "uid:" + UserCache.getUserAccount(),
+                        "lat:" + location.getLatitude(),
+                        "lng:" + location.getLongitude(),
+                        "province:" + location.getProvince(),
+                        "city:" + location.getCity(),
+                        "town:" + location.getDistrict(),
+                        "street:" + location.getStreet(),
+                        "address:" + location.getAddress(),
+                        "type:" +
+                                (location.getLocationType()
+                                        == AMapLocation.LOCATION_TYPE_GPS ? "GPS" : "IP")
+                ))
+                .compose(Rx.transformer())
+                .subscribe(REmptySubscriber.build());
     }
 
     public static RAmap init(Context context) {
