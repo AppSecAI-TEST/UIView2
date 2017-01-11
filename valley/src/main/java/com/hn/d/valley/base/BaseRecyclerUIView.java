@@ -62,8 +62,17 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @Override
     final protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflateRecyclerRootLayout(baseContentLayout, inflater);
+    }
+
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         initRefreshLayout();
         initRecyclerView();
+
+        if (!isDelayLoad()) {
+            loadData();
+        }
     }
 
     @CallSuper
@@ -103,14 +112,6 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      */
     protected boolean hasLastDecoration() {
         return true;
-    }
-
-    @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
-        if (!isDelayLoad()) {
-            loadData();
-        }
     }
 
     @CallSuper

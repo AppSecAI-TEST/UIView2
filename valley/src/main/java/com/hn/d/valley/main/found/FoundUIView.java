@@ -60,10 +60,10 @@ public class FoundUIView extends BaseUIView {
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
         ArrayList<UIItem.ItemInfo> items = new ArrayList<>();
-        UIItem.ItemInfo info = new UIItem.ItemInfo(R.drawable.add_friends_n, R.drawable.next, R.drawable.default_bg_selector,
+        UIItem.ItemInfo info = new UIItem.ItemInfo(R.drawable.hot_news, R.drawable.next, R.drawable.default_bg_selector,
                 mActivity.getResources().getColor(R.color.main_text_color),
                 (int) mActivity.getResources().getDimension(R.dimen.default_text_size),
-                (int) ResUtil.dpToPx(mActivity.getResources(), 50), "热点资讯",
+                (int) ResUtil.dpToPx(mActivity.getResources(), 60), "热点资讯",
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -71,19 +71,19 @@ public class FoundUIView extends BaseUIView {
                     }
                 });
         items.add(info);
-        items.add(info.copy().setLeftIcoResId(R.drawable.add_contact_n).setItemText("搜一搜").setClickListener(new View.OnClickListener() {
+        items.add(info.copy().setLeftIcoResId(R.drawable.search).setItemText("搜一搜").setClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 T_.show("搜一搜");
             }
         }));
-        items.add(info.copy().setLeftIcoResId(R.drawable.add_contact_n).setItemText("扫一扫").setClickListener(new View.OnClickListener() {
+        items.add(info.copy().setLeftIcoResId(R.drawable.scan).setItemText("扫一扫").setClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 T_.show("扫一扫");
             }
         }));
-        items.add(info.copy().setLeftIcoResId(R.drawable.add_contact_n).setItemText("邀请好友").setClickListener(new View.OnClickListener() {
+        items.add(info.copy().setLeftIcoResId(R.drawable.invite_friends).setItemText("邀请好友").setClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 T_.show("邀请好友");

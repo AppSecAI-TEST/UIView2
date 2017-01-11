@@ -188,6 +188,11 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
 
                     @Override
                     public void onNext(UserDiscussListBean userDiscussListBean) {
+                        if (userDiscussListBean == null) {
+                            onUILoadDataEnd();
+                            return;
+                        }
+
                         List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
                         if (data_list != null && data_list.size() > 0) {
                             UserDiscussListBean.DataListBean lastBean = data_list.get(data_list.size() - 1);
@@ -258,6 +263,9 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             HnGenderView hnGenderView = holder.v(R.id.grade);
             hnGenderView.setGender(headerBean.getSex(), headerBean.getGrade());
 
+            if (!TextUtils.isEmpty(headerBean.getIntroduce())) {
+                holder.v(R.id.introduce).setVisibility(View.VISIBLE);
+            }
             holder.v(R.id.star).setVisibility(1 == headerBean.getIs_star() ? View.VISIBLE : View.GONE);
             holder.v(R.id.auth).setVisibility("1".equalsIgnoreCase(headerBean.getIs_auth()) ? View.VISIBLE : View.GONE);
         }

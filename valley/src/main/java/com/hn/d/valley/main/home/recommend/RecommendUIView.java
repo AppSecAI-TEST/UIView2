@@ -85,7 +85,11 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
 
                     @Override
                     public void onNext(UserDiscussListBean userDiscussListBean) {
-                        onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
+                        if (userDiscussListBean == null) {
+                            onUILoadDataEnd();
+                        } else {
+                            onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
+                        }
                     }
 
                     @Override

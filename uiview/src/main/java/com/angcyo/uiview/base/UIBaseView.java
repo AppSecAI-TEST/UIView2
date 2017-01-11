@@ -167,7 +167,7 @@ public abstract class UIBaseView extends UIIViewImpl {
     /**
      * 初始化内容, 当你的 默认布局状态不等于 {@link LayoutState#CONTENT} 时,请使用以下方法初始化内容
      */
-    protected void initContentLayout() {
+    protected void initOnShowContentLayout() {
 
     }
 
@@ -272,7 +272,7 @@ public abstract class UIBaseView extends UIIViewImpl {
         if (mBaseContentLayout.getChildCount() == 0) {
             inflateContentLayout(mBaseContentLayout, LayoutInflater.from(mActivity));
             ButterKnife.bind(this, mBaseContentLayout);
-            initContentLayout();
+            initOnShowContentLayout();
         }
         changeState(mLayoutState, LayoutState.CONTENT);
     }

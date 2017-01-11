@@ -176,8 +176,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         mBaseRootLayout.fitsSystemWindows(false);
 
         mChatControl = new ChatControl(mActivity, mViewHolder, this);

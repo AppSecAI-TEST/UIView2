@@ -87,8 +87,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
 
         if (BuildConfig.DEBUG) {
             RxView.longClicks(mLoginView)

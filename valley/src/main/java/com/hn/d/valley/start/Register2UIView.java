@@ -94,8 +94,8 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
 
         RxView.clicks(mFinishView)
                 .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)

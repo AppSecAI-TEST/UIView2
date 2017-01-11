@@ -61,8 +61,8 @@ public class HomeUIView extends BaseUIView {
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         initViewPager();
         initTabLayout();
     }

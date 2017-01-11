@@ -75,8 +75,8 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         bindPresenter(new SearchPresenter());
         mSearchUserAdapter = new SearchUserAdapter(mActivity);
         mRecyclerView.setAdapter(mSearchUserAdapter);

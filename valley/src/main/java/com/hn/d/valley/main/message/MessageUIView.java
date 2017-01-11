@@ -83,8 +83,8 @@ public class MessageUIView extends BaseUIView {
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         mRecentContactsControl.init(mBaseContentLayout);
         onEvent(null);
     }

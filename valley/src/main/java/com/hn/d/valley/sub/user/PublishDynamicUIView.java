@@ -109,8 +109,8 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         mImageAdapter = new ImageAdapter(mRecyclerView);
         mImageAdapter.setDividerHeight((int) ResUtil.dpToPx(mActivity.getResources(), 6));
         mRecyclerView.setItemAnim(false);

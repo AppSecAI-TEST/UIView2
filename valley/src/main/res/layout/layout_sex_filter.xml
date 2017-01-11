@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/filter_root_layout"
     android:layout_width="wrap_content"
@@ -17,7 +18,18 @@
         android:id="@+id/check_group_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:divider="@drawable/base_shape_line"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        app:checked_id="@+id/all_check_view">
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/all_check_view"
+            style="@style/WhiteColorTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/base_dark_tran_check_selector"
+            android:text="All"/>
 
         <com.angcyo.uiview.widget.RImageCheckView
             android:id="@+id/boy_check_view"

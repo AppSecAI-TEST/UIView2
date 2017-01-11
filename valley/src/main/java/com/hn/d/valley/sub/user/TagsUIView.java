@@ -91,8 +91,8 @@ public class TagsUIView extends BaseContentUIView {
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         TagsControl.inflate(mActivity, mFlowLayout, false, new Action2<RTextCheckView, Tag>() {
             @Override
             public void call(RTextCheckView rTextCheckView, Tag tag) {

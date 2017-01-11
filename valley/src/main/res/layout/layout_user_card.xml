@@ -30,21 +30,22 @@
 
         <TextView
             android:id="@+id/show_distance"
-            style="@style/SingleWhiteTextStyle"
+            style="@style/ShadowStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/base_xxxhdpi"
             android:layout_alignParentTop="true"
             android:padding="@dimen/base_ldpi"
             tools:text="100m以内"/>
 
-        <View
+        <TextView
+            style="@style/ShadowStyle"
             android:layout_width="@dimen/base_ldpi"
             android:layout_height="@dimen/base_ldpi"
             android:background="@drawable/base_white_circle_shape"/>
 
         <TextView
             android:id="@+id/show_time"
-            style="@style/SingleWhiteTextStyle"
+            style="@style/ShadowStyle"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/base_xxxhdpi"
             android:padding="@dimen/base_ldpi"

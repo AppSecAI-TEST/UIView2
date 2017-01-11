@@ -17,7 +17,6 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseUIView;
@@ -25,15 +24,13 @@ import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
-import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.MsgCache;
-import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.status.PostStatusUIDialog;
-import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.widget.HnLoading;
@@ -91,8 +88,7 @@ public class MainUIView extends BaseUIView {
     @Override
     public void onViewCreate() {
         super.onViewCreate();
-        DataCacheManager.buildDataCacheAsync();
-        UserCache.instance().updateUserInfo();
+        MainControl.onMainCreate();
     }
 
     @NonNull
@@ -226,9 +222,7 @@ public class MainUIView extends BaseUIView {
     @Override
     public void onViewUnload() {
         super.onViewUnload();
-        if (BuildConfig.DEBUG) {
-            RNim.logout();
-        }
+        MainControl.onMainUnload();
     }
 
     @Subscribe

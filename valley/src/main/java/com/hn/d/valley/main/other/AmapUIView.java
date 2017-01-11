@@ -85,8 +85,8 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         mMapView.onCreate(null);
         initAmap();
         postDelayed(new Runnable() {

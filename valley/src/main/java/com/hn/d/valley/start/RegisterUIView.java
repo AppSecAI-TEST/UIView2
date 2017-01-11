@@ -66,8 +66,8 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         if (BuildConfig.DEBUG) {
             mCodeView.setText("888888");
         }

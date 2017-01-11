@@ -91,8 +91,8 @@ public class MeUIView extends BaseUIView {
     }
 
     @Override
-    protected void initContentLayout() {
-        super.initContentLayout();
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
         initScrollLayout();
         UserCache.instance().getLoginBeanObservable().subscribe(new Action1<LoginBean>() {
             @Override
