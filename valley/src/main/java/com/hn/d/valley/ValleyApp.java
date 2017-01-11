@@ -57,9 +57,9 @@ public class ValleyApp extends RApplication {
 
         RRealm.init(this);
 
-        CrashReport.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
-        CrashReport.initCrashReport(getApplicationContext(), "207e18ac24", false/*BuildConfig.DEBUG*/);
-        Bugly.init(getApplicationContext(), "207e18ac24", false);
+        CrashReport.setIsDevelopmentDevice(this, BuildConfig.DEBUG);
+        CrashReport.initCrashReport(this, "207e18ac24", false/*BuildConfig.DEBUG*/);
+        Bugly.init(this, "207e18ac24", false);
 
         UserCache.instance().getLoginBeanObservable()
                 .subscribe(new Action1<LoginBean>() {
