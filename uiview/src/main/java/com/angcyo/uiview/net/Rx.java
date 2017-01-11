@@ -118,8 +118,9 @@ public class Rx {
                                     }
                                 } catch (JSONException | IOException e) {
                                     e.printStackTrace();
+                                    throw new RException(-1000, "服务器数据异常.", e.getMessage());
                                 }
-                                return null;
+                                throw new NullPointerException("无数据.");
                             }
                         })
                         .retry(RETRY_COUNT)
