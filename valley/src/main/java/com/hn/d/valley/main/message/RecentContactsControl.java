@@ -236,12 +236,7 @@ public class RecentContactsControl {
             @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
                 if (direction == RefreshLayout.TOP) {
-                    mRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            RecentContactsCache.instance().buildCache();
-                        }
-                    }, 1000);
+                    RecentContactsCache.instance().buildCache();
                 }
             }
         });

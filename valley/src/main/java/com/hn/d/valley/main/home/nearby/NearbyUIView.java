@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.TextureMapView;
 import com.angcyo.library.utils.Anim;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
@@ -190,6 +191,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
                 } else if (to.getId() == R.id.all_check_view) {
                     mSex = 0;
                 }
+                L.e("开始刷新...");
                 mRecyclerView.scrollToPosition(0);
                 //开始刷新
                 mRefreshLayout.setRefreshState(RefreshLayout.TOP);
@@ -263,6 +265,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
+        L.e("加载数据..." + page);
+
         add(RRetrofit.create(UserInfoService.class)
                 .nearUser(Param.buildMap("uid:" + UserCache.getUserAccount(),
                         "page:" + page,

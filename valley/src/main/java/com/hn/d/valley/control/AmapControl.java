@@ -179,7 +179,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(myBitmap, mMarkerSize)));
 
                         /**开始动画*/
-                        startJumpAnimation(marker);
+                        //startJumpAnimation(marker);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
