@@ -1,6 +1,7 @@
 package com.hn.d.valley.control;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 
 import com.amap.api.location.AMapLocation;
@@ -18,7 +19,12 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.resources.ResUtil;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.constant.Constant;
@@ -44,9 +50,9 @@ import java.util.Map;
  */
 public class AmapControl implements LocationSource, AMapLocationListener {
 
+    private final int mMarkerSize;
     OnLocationChangedListener mListener;
     AMapLocationClient mLocationClient;
-
     List<Marker> mMarkerList;
     /**
      * 保存用户id, 和对应的marker
@@ -60,6 +66,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         this.map = map;
         mMarkerList = new ArrayList<>();
         mMarkerMap = new HashMap<>();
+        mMarkerSize = (int) ResUtil.dpToPx(mContext, 100);
     }
 
     public static Point getPointFromLanLng(final AMap aMap, LatLng latLng) {
@@ -107,9 +114,20 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     public void addMarks(List<NearUserInfo> userInfos) {
         for (NearUserInfo info : userInfos) {
             LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
-            Marker marker = map.addMarker(new MarkerOptions().position(latLng)
+            final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.default_avatar)));
 
+            Glide.with(mContext)
+                    .load(info.getAvatar())
+                    .asBitmap()
+                    .override(mMarkerSize, mMarkerSize)
+                    .transform(new GlideCircleTransform(mContext))
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
+                        }
+                    });
             mMarkerMap.put(info.getUid(), marker);
         }
     }

@@ -372,7 +372,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
         Anim.anim(mMapView).alpha(1).withEndAction(new Runnable() {
             @Override
             public void run() {
-                mMyLocation.setVisibility(View.INVISIBLE);
+                mMyLocation.setVisibility(View.VISIBLE);
             }
         }).start();
 
@@ -402,11 +402,11 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
     private void hideMapView() {
         UIViewPager.interceptTouch = true;
         mMapView.onPause();
+        mMyLocation.setVisibility(View.GONE);
         Anim.anim(mMapView).alpha(0).withEndAction(new Runnable() {
             @Override
             public void run() {
                 mMapView.setVisibility(View.GONE);
-                mMyLocation.setVisibility(View.GONE);
             }
         }).start();
     }
