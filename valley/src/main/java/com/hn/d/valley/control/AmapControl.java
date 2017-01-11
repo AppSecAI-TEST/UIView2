@@ -173,7 +173,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                                 .load(info.getAvatar())
                                 .asBitmap() //必须
                                 .centerCrop()
-                                //.transform(new GlideCircleTransform(mContext))
+                                //.transform(new GlideCircleTransform(mContext))...
                                 .into(mMarkerSize, mMarkerSize)
                                 .get();
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(myBitmap, mMarkerSize)));
