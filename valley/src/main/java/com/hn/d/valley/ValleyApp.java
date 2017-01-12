@@ -4,6 +4,9 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.storage.StorageUtil;
+import com.bumptech.glide.Glide;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.hn.d.valley.base.T_;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
@@ -42,11 +45,22 @@ public class ValleyApp extends RApplication {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+        if (BuildConfig.DEBUG) {
+            T_.show("请注意, 内存过低!");
+        }
+        Glide.get(this).clearMemory();
+        Fresco.shutDown();
+        Fresco.getImagePipeline().clearMemoryCaches();
     }
 
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
+        if (BuildConfig.DEBUG) {
+            T_.show("请求释放内存..." + level);
+        }
+        Glide.get(this).trimMemory(level);
+        Fresco.getImagePipeline().clearMemoryCaches();
     }
 
     @Override
