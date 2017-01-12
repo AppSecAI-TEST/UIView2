@@ -27,6 +27,10 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  * Version: 1.0.0
  */
 public class DraweeViewUtil {
+
+    public static int DEFAULT_WIDTH = 400;
+    public static int DEFAULT_HEIGHT = 600;
+
     public static void setDraweeViewRes(SimpleDraweeView view, @DrawableRes int res) {
         String url = "res://" + view.getContext().getPackageName() + "/" + res;
         view.setImageURI(Uri.parse(url));
