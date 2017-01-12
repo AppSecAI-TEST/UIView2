@@ -65,6 +65,8 @@ public class HomeUIView extends BaseUIView {
         super.initOnShowContentLayout();
         initViewPager();
         initTabLayout();
+
+        mViewPager.setCurrentItem(1);
     }
 
     private void initViewPager() {
