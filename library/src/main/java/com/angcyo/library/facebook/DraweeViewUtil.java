@@ -93,7 +93,7 @@ public class DraweeViewUtil {
             return;
         }
         if (url.startsWith("http")) {
-            view.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_XY);
+            view.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             resize(view, Uri.parse(url), width, height);
         } else {
             resize(view, Uri.parse(Http.BASE_IMAGE_URL + url), width, height);
