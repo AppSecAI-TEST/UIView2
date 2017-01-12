@@ -104,6 +104,10 @@ public class DraweeViewUtil {
         }
     }
 
+    public static void resize(SimpleDraweeView view, String url) {
+        resize(view, url, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+
     /**
      * 设置占位图以及缩放类型
      */
