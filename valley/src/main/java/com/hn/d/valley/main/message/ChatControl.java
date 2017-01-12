@@ -28,6 +28,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.bean.event.LastMessageEvent;
+import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
@@ -303,7 +304,7 @@ public class ChatControl {
             DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.msg_ico_view), avatar);
 
             //消息内容
-            updateMsgContent(holder, bean);
+            updateMsgContent(holder, bean, avatar);
 
             //时间
             TextView timeTextView = holder.tv(R.id.msg_time_view);
@@ -320,7 +321,7 @@ public class ChatControl {
             updateMsgStatus(holder, bean);
         }
 
-        private void updateMsgContent(RBaseViewHolder holder, final IMMessage bean) {
+        private void updateMsgContent(RBaseViewHolder holder, final IMMessage bean, final String avatar) {
             final View msgContentLayout = holder.v(R.id.msg_content_layout);
             final View msgTextLayout = holder.v(R.id.msg_text_layout);
             final View msgImageLayout = holder.v(R.id.msg_image_layout);
@@ -447,11 +448,15 @@ public class ChatControl {
                     msgLocationLayout.setVisibility(View.VISIBLE);
                     final LocationAttachment attachment = (LocationAttachment) bean.getAttachment();
                     holder.tV(R.id.location_address_view).setText(attachment.getAddress());
+                    new LatLng(attachment.getLatitude(), attachment.getLongitude());
+                    final AmapBean amapBean = new AmapBean();
+                    amapBean.latitude = attachment.getLatitude();
+                    amapBean.longitude = attachment.getLongitude();
+                    amapBean.address = attachment.getAddress();
                     msgContentLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mUIBaseView.startIView(new AmapUIView(null,
-                                    new LatLng(attachment.getLatitude(), attachment.getLongitude()), false));
+                            mUIBaseView.startIView(new AmapUIView(null, amapBean, avatar, false));
                         }
                     });
                     break;

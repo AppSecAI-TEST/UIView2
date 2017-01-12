@@ -33,10 +33,12 @@ public class RTextCheckView extends TextView implements View.OnClickListener, RC
         super.setOnClickListener(this);
         setGravity(Gravity.CENTER);
 
-        float density = getResources().getDisplayMetrics().density;
-        int paddStart = (int) (density * 20);
-        int paddTop = (int) (density * 10);
-        setPadding(paddStart, paddTop, paddStart, paddTop);
+        if (getTag() == null) {
+            float density = getResources().getDisplayMetrics().density;
+            int paddStart = (int) (density * 20);
+            int paddTop = (int) (density * 10);
+            setPadding(paddStart, paddTop, paddStart, paddTop);
+        }
     }
 
     @Override

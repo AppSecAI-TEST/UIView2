@@ -285,7 +285,7 @@ public class MainUIView extends BaseUIView {
                 }
 
                 @Override
-                protected void onEnd() {
+                public void onEnd() {
                     super.onEnd();
                     HnLoading.hide();
                 }

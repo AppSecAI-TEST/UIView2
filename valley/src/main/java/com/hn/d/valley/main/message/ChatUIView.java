@@ -277,7 +277,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 //                        final IMMessage message = MessageBuilder.createTextMessage(mSessionId, sessionType, "测试");
 //                        sendMessage(message);
                     }
-                }, null, true));
+                }, null, null, true));
             }
         }));
         items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_audio_chat_normal, "语音通话", new View.OnClickListener() {

@@ -11,28 +11,31 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.animation.Animation;
 import com.amap.api.maps.model.animation.TranslateAnimation;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.BmpUtil;
+import com.angcyo.uiview.utils.T;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.NearUserInfo;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.utils.RAmap;
 
 import java.util.ArrayList;
@@ -40,9 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
-import rx.functions.Func1;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -57,6 +59,7 @@ import rx.functions.Func1;
  */
 public class AmapControl implements LocationSource, AMapLocationListener {
 
+    private static PoiSearch sPoiSearch;
     private final int mMarkerSize;
     OnLocationChangedListener mListener;
     AMapLocationClient mLocationClient;
@@ -67,13 +70,38 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     Map<String, Marker> mMarkerMap;
     AMap map;
     Context mContext;
+    /**
+     * 自己的位置
+     */
+    Marker myMarker;
+    Action1<String> userAction;
 
-    public AmapControl(Context context, AMap map) {
+    /**
+     * 是否显示自己
+     */
+    boolean showMyMarker = true;
+    private long lastSaveTime;
+
+    public AmapControl(Context context, final AMap map) {
         mContext = context;
         this.map = map;
         mMarkerList = new ArrayList<>();
         mMarkerMap = new HashMap<>();
         mMarkerSize = (int) ResUtil.dpToPx(mContext, 60);
+
+        map.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                if (userAction != null) {
+                    try {
+                        userAction.call(marker.getObject().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     public static Point getPointFromLanLng(final AMap aMap, LatLng latLng) {
@@ -83,11 +111,11 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     /**
      * 初始化本地位置
      */
-    public static void initAmap(final AMap aMap, final LocationSource locationSource) {
+    public static void initAmap(final AMap aMap, boolean showZoomControl, final LocationSource locationSource) {
         try {
             UiSettings uiSettings = aMap.getUiSettings();
             /**放大,缩小按钮,是否激活*/
-            uiSettings.setZoomControlsEnabled(false);
+            uiSettings.setZoomControlsEnabled(showZoomControl);
             // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
             uiSettings.setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
 
@@ -145,53 +173,121 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         return (int) (dpValue * scale + 0.5f);
     }
 
+    /**
+     * 开始进行poi搜索(搜索附近的poi信息)
+     */
+    public static PoiSearch doSearchQuery(LatLng latLng, int currentPage, PoiSearch.OnPoiSearchListener listener) {
+        PoiSearch.Query query = new PoiSearch.Query("", "", "");// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        query.setPageSize(20);// 设置每页最多返回多少条poiitem
+        query.setPageNum(currentPage);// 设置查第一页
+
+        if (sPoiSearch == null) {
+            sPoiSearch = new PoiSearch(ValleyApp.getApp(), query);
+        } else {
+            sPoiSearch.setQuery(query);
+        }
+        sPoiSearch.setOnPoiSearchListener(listener);
+        /**center - 该范围的中心点。
+         radiusInMeters - 半径，单位：米。
+         isDistanceSort - 是否按照距离排序。*/
+        sPoiSearch.setBound(new PoiSearch.SearchBound(new LatLonPoint(latLng.latitude, latLng.longitude), 5000, true));//
+        // 设置搜索区域为以lp点为圆心，其周围5000米范围
+        sPoiSearch.searchPOIAsyn();// 异步搜索
+        return sPoiSearch;
+    }
+
+    public void setShowMyMarker(boolean showMyMarker) {
+        this.showMyMarker = showMyMarker;
+    }
+
+    public void setUserClick(Action1<String> action1) {
+        userAction = action1;
+    }
+
+    /**
+     * 自己位置的marker
+     */
+    public void setMyMarker(LatLng latLng, String url) {
+        if (!showMyMarker) {
+            return;
+        }
+
+        if (myMarker != null) {
+            myMarker.setPosition(latLng);
+        } else {
+            Marker marker = addMarks(latLng, url);
+            marker.setObject(UserCache.getUserAccount());
+            this.myMarker = marker;
+        }
+    }
+
     public void addMarks(List<NearUserInfo> userInfos) {
         clearMarker();
 
         for (final NearUserInfo info : userInfos) {
             LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
-            final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.default_avatar)));
-//            Glide.with(mContext)
-//                    .load(info.getAvatar())
-//                    .asBitmap()
-//                    .override(100, 100)
-//                    .centerCrop()
-//                    .transform(new GlideCircleTransform(mContext))
-//                    .into(new SimpleTarget<Bitmap>() {
-//                        @Override
-//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
-//                        }
-//                    });
-
-            Rx.base(new Func1<String, Object>() {
-                @Override
-                public Object call(String s) {
-                    try {
-                        Bitmap myBitmap = Glide.with(mContext)
-                                .load(info.getAvatar())
-                                .asBitmap() //必须
-                                .centerCrop()
-                                //.transform(new GlideCircleTransform(mContext))...
-                                .into(mMarkerSize, mMarkerSize)
-                                .get();
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(myBitmap, mMarkerSize)));
-
-                        /**开始动画*/
-                        //startJumpAnimation(marker);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-
-                    return null;
-                }
-            });
-
+            Marker marker = addMarks(latLng, info.getAvatar());
+            marker.setObject(info.getUid());
             mMarkerMap.put(info.getUid(), marker);
         }
+
+//        /**开始动画*/
+//        Set<Map.Entry<String, Marker>> entries = mMarkerMap.entrySet();
+//        for (Map.Entry<String, Marker> entry : entries) {
+//            startJumpAnimation(entry.getValue());
+//            break;
+//        }
+    }
+
+    public Marker addMarks(LatLng latLng, String url) {
+        final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.default_avatar)));
+        Glide.with(mContext)
+                .load(url)
+                .asBitmap()
+                .override(mMarkerSize, mMarkerSize)
+                .centerCrop()
+//                    .transform(new GlideCircleTransform(mContext))
+//                    .override(mMarkerSize, mMarkerSize)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
+                        if (marker != null) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                    BmpUtil.getRoundedCornerBitmap(resource, mMarkerSize)));
+                            startJumpAnimation(marker);
+                        }
+                    }
+                });
+
+//            Rx.base(new Func1<String, Object>() {
+//                @Override
+//                public Object call(String s) {
+//                    try {
+//                        Bitmap myBitmap = Glide.with(mContext)
+//                                .load(info.getAvatar())
+//                                .asBitmap() //必须
+//                                .centerCrop()
+//                                //.transform(new GlideCircleTransform(mContext))...
+//                                .into(mMarkerSize, mMarkerSize)
+//                                .get();
+//                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(myBitmap, mMarkerSize)));
+//
+//                        /**开始动画*/
+//                        //startJumpAnimation(marker);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                    return null;
+//                }
+//            });
+
+//            startJumpAnimation(marker);
+        return marker;
     }
 
     private void clearMarker() {
@@ -203,9 +299,13 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     }
 
     public void moveToLocation(LatLng latlng) {
-        CameraUpdate camera = CameraUpdateFactory.newCameraPosition(
-                new CameraPosition(latlng, Constant.DEFAULT_ZOOM_LEVEL, 0, 0));
-        map.animateCamera(camera);
+//        CameraUpdate camera = CameraUpdateFactory.newCameraPosition(
+//                new CameraPosition(latlng, Constant.DEFAULT_ZOOM_LEVEL, 0, 0));
+//        map.animateCamera(camera);
+
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, Constant.DEFAULT_ZOOM_LEVEL));
+        /**自己位置的marker*/
+        setMyMarker(latlng, UserCache.instance().getAvatar());
     }
 
     public void moveToLocation(AmapBean bean) {
@@ -215,7 +315,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     /**
      * 屏幕中心marker 跳动
      */
-    public void startJumpAnimation(Marker marker) {
+    public void startJumpAnimation(final Marker marker) {
 
         if (marker != null) {
             //根据屏幕距离计算需要移动的目标点
@@ -242,7 +342,13 @@ public class AmapControl implements LocationSource, AMapLocationListener {
             //设置动画
             marker.setAnimation(animation);
             //开始动画
-            marker.startAnimation();
+
+            T.mainHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    marker.startAnimation();
+                }
+            }, 300);
 
         } else {
             Log.e("ama", "screenMarker is null");
@@ -257,7 +363,12 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         if (mListener != null && amapLocation != null) {
             if (amapLocation != null
                     && amapLocation.getErrorCode() == 0) {
-
+                setMyMarker(new LatLng(amapLocation.getLatitude(), amapLocation.getLongitude()),
+                        UserCache.instance().getAvatar());
+                if (System.currentTimeMillis() - lastSaveTime > 60 * 1000) {
+                    RAmap.saveAmapLocation2(amapLocation);
+                    lastSaveTime = System.currentTimeMillis();
+                }
                 mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
             } else {
                 String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();

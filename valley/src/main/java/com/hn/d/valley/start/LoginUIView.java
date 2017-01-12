@@ -301,7 +301,11 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.weixin_view)
     public void onWeixinClick() {
-        startIView(new AmapUIView());
+        AmapBean amapBean = new AmapBean();
+        amapBean.address = "测试位置";
+        amapBean.latitude = 39.90923;
+        amapBean.longitude = 116.397428;
+        startIView(new AmapUIView(null, amapBean, UserCache.getUserAccount(), true));
 //        HnUIMainActivity.launcher(mActivity);
     }
 

@@ -91,7 +91,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                     }
 
                     @Override
-                    protected void onEnd() {
+                    public void onEnd() {
                         onUILoadDataFinish();
                     }
 

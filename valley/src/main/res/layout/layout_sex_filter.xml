@@ -23,7 +23,7 @@
         android:layout_marginBottom="@dimen/base_xxhdpi"
         android:layout_marginRight="@dimen/base_xhdpi"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:background="@android:color/darker_gray">
 
         <com.angcyo.uiview.widget.RCheckGroup
@@ -35,32 +35,34 @@
             android:showDividers="middle"
             app:checked_id="@+id/all_check_view">
 
-            <com.angcyo.uiview.widget.RImageCheckView
+            <com.angcyo.uiview.widget.RTextCheckView
                 android:id="@+id/all_check_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/WhiteColorTextStyle"
+                android:layout_width="@dimen/base_40dpi"
+                android:layout_height="@dimen/base_40dpi"
                 android:background="@drawable/base_dark_to_main_check_selector"
-                android:src="@drawable/switch_map"/>
+                android:tag="@string/all"
+                android:text="@string/all"/>
 
             <com.angcyo.uiview.widget.RImageCheckView
                 android:id="@+id/boy_check_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/base_40dpi"
+                android:layout_height="@dimen/base_40dpi"
                 android:background="@drawable/base_dark_to_main_check_selector"
                 android:src="@drawable/boy_near"/>
 
             <com.angcyo.uiview.widget.RImageCheckView
                 android:id="@+id/girl_check_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/base_40dpi"
+                android:layout_height="@dimen/base_40dpi"
                 android:background="@drawable/base_dark_to_main_check_selector"
                 android:src="@drawable/girl_near"/>
         </com.angcyo.uiview.widget.RCheckGroup>
 
         <com.angcyo.uiview.widget.RImageCheckView
             android:id="@+id/map_check_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/base_40dpi"
+            android:layout_height="@dimen/base_40dpi"
             android:layout_marginTop="@dimen/base_xhdpi"
             android:background="@drawable/base_dark_circle_to_main_check_selector"
             android:src="@drawable/switch_map"/>

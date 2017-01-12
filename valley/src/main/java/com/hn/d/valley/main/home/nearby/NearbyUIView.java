@@ -266,6 +266,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         L.e("加载数据..." + page);
+        RAmap.startLocation();
 
         add(RRetrofit.create(UserInfoService.class)
                 .nearUser(Param.buildMap("uid:" + UserCache.getUserAccount(),
@@ -384,18 +385,19 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
             mMapView.onCreate(null);
             AMap map = mMapView.getMap();
             mAmapControl = new AmapControl(mActivity, map);
-            mAmapControl.initAmap(map, mAmapControl);
+            mAmapControl.initAmap(map, false, mAmapControl);
             map.setOnMapLoadedListener(new AMap.OnMapLoadedListener() {
                 @Override
                 public void onMapLoaded() {
                     initLocation();
+                    mAmapControl.addMarks(mRExBaseAdapter.getAllDatas());
                 }
             });
+        } else {
+            mAmapControl.addMarks(mRExBaseAdapter.getAllDatas());
         }
 
         mMapView.onResume();
-
-        mAmapControl.addMarks(mRExBaseAdapter.getAllDatas());
 
         initLocation();
     }

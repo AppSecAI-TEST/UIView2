@@ -93,7 +93,7 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                     }
 
                     @Override
-                    protected void onEnd() {
+                    public void onEnd() {
                         onUILoadDataFinish();
                     }
 

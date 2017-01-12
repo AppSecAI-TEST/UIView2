@@ -3,35 +3,36 @@ package com.hn.d.valley.main.other;
 import android.os.Bundle;
 import android.support.v4.widget.ViewDragHelper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapException;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.TextureMapView;
-import com.amap.api.maps.UiSettings;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.NaviPara;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.poisearch.PoiResult;
+import com.amap.api.services.poisearch.PoiSearch;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.SwipeBackLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.widget.EmptyView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.realm.AmapBean;
+import com.hn.d.valley.control.AmapControl;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
 
@@ -53,7 +54,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChangeListener, LocationSource, AMapLocationListener {
+public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChangeListener/*, LocationSource, AMapLocationListener*/ {
 
     @BindView(R.id.map_view)
     TextureMapView mMapView;
@@ -62,19 +63,38 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     @BindView(R.id.location_info_layout)
     LinearLayout mLocationInfoLayout;
     AmapBean mLastBean, mTargetBean;
+    @BindView(R.id.recycler_view)
+    RRecyclerView mRecyclerView;
+    @BindView(R.id.empty_view)
+    EmptyView mEmptyView;
+    @BindView(R.id.bottom_layout)
+    RelativeLayout mBottomLayout;
     private AMap mMap;
-    private OnLocationChangedListener mListener;
-    private AMapLocationClient mLocationClient;
+    //    private OnLocationChangedListener mListener;
+//    private AMapLocationClient mLocationClient;
     private Action1<AmapBean> mBeanAction1;
     private int mState = ViewDragHelper.STATE_IDLE;
     private boolean mSend = false;//是否需要发送位置
-    private LatLng mLatlng;
+    private AmapBean mOtherUserAmapBean;
+    private int mCurrentPage = 1;
+    private PoiItemAdapter mPoiItemAdapter;
+    private boolean lockCameraChangedListener = false;
+    /**
+     * 最后选择的目标位置
+     */
+    private LatLng mLastTarget;
+    /**
+     * 查看其它用户的头像
+     */
+    private String userUrl;
+    private AmapControl mAmapControl;
 
     public AmapUIView() {
     }
 
-    public AmapUIView(Action1<AmapBean> beanAction1, LatLng latlng, boolean send) {
-        mLatlng = latlng;
+    public AmapUIView(Action1<AmapBean> beanAction1, AmapBean otherUserAmapBean, String url, boolean send) {
+        mOtherUserAmapBean = otherUserAmapBean;
+        userUrl = url;
         mSend = send;
         mBeanAction1 = beanAction1;
     }
@@ -87,8 +107,44 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mBottomLayout.setVisibility(mSend ? View.VISIBLE : View.GONE);
         mMapView.onCreate(null);
         initAmap();
+
+        if (mSend) {
+            initBottomLayout();
+        }
+    }
+
+    private void initBottomLayout() {
+        mPoiItemAdapter = new PoiItemAdapter(mActivity, new PoiItemAdapter.OnPoiItemListener() {
+            @Override
+            public void onPoiItemSelector(PoiItem item) {
+                AmapBean amapBean = new AmapBean();
+                LatLonPoint latLonPoint = item.getLatLonPoint();
+                lockCameraChangedListener = true;
+
+                amapBean.latitude = latLonPoint.getLatitude();
+                amapBean.longitude = latLonPoint.getLongitude();
+                amapBean.address = PoiItemAdapter.getAddress(item);
+                amapBean.city = item.getCityName();
+                amapBean.province = item.getProvinceName();
+                amapBean.district = item.getAdName();
+                mTargetBean = amapBean;
+
+                mMarkerAddress.setText(amapBean.address);
+                moveToLocation(latLonPoint.getLatitude(), latLonPoint.getLongitude());
+            }
+
+            @Override
+            public void onPoiLoadMore() {
+                mCurrentPage++;
+                searchLastPosition();
+            }
+        });
+
+        mRecyclerView.setItemAnim(false);
+        mRecyclerView.setAdapter(mPoiItemAdapter);
     }
 
     @Override
@@ -106,6 +162,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
                             mBeanAction1.call(mTargetBean);
                         }
                         finishIView(AmapUIView.this);
+                        T_.show(mTargetBean.address);
                     }
                 }
             }));
@@ -144,7 +201,15 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
             @Override
             public void onMapLoaded() {
                 initLocation();
-                setCameraChangeListener();
+                searchLastPosition();
+            }
+        });
+        mMap.setOnMapTouchListener(new AMap.OnMapTouchListener() {
+            @Override
+            public void onTouch(MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    setCameraChangeListener();
+                }
             }
         });
     }
@@ -153,7 +218,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     public void onViewUnload() {
         super.onViewUnload();
         mMapView.onDestroy();
-        deactivate();
+        mAmapControl.deactivate();
     }
 
     @Override
@@ -170,40 +235,46 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
 
     @OnClick(R.id.my_location)
     public void onMyLocationClick() {
+        mLastBean = RAmap.getLastLocation();
         moveToLocation(mLastBean);
     }
 
     private void initAmap() {
-        try {
-            mMap = mMapView.getMap();
+        mMap = mMapView.getMap();
+        mAmapControl = new AmapControl(mActivity, mMap);
+        mAmapControl.setShowMyMarker(false);
+        mAmapControl.initAmap(mMap, true, mAmapControl);
 
-            UiSettings uiSettings = mMap.getUiSettings();
-            uiSettings.setZoomControlsEnabled(true);
-            // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-            uiSettings.setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
-
-            mMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-            mMap.setLocationSource(this);// 设置定位监听
-            mMap.setMyLocationEnabled(true);
-            //自己的位置 圆点-------------
-            // 自定义系统定位蓝点
-            MyLocationStyle myLocationStyle = new MyLocationStyle();
-            // 自定义定位蓝点图标
-            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                    fromResource(R.drawable.gps_point));
-            // 自定义精度范围的圆形边框颜色
-            myLocationStyle.strokeColor(mActivity.getResources().getColor(R.color.colorAccent));
-            //自定义精度范围的圆形边框宽度
-            myLocationStyle.strokeWidth(5);
-            // 设置圆形的填充颜色
-            myLocationStyle.radiusFillColor(mActivity.getResources().getColor(R.color.theme_color_primary_dark_tran2));
-            // 将自定义的 myLocationStyle 对象添加到地图上
-            mMap.setMyLocationStyle(myLocationStyle);
-            //end--------------------
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mMap = mMapView.getMap();
+//
+//            UiSettings uiSettings = mMap.getUiSettings();
+//            uiSettings.setZoomControlsEnabled(true);
+//            // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+//            uiSettings.setMyLocationButtonEnabled(false);// 设置默认定位按钮是否显示
+//
+//            mMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+//            mMap.setLocationSource(this);// 设置定位监听
+//            mMap.setMyLocationEnabled(true);
+//            //自己的位置 圆点-------------
+//            // 自定义系统定位蓝点
+//            MyLocationStyle myLocationStyle = new MyLocationStyle();
+//            // 自定义定位蓝点图标
+//            myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
+//                    fromResource(R.drawable.gps_point));
+//            // 自定义精度范围的圆形边框颜色
+//            myLocationStyle.strokeColor(mActivity.getResources().getColor(R.color.colorAccent));
+//            //自定义精度范围的圆形边框宽度
+//            myLocationStyle.strokeWidth(5);
+//            // 设置圆形的填充颜色
+//            myLocationStyle.radiusFillColor(mActivity.getResources().getColor(R.color.theme_color_primary_dark_tran2));
+//            // 将自定义的 myLocationStyle 对象添加到地图上
+//            mMap.setMyLocationStyle(myLocationStyle);
+//            //end--------------------
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void setCameraChangeListener() {
@@ -218,22 +289,28 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
      * 定位到最后一次的位置
      */
     private void initLocation() {
-        if (mLatlng == null) {
+        if (mOtherUserAmapBean == null) {
             RealmResults<AmapBean> all = RRealm.realm().where(AmapBean.class).findAll();
             if (all.size() > 0) {
                 mLastBean = all.last();
-                mMarkerAddress.setText(mLastBean.address);
+                mOtherUserAmapBean = mLastBean;
                 moveToLocation(mLastBean);
             } else {
-                mLatlng = new LatLng(39.90923, 116.397428);
-                moveToLocation(mLatlng);
+                mOtherUserAmapBean = new AmapBean();
+                mOtherUserAmapBean.latitude = 39.90923;
+                mOtherUserAmapBean.longitude = 116.397428;
+                mOtherUserAmapBean.address = "--";
+                moveToLocation(mOtherUserAmapBean);
             }
         } else {
-            moveToLocation(mLatlng);
+            mAmapControl.addMarks(new LatLng(mOtherUserAmapBean.latitude, mOtherUserAmapBean.longitude), userUrl);
+            moveToLocation(mOtherUserAmapBean);
         }
+        mMarkerAddress.setText(mOtherUserAmapBean.address);
+        mLastTarget = new LatLng(mOtherUserAmapBean.latitude, mOtherUserAmapBean.longitude);
     }
 
-    private void moveToLocation(long latitude, long longitude) {
+    private void moveToLocation(double latitude, double longitude) {
         LatLng latlng = new LatLng(latitude, longitude);
         moveToLocation(latlng);
     }
@@ -262,7 +339,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
         try {
             // 调起高德地图导航
             AMapUtils.openAMapNavi(naviPara, mActivity);
-        } catch (com.amap.api.maps.AMapException e) {
+        } catch (AMapException e) {
             // 如果没安装会进入异常，调起下载页面
             AMapUtils.getLatestAMapApp(mActivity);
         }
@@ -271,73 +348,113 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        mMarkerAddress.setText("正在获取...");
+        mMarkerAddress.setText(R.string.fetching);
         mTargetBean = null;
+        mCurrentPage = 1;
     }
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        RAmap.instance().queryLatLngAddress(cameraPosition.target, new Action1<AmapBean>() {
+        mLastTarget = cameraPosition.target;
+        RAmap.instance().queryLatLngAddress(mLastTarget, new Action1<AmapBean>() {
             @Override
             public void call(AmapBean bean) {
                 mTargetBean = bean;
                 mMarkerAddress.setText(bean.address);
             }
         });
+        if (!lockCameraChangedListener) {
+            searchLastPosition();
+        }
+        lockCameraChangedListener = false;
     }
 
-    /**
-     * 定位成功后回调函数
-     */
-    @Override
-    public void onLocationChanged(AMapLocation amapLocation) {
-        if (mListener != null && amapLocation != null) {
-            if (amapLocation != null
-                    && amapLocation.getErrorCode() == 0) {
+    private void searchLastPosition() {
+        if (mLastTarget == null || !mSend) {
+            return;
+        }
+        if (mCurrentPage < 1) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+        AmapControl.doSearchQuery(mLastTarget, mCurrentPage, new PoiSearch.OnPoiSearchListener() {
+            @Override
+            public void onPoiSearched(PoiResult poiResult, int code) {
+                if (code != 1000) {
+                    return;
+                }
 
-                mLastBean = RAmap.saveAmapLocation2(amapLocation);
+                if (mCurrentPage == 1) {
+                    mPoiItemAdapter.unSelectorAll(false);
+                    mPoiItemAdapter.resetData(poiResult.getPois());
+                } else {
+                    mPoiItemAdapter.appendData(poiResult.getPois());
+                }
 
-                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-            } else {
-                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
-                L.e("AmapErr:" + errText);
+                mPoiItemAdapter.setLoadMoreEnd();
+
+                mEmptyView.setVisibility(View.GONE);
             }
-        }
+
+            @Override
+            public void onPoiItemSearched(PoiItem poiItem, int code) {
+                L.e("" + code);
+            }
+        });
     }
 
-    /**
-     * 激活定位
-     */
-    @Override
-    public void activate(OnLocationChangedListener listener) {
-        mListener = listener;
-        if (mLocationClient == null) {
-            mLocationClient = new AMapLocationClient(mActivity);
-            AMapLocationClientOption mLocationOption = RAmap.getDefaultOption();
-            //设置定位监听
-            mLocationClient.setLocationListener(this);
-            //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-            //设置定位参数
-            mLocationClient.setLocationOption(mLocationOption);
-            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-            // 在定位结束后，在合适的生命周期调用onDestroy()方法
-            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-            mLocationClient.startLocation();
-        }
-    }
-
-    /**
-     * 停止定位
-     */
-    @Override
-    public void deactivate() {
-        mListener = null;
-        if (mLocationClient != null) {
-            mLocationClient.stopLocation();
-            mLocationClient.onDestroy();
-        }
-        mLocationClient = null;
-    }
+//
+//    /**
+//     * 定位成功后回调函数
+//     */
+//    @Override
+//    public void onLocationChanged(AMapLocation amapLocation) {
+//        if (mListener != null && amapLocation != null) {
+//            if (amapLocation != null
+//                    && amapLocation.getErrorCode() == 0) {
+//
+//                mLastBean = RAmap.saveAmapLocation2(amapLocation);
+//
+//                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+//            } else {
+//                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
+//                L.e("AmapErr:" + errText);
+//            }
+//        }
+//    }
+//
+//    /**
+//     * 激活定位
+//     */
+//    @Override
+//    public void activate(OnLocationChangedListener listener) {
+//        mListener = listener;
+//        if (mLocationClient == null) {
+//            mLocationClient = new AMapLocationClient(mActivity);
+//            AMapLocationClientOption mLocationOption = RAmap.getDefaultOption();
+//            //设置定位监听
+//            mLocationClient.setLocationListener(this);
+//            //设置为高精度定位模式
+//            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+//            //设置定位参数
+//            mLocationClient.setLocationOption(mLocationOption);
+//            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+//            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+//            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+//            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+//            mLocationClient.startLocation();
+//        }
+//    }
+//
+//    /**
+//     * 停止定位
+//     */
+//    @Override
+//    public void deactivate() {
+//        mListener = null;
+//        if (mLocationClient != null) {
+//            mLocationClient.stopLocation();
+//            mLocationClient.onDestroy();
+//        }
+//        mLocationClient = null;
+//    }
 }

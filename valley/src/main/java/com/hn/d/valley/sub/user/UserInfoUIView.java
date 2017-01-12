@@ -204,7 +204,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     }
 
                     @Override
-                    protected void onEnd() {
+                    public void onEnd() {
                         hideLoadView();
                         onUILoadDataFinish();
                     }

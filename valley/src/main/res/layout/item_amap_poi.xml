@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/base_xhdpi">
+
+    <TextView
+        android:id="@+id/title_view"
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="false"
+        tools:text="悦方广场"/>
+
+    <TextView
+        android:id="@+id/address_view"
+        style="@style/SingleDarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_view"
+        android:layout_centerVertical="false"
+        android:layout_marginTop="@dimen/base_mdpi"
+        android:maxLength="20"
+        tools:text="悦方广场悦方广场悦方广场悦方广场"/>
+
+    <ImageView
+        android:id="@+id/select_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/selected"
+        android:tint="@color/colorAccent"
+        android:visibility="gone"/>
+
+</RelativeLayout>

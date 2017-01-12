@@ -63,8 +63,9 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
         e.printStackTrace();
 
         onError(errorCode, errorMsg);
-
-        T_.show("[" + errorCode + "]" + errorMsg);
+        if (L.LOG_DEBUG) {
+            T_.show("[" + errorCode + "]" + errorMsg);
+        }
         L.e("-----------------------------------------End-------------------------------------------");
     }
 

@@ -189,7 +189,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     }
 
                     @Override
-                    protected void onEnd() {
+                    public void onEnd() {
                         super.onEnd();
                         HnLoading.hide();
                     }
@@ -256,7 +256,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                 }
 
                 @Override
-                protected void onEnd() {
+                public void onEnd() {
                     super.onEnd();
                     HnLoading.hide();
                 }
