@@ -1,5 +1,6 @@
 package com.angcyo.library.facebook;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
@@ -28,17 +29,25 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
  */
 public class DraweeViewUtil {
 
-    public static int DEFAULT_WIDTH = 400;
-    public static int DEFAULT_HEIGHT = 600;
+    public static int DEFAULT_WIDTH = 300;
+    public static int DEFAULT_HEIGHT = 400;
+
+    public static void init(Context context) {
+        final float density = context.getResources().getDisplayMetrics().density;
+        DEFAULT_WIDTH *= density;
+        DEFAULT_HEIGHT *= density;
+    }
 
     public static void setDraweeViewRes(SimpleDraweeView view, @DrawableRes int res) {
         String url = "res://" + view.getContext().getPackageName() + "/" + res;
-        view.setImageURI(Uri.parse(url));
+//        view.setImageURI(Uri.parse(url));
+        resize(view, Uri.parse(url), DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     public static void setDraweeViewFile(SimpleDraweeView view, String filePath) {
         String url = "file://" + filePath;
-        view.setImageURI(Uri.parse(url));
+//        view.setImageURI(Uri.parse(url));
+        resize(view, Uri.parse(url), DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     public static void setDraweeViewHttp(SimpleDraweeView view, String url) {
@@ -46,12 +55,13 @@ public class DraweeViewUtil {
             view.setImageURI("");
             return;
         }
-        if (url.startsWith("http")) {
-            view.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-            view.setImageURI(Uri.parse(url));
-        } else {
-            setDraweeViewHttp2Inner(view, url);
-        }
+        resize(view, Uri.parse(url), DEFAULT_WIDTH, DEFAULT_HEIGHT);
+//        if (url.startsWith("http")) {
+//            view.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
+//            view.setImageURI(Uri.parse(url));
+//        } else {
+//            setDraweeViewHttp2Inner(view, url);
+//        }
     }
 
     public static void setDraweeViewHttp2(SimpleDraweeView view, String url) {
@@ -82,6 +92,7 @@ public class DraweeViewUtil {
      * 重置加载的图片大小,不修改原图, 效果很好
      */
     public static void resize(SimpleDraweeView view, Uri uri, int width, int height) {
+        view.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setResizeOptions(new ResizeOptions(width, height))
                 .build();
@@ -94,10 +105,10 @@ public class DraweeViewUtil {
 
     public static void resize(SimpleDraweeView view, String url, int width, int height) {
         if (TextUtils.isEmpty(url)) {
+            view.setImageURI("");
             return;
         }
         if (url.startsWith("http")) {
-            view.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
             resize(view, Uri.parse(url), width, height);
         } else {
             resize(view, Uri.parse(Http.BASE_IMAGE_URL + url), width, height);
