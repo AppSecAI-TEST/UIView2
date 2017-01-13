@@ -24,6 +24,7 @@ import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.MsgCache;
+import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.CustomAttachment;
 import com.hn.d.valley.nim.CustomBean;
@@ -172,21 +173,35 @@ public final class NewFriendUIView extends BaseContentUIView {
                             }
                             showContentLayout();
                             List<IMMessage> beans = new ArrayList<>();
+                            List<String> users = new ArrayList<>();
                             for (IMMessage message : result) {
                                 if (message.getMsgType() == MsgTypeEnum.custom) {
                                     MsgAttachment attachment = message.getAttachment();
                                     if (attachment instanceof CustomAttachment) {
                                         beans.add(message);
+
+                                        try {
+                                            users.add(((CustomAttachment) attachment).getBean().getUid());
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
                                     }
                                 }
                             }
                             mFriendAdapter.resetData(beans);
+
+                            updateUserInfo(users);
                         } else {
                             showEmptyLayout();
                         }
                     }
                 });
     }
+
+    private void updateUserInfo(List<String> users) {
+        NimUserInfoCache.getInstance().fetchUserInfoFromRemote(users);
+    }
+
 
     @NonNull
     private IMMessage getEmptyMessage() {

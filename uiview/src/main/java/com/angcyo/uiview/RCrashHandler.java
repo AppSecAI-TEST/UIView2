@@ -520,23 +520,23 @@ public class RCrashHandler implements Thread.UncaughtExceptionHandler {
         // 应用的版本名称和版本号
         PackageManager pm = context.getPackageManager();
         PackageInfo pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
-        pw.print("App Version: ");
+        pw.print("App VersionName: ");
         pw.print(pi.versionName);
-        pw.print('_');
+        pw.print(" VersionCode: ");
         pw.println(pi.versionCode);
-        pw.println();
+//        pw.println();
 
         // android版本号
         pw.print("OS Version: ");
         pw.print(Build.VERSION.RELEASE);
-        pw.print("_");
+        pw.print(" ");
         pw.println(Build.VERSION.SDK_INT);
         pw.println();
 
         // 手机制造商
         pw.print("Vendor: ");
         pw.println(Build.MANUFACTURER);
-        pw.println();
+//        pw.println();
 
         // 手机型号
         pw.print("Model: ");
@@ -546,7 +546,7 @@ public class RCrashHandler implements Thread.UncaughtExceptionHandler {
         // cpu架构
         pw.print("CPU ABI: ");
         pw.println(Build.CPU_ABI);
-        pw.println();
+//        pw.println();
 
         pw.print("CPU ABI 2: ");
         pw.println(Build.CPU_ABI2);
@@ -554,19 +554,19 @@ public class RCrashHandler implements Thread.UncaughtExceptionHandler {
 
         pw.print("手机内存大小:");
         pw.println(Formatter.formatFileSize(context, getTotalMemorySize(context)));
-        pw.println();
+//        pw.println();
 
         pw.print("JVM可用内存大小:");
         pw.println(Formatter.formatFileSize(context, Runtime.getRuntime().maxMemory()));
-        pw.println();
+//        pw.println();
 
         pw.print("APP可用内存大小:");
         pw.println(Formatter.formatFileSize(context, getAvailableMemory(context)));
-        pw.println();
+//        pw.println();
 
         pw.print("SD空间大小:");
         pw.println(Formatter.formatFileSize(context, getTotalExternalMemorySize()));
-        pw.println();
+//        pw.println();
 
         pw.print("SD可用空间大小:");
         pw.println(Formatter.formatFileSize(context, getAvailableExternalMemorySize()));
