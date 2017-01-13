@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="status_bar_height">25dp</dimen>
-    <dimen name="action_bar_height">45dp</dimen>
+    <dimen name="action_bar_height">40dp</dimen>
     <dimen name="title_bar_height">70dp</dimen>
 
     <!--默认文本大小-->
@@ -20,7 +20,7 @@
     <!--标题的字体大小-->
     <dimen name="base_title_size">16sp</dimen>
     <!--标题上, 每个item的大小, 一般指的是宽度-->
-    <dimen name="base_title_bar_item_size">45dp</dimen>
+    <dimen name="base_title_bar_item_size">40dp</dimen>
     <!--对话框默认两边的距离-->
     <dimen name="base_dialog_margin">30dp</dimen>
     <!--线的大小-->

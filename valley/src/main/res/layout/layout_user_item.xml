@@ -5,18 +5,24 @@
     android:id="@+id/user_info_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/base_xhdpi">
+    android:paddingLeft="@dimen/base_xhdpi"
+    android:paddingRight="@dimen/base_xhdpi"
+    android:paddingTop="@dimen/base_xhdpi">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/avatar"
-        style="@style/UserMidIcoStyle"/>
+        style="@style/UserMidIcoStyle"
+        android:layout_width="@dimen/base_50dpi"
+        android:layout_height="@dimen/base_50dpi"
+        android:layout_centerVertical="true"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@id/avatar"
         android:orientation="vertical"
-        android:padding="@dimen/base_xhdpi">
+        android:paddingLeft="@dimen/base_xhdpi">
 
         <TextView
             android:id="@+id/username"
@@ -28,7 +34,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/base_xhdpi"
+            android:layout_marginTop="@dimen/base_ldpi"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

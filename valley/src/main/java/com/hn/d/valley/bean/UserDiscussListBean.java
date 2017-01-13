@@ -94,6 +94,7 @@ public class UserDiscussListBean {
         private int is_collection;
         private String show_time;
         private OriginalInfo original_info;
+//        private Object original_info;
 
 
         public DataListBean() {
@@ -197,6 +198,22 @@ public class UserDiscussListBean {
 
         public void setShare_original_type(String share_original_type) {
             this.share_original_type = share_original_type;
+        }
+
+        public OriginalInfo getOriginal_info() {
+            return original_info;
+        }
+
+//        public String getOriginal_info() {
+//            return original_info;
+//        }
+//
+//        public void setOriginal_info(String original_info) {
+//            this.original_info = original_info;
+//        }
+
+        public void setOriginal_info(OriginalInfo original_info) {
+            this.original_info = original_info;
         }
 
         public String getShare_original_item_id() {

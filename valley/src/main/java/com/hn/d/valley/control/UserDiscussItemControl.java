@@ -1,11 +1,13 @@
 package com.hn.d.valley.control;
 
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.github.goodview.GoodView;
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -104,6 +106,18 @@ public class UserDiscussItemControl {
             commandItemView.setBackgroundResource(R.drawable.base_main_color_border_fill_selector);
             commandItemView.setTextColor(commandItemView.getResources().
                     getColorStateList(R.color.base_main_color_border_selector_color));
+        }
+
+        TextView infoView = holder.v(R.id.copy_info_view);
+        UserDiscussListBean.DataListBean.OriginalInfo originalInfo = dataListBean.getOriginal_info();
+        if (!"0".equalsIgnoreCase(dataListBean.getShare_original_item_id()) && originalInfo != null) {
+            infoView.setVisibility(View.VISIBLE);
+            SpannableStringBuilder stringBuilder = SpannableStringUtils.getBuilder(originalInfo.getUsername() + ": ")
+                    .setForegroundColor(infoView.getResources().getColor(R.color.colorAccent))
+                    .append(originalInfo.getContent())
+                    .setForegroundColor(infoView.getResources().getColor(R.color.main_text_color_dark))
+                    .create();
+            infoView.setText(stringBuilder);
         }
     }
 

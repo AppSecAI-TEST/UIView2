@@ -14,12 +14,16 @@
         android:layout_marginTop="@dimen/base_xhdpi"
         android:visibility="gone"/>
 
-    <include layout="@layout/layout_user_item"/>
+    <include
+        layout="@layout/layout_user_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base_xxxhdpi"/>
 
     <RelativeLayout
         android:id="@+id/media_control_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="270dp"
         tools:background="@color/main_text_color_dark">
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -42,8 +46,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipToPadding="false"
         android:orientation="vertical"
-        android:padding="@dimen/base_xhdpi">
+        android:paddingLeft="@dimen/base_xhdpi"
+        android:paddingRight="@dimen/base_xhdpi">
 
         <TextView
             android:id="@+id/content"
@@ -51,18 +57,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="4dp"
+            android:paddingBottom="@dimen/base_ldpi"
+            android:paddingTop="@dimen/base_ldpi"
             tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
+
+        <TextView
+            android:id="@+id/copy_info_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/base_xhdpi_"
+            android:layout_marginStart="@dimen/base_xhdpi_"
+            android:background="@color/line_color"
+            android:padding="@dimen/base_xhdpi"
+            android:visibility="gone"
+            tools:text="据说据说据说据说据说据说据说据说据说据说据说据说"/>
 
         <TextView
             android:id="@+id/address"
             style="@style/AddressTextStyle"
-            android:layout_marginTop="@dimen/base_xhdpi"
+            android:paddingBottom="@dimen/base_ldpi"
+            android:paddingTop="@dimen/base_ldpi"
             tools:text="广东 深圳"/>
 
         <com.hn.d.valley.widget.HnTagsNameTextView
             android:id="@+id/tags_name"
             style="@style/DarkTextStyle"
-            android:layout_marginTop="@dimen/base_xhdpi"
+            android:paddingBottom="@dimen/base_ldpi"
+            android:paddingTop="@dimen/base_ldpi"
             tools:text="广东 深圳"/>
 
         <View
