@@ -49,6 +49,7 @@ import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -283,7 +284,10 @@ public class ChatControl {
                 itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 contentRootLayout.setBackgroundResource(R.drawable.bubble_box_left_selector);
                 if (userInfoCache != null) {
-                    avatar = userInfoCache.getUserInfo(bean.getFromAccount()).getAvatar();
+                    final NimUserInfo userInfo = userInfoCache.getUserInfo(bean.getFromAccount());
+                    if (userInfo != null) {
+                        avatar = userInfo.getAvatar();
+                    }
                 }
             } else {
                 //发出去的消息
