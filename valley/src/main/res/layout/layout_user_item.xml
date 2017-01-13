@@ -5,9 +5,9 @@
     android:id="@+id/user_info_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="70dp"
     android:paddingLeft="@dimen/base_xhdpi"
-    android:paddingRight="@dimen/base_xhdpi"
-    android:paddingTop="@dimen/base_xhdpi">
+    android:paddingRight="@dimen/base_xhdpi">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/avatar"
@@ -66,6 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:orientation="vertical">
 
         <TextView
