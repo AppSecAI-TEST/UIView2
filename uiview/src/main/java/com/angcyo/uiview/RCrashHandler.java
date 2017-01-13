@@ -548,6 +548,12 @@ public class RCrashHandler implements Thread.UncaughtExceptionHandler {
         pw.print("Model: ");
         pw.println(Build.MODEL);
         pw.println();
+        pw.print("Device: ");
+        pw.println(Build.DEVICE);
+        pw.println();
+        pw.print("Hardware: ");
+        pw.println(Build.HARDWARE);
+        pw.println();
 
         // cpu架构
         pw.print("CPU ABI: ");
