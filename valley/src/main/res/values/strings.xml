@@ -95,5 +95,9 @@
     <string name="home_recommend">推荐</string>
     <string name="home_nearby">附近</string>
     <string name="new_frient_text">新朋友</string>
+    <string name="link_count_tip">%1$s个人赞过</string>
+    <string name="delete_text">删除</string>
+    <string name="see_all">查看全部</string>
+    <string name="reply_cnt_tip">%1$s条回复</string>
 
 </resources>

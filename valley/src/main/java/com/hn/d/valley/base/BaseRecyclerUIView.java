@@ -70,7 +70,8 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         initRefreshLayout();
         initRecyclerView();
 
-        if (!isDelayLoad()) {
+        if (getDefaultLayoutState() == LayoutState.CONTENT
+                && !isDelayLoad()) {
             loadData();
         }
     }
@@ -90,20 +91,27 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         }
         mRecyclerView.setItemAnim(false);
         mRecyclerView.setAdapter(mRExBaseAdapter);
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (mUITitleBarContainer != null) {
-                    mUITitleBarContainer.evaluateBackgroundColorSelf(recyclerView.computeVerticalScrollOffset());
+
+        if (hasScrollListener()) {
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (mUITitleBarContainer != null) {
+                        mUITitleBarContainer.evaluateBackgroundColorSelf(recyclerView.computeVerticalScrollOffset());
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     /**
      * 是否添加分割线
      */
     protected boolean hasDecoration() {
+        return true;
+    }
+
+    protected boolean hasScrollListener() {
         return true;
     }
 

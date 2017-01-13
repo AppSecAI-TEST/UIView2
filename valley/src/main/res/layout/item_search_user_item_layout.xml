@@ -2,9 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="@drawable/base_white_bg_selector"
     android:orientation="vertical">
 
     <TextView
@@ -95,7 +96,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_title_bar_item_size"
-        android:layout_marginTop="@dimen/base_xhdpi_"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/base_xhdpi"
         android:paddingRight="@dimen/base_xhdpi">
@@ -134,6 +134,34 @@
             android:layout_height="match_parent"
             android:drawableLeft="@drawable/thumb_up_icon_n"
             tools:text="40"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/like_users_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_50dpi"
+        android:background="@drawable/base_bg_selector"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="H"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/base_ldpi"
+            android:drawableRight="@drawable/next"
+            android:tag="@string/link_count_tip"
+            tools:text="109个人赞过"/>
 
     </LinearLayout>
 

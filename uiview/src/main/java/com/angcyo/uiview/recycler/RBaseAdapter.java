@@ -101,6 +101,11 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
     }
 
     @Override
+    final public void onBindViewHolder(RBaseViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    @Override
     public void onBindViewHolder(RBaseViewHolder holder, int position) {
         if (mEnableLoadMore && isLast(position)) {
             /**如果第一个就是加载更多的布局, 需要调用加载更多么?*/

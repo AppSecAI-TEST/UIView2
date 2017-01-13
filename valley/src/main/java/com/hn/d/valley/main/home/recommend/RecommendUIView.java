@@ -18,6 +18,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
+import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 
@@ -51,12 +52,17 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
     protected RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> initRExBaseAdapter() {
         return new UserDiscussAdapter(mActivity) {
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean dataBean) {
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, final UserDiscussListBean.DataListBean dataBean) {
                 //super.onBindDataView(holder, posInData, tBean);
                 UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action0() {
                     @Override
                     public void call() {
                         loadData();
+                    }
+                }, new Action0() {
+                    @Override
+                    public void call() {
+                        mOtherILayout.startIView(new DynamicDetailUIView(dataBean.getDiscuss_id()));
                     }
                 });
 

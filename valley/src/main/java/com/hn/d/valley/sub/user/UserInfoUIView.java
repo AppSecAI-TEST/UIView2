@@ -271,7 +271,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, final int posInData, UserDiscussListBean.DataListBean dataBean) {
+        protected void onBindDataView(RBaseViewHolder holder, final int posInData, final UserDiscussListBean.DataListBean dataBean) {
             if (holder.getItemViewType() == 100) {
                 initEmpty(holder, true, getEmptyTipString());
                 return;
@@ -310,6 +310,11 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 @Override
                 public void call() {
                     loadData();
+                }
+            }, new Action0() {
+                @Override
+                public void call() {
+                    mOtherILayout.startIView(new DynamicDetailUIView(dataBean.getDiscuss_id()));
                 }
             });
         }

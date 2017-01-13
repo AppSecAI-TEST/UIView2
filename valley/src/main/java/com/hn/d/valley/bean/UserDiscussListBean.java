@@ -94,6 +94,13 @@ public class UserDiscussListBean {
         private int is_collection;
         private String show_time;
         private OriginalInfo original_info;
+        /**
+         * is_collect : 1
+         * like_users : [{"uid":"50001","avatar":"http://static.bzsns.cn/pic/M00/00/2B/CixiMlbVVumAIJEGAAAetFQEzXc84.JPEG"}]
+         */
+
+        private int is_collect;
+        private List<UserInfoBean> like_users;
 //        private Object original_info;
 
 
@@ -307,6 +314,22 @@ public class UserDiscussListBean {
         @Override
         public boolean isDataEmpty() {
             return isEmpty;
+        }
+
+        public int getIs_collect() {
+            return is_collect;
+        }
+
+        public void setIs_collect(int is_collect) {
+            this.is_collect = is_collect;
+        }
+
+        public List<UserInfoBean> getLike_users() {
+            return like_users;
+        }
+
+        public void setLike_users(List<UserInfoBean> like_users) {
+            this.like_users = like_users;
         }
 
         public static class UserInfoBean {

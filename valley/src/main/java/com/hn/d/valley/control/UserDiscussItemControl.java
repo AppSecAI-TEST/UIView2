@@ -44,14 +44,15 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class UserDiscussItemControl {
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
-                                UserDiscussListBean.DataListBean dataListBean, final Action0 commandAction) {
-        initItem(holder, dataListBean);
+                                UserDiscussListBean.DataListBean dataListBean,
+                                final Action0 commandAction, final Action0 itemRootAction) {
+        initItem(holder, dataListBean, itemRootAction);
         bindAttentionItemView(subscription, holder, dataListBean, commandAction);
         bindFavItemView(subscription, holder, dataListBean);
         bindLikeItemView(subscription, holder, dataListBean);
     }
 
-    public static void initItem(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
+    public static void initItem(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean, final Action0 itemRootAction) {
         holder.fillView(dataListBean, true);
         holder.fillView(dataListBean.getUser_info(), true);
 
@@ -109,15 +110,33 @@ public class UserDiscussItemControl {
         }
 
         TextView infoView = holder.v(R.id.copy_info_view);
+        infoView.setVisibility(View.GONE);
         UserDiscussListBean.DataListBean.OriginalInfo originalInfo = dataListBean.getOriginal_info();
         if (!"0".equalsIgnoreCase(dataListBean.getShare_original_item_id()) && originalInfo != null) {
             infoView.setVisibility(View.VISIBLE);
-            SpannableStringBuilder stringBuilder = SpannableStringUtils.getBuilder(originalInfo.getUsername() + ": ")
-                    .setForegroundColor(infoView.getResources().getColor(R.color.colorAccent))
-                    .append(originalInfo.getContent())
-                    .setForegroundColor(infoView.getResources().getColor(R.color.main_text_color_dark))
-                    .create();
+            String content = originalInfo.getContent();
+            SpannableStringUtils.Builder builder = SpannableStringUtils.getBuilder(originalInfo.getUsername() + ": ")
+                    .setForegroundColor(infoView.getResources().getColor(R.color.colorAccent));
+            SpannableStringBuilder stringBuilder;
+            if (TextUtils.isEmpty(content)) {
+                stringBuilder = builder.create();
+            } else {
+                stringBuilder = builder.append(content)
+                        .setForegroundColor(infoView.getResources().getColor(R.color.main_text_color_dark))
+                        .create();
+            }
             infoView.setText(stringBuilder);
+        }
+
+        if (itemRootAction != null) {
+            holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemRootAction.call();
+                }
+            });
+        } else {
+            holder.v(R.id.item_root_layout).setClickable(false);
         }
     }
 
@@ -149,7 +168,9 @@ public class UserDiscussItemControl {
                                         @Override
                                         public void onNext(String bean) {
                                             //T_.show(bean);
-                                            commandAction.call();
+                                            if (commandAction != null) {
+                                                commandAction.call();
+                                            }
                                         }
                                     }));
                         }
@@ -184,7 +205,9 @@ public class UserDiscussItemControl {
                                         @Override
                                         public void onNext(String bean) {
                                             //T_.show(bean);
-                                            commandAction.call();
+                                            if (commandAction != null) {
+                                                commandAction.call();
+                                            }
                                         }
                                     }));
                         }

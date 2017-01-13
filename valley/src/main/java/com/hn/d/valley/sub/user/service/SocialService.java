@@ -78,4 +78,28 @@ public interface SocialService {
     @POST("discuss/publish")
     Observable<ResponseBody> publish(@QueryMap Map<String, String> map);
 
+    /**
+     * 动态详情
+     * <p>
+     * 对方把自己加入了黑名单，则无法查看
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * discuss_id	是	int	动态id
+     */
+    @POST("discuss/detail")
+    Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
+
+
+    /**
+     * 评论列表
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	点赞类型【discuss-动态 news-资讯】
+     * item_id	是	string	数据id【动态id/资讯id】
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	页面显示的数量 默认20
+     */
+    @POST("social/commentList")
+    Observable<ResponseBody> commentList(@QueryMap Map<String, String> map);
+
 }

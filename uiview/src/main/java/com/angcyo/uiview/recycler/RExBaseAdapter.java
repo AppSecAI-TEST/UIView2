@@ -106,7 +106,7 @@ public abstract class RExBaseAdapter<H, T, F> extends RBaseAdapter<T> {
     }
 
     @Override
-    protected void onBindView(RBaseViewHolder holder, int position, T bean) {
+    final protected void onBindView(RBaseViewHolder holder, int position, T bean) {
         if (isInHeader(position)) {
             onBindHeaderView(holder, position, mAllHeaderDatas.size() > position ? mAllHeaderDatas.get(position) : null);
         } else if (isInData(position)) {
