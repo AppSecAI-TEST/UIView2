@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.angcyo.library.utils.Http;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -116,7 +117,11 @@ public class DraweeViewUtil {
     }
 
     public static void resize(SimpleDraweeView view, String url) {
-        resize(view, url, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        resize(view, url, view.getMeasuredWidth(), view.getMeasuredHeight());
+    }
+
+    public static void resize(SimpleDraweeView view, String url, View taget) {
+        resize(view, url, taget.getMeasuredWidth(), taget.getMeasuredHeight());
     }
 
     /**

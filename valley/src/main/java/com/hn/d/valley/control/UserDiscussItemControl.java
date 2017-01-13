@@ -65,7 +65,11 @@ public class UserDiscussItemControl {
             mediaCountView.setText("" + medias.size());
             if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {
                 mediaImageType.setVisibility(View.VISIBLE);
-                DraweeViewUtil.setDraweeViewHttp(mediaImageType, medias.get(0));
+                Object tag = mediaImageType.getTag();
+                if (tag == null || !tag.toString().equalsIgnoreCase(medias.get(0))) {
+                    mediaImageType.setTag(medias.get(0));
+                    DraweeViewUtil.resize(mediaImageType, medias.get(0));
+                }
             } else {
                 mediaImageType.setVisibility(View.GONE);
             }

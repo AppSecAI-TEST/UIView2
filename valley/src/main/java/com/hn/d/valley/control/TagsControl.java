@@ -118,8 +118,10 @@ public class TagsControl {
                         checkView.setTextColor(activity.getResources().getColorStateList(R.color.base_dark_to_main_color_selector));
                         checkView.setTag(data);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -2);
-                        params.leftMargin = (int) ResUtil.dpToPx(activity, 20);
-                        params.bottomMargin = (int) ResUtil.dpToPx(activity, 20);
+                        int px = (int) ResUtil.dpToPx(activity, 20);
+                        params.leftMargin = px;
+                        params.bottomMargin = px;
+                        checkView.setPadding(px / 2, px / 4, px / 2, px / 4);
                         checkView.setLayoutParams(params);
 
                         if (onAddView != null) {
