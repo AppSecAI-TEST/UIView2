@@ -256,7 +256,11 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                         if (marker != null) {
                             marker.setIcon(BitmapDescriptorFactory.fromBitmap(
                                     BmpUtil.getRoundedCornerBitmap(resource, mMarkerSize)));
-                            startJumpAnimation(marker);
+                            try {
+                                startJumpAnimation(marker);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 });
@@ -321,6 +325,9 @@ public class AmapControl implements LocationSource, AMapLocationListener {
             //根据屏幕距离计算需要移动的目标点
             final LatLng latLng = marker.getPosition();
             Point point = map.getProjection().toScreenLocation(latLng);
+            if (point == null) {
+                return;
+            }
             point.y -= dip2px(mContext, 125);
             LatLng target = map.getProjection()
                     .fromScreenLocation(point);

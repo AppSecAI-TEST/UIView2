@@ -34,10 +34,12 @@ import com.hn.d.valley.bean.realm.NearUserInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AmapControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
+import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hwangjr.rxbus.annotation.Subscribe;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -126,7 +128,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
             }
 
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, NearUserInfo dataBean) {
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, final NearUserInfo dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
                 holder.fillView(dataBean, true);
 
@@ -137,9 +139,23 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
                 hnGenderView.setGender(dataBean.getSex(), dataBean.getGrade());
 
                 ImageView commandView = holder.v(R.id.command_item_view);
-                commandView.setVisibility(View.VISIBLE);
+                commandView.setVisibility(View.GONE);
 
-                setAttentionView(commandView, dataBean, dataBean.getUid());
+                ImageView chatView = holder.v(R.id.liaotian_item_view);
+                chatView.setVisibility(View.GONE);
+
+                if (dataBean.getIs_contact() == 1) {
+                    chatView.setVisibility(View.VISIBLE);
+                    chatView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ChatUIView.start(mOtherILayout, dataBean.getUid(), SessionTypeEnum.P2P);
+                        }
+                    });
+                } else {
+                    commandView.setVisibility(View.VISIBLE);
+                    setAttentionView(commandView, dataBean, dataBean.getUid());
+                }
 
                 holder.v(R.id.auth).setVisibility("1".equalsIgnoreCase(dataBean.getIs_auth()) ? View.VISIBLE : View.GONE);
 

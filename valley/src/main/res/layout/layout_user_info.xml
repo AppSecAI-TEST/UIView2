@@ -30,6 +30,18 @@
             android:padding="@dimen/base_ldpi"
             android:src="@drawable/attention_fans_n"
             android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/liaotian_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_hdpi"
+            android:background="@drawable/base_bg_selector"
+            android:minHeight="@dimen/base_xxxhdpi"
+            android:minWidth="@dimen/base_xxxhdpi"
+            android:padding="@dimen/base_ldpi"
+            android:src="@drawable/liaotian_selector"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <LinearLayout
