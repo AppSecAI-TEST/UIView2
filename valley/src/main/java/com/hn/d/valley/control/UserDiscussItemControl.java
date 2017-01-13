@@ -203,45 +203,46 @@ public class UserDiscussItemControl {
         itemTextView.setLeftIco(R.drawable.collection_icon_s);
         itemTextView.setText(tBean.getFav_cnt());
 
-        RxView.clicks(itemTextView)
-                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        subscription.add(RRetrofit.create(SocialService.class)
-                                .unCollect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                                .compose(Rx.transformer(String.class))
-                                .subscribe(new BaseSingleSubscriber<String>() {
-
-                                    @Override
-                                    public void onNext(String bean) {
-                                        //T_.show(bean);
-                                        tBean.setIs_collection(0);
-                                        tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
-                                        initUnFavView(itemTextView, tBean, subscription);
-                                    }
-                                }));
-                    }
-                });
-
-//        itemTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                subscription.add(RRetrofit.create(SocialService.class)
-//                        .unCollect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-//                        .compose(Rx.transformer(String.class))
-//                        .subscribe(new BaseSingleSubscriber<String>() {
+//        RxView.clicks(itemTextView)
+//                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
+//                .subscribe(new Action1<Void>() {
+//                    @Override
+//                    public void call(Void aVoid) {
+//                        subscription.add(RRetrofit.create(SocialService.class)
+//                                .unCollect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+//                                .compose(Rx.transformer(String.class))
+//                                .subscribe(new BaseSingleSubscriber<String>() {
 //
-//                            @Override
-//                            public void onNext(String bean) {
-//                                //T_.show(bean);
-//                                tBean.setIs_collection(0);
-//                                tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
-//                                initUnFavView(itemTextView, tBean, subscription);
-//                            }
-//                        }));
-//            }
-//        });
+//                                    @Override
+//                                    public void onNext(String bean) {
+//                                        //T_.show(bean);
+//                                        tBean.setIs_collection(0);
+//                                        tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
+//                                        initUnFavView(itemTextView, tBean, subscription);
+//                                    }
+//                                }));
+//                    }
+//                });
+
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tBean.setIs_collection(0);
+                tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
+                initUnFavView(itemTextView, tBean, subscription);
+
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .unCollect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Rx.transformer(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                //T_.show(bean);
+                            }
+                        }));
+            }
+        });
     }
 
     /**
@@ -255,47 +256,52 @@ public class UserDiscussItemControl {
         itemTextView.setLeftIco(R.drawable.collection_icon_n);
         itemTextView.setText(tBean.getFav_cnt());
 
-        RxView.clicks(itemTextView)
-                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        subscription.add(RRetrofit.create(SocialService.class)
-                                .collect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                                .compose(Rx.transformer(String.class))
-                                .subscribe(new BaseSingleSubscriber<String>() {
-
-                                    @Override
-                                    public void onNext(String bean) {
-                                        //T_.show(bean);
-                                        GoodView.build(itemTextView);
-                                        tBean.setIs_collection(1);
-                                        tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
-                                        initFavView(itemTextView, tBean, subscription);
-                                    }
-                                }));
-                    }
-                });
-
-//        itemTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                subscription.add(RRetrofit.create(SocialService.class)
-//                        .collect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-//                        .compose(Rx.transformer(String.class))
-//                        .subscribe(new BaseSingleSubscriber<String>() {
+//        RxView.clicks(itemTextView)
+//                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
+//                .subscribe(new Action1<Void>() {
+//                    @Override
+//                    public void call(Void aVoid) {
+//                        subscription.add(RRetrofit.create(SocialService.class)
+//                                .collect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+//                                .compose(Rx.transformer(String.class))
+//                                .subscribe(new BaseSingleSubscriber<String>() {
 //
-//                            @Override
-//                            public void onNext(String bean) {
-//                                //T_.show(bean);
+//                                    @Override
+//                                    public void onNext(String bean) {
+//                                        //T_.show(bean);
+//                                        GoodView.build(itemTextView);
+//                                        tBean.setIs_collection(1);
+//                                        tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
+//                                        initFavView(itemTextView, tBean, subscription);
+//                                    }
+//                                }));
+//                    }
+//                });
+
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoodView.build(itemTextView);
+                tBean.setIs_collection(1);
+                tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
+                initFavView(itemTextView, tBean, subscription);
+
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .collect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Rx.transformer(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                //T_.show(bean);
 //                                GoodView.build(itemTextView);
 //                                tBean.setIs_collection(1);
 //                                tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
 //                                initFavView(itemTextView, tBean, subscription);
-//                            }
-//                        }));
-//            }
-//        });
+                            }
+                        }));
+            }
+        });
     }
 
     /**
@@ -326,45 +332,47 @@ public class UserDiscussItemControl {
         itemTextView.setLeftIco(R.drawable.thumb_up_icon_s);
         itemTextView.setText(tBean.getLike_cnt());
 
-        RxView.clicks(itemTextView)
-                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        subscription.add(RRetrofit.create(SocialService.class)
-                                .dislike(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                                .compose(Rx.transformer(String.class))
-                                .subscribe(new BaseSingleSubscriber<String>() {
-
-                                    @Override
-                                    public void onNext(String bean) {
-                                        //T_.show(bean);
-                                        tBean.setIs_like(0);
-                                        tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) - 1));
-                                        initUnLikeView(itemTextView, tBean, subscription);
-                                    }
-                                }));
-                    }
-                });
-
-//        itemTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                subscription.add(RRetrofit.create(SocialService.class)
-//                        .dislike(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-//                        .compose(Rx.transformer(String.class))
-//                        .subscribe(new BaseSingleSubscriber<String>() {
+//        RxView.clicks(itemTextView)
+//                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
+//                .subscribe(new Action1<Void>() {
+//                    @Override
+//                    public void call(Void aVoid) {
+//                        subscription.add(RRetrofit.create(SocialService.class)
+//                                .dislike(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+//                                .compose(Rx.transformer(String.class))
+//                                .subscribe(new BaseSingleSubscriber<String>() {
 //
-//                            @Override
-//                            public void onNext(String bean) {
-//                                //T_.show(bean);
-//                                tBean.setIs_like(0);
-//                                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) - 1));
-//                                initUnLikeView(itemTextView, tBean, subscription);
-//                            }
-//                        }));
-//            }
-//        });
+//                                    @Override
+//                                    public void onNext(String bean) {
+//                                        //T_.show(bean);
+//                                        tBean.setIs_like(0);
+//                                        tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) - 1));
+//                                        initUnLikeView(itemTextView, tBean, subscription);
+//                                    }
+//                                }));
+//                    }
+//                });
+
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tBean.setIs_like(0);
+                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) - 1));
+                initUnLikeView(itemTextView, tBean, subscription);
+
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .dislike(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Rx.transformer(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                //T_.show(bean);
+
+                            }
+                        }));
+            }
+        });
     }
 
     /**
@@ -378,47 +386,48 @@ public class UserDiscussItemControl {
         itemTextView.setLeftIco(R.drawable.thumb_up_icon_n);
         itemTextView.setText(tBean.getLike_cnt());
 
-        RxView.clicks(itemTextView)
-                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        subscription.add(RRetrofit.create(SocialService.class)
-                                .like(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-                                .compose(Rx.transformer(String.class))
-                                .subscribe(new BaseSingleSubscriber<String>() {
-
-                                    @Override
-                                    public void onNext(String bean) {
-                                        //T_.show(bean);
-                                        GoodView.build(itemTextView);
-                                        tBean.setIs_like(1);
-                                        tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) + 1));
-                                        initLikeView(itemTextView, tBean, subscription);
-                                    }
-                                }));
-                    }
-                });
-
-//        itemTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                subscription.add(RRetrofit.create(SocialService.class)
-//                        .like(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
-//                        .compose(Rx.transformer(String.class))
-//                        .subscribe(new BaseSingleSubscriber<String>() {
+//        RxView.clicks(itemTextView)
+//                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
+//                .subscribe(new Action1<Void>() {
+//                    @Override
+//                    public void call(Void aVoid) {
+//                        subscription.add(RRetrofit.create(SocialService.class)
+//                                .like(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+//                                .compose(Rx.transformer(String.class))
+//                                .subscribe(new BaseSingleSubscriber<String>() {
 //
-//                            @Override
-//                            public void onNext(String bean) {
-//                                //T_.show(bean);
-//                                GoodView.build(itemTextView);
-//                                tBean.setIs_like(1);
-//                                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) + 1));
-//                                initLikeView(itemTextView, tBean, subscription);
-//                            }
-//                        }));
-//            }
-//        });
+//                                    @Override
+//                                    public void onNext(String bean) {
+//                                        //T_.show(bean);
+//                                        GoodView.build(itemTextView);
+//                                        tBean.setIs_like(1);
+//                                        tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) + 1));
+//                                        initLikeView(itemTextView, tBean, subscription);
+//                                    }
+//                                }));
+//                    }
+//                });
+
+        itemTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GoodView.build(itemTextView);
+                tBean.setIs_like(1);
+                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) + 1));
+                initLikeView(itemTextView, tBean, subscription);
+
+                subscription.add(RRetrofit.create(SocialService.class)
+                        .like(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .compose(Rx.transformer(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onNext(String bean) {
+                                //T_.show(bean);
+                            }
+                        }));
+            }
+        });
     }
 
     /**

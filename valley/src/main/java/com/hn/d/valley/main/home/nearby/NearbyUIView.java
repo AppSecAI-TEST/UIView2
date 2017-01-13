@@ -259,7 +259,9 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
     @Override
     protected void onEmptyData(boolean isEmpty) {
         super.onEmptyData(isEmpty);
-        mFilterRootLayout.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+//        if (!isMapMode()) {
+//            mFilterRootLayout.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
+//        }
     }
 
     @Override

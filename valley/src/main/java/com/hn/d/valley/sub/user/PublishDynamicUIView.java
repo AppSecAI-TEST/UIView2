@@ -143,6 +143,8 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             }
         };
         TagsControl.getTags(mListAction1);
+
+        mInputView.setAutoHideSoftInput(true);
     }
 
     @Override

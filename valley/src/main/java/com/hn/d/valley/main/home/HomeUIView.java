@@ -101,9 +101,9 @@ public class HomeUIView extends BaseUIView {
 
     private void initTabLayout() {
         ArrayList<CustomTabEntity> tabs = new ArrayList<>();
-        tabs.add(new TabEntity("圈子", -1, -1, false, false, false));
-        tabs.add(new TabEntity("推荐", -1, -1, true, false, false));
-        tabs.add(new TabEntity("附近", -1, -1, false, false, false));
+        tabs.add(new TabEntity(mActivity.getString(R.string.home_circle), -1, -1, false, false, false));
+        tabs.add(new TabEntity(mActivity.getString(R.string.home_recommend), -1, -1, true, false, false));
+        tabs.add(new TabEntity(mActivity.getString(R.string.home_nearby), -1, -1, false, false, false));
 
         mHomeNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override

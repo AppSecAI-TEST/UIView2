@@ -502,10 +502,11 @@ public class RCrashHandler implements Thread.UncaughtExceptionHandler {
                 return;
             }
         }
-        File file = new File(saveFolder, getDataTime("yyyy-MM-dd-HH-mm-ss") + FILE_NAME_SUFFIX);
+        String dataTime = getDataTime("yyyy-MM-dd-HH-mm-ss");
+        File file = new File(saveFolder, dataTime + FILE_NAME_SUFFIX);
         PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(file)));
         // 导出发生异常的时间
-        pw.println(getDataTime("yyyy-MM-dd-HH-mm-ss"));
+        pw.println(dataTime);
         // 导出手机信息
         dumpPhoneInfo(pw);
 
