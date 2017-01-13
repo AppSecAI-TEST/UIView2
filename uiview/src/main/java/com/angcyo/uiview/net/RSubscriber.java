@@ -37,6 +37,11 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
     }
 
     @Override
+    public void onNext(T bean) {
+        L.d("订阅onNext->" + this.getClass().getSimpleName());
+    }
+
+    @Override
     final public void onError(Throwable e) {
         L.e("----------------------------------------异常处理----------------------------------------");
         int errorCode;

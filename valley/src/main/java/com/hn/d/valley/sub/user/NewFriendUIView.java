@@ -110,7 +110,8 @@ public final class NewFriendUIView extends BaseContentUIView {
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
-                                    public void onNext(String bean) {
+                                    public void onEnd() {
+                                        super.onEnd();
                                         MsgCache.instance().deleteMessage(remove);
                                     }
                                 }));
