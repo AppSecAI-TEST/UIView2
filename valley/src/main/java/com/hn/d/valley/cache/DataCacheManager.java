@@ -58,7 +58,7 @@ public class DataCacheManager {
                         }
                     });
                 }
-                L.i(TAG, "build data cache completed");
+                L.i(TAG, "build mData cache completed");
             }
         });
     }
@@ -70,7 +70,7 @@ public class DataCacheManager {
         // clear
         clearDataCache();
 
-        // build user/friend/team data cache
+        // build user/friend/team mData cache
         FriendDataCache.getInstance().buildCache();
         NimUserInfoCache.getInstance().buildCache();
         TeamDataCache.getInstance().buildCache();
@@ -89,7 +89,7 @@ public class DataCacheManager {
      * 清空缓存（同步）
      */
     public static void clearDataCache() {
-        // clear user/friend/team data cache
+        // clear user/friend/team mData cache
         FriendDataCache.getInstance().clear();
         NimUserInfoCache.getInstance().clear();
         TeamDataCache.getInstance().clear();

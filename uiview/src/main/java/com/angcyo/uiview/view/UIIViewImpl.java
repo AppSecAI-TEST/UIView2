@@ -142,6 +142,7 @@ public abstract class UIIViewImpl implements IView {
 
     @Deprecated
     @Override
+    @CallSuper
     public void onViewShow() {
         onViewShow(null);
     }
@@ -149,9 +150,17 @@ public abstract class UIIViewImpl implements IView {
     @CallSuper
     @Override
     public void onViewShow(Bundle bundle) {
+        L.d(this.getClass().getSimpleName(), "onViewShow: ");
+        long lastShowTime = mLastShowTime;
         mIViewStatus = STATE_VIEW_SHOW;
         mLastShowTime = System.currentTimeMillis();
-        L.d(this.getClass().getSimpleName(), "onViewShow: ");
+        if (lastShowTime == 0) {
+            onViewShowFirst(bundle);
+        }
+    }
+
+    public void onViewShowFirst(Bundle bundle) {
+        L.d(this.getClass().getSimpleName(), "onViewShowFirst: ");
     }
 
     @CallSuper

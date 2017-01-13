@@ -106,14 +106,14 @@ public class JPushReceiver extends BroadcastReceiver {
     public static class Message {
 
         /**
-         * data : {"nick":"test"}
+         * mData : {"nick":"test"}
          * type : test
          */
 
         private DataBean data;
         private String type;
         /**
-         * data : {"anthor":{"id":"10458","nick":"18575677360","avatar":"def_user_icon.png","richlvl":"51","anchorlvl":"0","superadmin":"0","logintype":"userLogin","admin":0,"sex":"女","coin":"10000000000.00","livetitle":"test"},"notify":"269530435321594288","live_notice":"不知道为什么,就是想发个公告...."}
+         * mData : {"anthor":{"id":"10458","nick":"18575677360","avatar":"def_user_icon.png","richlvl":"51","anchorlvl":"0","superadmin":"0","logintype":"userLogin","admin":0,"sex":"女","coin":"10000000000.00","livetitle":"test"},"notify":"269530435321594288","live_notice":"不知道为什么,就是想发个公告...."}
          * msg : 你的好友 联通用户 开始直播了 赶快带上小板凳来围观吧
          */
 

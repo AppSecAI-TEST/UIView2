@@ -27,7 +27,7 @@ public class RRetrofit {
     public static String DEBUG_URL = "http://192.168.1.35/";
     public static String RELEASE_URL = "http://api.klgwl.com/";
 
-    public static String BASE_URL = DEBUG_URL;
+    public static String BASE_URL = RELEASE_URL;
 
     //    //切换服务器, 1外网 -1内网
 //    public static void switchHttp(int type) {
@@ -48,11 +48,11 @@ public class RRetrofit {
     public static boolean DEBUG = true;
 
     static {
-        if (DEBUG) {
-            BASE_URL = DEBUG_URL;
-        } else {
-            BASE_URL = RELEASE_URL;
-        }
+//        if (DEBUG) {
+//            BASE_URL = DEBUG_URL;
+//        } else {
+//            BASE_URL = RELEASE_URL;
+//        }
     }
 
     public static <T> T create(final Class<T> cls) {

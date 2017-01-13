@@ -95,6 +95,10 @@ public class MsgCache implements ICache {
 
     }
 
+    public void deleteMessage(IMMessage message) {
+        msgService().deleteChattingHistory(message);
+    }
+
     private static class Holder {
         static MsgCache instance = new MsgCache();
     }

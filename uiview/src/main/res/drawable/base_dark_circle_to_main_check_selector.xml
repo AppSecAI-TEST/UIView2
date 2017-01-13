@@ -14,7 +14,7 @@
 
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/default_base_bg_press"/>
+            <solid android:color="@color/default_base_tran_dark"/>
         </shape>
     </item>
 

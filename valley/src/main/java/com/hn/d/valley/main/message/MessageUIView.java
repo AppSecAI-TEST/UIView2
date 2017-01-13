@@ -13,6 +13,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
+import com.hn.d.valley.sub.user.NewFriendUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 import com.netease.nimlib.sdk.NIMClient;
@@ -68,6 +69,13 @@ public class MessageUIView extends BaseUIView {
                         startSearch();
                     }
                 });
+
+        mRecentContactsControl.setItemAddContactsAction(new Action1<RecentContact>() {
+            @Override
+            public void call(RecentContact contact) {
+                mOtherILayout.startIView(new NewFriendUIView(contact.getContactId(), contact.getSessionType()));
+            }
+        });
 
     }
 

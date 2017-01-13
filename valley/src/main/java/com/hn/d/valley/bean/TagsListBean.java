@@ -19,7 +19,7 @@ import java.util.List;
 public class TagsListBean {
     /**
      * result : 1
-     * data : [{"id":"1","name":"搞笑"},{"id":"2","name":"励志"},{"id":"3","name":"感动"},{"id":"4","name":"情感"},{"id":"5","name":"生活"}]
+     * mData : [{"id":"1","name":"搞笑"},{"id":"2","name":"励志"},{"id":"3","name":"感动"},{"id":"4","name":"情感"},{"id":"5","name":"生活"}]
      */
 
     private int result;

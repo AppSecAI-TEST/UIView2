@@ -72,4 +72,29 @@ public class Constant {
      * 键盘的高度
      */
     public static String KEYBOARD_HEIGHT = "keyboard_height";
+
+    /**
+     * 关注了对方且不是好友，发送添加为联系人请求给对方
+     */
+    public static String add_contact = "15";
+    /**
+     * 单方面关注时 发送给对方消息
+     */
+    public static String attenion = "15";
+    /**
+     * 点赞【动态/评论、回复】
+     */
+    public static String like = "14";
+    /**
+     * 评论
+     */
+    public static String comment = "14";
+    /**
+     * 回复
+     */
+    public static String reply = "14";
+    /**
+     * 转发
+     */
+    public static String forward = "14";
 }

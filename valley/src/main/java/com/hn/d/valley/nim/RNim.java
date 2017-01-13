@@ -11,11 +11,11 @@ import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
@@ -55,6 +55,8 @@ public class RNim {
     }
 
     public static void initOnce(Application application) {
+        NIMClient.getService(MsgService.class).registerCustomAttachmentParser(new CustomAttachParser()); // 监听的注册，必须在主进程中。
+
         /*云信登录状态监听*/
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode>() {
@@ -78,7 +80,7 @@ public class RNim {
         DataCacheManager.observeSDKDataChanged(true);
 
         if (!TextUtils.isEmpty(UserCache.getUserAccount())) {
-            DataCacheManager.buildDataCache(); // build data cache on auto userLogin
+            DataCacheManager.buildDataCache(); // build mData cache on auto userLogin
         }
 
         ScreenUtil.init(application);

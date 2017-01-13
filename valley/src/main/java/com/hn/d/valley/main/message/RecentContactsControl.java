@@ -22,6 +22,7 @@ import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.RecentContactsCache;
@@ -29,11 +30,14 @@ import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
+import com.hn.d.valley.nim.CustomAttachment;
+import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.RNim;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.attachment.NotificationAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -77,7 +81,9 @@ public class RecentContactsControl {
     RefreshLayout mRefreshLayout;
     RecentContactsAdapter mRecentContactsAdapter;
     Context mContext;
-    Action1<RecentContact> itemAction;
+    Action1<RecentContact> itemChatAction;
+    Action1<RecentContact> itemAddContactsAction;
+    Action1<RecentContact> itemCommentAction;
     Action0 searchAction;
 
     /**
@@ -151,9 +157,9 @@ public class RecentContactsControl {
         }
     };
 
-    public RecentContactsControl(Context context, Action1<RecentContact> itemAction, Action0 searchAction) {
+    public RecentContactsControl(Context context, Action1<RecentContact> itemChatAction, Action0 searchAction) {
         mContext = context;
-        this.itemAction = itemAction;
+        this.itemChatAction = itemChatAction;
         this.searchAction = searchAction;
         mRecentContactsAdapter = new RecentContactsAdapter(mContext, null);
 
@@ -209,12 +215,52 @@ public class RecentContactsControl {
         return info;
     }
 
+    public static IMMessage getMessageFromUuid(String uuid) {
+        if (TextUtils.isEmpty(uuid)) {
+            return null;
+        }
+        List<String> uuids = new ArrayList<>();
+        uuids.add(uuid);
+        List<IMMessage> messages = NIMClient.getService(MsgService.class).queryMessageListByUuidBlock(uuids);
+        if (messages.size() > 0) {
+            return messages.get(messages.size() - 1);
+        }
+        return null;
+    }
+
+    /**
+     * 是否是添加好友的消息类型
+     */
+    private static boolean isAddContact(RecentContact recent) {
+        return Constant.add_contact.equalsIgnoreCase(recent.getContactId());
+    }
+
+    /**
+     * 是否是 回复/评论 的消息类型
+     */
+    private static boolean isComment(RecentContact recent) {
+        return Constant.comment.equalsIgnoreCase(recent.getContactId());
+    }
+
     private int getTopItemCount() {
         return 1;
     }
 
     public void unLoad() {
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(mMessageObserver, false);
+    }
+
+
+    public void setItemChatAction(Action1<RecentContact> itemChatAction) {
+        this.itemChatAction = itemChatAction;
+    }
+
+    public void setItemAddContactsAction(Action1<RecentContact> itemAddContactsAction) {
+        this.itemAddContactsAction = itemAddContactsAction;
+    }
+
+    public void setItemCommentAction(Action1<RecentContact> itemCommentAction) {
+        this.itemCommentAction = itemCommentAction;
     }
 
     /**
@@ -449,8 +495,20 @@ public class RecentContactsControl {
                 @Override
                 public void onClick(View view) {
                     UnreadMessageControl.removeMessageUnread(bean.getContactId());
-                    itemAction.call(bean);
                     notifyItemChanged(position);
+                    if (isAddContact(bean)) {
+                        if (itemAddContactsAction != null) {
+                            itemAddContactsAction.call(bean);
+                        }
+                    } else if (isComment(bean)) {
+                        if (itemCommentAction != null) {
+                            itemCommentAction.call(bean);
+                        }
+                    } else {
+                        if (itemChatAction != null) {
+                            itemChatAction.call(bean);
+                        }
+                    }
                 }
             });
         }
@@ -495,6 +553,9 @@ public class RecentContactsControl {
          * 最后一条消息内容
          */
         private String getShowContent(final RecentContact recent) {
+            IMMessage message;
+            MsgAttachment attachment = recent.getAttachment();
+
             switch (recent.getMsgType()) {
                 case text:
                     return recent.getContent();
@@ -509,21 +570,42 @@ public class RecentContactsControl {
                 case file:
                     return "[文件]";
                 case tip:
-                    List<String> uuids = new ArrayList<>();
-                    uuids.add(recent.getRecentMessageId());
-                    List<IMMessage> messages = NIMClient.getService(MsgService.class).queryMessageListByUuidBlock(uuids);
-                    if (messages != null && messages.size() > 0) {
-                        return messages.get(0).getContent();
+                    message = getMessageFromUuid(recent.getRecentMessageId());
+
+//                    List<String> uuids = new ArrayList<>();
+//                    uuids.add(recent.getRecentMessageId());
+//                    List<IMMessage> messages = NIMClient.getService(MsgService.class).queryMessageListByUuidBlock(uuids);
+//                    if (messages != null && messages.size() > 0) {
+//                        return messages.get(0).getContent();
+//                    }
+                    if (message != null) {
+                        return message.getContent();
                     }
                     return "[通知提醒]";
                 case notification:
                     return TeamNotificationHelper.getTeamNotificationText(recent.getContactId(),
                             recent.getFromAccount(),
-                            (NotificationAttachment) recent.getAttachment());
+                            (NotificationAttachment) attachment);
                 case avchat:
                     return "[会议]";
-                default:
+                case custom:
+                    if (isAddContact(recent)) {
+                        //添加好友通知
+                        if (attachment instanceof CustomAttachment) {
+                            CustomBean bean = ((CustomAttachment) attachment).getBean();
+                            if (bean != null) {
+                                String tip = bean.getTip();
+                                if (TextUtils.isEmpty(tip)) {
+                                    return bean.getUsername() + " " + bean.getMsg();
+                                }
+                                return tip + " " + bean.getMsg();
+                            }
+                        }
+                        return "[自定义消息]";
+                    }
                     return "[自定义消息]";
+                default:
+                    return "[未知类型消息]";
             }
         }
     }

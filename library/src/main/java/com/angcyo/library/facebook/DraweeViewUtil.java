@@ -94,7 +94,7 @@ public class DraweeViewUtil {
     public static void resize(SimpleDraweeView view, Uri uri, int width, int height) {
         view.getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
-                .setResizeOptions(new ResizeOptions(width, height))
+                .setResizeOptions(new ResizeOptions(width == 0 ? DEFAULT_WIDTH : width, height == 0 ? DEFAULT_HEIGHT : height))
                 .build();
         PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
                 .setOldController(view.getController())

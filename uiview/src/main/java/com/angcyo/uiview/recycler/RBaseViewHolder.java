@@ -255,13 +255,15 @@ public class RBaseViewHolder extends RecyclerView.ViewHolder {
                         }
                         ((TextView) view).setText(value);
                     } else if (view instanceof SimpleDraweeView) {
-                        DraweeViewUtil.setDraweeViewHttp(((SimpleDraweeView) view), value);
+                        DraweeViewUtil.resize(((SimpleDraweeView) view), value,
+                                view.getMeasuredWidth(), view.getMeasuredHeight());
                     } else if (view instanceof ImageView) {
                         Glide.with(RApplication.getApp())
                                 .load(value)
                                 .placeholder(R.drawable.default_image)
                                 .error(R.drawable.default_image)
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .centerCrop()
                                 .into(((ImageView) view));
                     }
                 }

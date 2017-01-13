@@ -49,7 +49,7 @@ public class ValleyApp extends RApplication {
             T_.show("请注意, 内存过低!");
         }
         Glide.get(this).clearMemory();
-        Fresco.shutDown();
+        //Fresco.shutDown();
         Fresco.getImagePipeline().clearMemoryCaches();
     }
 
@@ -60,6 +60,7 @@ public class ValleyApp extends RApplication {
             T_.show("请求释放内存..." + level);
         }
         Glide.get(this).trimMemory(level);
+        Glide.get(this).clearMemory();
         Fresco.getImagePipeline().clearMemoryCaches();
     }
 

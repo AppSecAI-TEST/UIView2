@@ -137,6 +137,9 @@ public class RenRenCallback extends ItemTouchHelper.SimpleCallback {
     private void animTo(final RecyclerView recyclerView, boolean right) {
         final int position = recyclerView.getAdapter().getItemCount() - 1;
         final View view = recyclerView.findViewHolderForAdapterPosition(position).itemView;
+        if (view == null) {
+            return;
+        }
 
         TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0,
                 Animation.RELATIVE_TO_SELF, right ? 1f : -1f,

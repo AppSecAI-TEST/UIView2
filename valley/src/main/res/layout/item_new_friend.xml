@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:layout_marginEnd="@dimen/base_xxhdpi"
+    android:layout_marginStart="@dimen/base_xxhdpi"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp"
+    app:contentPadding="0dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/base_100dpi">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/avatar"
+            style="@style/ImageStyle"/>
+
+        <TextView
+            android:id="@+id/msg"
+            style="@style/SingleWhiteTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/base_xxxhdpi"
+            android:background="@drawable/base_left_tip_shape"
+            android:padding="@dimen/base_hdpi"
+            tools:text="我要添加你为好友...."/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_100dpi"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:padding="@dimen/base_xhdpi">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/username"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="爱宠物的默默"/>
+
+            <com.hn.d.valley.widget.HnGenderView
+                android:id="@+id/grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/base_ldpi"
+                android:tag="g"
+                tools:text="2"/>
+
+            <TextView
+                android:id="@+id/city_name"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/base_ldpi"
+                android:background="@color/chat_bg_color"
+                android:visibility="gone"
+                tools:text="深圳"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/job"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:visibility="visible"
+            tools:text="阿里巴巴董事长马云"/>
+
+        <TextView
+            android:id="@+id/introduce"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:visibility="visible"
+            tools:text="阿里巴巴董事长马云"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/auth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginBottom="@dimen/base_80dpi"
+        android:layout_marginEnd="@dimen/base_xxxhdpi"
+        android:layout_marginLeft="@dimen/base_ldpi"
+        android:src="@drawable/certified"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/not_like"
+        android:layout_width="@dimen/base_60dpi"
+        android:layout_height="@dimen/base_60dpi"
+        android:layout_gravity="right|top"
+        android:layout_marginEnd="@dimen/base_ldpi"
+        android:layout_marginTop="@dimen/base_ldpi"
+        android:src="@drawable/base_no_like"
+        android:tint="@color/theme_color_primary_dark_tran"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/like"
+        android:layout_width="@dimen/base_60dpi"
+        android:layout_height="@dimen/base_60dpi"
+        android:layout_gravity="left|top"
+        android:layout_marginStart="@dimen/base_ldpi"
+        android:layout_marginTop="@dimen/base_ldpi"
+        android:elevation="10dp"
+        android:src="@drawable/base_like"
+        android:tint="@color/theme_color_primary_dark_tran"
+        android:visibility="invisible"/>
+
+
+</android.support.v7.widget.CardView>
