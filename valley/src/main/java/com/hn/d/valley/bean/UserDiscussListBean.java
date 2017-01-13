@@ -93,6 +93,8 @@ public class UserDiscussListBean {
         private int is_like;
         private int is_collection;
         private String show_time;
+        private OriginalInfo original_info;
+
 
         public DataListBean() {
         }
@@ -373,6 +375,93 @@ public class UserDiscussListBean {
 
             public void setIs_attention(int is_attention) {
                 this.is_attention = is_attention;
+            }
+        }
+
+        public static class OriginalInfo {
+
+            /**
+             * status : 1
+             * discuss_id : 180
+             * uid : 60004
+             * media : http://circleimg.klgwl.com/17600041484224471.016469
+             * media_type : 3
+             * content : 厉害👍
+             * username : 蒲公英
+             * avatar : http://avatorimg.klgwl.com/18617036401
+             */
+
+            private String status;
+            private String discuss_id;
+            private String uid;
+            private String media;
+            private String media_type;
+            private String content;
+            private String username;
+            private String avatar;
+
+            public String getStatus() {
+                return status;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+
+            public String getDiscuss_id() {
+                return discuss_id;
+            }
+
+            public void setDiscuss_id(String discuss_id) {
+                this.discuss_id = discuss_id;
+            }
+
+            public String getUid() {
+                return uid;
+            }
+
+            public void setUid(String uid) {
+                this.uid = uid;
+            }
+
+            public String getMedia() {
+                return media;
+            }
+
+            public void setMedia(String media) {
+                this.media = media;
+            }
+
+            public String getMedia_type() {
+                return media_type;
+            }
+
+            public void setMedia_type(String media_type) {
+                this.media_type = media_type;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public void setUsername(String username) {
+                this.username = username;
+            }
+
+            public String getAvatar() {
+                return avatar;
+            }
+
+            public void setAvatar(String avatar) {
+                this.avatar = avatar;
             }
         }
     }
