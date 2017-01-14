@@ -13,6 +13,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -100,6 +101,12 @@ public class UserDiscussItemControl {
             } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
                 mediaImageType.setVisibility(View.VISIBLE);
                 DraweeViewUtil.setDraweeViewRes(mediaImageType, R.drawable.video_release);
+                mediaImageType.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        T_.info("暂不支持视频的播放.");
+                    }
+                });
             } else {
                 mediaImageType.setVisibility(View.GONE);
             }
