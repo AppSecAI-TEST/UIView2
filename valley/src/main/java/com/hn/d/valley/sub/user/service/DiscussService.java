@@ -54,4 +54,13 @@ public interface DiscussService {
     @POST("discuss/detail")
     Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
 
+    /**
+     * 删除动态
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * discuss_id	是	int	动态id
+     */
+    @POST("discuss/delete")
+    Observable<ResponseBody> delete(@QueryMap Map<String, String> map);
+
 }

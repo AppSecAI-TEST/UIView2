@@ -86,9 +86,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         mRExBaseAdapter.setLoadMoreListener(this);
 
         if (hasDecoration()) {
-            mRecyclerView.addItemDecoration(
-                    new RBaseItemDecoration(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi))
-                            .setDrawLastLine(hasLastDecoration()));
+            mRecyclerView.addItemDecoration(getItemDecoration());
         }
         mRecyclerView.setItemAnim(false);
         mRecyclerView.setAdapter(mRExBaseAdapter);
@@ -103,6 +101,21 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
                 }
             });
         }
+    }
+
+    /**
+     * 创建分割线
+     */
+    protected RBaseItemDecoration getItemDecoration() {
+        return new RBaseItemDecoration(getItemDecorationHeight())
+                .setDrawLastLine(hasLastDecoration());
+    }
+
+    /**
+     * 分割线的高度
+     */
+    protected int getItemDecorationHeight() {
+        return mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
     }
 
     /**
@@ -282,7 +295,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
             mRefreshLayout.setRefreshEnd();
         }
         //mRExBaseAdapter.setLoadMoreEnd();
-        if (mRExBaseAdapter.isEnableLoadMore()) {
+        if (mRExBaseAdapter != null && mRExBaseAdapter.isEnableLoadMore()) {
             if (hasNext()) {
                 mRExBaseAdapter.setLoadMoreEnd();
             } else {
@@ -301,20 +314,18 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         this.data_count = data_count;
         boolean isEmptyData;
 
-        if ((datas == null || datas.isEmpty())
-                && mRExBaseAdapter.getHeaderCount() == 0
-                && mRExBaseAdapter.getFooterCount() == 0
-                && page <= 1) {
+        if (isDataEmpty(datas) && page <= 1) {
             //接口返回空数据
             isEmptyData = true;
         } else {
             isEmptyData = false;
         }
 
-        onEmptyData(isEmptyData);
         if (isEmptyData) {
             mRExBaseAdapter.resetAllData(datas);
-            mRExBaseAdapter.setEnableLoadMore(false);
+            if (mRExBaseAdapter.isEnableLoadMore()) {
+                mRExBaseAdapter.setEnableLoadMore(false);
+            }
         } else {
             if (page <= 1) {
                 mRExBaseAdapter.resetAllData(datas);
@@ -322,10 +333,21 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
                 mRExBaseAdapter.appendAllData(datas);
             }
         }
+
+        onEmptyData(isEmptyData);
     }
 
     public void onUILoadDataEnd() {
         onUILoadDataEnd(null, data_count);
+    }
+
+    /**
+     * 判断数据是否为空, 可以返回true, 用来接管空界面处理
+     */
+    protected boolean isDataEmpty(List<T> datas) {
+        return (datas == null || datas.isEmpty())
+                && mRExBaseAdapter.getHeaderCount() == 0
+                && mRExBaseAdapter.getFooterCount() == 0;
     }
 
     /**

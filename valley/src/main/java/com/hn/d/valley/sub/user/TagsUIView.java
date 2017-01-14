@@ -7,11 +7,11 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RFlowLayout;
 import com.angcyo.uiview.widget.RTextCheckView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.TagsControl;
 
@@ -24,7 +24,7 @@ import rx.functions.Action2;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：标签选择界面
  * 创建人员：Robi
  * 创建时间：2017/01/09 16:41
  * 修改人员：Robi

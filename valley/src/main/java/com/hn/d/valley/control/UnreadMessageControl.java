@@ -89,7 +89,12 @@ public class UnreadMessageControl {
             public void call(Realm realm) {
                 final RealmResults<UnreadMessage> realmResults = realm.where(UnreadMessage.class)
                         .equalTo("sessionId", sessionId).findAll();
-                realmResults.deleteAllFromRealm();
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        realmResults.deleteAllFromRealm();
+                    }
+                });
             }
         });
     }

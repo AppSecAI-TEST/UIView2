@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
@@ -38,6 +39,7 @@ import com.hn.d.valley.main.message.EmojiLayoutControl;
 import com.hn.d.valley.sub.user.service.DiscussService;
 import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
+import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ import rx.functions.Func2;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：动态详情
  * 创建人员：Robi
  * 创建时间：2017/01/13 19:27
  * 修改人员：Robi
@@ -62,7 +64,8 @@ import rx.functions.Func2;
  * 修改备注：
  * Version: 1.0.0
  */
-public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.DataListBean, CommentListBean.DataListBean, String> {
+public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.DataListBean,
+        CommentListBean.DataListBean, String> implements UIIDialogImpl.OnDismissListener {
 
     @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
@@ -164,25 +167,32 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
             }
 
             @Override
-            protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, UserDiscussListBean.DataListBean headerBean) {
+            protected void onBindHeaderView(RBaseViewHolder holder, final int posInHeader, final UserDiscussListBean.DataListBean headerBean) {
                 super.onBindHeaderView(holder, posInHeader, headerBean);
                 UserDiscussItemControl.initItem(mSubscriptions, holder, headerBean, null, null, getILayout());
                 holder.v(R.id.command_item_view).setVisibility(View.GONE);
-                holder.v(R.id.like_users_layout).setVisibility(View.GONE);
+
+                final View likeUserControlLayout = holder.v(R.id.like_users_layout);
+                likeUserControlLayout.setVisibility(View.GONE);
+
                 List<UserDiscussListBean.DataListBean.UserInfoBean> like_users = headerBean.getLike_users();
                 final TextView userCountView = holder.tv(R.id.like_user_count_view);
 
-                if (like_users != null && !like_users.isEmpty()) {
-                    holder.v(R.id.like_users_layout).setVisibility(View.VISIBLE);
-                    userCountView.setText(like_users.size() + "");
+                mIcoRecyclerView = holder.v(R.id.like_user_recycler_view);
 
-                    mIcoRecyclerView = holder.v(R.id.like_user_recycler_view);
+                int oldSize = 0;
+                if (like_users != null && !like_users.isEmpty()) {
+                    oldSize = like_users.size();
+                    likeUserControlLayout.setVisibility(View.VISIBLE);
+                    userCountView.setText(oldSize + "");
+
                     List<HnIcoRecyclerView.IcoInfo> infos = new ArrayList<>();
                     for (UserDiscussListBean.DataListBean.UserInfoBean infoBean : like_users) {
                         infos.add(new HnIcoRecyclerView.IcoInfo(infoBean.getUid(), infoBean.getAvatar()));
                     }
                     mIcoRecyclerView.getMaxAdapter().resetData(infos);
                 }
+                //点赞
                 UserDiscussItemControl.bindLikeItemView(mSubscriptions, holder, headerBean, new Action1<Boolean>() {
                     @Override
                     public void call(Boolean aBoolean) {
@@ -190,16 +200,63 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                             RMaxAdapter<HnIcoRecyclerView.IcoInfo> maxAdapter = mIcoRecyclerView.getMaxAdapter();
                             HnIcoRecyclerView.IcoInfo icoInfo = new HnIcoRecyclerView.IcoInfo(UserCache.getUserAccount(),
                                     UserCache.getUserAvatar());
+                            int itemRawCount;
                             if (aBoolean) {
                                 maxAdapter.addLastItem(icoInfo);
-                                userCountView.setText(maxAdapter.getItemRawCount() + "");
+                                itemRawCount = maxAdapter.getItemRawCount();
+                                userCountView.setText(itemRawCount + "");
                             } else {
                                 maxAdapter.deleteItem(icoInfo);
-                                userCountView.setText(maxAdapter.getItemRawCount() + "");
+                                itemRawCount = maxAdapter.getItemRawCount();
+                                userCountView.setText(itemRawCount + "");
                             }
+
+                            likeUserControlLayout.setVisibility(itemRawCount > 0 ? View.VISIBLE : View.GONE);
                         }
                     }
                 });
+
+                View userDeleteView = holder.v(R.id.user_delete_view);
+                userDeleteView.setVisibility(View.GONE);
+                if (TextUtils.equals(headerBean.getUid(), UserCache.getUserAccount())) {
+                    userDeleteView.setVisibility(View.VISIBLE);
+                    userDeleteView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //删除动态
+                            add(RRetrofit.create(DiscussService.class)
+                                    .delete(Param.buildMap("discuss_id:" + headerBean.getDiscuss_id()))
+                                    .compose(Rx.transformer(String.class))
+                                    .doOnSubscribe(new Action0() {
+                                        @Override
+                                        public void call() {
+                                            HnLoading.show(mILayout).addDismissListener(DynamicDetailUIView.this);
+                                        }
+                                    })
+                                    .subscribe(new RSubscriber<String>() {
+                                        @Override
+                                        public void onNext(String bean) {
+                                            super.onNext(bean);
+                                            T_.ok(bean);
+                                            HnLoading.hide();
+                                            finishIView();
+                                        }
+
+                                        @Override
+                                        public void onError(int code, String msg) {
+                                            super.onError(code, msg);
+                                            T_.error(msg);
+                                        }
+
+                                        @Override
+                                        public void onEnd() {
+                                            super.onEnd();
+                                            HnLoading.hide();
+                                        }
+                                    }));
+                        }
+                    });
+                }
             }
 
             @Override
@@ -260,7 +317,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("动态详情")
+        return super.getTitleBar().setTitleString(mActivity.getString(R.string.dynamic_detail))
                 .setFloating(false)
                 .setTitleHide(false)
                 .setTitleBarBGColor(mActivity.getResources().getColor(com.angcyo.uiview.R.color.theme_color_primary));
@@ -374,5 +431,10 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
         } else {
             mDynamicRootLayout.hideEmojiLayout();
         }
+    }
+
+    @Override
+    public void onDismiss() {
+        onCancel();
     }
 }

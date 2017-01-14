@@ -42,7 +42,7 @@ import rx.functions.Action0;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：用户信息界面
  * 创建人员：Robi
  * 创建时间：2017/01/05 17:43
  * 修改人员：Robi
@@ -50,6 +50,7 @@ import rx.functions.Action0;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscussListBean.DataListBean, String> {
 
     SearchUserBean mSearchUserBean;
@@ -169,6 +170,11 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
     }
 
     @Override
+    protected boolean isDataEmpty(List<UserDiscussListBean.DataListBean> datas) {
+        return datas == null || datas.isEmpty();
+    }
+
+    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         Map<String, String> map = getPageMap();
@@ -189,16 +195,17 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     @Override
                     public void onNext(UserDiscussListBean userDiscussListBean) {
                         if (userDiscussListBean == null) {
+                            mRExBaseAdapter.setEnableLoadMore(false);
                             onUILoadDataEnd();
                             return;
                         }
-
                         List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
                         if (data_list != null && data_list.size() > 0) {
                             UserDiscussListBean.DataListBean lastBean = data_list.get(data_list.size() - 1);
                             mSearchUserBean.setIs_attention(lastBean.getUser_info().getIs_attention());
                             mSearchUserBean.setIs_contact(lastBean.getUser_info().getIs_contact());
                             initCommandView();
+                            mRExBaseAdapter.setEnableLoadMore(true);
                         }
                         onUILoadDataEnd(data_list, userDiscussListBean.getData_count());
                     }
