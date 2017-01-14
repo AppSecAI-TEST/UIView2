@@ -11,7 +11,7 @@ import com.angcyo.uiview.widget.RFlowLayout;
 import com.angcyo.uiview.widget.RTextCheckView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
-import com.hn.d.valley.base.T_;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.TagsControl;
 

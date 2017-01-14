@@ -16,8 +16,8 @@ import android.view.WindowManager;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.T_;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
 

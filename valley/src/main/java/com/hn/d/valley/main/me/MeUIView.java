@@ -22,7 +22,7 @@ import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
-import com.hn.d.valley.base.T_;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;

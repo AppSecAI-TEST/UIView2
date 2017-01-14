@@ -29,7 +29,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.widget.EmptyView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
-import com.hn.d.valley.base.T_;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.control.AmapControl;

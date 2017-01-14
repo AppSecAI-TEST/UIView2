@@ -7,7 +7,7 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.T_;
+import com.angcyo.uiview.utils.T_;
 import com.lzy.imagepicker.ImagePickerHelper;
 
 import butterknife.OnClick;

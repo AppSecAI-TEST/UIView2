@@ -6,6 +6,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.mvp.presenter.IBasePresenter;
 import com.angcyo.uiview.mvp.view.IBaseView;
+import com.angcyo.uiview.utils.T_;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.

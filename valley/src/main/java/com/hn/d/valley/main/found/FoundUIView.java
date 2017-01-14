@@ -9,10 +9,10 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UIItem;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
-import com.hn.d.valley.base.T_;
 
 import java.util.ArrayList;
 
