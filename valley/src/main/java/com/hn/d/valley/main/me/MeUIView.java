@@ -109,7 +109,7 @@ public class MeUIView extends BaseUIView {
                 T_.show("用户信息异常!");
             }
         });
-//        initViewPager();
+//        initMeUIView();
     }
 
     private void initScrollLayout() {
@@ -123,7 +123,7 @@ public class MeUIView extends BaseUIView {
         });
     }
 
-    private void initViewPager() {
+    private void initMeUIView() {
         ArrayList<String> photos = new ArrayList<>();
         photos.add(UserCache.instance().getAvatar());
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
@@ -157,7 +157,7 @@ public class MeUIView extends BaseUIView {
                     .subscribe(new RSubscriber<UserInfoBean>() {
                         @Override
                         public void onNext(UserInfoBean userInfoBean) {
-                            initViewPager();
+                            initMeUIView();
                         }
                     });
         }
