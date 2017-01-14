@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RSubscriber;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.TitleBarLayout;
@@ -125,15 +126,10 @@ public class MeUIView extends BaseUIView {
     private void initViewPager() {
         ArrayList<String> photos = new ArrayList<>();
         photos.add(UserCache.instance().getAvatar());
-        photos.add(UserCache.instance().getAvatar());
-        photos.add(UserCache.instance().getAvatar());
-        photos.add("");
-        photos.add("");
-        photos.add(UserCache.instance().getAvatar());
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
-//        if (userInfoBean != null) {
-//            photos.addAll(RUtils.split(userInfoBean.getPhotos()));
-//        }
+        if (userInfoBean != null) {
+            photos.addAll(RUtils.split(userInfoBean.getPhotos()));
+        }
         PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, photos);
 
         //
