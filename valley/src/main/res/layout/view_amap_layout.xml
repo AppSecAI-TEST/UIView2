@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -8,13 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:background="@android:color/holo_blue_dark">
+        tools:background="@android:color/holo_blue_dark">
 
-        <com.amap.api.maps.TextureMapView
-            android:id="@+id/map_view"
+        <com.hn.d.valley.widget.HnMapLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/holo_red_dark"/>
+            android:layout_height="match_parent">
+
+            <com.amap.api.maps.TextureMapView
+                android:id="@+id/map_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:background="@android:color/holo_red_dark"/>
+        </com.hn.d.valley.widget.HnMapLayout>
 
         <ImageView
             android:id="@+id/location_pin"
@@ -45,8 +51,8 @@
             android:layout_width="@dimen/base_title_bar_item_size"
             android:layout_height="@dimen/base_title_bar_item_size"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="15dp"
-            android:layout_marginStart="@dimen/base_xhdpi"
+            android:layout_marginBottom="@dimen/base_xxxhdpi"
+            android:layout_marginStart="@dimen/base_hdpi"
             android:background="@drawable/btn_location_selector"/>
 
     </RelativeLayout>

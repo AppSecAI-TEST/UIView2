@@ -97,6 +97,9 @@ public class UserDiscussItemControl {
                         ImagePagerUIView.start(iLayout, v, PhotoPager.getImageItems(medias), 0);
                     }
                 });
+            } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
+                mediaImageType.setVisibility(View.VISIBLE);
+                DraweeViewUtil.setDraweeViewRes(mediaImageType, R.drawable.video_release);
             } else {
                 mediaImageType.setVisibility(View.GONE);
             }
@@ -530,8 +533,8 @@ public class UserDiscussItemControl {
      * 点赞和取消点赞
      */
     public static void bindLikeItemView(final CompositeSubscription subscription,
-                                         RBaseViewHolder holder,
-                                         UserDiscussListBean.DataListBean tBean, Action1<Boolean> likeAction) {
+                                        RBaseViewHolder holder,
+                                        UserDiscussListBean.DataListBean tBean, Action1<Boolean> likeAction) {
 
         HnItemTextView like_cnt = holder.v(R.id.like_cnt);
 

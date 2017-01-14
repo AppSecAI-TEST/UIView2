@@ -7,14 +7,19 @@ import android.support.annotation.Nullable;
 import android.view.Gravity;
 
 import com.angcyo.uiview.dialog.UIDialog;
+import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.start.LauncherUIView;
 import com.hn.d.valley.start.LoginUIView;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.ClientType;
+import com.orhanobut.hawk.Hawk;
+
+import rx.functions.Action0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -69,7 +74,18 @@ public class HnSplashActivity extends BaseActivity {
             HnUIMainActivity.launcher(this);
             finish();
         } else {
-            startIView(new LoginUIView(), false);
+            final String versionName = RUtils.getAppVersionName(this);
+            if (Hawk.get(versionName, true)) {
+                startIView(new LauncherUIView(new Action0() {
+                    @Override
+                    public void call() {
+                        Hawk.put(versionName, false);
+                        mLayout.replaceIView(new LoginUIView());
+                    }
+                }));
+            } else {
+                startIView(new LoginUIView(), false);
+            }
         }
 
         onParseIntent();

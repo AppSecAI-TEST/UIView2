@@ -19,6 +19,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
@@ -27,7 +28,6 @@ import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.AmapBean;
@@ -83,6 +83,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_login);
+        mBaseRootLayout.setBackgroundResource(R.drawable.login_pic);
         fixInsertsTop();
     }
 
