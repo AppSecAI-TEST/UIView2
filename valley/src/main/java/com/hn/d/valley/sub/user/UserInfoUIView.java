@@ -15,12 +15,12 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.SearchUserBean;
@@ -316,7 +316,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 public void call() {
                     mOtherILayout.startIView(new DynamicDetailUIView(dataBean.getDiscuss_id()));
                 }
-            });
+            }, mOtherILayout);
         }
 
         /**

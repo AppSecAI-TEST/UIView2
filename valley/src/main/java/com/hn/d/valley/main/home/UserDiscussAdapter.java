@@ -2,6 +2,7 @@ package com.hn.d.valley.main.home;
 
 import android.content.Context;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.hn.d.valley.R;
@@ -19,7 +20,7 @@ import com.hn.d.valley.control.UserDiscussItemControl;
  * 修改备注：
  * Version: 1.0.0
  */
-public class UserDiscussAdapter extends RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> {
+public abstract class UserDiscussAdapter extends RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> {
     public UserDiscussAdapter(Context context) {
         super(context);
     }
@@ -32,6 +33,8 @@ public class UserDiscussAdapter extends RExBaseAdapter<String, UserDiscussListBe
     @Override
     protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean dataBean) {
         super.onBindDataView(holder, posInData, dataBean);
-        UserDiscussItemControl.initItem(holder, dataBean, null);
+        UserDiscussItemControl.initItem(holder, dataBean, null, getILayout());
     }
+
+    protected abstract ILayout getILayout();
 }

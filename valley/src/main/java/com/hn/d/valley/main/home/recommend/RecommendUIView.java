@@ -1,16 +1,11 @@
 package com.hn.d.valley.main.home.recommend;
 
-import android.view.View;
-
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
-import com.angcyo.uiview.utils.RUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.realm.Tag;
@@ -20,9 +15,6 @@ import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hn.d.valley.sub.user.service.UserInfoService;
-import com.hn.d.valley.utils.PhotoPager;
-
-import java.util.List;
 
 import rx.functions.Action0;
 
@@ -64,19 +56,13 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                     public void call() {
                         mOtherILayout.startIView(new DynamicDetailUIView(dataBean.getDiscuss_id()));
                     }
-                });
+                }, getILayout());
 
-                final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);
-                final List<String> medias = RUtils.split(dataBean.getMedia());
-                if ("3".equalsIgnoreCase(dataBean.getMedia_type())) {
-                    mediaImageType.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ImagePagerUIView.start(mOtherILayout, v, PhotoPager.getImageItems(medias), 0);
-                        }
-                    });
-                }
+            }
 
+            @Override
+            protected ILayout getILayout() {
+                return mOtherILayout;
             }
         };
     }

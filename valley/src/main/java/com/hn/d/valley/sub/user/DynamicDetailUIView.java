@@ -2,6 +2,16 @@ package com.hn.d.valley.sub.user;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.Layout;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -9,19 +19,36 @@ import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.recycler.RMaxAdapter;
+import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.CommentListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.emoji.EmojiRecyclerView;
+import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.message.EmojiLayoutControl;
+import com.hn.d.valley.sub.user.service.DiscussService;
 import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.widget.HnIcoRecyclerView;
+import com.hn.d.valley.widget.HnRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import rx.Observable;
+import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Func2;
 
 /**
@@ -37,13 +64,92 @@ import rx.functions.Func2;
  */
 public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.DataListBean, CommentListBean.DataListBean, String> {
 
+    @BindView(R.id.recycler_view)
+    RRecyclerView mRecyclerView;
+    @BindView(R.id.refresh_layout)
+    HnRefreshLayout mRefreshLayout;
+    @BindView(R.id.dynamic_root_layout)
+    RSoftInputLayout mDynamicRootLayout;
+    @BindView(R.id.emoji_recycler_view)
+    EmojiRecyclerView mEmojiRecyclerView;
+    @BindView(R.id.input_view)
+    ExEditText mInputView;
+    @BindView(R.id.emoji_control_layout)
+    CheckBox mEmojiControlLayout;
+    @BindView(R.id.send_view)
+    TextView mSendView;
     /**
      * 动态id
      */
     private String discuss_id;
+    /**
+     * 点赞头像列表
+     */
+    private HnIcoRecyclerView mIcoRecyclerView;
 
     public DynamicDetailUIView(String discuss_id) {
         this.discuss_id = discuss_id;
+    }
+
+    @Override
+    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        inflater.inflate(R.layout.view_dynamic_detail, baseContentLayout);
+//        inflate(R.layout.view_dynamic_detail);
+    }
+
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
+        mEmojiRecyclerView.setOnEmojiSelectListener(new EmojiLayoutControl.OnEmojiSelectListener() {
+            @Override
+            public void onEmojiText(String emoji) {
+                final int selectionStart = mInputView.getSelectionStart();
+                mInputView.getText().insert(selectionStart, emoji);
+                MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
+                mInputView.setSelection(selectionStart + emoji.length());
+                mInputView.requestFocus();
+            }
+        });
+        mDynamicRootLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
+            @Override
+            public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
+                if (!isEmojiShow) {
+                    mEmojiControlLayout.setChecked(false);
+                }
+            }
+        });
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mDynamicRootLayout.requestBackPressed();
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return mDynamicRootLayout.requestBackPressed();
+    }
+
+    /**
+     * 输入框文本变化
+     */
+    @OnTextChanged(R.id.input_view)
+    public void onInputTextChanged(Editable editable) {
+        mSendView.setEnabled(!TextUtils.isEmpty(editable));
+    }
+
+    @Override
+    public HnRefreshLayout getRefreshLayout() {
+        return mRefreshLayout;
+    }
+
+    @Override
+    public RRecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 
     @Override
@@ -60,13 +166,94 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
             @Override
             protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, UserDiscussListBean.DataListBean headerBean) {
                 super.onBindHeaderView(holder, posInHeader, headerBean);
-                UserDiscussItemControl.initItem(mSubscriptions, holder, headerBean, null, null);
+                UserDiscussItemControl.initItem(mSubscriptions, holder, headerBean, null, null, getILayout());
+                holder.v(R.id.command_item_view).setVisibility(View.GONE);
+                holder.v(R.id.like_users_layout).setVisibility(View.GONE);
+                List<UserDiscussListBean.DataListBean.UserInfoBean> like_users = headerBean.getLike_users();
+                final TextView userCountView = holder.tv(R.id.like_user_count_view);
+
+                if (like_users != null && !like_users.isEmpty()) {
+                    holder.v(R.id.like_users_layout).setVisibility(View.VISIBLE);
+                    userCountView.setText(like_users.size() + "");
+
+                    mIcoRecyclerView = holder.v(R.id.like_user_recycler_view);
+                    List<HnIcoRecyclerView.IcoInfo> infos = new ArrayList<>();
+                    for (UserDiscussListBean.DataListBean.UserInfoBean infoBean : like_users) {
+                        infos.add(new HnIcoRecyclerView.IcoInfo(infoBean.getUid(), infoBean.getAvatar()));
+                    }
+                    mIcoRecyclerView.getMaxAdapter().resetData(infos);
+                }
+                UserDiscussItemControl.bindLikeItemView(mSubscriptions, holder, headerBean, new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        if (mIcoRecyclerView != null) {
+                            RMaxAdapter<HnIcoRecyclerView.IcoInfo> maxAdapter = mIcoRecyclerView.getMaxAdapter();
+                            HnIcoRecyclerView.IcoInfo icoInfo = new HnIcoRecyclerView.IcoInfo(UserCache.getUserAccount(),
+                                    UserCache.getUserAvatar());
+                            if (aBoolean) {
+                                maxAdapter.addLastItem(icoInfo);
+                                userCountView.setText(maxAdapter.getItemRawCount() + "");
+                            } else {
+                                maxAdapter.deleteItem(icoInfo);
+                                userCountView.setText(maxAdapter.getItemRawCount() + "");
+                            }
+                        }
+                    }
+                });
             }
 
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, CommentListBean.DataListBean dataBean) {
+            protected void onBindDataView(final RBaseViewHolder holder, int posInData, final CommentListBean.DataListBean dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
                 holder.fillView(dataBean, true);
+                View deleteView = holder.v(R.id.delete_view);
+                if (TextUtils.equals(dataBean.getUid(), UserCache.getUserAccount())) {
+                    deleteView.setVisibility(View.VISIBLE);
+                    deleteView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            deleteItem(dataBean);
+                            add(RRetrofit.create(SocialService.class)
+                                    .removeComment(Param.buildMap("type:comment",
+                                            "item_id:" + dataBean.getComment_id()))
+                                    .compose(Rx.transformer(String.class))
+                                    .subscribe(new RSubscriber<String>() {
+                                        @Override
+                                        public void onError(int code, String msg) {
+                                            super.onError(code, msg);
+                                            T_.error(msg);
+                                        }
+                                    }));
+                        }
+                    });
+                } else {
+                    deleteView.setVisibility(View.GONE);
+                }
+                final TextView contentView = holder.v(R.id.content);
+                final TextView seeAllView = holder.v(R.id.see_all_view);
+                seeAllView.setVisibility(View.GONE);
+                seeAllView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        contentView.setMaxLines(Integer.MAX_VALUE);
+                        seeAllView.setVisibility(View.GONE);
+                    }
+                });
+                contentView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Layout layout = contentView.getLayout();
+                        if (layout != null) {
+                            int lines = layout.getLineCount();
+                            if (lines > 0) {
+                                if (layout.getEllipsisCount(lines - 1) > 0) {
+                                    seeAllView.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
+                    }
+                }, Constant.DEBOUNCE_TIME);
+                DynamicCommentControl.bindLikeItemView(mSubscriptions, holder, dataBean, null);
             }
         };
     }
@@ -105,7 +292,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         Observable.zip(
-                RRetrofit.create(SocialService.class)
+                RRetrofit.create(DiscussService.class)
                         .detail(Param.buildMap("discuss_id:" + discuss_id, "uid:" + UserCache.getUserAccount()))
                         .compose(Rx.transformer(UserDiscussListBean.DataListBean.class))
                         .asObservable(),
@@ -123,18 +310,69 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                             mRExBaseAdapter.resetHeaderData(headList);
                         }
                         if (dataListBean2 != null) {
-                            mRExBaseAdapter.resetAllData(dataListBean2.getData_list());
+                            onUILoadDataEnd(dataListBean2.getData_list(), dataListBean2.getData_count());
+                        } else {
+                            onUILoadDataEnd();
                         }
                         return null;
                     }
                 }
         )
                 .compose(Rx.<String>transformer())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        showLoadView();
+                    }
+                })
                 .subscribe(new RSubscriber<String>() {
                     @Override
                     public void onEnd() {
                         super.onEnd();
+                        hideLoadView();
+                        onUILoadDataFinish();
                     }
                 });
+    }
+
+    /**
+     * 发送评价
+     */
+    @OnClick({R.id.send_view})
+    public void onSendClick(View view) {
+        add(RRetrofit.create(SocialService.class)
+                .comment(Param.buildMap("type:discuss", "item_id:" + discuss_id, "content:" + mInputView.string()))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new RSubscriber<String>() {
+                    @Override
+                    public void onNext(String bean) {
+                        super.onNext(bean);
+                        loadData();
+                        try {
+                            mRecyclerView.smoothScrollToPosition(1);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        T_.error(msg);
+                    }
+                }));
+        mInputView.setText("");
+    }
+
+    /**
+     * 表情切换
+     */
+    @OnClick({R.id.emoji_control_layout})
+    public void onEmojiControlClick(CompoundButton view) {
+        if (view.isChecked()) {
+            mDynamicRootLayout.showEmojiLayout();
+        } else {
+            mDynamicRootLayout.hideEmojiLayout();
+        }
     }
 }

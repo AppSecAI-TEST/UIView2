@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
 import java.util.List;
 
 /**
@@ -162,6 +164,11 @@ public class CommentListBean {
 
         public void setIs_like(int is_like) {
             this.is_like = is_like;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return TextUtils.equals(comment_id, ((DataListBean) obj).comment_id);
         }
     }
 }

@@ -11,12 +11,12 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.widget.EmojiTabLayout;
 import com.angcyo.uiview.widget.viewpager.RPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.emoji.EmojiManager;
+import com.hn.d.valley.emoji.EmojiRecyclerView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -35,7 +35,7 @@ public class EmojiLayoutControl {
     EmojiTabLayout mTabLayout;
     OnEmojiSelectListener mOnEmojiSelectListener;
 
-    public EmojiLayoutControl(RBaseViewHolder viewHolder, OnEmojiSelectListener listener) {
+    public EmojiLayoutControl(RBaseViewHolder viewHolder, final OnEmojiSelectListener listener) {
         mViewHolder = viewHolder;
         mUIViewPager = mViewHolder.v(R.id.view_pager);
         mTabLayout = mViewHolder.v(R.id.emoji_tab_layout);
@@ -66,10 +66,12 @@ public class EmojiLayoutControl {
         mUIViewPager.setAdapter(new RPagerAdapter() {
             @Override
             protected View getView(LayoutInflater from, ViewGroup container, int position) {
-                RRecyclerView recyclerView = new RRecyclerView(container.getContext());
-                recyclerView.setItemAnim(false);
-                recyclerView.setAdapter(new EmojiAdapter(container.getContext()));
-                recyclerView.setTag("GV8");
+//                RRecyclerView recyclerView = new RRecyclerView(container.getContext());
+//                recyclerView.setItemAnim(false);
+//                recyclerView.setAdapter(new EmojiAdapter(container.getContext()));
+//                recyclerView.setTag("GV8");
+                EmojiRecyclerView recyclerView = new EmojiRecyclerView(container.getContext());
+                recyclerView.setOnEmojiSelectListener(mOnEmojiSelectListener);
                 container.addView(recyclerView);
                 return recyclerView;
             }
@@ -97,6 +99,7 @@ public class EmojiLayoutControl {
         void onEmojiText(String emoji);
     }
 
+    @Deprecated
     class EmojiAdapter extends RBaseAdapter<String> {
 
         public EmojiAdapter(Context context) {

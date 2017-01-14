@@ -9,6 +9,7 @@ import com.angcyo.uiview.net.rsa.RSA;
 import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.cache.UserCache;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
@@ -151,6 +152,7 @@ public class Param {
      */
     public static Map<String, String> build(String... args) {
         final Map<String, String> map = new HashMap<>();
+        map.put("uid", UserCache.getUserAccount());//默认传输uid参数
         foreach(new OnPutValue() {
             @Override
             public void onValue(String key, String value) {

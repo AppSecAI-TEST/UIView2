@@ -52,6 +52,10 @@ public class ImagePagerUIView extends UIIViewImpl {
     }
 
     public static void start(ILayout iLayout, final View view, ArrayList<ImageItem> imageItems, int startPosition) {
+        if (iLayout == null) {
+            return;
+        }
+
         int[] rt = new int[2];
         view.getLocationOnScreen(rt);
 

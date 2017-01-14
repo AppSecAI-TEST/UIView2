@@ -33,6 +33,7 @@ public class Constant {
      */
     public static final String USER_ACCOUNT = "user_account";
     public static final String USER_TOKEN = "user_token";
+    public static final String USER_AVATAR = "user_avatar";
 
     /**
      * 抖动时间, 多虑时间之内的事件

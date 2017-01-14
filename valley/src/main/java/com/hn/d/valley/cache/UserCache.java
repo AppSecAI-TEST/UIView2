@@ -62,6 +62,14 @@ public class UserCache {
         Hawk.put(Constant.USER_ACCOUNT, account);
     }
 
+    public static String getUserAvatar() {
+        return Hawk.get(Constant.USER_AVATAR, "");
+    }
+
+    public static void setUserAvatar(String avatar) {
+        Hawk.put(Constant.USER_AVATAR, avatar);
+    }
+
     public static String getUserToken() {
         return Hawk.get(Constant.USER_TOKEN, "");
     }
@@ -127,6 +135,7 @@ public class UserCache {
         mLoginBean = loginBean;
         setUserAccount(loginBean.getUid());
         setUserToken(loginBean.getYx_token());
+        setUserAvatar(loginBean.getAvatar());
 
         CrashReport.setUserId(loginBean.getUid());
 
@@ -164,6 +173,10 @@ public class UserCache {
             public void onNext(UserInfoBean userInfoBean) {
                 L.i("更新用户数据库信息:" + userInfoBean.getUid() + " " + userInfoBean.getUsername() + " 成功.");
                 RBus.post(userInfoBean);
+
+                if (TextUtils.equals(userInfoBean.getUid(), getUserAccount())) {
+                    setUserAvatar(userInfoBean.getAvatar());
+                }
             }
         });
     }

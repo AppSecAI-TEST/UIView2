@@ -19,7 +19,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.sub.user.service.DiscussService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class TagsControl {
             listAction1.call(tags);
         }
 
-        RRetrofit.create(SocialService.class)
+        RRetrofit.create(DiscussService.class)
                 .getTags(Param.buildMap())
                 .compose(Rx.transformerList(Tag.class))
                 .subscribe(new BaseSingleSubscriber<List<Tag>>() {

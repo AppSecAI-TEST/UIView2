@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.widget.TextView;
 
 import com.hn.d.valley.R;
@@ -42,10 +43,11 @@ public class HnGenderView extends TextView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.default_text_little_size));
+        setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(R.dimen.default_text_size10));
         setTextColor(Color.WHITE);
+        setGravity(Gravity.CENTER_VERTICAL);
         final float density = getResources().getDisplayMetrics().density;
-        setPadding((int) (density * 2), 0, 0, 0);
+        setPadding((int) (density * 4), 0, 0, 0);
         setMinWidth((int) (density * 20));
         if (getTag() == null) {
             setTag("1");

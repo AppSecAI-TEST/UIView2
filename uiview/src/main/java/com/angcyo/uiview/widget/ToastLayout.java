@@ -33,23 +33,43 @@ public class ToastLayout extends RelativeLayout {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int statusBarHeight = getResources().getDimensionPixelSize(R.dimen.status_bar_height);
+            setClipToPadding(false);
+            setClipChildren(false);
+            setPadding(getPaddingLeft(),
+                    statusBarHeight,
+                    getPaddingRight(), getPaddingBottom());
+            int height = statusBarHeight +
+                    getResources().getDimensionPixelSize(R.dimen.action_bar_height);
+            setMinimumHeight(height);
+        }
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        int height = getMeasuredHeight();
-        Context context = getContext();
-//        if (context instanceof Activity) {
-//            if (ResUtil.isLayoutFullscreen((Activity) context)) {
-                int statusBarHeight = getResources().getDimensionPixelSize(R.dimen.status_bar_height);
-                setClipToPadding(false);
-                setClipChildren(false);
-                setPadding(getPaddingLeft(),
-                        statusBarHeight,
-                        getPaddingRight(), getPaddingBottom());
-                height = statusBarHeight +
-                        getResources().getDimensionPixelSize(R.dimen.action_bar_height) +
-                        getResources().getDimensionPixelSize(R.dimen.base_toast_shadow_height);
-//            }
-//        }
-        setMeasuredDimension(widthMeasureSpec, height);
+        int width = MeasureSpec.getSize(widthMeasureSpec);
+        int height = getMeasuredHeight();//MeasureSpec.getSize(heightMeasureSpec);
+
+        int shadowHeight = getResources().getDimensionPixelSize(R.dimen.base_toast_shadow_height);
+        setMeasuredDimension(width, height + shadowHeight);
     }
+
+    //    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        int heightSize = getMeasuredHeight();
+//        int height;
+//
+//        Context context = getContext();
+////        if (context instanceof Activity) {
+////            if (ResUtil.isLayoutFullscreen((Activity) context)) {
+//
+////            }
+////        }
+////        setMeasuredDimension(widthMeasureSpec, height);
+//    }
 }

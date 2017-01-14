@@ -99,5 +99,6 @@
     <string name="delete_text">删除</string>
     <string name="see_all">查看全部</string>
     <string name="reply_cnt_tip">%1$s条回复</string>
+    <string name="dynamic_input_hint">说点什么吧</string>
 
 </resources>

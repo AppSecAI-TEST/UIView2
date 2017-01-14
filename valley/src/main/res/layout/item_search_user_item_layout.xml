@@ -145,16 +145,19 @@
         android:clickable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingLeft="@dimen/base_xhdpi"
+        android:paddingRight="@dimen/base_xhdpi"
         android:visibility="gone">
 
-        <com.angcyo.uiview.recycler.RRecyclerView
-            android:id="@+id/recycler_view"
+        <com.hn.d.valley.widget.HnIcoRecyclerView
+            android:id="@+id/like_user_recycler_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:tag="H"/>
 
         <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/like_user_count_view"
             style="@style/DarkTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -164,5 +167,11 @@
             tools:text="109个人赞过"/>
 
     </LinearLayout>
+
+    <View
+        style="@style/BaseHLine"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_ldpi"/>
 
 </LinearLayout>

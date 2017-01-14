@@ -225,6 +225,9 @@ public class RBaseViewHolder extends RecyclerView.ViewHolder {
      * @param withGetMethod 是否通过get方法获取对象字段的值
      */
     public void fillView(Class<?> clz, Object bean, boolean hideForEmpty, boolean withGetMethod) {
+        if (bean == null) {
+            return;
+        }
         Field[] fields;
         if (clz == null) {
             fields = bean.getClass().getDeclaredFields();

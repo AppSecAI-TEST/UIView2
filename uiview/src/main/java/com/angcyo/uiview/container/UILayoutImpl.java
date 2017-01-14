@@ -270,6 +270,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    isFinishing = false;
                     startIView(iView, param);
                 }
             }, UIIViewImpl.DEFAULT_ANIM_TIME);

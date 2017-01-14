@@ -62,6 +62,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @Override
     final protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflateRecyclerRootLayout(baseContentLayout, inflater);
+        inflateOverlayLayout(baseContentLayout, inflater);
     }
 
     @Override
@@ -138,8 +139,6 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         mRecyclerView = new RRecyclerView(mActivity);
         mRefreshLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-1, -1));
         baseContentLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
-
-        inflateOverlayLayout(baseContentLayout, inflater);
     }
 
     /**
@@ -283,6 +282,13 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
             mRefreshLayout.setRefreshEnd();
         }
         //mRExBaseAdapter.setLoadMoreEnd();
+        if (mRExBaseAdapter.isEnableLoadMore()) {
+            if (hasNext()) {
+                mRExBaseAdapter.setLoadMoreEnd();
+            } else {
+                mRExBaseAdapter.setNoMore();
+            }
+        }
     }
 
     /**
@@ -295,7 +301,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         this.data_count = data_count;
         boolean isEmptyData;
 
-        if ((datas == null || datas.isEmpty()) && page <= 1) {
+        if ((datas == null || datas.isEmpty())
+                && mRExBaseAdapter.getHeaderCount() == 0
+                && mRExBaseAdapter.getFooterCount() == 0
+                && page <= 1) {
             //接口返回空数据
             isEmptyData = true;
         } else {
@@ -311,12 +320,6 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
                 mRExBaseAdapter.resetAllData(datas);
             } else {
                 mRExBaseAdapter.appendAllData(datas);
-            }
-
-            if (hasNext()) {
-                mRExBaseAdapter.setLoadMoreEnd();
-            } else {
-                mRExBaseAdapter.setNoMore();
             }
         }
     }

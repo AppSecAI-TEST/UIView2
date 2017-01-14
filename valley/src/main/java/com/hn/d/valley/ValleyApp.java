@@ -56,9 +56,9 @@ public class ValleyApp extends RApplication {
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        if (BuildConfig.DEBUG) {
-            T_.show("请求释放内存..." + level);
-        }
+//        if (BuildConfig.DEBUG) {
+//            T_.show("请求释放内存..." + level);
+//        }
         Glide.get(this).trimMemory(level);
         Glide.get(this).clearMemory();
         Fresco.getImagePipeline().clearMemoryCaches();

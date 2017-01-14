@@ -23,6 +23,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.ResizeAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.bumptech.glide.Glide;
@@ -30,7 +31,6 @@ import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -39,7 +39,7 @@ import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.TagsControl;
-import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.sub.user.service.DiscussService;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.utils.RBus;
@@ -170,7 +170,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
      * 发布动态
      */
     private void publish() {
-        add(RRetrofit.create(SocialService.class)
+        add(RRetrofit.create(DiscussService.class)
                 .publish(Param.buildMap("uid:" + UserCache.getUserAccount(),
                         "tags:" + RUtils.connect(mSelectorTags),
                         "media_type:3",

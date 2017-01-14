@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.widget.RSoftInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dynamic_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/content_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--文本输入, 语音录制-->
+        <FrameLayout
+            android:id="@+id/input_control_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="bottom"
+            android:padding="@dimen/base_ldpi">
+
+            <CheckBox
+                android:id="@+id/emoji_control_layout"
+                android:layout_width="@dimen/base_xxxhdpi"
+                android:layout_height="38dp"
+                android:layout_gravity="bottom|left"
+                android:layout_marginBottom="@dimen/base_mdpi"
+                android:button="@drawable/message_expression_selector"/>
+
+            <com.angcyo.uiview.widget.ExEditText
+                android:id="@+id/input_view"
+                style="@style/MainTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="54dp"
+                android:layout_marginStart="@dimen/base_xxxhdpi"
+                android:layout_weight="1"
+                android:background="@drawable/dark_input_round_border_selector"
+                android:hint="@string/dynamic_input_hint"
+                android:maxHeight="@dimen/base_80dpi"
+                android:minHeight="38dp"
+                android:padding="@dimen/base_ldpi"
+                android:textSize="@dimen/default_text_size16"
+                tools:text="很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长"/>
+
+            <!--发送按钮-->
+            <TextView
+                android:id="@+id/send_view"
+                style="@style/MainColorButtonStyle"
+                android:layout_width="@dimen/base_50dpi"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right|bottom"
+                android:layout_marginBottom="@dimen/base_mdpi"
+                android:layout_marginStart="@dimen/base_ldpi"
+                android:enabled="false"
+                android:text="@string/send"
+                android:visibility="visible"/>
+        </FrameLayout>
+
+        <!--内容-->
+        <com.hn.d.valley.widget.HnRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/input_control_layout">
+
+            <com.angcyo.uiview.recycler.RRecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.hn.d.valley.widget.HnRefreshLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/emoji_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.hn.d.valley.emoji.EmojiRecyclerView
+            android:id="@+id/emoji_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </RelativeLayout>
+</com.angcyo.uiview.widget.RSoftInputLayout>

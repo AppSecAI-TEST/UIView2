@@ -69,7 +69,7 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
 
         onError(errorCode, errorMsg);
         if (L.LOG_DEBUG) {
-            T_.show("[" + errorCode + "]" + errorMsg);
+            T_.error("[" + errorCode + "]" + errorMsg);
         }
         L.e("-----------------------------------------End-------------------------------------------");
     }
