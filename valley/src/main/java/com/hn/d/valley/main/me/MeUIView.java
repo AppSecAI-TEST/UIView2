@@ -9,6 +9,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -68,6 +69,8 @@ public class MeUIView extends BaseUIView {
     ItemInfoLayout mPersonAuthLayout;
     @BindView(R.id.setting_layout)
     ItemInfoLayout mSettingLayout;
+    @BindView(R.id.view_pager_placeholder_view)
+    ImageView mViewPagerPlaceholderView;
 
 
     @Override
@@ -110,6 +113,7 @@ public class MeUIView extends BaseUIView {
             }
         });
 //        initMeUIView();
+        mViewPagerPlaceholderView.setVisibility(View.VISIBLE);
     }
 
     private void initScrollLayout() {
@@ -124,6 +128,7 @@ public class MeUIView extends BaseUIView {
     }
 
     private void initMeUIView() {
+        mViewPagerPlaceholderView.setVisibility(View.GONE);
         ArrayList<String> photos = new ArrayList<>();
         photos.add(UserCache.instance().getAvatar());
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();

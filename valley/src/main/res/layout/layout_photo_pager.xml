@@ -21,4 +21,12 @@
         android:layout_marginRight="@dimen/base_xhdpi"
         tools:text="3/10"/>
 
+    <ImageView
+        android:id="@+id/view_pager_placeholder_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/zhanweitu_1"
+        android:visibility="gone"/>
+
 </RelativeLayout>
