@@ -175,6 +175,8 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                 final View likeUserControlLayout = holder.v(R.id.like_users_layout);
                 likeUserControlLayout.setVisibility(View.GONE);
 
+//                holder.v(R.id.bottom_line_view).setVisibility(View.VISIBLE);
+
                 List<UserDiscussListBean.DataListBean.UserInfoBean> like_users = headerBean.getLike_users();
                 final TextView userCountView = holder.tv(R.id.like_user_count_view);
 

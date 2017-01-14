@@ -169,9 +169,11 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/bottom_line_view"
         style="@style/BaseHLine"
         android:layout_marginEnd="@dimen/base_xhdpi"
         android:layout_marginStart="@dimen/base_xhdpi"
-        android:layout_marginTop="@dimen/base_ldpi"/>
+        android:layout_marginTop="@dimen/base_ldpi"
+        android:visibility="gone"/>
 
 </LinearLayout>

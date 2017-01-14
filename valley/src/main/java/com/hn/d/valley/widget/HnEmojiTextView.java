@@ -42,6 +42,9 @@ public class HnEmojiTextView extends TextView {
 
     @Override
     public void setText(CharSequence text, BufferType type) {
+        if (isInEditMode()) {
+            return;
+        }
         if (!TextUtils.isEmpty(text)) {
             SpannableString spannableString = MoonUtil.makeSpannableStringTags(getContext(),
                     String.valueOf(text), 0.45f, ImageSpan.ALIGN_BOTTOM, false);

@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/view_bg"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/base_xhdpi"
-    android:paddingRight="@dimen/base_xhdpi"
-    android:paddingTop="@dimen/base_xhdpi">
+    android:paddingLeft="@dimen/base_xhdpi">
+
+    <View
+        style="@style/BaseHLine"/>
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/avatar"
         style="@style/UserLittleIcoStyle"
+        android:layout_marginTop="@dimen/base_xhdpi"
         tools:background="@drawable/default_avatar"/>
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_toEndOf="@id/avatar"
         android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/base_hdpi">
+        android:paddingLeft="@dimen/base_hdpi"
+        android:paddingRight="@dimen/base_xhdpi">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -143,12 +148,6 @@
 
         </LinearLayout>
 
-
-        <View
-            style="@style/BaseHLine"
-            android:layout_marginLeft="@dimen/base_40dpi_"
-            android:layout_marginTop="@dimen/base_ldpi"/>
-
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

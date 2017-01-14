@@ -115,7 +115,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 分割线的高度
      */
     protected int getItemDecorationHeight() {
-        return mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
+        return mActivity.getResources().getDimensionPixelSize(R.dimen.base_hdpi);
     }
 
     /**
