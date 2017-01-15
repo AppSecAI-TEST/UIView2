@@ -26,10 +26,10 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.SwipeBackLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.EmptyView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.control.AmapControl;
@@ -88,6 +88,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
      */
     private String userUrl;
     private AmapControl mAmapControl;
+    private boolean isCallAction = false;
 
     public AmapUIView() {
     }
@@ -158,11 +159,12 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
                         T_.show("还未获取到有效位置信息.");
                     } else {
 //                    finishIView(AmapUIView.this, new UIParam(true, false));
+                        isCallAction = true;
                         if (mBeanAction1 != null) {
                             mBeanAction1.call(mTargetBean);
                         }
                         finishIView(AmapUIView.this);
-                        T_.show(mTargetBean.address);
+                        //T_.show(mTargetBean.address);
                     }
                 }
             }));
@@ -219,6 +221,9 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
         super.onViewUnload();
         mMapView.onDestroy();
         mAmapControl.deactivate();
+        if (!isCallAction && mBeanAction1 != null) {
+            mBeanAction1.call(null);
+        }
     }
 
     @Override

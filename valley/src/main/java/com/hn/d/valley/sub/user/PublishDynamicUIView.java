@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
@@ -27,6 +28,7 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.bumptech.glide.Glide;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -34,12 +36,15 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.sub.user.service.DiscussService;
+import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.utils.RBus;
@@ -82,6 +87,8 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     boolean isFirst = true;
     @BindView(R.id.input_view)
     ExEditText mInputView;
+    @BindView(R.id.forward_control_layout)
+    RelativeLayout mForwardControlLayout;
     private ResizeAdapter mImageAdapter;
     /**
      * 选择的图片
@@ -98,6 +105,15 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     private Action1<List<Tag>> mListAction1;
     private OssControl mOssControl;
     private AmapBean mLastLocation;
+    private AmapBean mTargetLocation;
+    /**
+     * 需要转发的动态,如果不是转发,则为空
+     */
+    private UserDiscussListBean.DataListBean forwardDataBean;
+
+    public PublishDynamicUIView(UserDiscussListBean.DataListBean forwardDataBean) {
+        this.forwardDataBean = forwardDataBean;
+    }
 
     public PublishDynamicUIView(ArrayList<Luban.ImageItem> photos) {
         this.photos = photos;
@@ -111,14 +127,6 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        mImageAdapter = new ImageAdapter(mRecyclerView);
-        mImageAdapter.setDividerHeight((int) ResUtil.dpToPx(mActivity.getResources(), 6));
-        mRecyclerView.setItemAnim(false);
-        mRecyclerView.setAdapter(mImageAdapter);
-        mRecyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6),
-                Color.TRANSPARENT));
-        mImageAdapter.resetData(photos);
-
         mListAction1 = new Action1<List<Tag>>() {
             @Override
             public void call(List<Tag> tags) {
@@ -142,6 +150,25 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                 isFirst = false;
             }
         };
+
+        if (forwardDataBean == null) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mForwardControlLayout.setVisibility(View.GONE);
+            mImageAdapter = new ImageAdapter(mRecyclerView);
+            mImageAdapter.setDividerHeight((int) ResUtil.dpToPx(mActivity.getResources(), 6));
+            mRecyclerView.setItemAnim(false);
+            mRecyclerView.setAdapter(mImageAdapter);
+            mRecyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6),
+                    Color.TRANSPARENT));
+            mImageAdapter.resetData(photos);
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
+            mForwardControlLayout.setVisibility(View.VISIBLE);
+            mViewHolder.tv(R.id.content).setText(forwardDataBean.getContent());
+            mViewHolder.tv(R.id.username).setText(forwardDataBean.getUser_info().getUsername());
+            DraweeViewUtil.resize((SimpleDraweeView) mViewHolder.v(R.id.avatar), forwardDataBean.getUser_info().getAvatar());
+        }
+
         TagsControl.getTags(mListAction1);
 
         mInputView.setAutoHideSoftInput(true);
@@ -150,18 +177,23 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
-                .setTitleString("发布动态")
+                .setTitleString(forwardDataBean == null ? mActivity.getString(R.string.publish_dynamic) : mActivity.getString(R.string.forward_dynamic))
                 .setShowBackImageView(true)
                 .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.send_forward_dynamic_n, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //
-                        mOssControl = new OssControl(PublishDynamicUIView.this);
-                        List<String> files = new ArrayList<>();
-                        for (Luban.ImageItem item : photos) {
-                            files.add(item.thumbPath);
+                        if (forwardDataBean == null) {
+                            //
+                            mOssControl = new OssControl(PublishDynamicUIView.this);
+                            List<String> files = new ArrayList<>();
+                            for (Luban.ImageItem item : photos) {
+                                files.add(item.thumbPath);
+                            }
+                            mOssControl.uploadCircleImg(files);
+                        } else {
+                            onUploadStart();
+                            publish();
                         }
-                        mOssControl.uploadCircleImg(files);
                     }
                 }));
     }
@@ -170,39 +202,68 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
      * 发布动态
      */
     private void publish() {
-        add(RRetrofit.create(DiscussService.class)
-                .publish(Param.buildMap("uid:" + UserCache.getUserAccount(),
-                        "tags:" + RUtils.connect(mSelectorTags),
-                        "media_type:3",
-                        "media:" + RUtils.connect(mUploadMedias),
-                        "is_top:" + (mTopBox.isChecked() ? 1 : 0),
-                        "open_location:" + (mShareBox.isChecked() ? 1 : 0),
-                        "content:" + mInputView.string(),
-                        "address:" + getAddress(),
-                        "lng:" + getLongitude(),
-                        "lat:" + getLatitude()))
-                .compose(Rx.transformer(String.class))
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onNext(String s) {
-                        T_.show(s);
-                        finishIView();
-                        RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
-                    }
+        if (forwardDataBean == null) {
+            add(RRetrofit.create(DiscussService.class)
+                    .publish(Param.buildMap(
+                            "tags:" + RUtils.connect(mSelectorTags),
+                            "media_type:3",
+                            "media:" + RUtils.connect(mUploadMedias),
+                            "is_top:" + (mTopBox.isChecked() ? 1 : 0),
+                            "open_location:" + (mShareBox.isChecked() ? 1 : 0),
+                            "content:" + mInputView.string(),
+                            "address:" + getAddress(),
+                            "lng:" + getLongitude(),
+                            "lat:" + getLatitude()))
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+                        @Override
+                        public void onNext(String s) {
+                            T_.show(s);
+                            finishIView();
+                            RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
+                        }
 
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                        HnLoading.hide();
-                    }
-                })
-        );
+                        @Override
+                        public void onEnd() {
+                            super.onEnd();
+                            HnLoading.hide();
+                        }
+                    })
+            );
+        } else {
+            add(RRetrofit.create(SocialService.class)
+                    .forward(Param.buildMap(
+                            "tags:" + RUtils.connect(mSelectorTags),
+                            "media_type:3",
+                            "type:discuss",
+                            "item_id:" + forwardDataBean.getDiscuss_id(),
+                            "is_top:" + (mTopBox.isChecked() ? 1 : 0),
+                            "open_location:" + (mShareBox.isChecked() ? 1 : 0),
+                            "content:" + mInputView.string(),
+                            "address:" + getAddress(),
+                            "lng:" + getLongitude(),
+                            "lat:" + getLatitude()))
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+                        @Override
+                        public void onNext(String s) {
+                            T_.show(s);
+                            finishIView();
+                            RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
+                        }
+
+                        @Override
+                        public void onEnd() {
+                            super.onEnd();
+                            HnLoading.hide();
+                        }
+                    })
+            );
+        }
     }
 
     private String getAddress() {
-        if (mLastLocation == null) {
-            mLastLocation = RAmap.getLastLocation();
-        }
+        initLocation();
         if (mLastLocation == null) {
             return "";
         }
@@ -210,9 +271,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     }
 
     private String getLatitude() {
-        if (mLastLocation == null) {
-            mLastLocation = RAmap.getLastLocation();
-        }
+        initLocation();
         if (mLastLocation == null) {
             return "";
         }
@@ -220,13 +279,20 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     }
 
     private String getLongitude() {
-        if (mLastLocation == null) {
-            mLastLocation = RAmap.getLastLocation();
-        }
+        initLocation();
         if (mLastLocation == null) {
             return "";
         }
         return String.valueOf(mLastLocation.longitude);
+    }
+
+    private void initLocation() {
+        if (mTargetLocation != null) {
+            mLastLocation = mTargetLocation;
+        }
+        if (mLastLocation == null) {
+            mLastLocation = RAmap.getLastLocation();
+        }
     }
 
     @Override
@@ -303,6 +369,30 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             if (!BuildConfig.DEBUG) {
                 isShowTip = true;
             }
+        }
+    }
+
+    @OnCheckedChanged(R.id.share_box)
+    public void onShareCheck(boolean isCheck) {
+        final ItemInfoLayout infoLayout = mViewHolder.v(R.id.address_layout);
+        if (isCheck) {
+            startIView(new AmapUIView(new Action1<AmapBean>() {
+                @Override
+                public void call(AmapBean amapBean) {
+                    if (amapBean != null) {
+                        mTargetLocation = amapBean;
+                        infoLayout.setVisibility(View.VISIBLE);
+                        infoLayout.setItemText(amapBean.address);
+                    } else {
+                        if (mTargetLocation == null) {
+                            mShareBox.setChecked(false);
+                        }
+                    }
+                }
+            }, null, UserCache.getUserAvatar(), true));
+        } else {
+            infoLayout.setVisibility(View.GONE);
+            mTargetLocation = null;
         }
     }
 

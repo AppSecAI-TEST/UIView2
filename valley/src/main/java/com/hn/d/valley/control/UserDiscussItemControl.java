@@ -23,6 +23,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
@@ -59,7 +60,7 @@ public class UserDiscussItemControl {
         bindLikeItemView(subscription, holder, dataListBean, null);
     }
 
-    public static void initItem(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean,
+    public static void initItem(RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
                                 final Action0 itemRootAction, final ILayout iLayout) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
 
@@ -132,6 +133,7 @@ public class UserDiscussItemControl {
 
         TextView commandItemView = holder.v(R.id.command_item_view);
         commandItemView.setVisibility(View.VISIBLE);
+        final View forwardView = holder.v(R.id.forward_cnt);
         if (user_info != null) {
             if (user_info.getIs_attention() == 1) {
                 commandItemView.setText("取消关注");
@@ -144,15 +146,22 @@ public class UserDiscussItemControl {
                 commandItemView.setTextColor(commandItemView.getResources().
                         getColorStateList(R.color.base_main_color_border_selector_color));
             }
+
             if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
                 //自己的动态不允许转发
-                holder.v(R.id.forward_cnt).setClickable(false);
+                forwardView.setClickable(false);
             } else {
-                holder.v(R.id.forward_cnt).setClickable(true);
+                forwardView.setClickable(true);
+                forwardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        iLayout.startIView(new PublishDynamicUIView(dataListBean));
+                    }
+                });
             }
         } else {
             commandItemView.setVisibility(View.GONE);
-            holder.v(R.id.forward_cnt).setClickable(false);
+            forwardView.setClickable(false);
         }
 
         TextView infoView = holder.v(R.id.copy_info_view);

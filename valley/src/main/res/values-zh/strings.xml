@@ -103,5 +103,7 @@
     <string name="dynamic_detail">动态详情</string>
     <string name="like_title">点赞</string>
     <string name="like_title_formater">点赞(%1$d)</string>
+    <string name="publish_dynamic">发布动态</string>
+    <string name="forward_dynamic">转发动态</string>
 
 </resources>

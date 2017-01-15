@@ -429,18 +429,20 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             return;
         }
 
-        L.d("请求关闭2:" + viewPattern.mIView.getClass().getSimpleName());
+        L.d("请求关闭2:" + viewPattern.toString() + " isFinishing:" + isFinishing);
 
         ViewPattern lastViewPattern = findLastShowViewPattern(viewPattern);
 
-        if (viewPattern.isAnimToStart || isFinishing) {
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    finishIViewInner(viewPattern, param);
-                }
-            });
-            return;
+        if (!viewPattern.interrupt) {
+            if (viewPattern.isAnimToStart || isFinishing) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        finishIViewInner(viewPattern, param);
+                    }
+                });
+                return;
+            }
         }
 
         if (param.isSwipeBack) {
@@ -518,6 +520,17 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         final ViewPattern viewPattern = findViewPatternByIView(iview);
         if (viewPattern != null) {
             viewPattern.interrupt = true;//中断启动
+        }
+
+        if (mLastShowViewPattern != null && mLastShowViewPattern != viewPattern && mLastShowViewPattern.mIView.isDialog()) {
+            L.d("等待对话框:" + mLastShowViewPattern.mIView.getClass().getSimpleName() + " 的关闭");
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finishIView(iview, param);
+                }
+            }, DEFAULT_ANIM_TIME);
+            return;
         }
 
         final Runnable endRunnable = new Runnable() {

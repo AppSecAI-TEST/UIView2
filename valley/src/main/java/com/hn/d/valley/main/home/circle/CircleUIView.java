@@ -98,6 +98,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     @Subscribe(tags = {@Tag(Constant.TAG_UPDATE_CIRCLE)})
     public void onEvent(UpdateDataEvent event) {
         if (mIViewStatus == STATE_VIEW_SHOW) {
+            if (getRecyclerView() != null) {
+                getRecyclerView().smoothScrollToPosition(0);
+            }
             loadData();
         }
     }

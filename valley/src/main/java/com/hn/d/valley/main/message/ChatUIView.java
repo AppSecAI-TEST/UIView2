@@ -33,11 +33,11 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
@@ -272,6 +272,9 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                 startIView(new AmapUIView(new Action1<AmapBean>() {
                     @Override
                     public void call(AmapBean bean) {
+                        if (bean == null) {
+                            return;
+                        }
                         final IMMessage locationMessage = MessageBuilder.createLocationMessage(mSessionId, sessionType, bean.latitude, bean.longitude, bean.address);
                         sendMessage(locationMessage);
 //                        final IMMessage message = MessageBuilder.createTextMessage(mSessionId, sessionType, "测试");

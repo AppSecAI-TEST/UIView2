@@ -104,4 +104,16 @@ public interface SocialService {
     @POST("social/likeList")
     Observable<ResponseBody> likeList(@QueryMap Map<String, String> map);
 
+    /**
+     * 转发
+     * 参数：
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	转发类型【discuss-动态 news-资讯 user-名片 group-群】
+     * item_id	是	int	数据id【动态id/资讯id/用户id/群id】
+     * content	否	string	转发的内容
+     */
+    @POST("social/forward")
+    Observable<ResponseBody> forward(@QueryMap Map<String, String> map);
+
 }
