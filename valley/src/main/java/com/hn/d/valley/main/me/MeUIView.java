@@ -28,6 +28,8 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
+import com.hn.d.valley.sub.other.FansRecyclerUIView;
+import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.utils.PhotoPager;
 
 import java.util.ArrayList;
@@ -180,11 +182,13 @@ public class MeUIView extends BaseUIView {
     @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.qr_code_view:
+            case R.id.qr_code_view://二维码
                 break;
-            case R.id.follow_item_layout:
+            case R.id.follow_item_layout://关注
+                mOtherILayout.startIView(new FollowersRecyclerUIView());
                 break;
-            case R.id.follower_item_layout:
+            case R.id.follower_item_layout://粉丝
+                mOtherILayout.startIView(new FansRecyclerUIView());
                 break;
         }
     }

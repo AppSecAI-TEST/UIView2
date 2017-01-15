@@ -29,7 +29,18 @@ public class LikeUserInfoBean {
     private String job;
     private String industry;
     /**
-     * is_contact : 1
+     * is_contact : 1{
+     "uid": "50001",
+     "status": "1",
+     "sex": "0",
+     "username": "幽灵",
+     "true_name": "",
+     "is_auth": "0",
+     "is_contact": 0,
+     "introduce": "",
+     "signature": ""，
+     "grade":"1"
+     }
      * contact_mark : 张伟
      * is_attention : 1
      */
@@ -37,6 +48,16 @@ public class LikeUserInfoBean {
     private int is_contact;
     private String contact_mark;
     private int is_attention;
+    /**
+     * 0-被永久锁定【封号】1-正常 2-被锁定，需解封
+     * status : 1
+     * true_name :
+     * introduce :
+     */
+
+    private String status;
+    private String true_name;
+    private String introduce;
 
     public String getAvatar() {
         return avatar;
@@ -140,5 +161,29 @@ public class LikeUserInfoBean {
 
     public void setIs_attention(int is_attention) {
         this.is_attention = is_attention;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTrue_name() {
+        return true_name;
+    }
+
+    public void setTrue_name(String true_name) {
+        this.true_name = true_name;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 }

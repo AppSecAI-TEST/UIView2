@@ -1,16 +1,12 @@
 package com.hn.d.valley.sub.other;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
@@ -39,11 +35,6 @@ public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBea
 
     public LikeUserRecyclerUIView(String discuss_id) {
         this.discuss_id = discuss_id;
-    }
-
-    @Override
-    protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString(getTitleString());
     }
 
     @Override
@@ -97,46 +88,19 @@ public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBea
     }
 
     @Override
-    public void onViewShowFirst(Bundle bundle) {
-        super.onViewShowFirst(bundle);
-        loadData();
-    }
-
-    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(SocialService.class)
                 .likeList(Param.buildMap("type:discuss", "item_id:" + discuss_id, "page:" + page))
                 .compose(Rx.transformer(LikeUserModel.class))
-                .subscribe(new RSubscriber<LikeUserModel>() {
+                .subscribe(new SingleRSubscriber<LikeUserModel>(this) {
                     @Override
-                    public void onNext(LikeUserModel bean) {
-                        super.onNext(bean);
-                        showContentLayout();
+                    protected void onResult(LikeUserModel bean) {
                         if (bean == null || bean.getData_list() == null || bean.getData_list().isEmpty()) {
                             onUILoadDataEnd();
                         } else {
                             onUILoadDataEnd(bean.getData_list(), bean.getData_count());
                         }
-                    }
-
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        T_.error(msg);
-                    }
-
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                        hideLoadView();
-                        onUILoadDataFinish();
-                    }
-
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        showLoadView();
                     }
                 }));
     }

@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.other;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -22,6 +23,7 @@ public abstract class SingleRecyclerUIView<T> extends BaseRecyclerUIView<String,
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
+                .setTitleString(getTitleString())
                 .setFloating(false)
                 .setTitleHide(false)
                 .setTitleBarBGColor(mActivity.getResources().getColor(R.color.theme_color_primary));
@@ -46,5 +48,11 @@ public abstract class SingleRecyclerUIView<T> extends BaseRecyclerUIView<String,
     @Override
     protected LayoutState getDefaultLayoutState() {
         return LayoutState.LOAD;
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        loadData();
     }
 }
