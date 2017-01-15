@@ -137,36 +137,48 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/like_users_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_50dpi"
         android:background="@drawable/base_bg_selector"
         android:clickable="true"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/base_xhdpi"
-        android:paddingRight="@dimen/base_xhdpi"
         android:visibility="gone">
 
-        <com.hn.d.valley.widget.HnIcoRecyclerView
-            android:id="@+id/like_user_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:tag="H"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_50dpi"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/base_xhdpi"
+            android:paddingRight="@dimen/base_xhdpi">
 
-        <com.angcyo.uiview.widget.RTextView
-            android:id="@+id/like_user_count_view"
-            style="@style/DarkTextStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/base_ldpi"
-            android:drawableRight="@drawable/next"
-            android:tag="@string/link_count_tip"
-            tools:text="109个人赞过"/>
+            <com.hn.d.valley.widget.HnIcoRecyclerView
+                android:id="@+id/like_user_recycler_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:tag="H"/>
 
-    </LinearLayout>
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/like_user_count_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/base_ldpi"
+                android:drawableRight="@drawable/next"
+                android:tag="@string/link_count_tip"
+                tools:text="109个人赞过"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/click_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/base_bg_selector"
+            android:clickable="true"/>
+    </RelativeLayout>
 
     <View
         android:id="@+id/bottom_line_view"

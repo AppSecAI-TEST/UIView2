@@ -30,12 +30,14 @@ import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.CommentListBean;
+import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.emoji.EmojiRecyclerView;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
+import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
 import com.hn.d.valley.sub.user.service.DiscussService;
 import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
@@ -173,11 +175,18 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                 holder.v(R.id.command_item_view).setVisibility(View.GONE);
 
                 final View likeUserControlLayout = holder.v(R.id.like_users_layout);
+                final View clickView = holder.v(R.id.click_view);
                 likeUserControlLayout.setVisibility(View.GONE);
+                clickView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new LikeUserRecyclerUIView(headerBean.getDiscuss_id()));
+                    }
+                });
 
 //                holder.v(R.id.bottom_line_view).setVisibility(View.VISIBLE);
 
-                List<UserDiscussListBean.DataListBean.UserInfoBean> like_users = headerBean.getLike_users();
+                List<LikeUserInfoBean> like_users = headerBean.getLike_users();
                 final TextView userCountView = holder.tv(R.id.like_user_count_view);
 
                 mIcoRecyclerView = holder.v(R.id.like_user_recycler_view);
@@ -189,7 +198,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                     userCountView.setText(oldSize + "");
 
                     List<HnIcoRecyclerView.IcoInfo> infos = new ArrayList<>();
-                    for (UserDiscussListBean.DataListBean.UserInfoBean infoBean : like_users) {
+                    for (LikeUserInfoBean infoBean : like_users) {
                         infos.add(new HnIcoRecyclerView.IcoInfo(infoBean.getUid(), infoBean.getAvatar()));
                     }
                     mIcoRecyclerView.getMaxAdapter().resetData(infos);

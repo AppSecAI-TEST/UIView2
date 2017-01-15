@@ -92,4 +92,16 @@ public interface SocialService {
     @POST("social/removeComment")
     Observable<ResponseBody> removeComment(@QueryMap Map<String, String> map);
 
+    /**
+     * 点赞用户列表
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	点赞类型【discuss-动态 news-资讯 comment-评论 reply-回复】
+     * item_id	是	string	数据id【动态id/资讯id/评论id/回复id】
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	页面显示的数量 默认100
+     */
+    @POST("social/likeList")
+    Observable<ResponseBody> likeList(@QueryMap Map<String, String> map);
+
 }

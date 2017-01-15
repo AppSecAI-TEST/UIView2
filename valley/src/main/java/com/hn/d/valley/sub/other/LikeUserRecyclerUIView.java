@@ -1,7 +1,26 @@
 package com.hn.d.valley.sub.other;
 
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+
+import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.RSubscriber;
+import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
-import com.hn.d.valley.bean.UserDiscussListBean;
+import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.bean.LikeUserModel;
+import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.widget.HnGenderView;
+
+import java.util.Locale;
+
+import static android.view.View.VISIBLE;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -14,14 +33,111 @@ import com.hn.d.valley.bean.UserDiscussListBean;
  * 修改备注：
  * Version: 1.0.0
  */
-public class LikeUserRecyclerUIView extends SingleRecyclerUIView<UserDiscussListBean.DataListBean.UserInfoBean> {
+public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
+
+    private String discuss_id;
+
+    public LikeUserRecyclerUIView(String discuss_id) {
+        this.discuss_id = discuss_id;
+    }
+
     @Override
-    protected RExBaseAdapter<String, UserDiscussListBean.DataListBean.UserInfoBean, String> initRExBaseAdapter() {
-        return new RExBaseAdapter<String, UserDiscussListBean.DataListBean.UserInfoBean, String>(mActivity) {
+    protected TitleBarPattern getTitleBar() {
+        return super.getTitleBar().setTitleString(getTitleString());
+    }
+
+    @Override
+    protected String getTitleString() {
+        return mActivity.getString(R.string.like_title);
+    }
+
+    @Override
+    protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
+        return new RExBaseAdapter<String, LikeUserInfoBean, String>(mActivity) {
             @Override
             protected int getItemLayoutId(int viewType) {
-                return 0;
+                return R.layout.layout_user_info;
+            }
+
+            @Override
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
+                super.onBindDataView(holder, posInData, dataBean);
+                holder.fillView(dataBean, true);
+                holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+                holder.v(R.id.right_layout).setVisibility(View.GONE);
+                holder.v(R.id.bottom_line_view).setVisibility(View.GONE);
+                holder.v(R.id.avatar).setVisibility(VISIBLE);
+                HnGenderView genderView = holder.v(R.id.grade);
+                genderView.setGender(dataBean.getSex(), dataBean.getGrade());
+
+                holder.v(R.id.auth).setVisibility("1".equalsIgnoreCase(dataBean.getIs_auth()) ? View.VISIBLE : View.GONE);
+                holder.tv(R.id.introduce).setVisibility(TextUtils.isEmpty(dataBean.getSignature()) ? View.GONE : VISIBLE);
+                holder.tv(R.id.auth_desc).setVisibility(TextUtils.isEmpty(dataBean.getCompany()) ? View.GONE : VISIBLE);
+                holder.tv(R.id.introduce).setText(dataBean.getSignature());
+                holder.tv(R.id.auth_desc).setText(dataBean.getCompany());
             }
         };
+    }
+
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        if (isEmpty) {
+            setTitleString(getTitleString());
+        } else {
+            setTitleString(String.format(Locale.CHINA,
+                    mActivity.getString(R.string.like_title_formater),
+                    mRExBaseAdapter.getRawItemCount()));
+        }
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        loadData();
+    }
+
+    @Override
+    protected void onUILoadData(String page) {
+        super.onUILoadData(page);
+        add(RRetrofit.create(SocialService.class)
+                .likeList(Param.buildMap("type:discuss", "item_id:" + discuss_id, "page:" + page))
+                .compose(Rx.transformer(LikeUserModel.class))
+                .subscribe(new RSubscriber<LikeUserModel>() {
+                    @Override
+                    public void onNext(LikeUserModel bean) {
+                        super.onNext(bean);
+                        showContentLayout();
+                        if (bean == null || bean.getData_list() == null || bean.getData_list().isEmpty()) {
+                            onUILoadDataEnd();
+                        } else {
+                            onUILoadDataEnd(bean.getData_list(), bean.getData_count());
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        T_.error(msg);
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        hideLoadView();
+                        onUILoadDataFinish();
+                    }
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        showLoadView();
+                    }
+                }));
     }
 }

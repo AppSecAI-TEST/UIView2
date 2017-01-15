@@ -101,5 +101,7 @@
     <string name="reply_cnt_tip">%1$s条回复</string>
     <string name="dynamic_input_hint">说点什么吧</string>
     <string name="dynamic_detail">动态详情</string>
+    <string name="like_title">点赞</string>
+    <string name="like_title_formater">点赞(%1$d)</string>
 
 </resources>

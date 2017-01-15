@@ -105,6 +105,10 @@ public abstract class RExBaseAdapter<H, T, F> extends RBaseAdapter<T> {
         return mAllDatas == null ? 0 : mAllDatas.size();
     }
 
+    public int getRawItemCount() {
+        return getHeaderCount() + getDataCount() + getFooterCount();
+    }
+
     @Override
     final protected void onBindView(RBaseViewHolder holder, int position, T bean) {
         if (isInHeader(position)) {

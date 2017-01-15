@@ -20,6 +20,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.user.service.SocialService;
@@ -60,7 +61,7 @@ public class UserDiscussItemControl {
 
     public static void initItem(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean,
                                 final Action0 itemRootAction, final ILayout iLayout) {
-        UserDiscussListBean.DataListBean.UserInfoBean user_info = dataListBean.getUser_info();
+        LikeUserInfoBean user_info = dataListBean.getUser_info();
 
         holder.fillView(dataListBean, true);
         holder.fillView(user_info, true);
