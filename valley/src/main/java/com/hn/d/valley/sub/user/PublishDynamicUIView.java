@@ -383,6 +383,12 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                         mTargetLocation = amapBean;
                         infoLayout.setVisibility(View.VISIBLE);
                         infoLayout.setItemText(amapBean.address);
+                        infoLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                onShareCheck(true);
+                            }
+                        });
                     } else {
                         if (mTargetLocation == null) {
                             mShareBox.setChecked(false);
