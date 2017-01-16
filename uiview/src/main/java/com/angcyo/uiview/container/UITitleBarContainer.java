@@ -234,7 +234,7 @@ public class UITitleBarContainer extends FrameLayout {
     }
 
     /**
-     * 根据 scrollY 动态计算背景颜色
+     * 根据 scrollY 动态计算背景颜色, 并自动隐藏标题
      */
     public void evaluateBackgroundColor(int scrollY, View titleView) {
         float factor = 6 * scrollY * 0.1f / getMeasuredHeight();

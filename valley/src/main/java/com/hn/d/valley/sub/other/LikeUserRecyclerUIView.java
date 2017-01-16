@@ -21,7 +21,7 @@ import static android.view.View.VISIBLE;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：点赞用户列表界面
  * 创建人员：Robi
  * 创建时间：2017/01/14 18:10
  * 修改人员：Robi

@@ -173,6 +173,10 @@
                 style="@style/DefaultItemInfoStyle"
                 app:item_text="@string/setting"/>
 
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="300dp"/>-->
+
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

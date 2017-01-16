@@ -109,7 +109,7 @@ public class MeUIView extends BaseUIView {
                 setTitleString(loginBean.getUsername());
                 UserControl.setUserId(mUserIdView, loginBean.getUid());
                 DraweeViewUtil.setDraweeViewHttp(mUserIcoView, loginBean.getAvatar());
-                mPersonAuthLayout.setItemDarkText("未认证");
+                mPersonAuthLayout.setItemDarkText(mActivity.getResources().getString(R.string.not_auth));
             }
         }, new Action1<Throwable>() {
             @Override
@@ -125,16 +125,25 @@ public class MeUIView extends BaseUIView {
         mScrollRootLayout.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                getUITitleBarContainer().evaluateBackgroundColorSelf(scrollY);
+                getUITitleBarContainer().evaluateBackgroundColor(scrollY);
             }
         });
     }
 
     private void initMeUIView() {
+        final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+        setTitleString(userInfoBean.getUsername());
+        UserControl.setUserId(mUserIdView, userInfoBean.getUid());
+        DraweeViewUtil.setDraweeViewHttp(mUserIcoView, userInfoBean.getAvatar());
+        if ("1".equalsIgnoreCase(userInfoBean.getIs_auth())) {
+            mPersonAuthLayout.setItemDarkText(userInfoBean.getAuth_desc());
+        } else {
+            mPersonAuthLayout.setItemDarkText(mActivity.getResources().getString(R.string.not_auth));
+        }
+
         mViewPagerPlaceholderView.setVisibility(View.GONE);
         ArrayList<String> photos = new ArrayList<>();
         photos.add(UserCache.instance().getAvatar());
-        final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
         if (userInfoBean != null) {
             photos.addAll(RUtils.split(userInfoBean.getPhotos()));
         }
@@ -165,7 +174,10 @@ public class MeUIView extends BaseUIView {
                     .subscribe(new RSubscriber<UserInfoBean>() {
                         @Override
                         public void onNext(UserInfoBean userInfoBean) {
-                            initMeUIView();
+                            if (userInfoBean != null) {
+                                UserCache.instance().setUserInfoBean(userInfoBean);
+                                initMeUIView();
+                            }
                         }
                     });
         }
