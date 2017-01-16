@@ -70,7 +70,12 @@ android {
             output.outputFile = new File(output.outputFile.parent, appName)
         }
     }
+
+    useLibrary 'org.apache.http.legacy'
 }
+
+
+def nim_ver = "3.3.0"
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -86,14 +91,14 @@ dependencies {
     compile 'cn.jiguang.sdk:jpush:3.0.0'
     compile 'cn.jiguang.sdk:jcore:1.0.0'
     // 基础功能 (必需)
-    compile 'com.netease.nimlib:basesdk:3.2.0'
+    compile "com.netease.nimlib:basesdk:${nim_ver}"
     // 音视频需要
-    compile 'com.netease.nimlib:avchat:3.2.0'
+    compile "com.netease.nimlib:avchat:${nim_ver}"
     // 聊天室需要
-    compile 'com.netease.nimlib:chatroom:3.2.0'
+    compile "com.netease.nimlib:chatroom:${nim_ver}"
     // 实时会话服务需要
-    compile 'com.netease.nimlib:rts:3.2.0'
+    compile "com.netease.nimlib:rts:${nim_ver}"
     // 全文检索服务需要
-    compile 'com.netease.nimlib:lucene:3.2.0'
+    compile "com.netease.nimlib:lucene:${nim_ver}"
     compile project(':fragmentation')
 }
