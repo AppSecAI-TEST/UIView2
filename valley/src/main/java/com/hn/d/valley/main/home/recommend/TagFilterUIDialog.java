@@ -14,6 +14,7 @@ import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.widget.RFlowLayout;
 import com.angcyo.uiview.widget.RTextCheckView;
+import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.TagsControl;
 
@@ -61,7 +62,7 @@ public class TagFilterUIDialog extends UIIDialogImpl {
         mRootLayout.addView(mFlowLayout, new ViewGroup.LayoutParams(-1, -2));
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-1, -1);
-        params.setMargins(0, (int) (mActivity.getResources().getDisplayMetrics().density * 49), 0, 0);
+        params.setMargins(0, mActivity.getResources().getDimensionPixelSize(R.dimen.tags_dialog_offset), 0, 0);
         dialogRootLayout.addView(mRootLayout, params);
 
         return mRootLayout;

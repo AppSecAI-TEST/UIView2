@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
@@ -18,6 +19,7 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
@@ -184,6 +186,30 @@ public class MainUIView extends BaseUIView {
         });
 
         mBottomNavLayout.setTabData(tabs);
+
+        try {
+            ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
+            RGestureDetector.onDoubleTap(group.getChildAt(0), new RGestureDetector.OnDoubleTapListener() {
+                @Override
+                public void onDoubleTap() {
+                    //首页tab双击
+                    if (mHomeUIView != null) {
+                        mHomeUIView.scrollToTop();
+                    }
+                }
+            });
+            RGestureDetector.onDoubleTap(group.getChildAt(3), new RGestureDetector.OnDoubleTapListener() {
+                @Override
+                public void onDoubleTap() {
+                    //消息tab双击
+                    if (mMessageUIView != null) {
+                        mMessageUIView.scrollToTop();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

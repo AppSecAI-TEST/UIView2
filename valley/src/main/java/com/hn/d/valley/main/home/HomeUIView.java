@@ -49,6 +49,8 @@ public class HomeUIView extends BaseUIView {
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
     private RecommendUIView mRecommendUIView;
     private Tag currentTag;
+    private NearbyUIView mNearbyUIView;
+    private CircleUIView mCircleUIView;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -66,6 +68,7 @@ public class HomeUIView extends BaseUIView {
         initViewPager();
         initTabLayout();
 
+        /**默认显示第二页*/
         mViewPager.setCurrentItem(1);
     }
 
@@ -76,13 +79,21 @@ public class HomeUIView extends BaseUIView {
             @Override
             protected IView getIView(int position) {
                 if (position == 1) {
-                    mRecommendUIView = new RecommendUIView();
+                    if (mRecommendUIView == null) {
+                        mRecommendUIView = new RecommendUIView();
+                    }
                     return mRecommendUIView.bindOtherILayout(mOtherILayout);
                 }
                 if (position == 2) {
-                    return new NearbyUIView().bindOtherILayout(mOtherILayout);
+                    if (mNearbyUIView == null) {
+                        mNearbyUIView = new NearbyUIView();
+                    }
+                    return mNearbyUIView.bindOtherILayout(mOtherILayout);
                 }
-                return new CircleUIView().bindOtherILayout(mOtherILayout);
+                if (mCircleUIView == null) {
+                    mCircleUIView = new CircleUIView();
+                }
+                return mCircleUIView.bindOtherILayout(mOtherILayout);
             }
 
             @Override
@@ -134,6 +145,21 @@ public class HomeUIView extends BaseUIView {
         mViewPager.removeOnPageChangeListener(mPageChangeListener);
         mViewPager.setCurrentItem(position);
         mViewPager.addOnPageChangeListener(mPageChangeListener);
+    }
+
+    /**
+     * 滚动置顶
+     */
+    public void scrollToTop() {
+        int currentItem = mViewPager.getCurrentItem();
+        if (currentItem == 0 && mCircleUIView != null) {
+            mCircleUIView.scrollToTop();
+        } else if (currentItem == 1 && mRecommendUIView != null) {
+
+            mRecommendUIView.scrollToTop();
+        } else if (currentItem == 2 && mNearbyUIView != null) {
+            mNearbyUIView.scrollToTop();
+        }
     }
 
     @Override

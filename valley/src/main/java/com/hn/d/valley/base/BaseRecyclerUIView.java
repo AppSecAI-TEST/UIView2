@@ -15,6 +15,7 @@ import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
@@ -61,8 +62,26 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @CallSuper
     @Override
     final protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        if (getUITitleBarContainer() != null) {
+            //双击标题, 自动滚动到顶部
+            RGestureDetector.onDoubleTap(getUITitleBarContainer(), new RGestureDetector.OnDoubleTapListener() {
+                @Override
+                public void onDoubleTap() {
+                    scrollToTop();
+                }
+            });
+        }
         inflateRecyclerRootLayout(baseContentLayout, inflater);
         inflateOverlayLayout(baseContentLayout, inflater);
+    }
+
+    /**
+     * 滚动置顶
+     */
+    public void scrollToTop() {
+        if (getRecyclerView() != null) {
+            getRecyclerView().smoothScrollToPosition(0);
+        }
     }
 
     @Override

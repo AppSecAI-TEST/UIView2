@@ -5,10 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
@@ -23,6 +24,7 @@ import com.netease.nimlib.sdk.msg.model.RecentContact;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -39,6 +41,8 @@ import rx.functions.Action1;
  */
 public class MessageUIView extends BaseUIView {
 
+    @BindView(R.id.swipe_recycler_view)
+    SwipeMenuRecyclerView mSwipeRecyclerView;
     private boolean isLoading = false;
     private RecentContactsControl mRecentContactsControl;
 
@@ -149,6 +153,15 @@ public class MessageUIView extends BaseUIView {
             showEmptyLayout();
         } else {
             showContentLayout();
+        }
+    }
+
+    /**
+     * 滚动置顶
+     */
+    public void scrollToTop() {
+        if (mSwipeRecyclerView != null) {
+            mSwipeRecyclerView.smoothScrollToPosition(0);
         }
     }
 
