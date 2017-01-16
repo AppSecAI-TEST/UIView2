@@ -76,7 +76,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     }
 
     /**
-     * 滚动置顶
+     * 自动滚动置顶
      */
     public void scrollToTop() {
         if (getRecyclerView() != null) {
