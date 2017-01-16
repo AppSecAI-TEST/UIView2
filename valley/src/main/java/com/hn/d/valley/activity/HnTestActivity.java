@@ -56,6 +56,10 @@ public class HnTestActivity extends AppCompatActivity {
                 L.e("onReChecked:" + view.getId());
             }
         });
+
+//        TextureMapView mapView = view(R.id.map_view);
+//        mapView.onCreate(savedInstanceState);
+
 //        final RRecyclerView rRecyclerView = view(R.id.recycler_view);
 //        final EditText editText = view(R.id.input_view);
 //        final TestAdapter adapter = new TestAdapter(this);

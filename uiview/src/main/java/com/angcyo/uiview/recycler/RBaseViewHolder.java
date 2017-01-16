@@ -244,11 +244,15 @@ public class RBaseViewHolder extends RecyclerView.ViewHolder {
                 }
 
                 if (view != null) {
-                    final String value;
+                    String value = null;
                     if (withGetMethod) {
                         value = String.valueOf(getMethod(bean, name).invoke(bean));
                     } else {
-                        value = f.get(bean).toString();
+                        try {
+                            value = f.get(bean).toString();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     if (view instanceof TextView) {
                         if (TextUtils.isEmpty(value) && hideForEmpty) {

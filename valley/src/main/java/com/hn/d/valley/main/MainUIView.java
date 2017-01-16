@@ -1,6 +1,7 @@
 package com.hn.d.valley.main;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -17,10 +18,10 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseUIView;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
@@ -83,6 +84,11 @@ public class MainUIView extends BaseUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_main);
+    }
+
+    @Override
+    public int getDefaultBackgroundColor() {
+        return Color.TRANSPARENT;
     }
 
     @Override
@@ -209,7 +215,7 @@ public class MainUIView extends BaseUIView {
             return true;
         }
         onBackTime = timeMillis;
-        T_.show("别按啦，恐龙君舍不得离开你！");
+        T_.show(mActivity.getString(R.string.back_pressed_tip));
         return false;
     }
 

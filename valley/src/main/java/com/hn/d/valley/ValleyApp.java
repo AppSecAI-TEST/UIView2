@@ -3,10 +3,10 @@ package com.hn.d.valley;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.storage.StorageUtil;
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
@@ -50,7 +50,9 @@ public class ValleyApp extends RApplication {
         }
         Glide.get(this).clearMemory();
         //Fresco.shutDown();
-        Fresco.getImagePipeline().clearMemoryCaches();
+        if (Fresco.hasBeenInitialized()) {
+            Fresco.getImagePipeline().clearMemoryCaches();
+        }
     }
 
     @Override
@@ -61,7 +63,9 @@ public class ValleyApp extends RApplication {
 //        }
         Glide.get(this).trimMemory(level);
         Glide.get(this).clearMemory();
-        Fresco.getImagePipeline().clearMemoryCaches();
+        if (Fresco.hasBeenInitialized()) {
+            Fresco.getImagePipeline().clearMemoryCaches();
+        }
     }
 
     @Override
@@ -73,7 +77,7 @@ public class ValleyApp extends RApplication {
         RRealm.init(this);
 
         CrashReport.setIsDevelopmentDevice(this, BuildConfig.DEBUG);
-        CrashReport.initCrashReport(this, "207e18ac24", false/*BuildConfig.DEBUG*/);
+//        CrashReport.initCrashReport(this, "207e18ac24", false/*BuildConfig.DEBUG*/);
         Bugly.init(this, "207e18ac24", false);
 
         UserCache.instance().getLoginBeanObservable()

@@ -56,6 +56,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -109,6 +110,22 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                                 }
                             });
                             jumpToMain();
+                        }
+                    });
+
+            RxView.longClicks(mIcoView)
+                    .map(new Func1<Void, Object>() {
+                        @Override
+                        public Object call(Void aVoid) {
+                            T_.error("莫慌, 正在模拟Crash...");
+                            return null;
+                        }
+                    })
+                    .delay(100, TimeUnit.MILLISECONDS)
+                    .subscribe(new Action1<Object>() {
+                        @Override
+                        public void call(Object o) {
+                            throw new NullPointerException("测试Bug...");
                         }
                     });
         }

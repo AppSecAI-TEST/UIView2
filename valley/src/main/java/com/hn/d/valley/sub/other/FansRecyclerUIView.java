@@ -13,9 +13,10 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserListModel;
-import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.sub.user.service.ContactService;
 import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 /**
  * 我的粉丝
@@ -29,24 +30,53 @@ public class FansRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
-                ImageView commandView = holder.v(R.id.command_item_view);
+                final ImageView commandView = holder.v(R.id.command_item_view);
+                final ImageView chatView = holder.v(R.id.liaotian_item_view);
+                chatView.setVisibility(View.GONE);
+
                 if (dataBean.getIs_contact() != 1) {
                     commandView.setVisibility(View.VISIBLE);
 
-                    commandView.setImageResource(R.drawable.add_contacts_n);
+//                    commandView.setImageResource(R.drawable.add_contacts_n);
+//                    commandView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(final View v) {
+//                            add(RRetrofit.create(UserInfoService.class)
+//                                    .addContact(Param.buildMap("to_uid:" + dataBean.getUid(),
+//                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
+//                                                    UserCache.instance().getUserInfoBean().getUsername())))
+//                                    .compose(Rx.transformer(String.class))
+//                                    .subscribe(new BaseSingleSubscriber<String>() {
+//
+//                                        @Override
+//                                        public void onNext(String bean) {
+//                                            T_.show(bean);
+//                                        }
+//                                    }));
+//                        }
+//                    });
+
+                    commandView.setImageResource(R.drawable.attention_fans_n);
                     commandView.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(final View v) {
+                        public void onClick(View v) {
+                            commandView.setVisibility(View.GONE);
+                            chatView.setVisibility(View.VISIBLE);
+                            chatView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ChatUIView.start(mILayout, dataBean.getUid(), SessionTypeEnum.P2P);
+                                }
+                            });
+
                             add(RRetrofit.create(UserInfoService.class)
-                                    .addContact(Param.buildMap("to_uid:" + dataBean.getUid(),
-                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
-                                                    UserCache.instance().getUserInfoBean().getUsername())))
+                                    .attention(Param.buildMap("to_uid:" + dataBean.getUid()))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
-
                                         @Override
-                                        public void onNext(String bean) {
-                                            T_.show(bean);
+                                        public void onError(int code, String msg) {
+                                            super.onError(code, msg);
+                                            T_.error(msg);
                                         }
                                     }));
                         }

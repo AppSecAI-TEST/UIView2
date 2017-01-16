@@ -547,10 +547,8 @@ public class RCrashHandler implements Thread.UncaughtExceptionHandler {
         // 手机型号
         pw.print("Model: ");
         pw.println(Build.MODEL);
-        pw.println();
         pw.print("Device: ");
         pw.println(Build.DEVICE);
-        pw.println();
         pw.print("Hardware: ");
         pw.println(Build.HARDWARE);
         pw.println();
@@ -598,7 +596,7 @@ public class RCrashHandler implements Thread.UncaughtExceptionHandler {
 
         pw.print("SD可用空间大小:");
         pw.println(Formatter.formatFileSize(context, getAvailableExternalMemorySize()));
-        pw.println();
+//        pw.println();
 
     }
 }

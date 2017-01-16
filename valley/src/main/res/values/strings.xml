@@ -107,5 +107,6 @@
     <string name="forward_dynamic">转发动态</string>
     <string name="fans_title">粉丝</string>
     <string name="followers_titile">关注</string>
+    <string name="back_pressed_tip">别按啦，恐龙君舍不得离开你！</string>
 
 </resources>
