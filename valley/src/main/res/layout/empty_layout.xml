@@ -16,7 +16,7 @@
             android:id="@+id/base_empty_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/default_page"/>
+            android:src="@drawable/default_page_2"/>
 
         <TextView
             android:id="@+id/base_empty_tip_view"

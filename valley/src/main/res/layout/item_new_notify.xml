@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_info_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_bg_selector"
+    android:padding="@dimen/base_hdpi">
+
+    <RelativeLayout
+        android:id="@+id/right_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/base_50dpi"
+        android:layout_alignParentRight="true">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/media_image_view"
+            style="@style/UserMidIcoStyle"
+            android:layout_width="@dimen/base_50dpi"
+            android:layout_height="@dimen/base_50dpi"
+            android:layout_marginRight="@dimen/base_xhdpi"
+            android:visibility="gone"
+            app:roundAsCircle="false"/>
+
+        <TextView
+            android:id="@+id/content"
+            style="@style/SingleDarkTextStyle"
+            android:layout_width="@dimen/base_50dpi"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:visibility="gone"
+            tools:text="阿里巴巴董事长马云"/>
+    </RelativeLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/avatar"
+        style="@style/UserMidIcoStyle"
+        android:layout_width="@dimen/base_50dpi"
+        android:layout_height="@dimen/base_50dpi"
+        android:layout_marginRight="@dimen/base_xhdpi"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/center_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/right_layout"
+        android:layout_toRightOf="@id/avatar"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/msg"
+                style="@style/SingleMainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="@integer/content_show_length"
+                tools:text="爱宠物的默默"/>
+
+        </LinearLayout>
+
+        <com.hn.d.valley.widget.HnTimeTextView
+            android:id="@+id/created"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_hdpi"
+            android:visibility="visible"
+            tools:text="阿里巴巴董事长马云"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

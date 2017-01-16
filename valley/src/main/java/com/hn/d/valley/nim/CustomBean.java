@@ -51,6 +51,35 @@ public class CustomBean implements Serializable {
     private String company;
     private String signature;
     private String grade;
+    /**
+     * item_id : 9
+     * type : discuss
+     * media :
+     * media_type : 1
+     * content : nihao
+     * share_original_item_id : 0
+     * share_original_type :
+     */
+
+    private String item_id;
+    private String type;
+    private String media;
+    private String media_type;
+    private String content;
+    private String share_original_item_id;
+    private String share_original_type;
+    /**
+     * comment_content : 神级评论
+     */
+
+    private String comment_content;
+    /**
+     * comment_id : 1
+     * reply_content : 确实不错
+     */
+
+    private String comment_id;
+    private String reply_content;
 
     public String getMsg() {
         return msg;
@@ -178,5 +207,85 @@ public class CustomBean implements Serializable {
 
     public void setGrade(String grade) {
         this.grade = grade;
+    }
+
+    public String getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(String item_id) {
+        this.item_id = item_id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getMedia() {
+        return media;
+    }
+
+    public void setMedia(String media) {
+        this.media = media;
+    }
+
+    public String getMedia_type() {
+        return media_type;
+    }
+
+    public void setMedia_type(String media_type) {
+        this.media_type = media_type;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getShare_original_item_id() {
+        return share_original_item_id;
+    }
+
+    public void setShare_original_item_id(String share_original_item_id) {
+        this.share_original_item_id = share_original_item_id;
+    }
+
+    public String getShare_original_type() {
+        return share_original_type;
+    }
+
+    public void setShare_original_type(String share_original_type) {
+        this.share_original_type = share_original_type;
+    }
+
+    public String getComment_content() {
+        return comment_content;
+    }
+
+    public void setComment_content(String comment_content) {
+        this.comment_content = comment_content;
+    }
+
+    public String getComment_id() {
+        return comment_id;
+    }
+
+    public void setComment_id(String comment_id) {
+        this.comment_id = comment_id;
+    }
+
+    public String getReply_content() {
+        return reply_content;
+    }
+
+    public void setReply_content(String reply_content) {
+        this.reply_content = reply_content;
     }
 }

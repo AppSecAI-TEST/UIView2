@@ -12,4 +12,6 @@
     <integer name="message_limit">150</integer>
     <!--内容文本最大显示多少行-->
     <integer name="content_max_line">3</integer>
+    <!--内容最大显示长度-->
+    <integer name="content_show_length">20</integer>
 </resources>

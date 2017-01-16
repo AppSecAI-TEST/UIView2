@@ -308,7 +308,9 @@ public class RecentContactsControl {
 
                         if (tag == MENU_DELETE) {
                             UnreadMessageControl.removeMessageUnread(contactId);
-                            MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount() - recentContact.getUnreadCount());
+                            MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount()
+                                    + UnreadMessageControl.getUnreadCount()
+                                    - recentContact.getUnreadCount());
                             mViewHolder.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -495,6 +497,8 @@ public class RecentContactsControl {
                 @Override
                 public void onClick(View view) {
                     UnreadMessageControl.removeMessageUnread(bean.getContactId());
+                    NIMClient.getService(MsgService.class).clearUnreadCount(bean.getContactId(),
+                            bean.getSessionType());
                     notifyItemChanged(position);
                     if (isAddContact(bean)) {
                         if (itemAddContactsAction != null) {
@@ -601,7 +605,14 @@ public class RecentContactsControl {
                                 return tip + " " + bean.getMsg();
                             }
                         }
-                        return "[自定义消息]";
+                    } else if (isComment(recent)) {
+                        //动态通知
+                        if (attachment instanceof CustomAttachment) {
+                            CustomBean bean = ((CustomAttachment) attachment).getBean();
+                            if (bean != null) {
+                                return bean.getMsg();
+                            }
+                        }
                     }
                     return "[自定义消息]";
                 default:

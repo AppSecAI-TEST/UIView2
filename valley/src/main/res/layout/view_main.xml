@@ -45,7 +45,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_toast_shadow_height"
+        android:layout_height="@dimen/base_nav_shadow_height"
         android:layout_above="@id/bottom_nav_root_layout"
         android:background="@drawable/base_shadow_shape_top"/>
 

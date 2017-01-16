@@ -100,9 +100,13 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected void initRecyclerView() {
         mRecyclerView = getRecyclerView();
         mRExBaseAdapter = initRExBaseAdapter();
-
-        mRExBaseAdapter.setNoMore();//默认没有更多
-        mRExBaseAdapter.setLoadMoreListener(this);
+        if (mRecyclerView == null) {
+            return;
+        }
+        if (mRExBaseAdapter != null) {
+            mRExBaseAdapter.setNoMore();//默认没有更多
+            mRExBaseAdapter.setLoadMoreListener(this);
+        }
 
         if (hasDecoration()) {
             mRecyclerView.addItemDecoration(getItemDecoration());
