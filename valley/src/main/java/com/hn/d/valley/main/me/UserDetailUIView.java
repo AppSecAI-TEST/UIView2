@@ -29,6 +29,8 @@ import com.hn.d.valley.bean.realm.NewestDiscussPicBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.sub.other.FansRecyclerUIView;
+import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.user.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
@@ -210,12 +212,18 @@ public class UserDetailUIView extends BaseContentUIView {
             case R.id.qr_code_view://二维码
                 break;
             case R.id.follow_item_layout://关注
-                T_.error("不支持查看");
-//                mOtherILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
+                if (UserCache.getUserAccount().equalsIgnoreCase(mUserInfoBean.getUid())) {
+                    mOtherILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
+                } else {
+                    T_.error("不支持查看");
+                }
                 break;
             case R.id.follower_item_layout://粉丝
-                T_.error("不支持查看");
-//                mOtherILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
+                if (UserCache.getUserAccount().equalsIgnoreCase(mUserInfoBean.getUid())) {
+                    mOtherILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
+                } else {
+                    T_.error("不支持查看");
+                }
                 break;
         }
     }
