@@ -122,6 +122,9 @@ public class AmapControl implements LocationSource, AMapLocationListener {
             /**是否显示比例尺*/
             uiSettings.setScaleControlsEnabled(true);
 
+            /**显示罗盘*/
+            uiSettings.setCompassEnabled(true);
+
             aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
             aMap.setLocationSource(locationSource);// 设置定位监听
             aMap.setMyLocationEnabled(true);
