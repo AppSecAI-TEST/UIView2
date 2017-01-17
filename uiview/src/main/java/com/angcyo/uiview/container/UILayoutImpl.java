@@ -298,6 +298,8 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                     final ViewPattern newViewPattern = startIViewInternal(iView);
 //                    startIViewAnim(oldViewPattern, newViewPattern, param);
                     viewPatternByIView = newViewPattern;
+                    startIViewAnim(oldViewPattern, viewPatternByIView, param, false);
+
                 } else {
                     //这个IView 存在, 但是不在最前显示
 //                    bottomViewFinish(oldViewPattern, viewPatternByIView, param);
@@ -305,13 +307,13 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
                     mAttachViews.remove(viewPatternByIView);
                     mAttachViews.push(viewPatternByIView);
+                    startIViewAnim(oldViewPattern, viewPatternByIView, param, true);
                 }
-                startIViewAnim(oldViewPattern, viewPatternByIView, param);
             }
         } else {
             //正常的启动模式
             final ViewPattern newViewPattern = startIViewInternal(iView);
-            startIViewAnim(oldViewPattern, newViewPattern, param);
+            startIViewAnim(oldViewPattern, newViewPattern, param, false);
         }
     }
 
@@ -336,9 +338,6 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         for (OnIViewChangedListener listener : mOnIViewChangedListeners) {
             listener.onIViewAdd(this, newViewPattern);
         }
-
-        //3:
-        newViewPattern.mIView.onViewLoad();
 
         return newViewPattern;
     }
@@ -753,6 +752,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                 final ViewPattern oldViewPattern = getLastViewPattern();
                 final ViewPattern newViewPattern = startIViewInternal(iView);
 
+                //3:
+                newViewPattern.mIView.onViewLoad();
+
                 topViewStart(newViewPattern, param);
 
                 final Runnable endRunnable = new Runnable() {
@@ -793,9 +795,13 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     }
 
     private void startIViewAnim(final ViewPattern oldViewPattern, final ViewPattern newViewPattern,
-                                final UIParam param) {
+                                final UIParam param, boolean reLoad) {
         if (isAttachedToWindow) {
             mLastShowViewPattern = newViewPattern;
+
+            if (!reLoad) {
+                newViewPattern.mIView.onViewLoad();
+            }
 
             clearOldViewFocus(oldViewPattern);
 
