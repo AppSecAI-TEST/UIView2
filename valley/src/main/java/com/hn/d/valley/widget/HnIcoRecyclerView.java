@@ -80,6 +80,10 @@ public class HnIcoRecyclerView extends RRecyclerView {
         mMaxAdapter.setMaxcount(5);
     }
 
+    public void setMaxCount(int maxCount) {
+        mMaxAdapter.setMaxcount(maxCount);
+    }
+
     public RMaxAdapter<IcoInfo> getMaxAdapter() {
         return mMaxAdapter;
     }

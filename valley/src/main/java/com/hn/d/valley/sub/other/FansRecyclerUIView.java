@@ -13,6 +13,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserListModel;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.sub.user.service.ContactService;
 import com.hn.d.valley.sub.user.service.UserInfoService;
@@ -24,6 +25,20 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
  */
 
 public class FansRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
+
+    /**
+     * 默认是自己
+     */
+    String uid;
+
+    public FansRecyclerUIView() {
+        this.uid = UserCache.getUserAccount();
+    }
+
+    public FansRecyclerUIView(String uid) {
+        this.uid = uid;
+    }
+
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
         return new UserCardAdapter(mActivity, mILayout) {
@@ -88,7 +103,11 @@ public class FansRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
 
     @Override
     protected String getTitleString() {
-        return mActivity.getString(R.string.fans_title);
+        if (uid.equalsIgnoreCase(UserCache.getUserAccount())) {
+            return mActivity.getString(R.string.fans_title);
+        } else {
+            return mActivity.getString(R.string.ta_fans_title);
+        }
     }
 
     @Override
@@ -100,7 +119,7 @@ public class FansRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(ContactService.class)
-                .fans(Param.buildMap("page:" + page))
+                .fans(Param.buildMap("uid:" + uid, "page:" + page))
                 .compose(Rx.transformer(UserListModel.class))
                 .subscribe(new SingleRSubscriber<UserListModel>(this) {
                     @Override

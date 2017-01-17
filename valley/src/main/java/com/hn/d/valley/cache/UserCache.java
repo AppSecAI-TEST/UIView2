@@ -202,7 +202,7 @@ public class UserCache {
                         RRealm.save(userInfoBean);
                         return userInfoBean;
                     }
-                }).retry(Rx.RETRY_COUNT);
+                });
     }
 
     public Observable<UserInfoBean> fetchUserInfo() {

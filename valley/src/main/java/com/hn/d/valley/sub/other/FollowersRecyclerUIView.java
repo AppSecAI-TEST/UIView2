@@ -23,6 +23,20 @@ import com.hn.d.valley.sub.user.service.UserInfoService;
  */
 
 public class FollowersRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
+
+    /**
+     * 默认是自己
+     */
+    String uid;
+
+    public FollowersRecyclerUIView() {
+        this.uid = UserCache.getUserAccount();
+    }
+
+    public FollowersRecyclerUIView(String uid) {
+        this.uid = uid;
+    }
+
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
         return new UserCardAdapter(mActivity, mILayout) {
@@ -58,7 +72,11 @@ public class FollowersRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBe
 
     @Override
     protected String getTitleString() {
-        return mActivity.getString(R.string.followers_titile);
+        if (uid.equalsIgnoreCase(UserCache.getUserAccount())) {
+            return mActivity.getString(R.string.followers_titile);
+        } else {
+            return mActivity.getString(R.string.ta_followers_titile);
+        }
     }
 
     @Override
@@ -70,7 +88,7 @@ public class FollowersRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBe
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(ContactService.class)
-                .followers(Param.buildMap("page:" + page))
+                .followers(Param.buildMap("uid:" + uid, "page:" + page))
                 .compose(Rx.transformer(UserListModel.class))
                 .subscribe(new SingleRSubscriber<UserListModel>(this) {
                     @Override

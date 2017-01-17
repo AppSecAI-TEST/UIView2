@@ -41,6 +41,19 @@ public class RTextView extends TextView {
         }
     }
 
+    public void setText(Object... args) {
+        if (getTag() != null && args != null && args.length > 0) {
+            try {
+                final String format = String.format(Locale.CHINA, getTag().toString(), args);
+                super.setText(format);
+            } catch (Exception e) {
+                super.setText("");
+            }
+        } else {
+            super.setText("");
+        }
+    }
+
     public void setLeftIco(@DrawableRes int leftIco) {
         final Drawable[] compoundDrawables = getCompoundDrawables();
         setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(leftIco),

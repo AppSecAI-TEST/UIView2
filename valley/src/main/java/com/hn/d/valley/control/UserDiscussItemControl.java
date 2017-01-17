@@ -23,6 +23,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.sub.user.service.UserInfoService;
@@ -66,6 +67,19 @@ public class UserDiscussItemControl {
 
         holder.fillView(dataListBean, true);
         holder.fillView(user_info, true);
+
+
+        /**头像*/
+        final View avatarView = holder.v(R.id.avatar);
+        avatarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (iLayout != null) {
+                    iLayout.startIView(new UserDetailUIView(dataListBean.getUid()));
+                }
+            }
+        });
+
 
         final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);

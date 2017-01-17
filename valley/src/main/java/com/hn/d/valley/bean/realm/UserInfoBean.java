@@ -1,5 +1,6 @@
 package com.hn.d.valley.bean.realm;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 /**
@@ -88,6 +89,7 @@ public class UserInfoBean extends RealmObject {
     private String signature;
     private int is_set_password;
     private int is_login_protect;
+    private RealmList<NewestDiscussPicBean> newest_discuss_pic;
 
     public int getIs_attention() {
         return is_attention;
@@ -367,5 +369,13 @@ public class UserInfoBean extends RealmObject {
 
     public void setIs_login_protect(int is_login_protect) {
         this.is_login_protect = is_login_protect;
+    }
+
+    public RealmList<NewestDiscussPicBean> getNewest_discuss_pic() {
+        return newest_discuss_pic;
+    }
+
+    public void setNewest_discuss_pic(RealmList<NewestDiscussPicBean> newest_discuss_pic) {
+        this.newest_discuss_pic = newest_discuss_pic;
     }
 }
