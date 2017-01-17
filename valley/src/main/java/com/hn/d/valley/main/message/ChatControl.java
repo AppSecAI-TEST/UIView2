@@ -32,6 +32,7 @@ import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.utils.RBus;
@@ -273,7 +274,7 @@ public class ChatControl {
         }
 
         @Override
-        protected void onBindView(RBaseViewHolder holder, int position, IMMessage bean) {
+        protected void onBindView(RBaseViewHolder holder, int position, final IMMessage bean) {
             NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
 
             String avatar = "";
@@ -323,6 +324,14 @@ public class ChatControl {
 
             //消息状态
             updateMsgStatus(holder, bean);
+
+            //头像
+            holder.v(R.id.msg_ico_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mUIBaseView.startIView(new UserDetailUIView(bean.getFromAccount()));
+                }
+            });
         }
 
         private void updateMsgContent(RBaseViewHolder holder, final IMMessage bean, final String avatar) {

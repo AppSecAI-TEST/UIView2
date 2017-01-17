@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -291,7 +292,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                 //如果已经是最前显示, 调用onViewShow方法
                 oldViewPattern.mIView.onViewShow(param.mBundle);
             } else {
-                ViewPattern viewPatternByIView = findViewPatternByIView(iView);
+                ViewPattern viewPatternByIView = findViewPatternByClass(iView.getClass());
                 if (viewPatternByIView == null) {
                     //这个IView 还不存在
                     final ViewPattern newViewPattern = startIViewInternal(iView);
@@ -301,6 +302,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                     //这个IView 存在, 但是不在最前显示
 //                    bottomViewFinish(oldViewPattern, viewPatternByIView, param);
 //                    topViewStart(viewPatternByIView, param);
+
+                    mAttachViews.remove(viewPatternByIView);
+                    mAttachViews.push(viewPatternByIView);
                 }
                 startIViewAnim(oldViewPattern, viewPatternByIView, param);
             }
@@ -332,6 +336,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
         for (OnIViewChangedListener listener : mOnIViewChangedListeners) {
             listener.onIViewAdd(this, newViewPattern);
         }
+
+        //3:
+        newViewPattern.mIView.onViewLoad();
 
         return newViewPattern;
     }
@@ -387,7 +394,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
         //首先调用IView接口的inflateContentView方法,(inflateContentView请不要初始化View)
         //其次会调用loadContentView方法,用来初始化View.(此方法调用之后, 就支持ButterKnife了)
+        //1:
         final View view = iView.inflateContentView(mCompatActivity, this, this, LayoutInflater.from(mCompatActivity));
+        //2:
         iView.onViewCreate();
 
         View rawView;
@@ -790,9 +799,6 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
                                 final UIParam param) {
         if (isAttachedToWindow) {
             mLastShowViewPattern = newViewPattern;
-            if (newViewPattern != null) {
-                newViewPattern.mIView.onViewLoad();
-            }
 
             clearOldViewFocus(oldViewPattern);
 
@@ -1204,6 +1210,15 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 //            }
 
             if (viewPattern.mIView == iview) {
+                return viewPattern;
+            }
+        }
+        return null;
+    }
+
+    public ViewPattern findViewPatternByClass(Class<?> clz) {
+        for (ViewPattern viewPattern : mAttachViews) {
+            if (TextUtils.equals(viewPattern.mIView.getClass().getSimpleName(), clz.getSimpleName())) {
                 return viewPattern;
             }
         }

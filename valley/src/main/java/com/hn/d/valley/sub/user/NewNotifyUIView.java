@@ -32,6 +32,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -107,7 +108,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 , true)
                 .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
                     @Override
-                    public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                    public void onResult(int code, final List<IMMessage> result, Throwable exception) {
                         hideLoadView();
                         if (code == ResponseCode.RES_SUCCESS && result != null) {
                             //T_.show("消息条数:" + result.size());
@@ -131,6 +132,9 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                                     }
                                 }
                             }
+
+                            Collections.reverse(beans);
+
                             mRExBaseAdapter.resetData(beans);
                         } else {
                             showEmptyLayout();

@@ -11,6 +11,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.LikeUserModel;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.sub.user.service.SocialService;
 import com.hn.d.valley.widget.HnGenderView;
 
@@ -51,7 +52,7 @@ public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBea
             }
 
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
                 holder.fillView(dataBean, true);
                 holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
@@ -71,6 +72,13 @@ public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBea
                 holder.tv(R.id.auth_desc).setVisibility(TextUtils.isEmpty(dataBean.getCompany()) ? View.GONE : VISIBLE);
                 holder.tv(R.id.introduce).setText(dataBean.getSignature());
                 holder.tv(R.id.auth_desc).setText(dataBean.getCompany());
+
+                holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new UserDetailUIView(dataBean.getUid()));
+                    }
+                });
             }
         };
     }

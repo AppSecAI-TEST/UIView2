@@ -14,6 +14,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserListModel;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.sub.user.service.ContactService;
 import com.hn.d.valley.sub.user.service.UserInfoService;
@@ -97,6 +98,13 @@ public class FansRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
                         }
                     });
                 }
+
+                holder.v(R.id.card_root_layout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new UserDetailUIView(dataBean.getUid()));
+                    }
+                });
             }
         };
     }
