@@ -247,7 +247,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
         super.onShowInPager(viewPager);
         RAmap.startLocation();
         if (isMapMode()) {
-            UIViewPager.interceptTouch = false;
+//            UIViewPager.interceptTouch = false;
             mMapView.onResume();
         }
     }
@@ -255,7 +255,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
     @Override
     public void onHideInPager(UIViewPager viewPager) {
         super.onHideInPager(viewPager);
-        UIViewPager.interceptTouch = true;
+//        UIViewPager.interceptTouch = true;
 
         RAmap.stopLocation();
         if (isMapMode()) {
@@ -393,7 +393,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
      * 显示地图模式
      */
     private void showMapView() {
-        UIViewPager.interceptTouch = false;
+//        UIViewPager.interceptTouch = false;
         mMapView.setVisibility(View.VISIBLE);
         ViewCompat.setAlpha(mMapView, 0);
         Anim.anim(mMapView).alpha(1).withEndAction(new Runnable() {
@@ -428,7 +428,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
      * 隐藏地图模式
      */
     private void hideMapView() {
-        UIViewPager.interceptTouch = true;
+//        UIViewPager.interceptTouch = true;
         mMapView.onPause();
         mMyLocation.setVisibility(View.GONE);
         Anim.anim(mMapView).alpha(0).withEndAction(new Runnable() {

@@ -19,6 +19,7 @@ import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.main.home.recommend.RecommendUIView;
+import com.hn.d.valley.main.home.recommend.RecommendUIView2;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,7 @@ public class HomeUIView extends BaseUIView {
     @BindView(R.id.home_layout)
     UILayoutImpl mHomeLayout;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
-    private RecommendUIView mRecommendUIView;
+    private RecommendUIView2 mRecommendUIView2;
     private Tag currentTag;
     private NearbyUIView mNearbyUIView;
     private CircleUIView mCircleUIView;
@@ -70,12 +71,12 @@ public class HomeUIView extends BaseUIView {
         /**默认显示第二页*/
 //        mViewPager.setCurrentItem(1);
         mHomeNavLayout.setCurrentTab(1, false);
-        if (mRecommendUIView == null) {
-            mRecommendUIView = new RecommendUIView();
-            mRecommendUIView.bindOtherILayout(mOtherILayout);
-            mHomeLayout.startIView(mRecommendUIView, new UIParam(false));
+        if (mRecommendUIView2 == null) {
+            mRecommendUIView2 = new RecommendUIView2();
+            mRecommendUIView2.bindOtherILayout(mOtherILayout);
+            mHomeLayout.startIView(mRecommendUIView2, new UIParam(false));
         } else {
-            mHomeLayout.showIView(mRecommendUIView, false);
+            mHomeLayout.showIView(mRecommendUIView2, false);
         }
     }
 
@@ -86,10 +87,10 @@ public class HomeUIView extends BaseUIView {
 //            @Override
 //            protected IView getIView(int position) {
 //                if (position == 1) {
-//                    if (mRecommendUIView == null) {
-//                        mRecommendUIView = new RecommendUIView();
+//                    if (mRecommendUIView2 == null) {
+//                        mRecommendUIView2 = new RecommendUIView();
 //                    }
-//                    return mRecommendUIView.bindOtherILayout(mOtherILayout);
+//                    return mRecommendUIView2.bindOtherILayout(mOtherILayout);
 //                }
 //                if (position == 2) {
 //                    if (mNearbyUIView == null) {
@@ -137,8 +138,8 @@ public class HomeUIView extends BaseUIView {
 //                        @Override
 //                        public void call(Tag tag) {
 //                            currentTag = tag;
-//                            mRecommendUIView.setFilterTag(tag);
-//                            mRecommendUIView.loadData();
+//                            mRecommendUIView2.setFilterTag(tag);
+//                            mRecommendUIView2.loadData();
 //                        }
 //                    }, currentTag == null ? TagsControl.allTag : currentTag).showDialog(mOtherILayout);
 //                }
@@ -165,14 +166,14 @@ public class HomeUIView extends BaseUIView {
                 mHomeLayout.showIView(mCircleUIView);
             }
         } else if (position == 1) {
-            if (mRecommendUIView == null) {
-                mRecommendUIView = new RecommendUIView();
-                mRecommendUIView.bindOtherILayout(mOtherILayout);
-                mRecommendUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.startIView(mRecommendUIView);
+            if (mRecommendUIView2 == null) {
+                mRecommendUIView2 = new RecommendUIView2();
+                mRecommendUIView2.bindOtherILayout(mOtherILayout);
+                mRecommendUIView2.setIsRightJumpLeft(isRightToLeft);
+                mHomeLayout.startIView(mRecommendUIView2);
             } else {
-                mRecommendUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.showIView(mRecommendUIView);
+                mRecommendUIView2.setIsRightJumpLeft(isRightToLeft);
+                mHomeLayout.showIView(mRecommendUIView2);
             }
         } else if (position == 2) {
             if (mNearbyUIView == null) {
@@ -196,9 +197,8 @@ public class HomeUIView extends BaseUIView {
         int currentItem = mHomeNavLayout.getCurrentTab();
         if (currentItem == 0 && mCircleUIView != null) {
             mCircleUIView.scrollToTop();
-        } else if (currentItem == 1 && mRecommendUIView != null) {
-
-            mRecommendUIView.scrollToTop();
+        } else if (currentItem == 1 && mRecommendUIView2 != null) {
+            mRecommendUIView2.scrollToTop();
         } else if (currentItem == 2 && mNearbyUIView != null) {
             mNearbyUIView.scrollToTop();
         }

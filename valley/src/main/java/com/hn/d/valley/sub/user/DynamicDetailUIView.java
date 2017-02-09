@@ -137,6 +137,9 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
 
     @Override
     public boolean onBackPressed() {
+        if (mDynamicRootLayout == null) {
+            return true;
+        }
         return mDynamicRootLayout.requestBackPressed();
     }
 
