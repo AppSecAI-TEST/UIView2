@@ -43,6 +43,8 @@ public abstract class SwipeBackLayout extends FrameLayout {
 
     private Paint mPaint;
 
+    private boolean enableSwipeBack = true;
+
     /**
      * The drag helper callback interface for the Left position
      */
@@ -50,6 +52,9 @@ public abstract class SwipeBackLayout extends FrameLayout {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
+            if (!enableSwipeBack) {
+                return false;
+            }
             boolean isLeft = mDragHelper.isEdgeTouched(ViewDragHelper.EDGE_LEFT, pointerId);
             mTargetView = child;
             if (isLeft) {
@@ -136,6 +141,7 @@ public abstract class SwipeBackLayout extends FrameLayout {
 
     private boolean mIsLocked;
 
+
     public SwipeBackLayout(Context context) {
         super(context);
     }
@@ -158,6 +164,13 @@ public abstract class SwipeBackLayout extends FrameLayout {
      */
     public static int clamp(int value, int min, int max) {
         return Math.max(min, Math.min(max, value));
+    }
+
+    /**
+     * 是否激活滑动删除
+     */
+    public void setEnableSwipeBack(boolean enableSwipeBack) {
+        this.enableSwipeBack = enableSwipeBack;
     }
 
     /**

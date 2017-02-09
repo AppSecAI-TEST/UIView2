@@ -29,8 +29,14 @@
 
     </com.angcyo.uiview.widget.TitleBarLayout>
 
-    <com.angcyo.uiview.widget.viewpager.UIViewPager
-        android:id="@+id/view_pager"
+    <!--<com.angcyo.uiview.widget.viewpager.UIViewPager-->
+    <!--android:id="@+id/view_pager"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"/>-->
+
+    <com.angcyo.uiview.container.UILayoutImpl
+        android:id="@+id/home_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"/>

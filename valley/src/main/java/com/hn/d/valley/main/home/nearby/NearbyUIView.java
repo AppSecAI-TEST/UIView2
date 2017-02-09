@@ -231,6 +231,10 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
                 }
             }
         });
+
+        /**默认显示地图模式*/
+        //showMapView();
+        mMapCheckView.setChecked(true);
     }
 
     @Override
