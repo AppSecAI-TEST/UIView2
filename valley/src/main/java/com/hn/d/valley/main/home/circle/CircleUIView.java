@@ -21,6 +21,7 @@ import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -41,9 +42,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, final UserDiscussListBean.DataListBean dataBean) {
                 //super.onBindDataView(holder, posInData, tBean);
-                UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action0() {
+                UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action1<UserDiscussListBean.DataListBean>() {
                     @Override
-                    public void call() {
+                    public void call(UserDiscussListBean.DataListBean dataListBean) {
                         loadData();
                     }
                 }, new Action0() {

@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -313,10 +314,10 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             }
 
             //bindCommandItemView(holder, posInData, tBean, uid, to_uid);
-            UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action0() {
+            UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action1<UserDiscussListBean.DataListBean>() {
                 @Override
-                public void call() {
-                    loadData();
+                public void call(UserDiscussListBean.DataListBean dataListBean) {
+                    loadData();//星期五 2017-2-10
                 }
             }, new Action0() {
                 @Override

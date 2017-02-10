@@ -60,10 +60,11 @@ import rx.subscriptions.CompositeSubscription;
 public class UserDiscussItemControl {
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
                                 UserDiscussListBean.DataListBean dataListBean,
-                                final Action0 commandAction, final Action0 itemRootAction,
+                                final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
                                 final ILayout iLayout) {
         initItem(holder, dataListBean, itemRootAction, iLayout);
-        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
+//        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
+        bindAttentionItemView2(holder, dataListBean, commandAction);
         bindFavItemView(subscription, holder, dataListBean);
         bindLikeItemView(subscription, holder, dataListBean, null);
     }
@@ -119,22 +120,22 @@ public class UserDiscussItemControl {
             like_cnt.setLeftIco(R.drawable.thumb_up_icon_n);
         }
 
-        TextView commandItemView = holder.v(R.id.command_item_view);
+        View commandItemView = holder.v(R.id.command_item_view);
         commandItemView.setVisibility(View.VISIBLE);
         final View forwardView = holder.v(R.id.forward_cnt);
         if (user_info != null) {
-            if (user_info.getIs_attention() == 1) {
-                commandItemView.setText("取消关注");
-                commandItemView.setBackgroundResource(R.drawable.base_dark_color_border_fill_selector);
-                commandItemView.setTextColor(commandItemView.getResources().
-                        getColorStateList(R.color.base_dark_color_border_selector_color));
-            } else {
-                commandItemView.setText("+关注");
-                commandItemView.setBackgroundResource(R.drawable.base_main_color_border_fill_selector);
-                commandItemView.setTextColor(commandItemView.getResources().
-                        getColorStateList(R.color.base_main_color_border_selector_color));
-            }
-
+//            if (user_info.getIs_attention() == 1) {
+//                commandItemView.setText("取消关注");
+//                commandItemView.setBackgroundResource(R.drawable.base_dark_color_border_fill_selector);
+//                commandItemView.setTextColor(commandItemView.getResources().
+//                        getColorStateList(R.color.base_dark_color_border_selector_color));
+//            } else {
+//                commandItemView.setText("+关注");
+//                commandItemView.setBackgroundResource(R.drawable.base_main_color_border_fill_selector);
+//                commandItemView.setTextColor(commandItemView.getResources().
+//                        getColorStateList(R.color.base_main_color_border_selector_color));
+//            }
+//
             if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
                 //自己的动态不允许转发
                 forwardView.setClickable(false);
@@ -371,6 +372,20 @@ public class UserDiscussItemControl {
 //                }
 //            });
         }
+    }
+
+    private static void bindAttentionItemView2(RBaseViewHolder holder,
+                                               final UserDiscussListBean.DataListBean tBean,
+                                               final Action1<UserDiscussListBean.DataListBean> commandAction) {
+        View commandItemView = holder.v(R.id.command_item_view);
+        commandItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (commandAction != null) {
+                    commandAction.call(tBean);
+                }
+            }
+        });
     }
 
 

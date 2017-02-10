@@ -96,14 +96,23 @@
         android:layout_centerVertical="true"
         android:orientation="vertical">
 
-        <TextView
+        <!--<TextView-->
+        <!--android:id="@+id/command_item_view"-->
+        <!--style="@style/BaseCommandButtonStyle"-->
+        <!--android:layout_marginTop="@dimen/base_hdpi"-->
+        <!--android:minHeight="@dimen/base_xxxhdpi"-->
+        <!--android:minWidth="@dimen/base_xxxhdpi"-->
+        <!--android:visibility="visible"-->
+        <!--tools:text="取消关注"/>-->
+
+        <ImageButton
             android:id="@+id/command_item_view"
-            style="@style/BaseCommandButtonStyle"
-            android:layout_marginTop="@dimen/base_hdpi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/base_bg2_selector"
             android:minHeight="@dimen/base_xxxhdpi"
             android:minWidth="@dimen/base_xxxhdpi"
-            android:visibility="visible"
-            tools:text="取消关注"/>
+            android:src="@drawable/an"/>
 
     </LinearLayout>
 
