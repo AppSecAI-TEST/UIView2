@@ -122,13 +122,14 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/base_xxhdpi"
             android:drawableLeft="@drawable/collection_icon_n"
+            android:visibility="gone"
             tools:text="40"/>
 
         <com.hn.d.valley.widget.HnItemTextView
             android:id="@+id/comment_cnt"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_xxhdpi"
+            android:layout_marginLeft="@dimen/base_xhdpi"
             android:drawableLeft="@drawable/comments_icon"
             tools:text="40"/>
 

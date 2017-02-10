@@ -494,6 +494,7 @@ public class UserDiscussItemControl {
                                         UserDiscussListBean.DataListBean tBean) {
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
+        fav_cnt.setVisibility(View.GONE);//星期五 2017-2-10 不显示
 
         if (tBean.getIs_collection() == 1) {
             //是否收藏
