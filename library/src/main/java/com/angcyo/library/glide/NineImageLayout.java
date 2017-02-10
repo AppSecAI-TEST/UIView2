@@ -75,6 +75,8 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
                 } else {
                     mImageViews.get(0).measure(getSize(widthHeight[0]), getSize(widthHeight[1]));
                     setMeasuredDimension(widthHeight[0], widthHeight[1]);
+
+                    //L.e("width:" + widthHeight[0] + " height:" + widthHeight[1]);
                 }
             } else {
                 final int columns = getColumns(size);
