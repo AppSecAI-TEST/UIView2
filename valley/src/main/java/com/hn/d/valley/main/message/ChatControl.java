@@ -19,7 +19,6 @@ import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.utils.media.ImageUtil;
@@ -115,14 +114,6 @@ public class ChatControl {
         mRecyclerView.setAdapter(mChatAdapter);
     }
 
-    public static int getImageMaxEdge() {
-        return (int) (165.0 / 320.0 * ScreenUtil.screenWidth);
-    }
-
-    public static int getImageMinEdge() {
-        return (int) (76.0 / 320.0 * ScreenUtil.screenWidth);
-    }
-
     /**
      * 根据图片路径大小, 自动设置View的宽高
      */
@@ -142,7 +133,7 @@ public class ChatControl {
         }
 
         if (bounds != null) {
-            ImageUtil.ImageSize imageSize = ImageUtil.getThumbnailDisplaySize(bounds[0], bounds[1], getImageMaxEdge(), getImageMinEdge());
+            ImageUtil.ImageSize imageSize = ImageUtil.getThumbnailDisplaySize(bounds[0], bounds[1]);
 
             ViewGroup.LayoutParams maskParams = view.getLayoutParams();
             maskParams.width = imageSize.width;
@@ -171,7 +162,7 @@ public class ChatControl {
         }
 
         if (bounds != null) {
-            ImageUtil.ImageSize imageSize = ImageUtil.getThumbnailDisplaySize(bounds[0], bounds[1], getImageMaxEdge(), getImageMinEdge());
+            ImageUtil.ImageSize imageSize = ImageUtil.getThumbnailDisplaySize(bounds[0], bounds[1]);
 
             ViewGroup.LayoutParams maskParams = view.getLayoutParams();
             maskParams.width = imageSize.width;
@@ -422,7 +413,6 @@ public class ChatControl {
                             //DraweeViewUtil.setDraweeViewHttp(draweeView, msgAttachment.getUrl());
                         }
                     }
-
 
                     if (isReceivedMessage(bean)) {
                         clickView.setBackgroundResource(R.drawable.bubble_box_left_selector2);

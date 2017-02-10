@@ -1,12 +1,15 @@
 package com.hn.d.valley.base.oss;
 
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.angcyo.uiview.net.TransformUtils;
+import com.angcyo.uiview.utils.media.ImageUtil;
 import com.hn.d.valley.ValleyApp;
 
 import java.io.File;
@@ -97,6 +100,60 @@ public class OssHelper {
     public static Observable uploadVideo(final String uploadFilePath) {
         return Observable.create(new OssObservable(BASE_VIDEO_BUCKET, uploadFilePath))
                 .compose(TransformUtils.<String>defaultSchedulers());
+    }
+
+    /**
+     * 从url中, 返回图片的宽高信息
+     */
+    public static int[] getWidthHeightWithUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return new int[]{0, 0};
+        }
+//        width_640.0pictureheight_1136.0
+        final String[] pictureheight_s = url.split("pictureheight_");
+        float height = 0, width = 0;
+        if (pictureheight_s.length >= 2) {
+            height = Float.valueOf(pictureheight_s[pictureheight_s.length - 1]);
+            final String[] width_s = pictureheight_s[pictureheight_s.length - 2].split("width_");
+            width = Float.valueOf(width_s[width_s.length - 1]);
+        }
+        return new int[]{(int) width, (int) height};
+    }
+
+    /**
+     * 根据宽高, 返回对应的oss url地址
+     */
+    public static String getImageThumb(String url, int width, int height) {
+        return url + "?x-oss-process=image/resize,m_fill,h_" + height + ",w_" + width;
+    }
+
+    public static String getImageThumb(String url) {
+        int width, height;
+        final int[] widthHeightWithUrl = getWidthHeightWithUrl(url);
+        final ImageUtil.ImageSize thumbnailDisplaySize = ImageUtil.getThumbnailDisplaySize(widthHeightWithUrl[0], widthHeightWithUrl[1]);
+        width = thumbnailDisplaySize.width;
+        height = thumbnailDisplaySize.height;
+        return getImageThumb(url, width, height);
+    }
+
+    /**
+     * 根据url提供的宽高, 获取缩略图的宽高
+     */
+    public static int[] getImageThumbSize(String url) {
+        final int[] widthHeightWithUrl = getWidthHeightWithUrl(url);
+        final ImageUtil.ImageSize thumbnailDisplaySize = ImageUtil.getThumbnailDisplaySize(widthHeightWithUrl[0], widthHeightWithUrl[1]);
+        return new int[]{thumbnailDisplaySize.width, thumbnailDisplaySize.height};
+    }
+
+    /**
+     * 根据url提供的宽高, 设置视图的宽高
+     */
+    public static void setViewSize(View view, String url) {
+        final ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        final int[] imageThumbSize = getImageThumbSize(url);
+        layoutParams.height = imageThumbSize[1];
+        layoutParams.width = imageThumbSize[0];
+        view.setLayoutParams(layoutParams);
     }
 
     static class OssObservable implements Observable.OnSubscribe<String> {

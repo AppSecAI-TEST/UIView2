@@ -18,7 +18,6 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
-import com.hn.d.valley.main.home.recommend.RecommendUIView;
 import com.hn.d.valley.main.home.recommend.RecommendUIView2;
 
 import java.util.ArrayList;
@@ -78,6 +77,7 @@ public class HomeUIView extends BaseUIView {
         } else {
             mHomeLayout.showIView(mRecommendUIView2, false);
         }
+        lastPosition = 1;
     }
 
     private void initViewPager() {

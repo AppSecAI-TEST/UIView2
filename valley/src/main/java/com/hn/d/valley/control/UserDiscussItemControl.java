@@ -1,11 +1,14 @@
 package com.hn.d.valley.control;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.library.glide.NineImageLayout;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
@@ -14,11 +17,14 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
@@ -32,6 +38,7 @@ import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnItemTextView;
 import com.jakewharton.rxbinding.view.RxView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -68,7 +75,6 @@ public class UserDiscussItemControl {
         holder.fillView(dataListBean, true);
         holder.fillView(user_info, true);
 
-
         /**头像*/
         final View avatarView = holder.v(R.id.avatar);
         avatarView.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +89,8 @@ public class UserDiscussItemControl {
 
         final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
-        final SimpleDraweeView mediaImageType = holder.v(R.id.media_image_view);//
+//        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
+        final NineImageLayout mediaImageTypeView = holder.v(R.id.media_image_view);//
         final HnGenderView genderView = holder.v(R.id.grade);//性别,等级
         if (user_info != null) {
             genderView.setVisibility(View.VISIBLE);
@@ -92,41 +99,8 @@ public class UserDiscussItemControl {
             genderView.setVisibility(View.GONE);
         }
 
-        final List<String> medias = RUtils.split(dataListBean.getMedia());
-        if (medias.isEmpty()) {
-            mediaControlLayout.setVisibility(View.GONE);
-        } else {
-            mediaControlLayout.setVisibility(View.VISIBLE);
-            mediaCountView.setText("" + medias.size());
-            if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {
-                mediaImageType.setVisibility(View.VISIBLE);
-                Object tag = mediaImageType.getTag();
-                if (tag == null || !tag.toString().equalsIgnoreCase(medias.get(0))) {
-                    mediaImageType.setTag(medias.get(0));
-                    DraweeViewUtil.resize(mediaImageType, medias.get(0));
-                }
-
-                //点击预览全部图片
-                final List<String> previewMedia = RUtils.split(dataListBean.getMedia());
-                mediaImageType.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ImagePagerUIView.start(iLayout, v, PhotoPager.getImageItems(medias), 0);
-                    }
-                });
-            } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
-                mediaImageType.setVisibility(View.VISIBLE);
-                DraweeViewUtil.setDraweeViewRes(mediaImageType, R.drawable.video_release);
-                mediaImageType.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        T_.info("暂不支持视频的播放.");
-                    }
-                });
-            } else {
-                mediaImageType.setVisibility(View.GONE);
-            }
-        }
+        //图片视频处理
+        updateMediaLayout(dataListBean, iLayout, mediaCountView, mediaControlLayout, mediaImageTypeView);
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
         HnItemTextView like_cnt = holder.v(R.id.like_cnt);
@@ -216,6 +190,95 @@ public class UserDiscussItemControl {
             holder.v(R.id.comment_cnt).setClickable(false);//不允许评价
         }
 
+    }
+
+    private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout,
+                                          TextView mediaCountView, View mediaControlLayout, NineImageLayout mediaImageTypeView) {
+        final List<String> medias = RUtils.split(dataListBean.getMedia());
+        if (medias.isEmpty()) {
+            mediaControlLayout.setVisibility(View.GONE);
+        } else {
+            mediaControlLayout.setVisibility(View.VISIBLE);
+            mediaCountView.setText("" + medias.size());
+            if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {
+                //图片类型
+                mediaImageTypeView.setVisibility(View.VISIBLE);
+                Object tag = mediaImageTypeView.getTag();
+
+                final String url = medias.get(0);
+                if (tag == null || !tag.toString().equalsIgnoreCase(url)) {
+                    mediaImageTypeView.setTag(url);
+
+                    //DraweeViewUtil.resize(mediaImageTypeView, medias.get(0));
+                    //OssHelper.setViewSize(mediaControlLayout, url);
+                    //DraweeViewUtil.setDraweeViewHttp(mediaImageTypeView, OssHelper.getImageThumb(url));
+                    mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
+                        @Override
+                        public int[] getWidthHeight(int imageSize) {
+                            return OssHelper.getImageThumbSize(url);
+                        }
+
+                        @Override
+                        public void displayImage(final ImageView imageView, String url, int width, int height) {
+                            Glide.with(imageView.getContext())
+                                    .load(OssHelper.getImageThumb(url, width, height))
+                                    .asBitmap()
+                                    .into(new SimpleTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                            if (imageView == null) {
+                                                return;
+                                            }
+                                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                            imageView.setImageBitmap(resource);
+                                        }
+
+                                        @Override
+                                        public void onLoadStarted(Drawable placeholder) {
+                                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                            imageView.setImageResource(R.drawable.zhanweitu_1);
+                                        }
+                                    });
+                        }
+
+                        @Override
+                        public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
+                            //点击预览全部图片
+                            ImagePagerUIView.start(iLayout, imageView,
+                                    PhotoPager.getImageItems(medias, imageList), index);
+                        }
+                    });
+                    mediaImageTypeView.setImagesList(medias);
+                }
+            } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
+                //视频类型
+                mediaImageTypeView.setVisibility(View.VISIBLE);
+                //DraweeViewUtil.setDraweeViewRes(mediaImageTypeView, R.drawable.video_release);
+
+                List<String> thumbUrl = new ArrayList<>();
+                thumbUrl.add("");
+                mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
+                    @Override
+                    public int[] getWidthHeight(int imageSize) {
+                        return new int[]{-1, -1};
+                    }
+
+                    @Override
+                    public void displayImage(ImageView imageView, String url, int width, int height) {
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        imageView.setImageResource(R.drawable.video_release);
+                    }
+
+                    @Override
+                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
+                        T_.info("暂不支持视频的播放.");
+                    }
+                });
+                mediaImageTypeView.setImagesList(thumbUrl);
+            } else {
+                mediaImageTypeView.setVisibility(View.GONE);
+            }
+        }
     }
 
     /**
