@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.home.circle;
 
+import android.view.View;
+
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -15,8 +17,8 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
-import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
@@ -90,6 +92,16 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                         onUILoadDataFinish();
                     }
 
+                    @Override
+                    public void onNoNetwork() {
+                        super.onNoNetwork();
+                        showNonetLayout(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loadData();
+                            }
+                        });
+                    }
                 }));
     }
 

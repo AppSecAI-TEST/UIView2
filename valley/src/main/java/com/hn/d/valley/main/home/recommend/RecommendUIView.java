@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.home.recommend;
 
+import android.view.View;
+
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -13,8 +15,8 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
-import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.user.DynamicDetailUIView;
 
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -30,6 +32,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
 
     /**
@@ -88,6 +91,17 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                     @Override
                     public void onEnd() {
                         onUILoadDataFinish();
+                    }
+
+                    @Override
+                    public void onNoNetwork() {
+                        super.onNoNetwork();
+                        showNonetLayout(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loadData();
+                            }
+                        });
                     }
 
                 }));

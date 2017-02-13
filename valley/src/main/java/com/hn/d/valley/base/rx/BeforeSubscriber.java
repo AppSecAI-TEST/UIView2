@@ -2,9 +2,9 @@ package com.hn.d.valley.base.rx;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.mvp.view.IBaseView;
+import com.angcyo.uiview.net.NonetException;
 import com.angcyo.uiview.net.base.Network;
 import com.hn.d.valley.ValleyApp;
-import com.hn.d.valley.base.excepetion.NonetException;
 
 import rx.functions.Action0;
 

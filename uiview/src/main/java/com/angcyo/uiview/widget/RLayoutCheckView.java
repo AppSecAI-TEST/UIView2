@@ -2,6 +2,7 @@ package com.angcyo.uiview.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 /**
@@ -18,13 +19,27 @@ import android.widget.RelativeLayout;
 public class RLayoutCheckView extends RelativeLayout implements RCheckGroup.ICheckView {
 
     boolean mChecked = false;
+    View checkView;//选中状态显示的View, 非选中隐藏
 
     public RLayoutCheckView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public RLayoutCheckView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        for (int i = 0; i < getChildCount(); i++) {
+            final View view = getChildAt(i);
+            final Object tag = view.getTag();
+            if (tag != null && "check".equalsIgnoreCase(tag.toString())) {
+                checkView = view;
+                break;
+            }
+        }
     }
 
     @Override
@@ -36,12 +51,8 @@ public class RLayoutCheckView extends RelativeLayout implements RCheckGroup.IChe
     public void setChecked(boolean checked) {
         boolean old = mChecked;
         mChecked = checked;
-        if (mChecked != old) {
-            if (mChecked) {
-
-            } else {
-
-            }
+        if (checkView != null && mChecked != old) {
+            checkView.setVisibility(mChecked ? VISIBLE : GONE);
         }
     }
 }

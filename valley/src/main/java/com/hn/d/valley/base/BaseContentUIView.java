@@ -28,6 +28,11 @@ public abstract class BaseContentUIView extends UIContentView {
         return inflater.inflate(R.layout.empty_layout, baseRootLayout);
     }
 
+    @Override
+    protected View inflateNonetLayout(FrameLayout baseRootLayout, LayoutInflater inflater) {
+        return inflater.inflate(R.layout.no_network_layout, baseRootLayout);
+    }
+
     @CallSuper
     @Override
     public void onViewLoad() {

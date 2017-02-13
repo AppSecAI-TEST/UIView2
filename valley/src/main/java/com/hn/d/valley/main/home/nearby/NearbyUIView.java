@@ -315,6 +315,17 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
                         super.onEnd();
                         onUILoadDataFinish();
                     }
+
+                    @Override
+                    public void onNoNetwork() {
+                        super.onNoNetwork();
+                        showNonetLayout(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loadData();
+                            }
+                        });
+                    }
                 })
         );
     }

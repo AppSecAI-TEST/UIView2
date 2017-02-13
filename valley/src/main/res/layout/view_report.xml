@@ -21,7 +21,9 @@
             android:id="@+id/content_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:divider="@drawable/base_shape_line"
+            android:orientation="vertical"
+            android:showDividers="middle|end"/>
 
         <TextView
             android:id="@+id/submit_view"

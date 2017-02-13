@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.angcyo.uiview.R;
@@ -58,14 +59,24 @@ public class RCheckGroup extends LinearLayout implements View.OnClickListener {
     }
 
     @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        super.addView(child, index, params);
+        if (child instanceof ICheckView) {
+            child.setOnClickListener(this);
+            ((ICheckView) child).setChecked(child.getId() == checkId);
+            if (child.getId() == checkId) {
+                checkView = child;
+            }
+        }
+    }
+
+    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         View oldView = checkView;
         for (int i = 0; i < getChildCount(); i++) {
             View view = getChildAt(i);
             if (view instanceof ICheckView) {
-                view.setOnClickListener(this);
-                ((ICheckView) view).setChecked(view.getId() == checkId);
                 if (view.getId() == checkId) {
                     checkView = view;
                 }

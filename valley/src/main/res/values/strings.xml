@@ -128,5 +128,7 @@
     <string name="report">举报</string>
     <string name="submit">提交</string>
     <string name="selector_report_tip">请选择举报理由</string>
+    <string name="open_network_setting">打开网络设置</string>
+    <string name="retry_refresh">刷新试试</string>
 
 </resources>
