@@ -170,7 +170,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                     .doOnSubscribe(BeforeSubscriber.build(this))
                     .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
-                        public void onNext(String s) {
+                        public void onSucceed(String s) {
                             mIcoFilePathUrl = OssHelper.getAvatorUrl(s);
                             Hawk.put(phone, mIcoFilePathUrl);
                             mPresenter.register(mNameView.string(), mPasswordView.string(),
@@ -241,7 +241,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                 .doOnSubscribe(background ? EmptyAction.build() : BeforeSubscriber.build(this))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
-                    public void onNext(String s) {
+                    public void onSucceed(String s) {
                         mIcoFilePathUrl = OssHelper.getAvatorUrl(s);
                         Hawk.put(phone, mIcoFilePathUrl);
                         if (!background) {

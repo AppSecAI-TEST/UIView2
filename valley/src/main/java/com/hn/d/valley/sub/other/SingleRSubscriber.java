@@ -17,8 +17,7 @@ public abstract class SingleRSubscriber<T> extends RSubscriber<T> {
     }
 
     @Override
-    final public void onNext(T bean) {
-        super.onNext(bean);
+    final public void onSucceed(T bean) {
         mBaseRecyclerUIView.showContentLayout();
         onResult(bean);
     }

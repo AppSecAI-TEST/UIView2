@@ -28,7 +28,7 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.message.ChatUIView;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -138,7 +138,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
                                         @Override
-                                        public void onNext(String bean) {
+                                        public void onSucceed(String bean) {
                                             T_.show(bean);
                                         }
                                     }));
@@ -157,7 +157,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
-                                    public void onNext(String bean) {
+                                    public void onSucceed(String bean) {
                                         T_.show(bean);
                                         mSearchUserBean.setIs_attention(1);
                                         initCommandView();
@@ -194,7 +194,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     }
 
                     @Override
-                    public void onNext(UserDiscussListBean userDiscussListBean) {
+                    public void onSucceed(UserDiscussListBean userDiscussListBean) {
                         if (userDiscussListBean == null) {
                             mRExBaseAdapter.setEnableLoadMore(false);
                             onUILoadDataEnd();
@@ -345,7 +345,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
-                                    public void onNext(String bean) {
+                                    public void onSucceed(String bean) {
                                         T_.show(bean);
                                         notifyItemChanged(getHeaderCount() + posInData);
                                     }
@@ -362,7 +362,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
-                                    public void onNext(String bean) {
+                                    public void onSucceed(String bean) {
                                         T_.show(bean);
                                         notifyItemChanged(getHeaderCount() + posInData);
                                     }

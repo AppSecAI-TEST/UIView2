@@ -39,8 +39,8 @@ import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
 import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
-import com.hn.d.valley.sub.user.service.DiscussService;
-import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.service.DiscussService;
+import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -250,8 +250,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                                     })
                                     .subscribe(new RSubscriber<String>() {
                                         @Override
-                                        public void onNext(String bean) {
-                                            super.onNext(bean);
+                                        public void onSucceed(String bean) {
                                             T_.ok(bean);
                                             HnLoading.hide();
                                             finishIView();
@@ -424,8 +423,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                 .compose(Rx.transformer(String.class))
                 .subscribe(new RSubscriber<String>() {
                     @Override
-                    public void onNext(String bean) {
-                        super.onNext(bean);
+                    public void onSucceed(String bean) {
                         loadData();
                         try {
                             mRecyclerView.smoothScrollToPosition(1);

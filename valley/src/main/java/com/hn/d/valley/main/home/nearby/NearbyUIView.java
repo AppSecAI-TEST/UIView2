@@ -35,7 +35,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AmapControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.message.ChatUIView;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -87,7 +87,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
                             .subscribe(new BaseSingleSubscriber<String>() {
 
                                 @Override
-                                public void onNext(String bean) {
+                                public void onSucceed(String bean) {
                                     dataBean.setIs_attention(0);
                                     if (view != null) {
                                         setAttentionView(view, dataBean, to_uid);
@@ -107,7 +107,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
                             .subscribe(new BaseSingleSubscriber<String>() {
 
                                 @Override
-                                public void onNext(String bean) {
+                                public void onSucceed(String bean) {
                                     dataBean.setIs_attention(1);
                                     if (view != null) {
                                         setAttentionView(view, dataBean, to_uid);
@@ -299,7 +299,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
                 .compose(Rx.transformer(NearUserBean.class))
                 .subscribe(new RSubscriber<NearUserBean>() {
                     @Override
-                    public void onNext(NearUserBean nearUserBean) {
+                    public void onSucceed(NearUserBean nearUserBean) {
                         if (nearUserBean == null) {
                             onUILoadDataEnd();
                         } else {

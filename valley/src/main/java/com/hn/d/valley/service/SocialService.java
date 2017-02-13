@@ -1,4 +1,4 @@
-package com.hn.d.valley.sub.user.service;
+package com.hn.d.valley.service;
 
 import java.util.Map;
 
@@ -115,5 +115,14 @@ public interface SocialService {
      */
     @POST("social/forward")
     Observable<ResponseBody> forward(@QueryMap Map<String, String> map);
+
+    /**
+     * 举报原因列表
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	discuss-动态 group-群聊
+     */
+    @POST("social/getReportReason")
+    Observable<ResponseBody> getReportReason(@QueryMap Map<String, String> map);
 
 }

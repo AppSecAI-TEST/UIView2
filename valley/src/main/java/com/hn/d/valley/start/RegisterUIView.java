@@ -20,7 +20,7 @@ import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
 import com.hn.d.valley.start.mvp.Start;
-import com.hn.d.valley.sub.user.service.OtherService;
+import com.hn.d.valley.service.OtherService;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -122,7 +122,7 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
-                    public void onNext(String s) {
+                    public void onSucceed(String s) {
                         code = s;
                         T_.show(mActivity.getString(R.string.code_send_tip));
                     }

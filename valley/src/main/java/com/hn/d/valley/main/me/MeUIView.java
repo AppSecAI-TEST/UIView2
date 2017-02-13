@@ -173,7 +173,7 @@ public class MeUIView extends BaseUIView {
                     .fetchUserInfo()
                     .subscribe(new RSubscriber<UserInfoBean>() {
                         @Override
-                        public void onNext(UserInfoBean userInfoBean) {
+                        public void onSucceed(UserInfoBean userInfoBean) {
                             if (userInfoBean != null) {
                                 UserCache.instance().setUserInfoBean(userInfoBean);
                                 initMeUIView();

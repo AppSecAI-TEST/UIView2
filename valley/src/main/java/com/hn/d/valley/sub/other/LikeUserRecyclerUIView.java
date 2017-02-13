@@ -12,7 +12,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.LikeUserModel;
 import com.hn.d.valley.main.me.UserDetailUIView;
-import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnGenderView;
 
 import java.util.Locale;

@@ -309,7 +309,7 @@ public class MainUIView extends BaseUIView {
                 }
 
                 @Override
-                public void onNext(ArrayList<Luban.ImageItem> strings) {
+                public void onSucceed(ArrayList<Luban.ImageItem> strings) {
                     if (!strings.isEmpty()) {
                         HnLoading.hide();
                         startIView(new PublishDynamicUIView(strings));

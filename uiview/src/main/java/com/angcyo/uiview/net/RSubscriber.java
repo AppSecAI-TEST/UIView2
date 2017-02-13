@@ -24,6 +24,8 @@ import rx.Subscriber;
  */
 public abstract class RSubscriber<T> extends Subscriber<T> {
 
+    public static final int NO_NETWORK = 40000;
+
     @Override
     public void onStart() {
         super.onStart();
@@ -37,8 +39,17 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
     }
 
     @Override
-    public void onNext(T bean) {
+    final public void onNext(T bean) {
         L.d("订阅onNext->" + this.getClass().getSimpleName());
+        try {
+            onSucceed(bean);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onSucceed(T bean) {
+
     }
 
     @Override
@@ -53,7 +64,7 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
                 e instanceof NonetException) {
             L.e(e.getMessage());
             errorMsg = "请检查网络连接!";
-            errorCode = 40000;
+            errorCode = NO_NETWORK;
         } else if (e instanceof JsonParseException || e instanceof JsonMappingException) {
             errorMsg = "恐龙君打了个盹，请稍后再试!"; //   "数据解析错误:" + e.getMessage();
             errorCode = -40001;
@@ -79,6 +90,9 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
      */
     public void onError(int code, String msg) {
         L.d("订阅异常->" + this.getClass().getSimpleName() + " " + msg);
+        if (code == RSubscriber.NO_NETWORK) {
+            onNoNetwork();
+        }
         onEnd();
     }
 
@@ -87,5 +101,9 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
      */
     public void onEnd() {
         L.d("订阅异常->onEnd()");
+    }
+
+    public void onNoNetwork() {
+
     }
 }

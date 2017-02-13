@@ -41,7 +41,12 @@ public class UIItemDialog extends UIIDialogImpl {
     }
 
     public UIItemDialog addItem(String text, View.OnClickListener clickListener) {
-        mItemInfos.add(new ItemInfo(text, clickListener));
+        addItem(new ItemInfo(text, clickListener));
+        return this;
+    }
+
+    public UIItemDialog addItem(ItemInfo itemInfo) {
+        mItemInfos.add(itemInfo);
         return this;
     }
 
@@ -110,7 +115,7 @@ public class UIItemDialog extends UIIDialogImpl {
         return textView;
     }
 
-    static class ItemInfo {
+    public static class ItemInfo {
         public String mItemText;
         public View.OnClickListener mClickListener;
 

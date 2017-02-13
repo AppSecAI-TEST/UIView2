@@ -21,6 +21,7 @@ import com.hn.d.valley.utils.RBus;
  * Version: 1.0.0
  */
 public abstract class BaseContentUIView extends UIContentView {
+    boolean isRegister = false;
 
     @Override
     protected View inflateEmptyLayout(FrameLayout baseRootLayout, LayoutInflater inflater) {
@@ -31,13 +32,19 @@ public abstract class BaseContentUIView extends UIContentView {
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        RBus.register(this);
+        if (!isRegister) {
+            RBus.register(this);
+            isRegister = true;
+        }
     }
 
     @CallSuper
     @Override
     public void onViewUnload() {
         super.onViewUnload();
-        RBus.unregister(this);
+        if (isRegister) {
+            RBus.unregister(this);
+        }
+        isRegister = false;
     }
 }

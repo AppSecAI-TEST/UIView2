@@ -31,7 +31,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -137,8 +137,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onNext(UserInfoBean bean) {
-                        super.onNext(bean);
+                    public void onSucceed(UserInfoBean bean) {
                         if (bean == null) {
                             showEmptyLayout();
                         } else {
@@ -260,7 +259,7 @@ public class UserDetailUIView extends BaseContentUIView {
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
                                         @Override
-                                        public void onNext(String bean) {
+                                        public void onSucceed(String bean) {
                                             T_.show(bean);
                                         }
                                     }));
@@ -279,7 +278,7 @@ public class UserDetailUIView extends BaseContentUIView {
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
-                                    public void onNext(String bean) {
+                                    public void onSucceed(String bean) {
                                         T_.show(bean);
                                         mUserInfoBean.setIs_attention(1);
                                         initCommandView();

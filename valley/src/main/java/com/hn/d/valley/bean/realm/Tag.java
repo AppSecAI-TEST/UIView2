@@ -16,6 +16,14 @@ public class Tag extends RealmObject {
     private String id;
     private String name;
 
+
+    //举报消息的内容
+    /**
+     * content : 垃圾营销
+     */
+
+    private String content;
+
     public String getId() {
         return id;
     }
@@ -44,5 +52,13 @@ public class Tag extends RealmObject {
     @Override
     public String toString() {
         return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

@@ -73,6 +73,9 @@
     <string name="school">校园</string>
     <string name="add_tag">添加标签</string>
     <string name="top">置顶</string>
+    <string name="cancel_top">取消置顶</string>
+    <string name="fav">收藏</string>
+    <string name="cancel_fav">取消收藏</string>
     <string name="share_gps">公开地理位置</string>
     <string name="add_tags_text">添加标签</string>
     <string name="ok">确定</string>
@@ -106,7 +109,9 @@
     <string name="publish_dynamic">发布动态</string>
     <string name="forward_dynamic">转发动态</string>
     <string name="fans_title">粉丝</string>
-    <string name="followers_titile">关注</string>
+    <string name="followers_title">关注</string>
+    <string name="cancel_followers">取消关注</string>
+    <string name="cancel_friend">解除好友</string>
     <string name="back_pressed_tip">别按啦，恐龙君舍不得离开你！</string>
     <string name="dynamic_notify">动态通知</string>
     <string name="clear_all">清空</string>
@@ -118,6 +123,10 @@
     <string name="men">男</string>
     <string name="secret">保密</string>
     <string name="ta_fans_title">TA的粉丝</string>
-    <string name="ta_followers_titile">TA的关注</string>
+    <string name="ta_followers_title">TA的关注</string>
+    <string name="not_see_status">不看TA的动态</string>
+    <string name="report">举报</string>
+    <string name="submit">提交</string>
+    <string name="selector_report_tip">请选择举报理由</string>
 
 </resources>

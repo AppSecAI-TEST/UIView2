@@ -39,7 +39,7 @@ public abstract class UIStringSubscriber<T, V extends IBaseView> extends BaseSin
     }
 
     @Override
-    public void onNext(T bean) {
+    public void onSucceed(T bean) {
         mBaseView.onRequestFinish();
         onSuccess(bean);
     }

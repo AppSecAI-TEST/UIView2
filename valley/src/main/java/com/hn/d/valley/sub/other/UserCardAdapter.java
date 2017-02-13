@@ -15,7 +15,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.ChatUIView;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
@@ -46,7 +46,7 @@ public class UserCardAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
                             .subscribe(new BaseSingleSubscriber<String>() {
 
                                 @Override
-                                public void onNext(String bean) {
+                                public void onSucceed(String bean) {
                                     dataBean.setIs_attention(0);
                                     if (view != null) {
                                         setAttentionView(view, dataBean, to_uid, chatView, chatListener);
@@ -66,7 +66,7 @@ public class UserCardAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
                             .subscribe(new BaseSingleSubscriber<String>() {
 
                                 @Override
-                                public void onNext(String bean) {
+                                public void onSucceed(String bean) {
                                     dataBean.setIs_attention(1);
                                     if (view != null) {
                                         setChatView(chatView, chatListener);

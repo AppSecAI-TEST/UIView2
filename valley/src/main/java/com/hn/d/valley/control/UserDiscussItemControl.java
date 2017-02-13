@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.glide.NineImageLayout;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.net.RRetrofit;
@@ -21,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
+import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
@@ -30,9 +32,13 @@ import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.DiscussService;
+import com.hn.d.valley.service.SettingService;
+import com.hn.d.valley.service.SocialService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
-import com.hn.d.valley.sub.user.service.SocialService;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnItemTextView;
@@ -64,7 +70,7 @@ public class UserDiscussItemControl {
                                 final ILayout iLayout) {
         initItem(holder, dataListBean, itemRootAction, iLayout);
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
-        bindAttentionItemView2(holder, dataListBean, commandAction);
+        bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout);
         bindFavItemView(subscription, holder, dataListBean);
         bindLikeItemView(subscription, holder, dataListBean, null);
     }
@@ -308,7 +314,7 @@ public class UserDiscussItemControl {
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
                                         @Override
-                                        public void onNext(String bean) {
+                                        public void onSucceed(String bean) {
                                             //T_.show(bean);
                                             if (commandAction != null) {
                                                 commandAction.call();
@@ -345,7 +351,7 @@ public class UserDiscussItemControl {
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
                                         @Override
-                                        public void onNext(String bean) {
+                                        public void onSucceed(String bean) {
                                             //T_.show(bean);
                                             if (commandAction != null) {
                                                 commandAction.call();
@@ -374,16 +380,272 @@ public class UserDiscussItemControl {
         }
     }
 
-    private static void bindAttentionItemView2(RBaseViewHolder holder,
+    /**
+     * 更多按钮
+     */
+    private static void bindAttentionItemView2(final CompositeSubscription subscription, final RBaseViewHolder holder,
                                                final UserDiscussListBean.DataListBean tBean,
-                                               final Action1<UserDiscussListBean.DataListBean> commandAction) {
+                                               final Action1<UserDiscussListBean.DataListBean> commandAction,
+                                               final ILayout iLayout) {
         View commandItemView = holder.v(R.id.command_item_view);
+        final String uid = UserCache.getUserAccount();
+        final String to_uid = tBean.getUser_info().getUid();
+        final View.OnClickListener listener;
+
+        final UIItemDialog.ItemInfo topItem, favItem, deleteItem, followItem, notSeeItem, reportItem;
+
+        String topItemString;
+        View.OnClickListener topItemClickListener;
+        if ("1".equalsIgnoreCase(tBean.getIs_top())) {
+            topItemString = ValleyApp.getApp().getString(R.string.cancel_top);
+            topItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //取消置顶
+                    subscription.add(RRetrofit.create(DiscussService.class)
+                            .top(Param.buildMap("discuss_id:" + tBean.getDiscuss_id(), "is_top:0"))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    try {
+                                        T_.show(bean);
+                                        tBean.setIs_top("0");
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                    } catch (Exception e) {
+                                    }
+                                }
+                            }));
+                }
+            };
+        } else {
+            topItemString = ValleyApp.getApp().getString(R.string.top);
+            topItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //置顶
+                    subscription.add(RRetrofit.create(DiscussService.class)
+                            .top(Param.buildMap("discuss_id:" + tBean.getDiscuss_id(), "is_top:1"))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    try {
+                                        T_.show(bean);
+                                        tBean.setIs_top("1");
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                    } catch (Exception e) {
+                                    }
+                                }
+                            }));
+                }
+            };
+        }
+        topItem = new UIItemDialog.ItemInfo(topItemString, topItemClickListener);
+
+        String favItemString;
+        View.OnClickListener favItemClickListener;
+        if (tBean.getIs_collection() == 1) {
+            favItemString = ValleyApp.getApp().getString(R.string.cancel_fav);
+            favItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subscription.add(RRetrofit.create(SocialService.class)
+                            .unCollect(Param.buildMap("type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+
+                                @Override
+                                public void onSucceed(String bean) {
+                                    try {
+                                        T_.show(bean);
+                                        tBean.setIs_collection(0);
+                                        tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                    } catch (Exception e) {
+
+                                    }
+                                }
+                            }));
+                }
+            };
+        } else {
+            favItemString = ValleyApp.getApp().getString(R.string.fav);
+            favItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subscription.add(RRetrofit.create(SocialService.class)
+                            .collect(Param.buildMap("type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+
+                                @Override
+                                public void onSucceed(String bean) {
+                                    try {
+                                        T_.show(bean);
+                                        tBean.setIs_collection(1);
+                                        tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                    } catch (Exception e) {
+
+                                    }
+                                }
+                            }));
+                }
+            };
+        }
+        favItem = new UIItemDialog.ItemInfo(favItemString, favItemClickListener);
+
+        deleteItem = new UIItemDialog.ItemInfo(ValleyApp.getApp().getString(R.string.delete_text), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscription.add(RRetrofit.create(DiscussService.class)
+                        .delete(Param.buildMap("discuss_id:" + tBean.getDiscuss_id()))
+                        .compose(Rx.transformer(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onSucceed(String bean) {
+                                try {
+                                    T_.show(bean);
+                                    commandAction.call(tBean);
+                                } catch (Exception e) {
+
+                                }
+                            }
+                        }));
+            }
+        });
+
+        String followItemString;
+        View.OnClickListener followItemClickListener;
+        if (tBean.getUser_info().getIs_contact() == 1) {
+            //是联系人
+            followItemString = ValleyApp.getApp().getString(R.string.cancel_friend);
+            followItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    subscription.add(RRetrofit.create(ContactService.class)
+                            .delFriend(Param.buildMap("to_uid:" + to_uid))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    super.onSucceed(bean);
+                                    try {
+                                        T_.show(bean);
+                                        commandAction.call(tBean);
+                                    } catch (Exception e) {
+
+                                    }
+                                }
+                            }));
+                }
+            };
+        } else {
+            if (tBean.getUser_info().getIs_attention() == 1) {
+                //非联系人, 但是已经关注
+                followItemString = ValleyApp.getApp().getString(R.string.cancel_followers);
+                followItemClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        subscription.add(RRetrofit.create(UserInfoService.class)
+                                .unAttention(Param.buildMap("to_uid:" + to_uid))
+                                .compose(Rx.transformer(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+
+                                    @Override
+                                    public void onSucceed(String bean) {
+                                        super.onSucceed(bean);
+                                        T_.show(bean);
+                                        if (commandAction != null) {
+                                            commandAction.call(tBean);
+                                        }
+                                    }
+                                }));
+                    }
+                };
+            } else {
+                followItemString = ValleyApp.getApp().getString(R.string.followers_title);
+                followItemClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        subscription.add(RRetrofit.create(UserInfoService.class)
+                                .attention(Param.buildMap("to_uid:" + to_uid))
+                                .compose(Rx.transformer(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+
+                                    @Override
+                                    public void onSucceed(String bean) {
+                                        T_.show(bean);
+                                        if (commandAction != null) {
+                                            commandAction.call(tBean);
+                                        }
+                                    }
+                                }));
+                    }
+                };
+            }
+        }
+
+        followItem = new UIItemDialog.ItemInfo(followItemString, followItemClickListener);
+
+        notSeeItem = new UIItemDialog.ItemInfo(ValleyApp.getApp().getString(R.string.not_see_status), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subscription.add(RRetrofit.create(SettingService.class)
+                        .personal(Param.buildMap("to_uid:" + to_uid, "key:1002", "val:0"))
+                        .compose(Rx.transformer(String.class))
+                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                            @Override
+                            public void onSucceed(String bean) {
+                                T_.show(bean);
+                                if (commandAction != null) {
+                                    commandAction.call(tBean);
+                                }
+                            }
+                        }));
+            }
+        });
+
+        reportItem = new UIItemDialog.ItemInfo(ValleyApp.getApp().getString(R.string.report), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iLayout.startIView(new ReportUIView());
+            }
+        });
+
+        if (TextUtils.equals(uid, to_uid)) {
+            //自己发布的动态
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    iLayout.startIView(UIItemDialog.build()
+                            .addItem(topItem)
+                            .addItem(favItem)
+                            .addItem(deleteItem));
+                }
+            };
+        } else {
+            //其他人发布的动态
+            listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    iLayout.startIView(UIItemDialog.build()
+                            .addItem(followItem)
+                            .addItem(favItem)
+                            .addItem(notSeeItem)
+                            .addItem(reportItem));
+                }
+            };
+        }
+
+
         commandItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (commandAction != null) {
-                    commandAction.call(tBean);
-                }
+                listener.onClick(v);
             }
         });
     }
@@ -434,7 +696,7 @@ public class UserDiscussItemControl {
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
-                            public void onNext(String bean) {
+                            public void onSucceed(String bean) {
                                 //T_.show(bean);
                             }
                         }));
@@ -489,7 +751,7 @@ public class UserDiscussItemControl {
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
-                            public void onNext(String bean) {
+                            public void onSucceed(String bean) {
                                 //T_.show(bean);
 //                                GoodView.build(itemTextView);
 //                                tBean.setIs_collection(1);
@@ -569,7 +831,7 @@ public class UserDiscussItemControl {
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
-                            public void onNext(String bean) {
+                            public void onSucceed(String bean) {
                                 //T_.show(bean);
 
                             }
@@ -631,7 +893,7 @@ public class UserDiscussItemControl {
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
-                            public void onNext(String bean) {
+                            public void onSucceed(String bean) {
                                 //T_.show(bean);
                             }
                         }));

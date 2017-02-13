@@ -1,8 +1,11 @@
 package com.angcyo.uiview.base;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -262,6 +265,30 @@ public abstract class UIBaseView extends UIIViewImpl {
 
     public void showNonetLayout(View.OnClickListener settingListener, View.OnClickListener refreshListener) {
         mNonetSettingClickListener = settingListener;
+        mNonetRefreshClickListener = refreshListener;
+        changeState(mLayoutState, LayoutState.NONET);
+    }
+
+    public void showNonetLayout(View.OnClickListener refreshListener) {
+        mNonetSettingClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = null;
+                // 判断手机系统的版本 即API大于10 就是3.0或以上版本及魅族手机
+                if (Build.VERSION.SDK_INT > 10 && !Build.MANUFACTURER.equals("Meizu")) {
+                    intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                } else if (Build.VERSION.SDK_INT > 17 && Build.MANUFACTURER.equals("Meizu")) {
+                    //魅族更高版本调转的方式与其它手机型号一致  可能之前的版本有些一样  所以另加条件(tsp)
+                    intent = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                } else {
+                    intent = new Intent();
+                    ComponentName component = new ComponentName("com.android.settings", "com.android.settings.WirelessSettings");
+                    intent.setComponent(component);
+                    intent.setAction("android.intent.action.VIEW");
+                }
+                mActivity.startActivity(intent);
+            }
+        };
         mNonetRefreshClickListener = refreshListener;
         changeState(mLayoutState, LayoutState.NONET);
     }

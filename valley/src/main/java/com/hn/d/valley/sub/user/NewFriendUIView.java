@@ -28,7 +28,7 @@ import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.CustomAttachment;
 import com.hn.d.valley.nim.CustomBean;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;

@@ -26,7 +26,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

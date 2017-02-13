@@ -15,8 +15,8 @@ import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView;
-import com.hn.d.valley.sub.user.service.ContactService;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.UserInfoService;
 
 /**
  * 我的关注
@@ -60,7 +60,7 @@ public class FollowersRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBe
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
                                         @Override
-                                        public void onNext(String bean) {
+                                        public void onSucceed(String bean) {
                                             T_.show(bean);
                                         }
                                     }));
@@ -81,9 +81,9 @@ public class FollowersRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBe
     @Override
     protected String getTitleString() {
         if (uid.equalsIgnoreCase(UserCache.getUserAccount())) {
-            return mActivity.getString(R.string.followers_titile);
+            return mActivity.getString(R.string.followers_title);
         } else {
-            return mActivity.getString(R.string.ta_followers_titile);
+            return mActivity.getString(R.string.ta_followers_title);
         }
     }
 

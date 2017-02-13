@@ -18,7 +18,7 @@ import com.hn.d.valley.base.Bean;
 public class BaseSubscriber<O extends Object, B extends Bean<O>> extends BaseSingleSubscriber<B> {
 
     @Override
-    public void onNext(B b) {
+    public void onSucceed(B b) {
         if (b.isSuccess()) {
             onSuccess(b);
         } else {

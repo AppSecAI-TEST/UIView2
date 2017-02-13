@@ -68,7 +68,7 @@ public class OssControl {
         OssHelper.uploadCircleImg(needUploadList.get(index))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
-                    public void onNext(String s) {
+                    public void onSucceed(String s) {
                         uploadList.add(OssHelper.getCircleUrl(s));
                         index++;
                         startUpload();

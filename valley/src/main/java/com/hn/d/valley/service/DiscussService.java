@@ -1,4 +1,4 @@
-package com.hn.d.valley.sub.user.service;
+package com.hn.d.valley.service;
 
 import java.util.Map;
 
@@ -62,5 +62,15 @@ public interface DiscussService {
      */
     @POST("discuss/delete")
     Observable<ResponseBody> delete(@QueryMap Map<String, String> map);
+
+    /**
+     * 动态置顶/取消置顶
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * discuss_id	是	int	动态id
+     * is_top	是	int	0-取消置顶 1-置顶
+     */
+    @POST("discuss/top")
+    Observable<ResponseBody> top(@QueryMap Map<String, String> map);
 
 }

@@ -16,8 +16,8 @@ import com.hn.d.valley.bean.UserListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.ChatUIView;
-import com.hn.d.valley.sub.user.service.ContactService;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.UserInfoService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 /**

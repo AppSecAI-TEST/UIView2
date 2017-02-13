@@ -12,7 +12,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
@@ -170,7 +170,7 @@ public class UserCache {
         }
         fetchUserInfo(to_uid).subscribe(new BaseSingleSubscriber<UserInfoBean>() {
             @Override
-            public void onNext(UserInfoBean userInfoBean) {
+            public void onSucceed(UserInfoBean userInfoBean) {
                 L.i("更新用户数据库信息:" + userInfoBean.getUid() + " " + userInfoBean.getUsername() + " 成功.");
                 RBus.post(userInfoBean);
 

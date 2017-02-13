@@ -19,7 +19,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.sub.user.service.DiscussService;
+import com.hn.d.valley.service.DiscussService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class TagsControl {
                 .compose(Rx.transformerList(Tag.class))
                 .subscribe(new BaseSingleSubscriber<List<Tag>>() {
                     @Override
-                    public void onNext(final List<Tag> tags) {
+                    public void onSucceed(final List<Tag> tags) {
                         if (tags.isEmpty()) {
                             return;
                         }

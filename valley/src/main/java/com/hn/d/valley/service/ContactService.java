@@ -1,4 +1,4 @@
-package com.hn.d.valley.sub.user.service;
+package com.hn.d.valley.service;
 
 import java.util.Map;
 
@@ -32,4 +32,13 @@ public interface ContactService {
      */
     @POST("contact/followers")
     Observable<ResponseBody> followers(@QueryMap Map<String, String> map);
+
+    /**
+     * -解除好友关联
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	string	被解除的人
+     */
+    @POST("contact/delFriend")
+    Observable<ResponseBody> delFriend(@QueryMap Map<String, String> map);
 }

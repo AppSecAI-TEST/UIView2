@@ -43,8 +43,8 @@ import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.main.other.AmapUIView;
-import com.hn.d.valley.sub.user.service.DiscussService;
-import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.service.DiscussService;
+import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.utils.RBus;
@@ -217,7 +217,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     .compose(Rx.transformer(String.class))
                     .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
-                        public void onNext(String s) {
+                        public void onSucceed(String s) {
                             T_.show(s);
                             finishIView();
                             RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
@@ -246,7 +246,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     .compose(Rx.transformer(String.class))
                     .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
-                        public void onNext(String s) {
+                        public void onSucceed(String s) {
                             T_.show(s);
                             finishIView();
                             RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
@@ -315,7 +315,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                 }
 
                 @Override
-                public void onNext(ArrayList<Luban.ImageItem> strings) {
+                public void onSucceed(ArrayList<Luban.ImageItem> strings) {
                     if (BuildConfig.DEBUG) {
                         Luban.logFileItems(mActivity, strings);
                     }

@@ -10,7 +10,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.CommentListBean;
-import com.hn.d.valley.sub.user.service.SocialService;
+import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnItemTextView;
 
 import rx.functions.Action1;
@@ -57,7 +57,7 @@ public class DynamicCommentControl {
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
-                            public void onNext(String bean) {
+                            public void onSucceed(String bean) {
                                 //T_.show(bean);
 
                             }
@@ -95,7 +95,7 @@ public class DynamicCommentControl {
                         .subscribe(new BaseSingleSubscriber<String>() {
 
                             @Override
-                            public void onNext(String bean) {
+                            public void onSucceed(String bean) {
                                 //T_.show(bean);
                             }
                         }));

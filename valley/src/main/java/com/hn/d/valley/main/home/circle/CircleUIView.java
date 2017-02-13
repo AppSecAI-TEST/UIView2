@@ -16,7 +16,7 @@ import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.sub.user.DynamicDetailUIView;
-import com.hn.d.valley.sub.user.service.UserInfoService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
@@ -76,7 +76,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
                     @Override
-                    public void onNext(UserDiscussListBean userDiscussListBean) {
+                    public void onSucceed(UserDiscussListBean userDiscussListBean) {
                         if (userDiscussListBean == null) {
                             onUILoadDataEnd(null, 0);
                         } else {
