@@ -612,7 +612,7 @@ public class UserDiscussItemControl {
         reportItem = new UIItemDialog.ItemInfo(ValleyApp.getApp().getString(R.string.report), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iLayout.startIView(new ReportUIView());
+                iLayout.startIView(new ReportUIView(tBean));
             }
         });
 

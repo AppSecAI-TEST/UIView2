@@ -125,4 +125,15 @@ public interface SocialService {
     @POST("social/getReportReason")
     Observable<ResponseBody> getReportReason(@QueryMap Map<String, String> map);
 
+    /**
+     * 举报
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	举报类型【discuss-动态 comment-评论 reply-回复】
+     * item_id	是	int	数据id【动态id/评论id/回复id】
+     * reason_id	是	int	举报原因id
+     */
+    @POST("social/report")
+    Observable<ResponseBody> report(@QueryMap Map<String, String> map);
+
 }

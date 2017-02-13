@@ -13,12 +13,15 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RCheckGroup;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.service.SocialService;
+import com.hn.d.valley.widget.HnLoading;
 
 import java.util.List;
 
@@ -40,6 +43,12 @@ public class ReportUIView extends BaseContentUIView {
 
     @BindView(R.id.content_layout)
     RCheckGroup mContentLayout;
+
+    UserDiscussListBean.DataListBean mDataBean;
+
+    public ReportUIView(UserDiscussListBean.DataListBean dataBean) {
+        mDataBean = dataBean;
+    }
 
     @NonNull
     @Override
@@ -99,6 +108,7 @@ public class ReportUIView extends BaseContentUIView {
                             public View getView(ViewGroup parent, int pos, Tag data) {
                                 final View inflate = mInflater.inflate(R.layout.item_report, parent, false);
                                 ((TextView) inflate.findViewById(R.id.text_view)).setText(data.getContent());
+                                inflate.setTag(data);
                                 return inflate;
                             }
                         });
@@ -111,6 +121,33 @@ public class ReportUIView extends BaseContentUIView {
      */
     @OnClick(R.id.submit_view)
     public void onSubmitClick() {
+        final View checkView = mContentLayout.getCheckView();
+        if (checkView == null) {
+            T_.show(mActivity.getString(R.string.no_selector_report_tip));
+        } else {
+            Tag tag = (Tag) checkView.getTag();
+            add(RRetrofit.create(SocialService.class)
+                    .report(Param.buildMap("type:discuss", "item_id:" + mDataBean.getDiscuss_id(), "reason_id:" + tag.getId()))
+                    .compose(Rx.transformer(String.class)).subscribe(new RSubscriber<String>() {
+                        @Override
+                        public void onStart() {
+                            super.onStart();
+                            HnLoading.show(mOtherILayout, false);
+                        }
 
+                        @Override
+                        public void onSucceed(String bean) {
+                            super.onSucceed(bean);
+                            T_.show(bean);
+                            finishIView();
+                        }
+
+                        @Override
+                        public void onEnd() {
+                            super.onEnd();
+                            HnLoading.hide();
+                        }
+                    }));
+        }
     }
 }
