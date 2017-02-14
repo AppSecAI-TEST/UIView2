@@ -201,6 +201,11 @@
         <item name="item_right_res">@drawable/next</item>
     </style>
 
+    <style name="DefaultItemInfoOffsetStyle" parent="DefaultItemInfoStyle">
+        <item name="android:layout_marginStart">@dimen/base_xhdpi_</item>
+        <item name="android:clickable">true</item>
+    </style>
+
     <!--用户名称样式-->
     <style name="NameTextStyle" parent="MainTextStyle">
         <item name="android:singleLine">true</item>

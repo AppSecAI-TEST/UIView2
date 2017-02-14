@@ -24,7 +24,11 @@ public class MainControl {
     }
 
     public static void onMainUnload() {
-        if (BuildConfig.DEBUG) {
+        onMainUnload(BuildConfig.DEBUG);
+    }
+
+    public static void onMainUnload(boolean quit) {
+        if (quit) {
             RNim.logout();
         }
     }

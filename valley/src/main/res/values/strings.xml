@@ -131,5 +131,17 @@
     <string name="open_network_setting">打开网络设置</string>
     <string name="retry_refresh">刷新试试</string>
     <string name="no_selector_report_tip">请选择举报理由!</string>
+    <string name="account_safe">帐号与安全</string>
+    <string name="message_notify">消息通知</string>
+    <string name="conceal">隐私</string>
+    <string name="currency">通用</string>
+    <string name="feedback">意见反馈</string>
+    <string name="faq">常见问题</string>
+    <string name="about_me">关于我们</string>
+    <string name="user_agreement">用户协议</string>
+    <string name="quit_login">退出登录</string>
+    <string name="settting">设置</string>
+    <string name="dialog_title_hint">提示</string>
+    <string name="quit_login_hint">是否退出登录</string>
 
 </resources>
