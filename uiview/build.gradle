@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion Integer.parseInt(rootProject.C_SDK)
+    compileSdkVersion rootProject.C_SDK as int
     buildToolsVersion rootProject.B_TOOLS
 
     defaultConfig {
