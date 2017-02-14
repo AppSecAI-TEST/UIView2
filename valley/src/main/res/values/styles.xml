@@ -180,6 +180,10 @@
         <item name="android:paddingRight">@dimen/base_ldpi</item>
     </style>
 
+    <style name="DarkTextButtonPaddingStyle" parent="DarkTextButtonStyle">
+        <item name="android:padding">@dimen/base_hdpi</item>
+    </style>
+
     <!--主要文本的样式-->
     <style name="MainTextStyle" parent="DarkTextStyle">
         <item name="android:textColor">@color/main_text_color</item>

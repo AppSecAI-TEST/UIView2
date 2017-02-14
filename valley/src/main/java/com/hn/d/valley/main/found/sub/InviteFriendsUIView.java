@@ -1,12 +1,10 @@
 package com.hn.d.valley.main.found.sub;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 
@@ -24,6 +22,7 @@ import com.hn.d.valley.base.BaseContentUIView;
 public class InviteFriendsUIView extends BaseContentUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        inflate(R.layout.view_invite_friends);
     }
 
     @Override
@@ -31,15 +30,8 @@ public class InviteFriendsUIView extends BaseContentUIView {
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.invite_friends)).setShowBackImageView(true);
     }
 
-    @NonNull
-    @Override
-    protected LayoutState getDefaultLayoutState() {
-        return LayoutState.LOAD;
-    }
-
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        T_.ok("正在开发中...");
     }
 }

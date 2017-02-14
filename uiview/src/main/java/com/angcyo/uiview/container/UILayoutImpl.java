@@ -185,6 +185,10 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
      */
     @Override
     protected boolean canTryCaptureView(View child) {
+        if (mLastShowViewPattern == null || mLastShowViewPattern.isAnimToStart) {
+            return false;
+        }
+
         if (mAttachViews.size() > 1
                 && !mLastShowViewPattern.mIView.isDialog()
                 && mLastShowViewPattern.mView == child) {

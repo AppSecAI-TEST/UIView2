@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 
@@ -40,6 +39,5 @@ public class ScanUIView extends BaseContentUIView {
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        T_.ok("正在开发中...");
     }
 }

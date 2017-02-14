@@ -1,12 +1,11 @@
 package com.hn.d.valley.main.found.sub;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 
@@ -24,6 +23,11 @@ import com.hn.d.valley.base.BaseContentUIView;
 public class SearchUIView extends BaseContentUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        ImageView imageView = new ImageView(mActivity);
+        imageView.setImageResource(R.drawable.default_page_3);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        baseContentLayout.addView(imageView, params);
     }
 
     @Override
@@ -31,15 +35,8 @@ public class SearchUIView extends BaseContentUIView {
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.search_title)).setShowBackImageView(true);
     }
 
-    @NonNull
-    @Override
-    protected LayoutState getDefaultLayoutState() {
-        return LayoutState.LOAD;
-    }
-
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        T_.ok("正在开发中...");
     }
 }
