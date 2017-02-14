@@ -479,4 +479,9 @@ public abstract class UIIViewImpl implements IView {
         mOtherILayout = otherILayout;
         return this;
     }
+
+    @Override
+    public boolean canTryCaptureView() {
+        return true;
+    }
 }

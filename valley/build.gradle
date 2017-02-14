@@ -101,4 +101,5 @@ dependencies {
     // 全文检索服务需要
     compile "com.netease.nimlib:lucene:${nim_ver}"
     compile project(':fragmentation')
+    compile project(':zxing')
 }

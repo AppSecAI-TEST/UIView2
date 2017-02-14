@@ -180,4 +180,9 @@ public interface IView {
      * 会在start iVew 之后, 最先执行
      */
     void onAttachedToILayout(ILayout iLayout);
+
+    /**
+     * 是否可以滑动关闭
+     */
+    boolean canTryCaptureView();//星期二 2017-2-14
 }
