@@ -21,6 +21,7 @@ import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseUIView;
@@ -310,6 +311,9 @@ public class MainUIView extends BaseUIView {
 
                 @Override
                 public void onSucceed(ArrayList<Luban.ImageItem> strings) {
+                    if (BuildConfig.DEBUG) {
+                        Luban.logFileItems(mActivity, strings);
+                    }
                     if (!strings.isEmpty()) {
                         HnLoading.hide();
                         startIView(new PublishDynamicUIView(strings));
