@@ -147,5 +147,9 @@
     <string name="id">ID</string>
     <string name="password">密码</string>
     <string name="login_safe">登录保护</string>
+    <string name="not_bind_phone">未绑定</string>
+    <string name="not_set">未设置</string>
+    <string name="not_open">未开启</string>
+    <string name="is_open">已开启</string>
 
 </resources>

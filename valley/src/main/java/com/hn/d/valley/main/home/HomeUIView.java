@@ -124,6 +124,8 @@ public class HomeUIView extends BaseUIView {
         tabs.add(new TabEntity(mActivity.getString(R.string.home_recommend), -1, -1, false, false, false));
         tabs.add(new TabEntity(mActivity.getString(R.string.home_nearby), -1, -1, false, false, false));
 
+        mHomeNavLayout.setTabData(tabs);
+
         mHomeNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
@@ -146,7 +148,6 @@ public class HomeUIView extends BaseUIView {
             }
         });
 
-        mHomeNavLayout.setTabData(tabs);
     }
 
     private void changeViewPager(int position) {

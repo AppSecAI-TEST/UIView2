@@ -8,10 +8,13 @@ import android.text.TextPaint;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnSplashActivity;
+import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.ArrayList;
@@ -28,13 +31,7 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-public class SettingUIView2 extends ItemRecyclerUIView<SettingUIView2.ViewItemInfo> {
-
-
-    @Override
-    public int getDefaultBackgroundColor() {
-        return mActivity.getResources().getColor(R.color.chat_bg_color);
-    }
+public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
     @Override
     protected void onBindDataView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -84,18 +81,20 @@ public class SettingUIView2 extends ItemRecyclerUIView<SettingUIView2.ViewItemIn
             @Override
             public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
                 if (position == 0 || position == 1 || position == 4) {
-                    paint.setColor(getDefaultBackgroundColor());
-                    offsetRect.set(itemView.getLeft(), itemView.getTop() - offsetRect.top, itemView.getRight(), itemView.getTop());
-                    canvas.drawRect(offsetRect, paint);
+//                    paint.setColor(getDefaultBackgroundColor());
+//                    offsetRect.set(itemView.getLeft(), itemView.getTop() - offsetRect.top, itemView.getRight(), itemView.getTop());
+//                    canvas.drawRect(offsetRect, paint);
                 } else if (position == itemCount - 1) {
 
                 } else {
                     paint.setColor(Color.WHITE);
-                    offsetRect.set(itemView.getLeft(), itemView.getTop() - offsetRect.top, itemView.getRight(), itemView.getTop());
-                    paint.setColor(mActivity.getResources().getColor(R.color.line_color));
-                    offsetRect.set(itemView.getLeft() + mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi),
-                            itemView.getTop() - offsetRect.top, itemView.getRight(), itemView.getTop());
+                    offsetRect.set(itemView.getLeft(), itemView.getTop() - offsetRect.top,
+                            itemView.getLeft() + mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi), itemView.getTop());
                     canvas.drawRect(offsetRect, paint);
+//                    paint.setColor(mActivity.getResources().getColor(R.color.line_color));
+//                    offsetRect.set(itemView.getLeft() + mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi),
+//                            itemView.getTop() - offsetRect.top, itemView.getRight(), itemView.getTop());
+//                    canvas.drawRect(offsetRect, paint);
                 }
             }
         }));
@@ -112,7 +111,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<SettingUIView2.ViewItemIn
         items.add(new ViewItemInfo(mActivity.getString(R.string.account_safe), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new AccountSafeUIView());
             }
         }));
 
@@ -163,22 +162,20 @@ public class SettingUIView2 extends ItemRecyclerUIView<SettingUIView2.ViewItemIn
         items.add(new ViewItemInfo(mActivity.getString(R.string.quit_login), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                UIDialog.build()
+                        .setDialogTitle(mActivity.getString(R.string.dialog_title_hint))
+                        .setDialogContent(mActivity.getString(R.string.quit_login_hint))
+                        .setOkListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                MainControl.onMainUnload(true);
+                                HnSplashActivity.launcher(mActivity, false);
+                                mActivity.finish();
+                            }
+                        })
+                        .showDialog(mOtherILayout);
             }
         }));
         return items;
-    }
-
-    public static class ViewItemInfo {
-        public String itemString;
-        public View.OnClickListener itemClickListener;
-
-        public ViewItemInfo() {
-        }
-
-        public ViewItemInfo(String itemString, View.OnClickListener itemClickListener) {
-            this.itemString = itemString;
-            this.itemClickListener = itemClickListener;
-        }
     }
 }

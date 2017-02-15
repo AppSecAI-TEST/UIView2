@@ -52,7 +52,7 @@ public class TagsControl {
 
     public static void getTags(final Action1<List<Tag>> listAction1) {
         RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
-        int size = results.size();
+        final int size = results.size();
         L.i("数据库中标签数量:" + size);
         if (size != 0 && listAction1 != null) {
             List<Tag> tags = new ArrayList<>();
@@ -90,6 +90,10 @@ public class TagsControl {
                                 }
                             }
                         });
+
+                        if (size == 0) {
+                            listAction1.call(tags);
+                        }
                     }
                 });
     }

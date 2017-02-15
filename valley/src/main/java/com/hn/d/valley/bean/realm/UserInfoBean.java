@@ -90,6 +90,20 @@ public class UserInfoBean extends RealmObject {
     private int is_set_password;
     private int is_login_protect;
     private RealmList<NewestDiscussPicBean> newest_discuss_pic;
+    /**
+     * look_fans : 1
+     * look_my_discuss : 1
+     * look_his_discuss : 1
+     * created : 1480930827
+     * voice_introduce :
+     */
+
+    private int look_fans;
+    private int look_my_discuss;
+    private int look_his_discuss;
+    private String created;
+    private String voice_introduce;
+    public String test;
 
     public int getIs_attention() {
         return is_attention;
@@ -377,5 +391,45 @@ public class UserInfoBean extends RealmObject {
 
     public void setNewest_discuss_pic(RealmList<NewestDiscussPicBean> newest_discuss_pic) {
         this.newest_discuss_pic = newest_discuss_pic;
+    }
+
+    public int getLook_fans() {
+        return look_fans;
+    }
+
+    public void setLook_fans(int look_fans) {
+        this.look_fans = look_fans;
+    }
+
+    public int getLook_my_discuss() {
+        return look_my_discuss;
+    }
+
+    public void setLook_my_discuss(int look_my_discuss) {
+        this.look_my_discuss = look_my_discuss;
+    }
+
+    public int getLook_his_discuss() {
+        return look_his_discuss;
+    }
+
+    public void setLook_his_discuss(int look_his_discuss) {
+        this.look_his_discuss = look_his_discuss;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getVoice_introduce() {
+        return voice_introduce;
+    }
+
+    public void setVoice_introduce(String voice_introduce) {
+        this.voice_introduce = voice_introduce;
     }
 }

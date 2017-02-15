@@ -11,6 +11,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.hn.d.valley.R;
 import com.hn.d.valley.widget.HnEmptyRefreshLayout;
 
 import java.util.List;
@@ -63,6 +64,11 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
     }
 
     @Override
+    public int getDefaultBackgroundColor() {
+        return mActivity.getResources().getColor(R.color.chat_bg_color);
+    }
+
+    @Override
     protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         mRefreshLayout = new HnEmptyRefreshLayout(mActivity);
         mRecyclerView = new RRecyclerView(mActivity);
@@ -103,4 +109,17 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
     }
 
     protected abstract List<T> createItems();
+
+    public static class ViewItemInfo {
+        public String itemString;
+        public View.OnClickListener itemClickListener;
+
+        public ViewItemInfo() {
+        }
+
+        public ViewItemInfo(String itemString, View.OnClickListener itemClickListener) {
+            this.itemString = itemString;
+            this.itemClickListener = itemClickListener;
+        }
+    }
 }

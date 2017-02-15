@@ -23,6 +23,7 @@ import butterknife.OnClick;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class SettingUIView extends BaseSubContentUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
