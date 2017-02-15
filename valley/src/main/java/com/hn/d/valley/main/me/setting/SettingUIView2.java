@@ -16,6 +16,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,25 +138,25 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         items.add(new ViewItemInfo(mActivity.getString(R.string.feedback), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new X5WebUIView("http://www.baidu.com"));
             }
         }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.faq), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new X5WebUIView("http://www.baidu.com"));
             }
         }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.about_me), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new X5WebUIView("http://www.baidu.com"));
             }
         }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.user_agreement), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new X5WebUIView("http://www.baidu.com"));
             }
         }));
 
