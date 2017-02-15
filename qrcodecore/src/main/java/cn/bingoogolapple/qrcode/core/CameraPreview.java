@@ -16,9 +16,25 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private boolean mAutoFocus = true;
     private boolean mSurfaceCreated = false;
     private CameraConfigurationManager mCameraConfigurationManager;
+    private Runnable doAutoFocus = new Runnable() {
+        public void run() {
+            if (mCamera != null && mPreviewing && mAutoFocus && mSurfaceCreated) {
+                try {
+                    mCamera.autoFocus(autoFocusCB);
+                } catch (Exception e) {
+                }
+            }
+        }
+    };
+    Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
+        public void onAutoFocus(boolean success, Camera camera) {
+            postDelayed(doAutoFocus, 1000);
+        }
+    };
 
     public CameraPreview(Context context) {
         super(context);
+        getHolder().addCallback(this);
     }
 
     public void setCamera(Camera camera) {
@@ -27,12 +43,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCameraConfigurationManager = new CameraConfigurationManager(getContext());
             mCameraConfigurationManager.initFromCameraParameters(mCamera);
 
-            getHolder().addCallback(this);
+            //getHolder().addCallback(this);
             if (mPreviewing) {
                 requestLayout();
-            } else {
-                showCameraPreview();
             }
+//            } else {
+            showCameraPreview();
+//            }
         }
     }
 
@@ -46,7 +63,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         if (surfaceHolder.getSurface() == null) {
             return;
         }
-        mSurfaceCreated = true;
+//        mSurfaceCreated = true;
         stopCameraPreview();
 
         post(new Runnable() {
@@ -128,26 +145,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
     }
 
-
     private boolean flashLightAvailable() {
         return mCamera != null && mPreviewing && mSurfaceCreated && getContext().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
-
-    private Runnable doAutoFocus = new Runnable() {
-        public void run() {
-            if (mCamera != null && mPreviewing && mAutoFocus && mSurfaceCreated) {
-                try {
-                    mCamera.autoFocus(autoFocusCB);
-                } catch (Exception e) {
-                }
-            }
-        }
-    };
-
-    Camera.AutoFocusCallback autoFocusCB = new Camera.AutoFocusCallback() {
-        public void onAutoFocus(boolean success, Camera camera) {
-            postDelayed(doAutoFocus, 1000);
-        }
-    };
 
 }

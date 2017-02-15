@@ -5,6 +5,7 @@
     <string name="fast_register"><a>快速注册</a></string>
     <string name="forget_password">忘记密码</string>
     <string name="phone_number">手机号:</string>
+    <string name="phone_number2">手机号</string>
     <string name="code_text_tip">验证码:</string>
     <string name="phone_number_hint">手机号码</string>
     <string name="password_hint">登录密码</string>
@@ -143,5 +144,8 @@
     <string name="settting">设置</string>
     <string name="dialog_title_hint">提示</string>
     <string name="quit_login_hint">是否退出登录</string>
+    <string name="id">ID</string>
+    <string name="password">密码</string>
+    <string name="login_safe">登录保护</string>
 
 </resources>

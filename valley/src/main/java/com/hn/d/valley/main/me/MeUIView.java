@@ -26,7 +26,7 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
-import com.hn.d.valley.main.me.setting.SettingUIView;
+import com.hn.d.valley.main.me.setting.SettingUIView2;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.utils.PhotoPager;
@@ -215,7 +215,8 @@ public class MeUIView extends BaseUIView {
             case R.id.person_auth_layout://名人认证
                 break;
             case R.id.setting_layout://设置
-                mOtherILayout.startIView(new SettingUIView());
+//                mOtherILayout.startIView(new SettingUIView());
+                mOtherILayout.startIView(new SettingUIView2());
                 break;
         }
     }

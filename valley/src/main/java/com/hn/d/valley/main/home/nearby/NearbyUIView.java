@@ -238,6 +238,12 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<NearUserInfo> {
     }
 
     @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        onShowInPager(null);
+    }
+
+    @Override
     protected boolean hasDecoration() {
         return false;
     }

@@ -136,19 +136,12 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
                         l = left + j * width + j * space;
                         t = top + i * height + i * space;
                         imageView.layout(l, t, l + width, t + height);
+
+                        if (mNineImageConfig != null) {
+                            mNineImageConfig.displayImage(imageView, mImagesList.get(i), imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
+                        }
                     }
                 }
-            }
-        }
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        if (mNineImageConfig != null) {
-            for (int i = 0; i < mImagesList.size(); i++) {
-                final ImageView imageView = mImageViews.get(i);
-                mNineImageConfig.displayImage(imageView, mImagesList.get(i), imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
             }
         }
     }

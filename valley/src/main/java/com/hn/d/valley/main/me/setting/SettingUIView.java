@@ -5,10 +5,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.dialog.UIDialog;
-import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
-import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.base.BaseSubContentUIView;
 import com.hn.d.valley.control.MainControl;
 
 import butterknife.OnClick;
@@ -24,15 +23,15 @@ import butterknife.OnClick;
  * 修改备注：
  * Version: 1.0.0
  */
-public class SettingUIView extends BaseContentUIView {
+public class SettingUIView extends BaseSubContentUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_setting);
     }
 
     @Override
-    protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString(mActivity.getString(R.string.settting)).setShowBackImageView(true);
+    protected String getTitle() {
+        return mActivity.getString(R.string.settting);
     }
 
     @OnClick({R.id.account_safe_layout, R.id.message_notify_layout, R.id.conceal_layout,

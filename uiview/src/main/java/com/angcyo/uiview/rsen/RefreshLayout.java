@@ -102,6 +102,11 @@ public class RefreshLayout extends ViewGroup {
 
     private long refreshTime = 0;
 
+    /**
+     * 是否需要通知事件, 如果为false, 那么只有滑动效果, 没有事件监听
+     */
+    private boolean mNotifyListener = true;
+
     private ArrayList<OnTopViewMoveListener> mTopViewMoveListeners = new ArrayList<>();
     private ArrayList<OnBottomViewMoveListener> mBottomViewMoveListeners = new ArrayList<>();
     private ArrayList<OnRefreshListener> mRefreshListeners = new ArrayList<>();
@@ -215,6 +220,9 @@ public class RefreshLayout extends ViewGroup {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (!isEnabled()) {
+            return super.onInterceptTouchEvent(event);
+        }
         int action = event.getActionMasked();
         if (action == MotionEvent.ACTION_DOWN) {
             downY = event.getY();
@@ -246,7 +254,6 @@ public class RefreshLayout extends ViewGroup {
                 }
             }
         }
-
         return super.onInterceptTouchEvent(event);
     }
 
@@ -282,6 +289,11 @@ public class RefreshLayout extends ViewGroup {
      * 释放手指之后的处理
      */
     private void handleTouchUp() {
+        if (!mNotifyListener) {
+            resetScroll();
+            return;
+        }
+
         int scrollY = getScrollY();
         int rawY = Math.abs(scrollY);
 
@@ -575,6 +587,10 @@ public class RefreshLayout extends ViewGroup {
         }
 
         return ViewCompat.canScrollVertically(view, direction);
+    }
+
+    public void setNotifyListener(boolean notifyListener) {
+        this.mNotifyListener = notifyListener;
     }
 
     /**

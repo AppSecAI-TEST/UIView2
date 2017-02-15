@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.home.circle;
 
+import android.os.Bundle;
 import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
@@ -103,6 +104,12 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                         });
                     }
                 }));
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        onShowInPager(null);
     }
 
     /**

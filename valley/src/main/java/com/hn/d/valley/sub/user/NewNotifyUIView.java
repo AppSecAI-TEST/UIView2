@@ -70,8 +70,8 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
     }
 
     @Override
-    protected RBaseItemDecoration getItemDecoration() {
-        RBaseItemDecoration itemDecoration = super.getItemDecoration();
+    protected RBaseItemDecoration initItemDecoration() {
+        RBaseItemDecoration itemDecoration = super.initItemDecoration();
         itemDecoration.setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
         return itemDecoration;
     }

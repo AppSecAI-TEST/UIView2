@@ -40,7 +40,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         implements RBaseAdapter.OnAdapterLoadMoreListener, RefreshLayout.OnRefreshListener {
 
     public static final int PAGE_SIZE = 20;//没次请求默认的数据条数
-    protected HnRefreshLayout mRefreshLayout;
+    protected RefreshLayout mRefreshLayout;
     protected RRecyclerView mRecyclerView;
     protected RExBaseAdapter<H, T, F> mRExBaseAdapter;
     protected int data_count;//服务返回的数据库中数据的条数,用来翻页
@@ -109,7 +109,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         }
 
         if (hasDecoration()) {
-            mRecyclerView.addItemDecoration(getItemDecoration());
+            mRecyclerView.addItemDecoration(initItemDecoration());
         }
         mRecyclerView.setItemAnim(false);
         mRecyclerView.setAdapter(mRExBaseAdapter);
@@ -129,7 +129,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     /**
      * 创建分割线
      */
-    protected RBaseItemDecoration getItemDecoration() {
+    protected RBaseItemDecoration initItemDecoration() {
         return new RBaseItemDecoration(getItemDecorationHeight())
                 .setDrawLastLine(hasLastDecoration());
     }
@@ -228,7 +228,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     /**
      * 重写此方法, 获取自定义布局中的RefreshLayout
      */
-    public HnRefreshLayout getRefreshLayout() {
+    public RefreshLayout getRefreshLayout() {
         return mRefreshLayout;
     }
 
