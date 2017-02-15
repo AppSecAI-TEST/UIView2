@@ -39,6 +39,7 @@ import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnLoading;
+import com.hn.d.valley.x5.X5WebUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImagePickerHelper;
@@ -311,7 +312,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         //HnUIMainActivity.launcher(mActivity);
         //com.hn.d.valley.main.HnMainActivity.launcher(mActivity);
         //HnTestActivity.launcher(mActivity);
-        T_.show("测试");
+        //T_.show("测试");
+        mActivity.getWindow().setBackgroundDrawableResource(R.drawable.default_page);
+        startIView(new X5WebUIView("http://www.baidu.com"));
     }
 
     /**

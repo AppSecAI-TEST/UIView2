@@ -16,6 +16,7 @@ import com.lzy.imagepicker.ImagePickerHelper;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.smtt.sdk.QbSdk;
 
 import cn.jpush.android.api.JPushInterface;
 import rx.functions.Action1;
@@ -104,5 +105,8 @@ public class ValleyApp extends RApplication {
         ImagePickerHelper.init();
 
         StorageUtil.init(this, null);
+
+        //腾讯TBS X5内核浏览器初始化
+        QbSdk.initX5Environment(getApplicationContext(), null);
     }
 }
