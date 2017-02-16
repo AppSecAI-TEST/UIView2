@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/base_xhdpi">
+
+    <TextView
+        android:id="@+id/tip_text_view"
+        style="@style/DarkTextStyle"
+        android:layout_marginStart="@dimen/base_hdpi"/>
+
+    <com.angcyo.uiview.widget.ExEditText
+        android:id="@+id/edit_text_view"
+        style="@style/VerityEditStyle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/base_main_color_border_selector"
+        android:drawablePadding="@dimen/base_80dpi"
+        android:imeOptions="actionDone"
+        android:paddingStart="@dimen/base_80dpi"
+        android:textColor="@color/main_text_color"
+        android:textColorHint="@color/main_text_color_dark"/>
+
+</RelativeLayout>

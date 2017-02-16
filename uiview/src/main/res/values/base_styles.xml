@@ -172,7 +172,7 @@
     <!--手机输入框的样式-->
     <style name="BasePhoneEditStyle" parent="BaseEditStyle">
         <item name="android:inputType">number</item>
-        <item name="android:maxLength">11</item>
+        <item name="android:maxLength">@integer/phone_number_count</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
 

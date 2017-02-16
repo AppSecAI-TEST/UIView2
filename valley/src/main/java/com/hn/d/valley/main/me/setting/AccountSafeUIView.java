@@ -14,7 +14,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -87,19 +86,17 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     }
 
     @Override
-    protected List<ItemRecyclerUIView.ViewItemInfo> createItems() {
-        List<ViewItemInfo> items = new ArrayList<>();
+    protected void createItems(List<ViewItemInfo> items) {
         items.add(new ViewItemInfo(mActivity.getString(R.string.id), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
         }));
-
         items.add(new ViewItemInfo(mActivity.getString(R.string.phone_number2), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new BindPhoneUIView());
             }
         }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.password), new View.OnClickListener() {
@@ -114,6 +111,5 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
             }
         }));
-        return items;
     }
 }

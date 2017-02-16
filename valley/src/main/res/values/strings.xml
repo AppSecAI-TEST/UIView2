@@ -5,6 +5,7 @@
     <string name="fast_register"><a>快速注册</a></string>
     <string name="forget_password">忘记密码</string>
     <string name="phone_number">手机号:</string>
+    <string name="new_phone_number_tip">新手机号:</string>
     <string name="phone_number2">手机号</string>
     <string name="code_text_tip">验证码:</string>
     <string name="phone_number_hint">手机号码</string>
@@ -70,6 +71,7 @@
     <string name="default_empty_no_status_tip">亲~没有动态可以查看!</string>
     <string name="code_error_tip">请输入正确的验证码!</string>
     <string name="code_send_tip">验证码已发送, 请注意查收.</string>
+    <string name="voice_code_send_tip">请注意接听语音验证码.</string>
     <string name="publish_image_empty_tip">至少需要发布一张图片.</string>
     <string name="school">校园</string>
     <string name="add_tag">添加标签</string>
@@ -151,5 +153,8 @@
     <string name="not_set">未设置</string>
     <string name="not_open">未开启</string>
     <string name="is_open">已开启</string>
+    <string name="bind_phone">绑定手机号</string>
+    <string name="voice_code">语音验证码</string>
+    <string name="voice_code_tip">收不到短信?使用</string>
 
 </resources>

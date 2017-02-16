@@ -62,11 +62,7 @@ public class ExEditText extends AppCompatEditText {
             String tagString = String.valueOf(tag);
             if (tagString.contains("emoji")) {
                 //激活emoji表情过滤
-                final InputFilter[] filters = getFilters();
-                final InputFilter[] newFilters = new InputFilter[filters.length + 1];
-                System.arraycopy(filters, 0, newFilters, 0, filters.length);
-                newFilters[filters.length] = new EmojiFilter();
-                setFilters(newFilters);
+                addFilter(new EmojiFilter());
             }
 
             if (tagString.contains("password")) {
@@ -88,6 +84,14 @@ public class ExEditText extends AppCompatEditText {
                     R.drawable.base_edit_delete_selector,
                     getContext().getTheme());
         }
+    }
+
+    private void addFilter(InputFilter filter) {
+        final InputFilter[] filters = getFilters();
+        final InputFilter[] newFilters = new InputFilter[filters.length + 1];
+        System.arraycopy(filters, 0, newFilters, 0, filters.length);
+        newFilters[filters.length] = filter;
+        setFilters(newFilters);
     }
 
     @Override
@@ -282,5 +286,27 @@ public class ExEditText extends AppCompatEditText {
 
     public String string() {
         return getText().toString().trim();
+    }
+
+    public boolean isEmpty() {
+        return TextUtils.isEmpty(string());
+    }
+
+    public void setMaxLength(int length) {
+        InputFilter[] filters = getFilters();
+        boolean have = false;
+        InputFilter.LengthFilter lengthFilter = new InputFilter.LengthFilter(length);
+        for (int i = 0; i < filters.length; i++) {
+            InputFilter filter = filters[i];
+            if (filter instanceof InputFilter.LengthFilter) {
+                have = true;
+                filters[i] = lengthFilter;
+                setFilters(filters);
+                break;
+            }
+        }
+        if (!have) {
+            addFilter(lengthFilter);
+        }
     }
 }

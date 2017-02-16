@@ -18,7 +18,6 @@ import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.x5.X5WebUIView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,7 +54,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     @Override
     protected int getItemLayoutId(int viewType) {
         if (viewType == 2) {
-            return R.layout.item_quit_login;
+            return R.layout.item_button_view;
         } else {
             return R.layout.item_text_info;
         }
@@ -102,13 +101,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     @Override
-    protected String getTitleString() {
-        return mActivity.getString(R.string.settting);
-    }
-
-    @Override
-    protected List<ViewItemInfo> createItems() {
-        List<ViewItemInfo> items = new ArrayList<>();
+    protected void createItems(List<ViewItemInfo> items) {
         items.add(new ViewItemInfo(mActivity.getString(R.string.account_safe), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,6 +170,11 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         .showDialog(mOtherILayout);
             }
         }));
-        return items;
     }
+
+    @Override
+    protected String getTitleString() {
+        return mActivity.getString(R.string.settting);
+    }
+
 }

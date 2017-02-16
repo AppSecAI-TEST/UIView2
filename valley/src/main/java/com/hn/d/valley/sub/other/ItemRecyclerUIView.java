@@ -14,6 +14,7 @@ import com.angcyo.uiview.rsen.RefreshLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.widget.HnEmptyRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,9 +30,13 @@ import java.util.List;
  */
 public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
 
+    List<T> mItemsList;
+
     @Override
     protected RExBaseAdapter<String, T, String> initRExBaseAdapter() {
-        return new RExBaseAdapter<String, T, String>(mActivity, createItems()) {
+        mItemsList = new ArrayList<>();
+        createItems(mItemsList);
+        return new RExBaseAdapter<String, T, String>(mActivity, mItemsList) {
 
             @Override
             protected int getDataItemType(int posInData) {
@@ -51,7 +56,7 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
     }
 
     protected int getDataItemType(int posInData) {
-        return 1;
+        return posInData;
     }
 
     protected abstract void onBindDataView(RBaseViewHolder holder, int posInData, T dataBean);
@@ -60,7 +65,7 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar();
+        return super.getTitleBar().setShowBackImageView(true);
     }
 
     @Override
@@ -108,7 +113,7 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH);
     }
 
-    protected abstract List<T> createItems();
+    protected abstract void createItems(List<T> items);
 
     public static class ViewItemInfo {
         public String itemString;

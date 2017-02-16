@@ -104,4 +104,15 @@ public interface UserInfoService {
      */
     @POST("user/nearUser")
     Observable<ResponseBody> nearUser(@QueryMap Map<String, String> map);
+
+    /**
+     * 绑定/修改手机号
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * phone	是	string	手机号
+     * code	是	string	手机验证码
+     * is_bind	是	int	是否绑定手机【0/1】，如果不是则为修改手机
+     */
+    @POST("user/bindPhone")
+    Observable<ResponseBody> bindPhone(@QueryMap Map<String, String> map);
 }
