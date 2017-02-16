@@ -4,10 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.hn.d.valley.x5.X5WebView
-        android:id="@+id/web_view"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#2C3031"
+        android:gravity="center_horizontal"
+        android:paddingTop="80dp"
+        android:text="恐龙谷团队提供技术支持\n来自腾讯TBS X5内核"
+        android:textColor="#707475"
+        android:textSize="@dimen/default_text_size16"/>
+
+    <com.angcyo.uiview.rsen.EmptyRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.hn.d.valley.x5.X5WebView
+            android:id="@+id/web_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.angcyo.uiview.rsen.EmptyRefreshLayout>
 
     <com.angcyo.uiview.widget.SimpleProgressBar
         android:id="@+id/progress_bar_view"

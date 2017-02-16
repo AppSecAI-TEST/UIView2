@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.SimpleProgressBar;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -53,6 +54,8 @@ public class X5WebUIView extends BaseContentUIView {
         inflate(R.layout.view_x5_web);
         mWebView = mViewHolder.v(R.id.web_view);
         mProgressBarView = mViewHolder.v(R.id.progress_bar_view);
+        RefreshLayout refreshLayout = mViewHolder.v(R.id.refresh_layout);
+        refreshLayout.setRefreshDirection(RefreshLayout.TOP);
 
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
