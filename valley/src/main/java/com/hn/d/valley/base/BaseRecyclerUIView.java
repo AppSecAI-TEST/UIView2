@@ -188,7 +188,6 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setFloating(true)
-                .setTitleString(getTitleString())
                 .setTitleHide(true)
                 .setShowBackImageView(true)
                 .setTitleBarBGColor(Color.TRANSPARENT);
@@ -242,6 +241,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
 
     protected String getTitleString() {
         return "";
+    }
+
+    protected int getTitleResource() {
+        return View.NO_ID;
     }
 
     /**

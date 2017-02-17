@@ -196,12 +196,26 @@ public abstract class UIBaseView extends UIIViewImpl {
     }
 
     protected TitleBarPattern getTitleBar() {
-        return TitleBarPattern.build(getTitle())
+        return TitleBarPattern.build(getTitleResource() == View.NO_ID ?
+                getTitleString() : mActivity.getResources().getString(getTitleResource()))
                 .setTitleBarBGColor(mActivity.getResources().getColor(R.color.theme_color_primary));
     }
 
-    protected String getTitle() {
+    protected String getTitleString() {
         return mActivity.getTitle().toString();
+    }
+
+    /**
+     * 设置标题文本
+     */
+    public void setTitleString(String title) {
+        if (mUITitleBarContainer != null) {
+            mUITitleBarContainer.getTitleView().setText(title);
+        }
+    }
+
+    protected int getTitleResource() {
+        return View.NO_ID;
     }
 
     /**
@@ -317,12 +331,12 @@ public abstract class UIBaseView extends UIIViewImpl {
         return rotateAnimation;
     }
 
+
+    //-----------------以下私有方法------------------//
+
     protected void fixInsertsTop() {
         mBaseRootLayout.fixInsertsTop();
     }
-
-
-    //-----------------以下私有方法------------------//
 
     private void safeSetView(View view) {
         if (view != null) {
@@ -409,15 +423,6 @@ public abstract class UIBaseView extends UIIViewImpl {
             mUITitleBarContainer.hideLoadView();
         }
         return this;
-    }
-
-    /**
-     * 设置标题文本
-     */
-    public void setTitleString(String title) {
-        if (mUITitleBarContainer != null) {
-            mUITitleBarContainer.getTitleView().setText(title);
-        }
     }
 
     /**

@@ -16,6 +16,6 @@ import com.angcyo.uiview.model.TitleBarPattern;
 public abstract class BaseSubContentUIView extends BaseContentUIView {
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString(getTitle()).setShowBackImageView(true);
+        return super.getTitleBar().setTitleString(getTitleString()).setShowBackImageView(true);
     }
 }

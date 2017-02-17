@@ -666,7 +666,7 @@ public class Luban {
         bitmap.recycle();
 
         try {
-            filePath += "width_" + width + "pictureheight_" + height;
+            filePath += "_s_" + width + "x" + height;
             FileOutputStream fos = new FileOutputStream(filePath);
             fos.write(stream.toByteArray());
             fos.flush();

@@ -181,4 +181,19 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
         }
     }
+
+    public static abstract class ItemOffsetCallback extends ItemCallback {
+
+        int topOffset;
+
+        public ItemOffsetCallback(int topOffset) {
+            this.topOffset = topOffset;
+        }
+
+        @Override
+        public void setItemOffsets(Rect rect) {
+            super.setItemOffsets(rect);
+            rect.top = topOffset;
+        }
+    }
 }

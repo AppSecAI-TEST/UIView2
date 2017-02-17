@@ -118,13 +118,13 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         items.add(new ViewItemInfo(mActivity.getString(R.string.conceal), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new ConcealUIView());
             }
         }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.currency), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new CurrencyUIView());
             }
         }));
 

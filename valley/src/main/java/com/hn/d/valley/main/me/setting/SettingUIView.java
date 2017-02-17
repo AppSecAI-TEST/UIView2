@@ -31,7 +31,7 @@ public class SettingUIView extends BaseSubContentUIView {
     }
 
     @Override
-    protected String getTitle() {
+    protected String getTitleString() {
         return mActivity.getString(R.string.settting);
     }
 

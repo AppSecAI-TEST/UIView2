@@ -11,9 +11,9 @@ import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.angcyo.uiview.net.TransformUtils;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.cache.UserCache;
 
 import java.io.File;
-import java.util.UUID;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -110,12 +110,14 @@ public class OssHelper {
             return new int[]{0, 0};
         }
 //        width_640.0pictureheight_1136.0
-        final String[] pictureheight_s = url.split("pictureheight_");
+        final String[] pictureheight_s = url.split("_s_");
         float height = 0, width = 0;
         if (pictureheight_s.length >= 2) {
-            height = Float.valueOf(pictureheight_s[pictureheight_s.length - 1]);
-            final String[] width_s = pictureheight_s[pictureheight_s.length - 2].split("width_");
-            width = Float.valueOf(width_s[width_s.length - 1]);
+            final String[] size = pictureheight_s[pictureheight_s.length - 2].split("x");
+            if (size.length >= 2) {
+                width = Float.valueOf(size[0]);
+                height = Float.valueOf(size[1]);
+            }
         }
         return new int[]{(int) width, (int) height};
     }
@@ -171,7 +173,8 @@ public class OssHelper {
             if (subscriber.isUnsubscribed()) {
                 return;
             }
-            String uuid = UUID.randomUUID().toString();
+//            String uuid = UUID.randomUUID().toString();
+            String uuid = UserCache.getUserAccount() + uploadFilePath.substring(uploadFilePath.lastIndexOf('/'));
             // 构造上传请求
             PutObjectRequest put = new PutObjectRequest(bucket, uuid, uploadFilePath);
             try {
