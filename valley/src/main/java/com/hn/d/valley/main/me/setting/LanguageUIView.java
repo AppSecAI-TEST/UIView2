@@ -44,24 +44,25 @@ public class LanguageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().addRightItem(TitleBarPattern.TitleBarItem
-                .build(mActivity.getResources().getString(R.string.save), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int lang;
-                        if (mCheckBoxEn.isChecked()) {
-                            lang = 3;
-                        } else {
-                            lang = 1;
-                        }
+                .build(mActivity.getResources().getString(R.string.save),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int lang;
+                                if (mCheckBoxEn.isChecked()) {
+                                    lang = 3;
+                                } else {
+                                    lang = 1;
+                                }
 
-                        if (old == lang) {
-                            finishIView();
-                        } else {
-                            Param.changeLang(lang);
-                            mActivity.recreate();
-                        }
-                    }
-                }));
+                                if (old == lang) {
+                                    finishIView();
+                                } else {
+                                    Param.changeLang(lang);
+                                    mActivity.recreate();
+                                }
+                            }
+                        }).setVisibility(View.GONE));
     }
 
     @Override

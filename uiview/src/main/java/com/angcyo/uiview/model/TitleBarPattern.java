@@ -170,6 +170,8 @@ public class TitleBarPattern {
 
         public View.OnClickListener listener;
 
+        public int visibility = View.VISIBLE;
+
         private TitleBarItem() {
 
         }
@@ -203,6 +205,11 @@ public class TitleBarPattern {
 
         public TitleBarItem setRes(int res) {
             this.res = res;
+            return this;
+        }
+
+        public TitleBarItem setVisibility(int visibility) {
+            this.visibility = visibility;
             return this;
         }
 

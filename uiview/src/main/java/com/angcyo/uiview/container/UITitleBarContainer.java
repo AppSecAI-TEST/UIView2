@@ -306,6 +306,7 @@ public class UITitleBarContainer extends FrameLayout {
                 //创建图片按钮
                 view = createImageItem(item.res, item.listener);
             }
+            view.setVisibility(item.visibility);
             view.setMinimumWidth(itemSize);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -1);
             view.setTag(i);//方便之后查找这个view
