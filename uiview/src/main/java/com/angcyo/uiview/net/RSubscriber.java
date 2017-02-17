@@ -78,7 +78,12 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
 
         e.printStackTrace();
 
+        L.d("订阅异常->" + this.getClass().getSimpleName() + " " + errorCode);
         onError(errorCode, errorMsg);
+        if (errorCode == RSubscriber.NO_NETWORK) {
+            onNoNetwork();
+        }
+        onEnd();
         if (L.LOG_DEBUG) {
             T_.error("[" + errorCode + "]" + errorMsg);
         }
@@ -89,11 +94,7 @@ public abstract class RSubscriber<T> extends Subscriber<T> {
      * 统一错误处理
      */
     public void onError(int code, String msg) {
-        L.d("订阅异常->" + this.getClass().getSimpleName() + " " + msg);
-        if (code == RSubscriber.NO_NETWORK) {
-            onNoNetwork();
-        }
-        onEnd();
+
     }
 
     /**

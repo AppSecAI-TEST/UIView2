@@ -116,6 +116,7 @@ public abstract class SwipeBackLayout extends FrameLayout {
             switch (state) {
                 case ViewDragHelper.STATE_IDLE:
                     //滚动结束
+                    onStateIdle();
                     if (mTargetView.getLeft() == 0) {
                         // State Open
                         onRequestOpened();
@@ -305,6 +306,13 @@ public abstract class SwipeBackLayout extends FrameLayout {
      * 开始拖拽的时候回调
      */
     protected void onStateDragging() {
+
+    }
+
+    /**
+     * 结束拖拽的时候回调
+     */
+    protected void onStateIdle() {
 
     }
 

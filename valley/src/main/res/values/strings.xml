@@ -156,5 +156,19 @@
     <string name="bind_phone">绑定手机号</string>
     <string name="voice_code">语音验证码</string>
     <string name="voice_code_tip">收不到短信?使用</string>
+    <string name="set_password_title">设置密码</string>
+    <string name="modify_password_title">修改密码</string>
+    <string name="modify">修改</string>
+    <string name="modify_password_error_tip">两次输入的密码不相同.</string>
+    <string name="old_password_tip">旧密码:</string>
+    <string name="old_password_hint">请输入旧密码</string>
+    <string name="new_password_tip">新密码:</string>
+    <string name="new_password_hint">新密码,必须包含数字和字母,6-12位</string>
+    <string name="confirm_password_tip">确认新密码:</string>
+    <string name="confirm_password_hint">再次输入新密码</string>
+    <string name="password_tip">密码:</string>
+    <string name="password_hint2">请输入6-16位字母或数字组成</string>
+    <string name="confirm_password_tip2">确认密码:</string>
+    <string name="confirm_password_hint2">再次输入密码</string>
 
 </resources>

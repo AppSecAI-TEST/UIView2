@@ -38,7 +38,11 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     protected void onBindDataView(RBaseViewHolder holder, int posInData, ItemRecyclerUIView.ViewItemInfo dataBean) {
         ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
         infoLayout.setItemText(dataBean.itemString);
-        infoLayout.setOnClickListener(dataBean.itemClickListener);
+        if (dataBean.itemClickListener == null) {
+            infoLayout.setClickable(false);
+        } else {
+            infoLayout.setOnClickListener(dataBean.itemClickListener);
+        }
         if (posInData == 0) {
             infoLayout.setItemDarkText(UserCache.getUserAccount());
         } else if (posInData == 1) {
@@ -51,8 +55,20 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         } else if (posInData == 2) {
             if (UserCache.instance().getUserInfoBean().getIs_set_password() == 1) {
                 infoLayout.setItemDarkText("");
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new SetPasswordUIView(true));
+                    }
+                });
             } else {
                 infoLayout.setItemDarkText(mActivity.getString(R.string.not_set));
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new SetPasswordUIView(false));
+                    }
+                });
             }
         } else if (posInData == 3) {
             if (UserCache.instance().getUserInfoBean().getIs_login_protect() == 1) {
@@ -87,24 +103,14 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
     @Override
     protected void createItems(List<ViewItemInfo> items) {
-        items.add(new ViewItemInfo(mActivity.getString(R.string.id), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        }));
+        items.add(new ViewItemInfo(mActivity.getString(R.string.id), null));
         items.add(new ViewItemInfo(mActivity.getString(R.string.phone_number2), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startIView(new BindPhoneUIView());
             }
         }));
-        items.add(new ViewItemInfo(mActivity.getString(R.string.password), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        }));
+        items.add(new ViewItemInfo(mActivity.getString(R.string.password), null));
         items.add(new ViewItemInfo(mActivity.getString(R.string.login_safe), new View.OnClickListener() {
             @Override
             public void onClick(View v) {

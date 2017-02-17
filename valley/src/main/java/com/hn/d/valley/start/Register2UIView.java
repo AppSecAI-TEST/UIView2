@@ -179,7 +179,6 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
 
                         @Override
                         public void onError(int code, String msg) {
-                            super.onError(code, msg);
                             T_.show(mActivity.getString(R.string.register_fial_tip) + code);
                         }
                     })

@@ -115,4 +115,14 @@ public interface UserInfoService {
      */
     @POST("user/bindPhone")
     Observable<ResponseBody> bindPhone(@QueryMap Map<String, String> map);
+
+    /**
+     * 修改密码
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * old_pwd	否	string	旧密码【rsa加密】【修改密码需要传】
+     * pwd	是	string	新密码【rsa加密】
+     */
+    @POST("user/resetPassword")
+    Observable<ResponseBody> resetPassword(@QueryMap Map<String, String> map);
 }

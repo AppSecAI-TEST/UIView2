@@ -134,6 +134,10 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     private boolean isSwipeDrag = false;
 
     /**
+     * 是否需要滑动返回, 如果正在滑动返回,则阻止onLayout的进行
+     */
+    private boolean isWantSwipeBack = false;
+    /**
      * 需要中断IView启动的的列表
      */
     private Set<IView> interruptSet;
@@ -1355,6 +1359,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        if (isWantSwipeBack) {
+            return;
+        }
         super.onLayout(changed, left, top, right, bottom);
     }
 
@@ -1550,8 +1557,15 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     }
 
     @Override
+    protected void onStateIdle() {
+        super.onStateIdle();
+        isWantSwipeBack = false;
+    }
+
+    @Override
     protected void onStateDragging() {
         super.onStateDragging();
+        isWantSwipeBack = true;
         isSwipeDrag = true;
 
         //开始偏移时, 偏移的距离

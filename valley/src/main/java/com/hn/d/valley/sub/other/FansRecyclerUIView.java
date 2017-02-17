@@ -91,7 +91,6 @@ public class FansRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
                                     .subscribe(new BaseSingleSubscriber<String>() {
                                         @Override
                                         public void onError(int code, String msg) {
-                                            super.onError(code, msg);
                                             T_.error(msg);
                                         }
                                     }));

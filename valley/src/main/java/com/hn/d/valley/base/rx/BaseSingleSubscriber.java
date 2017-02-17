@@ -1,6 +1,7 @@
 package com.hn.d.valley.base.rx;
 
 import com.angcyo.uiview.net.RSubscriber;
+import com.angcyo.uiview.utils.T_;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -15,5 +16,9 @@ import com.angcyo.uiview.net.RSubscriber;
  */
 public abstract class BaseSingleSubscriber<T> extends RSubscriber<T> {
 
-
+    @Override
+    public void onError(int code, String msg) {
+        super.onError(code, msg);
+        T_.show(msg);
+    }
 }
