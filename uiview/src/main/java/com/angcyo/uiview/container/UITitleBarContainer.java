@@ -379,6 +379,18 @@ public class UITitleBarContainer extends FrameLayout {
         return mTitleBarPattern;
     }
 
+    public ViewGroup getCenterControlLayout() {
+        return mCenterControlLayout;
+    }
+
+    public LinearLayout getLeftControlLayout() {
+        return mLeftControlLayout;
+    }
+
+    public LinearLayout getRightControlLayout() {
+        return mRightControlLayout;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mTitleBarPattern == null) {

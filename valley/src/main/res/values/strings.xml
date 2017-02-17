@@ -82,6 +82,7 @@
     <string name="share_gps">公开地理位置</string>
     <string name="add_tags_text">添加标签</string>
     <string name="ok">确定</string>
+    <string name="save">保存</string>
     <string name="tag_empty_tip">至少需要一个标签!</string>
     <string name="fetch_tag_failed">标签获取失败!</string>
     <string name="known">知道了</string>
@@ -173,5 +174,8 @@
     <string name="confirm_password_hint2">再次输入密码</string>
     <string name="login_protect_title">登录保护</string>
     <string name="open_login_protect_tip">开启后, 再其他设备上登录需要短信验证码</string>
+    <string name="language">多语言</string>
+    <string name="zh">简体中文</string>
+    <string name="en">English</string>
 
 </resources>

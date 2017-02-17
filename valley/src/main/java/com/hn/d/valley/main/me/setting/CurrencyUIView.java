@@ -53,8 +53,15 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 SwitchCompat switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setVisibility(View.GONE);
 
-                itemInfoLayout.setItemText("多语言");
+                itemInfoLayout.setItemText(mActivity.getString(R.string.language));
                 itemInfoLayout.setRightDrawableRes(R.drawable.ic_right);
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new LanguageUIView());
+                    }
+                });
             }
         }));
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {

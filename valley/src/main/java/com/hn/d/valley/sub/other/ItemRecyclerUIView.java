@@ -1,6 +1,7 @@
 package com.hn.d.valley.sub.other;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -194,6 +195,31 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         public void setItemOffsets(Rect rect) {
             super.setItemOffsets(rect);
             rect.top = topOffset;
+        }
+    }
+
+    public static abstract class ItemLineCallback extends ItemCallback {
+
+        int leftOffset;
+        int lineOffset;
+
+        public ItemLineCallback(int leftOffset, int lineOffset) {
+            this.leftOffset = leftOffset;
+            this.lineOffset = lineOffset;
+        }
+
+        @Override
+        public void setItemOffsets(Rect rect) {
+            super.setItemOffsets(rect);
+            rect.top = lineOffset;
+        }
+
+        @Override
+        public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+            paint.setColor(Color.WHITE);
+            offsetRect.set(itemView.getLeft(), itemView.getTop() - offsetRect.top,
+                    itemView.getLeft() + leftOffset, itemView.getTop());
+            canvas.drawRect(offsetRect, paint);
         }
     }
 }
