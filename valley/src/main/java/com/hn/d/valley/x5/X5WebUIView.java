@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -34,6 +35,7 @@ public class X5WebUIView extends BaseContentUIView {
     X5WebView mWebView;
     SimpleProgressBar mProgressBarView;
     EmptyView mEmptyView;
+    private int mSoftInputMode;
 
     public X5WebUIView(String targetUrl) {
         mTargetUrl = targetUrl;
@@ -110,6 +112,19 @@ public class X5WebUIView extends BaseContentUIView {
             mActivity.getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                     android.view.WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         }
+    }
+
+    @Override
+    public void onViewShow(long viewShowCount) {
+        super.onViewShow(viewShowCount);
+        mSoftInputMode = mActivity.getWindow().getAttributes().softInputMode;
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        mActivity.getWindow().setSoftInputMode(mSoftInputMode);
     }
 
     @Override

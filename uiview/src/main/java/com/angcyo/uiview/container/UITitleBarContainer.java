@@ -381,6 +381,9 @@ public class UITitleBarContainer extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return true;
+        if (mTitleBarPattern == null) {
+            return true;
+        }
+        return !mTitleBarPattern.isFloating;
     }
 }

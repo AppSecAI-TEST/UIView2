@@ -26,10 +26,10 @@
     </com.angcyo.uiview.rsen.EmptyRefreshLayout>
 
     <!--<com.angcyo.uiview.widget.EmptyView-->
-        <!--android:id="@+id/empty_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:padding="@dimen/base_xxhdpi"/>-->
+    <!--android:id="@+id/empty_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:padding="@dimen/base_xxhdpi"/>-->
 
     <com.angcyo.uiview.widget.SimpleProgressBar
         android:id="@+id/progress_bar_view"
