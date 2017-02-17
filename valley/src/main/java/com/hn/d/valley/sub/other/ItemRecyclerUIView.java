@@ -64,7 +64,14 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         return posInData;
     }
 
-    protected abstract void onBindDataView(RBaseViewHolder holder, int posInData, T dataBean);
+    protected void onBindDataView(RBaseViewHolder holder, int posInData, T dataBean) {
+        if (dataBean instanceof ViewItemInfo) {
+            ViewItemInfo itemInfo = (ViewItemInfo) dataBean;
+            if ((itemInfo).mCallback != null) {
+                (itemInfo).mCallback.onBindView(holder, posInData, itemInfo);
+            }
+        }
+    }
 
     protected abstract int getItemLayoutId(int viewType);
 
@@ -158,6 +165,10 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         public ViewItemInfo(String itemString, View.OnClickListener itemClickListener) {
             this.itemString = itemString;
             this.itemClickListener = itemClickListener;
+        }
+
+        public static ViewItemInfo build(ItemCallback callback) {
+            return new ViewItemInfo(callback);
         }
     }
 

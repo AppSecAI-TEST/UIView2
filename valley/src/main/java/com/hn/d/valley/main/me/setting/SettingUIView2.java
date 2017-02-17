@@ -112,7 +112,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         items.add(new ViewItemInfo(mActivity.getString(R.string.message_notify), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new MessageNotifyUIView());
             }
         }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.conceal), new View.OnClickListener() {

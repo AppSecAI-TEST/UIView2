@@ -8,6 +8,7 @@
 
     <TextView
         android:id="@+id/text_view"
+        style="@style/DarkTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="@string/register_warning"/>
