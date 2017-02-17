@@ -26,6 +26,7 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
+import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
@@ -84,7 +85,8 @@ public class MeUIView extends BaseUIView {
                     @Override
                     public void onClick(View v) {
                         /* 编辑资料 */
-                        T_.show("编辑");
+                        //T_.show("编辑");
+                        mOtherILayout.startIView(new EditInfoUIView());
                     }
                 }));
     }

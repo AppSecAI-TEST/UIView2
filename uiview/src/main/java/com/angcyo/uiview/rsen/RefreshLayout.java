@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -243,11 +244,11 @@ public class RefreshLayout extends ViewGroup {
                     return super.onInterceptTouchEvent(event);
                 } else {
                     if (dy > 0 && canScrollDown() &&
-                            !innerCanChildScrollVertically(mTargetView, -1)) {
+                            !innerCanChildScrollVertically(mTargetView, -1, event.getRawX(), event.getRawY())) {
                         order = TOP;
                         return true;
                     } else if (dy < 0 && canScrollUp() &&
-                            !innerCanChildScrollVertically(mTargetView, 1)) {
+                            !innerCanChildScrollVertically(mTargetView, 1, event.getRawX(), event.getRawY())) {
                         order = BOTTOM;
                         return true;
                     }
@@ -567,7 +568,22 @@ public class RefreshLayout extends ViewGroup {
      *
      * @param direction 如果是大于0, 表示视图底部没有数据了, 即不能向上滚动了, 反之...
      */
-    private boolean innerCanChildScrollVertically(View view, int direction) {
+    private boolean innerCanChildScrollVertically(View view, int direction, float rawX, float rawY) {
+        //项目特殊处理,可以注释掉
+        if (view instanceof RecyclerView) {
+            RecyclerView recyclerView = (RecyclerView) view;
+            if (recyclerView.getChildCount() > 0) {
+                View childAt = recyclerView.getChildAt(0);
+                Rect rect = new Rect();
+                childAt.getGlobalVisibleRect(rect);
+                if (childAt instanceof RecyclerView && rect.contains(((int) rawX), (int) rawY)) {
+                    return ViewCompat.canScrollVertically(childAt, direction);
+                }
+            }
+            return ViewCompat.canScrollVertically(view, direction);
+        }
+        //---------------ebd-----------------
+
         if (view instanceof ViewGroup) {
             final ViewGroup vGroup = (ViewGroup) view;
             View child;
@@ -577,7 +593,7 @@ public class RefreshLayout extends ViewGroup {
                 if (child instanceof View) {
                     result = ViewCompat.canScrollVertically(child, direction);
                 } else {
-                    result = innerCanChildScrollVertically(child, direction);
+                    result = innerCanChildScrollVertically(child, direction, rawX, rawY);
                 }
 
                 if (result) {
