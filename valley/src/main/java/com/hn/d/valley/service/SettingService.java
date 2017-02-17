@@ -29,4 +29,13 @@ public interface SettingService {
      */
     @POST("setting/personal")
     Observable<ResponseBody> personal(@QueryMap Map<String, String> map);
+
+    /**
+     * 设置/取消登录保护
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	int	1-开启登录保护 2-取消登录保护
+     */
+    @POST("setting/loginProtect")
+    Observable<ResponseBody> loginProtect(@QueryMap Map<String, String> map);
 }

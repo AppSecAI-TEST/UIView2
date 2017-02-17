@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -181,24 +182,29 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
             if (isModifyPassword) {
                 if (posInData == 0) {
                     mEditText1 = editText;
+                    mEditText1.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                     tipTextView.setText(R.string.old_password_tip);
                     editText.setHint(R.string.old_password_hint);
                 } else if (posInData == 1) {
                     mEditText2 = editText;
+                    mEditText2.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                     tipTextView.setText(R.string.new_password_tip);
                     editText.setHint(R.string.new_password_hint);
                 } else if (posInData == 2) {
                     mEditText3 = editText;
+                    mEditText3.setImeOptions(EditorInfo.IME_ACTION_DONE);
                     tipTextView.setText(R.string.confirm_password_tip);
                     editText.setHint(R.string.confirm_password_hint);
                 }
             } else {
                 if (posInData == 0) {
                     mEditText1 = editText;
+                    mEditText1.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                     tipTextView.setText(R.string.password_tip);
                     editText.setHint(R.string.password_hint2);
                 } else if (posInData == 1) {
                     mEditText2 = editText;
+                    mEditText2.setImeOptions(EditorInfo.IME_ACTION_DONE);
                     tipTextView.setText(R.string.confirm_password_tip2);
                     editText.setHint(R.string.confirm_password_hint2);
                 }

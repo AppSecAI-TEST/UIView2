@@ -88,7 +88,7 @@ public class UserInfoBean extends RealmObject {
     private String industry;
     private String signature;
     private int is_set_password;
-    private int is_login_protect;
+    public int is_login_protect;
     private RealmList<NewestDiscussPicBean> newest_discuss_pic;
     /**
      * look_fans : 1

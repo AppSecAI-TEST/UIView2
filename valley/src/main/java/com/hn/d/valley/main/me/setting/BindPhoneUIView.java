@@ -3,6 +3,7 @@ package com.hn.d.valley.main.me.setting;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -55,6 +56,7 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
         if (posInData == 0) {
             holder.tv(R.id.tip_text_view).setText(R.string.new_phone_number_tip);
             mPhoneEdit = holder.v(R.id.edit_text_view);
+            mPhoneEdit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
             mPhoneEdit.setMaxLength(mActivity.getResources().getInteger(R.integer.phone_number_count));
             final VerifyButton verifyButton = holder.v(R.id.verify_view);
             verifyButton.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +90,7 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
         } else if (posInData == 1) {
             holder.tv(R.id.tip_text_view).setText(R.string.code_text_tip);
             mCodeEdit = holder.v(R.id.edit_text_view);
+            mCodeEdit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
             mCodeEdit.setMaxLength(mActivity.getResources().getInteger(R.integer.code_count));
         } else if (posInData == 2) {
             TextView textView = holder.tv(R.id.text_view);
@@ -197,6 +200,4 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
         items.add("");
         items.add("");
     }
-
-
 }

@@ -170,5 +170,7 @@
     <string name="password_hint2">请输入6-16位字母或数字组成</string>
     <string name="confirm_password_tip2">确认密码:</string>
     <string name="confirm_password_hint2">再次输入密码</string>
+    <string name="login_protect_title">登录保护</string>
+    <string name="open_login_protect_tip">开启后, 再其他设备上登录需要短信验证码</string>
 
 </resources>

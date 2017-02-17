@@ -1,6 +1,10 @@
 package com.hn.d.valley.sub.other;
 
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +13,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.hn.d.valley.R;
@@ -30,7 +35,7 @@ import java.util.List;
  */
 public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
 
-    List<T> mItemsList;
+    protected List<T> mItemsList;
 
     @Override
     protected RExBaseAdapter<String, T, String> initRExBaseAdapter() {
@@ -105,6 +110,29 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         super.initRecyclerView();
         mRExBaseAdapter.setEnableLoadMore(false);
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.ItemDecorationCallback() {
+            @Override
+            public Rect getItemOffsets(LinearLayoutManager layoutManager, int position) {
+                Rect rect = new Rect(0, 0, 0, 0);
+                T t = mItemsList.get(position);
+                if (t instanceof ViewItemInfo) {
+                    if (((ViewItemInfo) t).mCallback != null) {
+                        ((ViewItemInfo) t).mCallback.setItemOffsets(rect);
+                    }
+                }
+                return rect;
+            }
+
+            @Override
+            public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+                T t = mItemsList.get(position);
+                if (t instanceof ViewItemInfo) {
+                    if (((ViewItemInfo) t).mCallback != null) {
+                        ((ViewItemInfo) t).mCallback.draw(canvas, paint, itemView, offsetRect, itemCount, position);
+                    }
+                }
+            }
+        }));
     }
 
     @Override
@@ -118,13 +146,28 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
     public static class ViewItemInfo {
         public String itemString;
         public View.OnClickListener itemClickListener;
+        public ItemCallback mCallback;
 
         public ViewItemInfo() {
+        }
+
+        public ViewItemInfo(ItemCallback callback) {
+            mCallback = callback;
         }
 
         public ViewItemInfo(String itemString, View.OnClickListener itemClickListener) {
             this.itemString = itemString;
             this.itemClickListener = itemClickListener;
+        }
+    }
+
+    public static abstract class ItemCallback {
+        public abstract void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean);
+
+        public void setItemOffsets(Rect rect) {
+        }
+
+        public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
         }
     }
 }

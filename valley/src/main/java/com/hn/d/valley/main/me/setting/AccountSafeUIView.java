@@ -2,6 +2,7 @@ package com.hn.d.valley.main.me.setting;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -71,11 +72,18 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                 });
             }
         } else if (posInData == 3) {
-            if (UserCache.instance().getUserInfoBean().getIs_login_protect() == 1) {
+            final int is_login_protect = UserCache.instance().getUserInfoBean().getIs_login_protect();
+            if (is_login_protect == 1) {
                 infoLayout.setItemDarkText(mActivity.getString(R.string.is_open));
             } else {
                 infoLayout.setItemDarkText(mActivity.getString(R.string.not_open));
             }
+            infoLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new LoginProtectUIView(is_login_protect == 1));
+                }
+            });
         }
     }
 
@@ -102,6 +110,12 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     }
 
     @Override
+    public void onViewReShow(Bundle bundle) {
+        super.onViewReShow(bundle);
+        mRExBaseAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     protected void createItems(List<ViewItemInfo> items) {
         items.add(new ViewItemInfo(mActivity.getString(R.string.id), null));
         items.add(new ViewItemInfo(mActivity.getString(R.string.phone_number2), new View.OnClickListener() {
@@ -111,11 +125,6 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
             }
         }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.password), null));
-        items.add(new ViewItemInfo(mActivity.getString(R.string.login_safe), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        }));
+        items.add(new ViewItemInfo(mActivity.getString(R.string.login_safe), null));
     }
 }

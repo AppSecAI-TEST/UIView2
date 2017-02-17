@@ -146,7 +146,9 @@ public class UserCache {
 
     @UiThread
     public UserInfoBean getUserInfoBean() {
-        mUserInfoBean = getUserInfoBean(getUserAccount());
+//        if (mUserInfoBean == null) {
+            mUserInfoBean = getUserInfoBean(getUserAccount());
+//        }
         return mUserInfoBean;
     }
 
