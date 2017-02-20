@@ -137,7 +137,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
 
-        //照片墙
+        //照片墙...
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, final int posInData, ViewItemInfo dataBean) {
