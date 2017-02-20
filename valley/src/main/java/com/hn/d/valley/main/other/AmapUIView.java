@@ -90,9 +90,6 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     private AmapControl mAmapControl;
     private boolean isCallAction = false;
 
-    public AmapUIView() {
-    }
-
     public AmapUIView(Action1<AmapBean> beanAction1, AmapBean otherUserAmapBean, String url, boolean send) {
         mOtherUserAmapBean = otherUserAmapBean;
         userUrl = url;
