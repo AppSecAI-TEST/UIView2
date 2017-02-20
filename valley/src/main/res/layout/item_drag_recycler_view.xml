@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.angcyo.uiview.recycler.RDragRecyclerView
+<android.support.v7.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drag_recycler_view"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="wrap_content"
     android:background="#434343"
-    android:tag="GV3">
+    android:orientation="vertical">
 
-</com.angcyo.uiview.recycler.RDragRecyclerView>
+
+    <com.angcyo.uiview.recycler.RDragRecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/drag_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:tag="GV3">
+
+    </com.angcyo.uiview.recycler.RDragRecyclerView>
+
+    <TextView
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/photo_wall_tip"
+        android:textSize="@dimen/default_text_little_size"/>
+</android.support.v7.widget.LinearLayoutCompat>

@@ -24,6 +24,10 @@ public class RExItemDecoration extends RecyclerView.ItemDecoration {
         mTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     }
 
+    public static RExItemDecoration build(ItemDecorationCallback itemDecorationCallback) {
+        return new RExItemDecoration(itemDecorationCallback);
+    }
+
     /**
      * 判断 viewLayoutPosition 是否是一排的结束位置 (垂直水平通用)
      */

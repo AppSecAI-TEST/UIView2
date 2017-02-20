@@ -1,5 +1,6 @@
 package com.hn.d.valley.control;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
@@ -40,5 +41,23 @@ public class UserControl {
             auth = ValleyApp.getApp().getResources().getString(R.string.auth_zfry);
         }
         return auth;
+    }
+
+    public static String getSex(Context context, int sex) {
+        if (sex == 1) {
+            return context.getResources().getString(R.string.man);
+        } else if (sex == 2) {
+            return context.getResources().getString(R.string.women);
+        }
+        return "";
+    }
+
+    public static String getSex(Context context, String sex) {
+        if ("1".equalsIgnoreCase(sex)) {
+            return context.getResources().getString(R.string.man);
+        } else if ("2".equalsIgnoreCase(sex)) {
+            return context.getResources().getString(R.string.women);
+        }
+        return "";
     }
 }

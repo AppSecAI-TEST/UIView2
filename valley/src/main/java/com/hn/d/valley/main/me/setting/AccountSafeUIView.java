@@ -89,7 +89,7 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        return R.layout.item_text_info;
+        return R.layout.item_info_layout;
     }
 
     @Override

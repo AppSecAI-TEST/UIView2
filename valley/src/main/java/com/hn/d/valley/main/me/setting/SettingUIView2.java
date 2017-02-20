@@ -56,7 +56,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         if (viewType == 2) {
             return R.layout.item_button_view;
         } else {
-            return R.layout.item_text_info;
+            return R.layout.item_info_layout;
         }
     }
 
