@@ -3,6 +3,7 @@ package com.angcyo.uiview.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -38,6 +39,32 @@ public class RTextView extends TextView {
             }
         } else {
             super.setText(text, type);
+        }
+    }
+
+    public void addFilter(InputFilter filter) {
+        final InputFilter[] filters = getFilters();
+        final InputFilter[] newFilters = new InputFilter[filters.length + 1];
+        System.arraycopy(filters, 0, newFilters, 0, filters.length);
+        newFilters[filters.length] = filter;
+        setFilters(newFilters);
+    }
+
+    public void setMaxLength(int length) {
+        InputFilter[] filters = getFilters();
+        boolean have = false;
+        InputFilter.LengthFilter lengthFilter = new InputFilter.LengthFilter(length);
+        for (int i = 0; i < filters.length; i++) {
+            InputFilter filter = filters[i];
+            if (filter instanceof InputFilter.LengthFilter) {
+                have = true;
+                filters[i] = lengthFilter;
+                setFilters(filters);
+                break;
+            }
+        }
+        if (!have) {
+            addFilter(lengthFilter);
         }
     }
 

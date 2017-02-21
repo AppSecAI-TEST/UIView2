@@ -78,12 +78,17 @@ public class ExEditText extends AppCompatEditText {
                 showClear = true;
             }
         }
-        if (showClear) {
+        getClearDrawable();
+    }
+
+    private Drawable getClearDrawable() {
+        if (showClear && clearDrawable == null) {
             clearDrawable = ResourcesCompat.getDrawable(
                     getResources(),
                     R.drawable.base_edit_delete_selector,
                     getContext().getTheme());
         }
+        return clearDrawable;
     }
 
     private void addFilter(InputFilter filter) {
@@ -104,7 +109,7 @@ public class ExEditText extends AppCompatEditText {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (showClear) {
-            clearRect.set(w - getPaddingRight() - clearDrawable.getIntrinsicWidth(),
+            clearRect.set(w - getPaddingRight() - getClearDrawable().getIntrinsicWidth(),
                     getPaddingTop(), w - getPaddingRight(), Math.min(w, h) - getPaddingBottom());
         }
     }
@@ -173,7 +178,7 @@ public class ExEditText extends AppCompatEditText {
         }
     }
 
-    private void checkEdit(boolean focused) {
+    public void checkEdit(boolean focused) {
         if (showClear) {
             final Drawable[] compoundDrawables = getCompoundDrawables();
             if (TextUtils.isEmpty(getText()) || !focused) {
@@ -181,13 +186,19 @@ public class ExEditText extends AppCompatEditText {
                         null, compoundDrawables[3]);
             } else {
                 setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0], compoundDrawables[1],
-                        clearDrawable, compoundDrawables[3]);
+                        getClearDrawable(), compoundDrawables[3]);
             }
         }
     }
 
     private boolean checkClear(float x, float y) {
         return clearRect.contains(((int) x), (int) y);
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        super.setText(text, type);
+        checkEdit(isFocused());
     }
 
     @Override

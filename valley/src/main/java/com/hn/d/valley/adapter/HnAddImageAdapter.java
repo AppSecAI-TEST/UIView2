@@ -26,6 +26,7 @@ import java.util.List;
  */
 public class HnAddImageAdapter extends HnGlideImageAdapter {
 
+    public static final int TYPE_ADD_ITEM = 1111;
     /**
      * 是否是添加模式
      */
@@ -33,7 +34,7 @@ public class HnAddImageAdapter extends HnGlideImageAdapter {
     /**
      * 激活删除模式
      */
-    boolean isDeleteModel = true;
+    boolean isDeleteModel = false;
     OnAddListener mAddListener;
     int maxItemCount = 6;
     int itemHeight = 0;
@@ -50,6 +51,15 @@ public class HnAddImageAdapter extends HnGlideImageAdapter {
     public int getItemCount() {
         int count = super.getItemCount();
         return Math.min(maxItemCount, isAddModel ? count + 1 : count);
+    }
+
+    @Override
+    public int getItemType(int position) {
+        int size = getAllDatas().size();
+        if (isAddModel && size != maxItemCount && isLast(position)) {
+            return TYPE_ADD_ITEM;
+        }
+        return super.getItemType(position);
     }
 
     public boolean isMax(int position) {
@@ -132,7 +142,8 @@ public class HnAddImageAdapter extends HnGlideImageAdapter {
                 RBaseViewHolder vh = (RBaseViewHolder) recyclerView.findViewHolderForAdapterPosition(firstVisibleItemPosition + i);
                 if (vh != null) {
                     final View view = vh.v(R.id.delete_view);
-                    view.setVisibility(deleteModel ? View.VISIBLE : View.GONE);
+                    view.setVisibility(deleteModel && vh.getItemViewType() != TYPE_ADD_ITEM ?
+                            View.VISIBLE : View.GONE);
                 }
             }
         }

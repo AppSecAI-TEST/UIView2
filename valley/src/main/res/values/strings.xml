@@ -105,6 +105,7 @@
     <string name="link_count_tip">%1$s个人赞过</string>
     <string name="delete_text">删除</string>
     <string name="see_all">查看全部</string>
+    <string name="sex">性别</string>
     <string name="reply_cnt_tip">%1$s条回复</string>
     <string name="dynamic_input_hint">说点什么吧</string>
     <string name="dynamic_detail">动态详情</string>
@@ -179,5 +180,10 @@
     <string name="en">English</string>
     <string name="edit_into_title">编辑个人资料</string>
     <string name="photo_wall_tip">一次可上传多张图片,点击可查看和删除照片, 长按可以排序</string>
+    <string name="modify_name_title">修改昵称</string>
+    <string name="input_name_hint">请输入昵称</string>
+    <string name="signature_title">个性签名</string>
+    <string name="name_text">昵称</string>
+    <string name="save_ok_tip">保存成功</string>
 
 </resources>

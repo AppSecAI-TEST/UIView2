@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:background="@android:color/holo_red_dark">
+
+    <com.angcyo.uiview.widget.ExEditText
+        android:id="@+id/edit_text_view"
+        style="@style/EditStyle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:imeOptions="actionDone"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:textColor="@color/main_text_color"
+        android:textColorHint="@color/main_text_color_dark"
+        tools:layout_height="300dp"/>
+
+    <com.angcyo.uiview.widget.viewpager.TextIndicator
+        android:id="@+id/single_text_indicator_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/edit_text_view"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/base_xhdpi"
+        android:textSize="@dimen/default_text_little_size"
+        android:visibility="invisible"
+        tools:text="100/100"/>
+
+</RelativeLayout>

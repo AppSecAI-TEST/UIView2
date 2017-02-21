@@ -1,6 +1,7 @@
 package com.hn.d.valley.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.angcyo.uiview.github.luban.Luban;
@@ -47,11 +48,19 @@ public class HnGlideImageAdapter extends RBaseAdapter<Luban.ImageItem> {
         imageView.post(new Runnable() {
             @Override
             public void run() {
-                Glide.with(mContext)
-                        .load(bean.thumbPath)
-                        .override(imageView.getMeasuredWidth(), imageView.getMeasuredHeight())
-                        .placeholder(R.drawable.zhanweitu_1)
-                        .into(imageView);
+                if (TextUtils.isEmpty(bean.url)) {
+                    Glide.with(mContext)
+                            .load(bean.thumbPath)
+                            .override(imageView.getMeasuredWidth(), imageView.getMeasuredHeight())
+                            .placeholder(R.drawable.zhanweitu_1)
+                            .into(imageView);
+                } else {
+                    Glide.with(mContext)
+                            .load(bean.url)
+                            .override(imageView.getMeasuredWidth(), imageView.getMeasuredHeight())
+                            .placeholder(R.drawable.zhanweitu_1)
+                            .into(imageView);
+                }
             }
         });
     }

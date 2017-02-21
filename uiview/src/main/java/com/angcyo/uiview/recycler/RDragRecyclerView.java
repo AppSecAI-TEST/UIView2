@@ -23,6 +23,7 @@ import java.util.List;
 public class RDragRecyclerView extends RRecyclerView {
 
     ItemTouchHelper mItemTouchHelper;
+    OnDragCallback mDragCallback;
 
     public RDragRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -45,6 +46,14 @@ public class RDragRecyclerView extends RRecyclerView {
         }
     }
 
+    public void setDragCallback(OnDragCallback dragCallback) {
+        mDragCallback = dragCallback;
+    }
+
+    public interface OnDragCallback {
+        boolean canDragDirs(RecyclerView recyclerView, ViewHolder viewHolder);
+    }
+
     private class DragCallback extends ItemTouchHelper.SimpleCallback {
 
         public DragCallback() {
@@ -64,12 +73,26 @@ public class RDragRecyclerView extends RRecyclerView {
 
         @Override
         public int getDragDirs(RecyclerView recyclerView, ViewHolder viewHolder) {
+            if (mDragCallback != null) {
+                if (mDragCallback.canDragDirs(recyclerView, viewHolder)) {
+                    return ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                } else {
+                    return 0;
+                }
+            }
             return super.getDragDirs(recyclerView, viewHolder);
         }
 
         @Override
         public boolean onMove(RecyclerView recyclerView, ViewHolder viewHolder, ViewHolder target) {
             Adapter adapter = getAdapter();
+
+            if (mDragCallback != null) {
+                if (!mDragCallback.canDragDirs(recyclerView, target)) {
+                    return false;
+                }
+            }
+
             if (adapter instanceof RBaseAdapter) {
                 int from = viewHolder.getAdapterPosition();
                 int to = target.getAdapterPosition();

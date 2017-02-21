@@ -16,4 +16,6 @@
     <integer name="content_show_length">20</integer>
     <!--手机号码最大长度-->
     <integer name="phone_number_count">11</integer>
+    <!--个性签名的最大字符数-->
+    <integer name="signature_count">100</integer>
 </resources>

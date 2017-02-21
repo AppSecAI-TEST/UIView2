@@ -125,4 +125,20 @@ public interface UserInfoService {
      */
     @POST("user/resetPassword")
     Observable<ResponseBody> resetPassword(@QueryMap Map<String, String> map);
+
+    /**
+     * 编辑个人信息
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * username	否	string	用户名、昵称
+     * sex	否	int	性别 【1-男 2-女】
+     * signature	否	string	个性签名
+     * province_id	否	int	省份id
+     * city_id	否	int	市id
+     * avatar	否	string	头像
+     * photos	否	string	照片墙【不包含头像，多张图片以，分割】【当删除图片时，删除所有照片传empty】
+     * voice	否	string	语音介绍【传empty代表删除语音介绍】
+     */
+    @POST("user/editInfo")
+    Observable<ResponseBody> editInfo(@QueryMap Map<String, String> map);
 }

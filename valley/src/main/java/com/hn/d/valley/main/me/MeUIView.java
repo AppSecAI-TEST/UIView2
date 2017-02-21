@@ -33,9 +33,11 @@ import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.utils.PhotoPager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -69,7 +71,7 @@ public class MeUIView extends BaseUIView {
     ItemInfoLayout mSettingLayout;
     @BindView(R.id.view_pager_placeholder_view)
     ImageView mViewPagerPlaceholderView;
-
+    private ArrayList<String> mPhotos = new ArrayList<>();
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -80,15 +82,15 @@ public class MeUIView extends BaseUIView {
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
                 .setFloating(true).setTitleString("")
-                .setTitleBarBGColor(Color.TRANSPARENT)
-                .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.editor, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        /* 编辑资料 */
-                        //T_.show("编辑");
-                        mOtherILayout.startIView(new EditInfoUIView());
-                    }
-                }));
+                .setTitleBarBGColor(Color.TRANSPARENT);
+//                .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.editor, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        /* 编辑资料 */
+//                        //T_.show("编辑");
+//                        mOtherILayout.startIView(new EditInfoUIView());
+//                    }
+//                }));
     }
 
     @Override
@@ -145,12 +147,18 @@ public class MeUIView extends BaseUIView {
         }
 
         mViewPagerPlaceholderView.setVisibility(View.GONE);
-        ArrayList<String> photos = new ArrayList<>();
-        photos.add(UserCache.instance().getAvatar());
+        mPhotos.clear();
         if (userInfoBean != null) {
-            photos.addAll(RUtils.split(userInfoBean.getPhotos()));
+            List<String> stringList = RUtils.split(userInfoBean.getPhotos());
+            if (stringList.isEmpty()) {
+                mPhotos.add(UserCache.instance().getAvatar());
+            } else {
+                mPhotos.addAll(stringList);
+            }
+        } else {
+            mPhotos.add(UserCache.instance().getAvatar());
         }
-        PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, photos);
+        PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, mPhotos);
 
         //
         mViewHolder.fillView(UserInfoBean.class, userInfoBean, false, true);
@@ -206,7 +214,6 @@ public class MeUIView extends BaseUIView {
     public void onItemInfoClick(View view) {
         switch (view.getId()) {
             case R.id.my_status_layout://我的动态
-
                 break;
             case R.id.my_favor_layout://我的收藏
                 break;
@@ -221,5 +228,15 @@ public class MeUIView extends BaseUIView {
                 mOtherILayout.startIView(new SettingUIView2());
                 break;
         }
+    }
+
+    @OnClick(R.id.user_ico_view)
+    public void onUserIcoClick() {
+        mOtherILayout.startIView(new EditInfoUIView(mPhotos, new Action0() {
+            @Override
+            public void call() {
+                initMeUIView();
+            }
+        }));
     }
 }

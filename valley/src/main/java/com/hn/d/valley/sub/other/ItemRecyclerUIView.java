@@ -151,15 +151,40 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
 
     protected abstract void createItems(List<T> items);
 
+    public interface ItemConfig {
+        void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean);
+
+        void setItemOffsets(Rect rect);
+
+        void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position);
+    }
+
+    public static abstract class ItemCallback implements ItemConfig {
+        @Override
+        public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+
+        }
+
+        @Override
+        public void setItemOffsets(Rect rect) {
+
+        }
+
+        @Override
+        public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+
+        }
+    }
+
     public static class ViewItemInfo {
         public String itemString;
         public View.OnClickListener itemClickListener;
-        public ItemCallback mCallback;
+        public ItemConfig mCallback;
 
         public ViewItemInfo() {
         }
 
-        public ViewItemInfo(ItemCallback callback) {
+        public ViewItemInfo(ItemConfig callback) {
             mCallback = callback;
         }
 
@@ -168,33 +193,8 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
             this.itemClickListener = itemClickListener;
         }
 
-        public static ViewItemInfo build(ItemCallback callback) {
+        public static ViewItemInfo build(ItemConfig callback) {
             return new ViewItemInfo(callback);
-        }
-    }
-
-    public static abstract class ItemCallback {
-        public abstract void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean);
-
-        public void setItemOffsets(Rect rect) {
-        }
-
-        public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
-        }
-    }
-
-    public static abstract class ItemOffsetCallback extends ItemCallback {
-
-        int topOffset;
-
-        public ItemOffsetCallback(int topOffset) {
-            this.topOffset = topOffset;
-        }
-
-        @Override
-        public void setItemOffsets(Rect rect) {
-            super.setItemOffsets(rect);
-            rect.top = topOffset;
         }
     }
 
@@ -210,7 +210,6 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
 
         @Override
         public void setItemOffsets(Rect rect) {
-            super.setItemOffsets(rect);
             rect.top = lineOffset;
         }
 
@@ -220,6 +219,20 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
             offsetRect.set(itemView.getLeft(), itemView.getTop() - offsetRect.top,
                     itemView.getLeft() + leftOffset, itemView.getTop());
             canvas.drawRect(offsetRect, paint);
+        }
+    }
+
+    public abstract class ItemOffsetCallback extends ItemCallback {
+
+        int topOffset;
+
+        public ItemOffsetCallback(int topOffset) {
+            this.topOffset = topOffset;
+        }
+
+        @Override
+        public void setItemOffsets(Rect rect) {
+            rect.top = topOffset;
         }
     }
 }

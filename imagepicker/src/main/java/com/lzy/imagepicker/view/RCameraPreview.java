@@ -145,6 +145,7 @@ public class RCameraPreview extends TextureView {
         if (surfaceTexture == null) {
             return;
         }
+        isPreview = true;
         new Thread() {
             @Override
             public void run() {
@@ -154,9 +155,9 @@ public class RCameraPreview extends TextureView {
                     initFromCameraParameters(mCamera);
                     setDesiredCameraParameters(mCamera);
                     mCamera.startPreview();
-                    isPreview = true;
                 } catch (Exception e) {
                     e.printStackTrace();
+                    isPreview = false;
                 }
             }
         }.start();

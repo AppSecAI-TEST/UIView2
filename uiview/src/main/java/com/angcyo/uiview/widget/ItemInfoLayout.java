@@ -7,11 +7,12 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
-import android.text.InputFilter;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.R;
@@ -36,6 +37,7 @@ public class ItemInfoLayout extends RelativeLayout {
     public static int DEFAULT_TEXT_COLOR = Color.parseColor("#333333");
     public static int DEFAULT_DARK_TEXT_COLOR = Color.parseColor("#999999");
     RTextView mTextView, mDarkTextView;
+    ImageView mImageView;//扩展字段,用来显示一张网络图片 星期二 2017-2-21
     /**
      * 主要的文本信息属性
      */
@@ -109,6 +111,7 @@ public class ItemInfoLayout extends RelativeLayout {
     private void initLayout() {
         mTextView = new RTextView(getContext());
         mDarkTextView = new RTextView(getContext());
+        mImageView = new ImageView(getContext());
 
         mTextView.setTag(itemTag);
         mTextView.setText(itemText);
@@ -127,7 +130,9 @@ public class ItemInfoLayout extends RelativeLayout {
         mDarkTextView.setGravity(Gravity.CENTER_VERTICAL);
         mDarkTextView.setMaxLines(1);
         mDarkTextView.setSingleLine(true);
-        mDarkTextView.setFilters(new InputFilter[]{new InputFilter.LengthFilter(30)});
+        mDarkTextView.setEllipsize(TextUtils.TruncateAt.END);
+        mDarkTextView.setMaxLength(20);
+        mDarkTextView.setMaxWidth((int) (getResources().getDisplayMetrics().density * 260));
 
         setRightDrawableRes(rightDrawableRes);
         setDarkDrawableRes(darkDrawableRes);
@@ -139,8 +144,22 @@ public class ItemInfoLayout extends RelativeLayout {
         paramsDark.addRule(RelativeLayout.CENTER_VERTICAL);
         paramsDark.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
+        int size = (int) dpToPx(48);
+        LayoutParams imageParam = new LayoutParams(size, size);
+        imageParam.addRule(RelativeLayout.CENTER_VERTICAL);
+        imageParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        int padding = (int) dpToPx(2);
+        imageParam.setMargins(0, 0, -padding, 0);
+        mImageView.setPadding(0, padding, 0, padding);
+        //mImageView.setBackgroundColor(Color.RED);
+
         addView(mTextView, params);
         addView(mDarkTextView, paramsDark);
+        addView(mImageView, imageParam);
+    }
+
+    public ImageView getImageView() {
+        return mImageView;
     }
 
     public void setDarkDrawableRes(int darkDrawableRes) {

@@ -729,6 +729,7 @@ public class Luban {
     public static class ImageItem {
         public String path = "";//源文件的路径
         public String thumbPath = "";//压缩后的文件路径
+        public String url = "";//网络地址
 
         public ImageItem() {
         }
@@ -736,6 +737,10 @@ public class Luban {
         public ImageItem(String path, String thumbPath) {
             this.path = path;
             this.thumbPath = thumbPath;
+        }
+
+        public ImageItem(String url) {
+            this.url = url;
         }
 
         public static ImageItem get(String string) {
