@@ -176,6 +176,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
      */
     private void checkUserIco() {
         if (TextUtils.isEmpty(mUserSetIco)) {
+            mUserSetIco = UserCache.getUserAvatar();
             startSave();
         } else {
             List<String> files = new ArrayList<>();
@@ -192,7 +193,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     RRealm.exe(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                            UserCache.setUserAccount(mUserSetIco);
+                            UserCache.setUserAvatar(mUserSetIco);
                             UserCache.instance().getUserInfoBean().setAvatar(mUserSetIco);
                         }
                     });
