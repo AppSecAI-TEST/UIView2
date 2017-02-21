@@ -37,6 +37,7 @@ import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.dialog.DateDialog;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.oss.OssControl2;
@@ -398,6 +399,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 infoLayout.setItemDarkText(UserCache.getUserAccount());
             }
         }));
+
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -439,6 +441,12 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText("出生日期");
                 infoLayout.setItemDarkText("1000-01-01");
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new DateDialog());
+                    }
+                });
             }
         }));
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
@@ -458,6 +466,13 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
+
+            @Override
+            public void setItemOffsets(Rect rect) {
+                super.setItemOffsets(rect);
+                rect.bottom = left;
+            }
+
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 bindSignatureItem(holder, userInfoBean);
