@@ -24,7 +24,7 @@ import rx.functions.Action1;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：星期五 2016-12-16
+ * 类的描述：星期五 2016-12-16 恐龙谷Application
  * 创建人员：Robi
  * 创建时间：2016/12/08 17:10
  * 修改人员：Robi
