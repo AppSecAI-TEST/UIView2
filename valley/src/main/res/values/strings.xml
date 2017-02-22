@@ -190,5 +190,7 @@
     <string name="birthday_format">%1$d 岁</string>
     <string name="area">地区</string>
     <string name="edit_info_quit_tip">您的个人资料已经修改, 退出前要保存吗?</string>
+    <string name="my_qr_code">我的二维码</string>
+    <string name="create_qr_tip">二维码生成中...</string>
 
 </resources>

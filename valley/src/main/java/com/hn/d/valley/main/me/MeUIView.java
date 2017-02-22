@@ -27,6 +27,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
+import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
@@ -204,6 +205,7 @@ public class MeUIView extends BaseUIView {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.qr_code_view://二维码
+                mOtherILayout.startIView(new MyQrCodeUIView());
                 break;
             case R.id.follow_item_layout://关注
                 mOtherILayout.startIView(new FollowersRecyclerUIView());

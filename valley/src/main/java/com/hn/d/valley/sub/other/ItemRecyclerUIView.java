@@ -90,6 +90,7 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
     protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         mRefreshLayout = new HnEmptyRefreshLayout(mActivity);
         mRecyclerView = new RRecyclerView(mActivity);
+        mRecyclerView.setHasFixedSize(true);
         mRefreshLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-1, -1));
         baseContentLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
     }

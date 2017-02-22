@@ -521,8 +521,14 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("我的二维码");
+                infoLayout.setItemText(mActivity.getResources().getString(R.string.my_qr_code));
                 infoLayout.setDarkDrawableRes(R.drawable.qr_code);
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new MyQrCodeUIView());
+                    }
+                });
             }
         }));
 
