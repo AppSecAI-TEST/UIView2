@@ -27,7 +27,7 @@ public class InviteFriendsUIView extends BaseContentUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString(mActivity.getString(R.string.invite_friends)).setShowBackImageView(true);
+        return super.getTitleBar().setTitleString(mActivity.getString(R.string.invite_friends2)).setShowBackImageView(true);
     }
 
     @Override
