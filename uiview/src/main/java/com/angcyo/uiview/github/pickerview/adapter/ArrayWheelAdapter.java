@@ -1,6 +1,6 @@
 package com.angcyo.uiview.github.pickerview.adapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The simple Array wheel adapter
@@ -15,7 +15,7 @@ public class ArrayWheelAdapter<T> implements WheelAdapter {
     public static final int DEFAULT_LENGTH = 4;
 
     // items
-    private ArrayList<T> items;
+    private List<T> items;
     // length
     private int length;
 
@@ -25,7 +25,7 @@ public class ArrayWheelAdapter<T> implements WheelAdapter {
      * @param items  the items
      * @param length the max items length
      */
-    public ArrayWheelAdapter(ArrayList<T> items, int length) {
+    public ArrayWheelAdapter(List<T> items, int length) {
         this.items = items;
         this.length = length;
     }
@@ -35,7 +35,7 @@ public class ArrayWheelAdapter<T> implements WheelAdapter {
      *
      * @param items the items
      */
-    public ArrayWheelAdapter(ArrayList<T> items) {
+    public ArrayWheelAdapter(List<T> items) {
         this(items, DEFAULT_LENGTH);
     }
 
@@ -57,4 +57,7 @@ public class ArrayWheelAdapter<T> implements WheelAdapter {
         return items.indexOf(o);
     }
 
+    public List<T> getItems() {
+        return items;
+    }
 }

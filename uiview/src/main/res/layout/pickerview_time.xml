@@ -20,31 +20,31 @@
 
         <com.angcyo.uiview.github.pickerview.lib.WheelView
             android:id="@+id/year"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
         <com.angcyo.uiview.github.pickerview.lib.WheelView
             android:id="@+id/month"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.1"/>
 
         <com.angcyo.uiview.github.pickerview.lib.WheelView
             android:id="@+id/day"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.1"/>
 
         <com.angcyo.uiview.github.pickerview.lib.WheelView
             android:id="@+id/hour"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.1"/>
 
         <com.angcyo.uiview.github.pickerview.lib.WheelView
             android:id="@+id/min"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.1"/>
     </LinearLayout>

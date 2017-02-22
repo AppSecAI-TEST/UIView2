@@ -17,8 +17,12 @@ import android.view.ViewGroup;
 
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.Anim;
+import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.luban.Luban;
+import com.angcyo.uiview.github.pickerview.DateDialog;
+import com.angcyo.uiview.github.pickerview.view.WheelTime;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -37,11 +41,12 @@ import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.dialog.DateDialog;
+import com.hn.d.valley.base.dialog.CityDialog;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.oss.OssControl2;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.ProvinceBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
@@ -55,12 +60,15 @@ import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Action0;
+import rx.functions.Action2;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -75,6 +83,8 @@ import rx.functions.Action0;
  */
 public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
+    OldParams mOldParams;
+    boolean canBack = false;
     private HnAddImageAdapter mHnAddImageAdapter;
     private List<Luban.ImageItem> mOldItems = new ArrayList<>();//原先的照片地址
     private List<Luban.ImageItem> mPhones = new ArrayList<>();//原先的照片地址用来adapter
@@ -92,6 +102,20 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         }
         mPhones.addAll(mOldItems);
         mOnFinishAction = onFinishAction;
+
+        //保存初始值
+        UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+        mOldParams = new OldParams();
+        mOldParams.mPhotos.addAll(urls);
+        mOldParams.mUserIco = userInfoBean.getAvatar();
+        mOldParams.mUserName = userInfoBean.getUsername();
+        mOldParams.mUserSex = userInfoBean.getSex();
+        mOldParams.mBirthday = userInfoBean.getBirthday();
+        mOldParams.mArea = userInfoBean.getProvince_id() + "_" + userInfoBean.getCity_id();
+        mOldParams.mUserVoiceUrl = userInfoBean.getVoice_introduce();
+        mOldParams.mSignature = userInfoBean.getSignature();
+        mOldParams.pName = userInfoBean.getProvince_name();
+        mOldParams.cName = userInfoBean.getCity_name();
     }
 
     @Override
@@ -133,25 +157,40 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
      * 3:保存信息...end
      */
     private void startSave() {
+        final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
         final String allPhotos = getAllPhotos();
         if ("empty".equalsIgnoreCase(allPhotos)) {
             RRealm.exe(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    UserCache.instance().getUserInfoBean().setPhotos("");
+                    userInfoBean.setPhotos("");
                 }
             });
         } else {
             RRealm.exe(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {
-                    UserCache.instance().getUserInfoBean().setPhotos(allPhotos);
+                    userInfoBean.setPhotos(allPhotos);
                 }
             });
         }
 
+        String signature = userInfoBean.getSignature();
+        if (TextUtils.isEmpty(signature)) {
+            signature = "empty";
+        }
+
         add(RRetrofit.create(UserInfoService.class)
-                .editInfo(Param.buildMap("photos:" + allPhotos, "avatar:" + mUserSetIco))
+                .editInfo(Param.buildMap("photos:" + allPhotos,
+                        "avatar:" + mUserSetIco,
+                        "username:" + userInfoBean.getUsername(),
+                        "sex:" + userInfoBean.getSex(),
+                        "signature:" + signature,
+                        "province_id:" + userInfoBean.getProvince_id(),
+                        "city_id:" + userInfoBean.getCity_id(),
+                        "voice:",
+                        "birthday:" + userInfoBean.getBirthday()
+                ))
                 .compose(Rx.transformer(UserInfoBean.class))
                 .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
                     @Override
@@ -172,6 +211,27 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 }));
     }
 
+    private void onNotSave() {
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+                UserCache.setUserAvatar(mOldParams.mUserIco);
+                userInfoBean.setAvatar(mOldParams.mUserIco);
+                userInfoBean.setUsername(mOldParams.mUserName);
+                userInfoBean.setSex(mOldParams.mUserSex);
+                userInfoBean.setBirthday(mOldParams.mBirthday);
+                userInfoBean.setSignature(mOldParams.mSignature);
+                userInfoBean.setProvince_id(mOldParams.mArea.split("_")[0]);
+                userInfoBean.setCity_id(mOldParams.mArea.split("_")[1]);
+                userInfoBean.setProvince_id(mOldParams.mArea.split("_")[0]);
+                userInfoBean.setCity_id(mOldParams.mArea.split("_")[1]);
+                userInfoBean.setProvince_name(mOldParams.pName);
+                userInfoBean.setCity_name(mOldParams.cName);
+            }
+        });
+    }
+
     /**
      * 2:检查是否需要上传用户头像
      */
@@ -181,32 +241,40 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             startSave();
         } else {
             List<String> files = new ArrayList<>();
-            files.add(mUserSetIco);
-            new OssControl(new OssControl.OnUploadListener() {
-                @Override
-                public void onUploadStart() {
+            File file = new File(mUserSetIco);
+            if (file.exists()) {
+                files.add(mUserSetIco);
+                new OssControl(new OssControl.OnUploadListener() {
+                    @Override
+                    public void onUploadStart() {
 
-                }
+                    }
 
-                @Override
-                public void onUploadSucceed(List<String> list) {
-                    mUserSetIco = list.get(0);
-                    RRealm.exe(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            UserCache.setUserAvatar(mUserSetIco);
-                            UserCache.instance().getUserInfoBean().setAvatar(mUserSetIco);
-                        }
-                    });
-                    startSave();
-                }
+                    @Override
+                    public void onUploadSucceed(List<String> list) {
+                        mUserSetIco = list.get(0);
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                UserCache.setUserAvatar(mUserSetIco);
+                                UserCache.instance().getUserInfoBean().setAvatar(mUserSetIco);
+                            }
+                        });
+                        startSave();
+                    }
 
-                @Override
-                public void onUploadFailed(int code, String msg) {
-                    T_.show(msg);
-                    HnLoading.hide();
-                }
-            }).uploadCircleImg(files);
+                    @Override
+                    public void onUploadFailed(int code, String msg) {
+                        T_.show(msg);
+                        HnLoading.hide();
+                    }
+                }).uploadCircleImg(files);
+            } else if (mUserSetIco.startsWith("http")) {
+                startSave();
+                startSave();
+            } else {
+                startSave();
+            }
         }
     }
 
@@ -266,6 +334,12 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     @Override
+    public boolean canTryCaptureView() {
+        //如果用户信息更改了, 不允许滑动返回
+        return !mOldParams.isChanged(UserCache.instance().getUserInfoBean());
+    }
+
+    @Override
     protected int getItemLayoutId(int viewType) {
         if (viewType == 0) {
             return R.layout.item_drag_recycler_view;
@@ -277,6 +351,45 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     public void onViewCreate() {
         super.onViewCreate();
         ImagePickerHelper.clearAllSelectedImages();
+    }
+
+    @Override
+    public boolean canSwipeBackPressed() {
+        if (canBack) {
+            return true;
+        }
+        return changeBack();
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return changeBack();
+    }
+
+    boolean changeBack() {
+        if (mOldParams.isChanged(UserCache.instance().getUserInfoBean())) {
+            UIDialog.build()
+                    .setDialogContent(mActivity.getString(R.string.edit_info_quit_tip))
+                    .setOkText(mActivity.getString(R.string.save))
+                    .setCancelText(mActivity.getString(R.string.not_save))
+                    .setCancelListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onNotSave();
+                            canBack = true;
+                            finishIView(EditInfoUIView.this, new UIParam(true, true, false));
+                        }
+                    })
+                    .setOkListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onSaveInfo();
+                        }
+                    })
+                    .showDialog(mOtherILayout);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -358,6 +471,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
+        //头像
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -384,12 +498,14 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
+        //昵称
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 bindNameItem(holder, userInfoBean);
             }
         }));
+        //ID
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -400,6 +516,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
+        //我的二维码
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -409,6 +526,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
+        //性别
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -435,28 +553,21 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 });
             }
         }));
+        //出生日期
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("出生日期");
-                infoLayout.setItemDarkText("1000-01-01");
-                infoLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startIView(new DateDialog());
-                    }
-                });
+                bindBirthdayItem(holder, userInfoBean);
             }
         }));
+        //地区
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("地区");
-                infoLayout.setItemDarkText(userInfoBean.getProvince_name() + " " + userInfoBean.getCity_name());
+                bindAreaItem(holder, userInfoBean);
             }
         }));
+        //语音介绍
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -465,6 +576,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 infoLayout.setItemDarkText("点击添加");
             }
         }));
+        //个性签名
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
 
             @Override
@@ -604,16 +716,16 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         });
         infoLayout.setItemDarkText(UserControl.getSex(mActivity, sex));
-        add(RRetrofit.create(UserInfoService.class)
-                .editInfo(Param.buildMap("sex:" + sex))
-                .compose(Rx.transformer(UserInfoBean.class))
-                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
-                    @Override
-                    public void onSucceed(UserInfoBean bean) {
-                        super.onSucceed(bean);
-                        UserCache.instance().setUserInfoBean(bean);
-                    }
-                }));
+//        add(RRetrofit.create(UserInfoService.class)
+//                .editInfo(Param.buildMap("sex:" + sex))
+//                .compose(Rx.transformer(UserInfoBean.class))
+//                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+//                    @Override
+//                    public void onSucceed(UserInfoBean bean) {
+//                        super.onSucceed(bean);
+//                        UserCache.instance().setUserInfoBean(bean);
+//                    }
+//                }));
     }
 
     /**
@@ -648,16 +760,16 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                                                 });
                                                 infoLayout.setItemDarkText(mExEditText.string());
 
-                                                add(RRetrofit.create(UserInfoService.class)
-                                                        .editInfo(Param.buildMap("signature:" + value))
-                                                        .compose(Rx.transformer(UserInfoBean.class))
-                                                        .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
-                                                            @Override
-                                                            public void onSucceed(UserInfoBean bean) {
-                                                                super.onSucceed(bean);
-                                                                UserCache.instance().setUserInfoBean(bean);
-                                                            }
-                                                        }));
+//                                                add(RRetrofit.create(UserInfoService.class)
+//                                                        .editInfo(Param.buildMap("signature:" + value))
+//                                                        .compose(Rx.transformer(UserInfoBean.class))
+//                                                        .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+//                                                            @Override
+//                                                            public void onSucceed(UserInfoBean bean) {
+//                                                                super.onSucceed(bean);
+//                                                                UserCache.instance().setUserInfoBean(bean);
+//                                                            }
+//                                                        }));
 
                                                 finishIView(mIView);
                                             }
@@ -735,16 +847,16 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                                                 });
                                                 infoLayout.setItemDarkText(name);
 
-                                                add(RRetrofit.create(UserInfoService.class)
-                                                        .editInfo(Param.buildMap("username:" + name))
-                                                        .compose(Rx.transformer(UserInfoBean.class))
-                                                        .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
-                                                            @Override
-                                                            public void onSucceed(UserInfoBean bean) {
-                                                                super.onSucceed(bean);
-                                                                UserCache.instance().setUserInfoBean(bean);
-                                                            }
-                                                        }));
+//                                                add(RRetrofit.create(UserInfoService.class)
+//                                                        .editInfo(Param.buildMap("username:" + name))
+//                                                        .compose(Rx.transformer(UserInfoBean.class))
+//                                                        .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+//                                                            @Override
+//                                                            public void onSucceed(UserInfoBean bean) {
+//                                                                super.onSucceed(bean);
+//                                                                UserCache.instance().setUserInfoBean(bean);
+//                                                            }
+//                                                        }));
                                                 finishIView(mIView);
                                             }
                                         }))
@@ -762,4 +874,171 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         });
     }
+
+    /**
+     * 出生日期
+     */
+    protected void bindBirthdayItem(RBaseViewHolder holder, final UserInfoBean userInfoBean) {
+        final ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+        infoLayout.setItemText(mActivity.getString(R.string.birthday));
+        infoLayout.setItemDarkText(getBirthday(userInfoBean.getBirthday()));
+        infoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new DateDialog(new DateDialog.SimpleDateConfig() {
+                    @Override
+                    public void onDateSelector(WheelTime wheelTime) {
+                        final String time = wheelTime.getTime();
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                userInfoBean.setBirthday(time);
+                            }
+                        });
+                        infoLayout.setItemDarkText(getBirthday(time));
+
+//                        add(RRetrofit.create(UserInfoService.class)
+//                                .editInfo(Param.buildMap("birthday:" + time))
+//                                .compose(Rx.transformer(UserInfoBean.class))
+//                                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+//                                    @Override
+//                                    public void onSucceed(UserInfoBean bean) {
+//                                        super.onSucceed(bean);
+//                                        UserCache.instance().setUserInfoBean(bean);
+//                                    }
+//                                }));
+                    }
+
+                    @Override
+                    public String getCurrentDate() {
+                        return userInfoBean.getBirthday();
+                    }
+                }));
+            }
+        });
+    }
+
+    protected void bindAreaItem(RBaseViewHolder holder, final UserInfoBean userInfoBean) {
+        final ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+        infoLayout.setItemText(mActivity.getString(R.string.area));
+        infoLayout.setItemDarkText(userInfoBean.getProvince_name() + " " + userInfoBean.getCity_name());
+        infoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new CityDialog(userInfoBean.getProvince_id(), userInfoBean.getCity_id(), new Action2<ProvinceBean, ProvinceBean>() {
+                    @Override
+                    public void call(final ProvinceBean provinceBean, final ProvinceBean provinceBean2) {
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                userInfoBean.setProvince_id(provinceBean.getId());
+                                userInfoBean.setCity_id(provinceBean2.getId());
+
+                                userInfoBean.setProvince_name(provinceBean.getShort_name());
+                                userInfoBean.setCity_name(provinceBean2.getShort_name());
+                            }
+                        });
+                        infoLayout.setItemDarkText(userInfoBean.getProvince_name() + " " + userInfoBean.getCity_name());
+
+//                        add(RRetrofit.create(UserInfoService.class)
+//                                .editInfo(Param.buildMap("province_id:" + provinceBean.getId(), "city_id:" + provinceBean2.getId()))
+//                                .compose(Rx.transformer(UserInfoBean.class))
+//                                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+//                                    @Override
+//                                    public void onSucceed(UserInfoBean bean) {
+//                                        super.onSucceed(bean);
+//                                        UserCache.instance().setUserInfoBean(bean);
+//                                    }
+//                                }));
+                    }
+                }));
+            }
+        });
+    }
+
+    protected String getBirthday(String date) {
+        if (TextUtils.isEmpty(date)) {
+            return "";
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int year = calendar.get(Calendar.YEAR);//当前那一年
+
+        try {
+            calendar.setTime(WheelTime.Date_FORMAT.parse(date));
+            int y = calendar.get(Calendar.YEAR);//当前那一年
+            return mActivity.getResources().getString(R.string.birthday_format, year - y);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+     * 用来判断是否更改了信息
+     */
+    class OldParams {
+        public List<String> mPhotos = new ArrayList<>();
+        public String mUserIco;
+        public String mUserName;
+        public String mUserSex;
+        public String mBirthday;
+        public String mArea;
+        public String mUserVoiceUrl;
+        public String mSignature;
+        public String pName;
+        public String cName;
+
+        public boolean isChanged(UserInfoBean userInfoBean) {
+            boolean changed = false;
+
+            List<Luban.ImageItem> allDatas = mHnAddImageAdapter.getAllDatas();
+            for (int i = 0; i < allDatas.size(); i++) {
+                //照片墙给变了
+                try {
+                    Luban.ImageItem imageItem = allDatas.get(i);
+                    String url = mPhotos.get(i);
+                    if (!TextUtils.equals(url, imageItem.url)) {
+                        changed = true;
+                        return changed;
+                    }
+                } catch (Exception e) {
+                    changed = true;
+                    return changed;
+                }
+            }
+
+            if (!TextUtils.isEmpty(mUserSetIco)) {
+                //头像改变了
+                changed = true;
+                return changed;
+            }
+            if (!TextUtils.equals(mUserName, userInfoBean.getUsername())) {
+                changed = true;
+                return changed;
+            }
+            if (!TextUtils.equals(mUserSex, userInfoBean.getSex())) {
+                changed = true;
+                return changed;
+            }
+            if (!TextUtils.equals(mBirthday, userInfoBean.getBirthday())) {
+                changed = true;
+                return changed;
+            }
+            if (!TextUtils.equals(mArea, userInfoBean.getProvince_id() + "_" + userInfoBean.getCity_id())) {
+                changed = true;
+                return changed;
+            }
+            if (!TextUtils.equals(mUserVoiceUrl, userInfoBean.getVoice_introduce())) {
+                changed = true;
+                return changed;
+            }
+            if (!TextUtils.equals(mSignature, userInfoBean.getSignature())) {
+                changed = true;
+                return changed;
+            }
+            return changed;
+        }
+    }
+
 }

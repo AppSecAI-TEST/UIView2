@@ -467,6 +467,11 @@ public abstract class UIIViewImpl implements IView {
     }
 
     @Override
+    public boolean canSwipeBackPressed() {
+        return true;
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
     }

@@ -104,6 +104,11 @@ public class UserInfoBean extends RealmObject {
     private String created;
     private String voice_introduce;
     public String test;
+    /**
+     * birthday : 2017-02-21
+     */
+
+    private String birthday;
 
     public int getIs_attention() {
         return is_attention;
@@ -431,5 +436,13 @@ public class UserInfoBean extends RealmObject {
 
     public void setVoice_introduce(String voice_introduce) {
         this.voice_introduce = voice_introduce;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 }

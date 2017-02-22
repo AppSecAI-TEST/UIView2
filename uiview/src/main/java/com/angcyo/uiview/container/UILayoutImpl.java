@@ -731,8 +731,14 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             }
         }
 
-        if (!param.isSwipeBack) {
+        if (param.isSwipeBack) {
+            if (!mLastShowViewPattern.mIView.canSwipeBackPressed()) {
+                //不能滑动返回
+                return false;
+            }
+        } else {
             if (!mLastShowViewPattern.mIView.onBackPressed()) {
+                //不能退出
                 return false;
             }
         }

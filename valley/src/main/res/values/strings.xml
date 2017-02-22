@@ -83,6 +83,7 @@
     <string name="add_tags_text">添加标签</string>
     <string name="ok">确定</string>
     <string name="save">保存</string>
+    <string name="not_save">不保存</string>
     <string name="tag_empty_tip">至少需要一个标签!</string>
     <string name="fetch_tag_failed">标签获取失败!</string>
     <string name="known">知道了</string>
@@ -185,5 +186,9 @@
     <string name="signature_title">个性签名</string>
     <string name="name_text">昵称</string>
     <string name="save_ok_tip">保存成功</string>
+    <string name="birthday">年龄</string>
+    <string name="birthday_format">%1$d 岁</string>
+    <string name="area">地区</string>
+    <string name="edit_info_quit_tip">您的个人资料已经修改, 退出前要保存吗?</string>
 
 </resources>

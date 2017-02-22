@@ -138,6 +138,7 @@ public interface UserInfoService {
      * avatar	否	string	头像
      * photos	否	string	照片墙【不包含头像，多张图片以，分割】【当删除图片时，删除所有照片传empty】
      * voice	否	string	语音介绍【传empty代表删除语音介绍】
+     * birthday	否	string	生日【2017-02-21】
      */
     @POST("user/editInfo")
     Observable<ResponseBody> editInfo(@QueryMap Map<String, String> map);

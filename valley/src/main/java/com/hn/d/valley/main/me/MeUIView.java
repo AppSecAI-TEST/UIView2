@@ -147,6 +147,15 @@ public class MeUIView extends BaseUIView {
         }
 
         mViewPagerPlaceholderView.setVisibility(View.GONE);
+        initPhotos(userInfoBean);
+        PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, mPhotos);
+
+        //
+        mViewHolder.fillView(UserInfoBean.class, userInfoBean, false, true);
+        mPersonAuthLayout.setItemDarkText(UserControl.getAuthString(userInfoBean.getAuth_type()));
+    }
+
+    private void initPhotos(UserInfoBean userInfoBean) {
         mPhotos.clear();
         if (userInfoBean != null) {
             List<String> stringList = RUtils.split(userInfoBean.getPhotos());
@@ -158,11 +167,6 @@ public class MeUIView extends BaseUIView {
         } else {
             mPhotos.add(UserCache.instance().getAvatar());
         }
-        PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, mPhotos);
-
-        //
-        mViewHolder.fillView(UserInfoBean.class, userInfoBean, false, true);
-        mPersonAuthLayout.setItemDarkText(UserControl.getAuthString(userInfoBean.getAuth_type()));
     }
 
     @NonNull
@@ -174,6 +178,7 @@ public class MeUIView extends BaseUIView {
     @Override
     public void onViewCreate() {
         super.onViewCreate();
+        initPhotos(UserCache.instance().getUserInfoBean());
     }
 
     @Override
