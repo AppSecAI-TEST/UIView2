@@ -35,7 +35,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     @Override
     protected void onBindDataView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-        if (holder.getViewType() == 2) {
+        if (mRExBaseAdapter.isLast(posInData)) {
             TextView textView = holder.v(R.id.text_view);
             textView.setText(dataBean.itemString);
             textView.setOnClickListener(dataBean.itemClickListener);
