@@ -47,13 +47,8 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     @Override
-    protected int getDataItemType(int posInData) {
-        return mRExBaseAdapter.isLast(posInData) ? 2 : 1;
-    }
-
-    @Override
     protected int getItemLayoutId(int viewType) {
-        if (viewType == 2) {
+        if (mRExBaseAdapter.isLast(viewType)) {
             return R.layout.item_button_view;
         } else {
             return R.layout.item_info_layout;
