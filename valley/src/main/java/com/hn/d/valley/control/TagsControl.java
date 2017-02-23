@@ -1,6 +1,8 @@
 package com.hn.d.valley.control;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -11,15 +13,18 @@ import com.angcyo.uiview.github.all.base.adapter.adapter.cache.BaseCacheAdapter;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RTextCheckView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.DiscussService;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +52,12 @@ public class TagsControl {
     static {
         allTag = new Tag();
         allTag.setId("0");
-        allTag.setName(ValleyApp.getApp().getResources().getString(R.string.all));
+        allTag.setName(ValleyApp.getApp().getResources().getString(R.string.tag_recommend));
     }
 
+    /**
+     * 从服务器获取标签, 优先从数据库中获取
+     */
     public static void getTags(final Action1<List<Tag>> listAction1) {
         RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
         final int size = results.size();
@@ -136,5 +144,71 @@ public class TagsControl {
                 });
             }
         });
+    }
+
+    /**
+     * 获取排好序的标签列表(标签id列表)
+     */
+    public static List<String> getMyTags() {
+        String tags = Hawk.get(Constant.MY_TAGS, "");
+        return RUtils.split(tags);
+    }
+
+    /**
+     * 保存排好序的标签
+     */
+    public static void setMyTags(String tags) {
+        Hawk.put(Constant.MY_TAGS, tags);
+    }
+
+    /**
+     * 保存排好序的标签
+     */
+    public static void setMyTags(List<Tag> tags) {
+        StringBuilder build = new StringBuilder();
+        for (Tag g : tags) {
+            build.append(g.getId());
+            build.append(",");
+        }
+
+        setMyTags(RUtils.safe(build));
+    }
+
+    public static void initMyTags(@NonNull List<Tag> inAllTag, List<Tag> outMyTag, List<Tag> outOtherTag) {
+        Boolean first = Hawk.get(Constant.MY_TAGS_FIRST, true);
+        Hawk.put(Constant.MY_TAGS_FIRST, false);
+        if (first) {
+            setMyTags(inAllTag);
+            if (outMyTag != null) {
+                outMyTag.addAll(inAllTag);
+            }
+        } else {
+            List<String> myTags = getMyTags();
+            initMyTags(inAllTag, outMyTag);
+            //其他标签
+            for (Tag g : inAllTag) {
+                if (!myTags.contains(g.getId())) {
+                    if (outOtherTag != null) {
+                        outOtherTag.add(g);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void initMyTags(@NonNull List<Tag> inAllTag, List<Tag> outMyTag) {
+        List<String> myTags = getMyTags();
+        //根据顺序, 返回标签
+        for (int i = 0; i < myTags.size(); i++) {
+            String tagId = myTags.get(i);
+            for (int j = 0; j < inAllTag.size(); j++) {
+                Tag tag = inAllTag.get(j);
+                if (TextUtils.equals(tag.getId(), tagId)) {
+                    if (outMyTag != null) {
+                        outMyTag.add(tag);
+                    }
+                }
+            }
+        }
     }
 }

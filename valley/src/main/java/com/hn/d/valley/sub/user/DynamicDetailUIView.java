@@ -38,9 +38,9 @@ import com.hn.d.valley.emoji.EmojiRecyclerView;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
-import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
+import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -369,33 +369,34 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-        Observable.zip(
-                RRetrofit.create(DiscussService.class)
-                        .detail(Param.buildMap("discuss_id:" + discuss_id, "uid:" + UserCache.getUserAccount()))
-                        .compose(Rx.transformer(UserDiscussListBean.DataListBean.class))
-                        .asObservable(),
-                RRetrofit.create(SocialService.class)
-                        .commentList(Param.buildMap("page:" + page, "item_id:" + discuss_id, "type:discuss", "uid:" + UserCache.getUserAccount()))
-                        .compose(Rx.transformer(CommentListBean.class))
-                        .asObservable(),
-                new Func2<UserDiscussListBean.DataListBean, CommentListBean, String>() {
-                    @Override
-                    public String call(UserDiscussListBean.DataListBean dataListBean, CommentListBean dataListBean2) {
-                        showContentLayout();
-                        if (dataListBean != null) {
-                            List<UserDiscussListBean.DataListBean> headList = new ArrayList<>();
-                            headList.add(dataListBean);
-                            mRExBaseAdapter.resetHeaderData(headList);
+        Observable
+                .zip(
+                        RRetrofit.create(DiscussService.class)
+                                .detail(Param.buildMap("discuss_id:" + discuss_id, "uid:" + UserCache.getUserAccount()))
+                                .compose(Rx.transformer(UserDiscussListBean.DataListBean.class))
+                                .asObservable(),
+                        RRetrofit.create(SocialService.class)
+                                .commentList(Param.buildMap("page:" + page, "item_id:" + discuss_id, "type:discuss", "uid:" + UserCache.getUserAccount()))
+                                .compose(Rx.transformer(CommentListBean.class))
+                                .asObservable(),
+                        new Func2<UserDiscussListBean.DataListBean, CommentListBean, String>() {
+                            @Override
+                            public String call(UserDiscussListBean.DataListBean dataListBean, CommentListBean dataListBean2) {
+                                showContentLayout();
+                                if (dataListBean != null) {
+                                    List<UserDiscussListBean.DataListBean> headList = new ArrayList<>();
+                                    headList.add(dataListBean);
+                                    mRExBaseAdapter.resetHeaderData(headList);
+                                }
+                                if (dataListBean2 != null) {
+                                    onUILoadDataEnd(dataListBean2.getData_list(), dataListBean2.getData_count());
+                                } else {
+                                    onUILoadDataEnd();
+                                }
+                                return null;
+                            }
                         }
-                        if (dataListBean2 != null) {
-                            onUILoadDataEnd(dataListBean2.getData_list(), dataListBean2.getData_count());
-                        } else {
-                            onUILoadDataEnd();
-                        }
-                        return null;
-                    }
-                }
-        )
+                )
                 .compose(Rx.<String>transformer())
                 .doOnSubscribe(new Action0() {
                     @Override

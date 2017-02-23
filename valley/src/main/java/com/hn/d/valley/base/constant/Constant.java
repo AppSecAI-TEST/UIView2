@@ -69,6 +69,15 @@ public class Constant {
      * Amap
      */
     public static final int DEFAULT_ZOOM_LEVEL = 15;
+
+    /**
+     * 保存排序的标签
+     */
+    public static final String MY_TAGS = "my_tags";
+    /**
+     * 第一次设置标签, 返回所有的标签都是自己的
+     */
+    public static final String MY_TAGS_FIRST = "my_tags_first";
     /**
      * 键盘的高度
      */

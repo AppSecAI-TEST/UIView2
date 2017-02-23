@@ -1,7 +1,9 @@
 package com.hn.d.valley.main.home.recommend;
 
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
@@ -40,7 +42,7 @@ public class RecommendUIView2 extends BaseContentUIView {
     SlidingTabLayout mSlidTabLayout;
     @BindView(R.id.view_pager)
     UIViewPager mViewPager;
-    ArrayList<Tag> mAllTags;
+    ArrayList<Tag> mAllTags, mMyTags;
 
     BaseRecyclerUIView mLastUIView;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
@@ -59,14 +61,60 @@ public class RecommendUIView2 extends BaseContentUIView {
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
         mAllTags = new ArrayList<>();
+        mMyTags = new ArrayList<>();
         TagsControl.getTags(new Action1<List<Tag>>() {
             @Override
             public void call(List<Tag> tags) {
                 mAllTags.add(0, TagsControl.allTag);
                 mAllTags.addAll(tags);
 
+                TagsControl.initMyTags(mAllTags, mMyTags);
+
                 initViewPager();
                 initTabLayout();
+
+                //标签管理
+                mViewHolder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new TagsManageUIView(mAllTags, new Action1<List<Tag>>() {
+                            @Override
+                            public void call(List<Tag> tags) {
+                                //1:得到当前的item位置
+                                int currentItem = mViewPager.getCurrentItem();
+                                //得到当前标签的id
+                                String id = mMyTags.get(currentItem).getId();
+
+                                //2:判断当前标签的id是否被删除
+                                int index = -1;
+                                int size = tags.size();
+                                for (int i = 0; i < size; i++) {
+                                    String id1 = tags.get(i).getId();
+                                    if (TextUtils.equals(id, id1)) {
+                                        index = i;
+                                        break;
+                                    }
+                                }
+                                //如果没有找到找到了
+                                if (index == -1) {
+                                    if (size > currentItem) {
+                                        index = currentItem;
+                                    } else {
+                                        index = size - 1;
+                                    }
+                                }
+
+                                mMyTags.clear();
+                                mMyTags.addAll(tags);
+
+                                resetViewPagerAdapter();
+//                                mViewPager.getAdapter().notifyDataSetChanged();
+                                initTabLayout();
+                                mViewPager.setCurrentItem(index);
+                            }
+                        }));
+                    }
+                });
             }
         });
     }
@@ -96,12 +144,23 @@ public class RecommendUIView2 extends BaseContentUIView {
     private void initViewPager() {
         mViewPager.setPageTransformer(true, new FadeInOutPageTransformer());
         mViewPager.setOffscreenPageLimit(1);
+        resetViewPagerAdapter();
+        mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                mSlidTabLayout.setCurrentTab(position, false);
+            }
+        };
+        mViewPager.addOnPageChangeListener(mPageChangeListener);
+    }
+
+    private void resetViewPagerAdapter() {
         mViewPager.setAdapter(new UIPagerAdapter() {
             @Override
             protected IView getIView(int position) {
                 final RecommendUIView uiView = new RecommendUIView();
                 uiView.bindOtherILayout(mOtherILayout);
-                uiView.setFilterTag(mAllTags.get(position));
+                uiView.setFilterTag(mMyTags.get(position));
                 if (position == mViewPager.getCurrentItem()) {
                     mLastUIView = uiView;
                 }
@@ -110,21 +169,14 @@ public class RecommendUIView2 extends BaseContentUIView {
 
             @Override
             public int getCount() {
-                return mAllTags.size();
+                return mMyTags.size();
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return mAllTags.get(position).getName();
+                return mMyTags.get(position).getName();
             }
         });
-        mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                mSlidTabLayout.setCurrentTab(position, false);
-            }
-        };
-        mViewPager.addOnPageChangeListener(mPageChangeListener);
     }
 
     /**

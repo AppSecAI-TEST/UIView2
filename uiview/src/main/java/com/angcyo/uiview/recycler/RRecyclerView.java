@@ -181,7 +181,7 @@ public class RRecyclerView extends RecyclerView {
     /**
      * 设置Item 动画类, 用于 添加 和 删除 Item时候的动画
      */
-    public RRecyclerView setItemAnimator(Class<? extends BaseItemAnimator> animator) {
+    public RRecyclerView setBaseItemAnimator(Class<? extends BaseItemAnimator> animator) {
         try {
             super.setItemAnimator(animator.newInstance());
         } catch (Exception e) {
