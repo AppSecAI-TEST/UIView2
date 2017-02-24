@@ -71,6 +71,11 @@ public class Constant {
     public static final int DEFAULT_ZOOM_LEVEL = 15;
 
     /**
+     * 接口默认一页返回多少条数据
+     */
+    public static final int DEFAULT_PAGE_DATA_COUNT = 20;
+
+    /**
      * 保存排序的标签
      */
     public static final String MY_TAGS = "my_tags";

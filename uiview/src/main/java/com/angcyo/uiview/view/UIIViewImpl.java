@@ -458,6 +458,12 @@ public abstract class UIIViewImpl implements IView {
         }
     }
 
+    public void removeCallbacks(Runnable action) {
+        if (mRootView != null) {
+            mRootView.removeCallbacks(action);
+        }
+    }
+
     /**
      * @return true 允许退出
      */

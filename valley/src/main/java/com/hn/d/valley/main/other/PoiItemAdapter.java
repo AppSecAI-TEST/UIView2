@@ -70,15 +70,15 @@ public class PoiItemAdapter extends RModelAdapter<PoiItem> {
         });
 
         if (isSelector) {
-            onSelectorPosition(holder, position);
+            onSelectorPosition(holder, position, isSelector);
         } else {
-            onUnSelectorPosition(holder, position);
+            onUnSelectorPosition(holder, position, isSelector);
         }
     }
 
     @Override
-    protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position) {
-        super.onSelectorPosition(viewHolder, position);
+    protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
+        super.onSelectorPosition(viewHolder, position, isSelector);
         viewHolder.v(R.id.select_image_view).setVisibility(View.VISIBLE);
         int mainColor = R.color.colorAccent;
         int darkColor = R.color.colorAccent;
@@ -93,8 +93,8 @@ public class PoiItemAdapter extends RModelAdapter<PoiItem> {
     }
 
     @Override
-    protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position) {
-        super.onUnSelectorPosition(viewHolder, position);
+    protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
+        super.onUnSelectorPosition(viewHolder, position, isSelector);
         viewHolder.v(R.id.select_image_view).setVisibility(View.INVISIBLE);
         int mainColor = R.color.main_text_color;
         int darkColor = R.color.main_text_color_dark;

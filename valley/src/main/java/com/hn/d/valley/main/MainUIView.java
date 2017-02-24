@@ -19,6 +19,7 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.model.ViewPattern;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.BuildConfig;
@@ -249,6 +250,10 @@ public class MainUIView extends BaseUIView {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
+        ViewPattern lastViewPattern = mMainUILayout.getLastViewPattern();
+        if (lastViewPattern != null) {
+            lastViewPattern.mIView.onViewShow(bundle);
+        }
         MsgCache.notifyNoreadNum();
     }
 

@@ -73,6 +73,12 @@ public class MeUIView extends BaseUIView {
     @BindView(R.id.view_pager_placeholder_view)
     ImageView mViewPagerPlaceholderView;
     private ArrayList<String> mPhotos = new ArrayList<>();
+    Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            loadUserData();
+        }
+    };
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -194,19 +200,31 @@ public class MeUIView extends BaseUIView {
     public void onViewShow(Bundle bundle) {
         if (System.currentTimeMillis() - mLastShowTime > 30 * 1000) {
             //30秒后, 重新拉取新的信息
-            UserCache.instance()
-                    .fetchUserInfo()
-                    .subscribe(new RSubscriber<UserInfoBean>() {
-                        @Override
-                        public void onSucceed(UserInfoBean userInfoBean) {
-                            if (userInfoBean != null) {
-                                UserCache.instance().setUserInfoBean(userInfoBean);
-                                initMeUIView();
-                            }
-                        }
-                    });
+            loadUserData();
+        } else {
+            postDelayed(refreshRunnable, 1000);
         }
         super.onViewShow(bundle);
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        removeCallbacks(refreshRunnable);
+    }
+
+    private void loadUserData() {
+        UserCache.instance()
+                .fetchUserInfo()
+                .subscribe(new RSubscriber<UserInfoBean>() {
+                    @Override
+                    public void onSucceed(UserInfoBean userInfoBean) {
+                        if (userInfoBean != null) {
+                            UserCache.instance().setUserInfoBean(userInfoBean);
+                            initMeUIView();
+                        }
+                    }
+                });
     }
 
     @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})

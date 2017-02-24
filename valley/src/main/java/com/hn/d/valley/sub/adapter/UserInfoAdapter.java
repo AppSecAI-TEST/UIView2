@@ -18,7 +18,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
  * Created by angcyo on 2017-01-15.
  */
 
-public class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, String> {
+public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, String> {
 
     private ILayout mILayout;
 
@@ -88,11 +88,20 @@ public class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
             followView.setOnClickListener(null);
         } else {
             //关注
-            if (bean.getIs_attention() == 1) {
+            if (isAttention(bean)) {
                 followView.setImageResource(R.drawable.focus_on);
             } else {
                 followView.setImageResource(R.drawable.follow);
             }
         }
     }
+
+    //是否是联系人
+    protected abstract boolean isContact(final LikeUserInfoBean dataBean);
+
+    //是否已关注
+    protected abstract boolean isAttention(final LikeUserInfoBean dataBean);
+
+    protected abstract void onSetDataBean(final LikeUserInfoBean dataBean, boolean value);
+
 }

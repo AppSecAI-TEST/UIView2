@@ -189,9 +189,15 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
     }
 
     public void setNoMore() {
+        setNoMore(false);
+    }
+
+    public void setNoMore(boolean refresh) {
         mLoadState = ILoadMore.NO_MORE;
         setEnableLoadMore(true);
-//        updateLoadMoreView();//不需要及时刷新
+        if (refresh) {
+            updateLoadMoreView();//不需要及时刷新
+        }
     }
 
     public boolean isLast(int position) {

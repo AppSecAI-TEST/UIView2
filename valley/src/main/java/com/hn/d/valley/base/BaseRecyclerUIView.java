@@ -19,6 +19,7 @@ import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.widget.HnRefreshLayout;
 
 import java.util.HashMap;
@@ -47,6 +48,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected int page = 1;//当前请求第几页
     protected int next = 1;//下一页
     protected long loadTime = 0;//加载数据的时间
+    protected boolean hasNext = true;//是否有下一页
 
     public static void initEmpty(final RBaseViewHolder viewHolder, boolean isEmpty, String tip) {
         if (viewHolder != null) {
@@ -104,7 +106,8 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
             return;
         }
         if (mRExBaseAdapter != null) {
-            mRExBaseAdapter.setNoMore();//默认没有更多
+            mRExBaseAdapter.setEnableLoadMore(false);
+            //mRExBaseAdapter.setNoMore();//默认没有更多
             mRExBaseAdapter.setLoadMoreListener(this);
         }
 
@@ -251,7 +254,12 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 是否有下一页
      */
     public boolean hasNext() {
-        return data_count > page * PAGE_SIZE;
+        //return data_count > page * PAGE_SIZE;
+        return hasNext;
+    }
+
+    public void setHasNext(boolean hasNext) {
+        this.hasNext = hasNext;
     }
 
     @Override
@@ -275,6 +283,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         //mRExBaseAdapter.setNoMore();
         loadTime = System.currentTimeMillis();
         page = 1;
+        hasNext = true;
         onCancel();//刷新数据,取消之前的加载更多请求
         onUILoadData(getPage());
     }
@@ -347,6 +356,17 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
             isEmptyData = false;
         }
 
+        if (datas == null || datas.isEmpty()) {
+            hasNext = false;
+            if (mRExBaseAdapter.isEnableLoadMore()) {
+                mRExBaseAdapter.setNoMore(true);
+            }
+        } else if (datas.size() >= Constant.DEFAULT_PAGE_DATA_COUNT && hasNext) {
+            if (!mRExBaseAdapter.isEnableLoadMore()) {
+                mRExBaseAdapter.setLoadMoreEnd();
+            }
+        }
+
         if (isEmptyData) {
             mRExBaseAdapter.resetAllData(datas);
             if (mRExBaseAdapter.isEnableLoadMore()) {
@@ -361,6 +381,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         }
 
         onEmptyData(isEmptyData);
+    }
+
+    public void onUILoadDataEnd(List<T> datas) {
+        onUILoadDataEnd(datas, 0);
     }
 
     public void onUILoadDataEnd() {

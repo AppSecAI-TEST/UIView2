@@ -89,7 +89,7 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
      *
      * @return true 表示处理, false 不处理
      */
-    protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position) {
+    protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
         return false;
     }
 
@@ -98,12 +98,12 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
      *
      * @return true 表示处理, false 不处理
      */
-    protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position) {
+    protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
         return false;
     }
 
     /**
-     * 在执行 {@link #onUnSelectorPosition(RBaseViewHolder, int)}后, 调用此方法, 可以便捷的取消 CompoundButton 的状态
+     * 在执行 {@link #onUnSelectorPosition(RBaseViewHolder, int, boolean)}后, 调用此方法, 可以便捷的取消 CompoundButton 的状态
      */
     public void unselector(@NonNull List<Integer> list, @NonNull RRecyclerView recyclerView, @NonNull String viewTag) {
         for (Integer pos : list) {
@@ -128,7 +128,7 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
     }
 
     /**
-     * 在执行 {@link #onUnSelectorPosition(RBaseViewHolder, int)}后, 调用此方法, 可以便捷的取消 CompoundButton 的状态
+     * 在执行 {@link #onUnSelectorPosition(RBaseViewHolder, int, boolean)}后, 调用此方法, 可以便捷的取消 CompoundButton 的状态
      */
     public void unselector(@NonNull List<Integer> list, @NonNull RRecyclerView recyclerView, @IdRes int viewId) {
         for (Integer pos : list) {
@@ -313,7 +313,7 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
                 return;
             } else {
                 mSelector.remove(position);
-                if (!onUnSelectorPosition(viewHolder, position)) {
+                if (!onUnSelectorPosition(viewHolder, position, false)) {
                     onBindModelView(mModel, false, viewHolder, position,
                             getAllDatas().size() > position ? getAllDatas().get(position) : null);
                 }
@@ -324,7 +324,7 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
                 if (!allSelectorList.isEmpty()) {
                     Integer pos = allSelectorList.get(0);
                     RBaseViewHolder holder = getViewHolderFromPosition(pos);
-                    if (!onUnSelectorPosition(holder, pos)) {
+                    if (!onUnSelectorPosition(holder, pos, false)) {
                         onBindModelView(mModel, false, holder, pos,
                                 getAllDatas().size() > pos ? getAllDatas().get(pos) : null);
                     }
@@ -332,7 +332,7 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
                 mSelector.clear();
             }
             mSelector.add(position);
-            if (!onSelectorPosition(viewHolder, position)) {
+            if (!onSelectorPosition(viewHolder, position, true)) {
                 onBindModelView(mModel, true, viewHolder, position,
                         getAllDatas().size() > position ? getAllDatas().get(position) : null);
             }

@@ -197,5 +197,7 @@
     <string name="create_qr_tip">二维码生成中...</string>
     <string name="tags_manage_title">标签管理</string>
     <string name="signature_empty_tip">此人很懒, 什么也没有留下.</string>
+    <string name="unattention_tip2">你们是好友,取消关注后将会解除好友,你们将从各自的联系人列表中消失,对方不会收到任何提示</string>
+    <string name="unattention_tip1">确定不再关注此人?</string>
 
 </resources>

@@ -3,8 +3,10 @@ package com.angcyo.uiview.dialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.uiview.R;
 
@@ -62,16 +64,32 @@ public class UIBottomItemDialog extends UIItemDialog {
             mViewHolder.v(R.id.cancel_control_layout).setVisibility(View.GONE);
         }
 
+        TextView titleView = mViewHolder.v(R.id.base_title_view);
         if (TextUtils.isEmpty(titleString)) {
-            mViewHolder.v(R.id.base_title_view).setVisibility(View.GONE);
+            titleView.setVisibility(View.GONE);
         } else {
-            mViewHolder.tv(R.id.base_title_view).setText(titleString);
+            titleView.setVisibility(View.VISIBLE);
+            titleView.setText(titleString);
         }
 
         if (showDivider) {
             mItemContentLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE | LinearLayout.SHOW_DIVIDER_BEGINNING);
         } else {
             mItemContentLayout.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
+        }
+    }
+
+    @Override
+    protected void inflateItem() {
+        int size = mItemInfos.size();
+        for (int i = 0; i < size; i++) {
+            ItemInfo info = mItemInfos.get(i);
+            TextView textView = getItem(info);
+            textView.setTextColor(mActivity.getResources().getColor(R.color.base_text_color));
+            textView.setBackgroundResource(R.drawable.base_bg_selector);
+            mItemContentLayout.addView(textView,
+                    new ViewGroup.LayoutParams(-1,
+                            mActivity.getResources().getDimensionPixelSize(R.dimen.base_item_size)));
         }
     }
 }
