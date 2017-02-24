@@ -61,6 +61,16 @@ public class ItemInfoLayout extends RelativeLayout {
     @DrawableRes
     private int leftDrawableRes = -1, rightDrawableRes = -1, darkDrawableRes = -1;
 
+    /***
+     * 图片的大小, 用来显示小红点
+     */
+    private int darkImageSize = 48;//dp
+
+    /**
+     * 是否是红点模式
+     */
+    private boolean isRedDotMode = false;
+
     public ItemInfoLayout(Context context) {
         this(context, null);
     }
@@ -90,6 +100,9 @@ public class ItemInfoLayout extends RelativeLayout {
 
         itemDarkTag = array.getString(R.styleable.ItemInfoLayout_item_dark_tag);
         itemTag = array.getString(R.styleable.ItemInfoLayout_item_text_tag);
+
+        darkImageSize = array.getDimensionPixelOffset(R.styleable.ItemInfoLayout_item_dark_image_size, darkImageSize);
+        isRedDotMode = array.getBoolean(R.styleable.ItemInfoLayout_item_is_red_dot_mode, false);
 
         array.recycle();
 
@@ -144,13 +157,17 @@ public class ItemInfoLayout extends RelativeLayout {
         paramsDark.addRule(RelativeLayout.CENTER_VERTICAL);
         paramsDark.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
-        int size = (int) dpToPx(48);
+        int size = (int) dpToPx(darkImageSize);
         LayoutParams imageParam = new LayoutParams(size, size);
         imageParam.addRule(RelativeLayout.CENTER_VERTICAL);
         imageParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        int padding = (int) dpToPx(2);
-        imageParam.setMargins(0, 0, -padding, 0);
-        mImageView.setPadding(0, padding, 0, padding);
+        if (isRedDotMode) {
+            imageParam.setMargins(0, 0, (int) dpToPx(20), 0);
+        } else {
+            int padding = (int) dpToPx(2);
+            imageParam.setMargins(0, 0, -padding, 0);
+        }
+//        mImageView.setPadding(0, padding, 0, padding);
         //mImageView.setBackgroundColor(Color.RED);
 
         addView(mTextView, params);
@@ -219,5 +236,13 @@ public class ItemInfoLayout extends RelativeLayout {
     public void setItemText(String itemText) {
         this.itemText = itemText;
         mTextView.setText(itemText);
+    }
+
+    public void setDarkImageSize(int darkImageSize) {
+        this.darkImageSize = darkImageSize;
+    }
+
+    public void setRedDotMode(boolean redDotMode) {
+        isRedDotMode = redDotMode;
     }
 }

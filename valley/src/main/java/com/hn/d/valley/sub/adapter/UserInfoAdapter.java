@@ -97,11 +97,17 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
     }
 
     //是否是联系人
-    protected abstract boolean isContact(final LikeUserInfoBean dataBean);
+    protected boolean isContact(final LikeUserInfoBean dataBean) {
+        return false;
+    }
 
     //是否已关注
-    protected abstract boolean isAttention(final LikeUserInfoBean dataBean);
+    protected boolean isAttention(final LikeUserInfoBean dataBean) {
+        return false;
+    }
 
-    protected abstract void onSetDataBean(final LikeUserInfoBean dataBean, boolean value);
+    protected void onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {
+
+    }
 
 }

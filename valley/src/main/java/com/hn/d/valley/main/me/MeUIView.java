@@ -31,6 +31,8 @@ import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
+import com.hn.d.valley.sub.other.MyVisitorUserUIView;
+import com.hn.d.valley.sub.other.SeeStateUserUIView;
 import com.hn.d.valley.utils.PhotoPager;
 
 import java.util.ArrayList;
@@ -72,6 +74,10 @@ public class MeUIView extends BaseUIView {
     ItemInfoLayout mSettingLayout;
     @BindView(R.id.view_pager_placeholder_view)
     ImageView mViewPagerPlaceholderView;
+    @BindView(R.id.dynamic_notification_layout)
+    ItemInfoLayout mDynamicNotificationLayout;//动态通知
+    @BindView(R.id.my_visitor_layout)
+    ItemInfoLayout mMyVisitorLayout;//我的访客
     private ArrayList<String> mPhotos = new ArrayList<>();
     Runnable refreshRunnable = new Runnable() {
         @Override
@@ -160,6 +166,10 @@ public class MeUIView extends BaseUIView {
         //
         mViewHolder.fillView(UserInfoBean.class, userInfoBean, false, true);
         mPersonAuthLayout.setItemDarkText(UserControl.getAuthString(userInfoBean.getAuth_type()));
+
+        mDynamicNotificationLayout.getImageView().setImageResource(R.drawable.base_red_circle_shape);
+        mMyVisitorLayout.getImageView().setImageResource(R.drawable.base_red_circle_shape);
+
     }
 
     private void initPhotos(UserInfoBean userInfoBean) {
@@ -228,7 +238,7 @@ public class MeUIView extends BaseUIView {
     }
 
     @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
-    public void onClick(View view) {
+    public void onInfoClick(View view) {
         switch (view.getId()) {
             case R.id.qr_code_view://二维码
                 mOtherILayout.startIView(new MyQrCodeUIView());
@@ -271,5 +281,17 @@ public class MeUIView extends BaseUIView {
                 initMeUIView();
             }
         }));
+    }
+
+    @OnClick({R.id.dynamic_notification_layout, R.id.my_visitor_layout})
+    public void onDynamicClick(View view) {
+        switch (view.getId()) {
+            case R.id.dynamic_notification_layout://动态通知
+                mOtherILayout.startIView(new SeeStateUserUIView());
+                break;
+            case R.id.my_visitor_layout://我的访客
+                mOtherILayout.startIView(new MyVisitorUserUIView());
+                break;
+        }
     }
 }

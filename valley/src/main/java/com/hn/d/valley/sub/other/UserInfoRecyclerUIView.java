@@ -144,13 +144,19 @@ public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUs
     }
 
     //是否是联系人
-    protected abstract boolean isContact(final LikeUserInfoBean dataBean);
+    protected boolean isContact(final LikeUserInfoBean dataBean) {
+        return false;
+    }
 
     //是否已关注
-    protected abstract boolean isAttention(final LikeUserInfoBean dataBean);
+    protected boolean isAttention(final LikeUserInfoBean dataBean) {
+        return false;
+    }
 
     //改变数据
-    protected abstract void onSetDataBean(final LikeUserInfoBean dataBean, boolean value);
+    protected void onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {
+
+    }
 
     @Override
     protected RBaseItemDecoration initItemDecoration() {

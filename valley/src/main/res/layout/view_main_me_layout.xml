@@ -135,6 +135,35 @@
                 app:item_dark_id="@+id/collect_count"
                 app:item_text="@string/my_favor"/>
 
+
+            <!--中部-->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_xhdpi"/>
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/dynamic_notification_layout"
+                style="@style/DefaultItemInfoStyle"
+                app:item_dark_id="@+id/discuss_count"
+                app:item_dark_image_size="2dp"
+                app:item_is_red_dot_mode="true"
+                app:item_text="@string/dynamic_notification_text"/>
+
+            <View
+                style="@style/BaseHLine"/>
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/my_visitor_layout"
+                style="@style/DefaultItemInfoStyle"
+                app:item_dark_id="@+id/collect_count"
+                app:item_dark_image_size="2dp"
+                app:item_is_red_dot_mode="true"
+                app:item_text="@string/my_visitor_text"/>
+
+            <!--<Space-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/base_xhdpi"/>-->
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base_xhdpi"/>
@@ -174,8 +203,8 @@
                 app:item_text="@string/setting"/>
 
             <!--<View-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="300dp"/>-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="300dp"/>-->
 
         </LinearLayout>
 
