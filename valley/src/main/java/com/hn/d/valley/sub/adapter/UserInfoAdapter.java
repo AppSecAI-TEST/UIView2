@@ -3,7 +3,6 @@ package com.hn.d.valley.sub.adapter;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
@@ -11,6 +10,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
@@ -22,9 +22,9 @@ public class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
 
     private ILayout mILayout;
 
-    public UserInfoAdapter(Context context) {
+    public UserInfoAdapter(Context context, ILayout ILayout) {
         super(context);
-//        mILayout = ILayout;
+        mILayout = ILayout;
     }
 
     @Override
@@ -34,9 +34,17 @@ public class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
     }
 
     @Override
-    protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
+    protected void onBindDataView(RBaseViewHolder holder, final int posInData, final LikeUserInfoBean dataBean) {
         super.onBindDataView(holder, posInData, dataBean);
         holder.fillView(dataBean);
+
+        //用户个人详情
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         //头像
         HnGlideImageView userIcoView = holder.v(R.id.image_view);
@@ -48,14 +56,6 @@ public class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
 
         if (dataBean.getIs_contact() == 1) {
         } else {
-        }
-
-        //关注
-        ImageView followView = holder.v(R.id.follow_image_view);
-        if (dataBean.getIs_attention() == 1) {
-            followView.setImageResource(R.drawable.focus_on);
-        } else {
-            followView.setImageResource(R.drawable.follow);
         }
 
         //认证
@@ -70,6 +70,28 @@ public class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
                 signatureView.setText(R.string.signature_empty_tip);
             } else {
                 signatureView.setText(signature);
+            }
+        }
+    }
+
+    @Override
+    protected void onBindNormalView(RBaseViewHolder holder, int position, LikeUserInfoBean bean) {
+        super.onBindNormalView(holder, position, bean);
+    }
+
+    @Override
+    protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, LikeUserInfoBean bean) {
+        super.onBindModelView(model, isSelector, holder, position, bean);
+        final HnFollowImageView followView = holder.v(R.id.follow_image_view);
+        followView.setLoadingModel(isSelector);
+        if (isSelector) {
+            followView.setOnClickListener(null);
+        } else {
+            //关注
+            if (bean.getIs_attention() == 1) {
+                followView.setImageResource(R.drawable.focus_on);
+            } else {
+                followView.setImageResource(R.drawable.follow);
             }
         }
     }

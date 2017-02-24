@@ -110,7 +110,7 @@ public abstract class RExBaseAdapter<H, T, F> extends RModelAdapter<T> {
     }
 
     @Override
-    protected void onBindCommonView(RBaseViewHolder holder, int position, T bean) {
+    final protected void onBindCommonView(RBaseViewHolder holder, int position, T bean) {
         if (isInHeader(position)) {
             onBindHeaderView(holder, position, mAllHeaderDatas.size() > position ? mAllHeaderDatas.get(position) : null);
         } else if (isInData(position)) {

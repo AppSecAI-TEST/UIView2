@@ -77,7 +77,7 @@ public class PoiItemAdapter extends RModelAdapter<PoiItem> {
     }
 
     @Override
-    protected void onSelectorPosition(RBaseViewHolder viewHolder, int position) {
+    protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position) {
         super.onSelectorPosition(viewHolder, position);
         viewHolder.v(R.id.select_image_view).setVisibility(View.VISIBLE);
         int mainColor = R.color.colorAccent;
@@ -88,16 +88,20 @@ public class PoiItemAdapter extends RModelAdapter<PoiItem> {
         if (mPoiItemListener != null) {
             mPoiItemListener.onPoiItemSelector(getAllDatas().get(position));
         }
+
+        return true;
     }
 
     @Override
-    protected void onUnSelectorPosition(RBaseViewHolder viewHolder, int position) {
+    protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position) {
         super.onUnSelectorPosition(viewHolder, position);
         viewHolder.v(R.id.select_image_view).setVisibility(View.INVISIBLE);
         int mainColor = R.color.main_text_color;
         int darkColor = R.color.main_text_color_dark;
         viewHolder.tv(R.id.title_view).setTextColor(mContext.getResources().getColor(mainColor));
         viewHolder.tv(R.id.address_view).setTextColor(mContext.getResources().getColor(darkColor));
+
+        return true;
     }
 
     @Override

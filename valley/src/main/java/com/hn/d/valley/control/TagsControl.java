@@ -198,6 +198,11 @@ public class TagsControl {
 
     public static void initMyTags(@NonNull List<Tag> inAllTag, List<Tag> outMyTag) {
         List<String> myTags = getMyTags();
+        if (myTags.isEmpty()) {
+            outMyTag.addAll(inAllTag);
+            return;
+        }
+
         //根据顺序, 返回标签
         for (int i = 0; i < myTags.size(); i++) {
             String tagId = myTags.get(i);

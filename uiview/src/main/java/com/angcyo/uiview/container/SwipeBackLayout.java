@@ -244,7 +244,7 @@ public abstract class SwipeBackLayout extends FrameLayout {
 //            return true;
 //        }
         float density = getResources().getDisplayMetrics().density;
-        if (Build.USER.contains("nubia") && mRawDownX > 0 && mRawDownX <= 50f * density) {
+        if (mRawDownX > 0 && mRawDownX <= 50f * density) {
             return true;
         }
         return false;

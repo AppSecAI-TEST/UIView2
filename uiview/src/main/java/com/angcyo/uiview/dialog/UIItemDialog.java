@@ -33,7 +33,7 @@ public class UIItemDialog extends UIIDialogImpl {
     protected RBaseViewHolder mViewHolder;
     protected ArrayList<ItemInfo> mItemInfos = new ArrayList<>();
 
-    private UIItemDialog() {
+    public UIItemDialog() {
     }
 
     public static UIItemDialog build() {
@@ -93,7 +93,7 @@ public class UIItemDialog extends UIIDialogImpl {
 
             mItemContentLayout.addView(textView,
                     new ViewGroup.LayoutParams(-1,
-                            mActivity.getResources().getDimensionPixelSize(R.dimen.default_button_height)));
+                            mActivity.getResources().getDimensionPixelSize(R.dimen.base_item_size)));
         }
     }
 
@@ -108,7 +108,9 @@ public class UIItemDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
                 info.mClickListener.onClick(v);
-                finishDialog();
+                if (info.autoCloseDialog) {
+                    finishDialog();
+                }
             }
         });
 
@@ -118,10 +120,17 @@ public class UIItemDialog extends UIIDialogImpl {
     public static class ItemInfo {
         public String mItemText;
         public View.OnClickListener mClickListener;
+        public boolean autoCloseDialog = true;
 
         public ItemInfo(String itemText, View.OnClickListener clickListener) {
             mItemText = itemText;
             mClickListener = clickListener;
+        }
+
+        public ItemInfo(String itemText, View.OnClickListener clickListener, boolean autoCloseDialog) {
+            mItemText = itemText;
+            mClickListener = clickListener;
+            this.autoCloseDialog = autoCloseDialog;
         }
     }
 }

@@ -86,16 +86,20 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
 
     /**
      * 在单选模式下, 选择其他项时, 将要先取消之前的选中项. 此时会执行此方法, 取消之前按钮的状态
+     *
+     * @return true 表示处理, false 不处理
      */
-    protected void onUnSelectorPosition(RBaseViewHolder viewHolder, int position) {
-
+    protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position) {
+        return false;
     }
 
     /**
      * 在单选模式下, 如果不需要自动处理CompoundButton状态的改变, 此时会执行此方法, 自己处理状态
+     *
+     * @return true 表示处理, false 不处理
      */
-    protected void onSelectorPosition(RBaseViewHolder viewHolder, int position) {
-
+    protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position) {
+        return false;
     }
 
     /**
@@ -293,31 +297,49 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
     }
 
     /**
-     * 选择item, 并且自动设置CompoundButton的状态
+     * 互斥的操作, 选择item, 并且自动设置CompoundButton的状态
      */
     public void setSelectorPosition(int position, CompoundButton compoundButton) {
+        if (mModel == MODEL_NORMAL) {
+            return;
+        }
+
         final boolean selector = isPositionSelector(position);
+        RBaseViewHolder viewHolder = getViewHolderFromPosition(position);
 
         if (selector) {
+            //之前已经选中了
             if (mModel == MODEL_SINGLE) {
                 return;
             } else {
                 mSelector.remove(position);
+                if (!onUnSelectorPosition(viewHolder, position)) {
+                    onBindModelView(mModel, false, viewHolder, position,
+                            getAllDatas().size() > position ? getAllDatas().get(position) : null);
+                }
             }
         } else {
             if (mModel == MODEL_SINGLE) {
                 List<Integer> allSelectorList = getAllSelectorList();
                 if (!allSelectorList.isEmpty()) {
                     Integer pos = allSelectorList.get(0);
-                    onUnSelectorPosition(getViewHolderFromPosition(pos), pos);
+                    RBaseViewHolder holder = getViewHolderFromPosition(pos);
+                    if (!onUnSelectorPosition(holder, pos)) {
+                        onBindModelView(mModel, false, holder, pos,
+                                getAllDatas().size() > pos ? getAllDatas().get(pos) : null);
+                    }
                 }
                 mSelector.clear();
             }
             mSelector.add(position);
+            if (!onSelectorPosition(viewHolder, position)) {
+                onBindModelView(mModel, true, viewHolder, position,
+                        getAllDatas().size() > position ? getAllDatas().get(position) : null);
+            }
         }
 
         if (compoundButton == null) {
-            onSelectorPosition(getViewHolderFromPosition(position), position);
+
         } else {
             checkedButton(compoundButton, !selector);
         }
