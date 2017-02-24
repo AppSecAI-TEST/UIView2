@@ -1,4 +1,4 @@
-package com.hn.d.valley.sub.other;
+package com.hn.d.valley.sub.adapter;
 
 import android.content.Context;
 import android.view.View;

@@ -18,6 +18,7 @@ import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.adapter.UserCardAdapter;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 /**

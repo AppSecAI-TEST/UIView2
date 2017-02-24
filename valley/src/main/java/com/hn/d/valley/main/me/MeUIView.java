@@ -183,6 +183,14 @@ public class MeUIView extends BaseUIView {
     }
 
     @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        if (UserCache.instance().getUserInfoBean() != null) {
+            initMeUIView();
+        }
+    }
+
+    @Override
     public void onViewShow(Bundle bundle) {
         if (System.currentTimeMillis() - mLastShowTime > 30 * 1000) {
             //30秒后, 重新拉取新的信息

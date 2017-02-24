@@ -5,7 +5,9 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.angcyo.library.glide.GlideCircleTransform;
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.hn.d.valley.base.oss.OssHelper;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -33,18 +35,20 @@ public class HnGlideImageView extends ImageView {
 //        setImageResource(R.drawable.zhanweitu_1);
     }
 
-    public void setImageUrl(final String url) {
+    public void setImageThumbUrl(final String url) {
         CharSequence description = getContentDescription();
         if (description != null && description.toString().contains("circle")) {
             if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        Glide.with(getContext())
-                                .load(url)
-                                //.override(getMeasuredWidth(), getMeasuredHeight())
-                                .transform(new GlideCircleTransform(getContext()))
-                                .into(HnGlideImageView.this);
+                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
+                                .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
+                                .transform(new GlideCircleTransform(getContext()));
+                        if (getDrawable() != null) {
+                            builder.placeholder(getDrawable());
+                        }
+                        builder.into(HnGlideImageView.this);
                     }
                 });
             }
@@ -53,10 +57,46 @@ public class HnGlideImageView extends ImageView {
                 post(new Runnable() {
                     @Override
                     public void run() {
-                        Glide.with(getContext())
+                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
+                                .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()));
+                        if (getDrawable() != null) {
+                            builder.placeholder(getDrawable());
+                        }
+                        builder.into(HnGlideImageView.this);
+                    }
+                });
+            }
+        }
+    }
+
+    public void setImageUrl(final String url) {
+        CharSequence description = getContentDescription();
+        if (description != null && description.toString().contains("circle")) {
+            if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
                                 .load(url)
-                                //.override(getMeasuredWidth(), getMeasuredHeight())
-                                .into(HnGlideImageView.this);
+                                .transform(new GlideCircleTransform(getContext()));
+                        if (getDrawable() != null) {
+                            builder.placeholder(getDrawable());
+                        }
+                        builder.into(HnGlideImageView.this);
+                    }
+                });
+            }
+        } else {
+            if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
+                                .load(url);
+                        if (getDrawable() != null) {
+                            builder.placeholder(getDrawable());
+                        }
+                        builder.into(HnGlideImageView.this);
                     }
                 });
             }

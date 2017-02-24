@@ -25,7 +25,7 @@
                 android:id="@+id/image_view"
                 android:layout_width="@dimen/avatar_image_size"
                 android:layout_height="@dimen/avatar_image_size"
-                android:contentDescription="circle"
+                android:contentDescription="@string/is_circle"
                 android:src="@drawable/default_avatar"/>
 
             <LinearLayout

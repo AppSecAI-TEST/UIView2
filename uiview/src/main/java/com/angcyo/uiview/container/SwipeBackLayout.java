@@ -44,7 +44,9 @@ public abstract class SwipeBackLayout extends FrameLayout {
     private Paint mPaint;
 
     private boolean enableSwipeBack = true;
-
+    private boolean mIsLocked;
+    private boolean mIsLeftEdge;
+    private float mRawDownX;
     /**
      * The drag helper callback interface for the Left position
      */
@@ -55,9 +57,9 @@ public abstract class SwipeBackLayout extends FrameLayout {
             if (!enableSwipeBack) {
                 return false;
             }
-            boolean isLeft = mDragHelper.isEdgeTouched(ViewDragHelper.EDGE_LEFT, pointerId);
+            mIsLeftEdge = mDragHelper.isEdgeTouched(ViewDragHelper.EDGE_LEFT, pointerId);
             mTargetView = child;
-            if (isLeft) {
+            if (mIsLeftEdge || isForceIntercept()) {
                 return canTryCaptureView(child);
             }
             return false;
@@ -140,8 +142,6 @@ public abstract class SwipeBackLayout extends FrameLayout {
 
     };
 
-    private boolean mIsLocked;
-
 
     public SwipeBackLayout(Context context) {
         super(context);
@@ -223,6 +223,12 @@ public abstract class SwipeBackLayout extends FrameLayout {
 
         //canDragFromEdge(ev);
 
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            mRawDownX = ev.getRawX();
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            mRawDownX = -1;
+        }
+
         // Fix for pull request #13 and issue #12
         try {
             interceptForDrag = mDragHelper.shouldInterceptTouchEvent(ev);
@@ -231,6 +237,17 @@ public abstract class SwipeBackLayout extends FrameLayout {
         }
 
         return interceptForDrag && !mIsLocked;
+    }
+
+    boolean isForceIntercept() {
+//        if (Build.USER.contains("nubia") && mRawDownX > 0 && mRawDownX <= 100f) {
+//            return true;
+//        }
+        float density = getResources().getDisplayMetrics().density;
+        if (Build.USER.contains("nubia") && mRawDownX > 0 && mRawDownX <= 50f * density) {
+            return true;
+        }
+        return false;
     }
 
     @Override

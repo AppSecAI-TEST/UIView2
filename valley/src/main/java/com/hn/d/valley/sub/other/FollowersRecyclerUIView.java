@@ -1,22 +1,16 @@
 package com.hn.d.valley.sub.other;
 
-import android.view.View;
-import android.widget.ImageView;
-
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserListModel;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.service.ContactService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 
 /**
  * 我的关注
@@ -40,42 +34,52 @@ public class FollowersRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBe
 
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
-        return new UserCardAdapter(mActivity, mILayout) {
-            @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
-                super.onBindDataView(holder, posInData, dataBean);
-                ImageView commandView = holder.v(R.id.command_item_view);
-                if (dataBean.getIs_contact() != 1) {
-                    commandView.setVisibility(View.VISIBLE);
+//        return new UserCardAdapter(mActivity, mILayout) {
+//            @Override
+//            protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
+//                super.onBindDataView(holder, posInData, dataBean);
+//                ImageView commandView = holder.v(R.id.command_item_view);
+//                if (dataBean.getIs_contact() != 1) {
+//                    commandView.setVisibility(View.VISIBLE);
+//
+//                    commandView.setImageResource(R.drawable.add_contacts_n);
+//                    commandView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(final View v) {
+//                            add(RRetrofit.create(UserInfoService.class)
+//                                    .addContact(Param.buildMap("to_uid:" + dataBean.getUid(),
+//                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
+//                                                    UserCache.instance().getUserInfoBean().getUsername())))
+//                                    .compose(Rx.transformer(String.class))
+//                                    .subscribe(new BaseSingleSubscriber<String>() {
+//
+//                                        @Override
+//                                        public void onSucceed(String bean) {
+//                                            T_.show(bean);
+//                                        }
+//                                    }));
+//                        }
+//                    });
+//                }
+//
+//                holder.v(R.id.card_root_layout).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        startIView(new UserDetailUIView(dataBean.getUid()));
+//                    }
+//                });
+//            }
+//        };
+        return new UserInfoAdapter(mActivity);
+    }
 
-                    commandView.setImageResource(R.drawable.add_contacts_n);
-                    commandView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View v) {
-                            add(RRetrofit.create(UserInfoService.class)
-                                    .addContact(Param.buildMap("to_uid:" + dataBean.getUid(),
-                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
-                                                    UserCache.instance().getUserInfoBean().getUsername())))
-                                    .compose(Rx.transformer(String.class))
-                                    .subscribe(new BaseSingleSubscriber<String>() {
-
-                                        @Override
-                                        public void onSucceed(String bean) {
-                                            T_.show(bean);
-                                        }
-                                    }));
-                        }
-                    });
-                }
-
-                holder.v(R.id.card_root_layout).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startIView(new UserDetailUIView(dataBean.getUid()));
-                    }
-                });
-            }
-        };
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        return super.initItemDecoration()
+                .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
+                .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
+                .setDrawLastLine(true)
+                ;
     }
 
     @Override
@@ -89,7 +93,7 @@ public class FollowersRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBe
 
     @Override
     protected boolean hasDecoration() {
-        return false;
+        return true;
     }
 
     @Override

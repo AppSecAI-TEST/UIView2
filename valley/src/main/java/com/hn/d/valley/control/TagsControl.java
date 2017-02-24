@@ -71,7 +71,7 @@ public class TagsControl {
                 tags.add(tag);
                 L.i("->:" + tag.string());
             }
-            listAction1.call(tags);
+            //listAction1.call(tags);
         }
 
         RRetrofit.create(DiscussService.class)
@@ -99,9 +99,9 @@ public class TagsControl {
                             }
                         });
 
-                        if (size == 0) {
+//                        if (size == 0) {
                             listAction1.call(tags);
-                        }
+//                        }
                     }
                 });
     }
