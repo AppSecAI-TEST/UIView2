@@ -62,7 +62,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     /**
      * 头像和背景偏移的距离
      */
-    public static final int AVATAR_OFFSET = 6;
+    public static final int AVATAR_OFFSET = 8;
     /**
      * 头像的大小
      */
@@ -106,23 +106,14 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         map.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                selectorMarker(marker);
-                if (mOnMarkListener != null) {
-                    try {
-                        mOnMarkListener.onMarkerSelector((LikeUserInfoBean) marker.getObject());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                onMarkerSelector(marker);
                 return true;
             }
         });
         map.setOnMapClickListener(new AMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                if (mOnMarkListener != null) {
-                    mOnMarkListener.onMarkerUnSelector();
-                }
+                onMarkerUnSelector();
             }
         });
     }
@@ -222,6 +213,23 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         return sPoiSearch;
     }
 
+    private void onMarkerSelector(Marker marker) {
+        selectorMarker(marker);
+        if (mOnMarkListener != null) {
+            try {
+                mOnMarkListener.onMarkerSelector((LikeUserInfoBean) marker.getObject());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void onMarkerUnSelector() {
+        if (mOnMarkListener != null) {
+            mOnMarkListener.onMarkerUnSelector();
+        }
+    }
+
     public void setShowMyMarker(boolean showMyMarker) {
         this.showMyMarker = showMyMarker;
     }
@@ -252,6 +260,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 
     public void addMarks(List<LikeUserInfoBean> userInfos) {
         clearMarker();
+        onMarkerUnSelector();
 
         for (final LikeUserInfoBean info : userInfos) {
             LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
@@ -296,7 +305,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(
                                 BmpUtil.getRoundedCornerBitmap(mContext, resource,
                                         width, height,
-                                        R.drawable.touxiang_kuang_s, width, AVATAR_OFFSET)
+                                        R.drawable.touxiang_kuang_s, width, AVATAR_OFFSET / 2)
                         ));
                     }
                 });
@@ -345,7 +354,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(
                                 BmpUtil.getRoundedCornerBitmap(mContext, resource,
                                         mMarkerWidth, mMarkerHeight,
-                                        R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET)
+                                        R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET / 2)
                         ));
                     }
                 });
@@ -387,7 +396,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 //                                    BmpUtil.getRoundedCornerBitmap(resource, mMarkerWidth)
                                     BmpUtil.getRoundedCornerBitmap(mContext, resource,
                                             mMarkerWidth, mMarkerHeight,
-                                            R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET)
+                                            R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET / 2)
                             ));
                             try {
                                 //startJumpAnimation(marker);
