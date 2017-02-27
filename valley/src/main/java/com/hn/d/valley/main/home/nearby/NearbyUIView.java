@@ -539,7 +539,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         for (int i = 0; i < mRExBaseAdapter.getAllDatas().size(); i++) {
             LikeUserInfoBean likeUserInfoBean = mRExBaseAdapter.getAllDatas().get(i);
             if (TextUtils.equals(uid, likeUserInfoBean.getUid())) {
-                ((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
+                //((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
                 ((LinearLayoutManager) mCardRecyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
                 break;
             }
