@@ -2,6 +2,9 @@ package com.hn.d.valley.bean.realm;
 
 import io.realm.RealmObject;
 
+
+@Deprecated
+/**请使用 {@link com.hn.d.valley.bean.LikeUserInfoBean}*/
 public class NearUserInfo extends RealmObject {
     /**
      * uid : 50003

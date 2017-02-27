@@ -301,6 +301,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @OnClick(R.id.register_view)
     public void onRegisterClick() {
         startIView(new RegisterUIView());
+//        startIView(new RecommendUser2UIView());
     }
 
     /**

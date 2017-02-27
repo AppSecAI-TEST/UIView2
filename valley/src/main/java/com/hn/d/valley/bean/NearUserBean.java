@@ -1,7 +1,5 @@
 package com.hn.d.valley.bean;
 
-import com.hn.d.valley.bean.realm.NearUserInfo;
-
 import java.util.List;
 
 /**
@@ -23,7 +21,7 @@ public class NearUserBean {
      */
 
     private int data_count;
-    private List<NearUserInfo> data_list;
+    private List<LikeUserInfoBean> data_list;
 
     public int getData_count() {
         return data_count;
@@ -33,11 +31,11 @@ public class NearUserBean {
         this.data_count = data_count;
     }
 
-    public List<NearUserInfo> getData_list() {
+    public List<LikeUserInfoBean> getData_list() {
         return data_list;
     }
 
-    public void setData_list(List<NearUserInfo> data_list) {
+    public void setData_list(List<LikeUserInfoBean> data_list) {
         this.data_list = data_list;
     }
 }

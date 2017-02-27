@@ -58,6 +58,27 @@ public class LikeUserInfoBean {
     private String status;
     private String true_name;
     private String introduce;
+    /**
+     * auth_type : 3
+     * auth_desc : 国家体育队姚明
+     * is_blacklist : 0
+     * lng : 39.990912172420714
+     * lat : 116.32715863448607
+     * distance : 0
+     * show_distance : 附近
+     * created : 1481694406
+     * show_time : 2016-12-14 13:46
+     */
+
+    private String auth_type;
+    private String auth_desc;
+    private int is_blacklist;
+    private String lng;
+    private String lat;
+    private String distance;
+    private String show_distance;
+    private String created;
+    private String show_time;
 
     public String getAvatar() {
         return avatar;
@@ -185,5 +206,77 @@ public class LikeUserInfoBean {
 
     public void setIntroduce(String introduce) {
         this.introduce = introduce;
+    }
+
+    public String getAuth_type() {
+        return auth_type;
+    }
+
+    public void setAuth_type(String auth_type) {
+        this.auth_type = auth_type;
+    }
+
+    public String getAuth_desc() {
+        return auth_desc;
+    }
+
+    public void setAuth_desc(String auth_desc) {
+        this.auth_desc = auth_desc;
+    }
+
+    public int getIs_blacklist() {
+        return is_blacklist;
+    }
+
+    public void setIs_blacklist(int is_blacklist) {
+        this.is_blacklist = is_blacklist;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+    }
+
+    public String getShow_distance() {
+        return show_distance;
+    }
+
+    public void setShow_distance(String show_distance) {
+        this.show_distance = show_distance;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getShow_time() {
+        return show_time;
+    }
+
+    public void setShow_time(String show_time) {
+        this.show_time = show_time;
     }
 }

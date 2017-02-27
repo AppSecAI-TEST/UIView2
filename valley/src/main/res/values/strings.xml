@@ -59,6 +59,8 @@
     <string name="record_audio">按住开始录音</string>
     <string name="recording_max_time">录音达到最大时间，是否发送？</string>
     <string name="register_fial_tip">注册失败:</string>
+    <string name="recommend_focus_user">关注选中的人</string>
+
     <string name="man">男</string>
     <string name="women">女</string>
     <string name="empty"></string>
@@ -203,5 +205,6 @@
     <string name="dynamic_notification_text">动态通知</string>
     <string name="see_state_user_title">看过这条动态的人</string>
     <string name="my_visitor_title">我的访客</string>
+    <string name="follower_count_format">%1$s粉丝</string>
 
 </resources>

@@ -3,6 +3,7 @@ package com.hn.d.valley.control;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.animation.Interpolator;
 
@@ -33,8 +34,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.base.oss.OssHelper;
+import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.realm.AmapBean;
-import com.hn.d.valley.bean.realm.NearUserInfo;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.utils.RAmap;
 
@@ -43,8 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -59,8 +59,15 @@ import rx.functions.Action1;
  */
 public class AmapControl implements LocationSource, AMapLocationListener {
 
+    /**
+     * 头像和背景偏移的距离
+     */
+    public static final int AVATAR_OFFSET = 6;
+    /**
+     * 头像的大小
+     */
+    public static final int AVATAR_SIZE = 70;
     private static PoiSearch sPoiSearch;
-    private final int mMarkerSize;
     OnLocationChangedListener mListener;
     AMapLocationClient mLocationClient;
     List<Marker> mMarkerList;
@@ -74,12 +81,17 @@ public class AmapControl implements LocationSource, AMapLocationListener {
      * 自己的位置
      */
     Marker myMarker;
-    Action1<String> userAction;
-
+    OnMarkerListener mOnMarkListener;
     /**
      * 是否显示自己
      */
     boolean showMyMarker = true;
+    /**
+     * 当前选中的marker
+     */
+    Marker selectorMarker;
+    //Marker的标准大小, 和选中放大的增量
+    private int mMarkerWidth, mMarkerHeight, mMarkerMaxOffset;
     private long lastSaveTime;
 
     public AmapControl(Context context, final AMap map) {
@@ -87,19 +99,30 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         this.map = map;
         mMarkerList = new ArrayList<>();
         mMarkerMap = new HashMap<>();
-        mMarkerSize = (int) ResUtil.dpToPx(mContext, 60);
+        mMarkerWidth = (int) ResUtil.dpToPx(mContext, AVATAR_SIZE);
+        mMarkerHeight = (int) ResUtil.dpToPx(mContext, AVATAR_SIZE + AVATAR_OFFSET);
+        mMarkerMaxOffset = (int) ResUtil.dpToPx(mContext, 10);
 
         map.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if (userAction != null) {
+                selectorMarker(marker);
+                if (mOnMarkListener != null) {
                     try {
-                        userAction.call(marker.getObject().toString());
+                        mOnMarkListener.onMarkerSelector((LikeUserInfoBean) marker.getObject());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
                 return true;
+            }
+        });
+        map.setOnMapClickListener(new AMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                if (mOnMarkListener != null) {
+                    mOnMarkListener.onMarkerUnSelector();
+                }
             }
         });
     }
@@ -133,7 +156,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
             MyLocationStyle myLocationStyle = new MyLocationStyle();
             // 自定义定位蓝点图标
             myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
-                    fromResource(R.drawable.gps_point));
+                    fromResource(R.drawable.dingwei_icon));
             // 自定义精度范围的圆形边框颜色
             myLocationStyle.strokeColor(ValleyApp.getApp().getResources().getColor(R.color.colorAccent));
             //自定义精度范围的圆形边框宽度
@@ -203,8 +226,11 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         this.showMyMarker = showMyMarker;
     }
 
-    public void setUserClick(Action1<String> action1) {
-        userAction = action1;
+    /**
+     * 设置Marker监听事件
+     */
+    public void setOnMarkListener(OnMarkerListener onMarkListener) {
+        mOnMarkListener = onMarkListener;
     }
 
     /**
@@ -224,13 +250,14 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         }
     }
 
-    public void addMarks(List<NearUserInfo> userInfos) {
+    public void addMarks(List<LikeUserInfoBean> userInfos) {
         clearMarker();
 
-        for (final NearUserInfo info : userInfos) {
+        for (final LikeUserInfoBean info : userInfos) {
             LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
-            Marker marker = addMarks(latLng, info.getAvatar());
-            marker.setObject(info.getUid());
+            Marker marker = addMarks(latLng, info);
+//            marker.setObject(info.getUid());
+//            marker.setObject(info);
             mMarkerMap.put(info.getUid(), marker);
         }
 
@@ -242,25 +269,128 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 //        }
     }
 
+    /**
+     * 选中Marker, 并且高亮
+     */
+    public void selectorMarker(final Marker marker) {
+        unSelectorMarker();
+        selectorMarker = marker;
+        if (marker == null) {
+            return;
+        }
+        final int width, height;
+        width = mMarkerWidth + mMarkerMaxOffset;
+        height = mMarkerHeight + mMarkerMaxOffset;
+        LikeUserInfoBean userInfoBean = (LikeUserInfoBean) marker.getObject();
+        marker.setToTop();
+        if (userInfoBean == null) {
+            return;
+        }
+        Glide.with(mContext)
+                .load(OssHelper.getImageThumb(userInfoBean.getAvatar(), width, height))
+                .asBitmap()
+                .centerCrop()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                BmpUtil.getRoundedCornerBitmap(mContext, resource,
+                                        width, height,
+                                        R.drawable.touxiang_kuang_s, width, AVATAR_OFFSET)
+                        ));
+                    }
+                });
+    }
+
+    public void selectorMarker(String uid) {
+        selectorMarker(mMarkerMap.get(uid));
+    }
+
+    public void unSelectorMarker(String uid) {
+        unSelectorMarker(mMarkerMap.get(uid));
+    }
+
+    public void unSelectorMarker() {
+        unSelectorMarker(selectorMarker);
+    }
+
+    /**
+     * 取消选中
+     */
+    public void unSelectorMarker(final Marker marker) {
+        if (marker == null) {
+            return;
+        }
+        LikeUserInfoBean userInfoBean = (LikeUserInfoBean) marker.getObject();
+        if (userInfoBean == null) {
+            return;
+        }
+        Glide.with(mContext)
+                .load(OssHelper.getImageThumb(userInfoBean.getAvatar(), mMarkerWidth, mMarkerWidth))
+                .asBitmap()
+                .centerCrop()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onLoadStarted(Drawable placeholder) {
+                        super.onLoadStarted(placeholder);
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
+                                        mMarkerWidth, mMarkerHeight,
+                                        R.drawable.touxiang_kuang_n, mMarkerWidth)
+                        ));
+                    }
+
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                BmpUtil.getRoundedCornerBitmap(mContext, resource,
+                                        mMarkerWidth, mMarkerHeight,
+                                        R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET)
+                        ));
+                    }
+                });
+    }
+
+    public Marker addMarks(LatLng latLng, LikeUserInfoBean infoBean) {
+        final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
+                .icon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
+                        mMarkerWidth, mMarkerHeight,
+                        R.drawable.touxiang_kuang_n, mMarkerWidth))));
+
+        marker.setClickable(true);
+        marker.setObject(infoBean);
+        unSelectorMarker(marker);
+        return marker;
+    }
+
     public Marker addMarks(LatLng latLng, String url) {
         final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.default_avatar)));
+                .icon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
+                        mMarkerWidth, mMarkerHeight,
+                        R.drawable.touxiang_kuang_n, mMarkerWidth))));
+
+        marker.setClickable(true);
+
         Glide.with(mContext)
-                .load(url)
+                .load(OssHelper.getImageThumb(url, mMarkerWidth, mMarkerWidth))
                 .asBitmap()
-                .override(mMarkerSize, mMarkerSize)
+                //.override(mMarkerWidth, mMarkerWidth)
                 .centerCrop()
 //                    .transform(new GlideCircleTransform(mContext))
-//                    .override(mMarkerSize, mMarkerSize)
+//                    .override(mMarkerWidth, mMarkerWidth)
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
 //                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
                         if (marker != null) {
                             marker.setIcon(BitmapDescriptorFactory.fromBitmap(
-                                    BmpUtil.getRoundedCornerBitmap(resource, mMarkerSize)));
+//                                    BmpUtil.getRoundedCornerBitmap(resource, mMarkerWidth)
+                                    BmpUtil.getRoundedCornerBitmap(mContext, resource,
+                                            mMarkerWidth, mMarkerHeight,
+                                            R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET)
+                            ));
                             try {
-                                startJumpAnimation(marker);
+                                //startJumpAnimation(marker);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -277,9 +407,9 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 //                                .asBitmap() //必须
 //                                .centerCrop()
 //                                //.transform(new GlideCircleTransform(mContext))...
-//                                .into(mMarkerSize, mMarkerSize)
+//                                .into(mMarkerWidth, mMarkerWidth)
 //                                .get();
-//                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(myBitmap, mMarkerSize)));
+//                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(myBitmap, mMarkerWidth)));
 //
 //                        /**开始动画*/
 //                        //startJumpAnimation(marker);
@@ -421,6 +551,19 @@ public class AmapControl implements LocationSource, AMapLocationListener {
             mLocationClient.onDestroy();
         }
         mLocationClient = null;
+    }
+
+    public interface OnMarkerListener {
+
+        /**
+         * 选中用户
+         */
+        void onMarkerSelector(LikeUserInfoBean userInfo);
+
+        /**
+         * 取消选择
+         */
+        void onMarkerUnSelector();
     }
 
 }

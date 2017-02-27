@@ -20,7 +20,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
 
 public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInfoBean, String> {
 
-    private ILayout mILayout;
+    protected ILayout mILayout;
 
     public UserInfoAdapter(Context context, ILayout ILayout) {
         super(context);
@@ -98,12 +98,12 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
 
     //是否是联系人
     protected boolean isContact(final LikeUserInfoBean dataBean) {
-        return false;
+        return dataBean.getIs_contact() == 1;
     }
 
     //是否已关注
     protected boolean isAttention(final LikeUserInfoBean dataBean) {
-        return false;
+        return dataBean.getIs_attention() == 1;
     }
 
     protected void onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {

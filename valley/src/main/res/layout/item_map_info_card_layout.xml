@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        app:cardElevation="@dimen/base_ldpi">
+
+        <LinearLayout
+            android:id="@+id/card_root_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:foreground="@drawable/base_bg_selector"
+            android:orientation="vertical">
+
+            <include layout="@layout/item_user_info_new"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FAFAFA"
+                android:orientation="horizontal"
+                android:padding="@dimen/base_xhdpi">
+
+                <TextView
+                    android:id="@+id/signature_view"
+                    style="@style/DarkTextStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_ldpi"
+                    android:layout_weight="1"
+                    android:visibility="visible"
+                    tools:text="阿里巴巴董事长马云"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/follower_num_view"
+                    style="@style/DarkTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_ldpi"
+                    android:tag="@string/follower_count_format"
+                    tools:text="211"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</FrameLayout>

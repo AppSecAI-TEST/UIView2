@@ -38,68 +38,60 @@ public class HnGlideImageView extends ImageView {
     public void setImageThumbUrl(final String url) {
         CharSequence description = getContentDescription();
         if (description != null && description.toString().contains("circle")) {
-            if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
-                                .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
-                                .transform(new GlideCircleTransform(getContext()));
-                        if (getDrawable() != null) {
-                            builder.placeholder(getDrawable());
-                        }
-                        builder.into(HnGlideImageView.this);
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    DrawableRequestBuilder<String> builder = Glide.with(getContext())
+                            .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
+                            .transform(new GlideCircleTransform(getContext()));
+                    if (getDrawable() != null) {
+                        builder.placeholder(getDrawable());
                     }
-                });
-            }
+                    builder.into(HnGlideImageView.this);
+                }
+            });
         } else {
-            if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
-                                .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()));
-                        if (getDrawable() != null) {
-                            builder.placeholder(getDrawable());
-                        }
-                        builder.into(HnGlideImageView.this);
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    DrawableRequestBuilder<String> builder = Glide.with(getContext())
+                            .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()));
+                    if (getDrawable() != null) {
+                        builder.placeholder(getDrawable());
                     }
-                });
-            }
+                    builder.into(HnGlideImageView.this);
+                }
+            });
         }
     }
 
     public void setImageUrl(final String url) {
         CharSequence description = getContentDescription();
         if (description != null && description.toString().contains("circle")) {
-            if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
-                                .load(url)
-                                .transform(new GlideCircleTransform(getContext()));
-                        if (getDrawable() != null) {
-                            builder.placeholder(getDrawable());
-                        }
-                        builder.into(HnGlideImageView.this);
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    DrawableRequestBuilder<String> builder = Glide.with(getContext())
+                            .load(url)
+                            .transform(new GlideCircleTransform(getContext()));
+                    if (getDrawable() != null) {
+                        builder.placeholder(getDrawable());
                     }
-                });
-            }
+                    builder.into(HnGlideImageView.this);
+                }
+            });
         } else {
-            if (getMeasuredWidth() == 0 || getMeasuredHeight() == 0) {
-                post(new Runnable() {
-                    @Override
-                    public void run() {
-                        DrawableRequestBuilder<String> builder = Glide.with(getContext())
-                                .load(url);
-                        if (getDrawable() != null) {
-                            builder.placeholder(getDrawable());
-                        }
-                        builder.into(HnGlideImageView.this);
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    DrawableRequestBuilder<String> builder = Glide.with(getContext())
+                            .load(url);
+                    if (getDrawable() != null) {
+                        builder.placeholder(getDrawable());
                     }
-                });
-            }
+                    builder.into(HnGlideImageView.this);
+                }
+            });
         }
     }
 }
