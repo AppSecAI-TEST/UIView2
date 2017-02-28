@@ -127,8 +127,53 @@
 
             </RelativeLayout>
 
+            <!--<View-->
+            <!--style="@style/BaseHLine"/>-->
+
+            <!--中部-->
             <View
-                style="@style/BaseHLine"/>
+                style="@style/BaseHLine"
+                android:layout_height="@dimen/base_xhdpi"/>
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/voice_layout"
+                style="@style/DefaultItemInfoStyle"
+                app:item_right_res="@null"
+                app:item_text="@string/voice_introduce_text">
+
+                <LinearLayout
+                    android:id="@+id/voice_control_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/voice_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/voice_playing"/>
+
+                    <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/voice_length_view"
+                        style="@style/MainColorTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/base_hdpi"
+                        android:tag="@string/voice_length_format"
+                        tools:text="13"/>
+
+                </LinearLayout>
+
+            </com.angcyo.uiview.widget.ItemInfoLayout>
+
+            <!--中部-->
+            <View
+                style="@style/BaseHLine"
+                android:layout_height="@dimen/base_xhdpi"/>
 
             <com.angcyo.uiview.widget.ItemInfoLayout
                 android:id="@+id/status_layout"
@@ -140,8 +185,9 @@
                     android:id="@+id/ico_recycler_view"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginEnd="@dimen/base_xxhdpi"/>
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/base_xxhdpi"
+                    android:contentDescription="@string/not_circle"/>
 
             </com.angcyo.uiview.widget.ItemInfoLayout>
 
@@ -151,133 +197,159 @@
                 android:layout_height="@dimen/base_xhdpi"/>
 
             <com.angcyo.uiview.widget.ItemInfoLayout
-                android:id="@+id/my_status_layout"
+                android:id="@+id/username_item"
                 style="@style/DefaultItemInfoStyle"
                 app:item_right_res="@null"
-                app:item_text="昵称">
+                app:item_text="@string/username">
 
-                <TextView
-                    android:id="@+id/username"
-                    style="@style/DarkTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_100dpi"
-                    tools:text="测试文本"/>
+                <!--<TextView-->
+                <!--android:id="@+id/username"-->
+                <!--style="@style/DarkTextStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="@dimen/base_100dpi"-->
+                <!--tools:text="测试文本"/>-->
             </com.angcyo.uiview.widget.ItemInfoLayout>
 
             <View
                 style="@style/BaseHLine"/>
 
             <com.angcyo.uiview.widget.ItemInfoLayout
-                android:id="@+id/my_favor_layout"
+                android:id="@+id/id_item"
                 style="@style/DefaultItemInfoStyle"
                 app:item_right_res="@null"
-                app:item_text="等级">
+                app:item_text="ID"/>
 
-                <com.angcyo.uiview.widget.RTextView
-                    android:id="@+id/grade"
-                    style="@style/DarkTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_100dpi"
-                    android:tag="v%1$s"
-                    tools:text="测试文本"/>
+            <View
+                style="@style/BaseHLine"/>
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/grade_item"
+                style="@style/DefaultItemInfoStyle"
+                app:item_dark_tag="V%1$s"
+                app:item_right_res="@null"
+                app:item_text="@string/level_text">
+
+                <!--<com.angcyo.uiview.widget.RTextView-->
+                <!--android:id="@+id/grade"-->
+                <!--style="@style/DarkTextStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="@dimen/base_100dpi"-->
+                <!--android:tag="v%1$s"-->
+                <!--tools:text="测试文本"/>-->
             </com.angcyo.uiview.widget.ItemInfoLayout>
 
             <View
                 style="@style/BaseHLine"/>
             <!--底部-->
             <com.angcyo.uiview.widget.ItemInfoLayout
-                android:id="@+id/level_layout"
+                android:id="@+id/sex_item"
                 style="@style/DefaultItemInfoStyle"
-                app:item_dark_tag="V%1$s"
                 app:item_right_res="@null"
-                app:item_text="性别">
+                app:item_text="@string/sex">
 
-                <com.angcyo.uiview.widget.RTextView
-                    android:id="@+id/sex_text_view"
-                    style="@style/DarkTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_100dpi"
-                    tools:text="测试文本"/>
+                <!--<com.angcyo.uiview.widget.RTextView-->
+                <!--android:id="@+id/sex_text_view"-->
+                <!--style="@style/DarkTextStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="@dimen/base_100dpi"-->
+                <!--tools:text="测试文本"/>-->
             </com.angcyo.uiview.widget.ItemInfoLayout>
 
             <View
                 style="@style/BaseHLine"/>
 
             <com.angcyo.uiview.widget.ItemInfoLayout
-                android:id="@+id/coin_layout"
+                android:id="@+id/birthday_item"
                 style="@style/DefaultItemInfoStyle"
                 app:item_right_res="@null"
-                app:item_text="电话">
+                app:item_text="@string/birthday"/>
 
-                <com.angcyo.uiview.widget.RTextView
-                    android:id="@+id/phone"
-                    style="@style/DarkTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_100dpi"
-                    tools:text="测试文本"/>
+            <View
+                style="@style/BaseHLine"/>
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/phone_item"
+                style="@style/DefaultItemInfoStyle"
+                app:item_right_res="@null"
+                app:item_text="@string/phone">
+
+                <!--<com.angcyo.uiview.widget.RTextView-->
+                <!--android:id="@+id/phone"-->
+                <!--style="@style/DarkTextStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="@dimen/base_100dpi"-->
+                <!--tools:text="测试文本"/>-->
             </com.angcyo.uiview.widget.ItemInfoLayout>
 
             <View
                 style="@style/BaseHLine"/>
 
             <com.angcyo.uiview.widget.ItemInfoLayout
-                android:id="@+id/person_auth_layout"
+                android:id="@+id/address_item"
                 style="@style/DefaultItemInfoStyle"
                 app:item_right_res="@null"
-                app:item_text="地区">
+                app:item_text="@string/address">
 
-                <com.angcyo.uiview.widget.RTextView
-                    android:id="@+id/address_text_view"
-                    style="@style/DarkTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_100dpi"
-                    android:tag="%1$s  %2$s"
-                    tools:text="测试文本"/>
+                <!--<com.angcyo.uiview.widget.RTextView-->
+                <!--android:id="@+id/address_text_view"-->
+                <!--style="@style/DarkTextStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="@dimen/base_100dpi"-->
+                <!--android:tag="%1$s  %2$s"-->
+                <!--tools:text="测试文本"/>-->
             </com.angcyo.uiview.widget.ItemInfoLayout>
 
             <View
                 style="@style/BaseHLine"/>
 
             <com.angcyo.uiview.widget.ItemInfoLayout
-                android:id="@+id/setting_layout"
+                android:id="@+id/signature_item"
                 style="@style/DefaultItemInfoStyle"
                 app:item_right_res="@null"
-                app:item_text="个性签名">
+                app:item_text="@string/signature">
 
-                <com.angcyo.uiview.widget.RTextView
-                    android:id="@+id/signature"
-                    style="@style/SingleDarkTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_100dpi"
-                    android:maxLines="@integer/content_show_length"
-                    android:tag="%1$s  %2$s"
-                    tools:text="测试文本"/>
+                <!--<com.angcyo.uiview.widget.RTextView-->
+                <!--android:id="@+id/signature"-->
+                <!--style="@style/SingleDarkTextStyle"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginStart="@dimen/base_100dpi"-->
+                <!--android:maxLines="@integer/content_show_length"-->
+                <!--android:tag="%1$s  %2$s"-->
+                <!--tools:text="测试文本"/>-->
             </com.angcyo.uiview.widget.ItemInfoLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="60dp"
                 android:background="@color/line_color"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
-    <ImageView
+    <TextView
         android:id="@+id/command_item_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/MainColorButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_item_size"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/base_xxxhdpi"
-        android:layout_marginRight="@dimen/base_xhdpi"
-        tools:src="@drawable/attention_n"/>
+        android:text="+关注"/>
+
+    <!--<ImageView-->
+    <!--android:id="@+id/command_item_view"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="@dimen/base_xxxhdpi"-->
+    <!--android:layout_marginRight="@dimen/base_xhdpi"-->
+    <!--tools:src="@drawable/attention_n"/>-->
 
 </RelativeLayout>

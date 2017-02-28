@@ -436,6 +436,12 @@ public abstract class UIBaseView extends UIIViewImpl {
         manager.showSoftInputFromInputMethod(mActivity.getWindow().getDecorView().getWindowToken(), 0);
     }
 
+    public void showSoftInput(View view) {
+        view.requestFocus();
+        InputMethodManager manager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.showSoftInput(view, 0);
+    }
+
     /**
      * 隐藏键盘
      */

@@ -10,6 +10,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -42,7 +43,7 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mILayout.startIView(new UserDetailUIView(dataBean.getUid()));
             }
         });
 

@@ -159,14 +159,18 @@
     </style>
 
     <!--主色调颜色按钮-->
-    <style name="MainColorButtonStyle">
+    <style name="MainColorRoundButtonStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/default_button_height</item>
-        <item name="android:background">@drawable/main_color_bg_selector</item>
+        <item name="android:background">@drawable/main_color_bg_round_selector</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">@dimen/default_text_size</item>
         <item name="android:clickable">true</item>
+    </style>
+
+    <style name="MainColorButtonStyle" parent="MainColorRoundButtonStyle">
+        <item name="android:background">@drawable/main_color_bg_selector</item>
     </style>
 
     <!--次要文本的样式-->

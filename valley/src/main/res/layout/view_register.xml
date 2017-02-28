@@ -78,7 +78,7 @@
     <!--下一步-->
     <TextView
         android:id="@+id/next_view"
-        style="@style/MainColorButtonStyle"
+        style="@style/MainColorRoundButtonStyle"
         android:layout_marginTop="@dimen/base_xxxhdpi"
         android:text="@string/next_text"/>
 

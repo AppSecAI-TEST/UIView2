@@ -94,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/base_xxxhdpi"
-            android:background="@drawable/main_color_bg_selector"
+            android:background="@drawable/main_color_bg_round_selector"
             android:gravity="center"
             android:padding="@dimen/base_xhdpi"
             android:text="@string/quit_login"/>

@@ -54,7 +54,9 @@ public class HnIcoRecyclerView extends RRecyclerView {
 
                 SimpleDraweeView simpleDraweeView = new SimpleDraweeView(context);
                 GenericDraweeHierarchy hierarchy = simpleDraweeView.getHierarchy();
-                hierarchy.setRoundingParams(RoundingParams.asCircle());
+                if (!TextUtils.equals("not_circle", getContentDescription())) {
+                    hierarchy.setRoundingParams(RoundingParams.asCircle());
+                }
                 hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
                 hierarchy.setPlaceholderImage(R.drawable.default_avatar, ScalingUtils.ScaleType.CENTER_CROP);
                 simpleDraweeView.setTag("image");

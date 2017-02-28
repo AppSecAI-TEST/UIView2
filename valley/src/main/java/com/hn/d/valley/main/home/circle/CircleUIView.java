@@ -23,6 +23,8 @@ import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
+import java.util.List;
+
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -74,7 +76,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     protected void onUILoadData(String page) {
         add(RRetrofit.create(UserInfoService.class)
                 .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
-                        "type:" + 1, "page:" + page))
+                        "type:" + 1, "page:" + page, "first_id:" + first_id, "last_id:" + last_id))
                 .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
@@ -83,8 +85,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                         if (userDiscussListBean == null) {
                             onUILoadDataEnd(null, 0);
                         } else {
-                            onUILoadDataEnd(userDiscussListBean.getData_list(),
-                                    userDiscussListBean.getData_count());
+                            List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
+                            initConfigId(data_list);
+                            onUILoadDataEnd(data_list, userDiscussListBean.getData_count());
                         }
                     }
 

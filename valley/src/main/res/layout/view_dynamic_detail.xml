@@ -47,7 +47,7 @@
             <!--发送按钮-->
             <TextView
                 android:id="@+id/send_view"
-                style="@style/MainColorButtonStyle"
+                style="@style/MainColorRoundButtonStyle"
                 android:layout_width="@dimen/base_50dpi"
                 android:layout_height="38dp"
                 android:layout_alignParentRight="true"

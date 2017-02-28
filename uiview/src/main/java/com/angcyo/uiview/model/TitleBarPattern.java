@@ -176,6 +176,8 @@ public class TitleBarPattern {
         public int res = -1;
         public View.OnClickListener listener;
         public int visibility = View.VISIBLE;
+        @ColorInt
+        public int textColor = -1;
 
         private TitleBarItem() {
 
@@ -220,6 +222,11 @@ public class TitleBarPattern {
 
         public TitleBarItem setListener(View.OnClickListener listener) {
             this.listener = listener;
+            return this;
+        }
+
+        public TitleBarItem setTextColor(@ColorInt int textColor) {
+            this.textColor = textColor;
             return this;
         }
     }

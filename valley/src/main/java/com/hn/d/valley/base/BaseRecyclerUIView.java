@@ -20,6 +20,7 @@ import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.widget.HnRefreshLayout;
 
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected int next = 1;//下一页
     protected long loadTime = 0;//加载数据的时间
     protected boolean hasNext = true;//是否有下一页
+    protected String last_id, first_id;//动态的id, 第一个和最后一个
 
     public static void initEmpty(final RBaseViewHolder viewHolder, boolean isEmpty, String tip) {
         if (viewHolder != null) {
@@ -389,6 +391,15 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
 
     public void onUILoadDataEnd() {
         onUILoadDataEnd(null, data_count);
+    }
+
+    public void initConfigId(List<UserDiscussListBean.DataListBean> dataList) {
+        if (dataList != null && !dataList.isEmpty()) {
+            if (page <= 1) {
+                first_id = dataList.get(0).getDiscuss_id();
+            }
+            last_id = dataList.get(dataList.size() - 1).getDiscuss_id();
+        }
     }
 
     /**

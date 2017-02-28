@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.home.nearby;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 
@@ -173,12 +175,14 @@ public class MapCardAdapter extends UserInfoAdapter {
 
         //用户个人详情
         holder.itemView.setClickable(false);
+        holder.v(R.id.item_root_layout).setClickable(false);
+        holder.v(R.id.item_root_layout).setBackgroundColor(Color.TRANSPARENT);
 
         //用户个人详情
         holder.v(R.id.card_root_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mILayout.startIView(new UserDetailUIView(dataBean.getUid()));
             }
         });
     }

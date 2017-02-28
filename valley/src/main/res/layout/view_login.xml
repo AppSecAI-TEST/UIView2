@@ -65,7 +65,7 @@
 
         <TextView
             android:id="@+id/login_view"
-            style="@style/MainColorButtonStyle"
+            style="@style/MainColorRoundButtonStyle"
             android:layout_marginTop="@dimen/base_xxhdpi"
             android:text="@string/login_button"/>
 

@@ -2,10 +2,11 @@ package com.angcyo.uiview.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.base.UILayoutActivity;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -42,7 +44,7 @@ public abstract class UIIViewImpl implements IView {
 
     protected ILayout mILayout;
     protected ILayout mOtherILayout;
-    protected AppCompatActivity mActivity;
+    protected UILayoutActivity mActivity;
     /**
      * 根布局
      */
@@ -84,7 +86,7 @@ public abstract class UIIViewImpl implements IView {
     }
 
     @Override
-    public View inflateContentView(AppCompatActivity activity, ILayout iLayout, FrameLayout container, LayoutInflater inflater) {
+    public View inflateContentView(UILayoutActivity activity, ILayout iLayout, FrameLayout container, LayoutInflater inflater) {
         L.d(this.getClass().getSimpleName(), "inflateContentView: ");
         mActivity = activity;
         return inflateBaseView(container, inflater);
@@ -505,5 +507,19 @@ public abstract class UIIViewImpl implements IView {
     @Override
     public boolean canTryCaptureView() {
         return true;
+    }
+
+    public Resources getResources() {
+        return mActivity.getResources();
+    }
+
+    //星期二 2017-2-28
+    public String getString(@StringRes int id) {
+        return getResources().getString(id);
+    }
+
+    //星期二 2017-2-28
+    public String getString(@StringRes int id, Object... formatArgs) {
+        return getResources().getString(id, formatArgs);
     }
 }

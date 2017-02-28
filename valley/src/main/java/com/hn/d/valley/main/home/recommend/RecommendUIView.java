@@ -18,6 +18,8 @@ import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.user.DynamicDetailUIView;
 
+import java.util.List;
+
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -72,10 +74,10 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
     }
 
     @Override
-    protected void onUILoadData(String page) {
+    protected void onUILoadData(final String page) {
         add(RRetrofit.create(UserInfoService.class)
                 .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
-                        "type:" + 2, "page:" + page, "tag:" + getFilterTagId()))
+                        "type:" + 2, "page:" + page, "tag:" + getFilterTagId(), "first_id:" + first_id, "last_id:" + last_id))
                 .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
@@ -84,7 +86,9 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                         if (userDiscussListBean == null) {
                             onUILoadDataEnd();
                         } else {
-                            onUILoadDataEnd(userDiscussListBean.getData_list(), userDiscussListBean.getData_count());
+                            List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
+                            initConfigId(data_list);
+                            onUILoadDataEnd(data_list);
                         }
                     }
 

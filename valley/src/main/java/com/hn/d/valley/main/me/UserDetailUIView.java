@@ -9,17 +9,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RMaxAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.widget.RTextView;
+import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -29,9 +33,11 @@ import com.hn.d.valley.bean.realm.NewestDiscussPicBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.other.InputUIView;
+import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -45,7 +51,7 @@ import butterknife.OnClick;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：用户详情界面
  * 创建人员：Robi
  * 创建时间：2017/01/17 10:30
  * 修改人员：Robi
@@ -60,12 +66,6 @@ public class UserDetailUIView extends BaseContentUIView {
     NestedScrollView mScrollRootLayout;
     @BindView(R.id.ico_recycler_view)
     HnIcoRecyclerView mIcoRecyclerView;
-    @BindView(R.id.sex_text_view)
-    RTextView mSexTextView;
-    @BindView(R.id.address_text_view)
-    RTextView mAddressTextView;
-    @BindView(R.id.auth_desc)
-    TextView mAuthDesc;
     @BindView(R.id.view_pager_placeholder_view)
     ImageView mViewPagerPlaceholderView;
     @BindView(R.id.view_pager)
@@ -73,7 +73,9 @@ public class UserDetailUIView extends BaseContentUIView {
     @BindView(R.id.single_text_indicator_view)
     TextIndicator mSingleTextIndicatorView;
     @BindView(R.id.command_item_view)
-    ImageView mCommandItemView;
+    TextView mCommandItemView;
+    @BindView(R.id.auth_desc)
+    TextView mAuthDesc;
     private UserInfoBean mUserInfoBean;
 
     public UserDetailUIView(String to_uid) {
@@ -96,7 +98,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     public void onClick(View v) {
                         T_.show("更多");
                     }
-                }));
+                }).setVisibility(View.GONE));
     }
 
     @Override
@@ -109,6 +111,8 @@ public class UserDetailUIView extends BaseContentUIView {
             }
         });
         mViewPagerPlaceholderView.setVisibility(View.VISIBLE);
+
+        getUITitleBarContainer().showRightItem(0);
     }
 
     @NonNull
@@ -162,20 +166,29 @@ public class UserDetailUIView extends BaseContentUIView {
         setTitleString(mUserInfoBean.getUsername());
         getUITitleBarContainer().setBackgroundColor(Color.TRANSPARENT);
         mViewHolder.fillView(mUserInfoBean);
+        //性别
+        ItemInfoLayout sexItem = mViewHolder.v(R.id.sex_item);
         if ("1".equalsIgnoreCase(mUserInfoBean.getSex())) {
-            mSexTextView.setText(R.string.man);
+            sexItem.setItemDarkText(getString(R.string.man));
         } else if ("2".equalsIgnoreCase(mUserInfoBean.getSex())) {
-            mSexTextView.setText(R.string.women);
+            sexItem.setItemDarkText(getString(R.string.women));
         } else {
-            mSexTextView.setText(R.string.secret);
+            sexItem.setItemDarkText(getString(R.string.secret));
         }
-        mAddressTextView.setText(mUserInfoBean.getProvince_name(), mUserInfoBean.getCity_name(), mUserInfoBean.getCounty_name());
+
+        //区域
+        ItemInfoLayout addressItem = mViewHolder.v(R.id.address_item);
+        addressItem.setItemDarkText(mUserInfoBean.getProvince_name() + " " + mUserInfoBean.getCity_name() + " " + mUserInfoBean.getCounty_name());
+
+        //认证
         if ("1".equalsIgnoreCase(mUserInfoBean.getIs_auth())) {
             mAuthDesc.setVisibility(View.VISIBLE);
+            mAuthDesc.setText(mUserInfoBean.getAuth_desc());
         } else {
             mAuthDesc.setVisibility(View.GONE);
         }
 
+        //动态
         final RMaxAdapter<HnIcoRecyclerView.IcoInfo> maxAdapter = mIcoRecyclerView.getMaxAdapter();
         maxAdapter.setMaxcount(3);
         List<HnIcoRecyclerView.IcoInfo> infos = new ArrayList<>();
@@ -195,14 +208,46 @@ public class UserDetailUIView extends BaseContentUIView {
         PhotoPager.init(mILayout, mSingleTextIndicatorView, mViewPager, photos);
 
         initCommandView();
-    }
 
-    /**
-     * 动态详情
-     */
-    @OnClick(R.id.status_layout)
-    public void onStatusClick() {
+        //等级
+        ItemInfoLayout gradeItem = mViewHolder.v(R.id.grade_item);
+        gradeItem.setItemDarkText(bean.getGrade());
 
+        //昵称
+        ItemInfoLayout item = mViewHolder.v(R.id.username_item);
+        item.setItemDarkText(bean.getUsername());
+
+        //电话
+        item = mViewHolder.v(R.id.phone_item);
+        String phone = bean.getPhone();
+        if (!TextUtils.isEmpty(phone) && phone.length() > 4) {
+            item.setItemDarkText(phone.substring(0, phone.length() - 4) + "****");
+        }
+
+        //个性签名
+        item = mViewHolder.v(R.id.signature_item);
+        item.setItemDarkText(bean.getSignature());
+
+        //id
+        item = mViewHolder.v(R.id.id_item);
+        item.setItemDarkText(bean.getUid());
+
+        item = mViewHolder.v(R.id.birthday_item);
+        String birthday = bean.getBirthday();
+        if (TextUtils.isEmpty(birthday)) {
+            item.setItemDarkText(getString(R.string.secret));
+        } else {
+            item.setItemDarkText(getString(R.string.birthday_format, DateDialog.getBirthday(birthday)));
+        }
+
+        //语音介绍
+        ItemInfoLayout infoLayout = mViewHolder.v(R.id.voice_layout);
+        LinearLayout controlLayout = mViewHolder.v(R.id.voice_control_layout);
+        if (TextUtils.isEmpty(bean.getVoice_introduce())) {
+            infoLayout.setItemDarkText(mActivity.getString(R.string.nothing));
+        } else {
+            controlLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
@@ -238,7 +283,8 @@ public class UserDetailUIView extends BaseContentUIView {
                 //已关注
                 if (mUserInfoBean.getIs_contact() == 1) {
                     //是联系人
-                    mCommandItemView.setImageResource(R.drawable.send_message_selector);
+                    mCommandItemView.setText(R.string.send_message);
+                    //mCommandItemView.setImageResource(R.drawable.send_message_selector);
                     mCommandItemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -247,28 +293,19 @@ public class UserDetailUIView extends BaseContentUIView {
                     });
                 } else {
                     //不是联系人
-                    mCommandItemView.setImageResource(R.drawable.add_contact2_selector);
+                    //mCommandItemView.setImageResource(R.drawable.add_contact2_selector);
+                    mCommandItemView.setText(R.string.add_friend);
                     mCommandItemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            add(RRetrofit.create(UserInfoService.class)
-                                    .addContact(Param.buildMap("uid:" + uid, "to_uid:" + to_uid,
-                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
-                                                    UserCache.instance().getUserInfoBean().getUsername())))
-                                    .compose(Rx.transformer(String.class))
-                                    .subscribe(new BaseSingleSubscriber<String>() {
-
-                                        @Override
-                                        public void onSucceed(String bean) {
-                                            T_.show(bean);
-                                        }
-                                    }));
+                            onAddFriend();
                         }
                     });
                 }
             } else {
                 //未关注
-                mCommandItemView.setImageResource(R.drawable.attention_selector);
+                // mCommandItemView.setImageResource(R.drawable.attention_selector);
+                mCommandItemView.setText(R.string.add_follow);
                 mCommandItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -279,7 +316,7 @@ public class UserDetailUIView extends BaseContentUIView {
 
                                     @Override
                                     public void onSucceed(String bean) {
-                                        T_.show(bean);
+                                        T_.show(getString(R.string.attention_successed_tip));
                                         mUserInfoBean.setIs_attention(1);
                                         initCommandView();
                                     }
@@ -288,5 +325,52 @@ public class UserDetailUIView extends BaseContentUIView {
                 });
             }
         }
+    }
+
+    private void onAddFriend() {
+        startIView(InputUIView.build(new InputUIView.InputConfigCallback() {
+            @Override
+            public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
+                return super.initTitleBar(titleBarPattern)
+                        .setTitleString(mActivity, R.string.add_friend)
+                        .addRightItem(TitleBarPattern.TitleBarItem.build(getString(R.string.send), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finishIView(mIView);
+                                add(RRetrofit.create(UserInfoService.class)
+                                        .addContact(Param.buildMap("to_uid:" + to_uid,
+                                                "tip:" + mExEditText.string()))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                                            @Override
+                                            public void onSucceed(String bean) {
+                                                T_.show(bean);
+                                            }
+                                        }));
+                            }
+                        }));
+            }
+
+            @Override
+            public void initInputView(RBaseViewHolder holder, ExEditText editText, ItemRecyclerUIView.ViewItemInfo bean) {
+                super.initInputView(holder, editText, bean);
+                TextView tipView = holder.v(R.id.input_tip_view);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setText(R.string.add_friend_tip);
+
+                String username = UserCache.instance().getUserInfoBean().getUsername();
+                if (!TextUtils.isEmpty(username)) {
+                    setInputText(getString(R.string.add_friend_format, username));
+                    mExEditText.setSelection(2, username.length() + 2);
+                    mExEditText.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            showSoftInput(mExEditText);
+                        }
+                    }, DEFAULT_ANIM_TIME);
+                }
+            }
+        }));
     }
 }

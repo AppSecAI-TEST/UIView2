@@ -6,11 +6,22 @@
     android:layout_height="wrap_content"
     tools:background="@android:color/holo_red_dark">
 
+    <TextView
+        android:id="@+id/input_tip_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:padding="@dimen/base_xhdpi"
+        android:visibility="gone"
+        tools:text="测试文本"/>
+
     <com.angcyo.uiview.widget.ExEditText
         android:id="@+id/edit_text_view"
         style="@style/EditStyle"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/input_tip_view"
         android:background="@color/white"
         android:imeOptions="actionDone"
         android:paddingEnd="@dimen/base_xhdpi"

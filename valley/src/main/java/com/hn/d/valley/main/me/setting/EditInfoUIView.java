@@ -60,9 +60,7 @@ import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
 
 import java.io.File;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
@@ -963,21 +961,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     protected String getBirthday(String date) {
-        if (TextUtils.isEmpty(date)) {
-            return "";
-        }
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        int year = calendar.get(Calendar.YEAR);//当前那一年
-
-        try {
-            calendar.setTime(WheelTime.Date_FORMAT.parse(date));
-            int y = calendar.get(Calendar.YEAR);//当前那一年
-            return mActivity.getResources().getString(R.string.birthday_format, year - y);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "";
-        }
+        return getString(R.string.birthday_format, DateDialog.getBirthday(date));
     }
 
     /**
