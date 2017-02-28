@@ -576,7 +576,7 @@ public class UserDetailUIView extends BaseContentUIView {
     }
 
     /**
-     * 是好友
+     * 是好友..
      */
     private void showFriendDialog() {
 
