@@ -166,18 +166,35 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
     }
 
     private void notifyDataChanged() {
-        mImageViews.clear();
-        removeAllViews();
-        for (int i = 0; i < mImagesList.size(); i++) {
-            ImageView imageView = new ImageView(getContext());
-//            imageView.setBackgroundColor(Color.BLUE);
-            imageView.setTag(R.id.tag_position, i);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            addViewInLayout(imageView, -1, new LayoutParams(-2, -2));
-            mImageViews.add(imageView);
-            imageView.setOnClickListener(this);
+        int oldSize = mImageViews.size();
+        int newSize = mImagesList.size();
+        if (newSize > oldSize) {
+            for (int i = oldSize; i < newSize; i++) {
+                createImageView(i);
+            }
+        } else if (newSize < oldSize) {
+            for (int i = oldSize - 1; i >= newSize; i--) {
+                removeView(mImageViews.remove(i));
+            }
         }
         requestLayout();
+
+//        mImageViews.clear();
+//        removeAllViews();
+//        for (int i = 0; i < newSize; i++) {
+//            createImageView(i);
+//        }
+//        requestLayout();
+    }
+
+    private void createImageView(int i) {
+        ImageView imageView = new ImageView(getContext());
+//            imageView.setBackgroundColor(Color.BLUE);
+        imageView.setTag(R.id.tag_position, i);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        addViewInLayout(imageView, i, new LayoutParams(-2, -2));
+        mImageViews.add(imageView);
+        imageView.setOnClickListener(this);
     }
 
     /**
