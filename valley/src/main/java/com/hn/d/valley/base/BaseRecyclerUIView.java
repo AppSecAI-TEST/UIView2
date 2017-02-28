@@ -17,6 +17,7 @@ import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
@@ -394,10 +395,16 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         onUILoadDataEnd(null, data_count);
     }
 
-    public void initConfigId(List<UserDiscussListBean.DataListBean> dataList) {
+    public void initConfigId(UserDiscussListBean listBean) {
+        List<UserDiscussListBean.DataListBean> dataList = listBean.getData_list();
         if (dataList != null && !dataList.isEmpty()) {
             if (page <= 1) {
                 first_id = dataList.get(0).getDiscuss_id();
+
+                int dataCount = listBean.getData_count();
+                if (dataCount != 0) {
+                    T_.show(mActivity.getString(R.string.how_count_status_format, dataCount));
+                }
             }
             last_id = dataList.get(dataList.size() - 1).getDiscuss_id();
         }

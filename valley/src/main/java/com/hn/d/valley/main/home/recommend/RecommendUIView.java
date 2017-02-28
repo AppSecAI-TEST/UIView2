@@ -87,7 +87,7 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                             onUILoadDataEnd();
                         } else {
                             List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
-                            initConfigId(data_list);
+                            initConfigId(userDiscussListBean);
                             onUILoadDataEnd(data_list);
                         }
                     }
