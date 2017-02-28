@@ -433,12 +433,12 @@ public class UserDetailUIView extends BaseContentUIView {
                         .addRightItem(TitleBarPattern.TitleBarItem.build(getString(R.string.finish), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                finishIView(mIView);
-                                String string = mExEditText.string();
+                                final String string = mExEditText.string();
                                 if (TextUtils.isEmpty(string)) {
                                     Anim.band(mExEditText);
                                     return;
                                 }
+                                finishIView(mIView);
                                 add(RRetrofit.create(ContactService.class)
                                         .setMark(Param.buildMap("to_uid:" + to_uid,
                                                 "mark:" + string))
@@ -447,6 +447,7 @@ public class UserDetailUIView extends BaseContentUIView {
 
                                             @Override
                                             public void onSucceed(String bean) {
+                                                mUserInfoBean.setContact_remark(string);
                                                 T_.show(bean);
                                             }
                                         }));
