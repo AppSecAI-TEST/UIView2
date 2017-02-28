@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/base_mdpi">
+
+    <TextView
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base_xhdpi"
+        android:gravity="center"
+        android:text="你可能感兴趣的人"
+        android:textSize="@dimen/default_text_little_size"/>
+
+    <com.angcyo.uiview.recycler.RRecyclerView
+        android:id="@+id/recycler_view"
+        android:paddingLeft="@dimen/base_xhdpi"
+        android:paddingRight="@dimen/base_hdpi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+    </com.angcyo.uiview.recycler.RRecyclerView>
+
+    <TextView
+        android:id="@+id/tv_focus"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base_xhdpi"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:background="@drawable/base_main_color_border_selector"
+        android:layout_gravity="center"
+        android:text="@string/recommend_focus_user"
+        android:textSize="@dimen/default_text_little_size"/>
+</android.support.v7.widget.LinearLayoutCompat>

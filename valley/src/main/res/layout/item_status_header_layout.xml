@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gerendongtai_pic"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/title_bar_height"
+        android:padding="@dimen/base_xhdpi">
+
+        <com.hn.d.valley.widget.HnGlideImageView
+            android:id="@+id/image_view"
+            android:layout_width="@dimen/avatar_image_size_little"
+            android:layout_height="@dimen/avatar_image_size_little"
+            android:contentDescription="@string/is_circle"
+            android:src="@drawable/default_avatar"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/image_view"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/base_xhdpi">
+
+            <TextView
+                android:id="@+id/name_view"
+                style="@style/WhiteColorTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="玥玥北鼻"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/status_count_view"
+                style="@style/DarkWhiteColorTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_hdpi"
+                android:tag="@string/status_count_format"
+                tools:text="玥玥北鼻"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

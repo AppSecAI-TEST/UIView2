@@ -38,6 +38,8 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
 
     int space = 6;//dp, 间隙
 
+    boolean canItemClick = true;
+
     public NineImageLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         space *= getResources().getDisplayMetrics().density;
@@ -194,7 +196,9 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         addViewInLayout(imageView, i, new LayoutParams(-2, -2));
         mImageViews.add(imageView);
-        imageView.setOnClickListener(this);
+        if (canItemClick) {
+            imageView.setOnClickListener(this);
+        }
     }
 
     /**
@@ -229,6 +233,20 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
             final int position = (int) v.getTag(R.id.tag_position);
             mNineImageConfig.onImageItemClick((ImageView) v, mImagesList, mImageViews, position);
         }
+    }
+
+    /**
+     * 设置间隙大小
+     */
+    public void setSpace(int space) {
+        this.space = space;
+    }
+
+    /**
+     * 设置Item是否可点击
+     */
+    public void setCanItemClick(boolean canItemClick) {
+        this.canItemClick = canItemClick;
     }
 
     public interface NineImageConfig {

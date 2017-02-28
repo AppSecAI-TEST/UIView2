@@ -20,7 +20,7 @@ import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 
 /**
- * 用户信息
+ * 用户信息列表界面
  * Created by angcyo on 2017-01-15.
  */
 

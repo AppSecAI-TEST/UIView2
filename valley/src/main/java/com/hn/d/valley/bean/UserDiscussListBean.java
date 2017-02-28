@@ -101,6 +101,11 @@ public class UserDiscussListBean {
 
         private int is_collect;
         private List<LikeUserInfoBean> like_users;
+        /**
+         * scan_type : 1
+         */
+
+        private String scan_type;
 //        private Object original_info;
 
 
@@ -332,7 +337,15 @@ public class UserDiscussListBean {
             this.like_users = like_users;
         }
 
-        
+        public String getScan_type() {
+            return scan_type;
+        }
+
+        public void setScan_type(String scan_type) {
+            this.scan_type = scan_type;
+        }
+
+
         public static class OriginalInfo {
 
             /**

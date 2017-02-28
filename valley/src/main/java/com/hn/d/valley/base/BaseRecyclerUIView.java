@@ -40,7 +40,6 @@ import java.util.Map;
 public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         implements RBaseAdapter.OnAdapterLoadMoreListener, RefreshLayout.OnRefreshListener {
 
-    public static final int PAGE_SIZE = 20;//没次请求默认的数据条数
     protected RefreshLayout mRefreshLayout;
     protected RRecyclerView mRecyclerView;
     protected RExBaseAdapter<H, T, F> mRExBaseAdapter;
@@ -342,6 +341,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     /**
      * 接口返回数据后,请调用此方法设置数据
      */
+    @Deprecated
     public void onUILoadDataEnd(List<T> datas, int data_count) {
         //显示内容布局,因为一开始可能是一个加载布局
         showContentLayout();

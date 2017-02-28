@@ -131,6 +131,7 @@
     <string name="scan_title">扫一扫</string>
     <string name="search_title">搜一搜</string>
     <string name="status">动态</string>
+    <string name="ta_status">个人动态</string>
     <string name="men">男</string>
     <string name="secret">保密</string>
     <string name="ta_fans_title">TA的粉丝</string>
@@ -206,5 +207,6 @@
     <string name="see_state_user_title">看过这条动态的人</string>
     <string name="my_visitor_title">我的访客</string>
     <string name="follower_count_format">%1$s粉丝</string>
+    <string name="status_count_format">%1$s条动态</string>
 
 </resources>

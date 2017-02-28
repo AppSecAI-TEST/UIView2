@@ -33,6 +33,7 @@ import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.MyVisitorUserUIView;
 import com.hn.d.valley.sub.other.SeeStateUserUIView;
+import com.hn.d.valley.sub.user.MyStatusDetailUIView;
 import com.hn.d.valley.utils.PhotoPager;
 
 import java.util.ArrayList;
@@ -257,6 +258,7 @@ public class MeUIView extends BaseUIView {
     public void onItemInfoClick(View view) {
         switch (view.getId()) {
             case R.id.my_status_layout://我的动态
+                mOtherILayout.startIView(new MyStatusDetailUIView());
                 break;
             case R.id.my_favor_layout://我的收藏
                 break;
