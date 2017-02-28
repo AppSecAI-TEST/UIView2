@@ -16,6 +16,7 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.resources.AnimUtil;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.lzy.imagepicker.adapter.ImagePageAdapter;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -92,6 +93,7 @@ public class ImagePagerUIView extends UIIViewImpl {
     public void onViewLoad() {
         super.onViewLoad();
         startAnimation();
+        //startAnimation2();
         final View decorView = mActivity.getWindow().getDecorView();
         decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
@@ -121,6 +123,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         mMRootLayout.addView(mMViewPager, new ViewGroup.LayoutParams(-1, -1));
         mMRootLayout.addView(mMCircleIndicator, indicatorParams);
 
+        mMRootLayout.setClickable(true);
         container.addView(mMRootLayout, new ViewGroup.LayoutParams(-1, -1));
         return container;
     }
@@ -145,6 +148,7 @@ public class ImagePagerUIView extends UIIViewImpl {
                 }).start();
     }
 
+    @Deprecated
     private void startAnimation() {
         mMCircleIndicator.setVisibility(View.GONE);
         mValueAnimator = AnimUtil.startArgb(mMRootLayout, Color.TRANSPARENT, Color.BLACK, UIIViewImpl.DEFAULT_ANIM_TIME);
@@ -178,6 +182,34 @@ public class ImagePagerUIView extends UIIViewImpl {
 
             }
         });
+    }
+
+    private void startAnimation2() {
+        mMCircleIndicator.setVisibility(View.GONE);
+        mValueAnimator = AnimUtil.startArgb(mMRootLayout, Color.TRANSPARENT, Color.BLACK, UIIViewImpl.DEFAULT_ANIM_TIME);
+        final int screenWidth = ResUtil.getScreenWidth(mActivity);
+        final int screenHeight = ResUtil.getScreenHeight(mActivity);
+
+        ViewCompat.setX(mMViewPager, mStartX);
+        ViewCompat.setY(mMViewPager, mStartY);
+
+        UI.setView(mMViewPager, mStartW, mStartH);
+
+        ViewCompat.animate(mMViewPager)
+                .setDuration(1000)
+                .x(screenWidth / 2 - mStartW / 2)
+                .y(screenHeight / 2 - mStartH / 2)
+                .scaleX(screenWidth * 1.f / mStartW)
+                .scaleY(screenHeight * 1.f / mStartH)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mImageItems.size() > 1) {
+                            mMCircleIndicator.setVisibility(View.VISIBLE);
+                        }
+                    }
+                })
+                .start();
     }
 
 }
