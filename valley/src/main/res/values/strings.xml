@@ -107,6 +107,7 @@
     <string name="fetching">正在获取...</string>
     <string name="home_circle">圈子</string>
     <string name="is_circle">circle</string>
+    <string name="is_circle2">circle2</string>
     <string name="not_circle">not_circle</string>
     <string name="home_recommend">推荐</string>
     <string name="home_nearby">附近</string>
@@ -223,6 +224,8 @@
     <string name="send_message">发消息</string>
     <string name="attention_successed_tip">关注成功</string>
     <string name="add_friend_tip">你需要发送请求, 等待对方通过</string>
+    <string name="intest_preson">你可能感兴趣的人</string>
+    <string name="jump">跳过</string>
     <string name="set_dynamic_permission">设置动态权限</string>
     <string name="cant_see_my_status_tip">不让TA看我的动态</string>
     <string name="dont_see_he_status_tip">不查看TA的动态</string>

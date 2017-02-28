@@ -2,9 +2,9 @@ package com.hn.d.valley.start;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.TextPaint;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,6 +19,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
@@ -27,13 +28,11 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.utils.Preconditions;
 import com.hn.d.valley.widget.HnLoading;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -42,31 +41,29 @@ import rx.functions.Func1;
  * Created by Administrator on 2017/2/27.
  */
 
-public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>{
-
-    public RecommendUser2UIView(){
-        this.uid = UserCache.getUserAccount();
-    }
+public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
     private int itemHeight;
-
     private RecommendUserUIView.RecommendUserAdapter mUserAdapter;
-
     private String uid;
+
+    public RecommendUser2UIView() {
+        this.uid = UserCache.getUserAccount();
+    }
 
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText("跳过").setTextColor(mActivity.getResources().getColor(R.color.main_text_color_6666666))
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.jump)).setVisibility(View.GONE)
+                .setTextColor(mActivity.getResources().getColor(R.color.main_text_color_6666666))
                 .setListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                T_.show("跳过");
-            }
-        }));
-
-
-        return super.getTitleBar().setRightItems(rightItems)
+                    @Override
+                    public void onClick(View v) {
+                        HnUIMainActivity.launcher(mActivity);
+                        mActivity.finish();
+                    }
+                }));
+        return super.getTitleBar().setRightItems(rightItems).setTitleHide(true)
                 .setTitleBarBGColor(mActivity.getResources().getColor(R.color.white));
     }
 
@@ -97,6 +94,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
 
     @Override
     protected void onUILoadData(String page) {
+        loadAllRecommendUserData();
     }
 
     @Override
@@ -118,7 +116,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                     public void run() {
                         HnLoading.hide();
                     }
-                },3000);
+                }, 3000);
             }
         });
     }
@@ -152,36 +150,36 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
     }
 
     private void initRecyclerView(RRecyclerView rRecyclerView) {
-        ViewGroup.LayoutParams layoutParams =  rRecyclerView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = rRecyclerView.getLayoutParams();
         layoutParams.width = ScreenUtil.screenWidth;
         itemHeight = layoutParams.width / 3;
         L.i("init itemHeight : " + itemHeight);
 
         SpaceItemDecoration itemDecoration = new SpaceItemDecoration(10);
-        mUserAdapter = new RecommendUserUIView.RecommendUserAdapter(mActivity,itemHeight,rRecyclerView);
+        mUserAdapter = new RecommendUserUIView.RecommendUserAdapter(mActivity, itemHeight, rRecyclerView);
         rRecyclerView.addItemDecoration(itemDecoration);
         //禁止RecyclerView 上下拖动阴影
         rRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        rRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,3));
+        rRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
         rRecyclerView.setAdapter(mUserAdapter);
-
-        loadAllRecommendUserData();
     }
 
     private void loadAllRecommendUserData() {
         add(RRetrofit.create(ContactService.class)
                 .followers(Param.buildMap("uid:" + uid, "page:" + page))
                 .compose(Rx.transformer(UserListModel.class))
-                .subscribe(new SingleRSubscriber<UserListModel>(this) {
+                .subscribe(new BaseSingleSubscriber<UserListModel>() {
                     @Override
-                    protected void onResult(UserListModel bean) {
+                    public void onSucceed(UserListModel bean) {
                         if (bean == null || bean.getData_list() == null || bean.getData_list().isEmpty()) {
                             onUILoadDataEnd();
                             showEmptyLayout();
                         } else {
                             for (LikeUserInfoBean b : bean.getData_list()) {
                                 b.setIs_attention(1);
-                        }
+                            }
+                            getUITitleBarContainer().showRightItem(0);
+                            showContentLayout();
                             onRecommendUserLoadEnd(bean.getData_list());
                         }
                     }
@@ -204,9 +202,24 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                 }));
     }
 
-    public void onRecommendUserLoadEnd(List<LikeUserInfoBean> data_list) {
+    public void onRecommendUserLoadEnd(final List<LikeUserInfoBean> data_list) {
+        if (mUserAdapter == null) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    onRecommendUserLoadEnd(data_list);
+                }
+            });
+            return;
+        }
         Preconditions.checkNotNull(data_list);
         mUserAdapter.resetData(data_list);
         L.i(data_list);
+    }
+
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
     }
 }

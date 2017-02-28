@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ import butterknife.OnClick;
  * Created by hewking on 2017/2/27.
  */
 
-public class RecommendUserUIView extends BaseContentUIView{
+public class RecommendUserUIView extends BaseContentUIView {
 
     @BindView(R.id.tv_focus)
     TextView tv_focus;
@@ -64,17 +66,17 @@ public class RecommendUserUIView extends BaseContentUIView{
     }
 
     private void init() {
-        ViewGroup.LayoutParams layoutParams =  rRecyclerView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = rRecyclerView.getLayoutParams();
         layoutParams.width = ScreenUtil.screenWidth;
         int itemHeight = layoutParams.width / 3;
         L.i("init itemHeight : " + itemHeight);
 
         SpaceItemDecoration itemDecoration = new SpaceItemDecoration(10);
-        mUserAdapter = new RecommendUserAdapter(mActivity,itemHeight,rRecyclerView);
+        mUserAdapter = new RecommendUserAdapter(mActivity, itemHeight, rRecyclerView);
         rRecyclerView.addItemDecoration(itemDecoration);
         //禁止RecyclerView 上下拖动阴影
         rRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        rRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,3));
+        rRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
         rRecyclerView.setAdapter(mUserAdapter);
     }
 
@@ -94,14 +96,14 @@ public class RecommendUserUIView extends BaseContentUIView{
     }
 
     @OnClick(R.id.tv_focus)
-    public void focusRecommendUser(){
+    public void focusRecommendUser() {
         HnLoading.show(mILayout);
         tv_focus.postDelayed(new Runnable() {
             @Override
             public void run() {
                 HnLoading.hide();
             }
-        },3000);
+        }, 3000);
     }
 
     @Override
@@ -125,18 +127,19 @@ public class RecommendUserUIView extends BaseContentUIView{
 
         private RRecyclerView mRecyclerView;
 
-        public RecommendUserAdapter(Context context,int itemHeight,RRecyclerView recyclerView) {
+        public RecommendUserAdapter(Context context, int itemHeight, RRecyclerView recyclerView) {
             super(context);
             this.itemHeight = itemHeight;
             this.mRecyclerView = recyclerView;
             setModel(RModelAdapter.MODEL_MULTI);
+
         }
 
         @Override
         public void resetData(List<LikeUserInfoBean> datas) {
             super.resetData(datas);
             // 选中所有
-            setSelectorAll(mRecyclerView,0);
+            setSelectorAll(mRecyclerView, R.id.delete_view);
         }
 
         @Override
@@ -149,28 +152,24 @@ public class RecommendUserUIView extends BaseContentUIView{
             if (likeUserInfoBean == null) {
                 return;
             }
-            if(itemHeight != 0) {
+            if (itemHeight != 0) {
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = itemHeight;
                 holder.itemView.setLayoutParams(layoutParams);
             }
             L.i("itemHeight : " + itemHeight);
 
-            final ImageView imageView = holder.imgV(R.id.image_view);
-            final ImageView deleteView = holder.imgV(R.id.delete_view);
-            deleteView.setVisibility(View.VISIBLE);
+            final HnGlideImageView imageView = (HnGlideImageView) holder.imgV(R.id.image_view);
+            final TextView username = holder.tv(R.id.tv__username);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageResource(R.drawable.zhanweitu_1);
-
             imageView.post(new Runnable() {
                 @Override
                 public void run() {
                     if (likeUserInfoBean != null
                             && !TextUtils.isEmpty(likeUserInfoBean.getAvatar())) {
-                        Glide.with(mContext)
-                                .load(likeUserInfoBean.getAvatar())
-                                .placeholder(R.drawable.zhanweitu_1)
-                                .into(imageView);
+                        imageView.setImageThumbUrl(likeUserInfoBean.getAvatar());
+                        username.setText(likeUserInfoBean.getUsername());
                     }
                 }
             });
@@ -178,17 +177,19 @@ public class RecommendUserUIView extends BaseContentUIView{
 
         @Override
         protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, LikeUserInfoBean bean) {
-            final ImageView deleteView = holder.imgV(R.id.delete_view);
+            final CompoundButton deleteView = holder.cV(R.id.delete_view);
+            deleteView.setChecked(isSelector);
+            deleteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setSelectorPosition(position, deleteView);
+                }
+            });
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (deleteView.getVisibility() == View.VISIBLE) {
-                        deleteView.setVisibility(View.GONE);
-                    }else {
-                        deleteView.setVisibility(View.VISIBLE);
-                    }
-                    setSelectorPosition(position);
-
+                    setSelectorPosition(position, deleteView);
                 }
             });
         }

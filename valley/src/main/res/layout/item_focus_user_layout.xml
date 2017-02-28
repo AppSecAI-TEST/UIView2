@@ -1,26 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/base_dark_rect_shape">
 
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/default_page"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-    <ImageView
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.hn.d.valley.widget.HnGlideImageView
+            android:id="@+id/image_view"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/avatar_image_size_little"
+            android:layout_height="@dimen/avatar_image_size_little"
+            android:contentDescription="@string/is_circle2"
+            android:src="@drawable/default_avatar" />
+
+        <TextView
+            android:id="@+id/tv__username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="@dimen/base_xhdpi"
+            tools:text="@string/user_agreement" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/delete_view"
         android:layout_width="@dimen/base_xxxhdpi"
         android:layout_height="@dimen/base_xxxhdpi"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:background="@drawable/base_bg2_selector"
-        android:scaleType="centerInside"
-        android:src="@drawable/base_delete"
-        android:visibility="visible"/>
+        android:button="@drawable/check_selector"
+        android:scaleType="centerInside" />
 </RelativeLayout>
