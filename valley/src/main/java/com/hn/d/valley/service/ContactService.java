@@ -63,4 +63,25 @@ public interface ContactService {
      */
     @POST("contact/getRelationship")
     Observable<ResponseBody> getRelationship(@QueryMap Map<String, String> map);
+
+    /**
+     * 移除粉丝
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	string	被移除的人【多个以，分割】
+     */
+    @POST("contact/delFans")
+    Observable<ResponseBody> delFans(@QueryMap Map<String, String> map);
+
+    /**
+     * 加入黑名单
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	被加黑用户id
+     */
+    @POST("contact/addBlackList")
+    Observable<ResponseBody> addBlackList(@QueryMap Map<String, String> map);
+
+    @POST("contact/cancelBlackList")
+    Observable<ResponseBody> cancelBlackList(@QueryMap Map<String, String> map);
 }

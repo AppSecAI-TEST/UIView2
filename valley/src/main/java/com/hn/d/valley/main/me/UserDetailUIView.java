@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -41,6 +42,7 @@ import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -452,18 +454,13 @@ public class UserDetailUIView extends BaseContentUIView {
                         showDynamicPermission();
                     }
                 })
-                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.report), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        showReport();
                     }
                 })
-                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
+                .addItem(getBlackListItem())
                 .showDialog(mOtherILayout);
     }
 
@@ -478,24 +475,19 @@ public class UserDetailUIView extends BaseContentUIView {
                         showDynamicPermission();
                     }
                 })
-                .addItem("移除粉丝", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.del_fans), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        delFans();
                     }
                 })
-                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.report), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        showReport();
                     }
                 })
-                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
+                .addItem(getBlackListItem())
                 .showDialog(mOtherILayout);
     }
 
@@ -510,24 +502,19 @@ public class UserDetailUIView extends BaseContentUIView {
                         showDynamicPermission();
                     }
                 })
-                .addItem("移除关注", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.un_attention), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        unAttention();
                     }
                 })
-                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.report), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        showReport();
                     }
                 })
-                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
+                .addItem(getBlackListItem())
                 .showDialog(mOtherILayout);
     }
 
@@ -540,7 +527,6 @@ public class UserDetailUIView extends BaseContentUIView {
                 .addItem("设置备注", R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showDynamicPermission();
                     }
                 })
                 .addItem("把TA推荐给朋友", R.drawable.delete_search, new View.OnClickListener() {
@@ -558,13 +544,13 @@ public class UserDetailUIView extends BaseContentUIView {
                 .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        showDynamicPermission();
                     }
                 })
-                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.report), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        showReport();
                     }
                 })
                 .addItem("解除好友", R.drawable.delete_search, new View.OnClickListener() {
@@ -573,17 +559,95 @@ public class UserDetailUIView extends BaseContentUIView {
 
                     }
                 })
-                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
+                .addItem(getBlackListItem())
                 .showDialog(mOtherILayout);
 
     }
 
     private void showDynamicPermission() {
         startIView(new DynamicPermissionUIView(mUserInfoBean));
+    }
+
+    private void showReport() {
+        startIView(new ReportUIView(mUserInfoBean));
+    }
+
+    /**
+     * 取消关注
+     */
+    private void unAttention() {
+        add(RRetrofit.create(UserInfoService.class)
+                .unAttention(Param.buildMap("to_uid:" + to_uid))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        mUserInfoBean.setIs_attention(0);
+                        initCommandView();
+                    }
+                }));
+    }
+
+    /**
+     * 移除粉丝
+     */
+    private void delFans() {
+        add(RRetrofit.create(ContactService.class)
+                .delFans(Param.buildMap("to_uid:" + to_uid))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        isFollower = false;
+                    }
+                }));
+    }
+
+    boolean isInBlackList() {
+        return mUserInfoBean.getIs_blacklist() == 1;
+    }
+
+    /**
+     * 加入黑名单
+     */
+    private void addBlackList() {
+        if (isInBlackList()) {
+            add(RRetrofit.create(ContactService.class)
+                    .cancelBlackList(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                        @Override
+                        public void onSucceed(String bean) {
+                            T_.show(bean);
+                            mUserInfoBean.setIs_blacklist(0);
+                        }
+                    }));
+        } else {
+            add(RRetrofit.create(ContactService.class)
+                    .addBlackList(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                        @Override
+                        public void onSucceed(String bean) {
+                            T_.show(bean);
+                            mUserInfoBean.setIs_blacklist(1);
+                        }
+                    }));
+        }
+    }
+
+    public UIItemDialog.ItemInfo getBlackListItem() {
+        return new UIItemDialog.ItemInfo(isInBlackList() ? getString(R.string.cancel_blackList_tip) : getString(R.string.add_blackList_tip),
+                R.drawable.delete_search,
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addBlackList();
+                    }
+                });
     }
 }

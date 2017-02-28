@@ -20,6 +20,7 @@ import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.realm.Tag;
+import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnLoading;
 
@@ -45,6 +46,12 @@ public class ReportUIView extends BaseContentUIView {
     RCheckGroup mContentLayout;
 
     UserDiscussListBean.DataListBean mDataBean;
+
+    UserInfoBean mInfoBean;
+
+    public ReportUIView(UserInfoBean infoBean) {
+        mInfoBean = infoBean;
+    }
 
     public ReportUIView(UserDiscussListBean.DataListBean dataBean) {
         mDataBean = dataBean;
@@ -72,7 +79,7 @@ public class ReportUIView extends BaseContentUIView {
     public void onViewLoad() {
         super.onViewLoad();
         add(RRetrofit.create(SocialService.class)
-                .getReportReason(Param.buildMap("type:discuss"))
+                .getReportReason(Param.buildMap("type:" + getReportType()))
                 .compose(Rx.transformerList(Tag.class))
                 .subscribe(new RSubscriber<List<Tag>>() {
 
@@ -117,6 +124,18 @@ public class ReportUIView extends BaseContentUIView {
     }
 
     /**
+     * discuss-动态/评论/回复 group-群聊/个人
+     */
+    private String getReportType() {
+        if (mInfoBean != null) {
+            return "group";
+        } else if (mDataBean != null) {
+            return "discuss";
+        }
+        return "";
+    }
+
+    /**
      * 举报
      */
     @OnClick(R.id.submit_view)
@@ -126,28 +145,68 @@ public class ReportUIView extends BaseContentUIView {
             T_.show(mActivity.getString(R.string.no_selector_report_tip));
         } else {
             Tag tag = (Tag) checkView.getTag();
-            add(RRetrofit.create(SocialService.class)
-                    .report(Param.buildMap("type:discuss", "item_id:" + mDataBean.getDiscuss_id(), "reason_id:" + tag.getId()))
-                    .compose(Rx.transformer(String.class)).subscribe(new RSubscriber<String>() {
-                        @Override
-                        public void onStart() {
-                            super.onStart();
-                            HnLoading.show(mOtherILayout, false);
-                        }
-
-                        @Override
-                        public void onSucceed(String bean) {
-                            super.onSucceed(bean);
-                            T_.show(bean);
-                            finishIView();
-                        }
-
-                        @Override
-                        public void onEnd() {
-                            super.onEnd();
-                            HnLoading.hide();
-                        }
-                    }));
+            if (mInfoBean != null) {
+                reportUser(tag);
+            } else if (mDataBean != null) {
+                reportDiscuss(tag);
+            }
         }
+    }
+
+
+    /**
+     * 举报用户
+     */
+    private void reportUser(Tag tag) {
+        add(RRetrofit.create(SocialService.class)
+                .report(Param.buildMap("type:user", "item_id:" + mInfoBean.getUid(), "reason_id:" + tag.getId()))
+                .compose(Rx.transformer(String.class)).subscribe(new RSubscriber<String>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        HnLoading.show(mOtherILayout, false);
+                    }
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        super.onSucceed(bean);
+                        T_.show(bean);
+                        finishIView();
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        HnLoading.hide();
+                    }
+                }));
+    }
+
+    /**
+     * 举报动态
+     */
+    private void reportDiscuss(Tag tag) {
+        add(RRetrofit.create(SocialService.class)
+                .report(Param.buildMap("type:discuss", "item_id:" + mDataBean.getDiscuss_id(), "reason_id:" + tag.getId()))
+                .compose(Rx.transformer(String.class)).subscribe(new RSubscriber<String>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        HnLoading.show(mOtherILayout, false);
+                    }
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        super.onSucceed(bean);
+                        T_.show(bean);
+                        finishIView();
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        HnLoading.hide();
+                    }
+                }));
     }
 }
