@@ -83,6 +83,7 @@ public class UserDiscussItemControl {
         holder.fillView(user_info, true);
 
         TextView showTimeView = holder.v(R.id.show_time);
+        showTimeView.setVisibility(View.VISIBLE);
         showTimeView.setText(dataListBean.getShow_time());
 
         /**头像*/
