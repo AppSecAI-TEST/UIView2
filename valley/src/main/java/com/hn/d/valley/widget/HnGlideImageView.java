@@ -1,12 +1,17 @@
 package com.hn.d.valley.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.angcyo.library.glide.GlideCircleTransform;
+import com.angcyo.uiview.utils.BmpUtil;
+import com.bumptech.glide.BitmapTypeRequest;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.base.oss.OssHelper;
 
 /**
@@ -48,6 +53,24 @@ public class HnGlideImageView extends ImageView {
                         builder.placeholder(getDrawable());
                     }
                     builder.into(HnGlideImageView.this);
+                }
+            });
+        } else if (description != null && description.toString().contains("circle2")) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    BitmapTypeRequest<String> builder = Glide.with(getContext())
+                            .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
+                            .asBitmap();
+                    if (getDrawable() != null) {
+                        builder.placeholder(getDrawable());
+                    }
+                    builder.into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            setImageBitmap(BmpUtil.getRoundedCornerBitmap(resource, Math.max(getMeasuredWidth(), getMeasuredHeight())));
+                        }
+                    });
                 }
             });
         } else {

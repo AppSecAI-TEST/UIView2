@@ -20,21 +20,23 @@ import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.bean.EntityResponse;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
-import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.UserListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
+import com.hn.d.valley.utils.Preconditions;
 import com.hn.d.valley.widget.HnLoading;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * Created by Administrator on 2017/2/27.
@@ -55,14 +57,17 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText("跳过").setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setText("跳过").setTextColor(mActivity.getResources().getColor(R.color.main_text_color_6666666))
+                .setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 T_.show("跳过");
             }
         }));
 
-        return super.getTitleBar().setTitleString("推荐").setRightItems(rightItems);
+
+        return super.getTitleBar().setRightItems(rightItems)
+                .setTitleBarBGColor(mActivity.getResources().getColor(R.color.white));
     }
 
     @Override
@@ -92,17 +97,11 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
 
     @Override
     protected void onUILoadData(String page) {
+    }
 
-//        RRetrofit.create(ContactService.class)
-//                .getFollowers(Param.buildMap("uid:" + uid, "page:" + page))
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new SingleRSubscriber<EntityResponse<ListModel<LikeUserInfoBean>>>(this) {
-//                    @Override
-//                    protected void onResult(EntityResponse<ListModel<LikeUserInfoBean>> bean) {
-//                        L.i("onresult");
-//                        L.i(bean);
-//                    }
-//                });
+    @Override
+    public int getDefaultBackgroundColor() {
+        return mActivity.getResources().getColor(R.color.white);
     }
 
     private void initViewHolder(RBaseViewHolder holder) {
@@ -113,9 +112,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
             @Override
             public void onClick(View v) {
                 HnLoading.show(mILayout);
-
-                focusRecommendUser(mUserAdapter.getAllDatas());
-
+                focusRecommendUser(mUserAdapter.getSelectorData());
                 tv_focus.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -127,31 +124,31 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
     }
 
     private void focusRecommendUser(List<LikeUserInfoBean> allDatas) {
-//        add(RRetrofit.create(ContactService.class)
-//        .attentionn(Param.buildMap("uid:" + uid,"to_uid:" + allDatas.get(0).getUid(),"source:" + 1))
-//        .)
-
-        RRetrofit.create(ContactService.class)
-                .attention(Integer.valueOf(uid),Integer.valueOf(allDatas.get(0).getUid()),1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new RSubscriber<EntityResponse<Integer>>() {
+        Observable.from(allDatas)
+                .map(new Func1<LikeUserInfoBean, String>() {
                     @Override
-                    public void onSucceed(EntityResponse<Integer> bean) {
-                        super.onSucceed(bean);
-                        L.i("focusRecommendUser : " + bean.getData());
-                    }
+                    public String call(LikeUserInfoBean likeUserInfoBean) {
+                        add(RRetrofit.create(UserInfoService.class)
+                                .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + likeUserInfoBean.getUid()))
+                                .compose(Rx.transformer(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onSucceed(String bean) {
+                                        T_.show(bean);
+                                        L.i(bean);
+                                    }
+                                }));
+                        return likeUserInfoBean.getUid();
 
-                    @Override
-                    public void onNoNetwork() {
-                        super.onNoNetwork();
                     }
+                }).subscribe(new RSubscriber<String>() {
+            @Override
+            public void onSucceed(String bean) {
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
-                });
+                super.onSucceed(bean);
+            }
+        });
+
     }
 
     private void initRecyclerView(RRecyclerView rRecyclerView) {
@@ -161,13 +158,17 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
         L.i("init itemHeight : " + itemHeight);
 
         SpaceItemDecoration itemDecoration = new SpaceItemDecoration(10);
-        mUserAdapter = new RecommendUserUIView.RecommendUserAdapter(mActivity,itemHeight);
+        mUserAdapter = new RecommendUserUIView.RecommendUserAdapter(mActivity,itemHeight,rRecyclerView);
         rRecyclerView.addItemDecoration(itemDecoration);
         //禁止RecyclerView 上下拖动阴影
         rRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         rRecyclerView.setLayoutManager(new GridLayoutManager(mActivity,3));
         rRecyclerView.setAdapter(mUserAdapter);
 
+        loadAllRecommendUserData();
+    }
+
+    private void loadAllRecommendUserData() {
         add(RRetrofit.create(ContactService.class)
                 .followers(Param.buildMap("uid:" + uid, "page:" + page))
                 .compose(Rx.transformer(UserListModel.class))
@@ -176,17 +177,35 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                     protected void onResult(UserListModel bean) {
                         if (bean == null || bean.getData_list() == null || bean.getData_list().isEmpty()) {
                             onUILoadDataEnd();
+                            showEmptyLayout();
                         } else {
                             for (LikeUserInfoBean b : bean.getData_list()) {
                                 b.setIs_attention(1);
-                            }
+                        }
                             onRecommendUserLoadEnd(bean.getData_list());
                         }
+                    }
+
+                    @Override
+                    public void onNoNetwork() {
+                        super.onNoNetwork();
+                        showNonetLayout(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loadAllRecommendUserData();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
                     }
                 }));
     }
 
     public void onRecommendUserLoadEnd(List<LikeUserInfoBean> data_list) {
+        Preconditions.checkNotNull(data_list);
         mUserAdapter.resetData(data_list);
         L.i(data_list);
     }

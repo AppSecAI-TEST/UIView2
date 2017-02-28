@@ -300,8 +300,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.register_view)
     public void onRegisterClick() {
-        startIView(new RegisterUIView());
-//        startIView(new RecommendUser2UIView());
+//        startIView(new RegisterUIView());
+        startIView(new RecommendUser2UIView());
     }
 
     /**
@@ -402,7 +402,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1f,
                 Animation.RELATIVE_TO_PARENT, 0f,
                 Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f);
-        setDefaultConfig(translateAnimation);
+        setDefaultConfig(translateAnimation, false);
         return translateAnimation;
     }
 

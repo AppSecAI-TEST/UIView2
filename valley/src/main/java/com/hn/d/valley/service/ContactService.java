@@ -1,14 +1,9 @@
 package com.hn.d.valley.service;
 
-import com.hn.d.valley.bean.EntityResponse;
-import com.hn.d.valley.bean.LikeUserInfoBean;
-import com.hn.d.valley.bean.ListModel;
-
 import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -50,15 +45,22 @@ public interface ContactService {
 //    @POST("contact/followers")
 //    Observable<EntityResponse<ListModel<LikeUserInfoBean>>> getFollowers(@QueryMap Map<String,String> map);
 
+
     /**
-     * 关注好友
-     * @param map
-     * @return
+     * 获取和指定用户关系
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	要查看的用户id
+     * <p>
+     * 字段名	备注	说明
+     * 0	int	普通陌生人【没有拉黑情况】
+     * 1	int	双方拉黑
+     * 2	int	我拉对方黑
+     * 3	int	对方拉我黑
+     * 4	int	互为联系人【互相关注就为联系人】
+     * 5	int	我关注了对方
+     * 6	int	对方关注了我
      */
-    @POST("contact/attention")
-    Observable<ResponseBody> attention(@QueryMap Map<String,String> map);
-
-    @POST("contact/attention")
-    Observable<EntityResponse<Integer>> attention(@Query("uid") int uid, @Query("to_uid") int to_uid,@Query("source") int source);
-
+    @POST("contact/getRelationship")
+    Observable<ResponseBody> getRelationship(@QueryMap Map<String, String> map);
 }

@@ -10,6 +10,7 @@ import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
@@ -36,6 +37,7 @@ import butterknife.ButterKnife;
 public abstract class UIIViewImpl implements IView {
 
     public static final int DEFAULT_ANIM_TIME = 300;
+    public static final int DEFAULT_FINISH_ANIM_TIME = 150;
     public static final int STATE_NORMAL = 1;
     public static final int STATE_VIEW_SHOW = 3;
     public static final int STATE_VIEW_HIDE = 4;
@@ -65,9 +67,14 @@ public abstract class UIIViewImpl implements IView {
     private long viewShowCount = 0;
     private boolean mIsRightJumpLeft = false;
 
-    public static void setDefaultConfig(Animation animation) {
-        animation.setDuration(DEFAULT_ANIM_TIME);
-        animation.setInterpolator(new DecelerateInterpolator());
+    public static void setDefaultConfig(Animation animation, boolean isFinish) {
+        if (isFinish) {
+            animation.setDuration(DEFAULT_FINISH_ANIM_TIME);
+            animation.setInterpolator(new AccelerateInterpolator());
+        } else {
+            animation.setDuration(DEFAULT_ANIM_TIME);
+            animation.setInterpolator(new DecelerateInterpolator());
+        }
         animation.setFillAfter(false);
     }
 
@@ -207,7 +214,7 @@ public abstract class UIIViewImpl implements IView {
             translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0,
                     Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         }
-        setDefaultConfig(translateAnimation);
+        setDefaultConfig(translateAnimation, false);
         return translateAnimation;
     }
 
@@ -216,7 +223,7 @@ public abstract class UIIViewImpl implements IView {
         L.d(this.getClass().getSimpleName(), "loadFinishAnimation: ");
         TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, 1f,
                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
-        setDefaultConfig(translateAnimation);
+        setDefaultConfig(translateAnimation, true);
         return translateAnimation;
     }
 
@@ -243,7 +250,7 @@ public abstract class UIIViewImpl implements IView {
             translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0, Animation.RELATIVE_TO_SELF, -1f,
                     Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
         }
-        setDefaultConfig(translateAnimation);
+        setDefaultConfig(translateAnimation, false);
         return translateAnimation;
     }
 
@@ -252,7 +259,7 @@ public abstract class UIIViewImpl implements IView {
         L.d(this.getClass().getSimpleName(), "loadOtherEnterAnimation: ");
         TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0,
                 Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f);
-        setDefaultConfig(translateAnimation);
+        setDefaultConfig(translateAnimation, false);
         return translateAnimation;
     }
 

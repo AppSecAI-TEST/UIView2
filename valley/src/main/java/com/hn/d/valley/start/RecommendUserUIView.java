@@ -3,6 +3,7 @@ package com.hn.d.valley.start;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.recycler.RModelAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
@@ -25,6 +28,7 @@ import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.widget.HnLoading;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -66,7 +70,7 @@ public class RecommendUserUIView extends BaseContentUIView{
         L.i("init itemHeight : " + itemHeight);
 
         SpaceItemDecoration itemDecoration = new SpaceItemDecoration(10);
-        mUserAdapter = new RecommendUserAdapter(mActivity,itemHeight);
+        mUserAdapter = new RecommendUserAdapter(mActivity,itemHeight,rRecyclerView);
         rRecyclerView.addItemDecoration(itemDecoration);
         //禁止RecyclerView 上下拖动阴影
         rRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -113,15 +117,26 @@ public class RecommendUserUIView extends BaseContentUIView{
         return super.getTitleBar().setTitleString("推荐").setRightItems(rightItems);
     }
 
-    public static class RecommendUserAdapter extends RBaseAdapter<LikeUserInfoBean> {
-
-        private int itemHeight;
+    public static class RecommendUserAdapter extends RModelAdapter<LikeUserInfoBean> {
 
         private static final int DEFAULT_MAX_COUNT = 9;
 
-        public RecommendUserAdapter(Context context,int itemHeight) {
+        private int itemHeight;
+
+        private RRecyclerView mRecyclerView;
+
+        public RecommendUserAdapter(Context context,int itemHeight,RRecyclerView recyclerView) {
             super(context);
             this.itemHeight = itemHeight;
+            this.mRecyclerView = recyclerView;
+            setModel(RModelAdapter.MODEL_MULTI);
+        }
+
+        @Override
+        public void resetData(List<LikeUserInfoBean> datas) {
+            super.resetData(datas);
+            // 选中所有
+            setSelectorAll(mRecyclerView,0);
         }
 
         @Override
@@ -130,11 +145,10 @@ public class RecommendUserUIView extends BaseContentUIView{
         }
 
         @Override
-        protected void onBindView(RBaseViewHolder holder, final int position, final LikeUserInfoBean likeUserInfoBean) {
+        protected void onBindCommonView(RBaseViewHolder holder, int position, final LikeUserInfoBean likeUserInfoBean) {
             if (likeUserInfoBean == null) {
                 return;
             }
-
             if(itemHeight != 0) {
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = itemHeight;
@@ -148,17 +162,6 @@ public class RecommendUserUIView extends BaseContentUIView{
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageResource(R.drawable.zhanweitu_1);
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (deleteView.getVisibility() == View.VISIBLE) {
-                        deleteView.setVisibility(View.GONE);
-                    }else {
-                        deleteView.setVisibility(View.VISIBLE);
-                    }
-                }
-            });
-
             imageView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -171,6 +174,28 @@ public class RecommendUserUIView extends BaseContentUIView{
                     }
                 }
             });
+        }
+
+        @Override
+        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, LikeUserInfoBean bean) {
+            final ImageView deleteView = holder.imgV(R.id.delete_view);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (deleteView.getVisibility() == View.VISIBLE) {
+                        deleteView.setVisibility(View.GONE);
+                    }else {
+                        deleteView.setVisibility(View.VISIBLE);
+                    }
+                    setSelectorPosition(position);
+
+                }
+            });
+        }
+
+        @Override
+        protected void onBindNormalView(RBaseViewHolder holder, int position, LikeUserInfoBean bean) {
+
         }
 
         @Override

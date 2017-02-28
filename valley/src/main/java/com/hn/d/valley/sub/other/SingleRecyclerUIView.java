@@ -50,6 +50,11 @@ public abstract class SingleRecyclerUIView<T> extends BaseRecyclerUIView<String,
     }
 
     @Override
+    protected boolean isDelayLoad() {
+        return true;
+    }
+
+    @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
         loadData();

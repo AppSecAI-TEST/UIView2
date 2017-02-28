@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="@dimen/base_mdpi">
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/base_hdpi">
 
     <TextView
+        android:id="@+id/tv_interest_desc"
         style="@style/DarkTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/base_xhdpi"
         android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/main_text_color"
         android:text="你可能感兴趣的人"
-        android:textSize="@dimen/default_text_little_size"/>
+        android:textSize="@dimen/default_text_little_size"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentTop="true"
+         />
 
     <com.angcyo.uiview.recycler.RRecyclerView
         android:id="@+id/recycler_view"
+        android:layout_below="@id/tv_interest_desc"
+        android:layout_marginTop="@dimen/base_35dpi"
         android:paddingLeft="@dimen/base_xhdpi"
         android:paddingRight="@dimen/base_hdpi"
         android:layout_width="match_parent"
@@ -28,13 +35,17 @@
     <TextView
         android:id="@+id/tv_focus"
         style="@style/DarkTextStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:padding="@dimen/base_xhdpi"
         android:gravity="center"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/base_main_color_border_selector"
-        android:layout_gravity="center"
+        android:background="@drawable/main_color_bg_selector"
         android:text="@string/recommend_focus_user"
-        android:textSize="@dimen/default_text_little_size"/>
-</android.support.v7.widget.LinearLayoutCompat>
+        android:textSize="@dimen/default_text_little_size"
+        android:textColor="@color/white"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="54dp" />
+
+
+</RelativeLayout>

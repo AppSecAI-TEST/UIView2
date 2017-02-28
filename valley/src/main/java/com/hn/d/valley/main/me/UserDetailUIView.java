@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -32,7 +33,9 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.NewestDiscussPicBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
@@ -76,6 +79,10 @@ public class UserDetailUIView extends BaseContentUIView {
     TextView mCommandItemView;
     @BindView(R.id.auth_desc)
     TextView mAuthDesc;
+    /**
+     * 是否是粉丝
+     */
+    boolean isFollower = false;
     private UserInfoBean mUserInfoBean;
 
     public UserDetailUIView(String to_uid) {
@@ -89,16 +96,26 @@ public class UserDetailUIView extends BaseContentUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar()
+        TitleBarPattern titleBarPattern = super.getTitleBar()
                 .setTitleHide(true)
                 .setFloating(true)
-                .setShowBackImageView(true)
-                .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.more, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        T_.show("更多");
-                    }
-                }).setVisibility(View.GONE));
+                .setShowBackImageView(true);
+
+        if (!isMe()) {
+            titleBarPattern.addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.more, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //T_.show("更多");
+                    showBottomDialog();
+                }
+            }).setVisibility(View.GONE));
+        }
+
+        return titleBarPattern;
+    }
+
+    private boolean isMe() {
+        return TextUtils.equals(to_uid, UserCache.getUserAccount());
     }
 
     @Override
@@ -157,6 +174,19 @@ public class UserDetailUIView extends BaseContentUIView {
                     }
                 })
         );
+
+        if (!isMe()) {
+            add(RRetrofit.create(ContactService.class)
+                    .getRelationship(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(Integer.class))
+                    .subscribe(new BaseSingleSubscriber<Integer>() {
+                        @Override
+                        public void onSucceed(Integer bean) {
+                            super.onSucceed(bean);
+                            isFollower = bean == 6;
+                        }
+                    }));
+        }
     }
 
     private void initView(UserInfoBean bean) {
@@ -259,23 +289,34 @@ public class UserDetailUIView extends BaseContentUIView {
                 if (UserCache.getUserAccount().equalsIgnoreCase(mUserInfoBean.getUid())) {
                     mOtherILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
                 } else {
-                    T_.error("不支持查看");
+                    if (mUserInfoBean.getLook_fans() == 1) {
+                        mOtherILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
+                    } else {
+                        T_.error("对方不允许您查看.");
+                    }
                 }
                 break;
             case R.id.follower_item_layout://粉丝
                 if (UserCache.getUserAccount().equalsIgnoreCase(mUserInfoBean.getUid())) {
                     mOtherILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
                 } else {
-                    T_.error("不支持查看");
+                    if (mUserInfoBean.getLook_fans() == 1) {
+                        mOtherILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
+                    } else {
+                        T_.error("对方不允许您查看.");
+                    }
                 }
                 break;
         }
     }
 
+    /**
+     * 命令按钮
+     */
     private void initCommandView() {
         final String to_uid = mUserInfoBean.getUid();
         final String uid = UserCache.getUserAccount();
-        if (TextUtils.equals(uid, to_uid)) {
+        if (isMe()) {
             mCommandItemView.setVisibility(View.GONE);
         } else {
             mCommandItemView.setVisibility(View.VISIBLE);
@@ -327,6 +368,9 @@ public class UserDetailUIView extends BaseContentUIView {
         }
     }
 
+    /**
+     * 添加好友事件
+     */
     private void onAddFriend() {
         startIView(InputUIView.build(new InputUIView.InputConfigCallback() {
             @Override
@@ -372,5 +416,174 @@ public class UserDetailUIView extends BaseContentUIView {
                 }
             }
         }));
+    }
+
+    /**
+     * 更多弹窗
+     */
+    private void showBottomDialog() {
+        if (mUserInfoBean.getIs_contact() == 1) {
+            //联系人, 也就是好友
+            showFriendDialog();
+        } else {
+            if (mUserInfoBean.getIs_attention() == 1) {
+                //关注的人
+                showAttentionDialog();
+            } else {
+                if (isFollower) {
+                    //粉丝
+                    showFollowerDialog();
+                } else {
+                    //陌生人
+                    showOtherDialog();
+                }
+            }
+        }
+    }
+
+    /**
+     * 陌生人
+     */
+    private void showOtherDialog() {
+        UIBottomItemDialog.build().setUseWxStyle(true)
+                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDynamicPermission();
+                    }
+                })
+                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .showDialog(mOtherILayout);
+    }
+
+    /**
+     * 粉丝
+     */
+    private void showFollowerDialog() {
+        UIBottomItemDialog.build().setUseWxStyle(true)
+                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDynamicPermission();
+                    }
+                })
+                .addItem("移除粉丝", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .showDialog(mOtherILayout);
+    }
+
+    /**
+     * 关注的人
+     */
+    private void showAttentionDialog() {
+        UIBottomItemDialog.build().setUseWxStyle(true)
+                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDynamicPermission();
+                    }
+                })
+                .addItem("移除关注", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .showDialog(mOtherILayout);
+    }
+
+    /**
+     * 是好友
+     */
+    private void showFriendDialog() {
+
+        UIBottomItemDialog.build().setUseWxStyle(true)
+                .addItem("设置备注", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDynamicPermission();
+                    }
+                })
+                .addItem("把TA推荐给朋友", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("标为星标好友", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("举报", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("解除好友", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("加入黑名单", R.drawable.delete_search, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .showDialog(mOtherILayout);
+
+    }
+
+    private void showDynamicPermission() {
+        startIView(new DynamicPermissionUIView(mUserInfoBean));
     }
 }
