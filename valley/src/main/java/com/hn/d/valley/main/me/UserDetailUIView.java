@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.pickerview.DateDialog;
@@ -421,6 +422,61 @@ public class UserDetailUIView extends BaseContentUIView {
     }
 
     /**
+     * 设置备注
+     */
+    private void setMark() {
+        startIView(InputUIView.build(new InputUIView.InputConfigCallback() {
+            @Override
+            public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
+                return super.initTitleBar(titleBarPattern)
+                        .setTitleString(mActivity, R.string.set_mark_title)
+                        .addRightItem(TitleBarPattern.TitleBarItem.build(getString(R.string.finish), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finishIView(mIView);
+                                String string = mExEditText.string();
+                                if (TextUtils.isEmpty(string)) {
+                                    Anim.band(mExEditText);
+                                    return;
+                                }
+                                add(RRetrofit.create(ContactService.class)
+                                        .setMark(Param.buildMap("to_uid:" + to_uid,
+                                                "mark:" + string))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                                            @Override
+                                            public void onSucceed(String bean) {
+                                                T_.show(bean);
+                                            }
+                                        }));
+                            }
+                        }));
+            }
+
+            @Override
+            public void initInputView(RBaseViewHolder holder, ExEditText editText, ItemRecyclerUIView.ViewItemInfo bean) {
+                super.initInputView(holder, editText, bean);
+                TextView tipView = holder.v(R.id.input_tip_view);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setText(R.string.set_mark_tip);
+
+                String mark = mUserInfoBean.getContact_remark();
+                if (!TextUtils.isEmpty(mark)) {
+                    setInputText(mark);
+//                    mExEditText.setSelection(2, mark.length() + 2);
+//                    mExEditText.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            showSoftInput(mExEditText);
+//                        }
+//                    }, DEFAULT_ANIM_TIME);
+                }
+            }
+        }));
+    }
+
+    /**
      * 更多弹窗
      */
     private void showBottomDialog() {
@@ -524,23 +580,26 @@ public class UserDetailUIView extends BaseContentUIView {
     private void showFriendDialog() {
 
         UIBottomItemDialog.build().setUseWxStyle(true)
-                .addItem("设置备注", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.set_mark_title), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        setMark();
                     }
                 })
                 .addItem("把TA推荐给朋友", R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        T_.error("正在开发中...");
                     }
                 })
-                .addItem("标为星标好友", R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
+                .addItem(isSetStar() ? getString(R.string.set_not_star_tip) : getString(R.string.set_star_tip),
+                        R.drawable.delete_search,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setStar();
+                            }
+                        })
                 .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -553,10 +612,10 @@ public class UserDetailUIView extends BaseContentUIView {
                         showReport();
                     }
                 })
-                .addItem("解除好友", R.drawable.delete_search, new View.OnClickListener() {
+                .addItem(getString(R.string.del_friend), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        delFriend();
                     }
                 })
                 .addItem(getBlackListItem())
@@ -601,6 +660,59 @@ public class UserDetailUIView extends BaseContentUIView {
                     @Override
                     public void onSucceed(String bean) {
                         isFollower = false;
+                    }
+                }));
+    }
+
+    /**
+     * 设置星标好友
+     */
+    private void setStar() {
+        if (isSetStar()) {
+            add(RRetrofit.create(ContactService.class)
+                    .cancelStar(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                        @Override
+                        public void onSucceed(String bean) {
+                            mUserInfoBean.setIs_star(0);
+                        }
+                    }));
+        } else {
+            add(RRetrofit.create(ContactService.class)
+                    .setStar(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                        @Override
+                        public void onSucceed(String bean) {
+                            mUserInfoBean.setIs_star(1);
+                        }
+                    }));
+        }
+
+    }
+
+    private boolean isSetStar() {
+        return mUserInfoBean.getIs_star() == 1;
+    }
+
+    /**
+     * 解除好友关系
+     */
+    private void delFriend() {
+        add(RRetrofit.create(ContactService.class)
+                .delFriend(Param.buildMap("to_uid:" + to_uid))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        isFollower = false;
+                        mUserInfoBean.setIs_attention(0);
+                        mUserInfoBean.setIs_contact(0);
+                        initCommandView();
                     }
                 }));
     }

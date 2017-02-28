@@ -233,5 +233,10 @@
     <string name="del_fans">移除粉丝</string>
     <string name="add_blackList_tip">加入黑名单</string>
     <string name="cancel_blackList_tip">移除黑名单</string>
+    <string name="del_friend">解除好友</string>
+    <string name="set_star_tip">标为星标好友</string>
+    <string name="set_not_star_tip">取消星标好友</string>
+    <string name="set_mark_title">设置备注</string>
+    <string name="set_mark_tip">设置好友备注信息</string>
 
 </resources>

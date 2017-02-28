@@ -84,4 +84,26 @@ public interface ContactService {
 
     @POST("contact/cancelBlackList")
     Observable<ResponseBody> cancelBlackList(@QueryMap Map<String, String> map);
+
+    /**
+     * 设置为星标好友
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	被设为星标的好友
+     */
+    @POST("contact/setStar")
+    Observable<ResponseBody> setStar(@QueryMap Map<String, String> map);
+
+    @POST("contact/cancelStar")
+    Observable<ResponseBody> cancelStar(@QueryMap Map<String, String> map);
+
+    /**
+     * 编辑联系人备注
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	联系人
+     * mark	是	int	备注
+     */
+    @POST("contact/setMark")
+    Observable<ResponseBody> setMark(@QueryMap Map<String, String> map);
 }
