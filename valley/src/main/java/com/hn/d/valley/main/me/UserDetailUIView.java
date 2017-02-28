@@ -505,12 +505,12 @@ public class UserDetailUIView extends BaseContentUIView {
      */
     private void showOtherDialog() {
         UIBottomItemDialog.build().setUseWxStyle(true)
-                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDynamicPermission();
-                    }
-                })
+//                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showDynamicPermission();
+//                    }
+//                })
                 .addItem(getString(R.string.report), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -526,12 +526,12 @@ public class UserDetailUIView extends BaseContentUIView {
      */
     private void showFollowerDialog() {
         UIBottomItemDialog.build().setUseWxStyle(true)
-                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDynamicPermission();
-                    }
-                })
+//                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showDynamicPermission();
+//                    }
+//                })
                 .addItem(getString(R.string.del_fans), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -553,12 +553,12 @@ public class UserDetailUIView extends BaseContentUIView {
      */
     private void showAttentionDialog() {
         UIBottomItemDialog.build().setUseWxStyle(true)
-                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        showDynamicPermission();
-                    }
-                })
+//                .addItem(getString(R.string.set_dynamic_permission), R.drawable.delete_search, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        showDynamicPermission();
+//                    }
+//                })
                 .addItem(getString(R.string.un_attention), R.drawable.delete_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
