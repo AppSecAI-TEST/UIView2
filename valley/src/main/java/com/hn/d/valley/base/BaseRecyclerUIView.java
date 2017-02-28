@@ -284,6 +284,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         //mRExBaseAdapter.setNoMore();
         loadTime = System.currentTimeMillis();
         page = 1;
+        last_id = "";
         hasNext = true;
         onCancel();//刷新数据,取消之前的加载更多请求
         onUILoadData(getPage());
