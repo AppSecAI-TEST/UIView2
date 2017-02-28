@@ -210,53 +210,53 @@ public class UserDiscussItemControl {
             if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {
                 //图片类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);
-                Object tag = mediaImageTypeView.getTag();
+//                Object tag = mediaImageTypeView.getTag();
 
                 final String url = medias.get(0);
-                if (tag == null || !tag.toString().equalsIgnoreCase(url)) {
-                    mediaImageTypeView.setTag(url);
+//                if (tag == null || !tag.toString().equalsIgnoreCase(url)) {
+//                    mediaImageTypeView.setTag(url);
 
-                    //DraweeViewUtil.resize(mediaImageTypeView, medias.get(0));
-                    //OssHelper.setViewSize(mediaControlLayout, url);
-                    //DraweeViewUtil.setDraweeViewHttp(mediaImageTypeView, OssHelper.getImageThumb(url));
-                    mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
-                        @Override
-                        public int[] getWidthHeight(int imageSize) {
-                            return OssHelper.getImageThumbSize(url);
-                        }
+                //DraweeViewUtil.resize(mediaImageTypeView, medias.get(0));
+                //OssHelper.setViewSize(mediaControlLayout, url);
+                //DraweeViewUtil.setDraweeViewHttp(mediaImageTypeView, OssHelper.getImageThumb(url));
+                mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
+                    @Override
+                    public int[] getWidthHeight(int imageSize) {
+                        return OssHelper.getImageThumbSize(url);
+                    }
 
-                        @Override
-                        public void displayImage(final ImageView imageView, String url, int width, int height) {
-                            Glide.with(imageView.getContext())
-                                    .load(OssHelper.getImageThumb(url, width, height))
-                                    .asBitmap()
-                                    .into(new SimpleTarget<Bitmap>() {
-                                        @Override
-                                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                            if (imageView == null) {
-                                                return;
-                                            }
-                                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                                            imageView.setImageBitmap(resource);
+                    @Override
+                    public void displayImage(final ImageView imageView, String url, int width, int height) {
+                        Glide.with(imageView.getContext())
+                                .load(OssHelper.getImageThumb(url, width, height))
+                                .asBitmap()
+                                .into(new SimpleTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                        if (imageView == null) {
+                                            return;
                                         }
+                                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                        imageView.setImageBitmap(resource);
+                                    }
 
-                                        @Override
-                                        public void onLoadStarted(Drawable placeholder) {
-                                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                            imageView.setImageResource(R.drawable.zhanweitu_1);
-                                        }
-                                    });
-                        }
+                                    @Override
+                                    public void onLoadStarted(Drawable placeholder) {
+                                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                        imageView.setImageResource(R.drawable.zhanweitu_1);
+                                    }
+                                });
+                    }
 
-                        @Override
-                        public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
-                            //点击预览全部图片
-                            ImagePagerUIView.start(iLayout, imageView,
-                                    PhotoPager.getImageItems(medias, imageList), index);
-                        }
-                    });
-                    mediaImageTypeView.setImagesList(medias);
-                }
+                    @Override
+                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
+                        //点击预览全部图片
+                        ImagePagerUIView.start(iLayout, imageView,
+                                PhotoPager.getImageItems(medias, imageList), index);
+                    }
+                });
+                mediaImageTypeView.setImagesList(medias);
+//                }
             } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
                 //视频类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);

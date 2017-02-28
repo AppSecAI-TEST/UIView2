@@ -113,7 +113,7 @@ public class OssHelper {
         final String[] pictureheight_s = url.split("_s_");
         float height = 0, width = 0;
         if (pictureheight_s.length >= 2) {
-            final String[] size = pictureheight_s[pictureheight_s.length - 2].split("x");
+            final String[] size = pictureheight_s[pictureheight_s.length - 1].split("x");
             if (size.length >= 2) {
                 width = Float.valueOf(size[0]);
                 height = Float.valueOf(size[1]);
