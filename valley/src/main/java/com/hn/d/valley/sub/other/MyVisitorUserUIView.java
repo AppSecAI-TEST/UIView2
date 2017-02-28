@@ -11,7 +11,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserListModel;
-import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 
 import java.text.DateFormat;
@@ -54,8 +54,8 @@ public class MyVisitorUserUIView extends UserInfoRecyclerUIView {
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-        add(RRetrofit.create(ContactService.class)
-                .fans(Param.buildMap("page:" + page))
+        add(RRetrofit.create(UserInfoService.class)
+                .visitorList(Param.buildMap("page:" + page))
                 .compose(Rx.transformer(UserListModel.class))
                 .subscribe(new SingleRSubscriber<UserListModel>(this) {
                     @Override

@@ -142,4 +142,15 @@ public interface UserInfoService {
      */
     @POST("user/editInfo")
     Observable<ResponseBody> editInfo(@QueryMap Map<String, String> map);
+
+    /**
+     * 访客列表
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * page	是	int	第几页,默认第一页
+     * limit	否	int	页面显示的数量
+     */
+    @POST("user/visitorList")
+    Observable<ResponseBody> visitorList(@QueryMap Map<String, String> map);
+
 }
