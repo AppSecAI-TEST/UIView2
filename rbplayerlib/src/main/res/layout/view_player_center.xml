@@ -116,7 +116,7 @@
         android:id="@+id/preview_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         tools:background="@android:color/holo_red_dark"/>
 
     <ProgressBar
