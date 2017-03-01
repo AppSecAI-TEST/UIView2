@@ -26,6 +26,7 @@ import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
@@ -44,7 +45,6 @@ import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnItemTextView;
 import com.jakewharton.rxbinding.view.RxView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -97,11 +97,6 @@ public class UserDiscussItemControl {
             }
         });
 
-
-        final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
-        final View mediaControlLayout = holder.v(R.id.media_control_layout);
-//        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
-        final NineImageLayout mediaImageTypeView = holder.v(R.id.media_image_view);//
         final HnGenderView genderView = holder.v(R.id.grade);//性别,等级
         if (user_info != null) {
             genderView.setVisibility(View.VISIBLE);
@@ -111,7 +106,7 @@ public class UserDiscussItemControl {
         }
 
         //图片视频处理
-        updateMediaLayout(dataListBean, iLayout, mediaCountView, mediaControlLayout, mediaImageTypeView);
+        updateMediaLayout(dataListBean, iLayout, holder);
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
         HnItemTextView like_cnt = holder.v(R.id.like_cnt);
@@ -203,20 +198,29 @@ public class UserDiscussItemControl {
 
     }
 
-    private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout,
-                                          TextView mediaCountView, View mediaControlLayout, NineImageLayout mediaImageTypeView) {
+    private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout, RBaseViewHolder holder) {
+        final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
+        final View mediaControlLayout = holder.v(R.id.media_control_layout);
+//        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
+        final NineImageLayout mediaImageTypeView = holder.v(R.id.media_image_view);//
+        final View videoPlayView = holder.v(R.id.video_play_view);
+        final TextView videoTimeView = holder.v(R.id.video_time_view);
+
         final List<String> medias = RUtils.split(dataListBean.getMedia());
         if (medias.isEmpty()) {
             mediaControlLayout.setVisibility(View.GONE);
         } else {
             mediaControlLayout.setVisibility(View.VISIBLE);
             mediaCountView.setText("" + medias.size());
+            final String url = medias.get(0);
+
             if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {
                 //图片类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);
+                videoTimeView.setVisibility(View.INVISIBLE);
+                videoPlayView.setVisibility(View.INVISIBLE);
 //                Object tag = mediaImageTypeView.getTag();
 
-                final String url = medias.get(0);
 //                if (tag == null || !tag.toString().equalsIgnoreCase(url)) {
 //                    mediaImageTypeView.setTag(url);
 
@@ -231,25 +235,7 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(final ImageView imageView, String url, int width, int height) {
-                        Glide.with(imageView.getContext())
-                                .load(OssHelper.getImageThumb(url, width, height))
-                                .asBitmap()
-                                .into(new SimpleTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                        if (imageView == null) {
-                                            return;
-                                        }
-                                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                                        imageView.setImageBitmap(resource);
-                                    }
-
-                                    @Override
-                                    public void onLoadStarted(Drawable placeholder) {
-                                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                        imageView.setImageResource(R.drawable.zhanweitu_1);
-                                    }
-                                });
+                        UserDiscussItemControl.displayImage(imageView, url, width, height);
                     }
 
                     @Override
@@ -264,28 +250,34 @@ public class UserDiscussItemControl {
             } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
                 //视频类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);
+                videoTimeView.setVisibility(View.VISIBLE);
+                videoPlayView.setVisibility(View.VISIBLE);
                 //DraweeViewUtil.setDraweeViewRes(mediaImageTypeView, R.drawable.video_release);
 
-                List<String> thumbUrl = new ArrayList<>();
-                thumbUrl.add("");
+                String[] split = url.split("\\?");
+                final String thumbUrl = split[0];
+                final String videoUrl = split[1];
+
+                videoTimeView.setText(getVideoTime(videoUrl.split("t_")[1]));
+
                 mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
-                        return new int[]{-1, -1};
+                        return OssHelper.getImageThumbSize(thumbUrl);
                     }
 
                     @Override
                     public void displayImage(ImageView imageView, String url, int width, int height) {
-                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        imageView.setImageResource(R.drawable.video_release);
+                        UserDiscussItemControl.displayImage(imageView, url, width, height);
                     }
 
                     @Override
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
-                        T_.info("暂不支持视频的播放.");
+                        //T_.info(videoUrl);
+                        iLayout.startIView(new VideoPlayUIView(videoUrl));
                     }
                 });
-                mediaImageTypeView.setImagesList(thumbUrl);
+                mediaImageTypeView.setImage(thumbUrl);
             } else {
                 mediaImageTypeView.setVisibility(View.GONE);
             }
@@ -920,5 +912,40 @@ public class UserDiscussItemControl {
         } else {
             initUnLikeView(like_cnt, tBean, subscription, likeAction);
         }
+    }
+
+    public static String getVideoTime(String time) {
+        final int videoTime = Integer.parseInt(time);
+        int min = videoTime / 60;
+        int second = videoTime % 60;
+
+        StringBuilder builder = new StringBuilder();
+        builder.append(min > 10 ? min : ("0" + min));
+        builder.append(":");
+        builder.append(second > 10 ? second : ("0" + second));
+
+        return builder.toString();
+    }
+
+    public static void displayImage(final ImageView imageView, String url, int width, int height) {
+        Glide.with(imageView.getContext())
+                .load(OssHelper.getImageThumb(url, width, height))
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        if (imageView == null) {
+                            return;
+                        }
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        imageView.setImageBitmap(resource);
+                    }
+
+                    @Override
+                    public void onLoadStarted(Drawable placeholder) {
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        imageView.setImageResource(R.drawable.zhanweitu_1);
+                    }
+                });
     }
 }

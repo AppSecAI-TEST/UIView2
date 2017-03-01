@@ -1,1 +1,1 @@
-include ':uiview', ':library', ':imagepicker', ':valley', ':fragmentation', ':qrcodecore', ':zxing'
+include ':uiview', ':library', ':imagepicker', ':valley', ':fragmentation', ':qrcodecore', ':zxing', ':rbrecoderlib', ':rbplayerlib'

@@ -44,10 +44,33 @@
         <!--android:id="@+id/media_image_view"-->
         <!--style="@style/ImageStyle"/>-->
 
-        <com.angcyo.library.glide.NineImageLayout
-            android:id="@+id/media_image_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.angcyo.library.glide.NineImageLayout
+                android:id="@+id/media_image_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/video_play_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/play_redianzixun"
+                android:visibility="invisible"/>
+
+            <TextView
+                android:id="@+id/video_time_view"
+                style="@style/WhiteColorTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_marginEnd="@dimen/base_ldpi"
+                android:visibility="invisible"
+                tools:text="00:07"/>
+        </FrameLayout>
 
         <!--媒体文件(图片), 的数量-->
         <TextView

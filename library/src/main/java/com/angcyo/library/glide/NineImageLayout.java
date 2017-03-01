@@ -160,6 +160,12 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
         notifyDataChanged();
     }
 
+    public void setImage(String image) {
+        List<String> imagesList = new ArrayList<>();
+        imagesList.add(image);
+        setImagesList(imagesList);
+    }
+
     /**
      * 设置图片加载方式, 和第一张图片的大小
      */
