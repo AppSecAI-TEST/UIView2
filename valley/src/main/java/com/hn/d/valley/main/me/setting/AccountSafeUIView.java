@@ -59,7 +59,7 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new SetPasswordUIView(true));
+                        startIView(new SetPasswordUIView(SetPasswordUIView.TYPE_MODIFY_PW));
                     }
                 });
             } else {
@@ -67,7 +67,7 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new SetPasswordUIView(false));
+                        startIView(new SetPasswordUIView(SetPasswordUIView.TYPE_SET_PW));
                     }
                 });
             }

@@ -130,6 +130,16 @@ public interface UserInfoService {
     Observable<ResponseBody> resetPassword(@QueryMap Map<String, String> map);
 
     /**
+     * 找回密码
+     * 参数名	必选	类型	说明
+     * phone	是	string	手机号
+     * code	是	string	手机验证码
+     * pwd	是	string	新密码【rsa加密】
+     */
+    @POST("user/forgot")
+    Observable<ResponseBody> forgot(@QueryMap Map<String, String> map);
+
+    /**
      * 编辑个人信息
      * 参数名	必选	类型	说明
      * uid	是	int	用户id

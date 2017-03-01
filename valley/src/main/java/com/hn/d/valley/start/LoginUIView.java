@@ -33,13 +33,13 @@ import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnLoading;
-import com.hn.d.valley.x5.X5WebUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImagePickerHelper;
@@ -314,8 +314,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         //com.hn.d.valley.main.HnMainActivity.launcher(mActivity);
         //HnTestActivity.launcher(mActivity);
         //T_.show("测试");
-        mActivity.getWindow().setBackgroundDrawableResource(R.drawable.default_page);
-        startIView(new X5WebUIView("http://www.baidu.com"));
+        //mActivity.getWindow().setBackgroundDrawableResource(R.drawable.default_page);
+        //startIView(new X5WebUIView("http://www.baidu.com"));
+        startIView(new SetPasswordUIView(SetPasswordUIView.TYPE_FORGET_PW));
     }
 
     /**

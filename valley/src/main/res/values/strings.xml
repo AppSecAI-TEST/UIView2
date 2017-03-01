@@ -173,6 +173,7 @@
     <string name="voice_code_tip">收不到短信?使用</string>
     <string name="set_password_title">设置密码</string>
     <string name="modify_password_title">修改密码</string>
+    <string name="forget_password_title">找回密码</string>
     <string name="modify">修改</string>
     <string name="modify_password_error_tip">两次输入的密码不相同.</string>
     <string name="old_password_tip">旧密码:</string>
