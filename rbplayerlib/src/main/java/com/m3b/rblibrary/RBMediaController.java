@@ -12,14 +12,12 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.m3b.rblibrary.media.IRenderView;
 import com.m3b.rblibrary.media.IjkVideoView;
@@ -27,7 +25,6 @@ import com.m3b.rblibrary.utils.NetUtils;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
-
 
 
 /**
@@ -75,16 +72,150 @@ public class RBMediaController extends RelativeLayout {
     private boolean isShowTopControl = false;//是否显示头部显示栏，true：竖屏也显示 false：竖屏不显示，横屏显示
     private boolean isSupportGesture = false;//是否至此手势操作，false ：小屏幕的时候不支持，全屏的支持；true : 小屏幕还是全屏都支持
     private boolean isPrepare = false;// 是否已经初始化播放
-    private boolean isNetListener = false;// 是否添加网络监听 (默认是监听)
+    private boolean isNetListener = true;// 是否添加网络监听 (默认是监听)
 
     private int defaultTimeout = 3000;
     private int screenWidthPixels;
 
     private int initWidth = 0;
     private int initHeight = 0;
+    private ImageView mPreviewImageView;
 
 
-    /*************************************** 对外调用的方法 ********************/
+    /***************************************
+     * 对外调用的方法
+     ********************/
+    private boolean isShowing;
+    private boolean portrait;
+    private long newPosition = -1;
+    private long defaultRetryTime = 5000;
+    private OnErrorListener onErrorListener;
+    private Runnable oncomplete = new Runnable() {
+        @Override
+        public void run() {
+        }
+    };
+    private OnInfoListener onInfoListener;
+    private OnPreparedListener onPreparedListener;
+    private int currentPosition;
+    private long duration;
+    private boolean instantSeeking;
+    private boolean isDragging;
+    @SuppressWarnings("HandlerLeak")
+    private Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_FADE_OUT:
+                    hide(false);
+                    break;
+                case MESSAGE_HIDE_CENTER_BOX:
+                    $.id(R.id.app_video_fastForward_box).gone();
+                    break;
+                case MESSAGE_SEEK_NEW_POSITION:
+                    if (!isLive && newPosition >= 0) {
+                        videoView.seekTo((int) newPosition);
+                        newPosition = -1;
+                    }
+                    break;
+                case MESSAGE_SHOW_PROGRESS:
+                    setProgress();
+                    if (!isDragging && isShowing) {
+                        msg = obtainMessage(MESSAGE_SHOW_PROGRESS);
+                        sendMessageDelayed(msg, 1000);
+                        updatePausePlay();
+                    }
+                    break;
+                case MESSAGE_RESTART_PLAY:
+                    play(url);
+                    break;
+            }
+        }
+    };
+    /**
+     * 相应点击事件
+     */
+    private final View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (v.getId() == R.id.app_video_play) {
+                doPauseResume();
+                show(defaultTimeout);
+            } else if (v.getId() == R.id.view_jky_player_center_play) {
+                // videoView.seekTo(0);
+                // videoView.start();
+                doPauseResume();
+                show(defaultTimeout);
+            } else if (v.getId() == R.id.app_video_finish) {
+                if (!portrait) {
+                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                } else {
+                    activity.finish();
+                }
+            } else if (v.getId() == R.id.view_jky_player_tv_continue) {
+                isNetListener = false;// 取消网络的监听
+                $.id(R.id.view_jky_player_tip_control).gone();
+                play(url, currentPosition);
+            }
+        }
+    };
+    private final SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress,
+                                      boolean fromUser) {
+            if (!fromUser)
+                return;
+            $.id(R.id.view_jky_player_tip_control).gone();
+            int newPosition = (int) ((duration * progress * 1.0) / 1000);
+            Log.d("+++++", "newPosition: " + newPosition);
+            String time = generateTime(newPosition);
+            if (instantSeeking) {
+                videoView.seekTo(newPosition);
+            }
+            $.id(R.id.app_video_currentTime).text(time);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            isDragging = true;
+            show(3600000);
+            handler.removeMessages(MESSAGE_SHOW_PROGRESS);
+            if (instantSeeking) {
+                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
+            }
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            if (!instantSeeking) {
+                videoView
+                        .seekTo((int) ((duration * seekBar.getProgress() * 1.0) / 1000));
+            }
+            show(defaultTimeout);
+            handler.removeMessages(MESSAGE_SHOW_PROGRESS);
+            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
+            isDragging = false;
+            handler.sendEmptyMessageDelayed(MESSAGE_SHOW_PROGRESS, 1000);
+        }
+    };
+
+    /**********************************************************/
+
+    public RBMediaController(Context context) {
+        this(context, null);
+    }
+
+    public RBMediaController(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public RBMediaController(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
+        activity = (Activity) this.context;
+        //初始化view和其他相关的
+        initView();
+    }
 
     /**
      * 是否显示中心控制器
@@ -125,7 +256,8 @@ public class RBMediaController extends RelativeLayout {
 
     /**
      * 设置了竖屏的时候播放器的宽高
-     * @param width 0：默认是屏幕的宽度
+     *
+     * @param width  0：默认是屏幕的宽度
      * @param height 0：默认是宽度的16:9
      * @return
      */
@@ -153,67 +285,6 @@ public class RBMediaController extends RelativeLayout {
     public View getView(int ViewId) {
         return activity.findViewById(ViewId);
     }
-    /**********************************************************/
-
-    public RBMediaController(Context context) {
-        this(context, null);
-    }
-
-    public RBMediaController(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public RBMediaController(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.context = context;
-        activity = (Activity) this.context;
-        //初始化view和其他相关的
-        initView();
-    }
-
-
-
-    /**
-     * 相应点击事件
-     */
-    private final View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (v.getId() == R.id.app_video_play) {
-                doPauseResume();
-                show(defaultTimeout);
-            } else if (v.getId() == R.id.view_jky_player_center_play) {
-                // videoView.seekTo(0);
-                // videoView.start();
-                doPauseResume();
-                show(defaultTimeout);
-            } else if (v.getId() == R.id.app_video_finish) {
-                if (!portrait) {
-                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                } else {
-                    activity.finish();
-                }
-            } else if (v.getId() == R.id.view_jky_player_tv_continue) {
-                isNetListener = false;// 取消网络的监听
-                $.id(R.id.view_jky_player_tip_control).gone();
-                play(url, currentPosition);
-            }
-        }
-    };
-    private boolean isShowing;
-    private boolean portrait;
-    private long newPosition = -1;
-    private long defaultRetryTime = 5000;
-    private OnErrorListener onErrorListener;
-    private Runnable oncomplete = new Runnable() {
-        @Override
-        public void run() {
-        }
-    };
-    private OnInfoListener onInfoListener;
-    private OnPreparedListener onPreparedListener;
-
-    private int currentPosition;
 
     public RBMediaController setTitle(CharSequence title) {
         $.id(R.id.app_video_title).text(title);
@@ -314,80 +385,12 @@ public class RBMediaController extends RelativeLayout {
         }
     }
 
-    private long duration;
-    private boolean instantSeeking;
-    private boolean isDragging;
-    private final SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
-        @Override
-        public void onProgressChanged(SeekBar seekBar, int progress,
-                                      boolean fromUser) {
-            if (!fromUser)
-                return;
-            $.id(R.id.view_jky_player_tip_control).gone();
-            int newPosition = (int) ((duration * progress * 1.0) / 1000);
-            Log.d("+++++", "newPosition: "+  newPosition);
-            String time = generateTime(newPosition);
-            if (instantSeeking) {
-                videoView.seekTo(newPosition);
-            }
-            $.id(R.id.app_video_currentTime).text(time);
-        }
-
-        @Override
-        public void onStartTrackingTouch(SeekBar seekBar) {
-            isDragging = true;
-            show(3600000);
-            handler.removeMessages(MESSAGE_SHOW_PROGRESS);
-            if (instantSeeking) {
-                audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
-            }
-        }
-
-        @Override
-        public void onStopTrackingTouch(SeekBar seekBar) {
-            if (!instantSeeking) {
-                videoView
-                        .seekTo((int) ((duration * seekBar.getProgress() * 1.0) / 1000));
-            }
-            show(defaultTimeout);
-            handler.removeMessages(MESSAGE_SHOW_PROGRESS);
-            audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
-            isDragging = false;
-            handler.sendEmptyMessageDelayed(MESSAGE_SHOW_PROGRESS, 1000);
-        }
-    };
-
-    @SuppressWarnings("HandlerLeak")
-    private Handler handler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MESSAGE_FADE_OUT:
-                    hide(false);
-                    break;
-                case MESSAGE_HIDE_CENTER_BOX:
-                    $.id(R.id.app_video_fastForward_box).gone();
-                    break;
-                case MESSAGE_SEEK_NEW_POSITION:
-                    if (!isLive && newPosition >= 0) {
-                        videoView.seekTo((int) newPosition);
-                        newPosition = -1;
-                    }
-                    break;
-                case MESSAGE_SHOW_PROGRESS:
-                    setProgress();
-                    if (!isDragging && isShowing) {
-                        msg = obtainMessage(MESSAGE_SHOW_PROGRESS);
-                        sendMessageDelayed(msg, 1000);
-                        updatePausePlay();
-                    }
-                    break;
-                case MESSAGE_RESTART_PLAY:
-                    play(url);
-                    break;
-            }
-        }
-    };
+    /**
+     * 返回预览图的控件
+     */
+    public ImageView getPreviewImageView() {
+        return mPreviewImageView;
+    }
 
     /**
      * 初始化视图
@@ -403,14 +406,15 @@ public class RBMediaController extends RelativeLayout {
         screenWidthPixels = activity.getResources().getDisplayMetrics().widthPixels;
         $ = new Query(activity);
         contentView = View.inflate(context, R.layout.view_player, this);
+        mPreviewImageView = (ImageView) contentView.findViewById(R.id.preview_image_view);
         videoView = (IjkVideoView) contentView.findViewById(R.id.video_view);
         videoView.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(IMediaPlayer mp) {
-                        statusChange(STATUS_COMPLETED);
-                        oncomplete.run();
-                    }
-                });
+            @Override
+            public void onCompletion(IMediaPlayer mp) {
+                statusChange(STATUS_COMPLETED);
+                oncomplete.run();
+            }
+        });
         videoView.setOnErrorListener(new IMediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(IMediaPlayer mp, int what, int extra) {
@@ -426,12 +430,14 @@ public class RBMediaController extends RelativeLayout {
             @Override
             public boolean onInfo(IMediaPlayer mp, int what, int extra) {
 
-                Log.d("++++"," " +what);
+                Log.d("++++", " " + what);
                 switch (what) {
                     case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
+                        //表示缓冲开始 1,
                         statusChange(STATUS_LOADING);
                         break;
                     case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
+                        //2,
                         statusChange(STATUS_PLAYING);
                         break;
                     case IMediaPlayer.MEDIA_INFO_NETWORK_BANDWIDTH:
@@ -439,9 +445,11 @@ public class RBMediaController extends RelativeLayout {
                         //Toast.makeText(activity,"download rate:" + extra,Toast.LENGTH_SHORT).show();
                         break;
                     case IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                        //表示视频开始渲染 3,
                         statusChange(STATUS_PLAYING);
                         break;
                     case IMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
+                        //表示音频开始渲染
                         statusChange(STATUS_PLAYING);
                         break;
                 }
@@ -558,7 +566,7 @@ public class RBMediaController extends RelativeLayout {
             $.id(R.id.app_video_loading).visible();
         } else if (newStatus == STATUS_PLAYING) {
             hideAll();
-        }else{
+        } else {
             hideAll();
         }
 
@@ -639,7 +647,6 @@ public class RBMediaController extends RelativeLayout {
     /**
      * @param url             开始播放(可播放指定位置)
      * @param currentPosition 指定位置的大小(0-1000)
-     *
      */
     public void play(String url, int currentPosition) {
         this.url = url;
@@ -821,6 +828,120 @@ public class RBMediaController extends RelativeLayout {
         return false;
     }
 
+    /**
+     * is player support this device
+     *
+     * @return
+     */
+    public boolean SurfaceView() {
+        return playerSupport;
+    }
+
+    /**
+     * 是否正在播放
+     *
+     * @return
+     */
+    public boolean isPlaying() {
+        return videoView != null ? videoView.isPlaying() : false;
+    }
+
+    /**
+     * 停止播放
+     */
+    public void stop() {
+        if (videoView.isPlaying()) {
+            videoView.stopPlayback();
+        }
+    }
+
+    /**
+     * 释放资源
+     */
+    public void release() {
+        videoView.release(true);
+        videoView.seekTo(0);
+    }
+
+    /**
+     * seekTo position
+     *
+     * @param msec millisecond
+     */
+    public RBMediaController seekTo(int msec, boolean showControlPanle) {
+        videoView.seekTo(msec);
+        if (showControlPanle) {
+            //show(defaultTimeout);
+        }
+        return this;
+    }
+
+    /**
+     * 获取当前播放的currentPosition
+     *
+     * @return
+     */
+    public int getCurrentPosition() {
+        if (!isLive) {
+            currentPosition = videoView.getCurrentPosition();
+        } else {// 直播
+            currentPosition = -1;
+        }
+        return currentPosition;
+    }
+
+    /**
+     * 获取视频的总长度
+     *
+     * @return
+     */
+    public int getDuration() {
+        return videoView.getDuration();
+    }
+
+    public RBMediaController onError(OnErrorListener onErrorListener) {
+        this.onErrorListener = onErrorListener;
+        return this;
+    }
+
+    public RBMediaController onComplete(Runnable complete) {
+        this.oncomplete = complete;
+        return this;
+    }
+
+    public RBMediaController onInfo(OnInfoListener onInfoListener) {
+        this.onInfoListener = onInfoListener;
+        return this;
+    }
+
+    public RBMediaController onPrepared(OnPreparedListener onPreparedListener) {
+        this.onPreparedListener = onPreparedListener;
+        return this;
+    }
+
+    /**
+     * set is live (can't seek forward)
+     *
+     * @param isLive
+     * @return
+     */
+    public RBMediaController setLive(boolean isLive) {
+        this.isLive = isLive;
+        return this;
+    }
+
+    public interface OnErrorListener {
+        void onError(int what, int extra);
+    }
+
+    public interface OnInfoListener {
+        void onInfo(int what, int extra);
+    }
+
+    public interface OnPreparedListener {
+        void onPrepared();
+    }
+
     class Query {
         private final Activity activity;
         private View view;
@@ -927,122 +1048,6 @@ public class RBMediaController extends RelativeLayout {
             }
             return true;
         }
-    }
-
-    /**
-     * is player support this device
-     *
-     * @return
-     */
-    public boolean SurfaceView() {
-        return playerSupport;
-    }
-
-    /**
-     * 是否正在播放
-     *
-     * @return
-     */
-    public boolean isPlaying() {
-        return videoView != null ? videoView.isPlaying() : false;
-    }
-
-    /**
-     * 停止播放
-     */
-    public void stop() {
-        if (videoView.isPlaying()) {
-            videoView.stopPlayback();
-        }
-    }
-
-    /**
-     * 释放资源
-     */
-    public void release() {
-        videoView.release(true);
-        videoView.seekTo(0);
-    }
-
-    /**
-     * seekTo position
-     *
-     * @param msec millisecond
-     */
-    public RBMediaController seekTo(int msec, boolean showControlPanle) {
-        videoView.seekTo(msec);
-        if (showControlPanle) {
-            //show(defaultTimeout);
-        }
-        return this;
-    }
-
-
-    /**
-     * 获取当前播放的currentPosition
-     *
-     * @return
-     */
-    public int getCurrentPosition() {
-        if (!isLive) {
-            currentPosition = videoView.getCurrentPosition();
-        } else {// 直播
-            currentPosition = -1;
-        }
-        return currentPosition;
-    }
-
-    /**
-     * 获取视频的总长度
-     *
-     * @return
-     */
-    public int getDuration() {
-        return videoView.getDuration();
-    }
-
-
-    public interface OnErrorListener {
-        void onError(int what, int extra);
-    }
-
-    public interface OnInfoListener {
-        void onInfo(int what, int extra);
-    }
-
-    public interface OnPreparedListener {
-        void onPrepared();
-    }
-
-    public RBMediaController onError(OnErrorListener onErrorListener) {
-        this.onErrorListener = onErrorListener;
-        return this;
-    }
-
-    public RBMediaController onComplete(Runnable complete) {
-        this.oncomplete = complete;
-        return this;
-    }
-
-    public RBMediaController onInfo(OnInfoListener onInfoListener) {
-        this.onInfoListener = onInfoListener;
-        return this;
-    }
-
-    public RBMediaController onPrepared(OnPreparedListener onPreparedListener) {
-        this.onPreparedListener = onPreparedListener;
-        return this;
-    }
-
-    /**
-     * set is live (can't seek forward)
-     *
-     * @param isLive
-     * @return
-     */
-    public RBMediaController setLive(boolean isLive) {
-        this.isLive = isLive;
-        return this;
     }
 
 }

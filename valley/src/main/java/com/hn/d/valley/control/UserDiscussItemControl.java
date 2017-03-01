@@ -274,7 +274,7 @@ public class UserDiscussItemControl {
                     @Override
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
                         //T_.info(videoUrl);
-                        iLayout.startIView(new VideoPlayUIView(videoUrl));
+                        iLayout.startIView(new VideoPlayUIView(thumbUrl, videoUrl));
                     }
                 });
                 mediaImageTypeView.setImage(thumbUrl);

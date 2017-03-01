@@ -1,14 +1,19 @@
 package com.hn.d.valley.base.iview;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.view.UIIViewImpl;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.m3b.rblibrary.RBMediaController;
+
+import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -23,12 +28,17 @@ import com.m3b.rblibrary.RBMediaController;
  */
 public class VideoPlayUIView extends UIIViewImpl {
 
-    String path;
+    String path, thumbImagePath;
 
     RBMediaController mMediaController;
     private boolean mIsLive;
 
     public VideoPlayUIView(String path) {
+        this.path = path;
+    }
+
+    public VideoPlayUIView(String thumbImagePath, String path) {
+        this.thumbImagePath = thumbImagePath;
         this.path = path;
     }
 
@@ -51,6 +61,7 @@ public class VideoPlayUIView extends UIIViewImpl {
         if (mIsLive) {
             mMediaController.setLive(true);//设置该地址是直播的地址, 主播状态下, 不会显示播放控制按钮
         }
+        final ImageView previewImageView = mMediaController.getPreviewImageView();
         mMediaController
                 .onPrepared(new RBMediaController.OnPreparedListener() {
                     @Override
@@ -58,6 +69,7 @@ public class VideoPlayUIView extends UIIViewImpl {
                         /**
                          * 监听视频是否已经准备完成开始播放
                          */
+                        L.e("onPrepared: ");
                     }
                 })
                 .onComplete(new Runnable() {
@@ -66,6 +78,7 @@ public class VideoPlayUIView extends UIIViewImpl {
                         /**
                          * 监听视频是否已经播放完成了
                          */
+                        L.e("run: ");
                     }
                 })
                 .onInfo(new RBMediaController.OnInfoListener() {
@@ -74,7 +87,10 @@ public class VideoPlayUIView extends UIIViewImpl {
                         /**
                          * 监听视频的相关信息。
                          */
-
+                        L.e("onInfo: ");
+                        if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                            previewImageView.setVisibility(View.GONE);
+                        }
                     }
                 })
                 .onError(new RBMediaController.OnErrorListener() {
@@ -84,11 +100,17 @@ public class VideoPlayUIView extends UIIViewImpl {
                          * 监听视频播放失败的回调
                          *
                          */
-                        Log.e("####", "Error happened, errorCode = " + what);
-
+                        L.e("Error happened, errorCode = " + what);
+                        L.e("onError: ");
                     }
                 })
                 .play(path);//开始播放视频
+
+        if (!TextUtils.isEmpty(thumbImagePath) && previewImageView != null) {
+            Glide.with(mActivity)
+                    .load(thumbImagePath)
+                    .into(previewImageView);
+        }
     }
 
 
