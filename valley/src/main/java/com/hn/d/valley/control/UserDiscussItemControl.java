@@ -920,9 +920,9 @@ public class UserDiscussItemControl {
         int second = videoTime % 60;
 
         StringBuilder builder = new StringBuilder();
-        builder.append(min > 10 ? min : ("0" + min));
+        builder.append(min >= 10 ? min : ("0" + min));
         builder.append(":");
-        builder.append(second > 10 ? second : ("0" + second));
+        builder.append(second >= 10 ? second : ("0" + second));
 
         return builder.toString();
     }
