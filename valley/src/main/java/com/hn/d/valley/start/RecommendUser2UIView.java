@@ -16,17 +16,17 @@ import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.LikeUserInfoBean;
-import com.hn.d.valley.bean.UserListModel;
+import com.hn.d.valley.bean.RecommendUserBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.start.service.StartService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.Preconditions;
 import com.hn.d.valley.widget.HnLoading;
@@ -34,11 +34,9 @@ import com.hn.d.valley.widget.HnLoading;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
- * Created by Administrator on 2017/2/27.
+ * Created by hewking on 2017/2/27.
  */
 
 public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
@@ -46,6 +44,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
     private int itemHeight;
     private RecommendUserUIView.RecommendUserAdapter mUserAdapter;
     private String uid;
+    private TextView tv_focus;
 
     public RecommendUser2UIView() {
         this.uid = UserCache.getUserAccount();
@@ -103,7 +102,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
     }
 
     private void initViewHolder(RBaseViewHolder holder) {
-        final TextView tv_focus = holder.tv(R.id.tv_focus);
+        tv_focus = holder.tv(R.id.tv_focus);
         RRecyclerView rRecyclerView = holder.v(R.id.recycler_view);
         initRecyclerView(rRecyclerView);
         tv_focus.setOnClickListener(new View.OnClickListener() {
@@ -121,31 +120,43 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
         });
     }
 
-    private void focusRecommendUser(List<LikeUserInfoBean> allDatas) {
-        Observable.from(allDatas)
-                .map(new Func1<LikeUserInfoBean, String>() {
+    private void focusRecommendUser(List<RecommendUserBean> allDatas) {
+
+        add(RRetrofit.create(UserInfoService.class)
+                .attentionBatch(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(allDatas)))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
-                    public String call(LikeUserInfoBean likeUserInfoBean) {
-                        add(RRetrofit.create(UserInfoService.class)
-                                .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + likeUserInfoBean.getUid()))
-                                .compose(Rx.transformer(String.class))
-                                .subscribe(new BaseSingleSubscriber<String>() {
-                                    @Override
-                                    public void onSucceed(String bean) {
-                                        T_.show(bean);
-                                        L.i(bean);
-                                    }
-                                }));
-                        return likeUserInfoBean.getUid();
-
+                    public void onSucceed(String bean) {
+                        HnUIMainActivity.launcher(mActivity);
+                        mActivity.finish();
                     }
-                }).subscribe(new RSubscriber<String>() {
-            @Override
-            public void onSucceed(String bean) {
+                }));
 
-                super.onSucceed(bean);
-            }
-        });
+//        Observable.from(allDatas)
+//                .map(new Func1<RecommendUserBean, String>() {
+//                    @Override
+//                    public String call(RecommendUserBean likeUserInfoBean) {
+//                        add(RRetrofit.create(UserInfoService.class)
+//                                .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + likeUserInfoBean.getUid()))
+//                                .compose(Rx.transformer(String.class))
+//                                .subscribe(new BaseSingleSubscriber<String>() {
+//                                    @Override
+//                                    public void onSucceed(String bean) {
+//                                        T_.show(bean);
+//                                        L.i(bean);
+//                                    }
+//                                }));
+//                        return likeUserInfoBean.getUid();
+//
+//                    }
+//                }).subscribe(new RSubscriber<String>() {
+//            @Override
+//            public void onSucceed(String bean) {
+//
+//                super.onSucceed(bean);
+//            }
+//        });
 
     }
 
@@ -157,6 +168,15 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
 
         SpaceItemDecoration itemDecoration = new SpaceItemDecoration(10);
         mUserAdapter = new RecommendUserUIView.RecommendUserAdapter(mActivity, itemHeight, rRecyclerView);
+        mUserAdapter.setSelectListener(new RecommendUserUIView.OnUserSelectListener() {
+            @Override
+            public void onSelect(boolean boo) {
+                if (tv_focus ==  null )
+                    return;
+                tv_focus.setEnabled(boo);
+            }
+        });
+
         rRecyclerView.addItemDecoration(itemDecoration);
         //禁止RecyclerView 上下拖动阴影
         rRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -165,22 +185,20 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
     }
 
     private void loadAllRecommendUserData() {
-        add(RRetrofit.create(ContactService.class)
-                .followers(Param.buildMap("uid:" + uid, "page:" + page))
-                .compose(Rx.transformer(UserListModel.class))
-                .subscribe(new BaseSingleSubscriber<UserListModel>() {
+        add(RRetrofit.create(StartService.class)
+                .interestUser(Param.buildMap("uid:" + uid))
+                .compose(Rx.transformerList(RecommendUserBean.class))
+                .subscribe(new BaseSingleSubscriber<List<RecommendUserBean>>() {
                     @Override
-                    public void onSucceed(UserListModel bean) {
-                        if (bean == null || bean.getData_list() == null || bean.getData_list().isEmpty()) {
+                    public void onSucceed(List<RecommendUserBean> bean) {
+                        if (bean == null  || bean.isEmpty()) {
                             onUILoadDataEnd();
                             showEmptyLayout();
                         } else {
-                            for (LikeUserInfoBean b : bean.getData_list()) {
-                                b.setIs_attention(1);
-                            }
+                            //显示titlebar 右边text
                             getUITitleBarContainer().showRightItem(0);
                             showContentLayout();
-                            onRecommendUserLoadEnd(bean.getData_list());
+                            onRecommendUserLoadEnd(bean);
                         }
                     }
 
@@ -198,11 +216,12 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
+                        showEmptyLayout();
                     }
                 }));
     }
 
-    public void onRecommendUserLoadEnd(final List<LikeUserInfoBean> data_list) {
+    public void onRecommendUserLoadEnd(final List<RecommendUserBean> data_list) {
         if (mUserAdapter == null) {
             post(new Runnable() {
                 @Override

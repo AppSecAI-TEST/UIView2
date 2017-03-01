@@ -300,8 +300,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.register_view)
     public void onRegisterClick() {
-//        startIView(new RegisterUIView());
-        startIView(new RecommendUser2UIView());
+        startIView(new RegisterUIView());
     }
 
     /**
@@ -342,7 +341,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //                .setGravity(Gravity.CENTER_VERTICAL));
 
         //HnLoading.show(mILayout);
-        ImagePickerHelper.startImagePicker(mActivity, false, true, true, 50);
+//        ImagePickerHelper.startImagePicker(mActivity, false, true, true, 50);
+        startIView(new RecommendUser2UIView());
     }
 
     @Override

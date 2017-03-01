@@ -459,7 +459,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     private void initRefreshLayout() {
         mRefreshLayout.setBottomView(new PlaceholderView(mActivity));
         mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
-            @Override
+                @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
                 if (direction == RefreshLayout.TOP) {
                     //加载历史记录

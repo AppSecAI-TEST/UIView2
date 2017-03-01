@@ -3,7 +3,6 @@ package com.hn.d.valley.start;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +14,14 @@ import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RModelAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
-import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
-import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.bean.RecommendUserBean;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 
@@ -119,13 +115,15 @@ public class RecommendUserUIView extends BaseContentUIView {
         return super.getTitleBar().setTitleString("推荐").setRightItems(rightItems);
     }
 
-    public static class RecommendUserAdapter extends RModelAdapter<LikeUserInfoBean> {
+    public static class RecommendUserAdapter extends RModelAdapter<RecommendUserBean> {
 
         private static final int DEFAULT_MAX_COUNT = 9;
 
         private int itemHeight;
 
         private RRecyclerView mRecyclerView;
+
+        private OnUserSelectListener mSelectListener;
 
         public RecommendUserAdapter(Context context, int itemHeight, RRecyclerView recyclerView) {
             super(context);
@@ -135,8 +133,12 @@ public class RecommendUserUIView extends BaseContentUIView {
 
         }
 
+        public void setSelectListener(OnUserSelectListener listener) {
+            this.mSelectListener = listener;
+        }
+
         @Override
-        public void resetData(List<LikeUserInfoBean> datas) {
+        public void resetData(List<RecommendUserBean> datas) {
             super.resetData(datas);
             // 选中所有
             setSelectorAll(mRecyclerView, R.id.delete_view);
@@ -148,7 +150,7 @@ public class RecommendUserUIView extends BaseContentUIView {
         }
 
         @Override
-        protected void onBindCommonView(RBaseViewHolder holder, int position, final LikeUserInfoBean likeUserInfoBean) {
+        protected void onBindCommonView(RBaseViewHolder holder, int position, final RecommendUserBean likeUserInfoBean) {
             if (likeUserInfoBean == null) {
                 return;
             }
@@ -176,26 +178,27 @@ public class RecommendUserUIView extends BaseContentUIView {
         }
 
         @Override
-        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, LikeUserInfoBean bean) {
+        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, RecommendUserBean bean) {
             final CompoundButton deleteView = holder.cV(R.id.delete_view);
             deleteView.setChecked(isSelector);
-            deleteView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSelectorPosition(position, deleteView);
-                }
-            });
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     setSelectorPosition(position, deleteView);
+                    if(mSelectListener != null){
+                        // getAllSelector() == 0 为没有一个选中
+                        mSelectListener.onSelect(getAllSelector().size() != 0);
+                    }
                 }
-            });
+            };
+
+            deleteView.setOnClickListener(clickListener);
+            holder.itemView.setOnClickListener(clickListener);
         }
 
         @Override
-        protected void onBindNormalView(RBaseViewHolder holder, int position, LikeUserInfoBean bean) {
+        protected void onBindNormalView(RBaseViewHolder holder, int position, RecommendUserBean bean) {
 
         }
 
@@ -204,6 +207,10 @@ public class RecommendUserUIView extends BaseContentUIView {
 //            return DEFAULT_MAX_COUNT;
             return mAllDatas.size() > DEFAULT_MAX_COUNT ? DEFAULT_MAX_COUNT : mAllDatas.size();
         }
+    }
+
+    public interface OnUserSelectListener {
+        void onSelect(boolean boo);
     }
 
     @Override

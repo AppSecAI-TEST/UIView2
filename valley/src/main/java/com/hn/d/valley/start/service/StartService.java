@@ -5,6 +5,7 @@ import com.hn.d.valley.bean.realm.LoginBean;
 
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -47,4 +48,23 @@ public interface StartService {
      */
     @POST("user/login")
     Observable<Bean<LoginBean>> userLogin(@QueryMap Map<String, String> map);
+
+    /**
+     * 注册时-感兴趣的人推荐
+     *
+     uid	用户id	--
+     avatar	用户头像	--
+     sex	性别	0-保密 1-男 2-女
+     username	用户名【昵称】	--
+     true_name	真实姓名	--
+     is_auth	是否已认证	0-未认证 1-已认证
+     auth_type	认证类型	1-职场名人 2-娱乐明星 3-体育人员 4-政府人员
+     job	职位	--
+     industry	行业	--
+     company	公司/经纪公司/所在运动队/组织机构	--
+     grade	用户等级	--
+     signature	个性签名
+     */
+    @POST("recommend/interestUser")
+    Observable<ResponseBody> interestUser(@QueryMap Map<String,String> map);
 }

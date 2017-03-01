@@ -1,6 +1,7 @@
 package com.hn.d.valley.control;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -258,7 +259,12 @@ public class UserDiscussItemControl {
                 final String thumbUrl = split[0];
                 final String videoUrl = split[1];
 
-                videoTimeView.setText(getVideoTime(videoUrl.split("t_")[1]));
+                try {
+                    videoTimeView.setText(getVideoTime(videoUrl.split("t_")[1]));
+                } catch (Exception e) {
+                    videoTimeView.setTextColor(Color.RED);
+                    videoTimeView.setText("video time format error");
+                }
 
                 mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
                     @Override

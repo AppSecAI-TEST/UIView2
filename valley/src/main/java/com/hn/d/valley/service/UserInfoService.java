@@ -69,6 +69,13 @@ public interface UserInfoService {
     Observable<ResponseBody> attention(@QueryMap Map<String, String> map);
 
     /**
+     * 批量关注
+       注册引导可以用到
+     */
+    @POST("contact/attentionBatch")
+    Observable<ResponseBody> attentionBatch(@QueryMap Map<String,String> map);
+
+    /**
      * 取消关注
      * 参数名	必选	类型	说明
      * uid	是	int	用户id
