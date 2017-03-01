@@ -529,4 +529,19 @@ public abstract class UIIViewImpl implements IView {
     public String getString(@StringRes int id, Object... formatArgs) {
         return getResources().getString(id, formatArgs);
     }
+
+    /**
+     * 是否全屏
+     *
+     * @param enable 是
+     */
+    //星期三 2017-3-1
+    public void fullscreen(boolean enable) {
+        final View decorView = mActivity.getWindow().getDecorView();
+        if (enable) {
+            decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        } else {
+            decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+    }
 }

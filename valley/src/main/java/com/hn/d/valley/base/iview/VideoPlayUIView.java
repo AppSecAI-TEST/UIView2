@@ -131,11 +131,18 @@ public class VideoPlayUIView extends UIIViewImpl {
     }
 
     @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        fullscreen(true);
+    }
+
+    @Override
     public void onViewUnload() {
         super.onViewUnload();
         if (mMediaController != null) {
             mMediaController.onDestroy();
         }
+        fullscreen(false);
     }
 
     @Override

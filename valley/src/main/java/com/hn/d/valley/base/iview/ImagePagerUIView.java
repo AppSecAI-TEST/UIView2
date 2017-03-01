@@ -94,8 +94,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         super.onViewLoad();
         startAnimation();
         //startAnimation2();
-        final View decorView = mActivity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        fullscreen(true);
     }
 
     @Override
@@ -105,8 +104,7 @@ public class ImagePagerUIView extends UIIViewImpl {
             mValueAnimator.cancel();
             mValueAnimator = null;
         }
-        final View decorView = mActivity.getWindow().getDecorView();
-        decorView.setSystemUiVisibility(decorView.getSystemUiVisibility() & ~View.SYSTEM_UI_FLAG_FULLSCREEN);
+        fullscreen(false);
     }
 
     @Override
