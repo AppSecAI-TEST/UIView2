@@ -1,15 +1,17 @@
 package com.hn.d.valley.main.me;
 
 import android.text.TextUtils;
+import android.view.View;
 
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.CollectModel;
+import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -46,8 +48,8 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         super.onUILoadData(page);
         add(RRetrofit.create(SocialService.class)
                 .myCollect(Param.buildMap())
-                .compose(Rx.transformerList(CollectModel.class))
-                .subscribe(new BaseSingleSubscriber<List<CollectModel>>() {
+                .compose(Rx.transformerList(UserDiscussListBean.class))
+                .subscribe(new BaseSingleSubscriber<List<UserDiscussListBean>>() {
                     @Override
                     public void onStart() {
                         super.onStart();
@@ -55,10 +57,10 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     }
 
                     @Override
-                    public void onSucceed(List<CollectModel> bean) {
+                    public void onSucceed(List<UserDiscussListBean> bean) {
                         super.onSucceed(bean);
                         if (mHotItemLayout != null) {
-                            for (CollectModel model : bean) {
+                            for (UserDiscussListBean model : bean) {
                                 if (TextUtils.equals(model.getType(), "news")) {
                                     mHotItemLayout.setItemDarkText(model.getData_count() + "");
                                 } else if (TextUtils.equals(model.getType(), "discuss")) {
@@ -86,6 +88,12 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 mStatusItemLayout = holder.v(R.id.item_info_layout);
                 mStatusItemLayout.setItemText(getString(R.string.status));
+                mStatusItemLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new MyCollectDynamicStateUIView());
+                    }
+                });
             }
         }));
         items.add(ViewItemInfo.build(new ItemLineCallback(size, line) {
@@ -93,6 +101,13 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 mHotItemLayout = holder.v(R.id.item_info_layout);
                 mHotItemLayout.setItemText(getString(R.string.hot_information));
+
+                mHotItemLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        T_.show("开发中...");
+                    }
+                });
             }
         }));
     }

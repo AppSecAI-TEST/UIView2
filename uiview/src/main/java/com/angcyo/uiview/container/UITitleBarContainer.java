@@ -185,6 +185,9 @@ public class UITitleBarContainer extends FrameLayout {
         /*返回按钮*/
         if (mTitleBarPattern.isShowBackImageView) {
             mBackImageView.setVisibility(VISIBLE);
+            if (mTitleBarPattern.backImageRes != 0) {
+                mBackImageView.setImageResource(mTitleBarPattern.backImageRes);
+            }
             mBackImageView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

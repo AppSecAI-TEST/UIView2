@@ -1626,7 +1626,7 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
     /**
      * 打印堆栈信息
      */
-    public void logLayoutInfo() {
+    public String logLayoutInfo() {
         StringBuilder stringBuilder = new StringBuilder("\n");
         for (int i = 0; i < mAttachViews.size(); i++) {
             ViewPattern viewPattern = mAttachViews.get(i);
@@ -1649,7 +1649,9 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             stringBuilder.append(vis);
             stringBuilder.append("\n");
         }
-        L.e(stringBuilder.toString());
+        String string = stringBuilder.toString();
+        L.e(string);
+        return string;
     }
 
     /**

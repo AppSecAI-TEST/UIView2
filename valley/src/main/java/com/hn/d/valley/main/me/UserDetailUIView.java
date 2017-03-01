@@ -102,7 +102,8 @@ public class UserDetailUIView extends BaseContentUIView {
         TitleBarPattern titleBarPattern = super.getTitleBar()
                 .setTitleHide(true)
                 .setFloating(true)
-                .setShowBackImageView(true);
+                .setShowBackImageView(true)
+                .setBackImageRes(R.drawable.back_2);
 
         if (!isMe()) {
             titleBarPattern.addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.more, new View.OnClickListener() {

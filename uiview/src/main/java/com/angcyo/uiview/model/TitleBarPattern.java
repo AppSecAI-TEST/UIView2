@@ -25,6 +25,12 @@ public class TitleBarPattern {
      * 是否显示返回按钮
      */
     public boolean isShowBackImageView;
+
+    /**
+     * 返回按钮的图片资源
+     */
+    @DrawableRes
+    public int backImageRes = 0;
     /**
      * 标题进入的动画
      */
@@ -167,6 +173,11 @@ public class TitleBarPattern {
 
     public TitleBarPattern addRightItem(TitleBarItem rightItem) {
         mRightItems.add(rightItem);
+        return this;
+    }
+
+    public TitleBarPattern setBackImageRes(int backImageRes) {
+        this.backImageRes = backImageRes;
         return this;
     }
 

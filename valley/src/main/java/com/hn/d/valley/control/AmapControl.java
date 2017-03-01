@@ -302,6 +302,9 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        if (resource == null || resource.isRecycled()) {
+                            return;
+                        }
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(
                                 BmpUtil.getRoundedCornerBitmap(mContext, resource,
                                         width, height,
@@ -351,6 +354,10 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        if (resource == null || resource.isRecycled()) {
+                            return;
+                        }
+
                         marker.setIcon(BitmapDescriptorFactory.fromBitmap(
                                 BmpUtil.getRoundedCornerBitmap(mContext, resource,
                                         mMarkerWidth, mMarkerHeight,
@@ -391,6 +398,9 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
 //                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(resource));
+                        if (resource == null || resource.isRecycled()) {
+                            return;
+                        }
                         if (marker != null) {
                             marker.setIcon(BitmapDescriptorFactory.fromBitmap(
 //                                    BmpUtil.getRoundedCornerBitmap(resource, mMarkerWidth)

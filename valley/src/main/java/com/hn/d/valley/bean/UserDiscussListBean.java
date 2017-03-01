@@ -24,6 +24,11 @@ public class UserDiscussListBean {
 
     private int data_count;
     private List<DataListBean> data_list;
+    /**
+     * type : news
+     */
+
+    private String type;
 
     public int getData_count() {
         return data_count;
@@ -39,6 +44,14 @@ public class UserDiscussListBean {
 
     public void setData_list(List<DataListBean> data_list) {
         this.data_list = data_list;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public static class DataListBean implements RExBaseAdapter.ObjectEmpty {
@@ -106,6 +119,29 @@ public class UserDiscussListBean {
          */
 
         private String scan_type;
+        /**
+         * status : 1
+         */
+
+        private String status;
+        /**
+         * 资讯相关字段
+         * news_id : 1
+         * title : 111
+         * type : article
+         * from_platform :
+         * original_url :
+         * publish_time : 0
+         * author :
+         */
+
+        private String news_id;
+        private String title;
+        private String type;
+        private String from_platform;
+        private String original_url;
+        private String publish_time;
+        private String author;
 //        private Object original_info;
 
 
@@ -343,6 +379,70 @@ public class UserDiscussListBean {
 
         public void setScan_type(String scan_type) {
             this.scan_type = scan_type;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getNews_id() {
+            return news_id;
+        }
+
+        public void setNews_id(String news_id) {
+            this.news_id = news_id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getFrom_platform() {
+            return from_platform;
+        }
+
+        public void setFrom_platform(String from_platform) {
+            this.from_platform = from_platform;
+        }
+
+        public String getOriginal_url() {
+            return original_url;
+        }
+
+        public void setOriginal_url(String original_url) {
+            this.original_url = original_url;
+        }
+
+        public String getPublish_time() {
+            return publish_time;
+        }
+
+        public void setPublish_time(String publish_time) {
+            this.publish_time = publish_time;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
         }
 
 
