@@ -261,10 +261,13 @@ public class MeUIView extends BaseUIView {
                 mOtherILayout.startIView(new MyStatusDetailUIView());
                 break;
             case R.id.my_favor_layout://我的收藏
+                mOtherILayout.startIView(new MyCollectUIView());
                 break;
             case R.id.level_layout://等级
+                mOtherILayout.startIView(new MyGradeUIView());
                 break;
             case R.id.coin_layout://龙币
+                mOtherILayout.startIView(new MyCoinUIView());
                 break;
             case R.id.person_auth_layout://名人认证
                 break;

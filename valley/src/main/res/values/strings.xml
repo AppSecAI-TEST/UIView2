@@ -40,6 +40,8 @@
     <string name="person_auth">我的身份</string>
     <string name="coin">龙币</string>
     <string name="level">等级</string>
+    <string name="my_level">我的等级</string>
+    <string name="my_coin">龙币</string>
     <string name="my_favor">我的收藏</string>
     <string name="my_status">我的动态</string>
     <string name="welcome">欢迎</string>
@@ -240,5 +242,6 @@
     <string name="set_mark_title">设置备注</string>
     <string name="set_mark_tip">设置好友备注信息</string>
     <string name="how_count_status_format">%1$d条动态更新</string>
+    <string name="my_collect">我的收藏</string>
 
 </resources>

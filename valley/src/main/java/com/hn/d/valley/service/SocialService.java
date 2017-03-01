@@ -136,4 +136,15 @@ public interface SocialService {
     @POST("social/report")
     Observable<ResponseBody> report(@QueryMap Map<String, String> map);
 
+    /**
+     * 我的收藏
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	否	string	类型【discuss-动态 news-资讯】；如果为空则返回数量列表
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	页面显示的数量 默认20
+     */
+    @POST("social/myCollect")
+    Observable<ResponseBody> myCollect(@QueryMap Map<String, String> map);
+
 }

@@ -160,7 +160,8 @@ public class ReportUIView extends BaseContentUIView {
     private void reportUser(Tag tag) {
         add(RRetrofit.create(SocialService.class)
                 .report(Param.buildMap("type:user", "item_id:" + mInfoBean.getUid(), "reason_id:" + tag.getId()))
-                .compose(Rx.transformer(String.class)).subscribe(new RSubscriber<String>() {
+                .compose(Rx.transformer(String.class))
+                .subscribe(new RSubscriber<String>() {
                     @Override
                     public void onStart() {
                         super.onStart();

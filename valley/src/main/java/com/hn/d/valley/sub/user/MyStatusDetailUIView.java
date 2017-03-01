@@ -6,6 +6,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -97,6 +98,7 @@ public class MyStatusDetailUIView extends SingleRecyclerUIView<UserDiscussListBe
                         if (data_list != null && data_list.size() > 0) {
                             UserDiscussListBean.DataListBean lastBean = data_list.get(data_list.size() - 1);
                         }
+                        T_.ok("莫慌, 数据已拿到, 页面正在修改中...");
                         onUILoadDataEnd(data_list);
                     }
 

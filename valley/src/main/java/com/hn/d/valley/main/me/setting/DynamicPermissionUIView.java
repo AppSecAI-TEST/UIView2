@@ -52,7 +52,6 @@ public class DynamicPermissionUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
         items.add(ViewItemInfo.build(new ItemOffsetCallback(offset) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                super.onBindView(holder, posInData, dataBean);
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(getString(R.string.cant_see_my_status_tip));
 
@@ -83,7 +82,6 @@ public class DynamicPermissionUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
         items.add(ViewItemInfo.build(new ItemLineCallback(offset, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                super.onBindView(holder, posInData, dataBean);
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(getString(R.string.dont_see_he_status_tip));
 

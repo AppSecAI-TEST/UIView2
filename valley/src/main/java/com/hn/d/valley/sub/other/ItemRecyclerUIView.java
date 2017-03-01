@@ -161,10 +161,6 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
     }
 
     public static abstract class ItemCallback implements ItemConfig {
-        @Override
-        public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-
-        }
 
         @Override
         public void setItemOffsets(Rect rect) {
