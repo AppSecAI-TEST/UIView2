@@ -3,6 +3,13 @@ package com.m3b.rbrecoderlib;
 import android.annotation.TargetApi;
 import android.opengl.EGL14;
 
+import com.m3b.rbrecoderlib.encoder.EglCore;
+import com.m3b.rbrecoderlib.encoder.MediaAudioEncoder;
+import com.m3b.rbrecoderlib.encoder.MediaEncoder;
+import com.m3b.rbrecoderlib.encoder.MediaMuxerWrapper;
+import com.m3b.rbrecoderlib.encoder.MediaVideoEncoder;
+import com.m3b.rbrecoderlib.encoder.WindowSurface;
+
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
@@ -10,8 +17,6 @@ import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
-
-import com.m3b.rbrecoderlib.encoder.*;
 
 @TargetApi(18)
 public class GPUImageMovieWriter extends GPUImageFilter {
@@ -66,12 +71,47 @@ public class GPUImageMovieWriter extends GPUImageFilter {
         releaseEncodeSurface();
     }
 
-    public void startRecording(final String outputPath, final int width, final int height, final int rotationRecord) {
+    public void startRecording(final String outputPath, final String level, final int rotationRecord) {
         runOnDraw(new Runnable() {
             @Override
             public void run() {
                 if (mIsRecording) {
                     return;
+                }
+
+                int width = 0;
+                int height = 0;
+
+                /*
+                * low 480 640
+                * meduim 600 800
+                * high 960 1280
+                * veryhigh 1080 1920
+                 * */
+
+                switch (level){
+                    case "low":
+                        width = 480;
+                        height = 640;
+                        break;
+
+                    case "meduim":
+                        width = 600;
+                        height = 800;
+                        break;
+
+                    case "high":
+                        width = 960;
+                        height = 1280;
+                        break;
+
+                    case "veryhigh":
+                        width = 1080;
+                        height = 1920;
+                        break;
+
+                    default:
+                        break;
                 }
 
                 try {

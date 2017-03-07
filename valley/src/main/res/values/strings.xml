@@ -249,5 +249,7 @@
     <string name="click_add_desc">点击添加</string>
     <string name="audio_dynamic_cancel">滑到此区域取消录音</string>
     <string name="publish_dynamic_hint">说说分享心得</string>
+    <string name="record_tip">按住录</string>
+    <string name="recore_time_short">录制时间太短.</string>
 
 </resources>

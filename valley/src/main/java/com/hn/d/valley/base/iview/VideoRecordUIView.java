@@ -3,16 +3,33 @@ package com.hn.d.valley.base.iview;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.angcyo.uiview.github.utilcode.utils.FileUtils;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RLoopRecyclerView;
+import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.view.UIIViewImpl;
+import com.angcyo.uiview.widget.RecordButton;
 import com.hn.d.valley.R;
+import com.hn.d.valley.ValleyApp;
 import com.m3b.rbrecoderlib.GPUImage;
+import com.m3b.rbrecoderlib.GPUImageFilter;
+import com.m3b.rbrecoderlib.GPUImageFilterGroup;
 import com.m3b.rbrecoderlib.GPUImageMovieWriter;
 import com.m3b.rbrecoderlib.utils.CameraHelper;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
+import butterknife.BindView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -27,13 +44,57 @@ import com.m3b.rbrecoderlib.utils.CameraHelper;
  */
 public class VideoRecordUIView extends UIIViewImpl {
 
+    public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
     public boolean mIsRecording = false;
     int rotationRecord = 0;
+    @BindView(R.id.record_view)
+    RecordButton mRecordView;
+    @BindView(R.id.loop_recycler_view)
+    RLoopRecyclerView mLoopRecyclerView;
     private GPUImage mGPUImage;
     private OrientationEventListener mOrientationEventListener;
     private CameraHelper mCameraHelper;
     private CameraLoader mCamera;
     private GPUImageMovieWriter mMovieWriter;
+    private GPUImageFilter mFilter;
+    private File mRecordFile;
+    private RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean> mLoopAdapter;
+
+    private static File getOutputMediaFile(final int type) {
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+
+//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_PICTURES), "videotest");
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        File mediaStorageDir = new File(ValleyApp.getApp().getCacheDir(), "record_video");
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("videotest", "failed to create directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "IMG_" + timeStamp + ".jpg");
+        } else if (type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "VID_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
 
     @Override
     protected View inflateBaseView(FrameLayout container, LayoutInflater inflater) {
@@ -53,6 +114,63 @@ public class VideoRecordUIView extends UIIViewImpl {
         mGPUImage.setFilter(mMovieWriter);
 
         rotationListener();
+
+        mRecordView.setOnRecordListener(new RecordButton.OnRecordListener() {
+            @Override
+            public void onRecordStart() {
+                startRecord();
+            }
+
+            @Override
+            public void onRecordEnd(int progress) {
+                if (progress < 3) {
+                    T_.error(getString(R.string.recore_time_short));
+                } else {
+                    stopRecord();
+                    T_.info(progress + " s" + mRecordFile.getAbsolutePath());
+                    final String parent = mRecordFile.getParent();
+
+                    final String newName = UUID.randomUUID().toString() + "_t_" + progress;
+                    final String thumbPath;
+                    if (rotationRecord == 0) {
+                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + "960" + "x" + "1280";
+
+                    } else {
+                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + "1280" + "x" + "960";
+                    }
+                    FileUtils.rename(mRecordFile, newName);
+
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            String videoPath = parent + File.separator + newName;
+                            BitmapDecoder.extractThumbnail(videoPath, thumbPath);
+                            startIView(new VideoPlayUIView(thumbPath, videoPath));
+                        }
+                    }, 100);
+                }
+            }
+        });
+        mRecordView.setMaxProgress(getResources().getInteger(R.integer.max_video_record_length));
+
+        mLoopAdapter = new RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean>(mActivity, FilterTools.createFilterList()) {
+            @Override
+            protected int getItemLayoutId(int viewType) {
+                return R.layout.item_gpuiimage_filter;
+            }
+
+            @Override
+            public void onBindLoopViewHolder(RBaseViewHolder holder, int position, FilterTools.FilterBean bean) {
+                holder.tv(R.id.text_view).setText(bean.name);
+            }
+        };
+        mLoopRecyclerView.setAdapter(mLoopAdapter);
+        mLoopRecyclerView.setOnPageListener(new RLoopRecyclerView.OnPageListener() {
+            @Override
+            public void onPageSelector(int position) {
+                switchFilterTo(mLoopAdapter.getAllDatas().get(position).createFilterForType(mActivity));
+            }
+        });
     }
 
     @Override
@@ -73,6 +191,57 @@ public class VideoRecordUIView extends UIIViewImpl {
     @Override
     public void onViewUnload() {
         super.onViewUnload();
+    }
+
+    /**
+     * 开始录制
+     */
+    private void startRecord() {
+        mIsRecording = true;
+        mLoopRecyclerView.setVisibility(View.GONE);
+        mRecordFile = getOutputMediaFile(MEDIA_TYPE_VIDEO);
+        mMovieWriter.startRecording(mRecordFile.getAbsolutePath(), "high", rotationRecord);//do not change it without standrad
+    }
+
+    private void stopRecord() {
+        mIsRecording = false;
+        mLoopRecyclerView.setVisibility(View.VISIBLE);
+        mMovieWriter.stopRecording();
+    }
+
+
+    /**
+     * 是否有2个摄像头
+     */
+    private boolean hasTwoCamera() {
+        return mCameraHelper.hasFrontCamera() && mCameraHelper.hasBackCamera();
+    }
+
+    /**
+     * 切换摄像头
+     */
+    private void switchCamera() {
+        mCamera.switchCamera();
+    }
+
+    /**
+     * 切换滤镜
+     */
+    private void switchFilterTo(final GPUImageFilter filter) {
+        if (mFilter == null
+                || (filter != null && !mFilter.getClass().equals(filter.getClass()))) {
+            mFilter = filter;
+
+            GPUImageFilterGroup filters = new GPUImageFilterGroup();
+            filters.addFilter(mFilter);
+            filters.addFilter(mMovieWriter);
+
+            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_center_pause);
+            //LogoFilter logoFilter = new LogoFilter(bitmap,new Rect(100,100,200,200));
+            //filters.addFilter(logoFilter);
+
+            mGPUImage.setFilter(filters);
+        }
     }
 
     /**
@@ -164,4 +333,6 @@ public class VideoRecordUIView extends UIIViewImpl {
             mCameraInstance = null;
         }
     }
+
+
 }

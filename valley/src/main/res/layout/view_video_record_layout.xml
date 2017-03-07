@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,4 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-</FrameLayout>
+    <com.angcyo.uiview.recycler.RLoopRecyclerView
+        android:id="@+id/loop_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="H"/>
+
+    <com.angcyo.uiview.widget.RecordButton
+        android:id="@+id/record_view"
+        style="@style/MainColorTextStyle"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/base_xxhdpi"
+        android:gravity="center"
+        android:text="@string/record_tip"/>
+
+</RelativeLayout>
