@@ -1,11 +1,9 @@
 package com.angcyo.uiview.widget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Paint;
-import android.os.Build;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -18,7 +16,7 @@ import android.widget.TextView;
  * 修改备注：
  * Version: 1.0.0
  */
-public class UnderlineTextView extends TextView {
+public class UnderlineTextView extends AppCompatTextView {
     public UnderlineTextView(Context context) {
         super(context);
     }
@@ -29,11 +27,6 @@ public class UnderlineTextView extends TextView {
 
     public UnderlineTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public UnderlineTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override

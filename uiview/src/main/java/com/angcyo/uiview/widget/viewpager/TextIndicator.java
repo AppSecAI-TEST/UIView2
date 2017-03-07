@@ -1,13 +1,11 @@
 package com.angcyo.uiview.widget.viewpager;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 
@@ -16,7 +14,7 @@ import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
  * 创建人员：Robi
  * 创建时间：2016/12/17 10:58 ~
  */
-public class TextIndicator extends TextView implements ViewPager.OnPageChangeListener {
+public class TextIndicator extends AppCompatTextView implements ViewPager.OnPageChangeListener {
 
     private ViewPager mViewPager;
     private int maxCount, currentCount;
@@ -31,11 +29,6 @@ public class TextIndicator extends TextView implements ViewPager.OnPageChangeLis
 
     public TextIndicator(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TextIndicator(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     public void setupViewPager(ViewPager viewPager) {

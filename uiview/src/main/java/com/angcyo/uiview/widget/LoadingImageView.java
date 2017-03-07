@@ -3,9 +3,9 @@ package com.angcyo.uiview.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.angcyo.uiview.R;
 
@@ -20,7 +20,7 @@ import com.angcyo.uiview.R;
  * 修改备注：
  * Version: 1.0.0
  */
-public class LoadingImageView extends ImageView {
+public class LoadingImageView extends AppCompatImageView {
 
     float degrees = 0;
 

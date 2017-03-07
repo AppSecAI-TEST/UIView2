@@ -3,6 +3,7 @@ package com.angcyo.uiview.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -15,7 +16,7 @@ import java.util.Locale;
  * Created by angcyo on 2017-01-08.
  */
 
-public class RTextView extends TextView {
+public class RTextView extends AppCompatTextView {
     public RTextView(Context context) {
         this(context, null);
     }
