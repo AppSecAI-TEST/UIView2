@@ -5,7 +5,11 @@ import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.widget.EditText;
 
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 
@@ -63,6 +67,27 @@ public class TextIndicator extends AppCompatTextView implements ViewPager.OnPage
         this.maxCount = maxCount;
         this.currentCount = currentCount;
         updateText();
+        return this;
+    }
+
+    public TextIndicator initIndicator(int maxCount, final EditText editText) {
+        initIndicator(TextUtils.isEmpty(editText.getText()) ? 0 : editText.length(), maxCount);
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setCurrentCount(s.length());
+            }
+        });
         return this;
     }
 

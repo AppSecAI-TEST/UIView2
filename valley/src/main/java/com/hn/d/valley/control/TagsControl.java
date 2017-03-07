@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.all.base.adapter.ViewGroupUtils;
 import com.angcyo.uiview.github.all.base.adapter.adapter.cache.BaseCacheAdapter;
 import com.angcyo.uiview.net.RRetrofit;
@@ -26,7 +25,6 @@ import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.DiscussService;
 import com.orhanobut.hawk.Hawk;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -49,6 +47,8 @@ public class TagsControl {
 
     public static Tag allTag;
 
+    public static List<Tag> cacheTags;
+
     static {
         allTag = new Tag();
         allTag.setId("0");
@@ -59,51 +59,59 @@ public class TagsControl {
      * 从服务器获取标签, 优先从数据库中获取
      */
     public static void getTags(final Action1<List<Tag>> listAction1) {
-        RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
-        final int size = results.size();
-        L.i("数据库中标签数量:" + size);
-        if (size != 0 && listAction1 != null) {
-            List<Tag> tags = new ArrayList<>();
-            for (Tag t : results) {
-                Tag tag = new Tag();
-                tag.setId(t.getId());
-                tag.setName(t.getName());
-                tags.add(tag);
-                L.i("->:" + tag.string());
-            }
-            //listAction1.call(tags);
-        }
+//        RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
+//        final int size = results.size();
+//        L.i("数据库中标签数量:" + size);
+//        if (size != 0 && listAction1 != null) {
+//            List<Tag> tags = new ArrayList<>();
+//            for (Tag t : results) {
+//                Tag tag = new Tag();
+//                tag.setId(t.getId());
+//                tag.setName(t.getName());
+//                tags.add(tag);
+//                L.i("->:" + tag.string());
+//            }
+//            //listAction1.call(tags);
+//        }
 
-        RRetrofit.create(DiscussService.class)
-                .getTags(Param.buildMap())
-                .compose(Rx.transformerList(Tag.class))
-                .subscribe(new BaseSingleSubscriber<List<Tag>>() {
-                    @Override
-                    public void onSucceed(final List<Tag> tags) {
-                        if (tags.isEmpty()) {
-                            return;
-                        }
-
-                        /**先清空*/
-                        final RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
-
-                        /**后保存*/
-                        RRealm.exe(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                results.deleteAllFromRealm();
-
-                                for (Tag tag : tags) {
-                                    realm.copyToRealm(tag);
-                                }
+        if (cacheTags == null) {
+            RRetrofit.create(DiscussService.class)
+                    .getTags(Param.buildMap())
+                    .compose(Rx.transformerList(Tag.class))
+                    .subscribe(new BaseSingleSubscriber<List<Tag>>() {
+                        @Override
+                        public void onSucceed(final List<Tag> tags) {
+                            if (tags.isEmpty()) {
+                                return;
                             }
-                        });
 
-//                        if (size == 0) {
-                            listAction1.call(tags);
-//                        }
-                    }
-                });
+                            /**先清空*/
+                            final RealmResults<Tag> results = RRealm.realm().where(Tag.class).findAll();
+
+                            /**后保存*/
+                            RRealm.exe(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    results.deleteAllFromRealm();
+
+                                    for (Tag tag : tags) {
+                                        realm.copyToRealm(tag);
+                                    }
+                                }
+                            });
+
+                            cacheTags = tags;
+
+                            if (listAction1 != null) {
+                                listAction1.call(cacheTags);
+                            }
+                        }
+                    });
+        } else {
+            if (listAction1 != null) {
+                listAction1.call(cacheTags);
+            }
+        }
     }
 
     public static void inflate(final AppCompatActivity activity, final ViewGroup rootLayout,

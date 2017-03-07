@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.m3b.rblibrary.RBMediaController
-        android:id="@+id/view_player"
+    <android.opengl.GLSurfaceView
+        android:id="@+id/surfaceView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.m3b.rblibrary.RBMediaController>
+        android:layout_height="match_parent"/>
+
 </FrameLayout>

@@ -43,9 +43,19 @@ public class TagsUIView extends BaseContentUIView {
 
     private RFlowLayout mFlowLayout;
 
+    /**
+     * 强制选中视频tag
+     */
+    private boolean isVideo = false;
+
     public TagsUIView(Action1<List<Tag>> listAction, List<Tag> selectorTag) {
+        this(listAction, selectorTag, false);
+    }
+
+    public TagsUIView(Action1<List<Tag>> listAction, List<Tag> selectorTag, boolean isVideo) {
         mListAction = listAction;
         this.selectorTag = selectorTag;
+        this.isVideo = isVideo;
     }
 
     @Override
@@ -97,6 +107,9 @@ public class TagsUIView extends BaseContentUIView {
             @Override
             public void call(RTextCheckView rTextCheckView, Tag tag) {
                 rTextCheckView.setChecked(selectorTag.contains(tag));
+                if (tag.getName().equalsIgnoreCase(getString(R.string.video))) {
+                    rTextCheckView.setEnabled(false);
+                }
             }
         });
     }

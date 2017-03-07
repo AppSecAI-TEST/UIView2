@@ -248,5 +248,6 @@
     <string name="audio_introduce_desc">语音介绍</string>
     <string name="click_add_desc">点击添加</string>
     <string name="audio_dynamic_cancel">滑到此区域取消录音</string>
+    <string name="publish_dynamic_hint">说说分享心得</string>
 
 </resources>

@@ -27,6 +27,7 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
+import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
@@ -89,6 +90,8 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     ExEditText mInputView;
     @BindView(R.id.forward_control_layout)
     RelativeLayout mForwardControlLayout;
+    @BindView(R.id.single_text_indicator_view)
+    TextIndicator mSingleTextIndicatorView;
     private ResizeAdapter mImageAdapter;
     /**
      * 选择的图片
@@ -111,13 +114,30 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
      */
     private UserDiscussListBean.DataListBean forwardDataBean;
 
+    private VideoStatusInfo mVideoStatusInfo;
+
+    /**
+     * 转发动态
+     */
     public PublishDynamicUIView(UserDiscussListBean.DataListBean forwardDataBean) {
         this.forwardDataBean = forwardDataBean;
     }
 
+    /**
+     * 发布图片
+     */
     public PublishDynamicUIView(ArrayList<Luban.ImageItem> photos) {
         this.photos = photos;
     }
+
+
+    /**
+     * 发布视频
+     */
+    public PublishDynamicUIView(VideoStatusInfo videoStatusInfo) {
+        mVideoStatusInfo = videoStatusInfo;
+    }
+
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -172,6 +192,8 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         TagsControl.getTags(mListAction1);
 
         mInputView.setAutoHideSoftInput(true);
+
+        mSingleTextIndicatorView.initIndicator(getResources().getInteger(R.integer.dynamic_status_text_count), mInputView);
     }
 
     @Override
@@ -433,6 +455,10 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         if (mOssControl != null) {
             mOssControl.setCancel(true);
         }
+    }
+
+    public static class VideoStatusInfo {
+
     }
 
     /**

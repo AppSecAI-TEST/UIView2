@@ -12,6 +12,36 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.angcyo.uiview.widget.ExEditText
+                android:id="@+id/input_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:gravity="top"
+                android:hint="@string/publish_dynamic_hint"
+                android:maxHeight="200dp"
+                android:maxLength="@integer/dynamic_status_text_count"
+                android:minHeight="100dp"
+                android:padding="@dimen/base_round_radius"/>
+
+            <com.angcyo.uiview.widget.viewpager.TextIndicator
+                android:id="@+id/single_text_indicator_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="false"
+                android:padding="@dimen/base_xhdpi"
+                android:textSize="@dimen/default_text_little_size"
+                android:visibility="visible"
+                tools:text="100/2000"/>
+        </RelativeLayout>
+
         <com.angcyo.uiview.recycler.RRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
@@ -20,6 +50,7 @@
             android:padding="@dimen/base_xhdpi"
             android:tag="GV1"/>
 
+        <!--转发动态控制-->
         <RelativeLayout
             android:id="@+id/forward_control_layout"
             android:layout_width="match_parent"
@@ -57,16 +88,6 @@
 
             </LinearLayout>
         </RelativeLayout>
-
-        <com.angcyo.uiview.widget.ExEditText
-            android:id="@+id/input_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:gravity="top"
-            android:hint="说说分享心得"
-            android:minHeight="100dp"
-            android:padding="@dimen/base_round_radius"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
             android:id="@+id/tag_layout"
