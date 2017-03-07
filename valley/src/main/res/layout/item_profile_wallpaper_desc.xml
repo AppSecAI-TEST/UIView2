@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/DarkTextStyle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:maxEms="15"
+    android:padding="@dimen/base_xhdpi"
+    android:text="上传几张生活照,旅游照,充分展现你的兴趣\n品味和生活"
+    android:textSize="@dimen/default_text_little_size"
+    android:visibility="visible" />

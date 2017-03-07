@@ -231,7 +231,7 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
-                        return OssHelper.getImageThumbSize(url);
+                        return OssHelper.getImageThumbSize2(url);
                     }
 
                     @Override
@@ -269,7 +269,7 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
-                        return OssHelper.getImageThumbSize(thumbUrl);
+                        return OssHelper.getImageThumbSize2(thumbUrl);
                     }
 
                     @Override

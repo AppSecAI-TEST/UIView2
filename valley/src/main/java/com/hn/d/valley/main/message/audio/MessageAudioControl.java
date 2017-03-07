@@ -122,7 +122,6 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
             boolean resetOrigAudioStreamType,
             long delayMillis) {
         if (StorageUtil.isExternalStorageExist()) {
-
             if (startAudio(new AudioMessagePlayable(message), audioControlListener, audioStreamType, resetOrigAudioStreamType, delayMillis)) {
                 // 将未读标识去掉,更新数据库
                 if (isUnreadAudioMessage(message)) {

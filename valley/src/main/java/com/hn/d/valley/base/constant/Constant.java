@@ -62,6 +62,7 @@ public class Constant {
     public static final String TAG_NO_READ_NUM = "tag_no_read_num";
     public static final int POS_HOME = 0;
     public static final int POS_FOUND = 1;
+    public static final int POS_CONNACT = 2;
     public static final int POS_MESSAGE = 3;
     public static final int POS_ME = 4;
 

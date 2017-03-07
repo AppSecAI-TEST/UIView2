@@ -58,9 +58,11 @@ public class VideoPlayUIView extends UIIViewImpl {
      */
     private void initPlayer() {
         mMediaController = mViewHolder.v(R.id.view_player);
+        mMediaController.setScaleType("fitParent");
         if (mIsLive) {
             mMediaController.setLive(true);//设置该地址是直播的地址, 主播状态下, 不会显示播放控制按钮
         }
+        mMediaController.setScaleType("fitParent");
         final ImageView previewImageView = mMediaController.getPreviewImageView();
         mMediaController
                 .onPrepared(new RBMediaController.OnPreparedListener() {

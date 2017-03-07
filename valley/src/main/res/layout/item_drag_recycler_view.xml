@@ -1,14 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#434343"
+    android:background="@drawable/base_white_bg_selector"
     android:orientation="vertical"
     android:paddingTop="@dimen/base_mdpi">
 
-    <com.angcyo.uiview.recycler.RDragRecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingLeft="@dimen/base_xhdpi"
+        android:paddingRight="@dimen/base_xhdpi">
+
+        <TextView
+            style="@style/DarkTextStyle"
+            android:layout_alignParentStart="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/base_text_color"
+            android:text="照片墙"
+            android:textSize="@dimen/default_text_size" />
+
+        <TextView
+            android:id="@+id/tv_add_photos"
+            style="@style/DarkTextStyle"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/nav_text_color_press"
+            android:text="上传照片"
+            android:textSize="@dimen/default_text_size" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_marginRight="@dimen/base_xhdpi"
+        android:background="@color/line_color"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+
+    <com.angcyo.uiview.recycler.RDragRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drag_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -16,11 +48,4 @@
 
     </com.angcyo.uiview.recycler.RDragRecyclerView>
 
-    <TextView
-        style="@style/DarkTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/base_xhdpi"
-        android:text="@string/photo_wall_tip"
-        android:textSize="@dimen/default_text_little_size"/>
 </android.support.v7.widget.LinearLayoutCompat>

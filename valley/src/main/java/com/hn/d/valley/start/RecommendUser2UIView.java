@@ -12,13 +12,11 @@ import android.widget.TextView;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.Param;
@@ -171,7 +169,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
         mUserAdapter.setSelectListener(new RecommendUserUIView.OnUserSelectListener() {
             @Override
             public void onSelect(boolean boo) {
-                if (tv_focus ==  null )
+                if (tv_focus == null)
                     return;
                 tv_focus.setEnabled(boo);
             }
@@ -191,7 +189,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                 .subscribe(new BaseSingleSubscriber<List<RecommendUserBean>>() {
                     @Override
                     public void onSucceed(List<RecommendUserBean> bean) {
-                        if (bean == null  || bean.isEmpty()) {
+                        if (bean == null || bean.isEmpty()) {
                             onUILoadDataEnd();
                             showEmptyLayout();
                         } else {

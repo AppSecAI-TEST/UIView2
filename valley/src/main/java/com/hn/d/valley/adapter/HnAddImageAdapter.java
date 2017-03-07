@@ -27,6 +27,8 @@ import java.util.List;
 public class HnAddImageAdapter extends HnGlideImageAdapter {
 
     public static final int TYPE_ADD_ITEM = 1111;
+    public static final int TYPE_NODATA_ITEM = 1112;
+
     /**
      * 是否是添加模式
      */
@@ -50,15 +52,24 @@ public class HnAddImageAdapter extends HnGlideImageAdapter {
     @Override
     public int getItemCount() {
         int count = super.getItemCount();
-        return Math.min(maxItemCount, isAddModel ? count + 1 : count);
+//        return Math.min(maxItemCount, isAddModel ? count + 1 : count);
+        if (getAllDatas().size() == 0) {
+            return 1;
+        }
+        return count;
     }
 
     @Override
     public int getItemType(int position) {
         int size = getAllDatas().size();
-        if (isAddModel && size != maxItemCount && isLast(position)) {
-            return TYPE_ADD_ITEM;
+//        if (isAddModel && size != maxItemCount && isLast(position)) {
+//            return TYPE_ADD_ITEM;
+//        }
+
+        if (size == 0) {
+            return TYPE_NODATA_ITEM;
         }
+
         return super.getItemType(position);
     }
 
@@ -67,7 +78,23 @@ public class HnAddImageAdapter extends HnGlideImageAdapter {
     }
 
     @Override
+    protected int getItemLayoutId(int viewType) {
+
+        if (viewType == TYPE_NODATA_ITEM) {
+            return R.layout.item_profile_wallpaper_desc;
+        }
+
+        return super.getItemLayoutId(viewType);
+    }
+
+    @Override
     protected void onBindView(RBaseViewHolder holder, final int position, final Luban.ImageItem bean) {
+
+        if (TYPE_NODATA_ITEM == getItemType(position)) {
+
+            return;
+        }
+
         if (itemHeight != 0) {
             ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
             layoutParams.height = itemHeight;
@@ -77,19 +104,19 @@ public class HnAddImageAdapter extends HnGlideImageAdapter {
         ImageView imageView = holder.imgV(R.id.image_view);
         ImageView deleteView = holder.imgV(R.id.delete_view);
 
-        if (isAddModel && bean == null && isLast(position)) {
-            imageView.setImageResource(R.drawable.add_bianjizhiliao);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mAddListener != null) {
-                        mAddListener.onAddClick(v, position, bean);
-                    }
-                }
-            });
-            deleteView.setVisibility(View.GONE);
-        } else {
+//        if (isAddModel && bean == null && isLast(position)) {
+//            imageView.setImageResource(R.drawable.add_bianjizhiliao);
+//            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//            imageView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (mAddListener != null) {
+//                        mAddListener.onAddClick(v, position, bean);
+//                    }
+//                }
+//            });
+//            deleteView.setVisibility(View.GONE);
+//        } else {
             super.onBindView(holder, position, bean);
             deleteView.setVisibility(isDeleteModel ? View.VISIBLE : View.GONE);
             imageView.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +144,7 @@ public class HnAddImageAdapter extends HnGlideImageAdapter {
                     }
                 }
             });
-        }
+//        }
     }
 
     public void setAddListener(OnAddListener addListener) {

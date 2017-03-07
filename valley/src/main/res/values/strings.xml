@@ -18,7 +18,7 @@
     <string name="register_protocol">《恐龙谷用户协议》</string>
     <string name="register">注册</string>
     <string name="account_exception">你的账号已被暂停使用,请解锁后使用.</string>
-    <string name="finish">完成</string>
+    <string name="finish">保存</string>
     <string name="register_password_hint">数字和字母,6-12位</string>
     <string name="register_password_tip">密码:</string>
     <string name="register_add_ico">添加头像</string>
@@ -243,5 +243,10 @@
     <string name="set_mark_tip">设置好友备注信息</string>
     <string name="how_count_status_format">%1$d条动态更新</string>
     <string name="my_collect">我的收藏</string>
+    <string name="audio_introduce">语音介绍</string>
+    <string name="record_dynamic_tip">按住我给大家打个招呼吧</string>
+    <string name="audio_introduce_desc">语音介绍</string>
+    <string name="click_add_desc">点击添加</string>
+    <string name="audio_dynamic_cancel">滑到此区域取消录音</string>
 
 </resources>

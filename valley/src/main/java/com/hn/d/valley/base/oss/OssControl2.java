@@ -1,9 +1,12 @@
 package com.hn.d.valley.base.oss;
 
+import android.text.TextUtils;
+
 import com.angcyo.library.utils.L;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +26,8 @@ public class OssControl2 {
     public static final int uploadCircleImg = 1;
     public static final int uploadAvatorImg = 2;
     public static final int uploadVideo = 3;
+    public static final int uploadAudio = 4;
+
     List<String> needUploadList;
     List<String> uploadList;
     int index = 0;//正在上传的索引位置
@@ -48,6 +53,36 @@ public class OssControl2 {
         mUploadListener.onUploadStart();
 
         startUpload();
+    }
+
+    public void uploadAudio(final String audioPath) {
+        if (TextUtils.isEmpty(audioPath)) {
+            return;
+        }
+
+        File file = new File(audioPath);
+        if (!file.exists()) {
+            return;
+        }
+
+        OssHelper.uploadAudio(audioPath)
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String s) {
+                        if (BuildConfig.DEBUG) {
+                            L.i(audioPath + " 上传成功至->" + s);
+                        }
+//                        mUploadListener.onUploadSucceed();
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        mUploadListener.onUploadFailed(code, msg);
+                    }
+                });
+
+
     }
 
     /**

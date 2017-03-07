@@ -13,7 +13,7 @@ import com.netease.nimlib.sdk.media.player.OnPlayListener;
 
 abstract public class BaseAudioControl<T> {
 
-    protected boolean isEarPhoneModeEnable = true; // 是否是听筒模式
+    protected boolean isEarPhoneModeEnable = false; // 是否是听筒模式
     protected AudioControlListener audioControlListener;
     protected Context mContext;
     protected AudioPlayer currentAudioPlayer;
@@ -35,7 +35,7 @@ abstract public class BaseAudioControl<T> {
                 L.i("playRunnable run when currentAudioPlayer == null");
                 return;
             }
-
+//            currentAudioStreamType = AudioManager.STREAM_MUSIC;
             currentAudioPlayer.start(currentAudioStreamType);
         }
     };

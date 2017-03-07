@@ -3,7 +3,10 @@ package com.hn.d.valley.main.me.setting;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
+import android.os.SystemClock;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -12,11 +15,24 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.SparseArray;
 import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.widget.Chronometer;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.Anim;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -35,6 +51,7 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
+import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.BuildConfig;
@@ -45,11 +62,17 @@ import com.hn.d.valley.base.dialog.CityDialog;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.oss.OssControl2;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.bean.ProvinceBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
+import com.hn.d.valley.main.message.audio.AudioRecordPlayable;
+import com.hn.d.valley.main.message.audio.BaseAudioControl;
+import com.hn.d.valley.main.message.audio.PathAudioControl;
+import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.InputUIView;
@@ -58,11 +81,17 @@ import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
+import com.netease.nimlib.sdk.media.record.AudioRecorder;
+import com.netease.nimlib.sdk.media.record.IAudioRecordCallback;
+import com.netease.nimlib.sdk.media.record.RecordType;
+import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
+import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Action0;
@@ -79,20 +108,43 @@ import rx.functions.Action2;
  * 修改备注：
  * Version: 1.0.0
  */
-public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
+public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> implements IAudioRecordCallback{
 
-    OldParams mOldParams;
-    boolean canBack = false;
     private HnAddImageAdapter mHnAddImageAdapter;
     private List<Luban.ImageItem> mOldItems = new ArrayList<>();//原先的照片地址
     private List<Luban.ImageItem> mPhones = new ArrayList<>();//原先的照片地址用来adapter
     private SparseArray<String> mUrls = new SparseArray<>();//所有照片墙的图片网络地址
+
     private OssControl2 mOssControl;
     private Action0 mOnFinishAction;
+    private Action0 mOnAudioRecordSuccess;
+
     //选择用户头像图片返回
     private boolean isSetUserIco = false;
-    private ItemInfoLayout mUserIcoInfoLayout;
     private String mUserSetIco;
+    OldParams mOldParams;
+    boolean canBack = false;
+
+    // 语音
+    protected AudioRecorder audioMessageHelper;
+    private PathAudioControl mPathAudioControl;
+    private boolean touched;
+    private boolean started;
+    private boolean cancelled;
+
+    private ItemInfoLayout mUserIcoInfoLayout;
+    @BindView(R.id.over_layout)
+    FrameLayout over_layout;
+    @BindView(R.id.layoutPlayAudio)
+    LinearLayout layoutPlayAudio;
+    @BindView(R.id.timer)
+    Chronometer mTimer;
+
+
+    @Override
+    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        super.inflateRecyclerRootLayout(baseContentLayout, inflater);
+    }
 
     public EditInfoUIView(List<String> urls, Action0 onFinishAction) {
         for (String url : urls) {
@@ -186,7 +238,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         "signature:" + signature,
                         "province_id:" + userInfoBean.getProvince_id(),
                         "city_id:" + userInfoBean.getCity_id(),
-                        "voice:",
+                        "voice:" + userInfoBean.getVoice_introduce(),
                         "birthday:" + userInfoBean.getBirthday()
                 ))
                 .compose(Rx.transformer(UserInfoBean.class))
@@ -287,7 +339,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         HnLoading.show(mOtherILayout, false);
 
         if (allDatas.isEmpty()) {
-            checkUserIco();
+//            checkUserIco();
+            checkAudioRecord();
             return;
         }
 
@@ -319,7 +372,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         }
                     }
                 }
-                checkUserIco();
+//                checkUserIco();
+                checkAudioRecord();
             }
 
             @Override
@@ -329,6 +383,42 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         });
         mOssControl.uploadCircleImg(needUploadFiles);
+    }
+
+    private void checkAudioRecord(){
+        if (mAudioRecordPlayable == null ) {
+            checkUserIco();
+            return;
+        }
+        String audioPath = mAudioRecordPlayable.getPath();
+        File audioFile = new File(audioPath);
+        if(!audioFile.exists()){
+            checkUserIco();
+            return;
+        }
+        add(OssHelper.uploadAudio(audioPath)
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String s) {
+                        L.i(s + ":::  audio upload success");
+                        final String audioUrl = OssHelper.getAudioUrl(s);
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                String audioUrlAndTime = audioUrl + "_" + mAudioRecordPlayable.getDuration();
+                                UserCache.instance().getUserInfoBean().setVoice_introduce(audioUrlAndTime);
+                            }
+                        });
+                        checkUserIco();
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        T_.show(msg);
+                        HnLoading.hide();
+                    }
+                })
+        );
     }
 
     @Override
@@ -342,6 +432,11 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         if (viewType == 0) {
             return R.layout.item_drag_recycler_view;
         }
+
+        if (viewType == 1) {
+            return R.layout.item_profile_recordvoice;
+        }
+
         return R.layout.item_info_layout;
     }
 
@@ -349,6 +444,12 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     public void onViewCreate() {
         super.onViewCreate();
         ImagePickerHelper.clearAllSelectedImages();
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        mPathAudioControl.stopAudio();
     }
 
     @Override
@@ -452,6 +553,128 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         }
     }
 
+
+    /**
+     * 初始化AudioRecord
+     */
+    private void initAudioRecord() {
+        if (audioMessageHelper == null) {
+            audioMessageHelper = new AudioRecorder(mActivity, RecordType.AAC, AudioRecorder.DEFAULT_MAX_AUDIO_RECORD_TIME_SECOND, this);
+        }
+    }
+
+    /**
+     * 取消语音录制
+     *
+     * @param cancel
+     */
+    private void cancelAudioRecord(boolean cancel) {
+        // reject
+        if (!started) {
+            return;
+        }
+        // no change
+        if (cancelled == cancel) {
+            return;
+        }
+
+        cancelled = cancel;
+    }
+
+    /**
+     * 开始语音录制
+     */
+    private void onStartAudioRecord() {
+        mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        started = audioMessageHelper.startRecord();
+        cancelled = false;
+        if (!started) {
+            T_.show(mActivity.getString(R.string.recording_init_failed));
+            return;
+        }
+
+        if (!touched) {
+            return;
+        }
+        playAudioRecordAnim();
+    }
+
+    /**
+     * 开始语音录制动画
+     */
+    private void playAudioRecordAnim() {
+        mTimer.setBase(SystemClock.elapsedRealtime());
+        mTimer.start();
+    }
+
+    /**
+     * 结束语音录制动画
+     */
+    private void stopAudioRecordAnim() {
+        mTimer.stop();
+        mTimer.setBase(SystemClock.elapsedRealtime());
+    }
+
+    private View.OnTouchListener audioRecordListener = new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                touched = true;
+                initAudioRecord();
+                onStartAudioRecord();
+                over_layout.setVisibility(View.VISIBLE);
+            } else if (event.getAction() == MotionEvent.ACTION_CANCEL
+                    || event.getAction() == MotionEvent.ACTION_UP) {
+                touched = false;
+                onEndAudioRecord(isCancelled(layoutPlayAudio, event));
+                over_layout.setVisibility(View.GONE);
+            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                // 不允许recyclerview 处理滑动事件
+                mRecyclerView.requestDisallowInterceptTouchEvent(true);
+                touched = false;
+                cancelAudioRecord(isCancelled(layoutPlayAudio, event));
+            }
+
+            return true;
+        }
+    };
+
+
+    @Override
+    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        inflate(R.layout.layout_audio_record);
+
+        mPathAudioControl = PathAudioControl.getInstance(mActivity);
+        mPathAudioControl.setEarPhoneModeEnable(false);
+    }
+
+    /**
+     * 结束语音录制
+     *
+     * @param cancel
+     */
+    private void onEndAudioRecord(boolean cancel) {
+        mActivity.getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        audioMessageHelper.completeRecord(cancel);
+        stopAudioRecordAnim();
+    }
+
+    // 滑动到指定view区域取消录音判断
+    private static boolean isCancelled(View view, MotionEvent event) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        RectF rectf = new RectF(location[0],location[1],location[0] + view.getWidth()
+                , location[1] + view.getHeight());
+        if (rectf.contains(event.getRawX(),event.getRawY())) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected void createItems(List<ViewItemInfo> items) {
         final int line = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
@@ -466,6 +689,13 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, final int posInData, ViewItemInfo dataBean) {
                 bindPhoneWallItem(holder, size);
+            }
+        }));
+
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                bindAudioIntroduce(holder,userInfoBean);
             }
         }));
 
@@ -576,8 +806,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("语音介绍");
-                infoLayout.setItemDarkText("点击添加");
+                infoLayout.setItemText(mActivity.getString(R.string.audio_introduce_desc));
+                infoLayout.setItemDarkText(mActivity.getString(R.string.click_add_desc));
             }
         }));
         //个性签名
@@ -596,31 +826,102 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         }));
     }
 
+    private void bindAudioIntroduce(RBaseViewHolder holder, UserInfoBean userInfoBean) {
+        View record_layout = holder.v(R.id.record_layout);
+        final ImageView iv_play = holder.v(R.id.iv_play_audio);
+        final RTextView tv_record_second = holder.v(R.id.tv_record_second);
+
+        if (userInfoBean.getVoice_introduce() != null
+                && !TextUtils.isEmpty(userInfoBean.getVoice_introduce())) {
+
+            String audioUrlAndTime = userInfoBean.getVoice_introduce();
+            String[] voiceIntroduces = audioUrlAndTime.split("_");
+            if(voiceIntroduces.length == 2) {
+                iv_play.setVisibility(View.VISIBLE);
+                tv_record_second.setVisibility(View.VISIBLE);
+                tv_record_second.setText(Long.parseLong(voiceIntroduces[1]) / 1000 + "″");
+                mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0],Long.parseLong(voiceIntroduces[1]));
+            }
+        }
+
+        mOnAudioRecordSuccess = new Action0() {
+            @Override
+            public void call() {
+                iv_play.setVisibility(View.VISIBLE);
+                tv_record_second.setVisibility(View.VISIBLE);
+                tv_record_second.setText(mAudioRecordPlayable.getDuration() / 1000 + "″");
+            }
+        };
+
+        record_layout.setOnTouchListener(audioRecordListener);
+        iv_play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mAudioRecordPlayable == null ) {
+                    return;
+                }
+                mPathAudioControl.startPlayAudioDelay(0, mAudioRecordPlayable, new BaseAudioControl.AudioControlListener() {
+                    @Override
+                    public void onAudioControllerReady(Playable playable) {
+                        iv_play.setImageResource(R.drawable.voice_playing_n);
+                        Animation animation = AnimationUtils.loadAnimation(mActivity,R.anim.base_rotate);
+                        animation.setInterpolator(new LinearInterpolator());
+                        animation.setRepeatMode(Animation.RESTART);
+                        animation.setRepeatCount(Animation.INFINITE);
+                        iv_play.setAnimation(animation);
+                        iv_play.startAnimation(animation);
+                    }
+
+                    @Override
+                    public void onEndPlay(Playable playable) {
+                        iv_play.clearAnimation();
+                        iv_play.setImageResource(R.drawable.dynamic_notification);
+                    }
+
+                    @Override
+                    public void updatePlayingProgress(Playable playable, long curPosition) {
+
+                    }
+                });
+            }
+        });
+    }
+
     /**
      * 照片墙
      */
     protected void bindPhoneWallItem(RBaseViewHolder holder, final int size) {
         final RDragRecyclerView dragRecyclerView = holder.v(R.id.drag_recycler_view);
+        TextView tv_add_photos = holder.tv(R.id.tv_add_photos);
         ViewGroup.LayoutParams layoutParams = dragRecyclerView.getLayoutParams();
         layoutParams.width = ScreenUtil.screenWidth;
 
         int itemHeight = layoutParams.width / 3;
-        layoutParams.height = itemHeight * 2 + size;
+        layoutParams.height = itemHeight * 2 + ScreenUtil.dip2px(20);
         dragRecyclerView.setLayoutParams(layoutParams);
+
+        tv_add_photos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImagePickerHelper.startImagePicker(mActivity, true, false, false, true, getMaxSelectorCount());
+            }
+        });
 
         //分割线
         dragRecyclerView.addItemDecoration(RExItemDecoration.build(new RExItemDecoration.ItemDecorationCallback() {
             @Override
             public Rect getItemOffsets(LinearLayoutManager layoutManager, int position) {
+                int size = ScreenUtil.dip2px(10);
                 Rect rect = new Rect(0, 0, 0, 0);
-                if (position == 1) {
-                    rect.set(size, 0, size, 0);
-                } else if (position > 2) {
-                    rect.top = size;
-                    if (position == 4) {
-                        rect.left = size;
-                        rect.right = size;
-                    }
+                rect.top = size / 2;
+                rect.right = size / 2;
+                if (position == 0 | position == 3) {
+                    rect.left = size;
+                } else if (position == 2 | position == 5) {
+                    rect.right = size;
+                }
+                if (position > 2) {
+                    rect.bottom = size;
                 }
                 return rect;
             }
@@ -649,6 +950,16 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         mHnAddImageAdapter = new HnAddImageAdapter(mActivity);
         mHnAddImageAdapter.setItemHeight(itemHeight);
         mHnAddImageAdapter.resetData(mPhones);
+
+
+        GridLayoutManager layoutManager = new GridLayoutManager(mActivity,3);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return mHnAddImageAdapter.getAllDatas().size() == 0 ? 3 : 1;
+            }
+        });
+        dragRecyclerView.setLayoutManager(layoutManager);
 
         dragRecyclerView.setAdapter(mHnAddImageAdapter);
 
@@ -962,6 +1273,44 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     protected String getBirthday(String date) {
         return getString(R.string.birthday_format, DateDialog.getBirthday(date));
+    }
+
+    @Override
+    public void onRecordReady() {
+
+    }
+
+    @Override
+    public void onRecordStart(File audioFile, RecordType recordType) {
+
+    }
+
+    private AudioRecordPlayable mAudioRecordPlayable;
+
+    @Override
+    public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
+        // 可播放
+        // 上传语音
+        mAudioRecordPlayable = new AudioRecordPlayable(audioFile.getPath(),audioLength);
+
+        if (mOnAudioRecordSuccess != null) {
+            mOnAudioRecordSuccess.call();
+        }
+    }
+
+    @Override
+    public void onRecordFail() {
+
+    }
+
+    @Override
+    public void onRecordCancel() {
+        T_.show("录音取消了");
+    }
+
+    @Override
+    public void onRecordReachedMaxTime(int maxTime) {
+
     }
 
     /**

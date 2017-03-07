@@ -9,6 +9,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.angcyo.uiview.net.TransformUtils;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.cache.UserCache;
@@ -34,12 +35,15 @@ public class OssHelper {
     public static final String BASE_AVATOR_URL = "http://avatorimg.klgwl.com";
     public static final String BASE_CIRCLE_URL = "http://circleimg.klgwl.com";
     public static final String BASE_VIDEO_URL = "http://video.klgwl.com";
+    public static final String BASE_AUDIO_URL = "http://audio.klgwl.com";
+
 
     public static final String BASE_AVATOR_BUCKET = "klg-useravator";
     public static final String BASE_CIRCLE_BUCKET = "klg-circleimg";
     public static final String BASE_VIDEO_BUCKET = "klg-video";
+    public static final String BASE_AUDIO_BUCKET = "klg-audio";
 
-    static OSSClient avatorOss, circleOss, videoOss;
+    static OSSClient avatorOss, circleOss, videoOss, audioOss;
     static OSSCredentialProvider credentialProvider =
             new OSSPlainTextAKSKCredentialProvider("UuyoRLLDaiTyRYD5", "06a8SRzXM0ELLnOluUMmkR9rLySFYh");
 
@@ -65,6 +69,13 @@ public class OssHelper {
         return videoOss;
     }
 
+    private static OSSClient getAudioOss() {
+        if (audioOss == null) {
+            audioOss = new OSSClient(ValleyApp.getApp(), BASE_AUDIO_URL, credentialProvider);
+        }
+        return audioOss;
+    }
+
 
     public static String getVideoUrl(String key) {
         return BASE_VIDEO_URL + File.separator + key;
@@ -76,6 +87,10 @@ public class OssHelper {
 
     public static String getCircleUrl(String key) {
         return BASE_CIRCLE_URL + File.separator + key;
+    }
+
+    public static String getAudioUrl(String key) {
+        return BASE_AUDIO_URL + File.separator + key;
     }
 
     /**
@@ -99,6 +114,14 @@ public class OssHelper {
      */
     public static Observable uploadVideo(final String uploadFilePath) {
         return Observable.create(new OssObservable(BASE_VIDEO_BUCKET, uploadFilePath))
+                .compose(TransformUtils.<String>defaultSchedulers());
+    }
+
+    /**
+     * 上传录音
+     */
+    public static Observable uploadAudio(final String uploadFilePath) {
+        return Observable.create(new OssObservable(BASE_AUDIO_BUCKET, uploadFilePath))
                 .compose(TransformUtils.<String>defaultSchedulers());
     }
 
@@ -148,6 +171,38 @@ public class OssHelper {
     }
 
     /**
+     * 根据url提供的宽高, 获取缩略图的宽高
+     */
+    public static int[] getImageThumbSize2(String url) {
+        final int[] widthHeightWithUrl = getWidthHeightWithUrl(url);
+        return getThumbDisplaySize2(widthHeightWithUrl[0], widthHeightWithUrl[1]);
+    }
+
+    public static int[] getThumbDisplaySize2(float srcWidth, float srcHeight) {
+        int[] size = new int[2];
+        final float TARGET_WIDTH = 3f / 4 * ScreenUtil.screenWidth;
+        final float TARGET_HEIGHT = 3f / 4 * ScreenUtil.screenHeight;
+
+        //float srcScale = srcWidth / srcHeight;//原始宽高的比例
+        float wScale = TARGET_WIDTH / srcWidth;
+        float hScale = TARGET_HEIGHT / srcHeight;
+
+        float tScale;
+        if (TARGET_WIDTH > srcWidth && TARGET_HEIGHT > srcHeight) {
+            //放大图片
+            tScale = Math.min(wScale, hScale);
+        } else {
+            //缩小图片
+            tScale = Math.max(wScale, hScale);
+        }
+
+        size[0] = (int) (tScale * srcWidth);
+        size[1] = (int) (tScale * srcHeight);
+
+        return size;
+    }
+
+    /**
      * 根据url提供的宽高, 设置视图的宽高
      */
     public static void setViewSize(View view, String url) {
@@ -184,6 +239,8 @@ public class OssHelper {
                     getVideoOss().putObject(put);
                 } else if (TextUtils.equals(bucket, BASE_CIRCLE_BUCKET)) {
                     getCircleOss().putObject(put);
+                } else if (TextUtils.equals(bucket, BASE_AUDIO_BUCKET)) {
+                    getAudioOss().putObject(put);
                 }
                 subscriber.onNext(uuid);
             } catch (Exception e) {
