@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.home.circle;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
@@ -15,6 +16,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
@@ -23,6 +25,7 @@ import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action0;
@@ -87,6 +90,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                         } else {
                             List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
                             initConfigId(userDiscussListBean);
+                            data_list.addAll(0, PublishControl.instance().getDataListBeen());
                             onUILoadDataEnd(data_list, userDiscussListBean.getData_count());
                         }
                     }
@@ -126,5 +130,26 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
             }
             loadData();
         }
+    }
+
+    /**
+     * 发布了动态之后, 插入到第一条
+     */
+    public void onPublishStart() {
+        if (mRExBaseAdapter == null) {
+            return;
+        }
+
+        List<UserDiscussListBean.DataListBean> allDatas = mRExBaseAdapter.getAllDatas();
+        List<UserDiscussListBean.DataListBean> newDatas = new ArrayList<>();
+
+        newDatas.addAll(PublishControl.instance().getDataListBeen());
+        for (UserDiscussListBean.DataListBean bean : allDatas) {
+            if (TextUtils.isEmpty(bean.uuid)) {
+                newDatas.add(bean);
+            }
+        }
+
+        mRExBaseAdapter.resetAllData(newDatas);
     }
 }

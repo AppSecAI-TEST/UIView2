@@ -19,7 +19,9 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
+import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
@@ -45,7 +47,9 @@ import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnItemTextView;
 import com.jakewharton.rxbinding.view.RxView;
+import com.lzy.imagepicker.ImageUtils;
 
+import java.io.File;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -76,7 +80,7 @@ public class UserDiscussItemControl {
         bindLikeItemView(subscription, holder, dataListBean, null);
     }
 
-    public static void initItem(RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
+    public static void initItem(final RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
                                 final Action0 itemRootAction, final ILayout iLayout) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
 
@@ -145,12 +149,18 @@ public class UserDiscussItemControl {
             if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
                 //自己的动态不允许转发
                 forwardView.setClickable(false);
+                forwardView.setEnabled(false);
             } else {
+                forwardView.setEnabled(true);
                 forwardView.setClickable(true);
                 forwardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        iLayout.startIView(new PublishDynamicUIView(dataListBean));
+                        if (TextUtils.isEmpty(dataListBean.uuid)) {
+                            iLayout.startIView(new PublishDynamicUIView(dataListBean));
+                        } else {
+                            T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
+                        }
                     }
                 });
             }
@@ -182,14 +192,22 @@ public class UserDiscussItemControl {
             holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemRootAction.call();
+                    if (TextUtils.isEmpty(dataListBean.uuid)) {
+                        itemRootAction.call();
+                    } else {
+                        T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
+                    }
                 }
             });
 
             holder.v(R.id.comment_cnt).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemRootAction.call();
+                    if (TextUtils.isEmpty(dataListBean.uuid)) {
+                        itemRootAction.call();
+                    } else {
+                        T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
+                    }
                 }
             });
         } else {
@@ -197,6 +215,13 @@ public class UserDiscussItemControl {
             holder.v(R.id.comment_cnt).setClickable(false);//不允许评价
         }
 
+    }
+
+    /**
+     * 动态是否置顶
+     */
+    private static void showTopView(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
+        holder.v(R.id.top_image_view).setVisibility("1".equalsIgnoreCase(dataListBean.getIs_top()) ? View.VISIBLE : View.GONE);
     }
 
     private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout, RBaseViewHolder holder) {
@@ -389,6 +414,9 @@ public class UserDiscussItemControl {
                                                final UserDiscussListBean.DataListBean tBean,
                                                final Action1<UserDiscussListBean.DataListBean> commandAction,
                                                final ILayout iLayout) {
+        //是否置顶
+        showTopView(holder, tBean);
+
         View commandItemView = holder.v(R.id.command_item_view);
         final String uid = UserCache.getUserAccount();
         final String to_uid = tBean.getUser_info().getUid();
@@ -647,7 +675,11 @@ public class UserDiscussItemControl {
         commandItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onClick(v);
+                if (TextUtils.isEmpty(tBean.uuid)) {
+                    listener.onClick(v);
+                } else {
+                    T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
+                }
             }
         });
     }
@@ -818,6 +850,12 @@ public class UserDiscussItemControl {
         itemTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!TextUtils.isEmpty(tBean.uuid)) {
+                    T_.show(itemTextView.getResources().getString(R.string.publishing_tip));
+                    return;
+                }
+
+
                 if (likeAction != null) {
                     //取消点赞
                     likeAction.call(false);
@@ -879,6 +917,11 @@ public class UserDiscussItemControl {
             @Override
             public void onClick(View v) {
 
+                if (!TextUtils.isEmpty(tBean.uuid)) {
+                    T_.show(itemTextView.getResources().getString(R.string.publishing_tip));
+                    return;
+                }
+
                 if (likeAction != null) {
                     //点赞
                     likeAction.call(true);
@@ -934,24 +977,48 @@ public class UserDiscussItemControl {
     }
 
     public static void displayImage(final ImageView imageView, String url, int width, int height) {
-        Glide.with(imageView.getContext())
-                .load(OssHelper.getImageThumb(url, width, height))
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if (imageView == null) {
-                            return;
-                        }
-                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        imageView.setImageBitmap(resource);
-                    }
+//        ImagePicker.getInstance().getImageLoader().displayImage((Activity) imageView.getContext(),
+//                "", "", OssHelper.getImageThumb(url, width, height), imageView, 0, 0);
 
-                    @Override
-                    public void onLoadStarted(Drawable placeholder) {
-                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        imageView.setImageResource(R.drawable.zhanweitu_1);
-                    }
-                });
+        File file = new File(url);
+        if (file.exists()) {
+            if ("GIF".equalsIgnoreCase(ImageUtils.getImageType(file))) {
+                GifRequestBuilder<File> gifRequestBuilder = Glide.with(imageView.getContext())                             //配置上下文
+                        .load(file)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                        //.error(R.mipmap.default_image)           //设置错误图片
+                        //.fitCenter()
+                        .asGif()
+                        //.centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE);
+
+                gifRequestBuilder.into(imageView);
+            } else {
+                Glide.with(imageView.getContext())                             //配置上下文
+                        .load(file)
+                        .placeholder(R.drawable.zhanweitu_1)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            }
+        } else {
+            Glide.with(imageView.getContext())
+                    .load(OssHelper.getImageThumb(url, width, height))
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            if (imageView == null) {
+                                return;
+                            }
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            imageView.setImageBitmap(resource);
+                        }
+
+                        @Override
+                        public void onLoadStarted(Drawable placeholder) {
+                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            imageView.setImageResource(R.drawable.zhanweitu_1);
+                        }
+                    });
+        }
     }
 }

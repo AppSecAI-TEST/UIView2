@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <stroke android:width="@dimen/base_border_little_size"
+                    android:color="@color/theme_color_accent"/>
+            <corners android:radius="@dimen/base_round_little_radius"/>
+        </shape>
+    </item>
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
             <stroke android:width="@dimen/base_border_little_size"
@@ -15,13 +22,6 @@
         </shape>
     </item>
     <item android:state_focused="true">
-        <shape android:shape="rectangle">
-            <stroke android:width="@dimen/base_border_little_size"
-                    android:color="@color/theme_color_accent"/>
-            <corners android:radius="@dimen/base_round_little_radius"/>
-        </shape>
-    </item>
-    <item android:state_checked="true">
         <shape android:shape="rectangle">
             <stroke android:width="@dimen/base_border_little_size"
                     android:color="@color/theme_color_accent"/>

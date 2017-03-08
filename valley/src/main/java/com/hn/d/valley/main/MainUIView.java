@@ -31,7 +31,10 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.control.MainControl;
+import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
+import com.hn.d.valley.main.friend.Friend2UIView;
+import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.message.MessageUIView;
@@ -46,6 +49,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.functions.Action0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -73,6 +77,9 @@ public class MainUIView extends BaseUIView {
     MessageUIView mMessageUIView;
     /*我的*/
     MeUIView mMeUIView;
+    /*好友*/
+    FriendUIView mFriend2UIView;
+
     long onBackTime = 0;
     private int lastPosition = 0;
 
@@ -154,7 +161,15 @@ public class MainUIView extends BaseUIView {
                     }
                 } else if (position == Constant.POS_CONNECT) {
                     //联系人, 好友
-
+                    if (mFriend2UIView == null) {
+                        mFriend2UIView = new FriendUIView();
+                        mFriend2UIView.bindOtherILayout(mILayout);
+                        mFriend2UIView.setIsRightJumpLeft(isRightToLeft);
+                        mMainUILayout.startIView(mFriend2UIView);
+                    } else {
+                        mFriend2UIView.setIsRightJumpLeft(isRightToLeft);
+                        mMainUILayout.showIView(mFriend2UIView);
+                    }
 
                 } else if (position == Constant.POS_MESSAGE) {
 //                    HnChatActivity.launcher(mActivity, "50033");
@@ -323,7 +338,26 @@ public class MainUIView extends BaseUIView {
                     }
                     if (!strings.isEmpty()) {
                         HnLoading.hide();
-                        startIView(new PublishDynamicUIView(strings));
+                        startIView(new PublishDynamicUIView(strings, new Action0() {
+                            @Override
+                            public void call() {
+                                //开始发布任务.
+                                PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
+                                    @Override
+                                    public void onPublishStart() {
+                                        mViewHolder.v(R.id.publish_control_layout).setVisibility(View.VISIBLE);
+                                        if (mHomeUIView != null) {
+                                            mHomeUIView.onPublishStart();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onPublishEnd() {
+                                        mViewHolder.v(R.id.publish_control_layout).setVisibility(View.GONE);
+                                    }
+                                });
+                            }
+                        }));
                     }
                 }
 

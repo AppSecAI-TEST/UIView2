@@ -26,14 +26,14 @@
             app:tl_underline_height="0dp"/>
 
         <!--<ImageView-->
-            <!--android:id="@+id/nav_center_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:background="@drawable/base_main_color_bg_selector2"-->
-            <!--android:clickable="true"-->
-            <!--android:minHeight="@dimen/base_60dpi"-->
-            <!--android:src="@drawable/nav_center_button_selector"/>-->
+        <!--android:id="@+id/nav_center_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:background="@drawable/base_main_color_bg_selector2"-->
+        <!--android:clickable="true"-->
+        <!--android:minHeight="@dimen/base_60dpi"-->
+        <!--android:src="@drawable/nav_center_button_selector"/>-->
 
     </RelativeLayout>
 
@@ -48,5 +48,19 @@
         android:layout_height="@dimen/base_line"
         android:layout_above="@id/bottom_nav_root_layout"
         android:background="@color/line_color"/>
+
+    <RelativeLayout
+        android:id="@+id/publish_control_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"
+        android:layout_margin="40dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/comments_add_friends"/>
+    </RelativeLayout>
 
 </RelativeLayout>

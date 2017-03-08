@@ -28,8 +28,14 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -138,19 +144,41 @@ public class VideoRecordUIView extends UIIViewImpl {
                     } else {
                         thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + "1280" + "x" + "960";
                     }
-                    postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            int index = 0;
-                            while (!FileUtils.rename(mRecordFile, newName) || index > 5) {
-                                index++;
-                            }
 
-                            String videoPath = parent + File.separator + newName;
-                            BitmapDecoder.extractThumbnail(videoPath, thumbPath);
-                            startIView(new VideoPlayUIView(thumbPath, videoPath));
-                        }
-                    }, 100);
+                    Observable.just("")
+                            .delay(300, TimeUnit.MILLISECONDS)
+                            .map(new Func1<String, String>() {
+                                @Override
+                                public String call(String s) {
+                                    int index = 0;
+                                    while (!BitmapDecoder.extractThumbnail(mRecordFile.getAbsolutePath(), thumbPath) || index > 5) {
+                                        index++;
+                                    }
+
+                                    return "";
+                                }
+                            })
+                            .delay(300, TimeUnit.MILLISECONDS)
+                            .map(new Func1<String, String>() {
+                                @Override
+                                public String call(String s) {
+                                    int index = 0;
+                                    while (!FileUtils.rename(mRecordFile, newName) || index > 5) {
+                                        index++;
+                                    }
+                                    String videoPath = parent + File.separator + newName;
+                                    return videoPath;
+                                }
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<String>() {
+                                @Override
+                                public void call(String s) {
+                                    startIView(new VideoPlayUIView(thumbPath, s));
+                                }
+                            });
+
                 }
             }
         });

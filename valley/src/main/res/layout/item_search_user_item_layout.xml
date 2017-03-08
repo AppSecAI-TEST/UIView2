@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/base_xxxhdpi"/>
 
-    <TextView
+    <com.angcyo.uiview.widget.RTextView
         android:id="@+id/content"
         style="@style/MainTextStyle"
         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
         android:paddingLeft="@dimen/base_xhdpi"
         android:paddingRight="@dimen/base_xhdpi">
 
-        <TextView
+        <com.angcyo.uiview.widget.RTextView
             android:id="@+id/copy_info_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

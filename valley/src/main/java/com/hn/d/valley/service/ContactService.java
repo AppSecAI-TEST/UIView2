@@ -106,4 +106,13 @@ public interface ContactService {
      */
     @POST("contact/setMark")
     Observable<ResponseBody> setMark(@QueryMap Map<String, String> map);
+
+    /**
+     *好友列表
+     * uid	是	int	用户id
+     page	否	int	第几页【不传就是所有数据全部返回】
+     limit	否	int	页面显示的数量
+     */
+    @POST("contact/friends")
+    Observable<ResponseBody> friends(@QueryMap Map<String,String> map);
 }

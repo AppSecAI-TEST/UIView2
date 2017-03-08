@@ -330,6 +330,7 @@ public class AttachmentStore {
         } finally {
             if (bos != null) {
                 try {
+                    bos.flush();
                     bos.close();
                 } catch (IOException e) {
                 }

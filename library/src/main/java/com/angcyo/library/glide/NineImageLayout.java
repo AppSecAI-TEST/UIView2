@@ -53,17 +53,23 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
         return MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
     }
 
+    private int getSize2(int width) {
+        return MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST);
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int measureWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int measureHeight = MeasureSpec.getSize(heightMeasureSpec);
+
         if (mImagesList.isEmpty()) {
             L.w("don't have image list , skip measure.");
             setMeasuredDimension(0, 0);//没有图片, 设置0大小
         } else if (mNineImageConfig == null) {
             L.w("need set nine image config.");
-            int width = MeasureSpec.getSize(widthMeasureSpec);
-            mImageViews.get(0).measure(getSize(width), getSize(width));
-            setMeasuredDimension(width, width);
+            mImageViews.get(0).measure(getSize(measureWidth), getSize(measureWidth));
+            setMeasuredDimension(measureWidth, measureWidth);
         } else {
             final int size = mImagesList.size();
             int width = MeasureSpec.getSize(widthMeasureSpec);
@@ -74,6 +80,10 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
                 if (widthHeight[0] == -1) {
                     mImageViews.get(0).measure(getSize(width), getSize(width));
                     setMeasuredDimension(width, width);
+                } else if (widthHeight[0] == 0) {
+                    int defaultSize = (int) (getResources().getDisplayMetrics().density * 150);
+                    mImageViews.get(0).measure(getSize(defaultSize), getSize(defaultSize));
+                    setMeasuredDimension(defaultSize, defaultSize);
                 } else {
                     mImageViews.get(0).measure(getSize(widthHeight[0]), getSize(widthHeight[1]));
                     setMeasuredDimension(widthHeight[0], widthHeight[1]);
@@ -105,9 +115,9 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
             final ImageView firstView = mImageViews.get(0);
             firstView.layout(left, top, right, bottom);
 
-            if (mNineImageConfig != null) {
-                mNineImageConfig.displayImage(firstView, mImagesList.get(0), getMeasuredWidth(), getMeasuredHeight());
-            }
+//            if (mNineImageConfig != null) {
+//                mNineImageConfig.displayImage(firstView, mImagesList.get(0), getMeasuredWidth(), getMeasuredHeight());
+//            }
         } else {
             final int size = mImagesList.size();
             if (size == 1) {
@@ -115,9 +125,9 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
                 final ImageView firstView = mImageViews.get(0);
                 firstView.layout(left, top, right, bottom);
 
-                if (mNineImageConfig != null) {
-                    mNineImageConfig.displayImage(firstView, mImagesList.get(0), getMeasuredWidth(), getMeasuredHeight());
-                }
+//                if (mNineImageConfig != null) {
+//                    mNineImageConfig.displayImage(firstView, mImagesList.get(0), getMeasuredWidth(), getMeasuredHeight());
+//                }
             } else {
                 final int columns = getColumns(size);
                 final int rows = getRows(size);
@@ -139,11 +149,22 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
                         t = top + i * height + i * space;
                         imageView.layout(l, t, l + width, t + height);
 
-                        if (mNineImageConfig != null) {
-                            mNineImageConfig.displayImage(imageView, mImagesList.get(index), imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
-                        }
+//                        if (mNineImageConfig != null) {
+//                            mNineImageConfig.displayImage(imageView, mImagesList.get(index), imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
+//                        }
                     }
                 }
+            }
+        }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        if (mNineImageConfig != null) {
+            for (int i = 0; i < mImageViews.size(); i++) {
+                ImageView imageView = mImageViews.get(i);
+                mNineImageConfig.displayImage(imageView, mImagesList.get(i),
+                        imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
             }
         }
     }
@@ -186,6 +207,7 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
             }
         }
         requestLayout();
+        onSizeChanged(0, 0, 0, 0);
 
 //        mImageViews.clear();
 //        removeAllViews();

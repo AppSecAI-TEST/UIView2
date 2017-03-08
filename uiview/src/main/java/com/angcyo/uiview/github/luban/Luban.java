@@ -612,7 +612,7 @@ public class Luban {
                     degree = 270;
                     break;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return degree;

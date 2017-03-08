@@ -55,6 +55,7 @@ public class UserDiscussListBean {
     }
 
     public static class DataListBean implements RExBaseAdapter.ObjectEmpty {
+        public String uuid;
         boolean isEmpty = false;
         /**
          * discuss_id : 14
@@ -89,23 +90,23 @@ public class UserDiscussListBean {
         private String content;
         private String media;
         private String media_type;
-        private String like_cnt;
-        private String fav_cnt;
-        private String comment_cnt;
-        private String forward_cnt;
-        private String view_cnt;
+        private String like_cnt = "0";
+        private String fav_cnt = "0";
+        private String comment_cnt = "0";
+        private String forward_cnt = "0";
+        private String view_cnt = "0";
         private String share_original_type;
         private String share_original_item_id;
         private String parent_item_id;
-        private String is_top;
-        private String created;
+        private String is_top = "0";
+        private String created = String.valueOf(System.currentTimeMillis());
         private String address;
         private String lng;
         private String lat;
         private LikeUserInfoBean user_info;
         private int is_like;
         private int is_collection;
-        private String show_time;
+        private String show_time = "刚刚";
         private OriginalInfo original_info;
         /**
          * is_collect : 1

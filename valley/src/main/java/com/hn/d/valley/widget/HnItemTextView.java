@@ -3,6 +3,7 @@ package com.hn.d.valley.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -21,7 +22,7 @@ import com.hn.d.valley.R;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HnItemTextView extends TextView {
+public class HnItemTextView extends AppCompatTextView {
     public HnItemTextView(Context context) {
         this(context, null);
     }

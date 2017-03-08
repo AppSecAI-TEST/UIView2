@@ -3,11 +3,12 @@ package com.angcyo.uiview.widget;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.v4.text.util.LinkifyCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import java.util.Locale;
 
@@ -27,6 +28,12 @@ public class RTextView extends AppCompatTextView {
 
     public RTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        LinkifyCompat.addLinks(this, Linkify.ALL);
     }
 
     @Override

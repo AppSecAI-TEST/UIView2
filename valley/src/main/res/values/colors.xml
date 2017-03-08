@@ -14,6 +14,7 @@
     <color name="main_text_color_6666666">#666666</color>
     <color name="main_text_color">#333333</color>
     <color name="orange">#fbb03e</color>
+    <color name="contact_letter_idx_bg">#33000000</color>
 
     <!--线的颜色-->
     <color name="line_color">#E0E0E0</color>

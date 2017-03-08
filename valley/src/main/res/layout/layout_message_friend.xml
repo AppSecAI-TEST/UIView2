@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <!--<com.angcyo.uiview.recycler.RRecyclerView-->
+        <!--android:id="@+id/recycler_friend"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--/>-->
+
+    <ImageView
+        android:id="@+id/iv_index_bg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/nim_contact_hit_letter_bg"
+        />
+
+    <TextView
+        android:id="@+id/tv_friend_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text=""
+        />
+
+    <com.hn.d.valley.widget.LetterIndexView
+        android:id="@+id/sidebar_friend_index"
+        android:layout_width="15dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@color/transparent"
+        />
+
+
+</RelativeLayout>

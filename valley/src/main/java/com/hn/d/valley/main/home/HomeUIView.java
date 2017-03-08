@@ -11,6 +11,7 @@ import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
+import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -153,6 +154,17 @@ public class HomeUIView extends BaseUIView {
 
         mHomeNavLayout.setTabData(new String[]{getString(R.string.circle_title), getString(R.string.square_title)});
         mHomeNavLayout.setCurrentTab(1);
+        mHomeNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelect(int position) {
+                changeViewPager(position);
+            }
+
+            @Override
+            public void onTabReselect(int position) {
+
+            }
+        });
     }
 
     private void changeViewPager(int position) {
@@ -221,17 +233,26 @@ public class HomeUIView extends BaseUIView {
         return LayoutState.CONTENT;
     }
 
+    /**
+     * 发布了动态之后, 插入到第一条
+     */
+    public void onPublishStart() {
+        if (mHomeNavLayout.getCurrentTab() == 0 && mCircleUIView != null) {
+            mCircleUIView.onPublishStart();
+        }
+    }
+
     @OnClick(R.id.publish_view)
     public void onClick() {
         //发布动态
         UIItemDialog.build()
-                .addItem("发布图文", new View.OnClickListener() {
+                .addItem(getString(R.string.publish_image_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
                     }
                 })
-                .addItem("发布视频", new View.OnClickListener() {
+                .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new VideoRecordUIView());

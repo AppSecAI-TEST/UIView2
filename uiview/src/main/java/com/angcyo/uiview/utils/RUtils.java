@@ -14,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -544,6 +545,31 @@ public class RUtils {
                 String first = split[0];
                 onPutValue.onValue(first, str.substring(first.length() + 1));
             }
+        }
+    }
+
+    /**
+     * 填充两个字段相同的数据对象
+     */
+    public static void fill(Object from, Object to) {
+        Field[] fromFields = from.getClass().getDeclaredFields();
+        Field[] toFields = to.getClass().getDeclaredFields();
+        for (Field f : fromFields) {
+            String name = f.getName();
+            for (Field t : toFields) {
+                String tName = t.getName();
+                if (name.equalsIgnoreCase(tName)) {
+                    try {
+                        f.setAccessible(true);
+                        t.setAccessible(true);
+                        t.set(to, f.get(from));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+
         }
     }
 

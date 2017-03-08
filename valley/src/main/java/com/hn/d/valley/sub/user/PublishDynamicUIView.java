@@ -28,7 +28,6 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
-import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
@@ -42,7 +41,9 @@ import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
@@ -59,6 +60,7 @@ import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -92,6 +94,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     RelativeLayout mForwardControlLayout;
     @BindView(R.id.single_text_indicator_view)
     TextIndicator mSingleTextIndicatorView;
+    Action0 mPublishAction;
     private ResizeAdapter mImageAdapter;
     /**
      * 选择的图片
@@ -106,14 +109,12 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
      * 选择的标签
      */
     private Action1<List<Tag>> mListAction1;
-    private OssControl mOssControl;
     private AmapBean mLastLocation;
     private AmapBean mTargetLocation;
     /**
      * 需要转发的动态,如果不是转发,则为空
      */
     private UserDiscussListBean.DataListBean forwardDataBean;
-
     private VideoStatusInfo mVideoStatusInfo;
 
     /**
@@ -125,9 +126,12 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
 
     /**
      * 发布图片
+     *
+     * @param publishAction 当点击发布按钮之后, 会先添加任务到后台, 然后回调. 请在回调中开始任务.
      */
-    public PublishDynamicUIView(ArrayList<Luban.ImageItem> photos) {
+    public PublishDynamicUIView(ArrayList<Luban.ImageItem> photos, Action0 publishAction) {
         this.photos = photos;
+        mPublishAction = publishAction;
     }
 
 
@@ -206,12 +210,20 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     public void onClick(View v) {
                         if (forwardDataBean == null) {
                             //
-                            mOssControl = new OssControl(PublishDynamicUIView.this);
-                            List<String> files = new ArrayList<>();
-                            for (Luban.ImageItem item : photos) {
-                                files.add(item.thumbPath);
+//                            mOssControl = new OssControl(PublishDynamicUIView.this);
+//                            List<String> files = new ArrayList<>();
+//                            for (Luban.ImageItem item : photos) {
+//                                files.add(item.thumbPath);
+//                            }
+//                            mOssControl.uploadCircleImg(files);
+                            PublishControl.instance().addTask(
+                                    new PublishControl.PublishTask(photos, mSelectorTags, mTopBox.isChecked(), mShareBox.isChecked(),
+                                            mInputView.string(), getAddress(), getLongitude(), getLatitude())
+                            );
+                            finishIView();
+                            if (mPublishAction != null) {
+                                mPublishAction.call();
                             }
-                            mOssControl.uploadCircleImg(files);
                         } else {
                             onUploadStart();
                             publish();
@@ -452,9 +464,6 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
 
     @Override
     public void onDismiss() {
-        if (mOssControl != null) {
-            mOssControl.setCancel(true);
-        }
     }
 
     public static class VideoStatusInfo {
@@ -512,8 +521,11 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         protected void onBindView(RBaseViewHolder holder, int position, final Luban.ImageItem bean) {
             super.onBindView(holder, position, bean);
             int size = getItemHeight();
-            Glide.with(mContext).load(bean.thumbPath).override(size, size).placeholder(R.drawable.zhanweitu_1)
-                    .into(holder.imgV(R.id.image_view));
+            //Glide.with(mContext).load(bean.thumbPath).override(size, size).placeholder(R.drawable.zhanweitu_1)
+              //      .into(holder.imgV(R.id.image_view));
+
+            UserDiscussItemControl.displayImage(holder.imgV(R.id.image_view), bean.thumbPath, 0, 0);
+
             holder.v(R.id.click_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
