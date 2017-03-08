@@ -4,9 +4,8 @@ import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
+import android.media.MediaMetadataRetriever;
 import android.os.Build;
-import android.provider.MediaStore;
 
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.file.AttachmentStore;
@@ -260,12 +259,36 @@ public class BitmapDecoder {
 
     public static boolean extractThumbnail(String videoPath, String thumbPath) {
         if (!AttachmentStore.isFileExist(thumbPath)) {
-            Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MINI_KIND);
+            //Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(videoPath, MediaStore.Images.Thumbnails.MINI_KIND);
+            Bitmap thumbnail = createVideoThumbnail(videoPath);
             if (thumbnail != null) {
                 AttachmentStore.saveBitmap(thumbnail, thumbPath, true);
                 return true;
             }
         }
         return false;
+    }
+
+    public static Bitmap createVideoThumbnail(String filePath) {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            bitmap = retriever.getFrameAtTime(1);
+        } catch (IllegalArgumentException ex) {
+            // Assume this is a corrupt video file
+        } catch (RuntimeException ex) {
+            // Assume this is a corrupt video file.
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException ex) {
+                // Ignore failures while cleaning up.
+            }
+        }
+
+        if (bitmap == null) return null;
+
+        return bitmap;
     }
 }

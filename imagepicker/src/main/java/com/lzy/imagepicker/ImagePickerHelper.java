@@ -3,12 +3,12 @@ package com.lzy.imagepicker;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -123,9 +123,9 @@ public class ImagePickerHelper {
             if (TextUtils.isEmpty(path)) {
                 final DrawableRequestBuilder<String> drawableRequestBuilder = Glide.with(activity)                             //配置上下文
                         .load(url)                                       //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                        .error(R.mipmap.default_image)                    //设置错误图片
+                        //.error(R.mipmap.default_image)                    //设置错误图片
                         //.fitCenter()
-                        .centerCrop()
+                        //.centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.ALL);
 
                 if (TextUtils.isEmpty(thumbPath)) {
@@ -136,20 +136,39 @@ public class ImagePickerHelper {
                             .into(imageView);
                 }
             } else {
+                File file = new File(path);
+                if ("GIF".equalsIgnoreCase(ImageUtils.getImageType(file))) {
+                    GifRequestBuilder<File> gifRequestBuilder = Glide.with(activity)                             //配置上下文
+                            .load(file)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                            //.error(R.mipmap.default_image)           //设置错误图片
+                            //.fitCenter()
+                            .asGif()
+                            //.centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                            ;
 
-                final DrawableRequestBuilder<Uri> requestBuilder = Glide.with(activity)                             //配置上下文
-                        .load(Uri.fromFile(new File(path)))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                        .error(R.mipmap.default_image)           //设置错误图片
-                        //.fitCenter()
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL);
-
-                if (TextUtils.isEmpty(thumbPath)) {
-                    requestBuilder.placeholder(R.mipmap.default_image)     //设置占位图片
-                            .into(imageView);
+                    if (TextUtils.isEmpty(thumbPath)) {
+                        gifRequestBuilder.placeholder(R.mipmap.default_image)     //设置占位图片
+                                .into(imageView);
+                    } else {
+                        gifRequestBuilder.placeholder(new BitmapDrawable(activity.getResources(), thumbPath))
+                                .into(imageView);
+                    }
                 } else {
-                    requestBuilder.placeholder(new BitmapDrawable(activity.getResources(), thumbPath))
-                            .into(imageView);
+                    final DrawableRequestBuilder<File> requestBuilder = Glide.with(activity)                             //配置上下文
+                            .load(file)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                            //.error(R.mipmap.default_image)           //设置错误图片
+                            //.fitCenter()
+                            //.centerCrop()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+                    if (TextUtils.isEmpty(thumbPath)) {
+                        requestBuilder.placeholder(R.mipmap.default_image)     //设置占位图片
+                                .into(imageView);
+                    } else {
+                        requestBuilder.placeholder(new BitmapDrawable(activity.getResources(), thumbPath))
+                                .into(imageView);
+                    }
                 }
             }
 

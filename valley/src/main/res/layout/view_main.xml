@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_50dpi"
         android:layout_alignParentBottom="true"
-        android:background="@color/transparent">
+        android:background="@color/white">
 
         <com.angcyo.uiview.github.tablayout.CommonTabLayout
             android:id="@+id/bottom_nav_layout"
@@ -25,15 +25,15 @@
             app:tl_underline_gravity="TOP"
             app:tl_underline_height="0dp"/>
 
-        <ImageView
-            android:id="@+id/nav_center_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/base_main_color_bg_selector2"
-            android:clickable="true"
-            android:minHeight="@dimen/base_60dpi"
-            android:src="@drawable/nav_center_button_selector"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/nav_center_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:background="@drawable/base_main_color_bg_selector2"-->
+            <!--android:clickable="true"-->
+            <!--android:minHeight="@dimen/base_60dpi"-->
+            <!--android:src="@drawable/nav_center_button_selector"/>-->
 
     </RelativeLayout>
 
@@ -45,8 +45,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_nav_shadow_height"
+        android:layout_height="@dimen/base_line"
         android:layout_above="@id/bottom_nav_root_layout"
-        android:background="@drawable/base_shadow_shape_top"/>
+        android:background="@color/line_color"/>
 
 </RelativeLayout>

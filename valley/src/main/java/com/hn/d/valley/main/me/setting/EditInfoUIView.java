@@ -95,6 +95,7 @@ import butterknife.BindView;
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Action2;
 
 /**
@@ -118,6 +119,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     private OssControl2 mOssControl;
     private Action0 mOnFinishAction;
     private Action0 mOnAudioRecordSuccess;
+    private Action1 mOnAudioRecordStatus;
 
     //选择用户头像图片返回
     private boolean isSetUserIco = false;
@@ -405,7 +407,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         RRealm.exe(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                String audioUrlAndTime = audioUrl + "_" + mAudioRecordPlayable.getDuration();
+                                String audioUrlAndTime = audioUrl + "--" + mAudioRecordPlayable.getDuration() / 1000;
                                 UserCache.instance().getUserInfoBean().setVoice_introduce(audioUrlAndTime);
                             }
                         });
@@ -598,6 +600,11 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         if (!touched) {
             return;
         }
+
+        if(mOnAudioRecordStatus != null){
+            mOnAudioRecordStatus.call(true);
+        }
+
         playAudioRecordAnim();
     }
 
@@ -659,6 +666,9 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     private void onEndAudioRecord(boolean cancel) {
         mActivity.getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         audioMessageHelper.completeRecord(cancel);
+        if(mOnAudioRecordStatus != null) {
+            mOnAudioRecordStatus.call(false);
+        }
         stopAudioRecordAnim();
     }
 
@@ -827,19 +837,20 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     private void bindAudioIntroduce(RBaseViewHolder holder, UserInfoBean userInfoBean) {
-        View record_layout = holder.v(R.id.record_layout);
+        final View record_layout = holder.v(R.id.record_layout);
         final ImageView iv_play = holder.v(R.id.iv_play_audio);
         final RTextView tv_record_second = holder.v(R.id.tv_record_second);
+        final ImageView iv_audio_record = holder.imgV(R.id.iv_audio_record);
 
         if (userInfoBean.getVoice_introduce() != null
                 && !TextUtils.isEmpty(userInfoBean.getVoice_introduce())) {
 
             String audioUrlAndTime = userInfoBean.getVoice_introduce();
-            String[] voiceIntroduces = audioUrlAndTime.split("_");
+            String[] voiceIntroduces = audioUrlAndTime.split("--");
             if(voiceIntroduces.length == 2) {
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
-                tv_record_second.setText(Long.parseLong(voiceIntroduces[1]) / 1000 + "″");
+                tv_record_second.setText(Long.parseLong(voiceIntroduces[1]) + "″");
                 mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0],Long.parseLong(voiceIntroduces[1]));
             }
         }
@@ -850,6 +861,19 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
                 tv_record_second.setText(mAudioRecordPlayable.getDuration() / 1000 + "″");
+            }
+        };
+
+        mOnAudioRecordStatus = new Action1<Boolean>(){
+            @Override
+            public void call(Boolean aBoolean) {
+                if(aBoolean){
+                    record_layout.setBackgroundResource(R.drawable.recording_dise_s);
+                    iv_audio_record.setImageResource(R.drawable.recording_2_s);
+                }else {
+                    record_layout.setBackgroundResource(R.drawable.recording_dise);
+                    iv_audio_record.setImageResource(R.drawable.recording_2_n);
+                }
             }
         };
 

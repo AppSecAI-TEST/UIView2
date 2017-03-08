@@ -20,17 +20,31 @@ import javax.microedition.khronos.egl.EGLSurface;
 
 @TargetApi(18)
 public class GPUImageMovieWriter extends GPUImageFilter {
+    /**
+     * callback methods from encoder
+     */
+    private final MediaEncoder.MediaEncoderListener mMediaEncoderListener = new MediaEncoder.MediaEncoderListener() {
+        @Override
+        public void onPrepared(final MediaEncoder encoder) {
+        }
+
+        @Override
+        public void onStopped(final MediaEncoder encoder) {
+        }
+
+        @Override
+        public void onMuxerStopped() {
+        }
+    };
     private MediaMuxerWrapper mMuxer;
     private MediaVideoEncoder mVideoEncoder;
     private MediaAudioEncoder mAudioEncoder;
     private WindowSurface mCodecInput;
-
     private EGLSurface mEGLScreenSurface;
     private EGL10 mEGL;
     private EGLDisplay mEGLDisplay;
     private EGLContext mEGLContext;
     private EglCore mEGLCore;
-
     private boolean mIsRecording = false;
 
     @Override
@@ -57,8 +71,12 @@ public class GPUImageMovieWriter extends GPUImageFilter {
             // Draw on encoder surface
             mCodecInput.makeCurrent();
             super.onDraw(textureId, cubeBuffer, textureBuffer);
-            mCodecInput.swapBuffers();
-            mVideoEncoder.frameAvailableSoon();
+            if (mCodecInput != null) {
+                mCodecInput.swapBuffers();
+            }
+            if (mVideoEncoder != null) {
+                mVideoEncoder.frameAvailableSoon();
+            }
         }
 
         // Make screen surface be current surface
@@ -89,7 +107,7 @@ public class GPUImageMovieWriter extends GPUImageFilter {
                 * veryhigh 1080 1920
                  * */
 
-                switch (level){
+                switch (level) {
                     case "low":
                         width = 480;
                         height = 640;
@@ -115,7 +133,7 @@ public class GPUImageMovieWriter extends GPUImageFilter {
                 }
 
                 try {
-                    mMuxer = new MediaMuxerWrapper(outputPath,rotationRecord);
+                    mMuxer = new MediaMuxerWrapper(outputPath, rotationRecord);
 
                     // for video capturing
                     mVideoEncoder = new MediaVideoEncoder(mMuxer, mMediaEncoderListener, width, height);
@@ -160,21 +178,4 @@ public class GPUImageMovieWriter extends GPUImageFilter {
             mCodecInput = null;
         }
     }
-
-    /**
-     * callback methods from encoder
-     */
-    private final MediaEncoder.MediaEncoderListener mMediaEncoderListener = new MediaEncoder.MediaEncoderListener() {
-        @Override
-        public void onPrepared(final MediaEncoder encoder) {
-        }
-
-        @Override
-        public void onStopped(final MediaEncoder encoder) {
-        }
-
-        @Override
-        public void onMuxerStopped() {
-        }
-    };
 }

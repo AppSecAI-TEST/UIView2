@@ -3,26 +3,26 @@ package com.hn.d.valley.main.home;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
-import com.angcyo.uiview.github.tablayout.CommonTabLayout;
-import com.angcyo.uiview.github.tablayout.TabEntity;
-import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
-import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
+import com.angcyo.uiview.dialog.UIItemDialog;
+import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
+import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.main.home.recommend.RecommendUIView2;
-
-import java.util.ArrayList;
+import com.lzy.imagepicker.ImagePickerHelper;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -37,12 +37,14 @@ import butterknife.BindView;
  */
 public class HomeUIView extends BaseUIView {
 
-    @BindView(R.id.home_nav_layout)
-    CommonTabLayout mHomeNavLayout;
+    //    @BindView(R.id.home_nav_layout)
+//    CommonTabLayout mHomeNavLayout;
     //    @BindView(R.id.view_pager)
 //    UIViewPager mViewPager;
     @BindView(R.id.home_layout)
     UILayoutImpl mHomeLayout;
+    @BindView(R.id.home_nav_layout)
+    SegmentTabLayout mHomeNavLayout;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
     private RecommendUIView2 mRecommendUIView2;
     private Tag currentTag;
@@ -69,7 +71,8 @@ public class HomeUIView extends BaseUIView {
         mHomeLayout.setEnableSwipeBack(false);
         /**默认显示第二页*/
 //        mViewPager.setCurrentItem(1);
-        mHomeNavLayout.setCurrentTab(1, false);
+//        mHomeNavLayout.setCurrentTab(1, false);
+
         if (mRecommendUIView2 == null) {
             mRecommendUIView2 = new RecommendUIView2();
             mRecommendUIView2.bindOtherILayout(mOtherILayout);
@@ -119,35 +122,37 @@ public class HomeUIView extends BaseUIView {
     }
 
     private void initTabLayout() {
-        ArrayList<CustomTabEntity> tabs = new ArrayList<>();
-        tabs.add(new TabEntity(mActivity.getString(R.string.home_circle), -1, -1, false, false, false));
-        tabs.add(new TabEntity(mActivity.getString(R.string.home_recommend), -1, -1, false, false, false));
-        tabs.add(new TabEntity(mActivity.getString(R.string.home_nearby), -1, -1, false, false, false));
+//        ArrayList<CustomTabEntity> tabs = new ArrayList<>();
+//        tabs.add(new TabEntity(mActivity.getString(R.string.home_circle), -1, -1, false, false, false));
+//        tabs.add(new TabEntity(mActivity.getString(R.string.home_recommend), -1, -1, false, false, false));
+//        tabs.add(new TabEntity(mActivity.getString(R.string.home_nearby), -1, -1, false, false, false));
+//
+//        mHomeNavLayout.setTabData(tabs);
+//
+//        mHomeNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
+//            @Override
+//            public void onTabSelect(int position) {
+//                changeViewPager(position);
+//            }
+//
+//            @Override
+//            public void onTabReselect(int position) {
+////                if (position == 1) {
+////                    //推荐 , 弹出标签
+////                    new TagFilterUIDialog(new Action1<Tag>() {
+////                        @Override
+////                        public void call(Tag tag) {
+////                            currentTag = tag;
+////                            mRecommendUIView2.setFilterTag(tag);
+////                            mRecommendUIView2.loadData();
+////                        }
+////                    }, currentTag == null ? TagsControl.allTag : currentTag).showDialog(mOtherILayout);
+////                }
+//            }
+//        });
 
-        mHomeNavLayout.setTabData(tabs);
-
-        mHomeNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
-                changeViewPager(position);
-            }
-
-            @Override
-            public void onTabReselect(int position) {
-//                if (position == 1) {
-//                    //推荐 , 弹出标签
-//                    new TagFilterUIDialog(new Action1<Tag>() {
-//                        @Override
-//                        public void call(Tag tag) {
-//                            currentTag = tag;
-//                            mRecommendUIView2.setFilterTag(tag);
-//                            mRecommendUIView2.loadData();
-//                        }
-//                    }, currentTag == null ? TagsControl.allTag : currentTag).showDialog(mOtherILayout);
-//                }
-            }
-        });
-
+        mHomeNavLayout.setTabData(new String[]{getString(R.string.circle_title), getString(R.string.square_title)});
+        mHomeNavLayout.setCurrentTab(1);
     }
 
     private void changeViewPager(int position) {
@@ -216,4 +221,21 @@ public class HomeUIView extends BaseUIView {
         return LayoutState.CONTENT;
     }
 
+    @OnClick(R.id.publish_view)
+    public void onClick() {
+        //发布动态
+        UIItemDialog.build()
+                .addItem("发布图文", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
+                    }
+                })
+                .addItem("发布视频", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new VideoRecordUIView());
+                    }
+                }).showDialog(mOtherILayout);
+    }
 }

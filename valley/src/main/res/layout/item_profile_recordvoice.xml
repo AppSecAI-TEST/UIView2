@@ -64,6 +64,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/iv_audio_record"
             android:src="@drawable/recording_2_n"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

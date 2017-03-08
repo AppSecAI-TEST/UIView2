@@ -193,7 +193,7 @@ public class OssHelper {
             tScale = Math.min(wScale, hScale);
         } else {
             //缩小图片
-            tScale = Math.max(wScale, hScale);
+            tScale = Math.min(wScale, hScale);
         }
 
         size[0] = (int) (tScale * srcWidth);

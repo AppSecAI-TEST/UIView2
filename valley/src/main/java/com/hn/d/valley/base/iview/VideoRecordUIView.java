@@ -124,7 +124,7 @@ public class VideoRecordUIView extends UIIViewImpl {
             @Override
             public void onRecordEnd(int progress) {
                 if (progress < 3) {
-                    T_.error(getString(R.string.recore_time_short));
+                    T_.error(getString(R.string.record_time_short));
                 } else {
                     stopRecord();
                     T_.info(progress + " s" + mRecordFile.getAbsolutePath());
@@ -138,11 +138,14 @@ public class VideoRecordUIView extends UIIViewImpl {
                     } else {
                         thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + "1280" + "x" + "960";
                     }
-                    FileUtils.rename(mRecordFile, newName);
-
                     postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            int index = 0;
+                            while (!FileUtils.rename(mRecordFile, newName) || index > 5) {
+                                index++;
+                            }
+
                             String videoPath = parent + File.separator + newName;
                             BitmapDecoder.extractThumbnail(videoPath, thumbPath);
                             startIView(new VideoPlayUIView(thumbPath, videoPath));

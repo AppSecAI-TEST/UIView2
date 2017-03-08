@@ -35,7 +35,6 @@ import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.message.MessageUIView;
-import com.hn.d.valley.main.status.PostStatusUIDialog;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.widget.HnLoading;
@@ -46,7 +45,6 @@ import com.netease.nimlib.sdk.StatusCode;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import rx.Observable;
 
 /**
@@ -122,9 +120,9 @@ public class MainUIView extends BaseUIView {
     private void initTabLayout() {
         ArrayList<CustomTabEntity> tabs = new ArrayList<>();
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_home_text), R.drawable.home_s, R.drawable.home_n));
-        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_found_text), R.drawable.found_s, R.drawable.found_n));
-        tabs.add(new TabEntity(true, "", -1, -1));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_message_text), R.drawable.message_s, R.drawable.message_n));
+        tabs.add(new TabEntity(true, mActivity.getString(R.string.friend), R.drawable.haoyou_s, R.drawable.haoyou_n));
+        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_found_text), R.drawable.found_s, R.drawable.found_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_me_text), R.drawable.me_s, R.drawable.me_n));
 
         mBottomNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
@@ -154,6 +152,10 @@ public class MainUIView extends BaseUIView {
                         mFoundUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.showIView(mFoundUIView);
                     }
+                } else if (position == Constant.POS_CONNECT) {
+                    //联系人, 好友
+
+
                 } else if (position == Constant.POS_MESSAGE) {
 //                    HnChatActivity.launcher(mActivity, "50033");
                     //消息
@@ -231,10 +233,10 @@ public class MainUIView extends BaseUIView {
         return animation;
     }
 
-    @OnClick(R.id.nav_center_view)
-    public void onPostStatusClick() {
-        startIView(new PostStatusUIDialog());
-    }
+//    @OnClick(R.id.nav_center_view)
+//    public void onPostStatusClick() {
+//        startIView(new PostStatusUIDialog());
+//    }
 
     @Override
     public boolean onBackPressed() {

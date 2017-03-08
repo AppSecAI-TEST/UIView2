@@ -24,10 +24,10 @@
     <string name="register_add_ico">添加头像</string>
     <string name="register_name_tip">昵称:</string>
     <string name="register_name_hint">请输入昵称</string>
-    <string name="nav_home_text">首页</string>
+    <string name="nav_home_text">恐龙谷</string>
     <string name="nav_found_text">发现</string>
     <string name="nav_message_text">消息</string>
-    <string name="nav_me_text">我的</string>
+    <string name="nav_me_text">我</string>
     <string name="image">图片</string>
     <string name="video">视频</string>
     <string name="search">搜索</string>
@@ -250,6 +250,9 @@
     <string name="audio_dynamic_cancel">滑到此区域取消录音</string>
     <string name="publish_dynamic_hint">说说分享心得</string>
     <string name="record_tip">按住录</string>
-    <string name="recore_time_short">录制时间太短.</string>
+    <string name="record_time_short">录制时间太短.</string>
+    <string name="friend">好友</string>
+    <string name="square_title">广场</string>
+    <string name="circle_title">朋友圈</string>
 
 </resources>

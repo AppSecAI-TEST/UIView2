@@ -12,20 +12,42 @@
         android:layout_height="wrap_content"
         android:background="@color/theme_color_accent">
 
-        <com.angcyo.uiview.github.tablayout.CommonTabLayout
+        <!--<com.angcyo.uiview.github.tablayout.CommonTabLayout-->
+        <!--android:id="@+id/home_nav_layout"-->
+        <!--android:layout_width="260dp"-->
+        <!--android:layout_height="@dimen/base_title_bar_item_size"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--app:tl_iconVisible="false"-->
+        <!--app:tl_indicator_color="@color/white"-->
+        <!--app:tl_indicator_corner_radius="@dimen/little_round_radius"-->
+        <!--app:tl_indicator_height="@dimen/base_unline_size"-->
+        <!--app:tl_indicator_width="@dimen/base_60dpi"-->
+        <!--app:tl_textSelectColor="@color/white"-->
+        <!--app:tl_textUnselectColor="@color/line_color"-->
+        <!--app:tl_textsize="@dimen/main_text_size2"-->
+        <!--app:tl_underline_height="0dp"/>-->
+
+        <com.angcyo.uiview.github.tablayout.SegmentTabLayout
             android:id="@+id/home_nav_layout"
-            android:layout_width="260dp"
-            android:layout_height="@dimen/base_title_bar_item_size"
+            android:layout_width="160dp"
+            android:layout_height="33dp"
             android:layout_centerHorizontal="true"
-            app:tl_iconVisible="false"
-            app:tl_indicator_color="@color/white"
-            app:tl_indicator_corner_radius="@dimen/little_round_radius"
-            app:tl_indicator_height="@dimen/base_unline_size"
-            app:tl_indicator_width="@dimen/base_60dpi"
-            app:tl_textSelectColor="@color/white"
-            app:tl_textUnselectColor="@color/line_color"
-            app:tl_textsize="@dimen/main_text_size2"
-            app:tl_underline_height="0dp"/>
+            android:layout_marginBottom="@dimen/base_ldpi"
+            app:tl_indicator_anim_enable="false"
+            app:tl_indicator_color="@color/default_base_white"
+            app:tl_indicator_corner_radius="@dimen/base_round_radius"
+            app:tl_textSelectColor="@color/colorAccent"
+            app:tl_textsize="@dimen/default_text_size"/>
+
+        <ImageView
+            android:id="@+id/publish_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/base_bg2_selector"
+            android:padding="@dimen/base_hdpi"
+            android:src="@drawable/switch_camera_n"/>
+
 
     </com.angcyo.uiview.widget.TitleBarLayout>
 
