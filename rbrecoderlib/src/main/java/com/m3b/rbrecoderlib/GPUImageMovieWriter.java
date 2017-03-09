@@ -73,8 +73,6 @@ public class GPUImageMovieWriter extends GPUImageFilter {
             super.onDraw(textureId, cubeBuffer, textureBuffer);
             if (mCodecInput != null) {
                 mCodecInput.swapBuffers();
-            }
-            if (mVideoEncoder != null) {
                 mVideoEncoder.frameAvailableSoon();
             }
         }

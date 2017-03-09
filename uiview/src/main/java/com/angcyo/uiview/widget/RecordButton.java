@@ -86,6 +86,10 @@ public class RecordButton extends AppCompatTextView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!isEnabled()) {
+            return true;
+        }
+
         int action = event.getAction();
         //Log.e(TAG, "onTouchEvent: " + action);
         super.onTouchEvent(event);

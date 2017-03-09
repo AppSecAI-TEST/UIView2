@@ -11,6 +11,7 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RLoopRecyclerView;
@@ -146,6 +147,16 @@ public class VideoRecordUIView extends UIIViewImpl {
             public void onRecordEnd(int progress) {
                 if (progress < 3) {
                     T_.error(getString(R.string.record_time_short));
+                    mRecordView.setEnabled(false);
+                    stopRecord();
+                    ViewCompat.animate(mRecordView)
+                            .alpha(1).setDuration(100)
+                            .withEndAction(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mRecordView.setEnabled(true);
+                                }
+                            }).start();
                 } else {
                     stopRecord();
                     if (BuildConfig.DEBUG) {
@@ -169,10 +180,16 @@ public class VideoRecordUIView extends UIIViewImpl {
                                 @Override
                                 public String call(String s) {
                                     int index = 0;
-                                    while (!BitmapDecoder.extractThumbnail(mRecordFile.getAbsolutePath(), thumbPath) || index > 5) {
+                                    L.i("start--视频截图");
+                                    while (!BitmapDecoder.extractThumbnail(mRecordFile.getAbsolutePath(), thumbPath) && index < 5) {
+                                        L.i("start--视频截图:" + index);
                                         index++;
+                                        try {
+                                            Thread.sleep(100);
+                                        } catch (Exception e) {
+                                        }
                                     }
-
+                                    L.i("视频截图完成:" + thumbPath);
                                     return "";
                                 }
                             })
@@ -181,10 +198,17 @@ public class VideoRecordUIView extends UIIViewImpl {
                                 @Override
                                 public String call(String s) {
                                     int index = 0;
-                                    while (!FileUtils.rename(mRecordFile, newName) || index > 5) {
+                                    L.i("start--视频重命名");
+                                    while (!FileUtils.rename(mRecordFile, newName) && index < 5) {
+                                        L.i("start--视频重命名:" + index);
                                         index++;
+                                        try {
+                                            Thread.sleep(100);
+                                        } catch (Exception e) {
+                                        }
                                     }
                                     String videoPath = parent + File.separator + newName;
+                                    L.i("视频重命名完成:" + mRecordFile.getAbsolutePath() + "->" + videoPath);
                                     return videoPath;
                                 }
                             })

@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/base_xhdpi"
         android:layout_marginStart="@dimen/base_xhdpi"
+        android:contentDescription="@string/all"
         android:lineSpacingExtra="4dp"
         android:paddingBottom="@dimen/base_ldpi"
         tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>

@@ -57,6 +57,11 @@ public class PublishControl {
 
     OnPublishListener mPublishListener;
 
+    /**
+     * 失败后的下一个
+     */
+    int index = 0;
+
     private PublishControl() {
         mDataListBeen = new ArrayList<>();
         mPublishTasks = new ArraySet<>();
@@ -94,10 +99,10 @@ public class PublishControl {
         }
         isStart = true;
 
-        onPublishStart();
+        onPublishStart(false);
     }
 
-    private void onPublishStart() {
+    private void onPublishStart(boolean next) {
         if (mPublishTasks.isEmpty()) {
             isStart = false;
             mDataListBeen.clear();
@@ -105,7 +110,15 @@ public class PublishControl {
             return;
         }
 
-        final PublishTask publishTask = mPublishTasks.valueAt(0);
+        if (next) {
+            index++;
+            if (index >= mPublishTasks.size()) {
+                index = 0;
+            }
+        } else {
+            index = 0;
+        }
+        final PublishTask publishTask = mPublishTasks.valueAt(index);
 
         if ("2".equalsIgnoreCase(publishTask.type)) {
             //发布视频
@@ -118,7 +131,7 @@ public class PublishControl {
                 @Override
                 public void onUploadSucceed(List<String> list) {
                     if (list == null || list.isEmpty()) {
-                        onPublishStart();
+                        onPublishStart(false);
                     } else {
                         //视频上传成功后, 再上传图片
                         final String videoUrl = list.get(0);
@@ -145,7 +158,7 @@ public class PublishControl {
 
                             @Override
                             public void onUploadFailed(int code, String msg) {
-                                onPublishStart();
+                                onPublishStart(true);
                             }
                         }).uploadCircleImg(files);
                     }
@@ -153,7 +166,7 @@ public class PublishControl {
 
                 @Override
                 public void onUploadFailed(int code, String msg) {
-                    onPublishStart();
+                    onPublishStart(true);
                 }
             }).uploadVideo(publishTask.mVideoStatusInfo.videoPath);
         } else {
@@ -175,7 +188,7 @@ public class PublishControl {
 
                 @Override
                 public void onUploadFailed(int code, String msg) {
-                    onPublishStart();
+                    onPublishStart(true);
                 }
             }).uploadCircleImg(files);
         }
@@ -258,7 +271,7 @@ public class PublishControl {
                                @Override
                                public void onEnd() {
                                    super.onEnd();
-                                   onPublishStart();
+                                   onPublishStart(false);
                                }
                            }
                 );

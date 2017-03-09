@@ -33,7 +33,9 @@ public class RTextView extends AppCompatTextView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        LinkifyCompat.addLinks(this, Linkify.ALL);
+        if (getContentDescription() != null) {
+            LinkifyCompat.addLinks(this, Linkify.ALL);
+        }
     }
 
     @Override
