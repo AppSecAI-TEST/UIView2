@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.library.glide.NineImageLayout;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
@@ -34,7 +35,9 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.oss.OssControl;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
@@ -95,6 +98,10 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     @BindView(R.id.single_text_indicator_view)
     TextIndicator mSingleTextIndicatorView;
     Action0 mPublishAction;
+    @BindView(R.id.video_control_layout)
+    View mVideoControlLayout;
+    @BindView(R.id.video_thumb_layout)
+    NineImageLayout mVideoThumbLayout;
     private ResizeAdapter mImageAdapter;
     /**
      * 选择的图片
@@ -138,8 +145,9 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     /**
      * 发布视频
      */
-    public PublishDynamicUIView(VideoStatusInfo videoStatusInfo) {
+    public PublishDynamicUIView(VideoStatusInfo videoStatusInfo, Action0 publishAction) {
         mVideoStatusInfo = videoStatusInfo;
+        mPublishAction = publishAction;
     }
 
 
@@ -159,6 +167,17 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     Tag tag = tags.get(0);
                     mSelectorTags.clear();
                     if (isFirst) {
+                        if (mVideoStatusInfo == null) {
+                            //图文动态
+                        } else {
+                            //视频动态,强制添加视频tag
+                            for (Tag t : tags) {
+                                if (t.getName().equalsIgnoreCase(getString(R.string.video))) {
+                                    tag = t;
+                                    break;
+                                }
+                            }
+                        }
                         mSelectorTags.add(tag);
                         mTagLayout.setItemDarkText(tag.getName());
                     } else {
@@ -175,18 +194,46 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             }
         };
 
+        mRecyclerView.setVisibility(View.GONE);
+        mVideoControlLayout.setVisibility(View.GONE);
         if (forwardDataBean == null) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            mForwardControlLayout.setVisibility(View.GONE);
-            mImageAdapter = new ImageAdapter(mRecyclerView);
-            mImageAdapter.setDividerHeight((int) ResUtil.dpToPx(mActivity.getResources(), 6));
-            mRecyclerView.setItemAnim(false);
-            mRecyclerView.setAdapter(mImageAdapter);
-            mRecyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6),
-                    Color.TRANSPARENT));
-            mImageAdapter.resetData(photos);
+            if (mVideoStatusInfo == null) {
+                //发布图文
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mForwardControlLayout.setVisibility(View.GONE);
+                mImageAdapter = new ImageAdapter(mRecyclerView);
+                mImageAdapter.setDividerHeight((int) ResUtil.dpToPx(mActivity.getResources(), 6));
+                mRecyclerView.setItemAnim(false);
+                mRecyclerView.setAdapter(mImageAdapter);
+                mRecyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6),
+                        Color.TRANSPARENT));
+                mImageAdapter.resetData(photos);
+            } else {
+                //发布视频
+                mVideoControlLayout.setVisibility(View.VISIBLE);
+                mVideoThumbLayout.setNineImageConfig(new NineImageLayout.NineImageConfig() {
+                    @Override
+                    public int[] getWidthHeight(int imageSize) {
+                        return OssHelper.getImageThumbSize2(mVideoStatusInfo.videoThumbPath);
+                    }
+
+                    @Override
+                    public void displayImage(final ImageView imageView, String url, int width, int height) {
+                        UserDiscussItemControl.displayImage(imageView, url, width, height);
+                    }
+
+                    @Override
+                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
+                        //点击预览全部图片
+                        //startIView(new VideoPlayUIView(mVideoStatusInfo.videoThumbPath, mVideoStatusInfo.videoPath));
+                        startIView(new VideoPlayUIView(mVideoStatusInfo.videoPath, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(mVideoStatusInfo.videoThumbPath)));
+                    }
+                });
+                mVideoThumbLayout.setImage(mVideoStatusInfo.videoThumbPath);
+                mViewHolder.tv(R.id.video_time_view).setText(UserDiscussItemControl.getVideoTime(mVideoStatusInfo.videoPath));
+            }
         } else {
-            mRecyclerView.setVisibility(View.GONE);
+            //转发动态
             mForwardControlLayout.setVisibility(View.VISIBLE);
             mViewHolder.tv(R.id.content).setText(forwardDataBean.getContent());
             mViewHolder.tv(R.id.username).setText(forwardDataBean.getUser_info().getUsername());
@@ -216,10 +263,15 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
 //                                files.add(item.thumbPath);
 //                            }
 //                            mOssControl.uploadCircleImg(files);
-                            PublishControl.instance().addTask(
-                                    new PublishControl.PublishTask(photos, mSelectorTags, mTopBox.isChecked(), mShareBox.isChecked(),
-                                            mInputView.string(), getAddress(), getLongitude(), getLatitude())
-                            );
+                            PublishControl.PublishTask publishTask;
+                            if (mVideoStatusInfo == null) {
+                                publishTask = new PublishControl.PublishTask(photos, mSelectorTags, mTopBox.isChecked(), mShareBox.isChecked(),
+                                        mInputView.string(), getAddress(), getLongitude(), getLatitude());
+                            } else {
+                                publishTask = new PublishControl.PublishTask(mVideoStatusInfo, mSelectorTags, mTopBox.isChecked(), mShareBox.isChecked(),
+                                        mInputView.string(), getAddress(), getLongitude(), getLatitude());
+                            }
+                            PublishControl.instance().addTask(publishTask);
                             finishIView();
                             if (mPublishAction != null) {
                                 mPublishAction.call();
@@ -333,7 +385,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     public void onViewCreate() {
         super.onViewCreate();
         //ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
-        TagsControl.getTags(null);//拉取一下标签
+        //TagsControl.getTags(null);//拉取一下标签
     }
 
     @Override
@@ -442,7 +494,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     @OnClick(R.id.tag_layout)
     public void onTagClick() {
         isFirst = false;
-        startIView(new TagsUIView(mListAction1, mSelectorTags));
+        startIView(new TagsUIView(mListAction1, mSelectorTags).setIsVideo(mVideoStatusInfo != null));
     }
 
     @Override
@@ -467,7 +519,12 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     }
 
     public static class VideoStatusInfo {
+        public String videoThumbPath, videoPath;
 
+        public VideoStatusInfo(String videoThumbPath, String videoPath) {
+            this.videoThumbPath = videoThumbPath;
+            this.videoPath = videoPath;
+        }
     }
 
     /**
@@ -522,7 +579,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             super.onBindView(holder, position, bean);
             int size = getItemHeight();
             //Glide.with(mContext).load(bean.thumbPath).override(size, size).placeholder(R.drawable.zhanweitu_1)
-              //      .into(holder.imgV(R.id.image_view));
+            //      .into(holder.imgV(R.id.image_view));
 
             UserDiscussItemControl.displayImage(holder.imgV(R.id.image_view), bean.thumbPath, 0, 0);
 

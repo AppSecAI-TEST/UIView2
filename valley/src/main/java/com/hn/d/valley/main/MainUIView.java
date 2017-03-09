@@ -33,7 +33,6 @@ import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
-import com.hn.d.valley.main.friend.Friend2UIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView;
@@ -81,6 +80,7 @@ public class MainUIView extends BaseUIView {
     FriendUIView mFriend2UIView;
 
     long onBackTime = 0;
+
     private int lastPosition = 0;
 
     public MainUIView() {
@@ -345,7 +345,7 @@ public class MainUIView extends BaseUIView {
                                 PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
                                     @Override
                                     public void onPublishStart() {
-                                        mViewHolder.v(R.id.publish_control_layout).setVisibility(View.VISIBLE);
+                                        //mViewHolder.v(R.id.publish_control_layout).setVisibility(View.VISIBLE);
                                         if (mHomeUIView != null) {
                                             mHomeUIView.onPublishStart();
                                         }
@@ -368,6 +368,5 @@ public class MainUIView extends BaseUIView {
                 }
             });
         }
-
     }
 }

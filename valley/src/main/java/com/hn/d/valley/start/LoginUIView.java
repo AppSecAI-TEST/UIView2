@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -29,7 +30,6 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.LoginBean;
@@ -343,7 +343,13 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         //HnLoading.show(mILayout);
 //        ImagePickerHelper.startImagePicker(mActivity, false, true, true, 50);
         //startIView(new RecommendUser2UIView());
-        startIView(new VideoRecordUIView());
+        //startIView(new VideoRecordUIView(null));
+
+        UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
+                .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
+                .setCancelText("").setOkText(mActivity.getString(R.string.known))
+                .setCanCanceledOnOutside(false)
+                .showDialog(this);
     }
 
     @Override

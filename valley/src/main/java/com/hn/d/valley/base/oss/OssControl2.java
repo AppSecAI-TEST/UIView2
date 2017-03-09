@@ -55,34 +55,88 @@ public class OssControl2 {
         startUpload();
     }
 
+    public void uploadVideo(final String videoPath) {
+        if (TextUtils.isEmpty(videoPath)) {
+            mUploadListener.onUploadSucceed(null);
+            return;
+        }
+
+        File file = new File(videoPath);
+        if (!file.exists()) {
+            mUploadListener.onUploadSucceed(null);
+            return;
+        }
+
+        String upload = OssControl.isUpload(videoPath);
+        if (upload == null) {
+            L.d("准备上传视频:" + videoPath);
+            OssHelper.uploadVideo(videoPath)
+                    .subscribe(new BaseSingleSubscriber<String>() {
+                        @Override
+                        public void onSucceed(String s) {
+                            if (BuildConfig.DEBUG) {
+                                L.i(videoPath + " 上传成功至->" + s);
+                            }
+                            List<String> list = new ArrayList<>();
+                            String videoUrl = OssHelper.getVideoUrl(s);
+                            OssControl.urlMap.put(videoPath, videoUrl);
+                            list.add(videoUrl);
+                            mUploadListener.onUploadSucceed(list);
+                        }
+
+                        @Override
+                        public void onError(int code, String msg) {
+                            super.onError(code, msg);
+                            mUploadListener.onUploadFailed(code, msg);
+                        }
+                    });
+        } else {
+            List<String> list = new ArrayList<>();
+            list.add(upload);
+            mUploadListener.onUploadSucceed(list);
+        }
+    }
+
     public void uploadAudio(final String audioPath) {
         if (TextUtils.isEmpty(audioPath)) {
+            mUploadListener.onUploadSucceed(null);
             return;
         }
 
         File file = new File(audioPath);
         if (!file.exists()) {
+            mUploadListener.onUploadSucceed(null);
             return;
         }
 
-        OssHelper.uploadAudio(audioPath)
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onSucceed(String s) {
-                        if (BuildConfig.DEBUG) {
-                            L.i(audioPath + " 上传成功至->" + s);
+        String upload = OssControl.isUpload(audioPath);
+        if (upload == null) {
+            L.d("准备上传语音:" + audioPath);
+            OssHelper.uploadAudio(audioPath)
+                    .subscribe(new BaseSingleSubscriber<String>() {
+                        @Override
+                        public void onSucceed(String s) {
+                            if (BuildConfig.DEBUG) {
+                                L.i(audioPath + " 上传成功至->" + s);
+                            }
+                            List<String> list = new ArrayList<>();
+                            String audioUrl = OssHelper.getAudioUrl(s);
+                            OssControl.urlMap.put(audioPath, audioUrl);
+                            list.add(audioUrl);
+                            mUploadListener.onUploadSucceed(list);
                         }
-//                        mUploadListener.onUploadSucceed();
-                    }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        mUploadListener.onUploadFailed(code, msg);
-                    }
-                });
-
-
+                        @Override
+                        public void onError(int code, String msg) {
+                            super.onError(code, msg);
+                            mUploadListener.onUploadFailed(code, msg);
+                        }
+                    });
+        } else {
+            List<String> list = new ArrayList<>();
+            list.add(upload);
+            mUploadListener.onUploadSucceed(list);
+        }
     }
 
     /**

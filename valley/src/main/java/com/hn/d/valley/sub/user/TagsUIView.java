@@ -58,6 +58,11 @@ public class TagsUIView extends BaseContentUIView {
         this.isVideo = isVideo;
     }
 
+    public TagsUIView setIsVideo(boolean video) {
+        isVideo = video;
+        return this;
+    }
+
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         mFlowLayout = new RFlowLayout(mActivity);
@@ -109,6 +114,9 @@ public class TagsUIView extends BaseContentUIView {
                 rTextCheckView.setChecked(selectorTag.contains(tag));
                 if (tag.getName().equalsIgnoreCase(getString(R.string.video))) {
                     rTextCheckView.setEnabled(false);
+                    if (isVideo) {
+                        rTextCheckView.setChecked(true);
+                    }
                 }
             }
         });

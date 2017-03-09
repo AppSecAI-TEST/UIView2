@@ -1,15 +1,15 @@
 package com.hn.d.valley.base.iview;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
-import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.m3b.rblibrary.RBMediaController;
 
@@ -30,6 +30,10 @@ public class VideoPlayUIView extends UIIViewImpl {
 
     String path, thumbImagePath;
 
+    Drawable thumbDrawable;
+
+    int[] thumbSize;
+
     RBMediaController mMediaController;
     private boolean mIsLive;
 
@@ -40,6 +44,12 @@ public class VideoPlayUIView extends UIIViewImpl {
     public VideoPlayUIView(String thumbImagePath, String path) {
         this.thumbImagePath = thumbImagePath;
         this.path = path;
+    }
+
+    public VideoPlayUIView(String path, Drawable thumbDrawable, int[] thumbSize) {
+        this.path = path;
+        this.thumbDrawable = thumbDrawable;
+        this.thumbSize = thumbSize;
     }
 
     @Override
@@ -108,10 +118,14 @@ public class VideoPlayUIView extends UIIViewImpl {
                 })
                 .play(path);//开始播放视频
 
-        if (!TextUtils.isEmpty(thumbImagePath) && previewImageView != null) {
-            Glide.with(mActivity)
-                    .load(thumbImagePath)
-                    .into(previewImageView);
+//        if (!TextUtils.isEmpty(thumbImagePath) && previewImageView != null) {
+//            Glide.with(mActivity)
+//                    .load(thumbImagePath)
+//                    .into(previewImageView);
+//        }
+        if (thumbDrawable != null && previewImageView != null) {
+            UI.setView(previewImageView, thumbSize[0], thumbSize[1]);
+            previewImageView.setImageDrawable(thumbDrawable);
         }
     }
 

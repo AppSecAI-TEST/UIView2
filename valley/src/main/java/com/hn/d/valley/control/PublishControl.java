@@ -11,6 +11,7 @@ import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssControl;
+import com.hn.d.valley.base.oss.OssControl2;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
@@ -18,6 +19,7 @@ import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.DiscussService;
+import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.RBus;
 
 import java.util.ArrayList;
@@ -87,10 +89,10 @@ public class PublishControl {
 
         mPublishListener = listener;
         if (isStart) {
+            mPublishListener.onPublishStart();
             return;
         }
         isStart = true;
-        mPublishListener.onPublishStart();
 
         onPublishStart();
     }
@@ -105,27 +107,80 @@ public class PublishControl {
 
         final PublishTask publishTask = mPublishTasks.valueAt(0);
 
-        List<String> files = new ArrayList<>();
-        for (Luban.ImageItem item : publishTask.photos) {
-            files.add(item.thumbPath);
+        if ("2".equalsIgnoreCase(publishTask.type)) {
+            //发布视频
+            new OssControl2(new OssControl2.OnUploadListener() {
+                @Override
+                public void onUploadStart() {
+
+                }
+
+                @Override
+                public void onUploadSucceed(List<String> list) {
+                    if (list == null || list.isEmpty()) {
+                        onPublishStart();
+                    } else {
+                        //视频上传成功后, 再上传图片
+                        final String videoUrl = list.get(0);
+                        L.e("视频上传成功:" + videoUrl);
+
+                        List<String> files = new ArrayList<>();
+                        files.add(publishTask.mVideoStatusInfo.videoThumbPath);
+
+                        new OssControl(new OssControl.OnUploadListener() {
+                            @Override
+                            public void onUploadStart() {
+
+                            }
+
+                            @Override
+                            public void onUploadSucceed(List<String> list) {
+                                List<String> media = new ArrayList<>();
+                                String videoThumbUrl = list.get(0);
+                                media.add(videoThumbUrl + "?" + videoUrl);
+
+                                L.e("视频缩略图上传成功:" + videoThumbUrl);
+                                publish(publishTask, media);
+                            }
+
+                            @Override
+                            public void onUploadFailed(int code, String msg) {
+                                onPublishStart();
+                            }
+                        }).uploadCircleImg(files);
+                    }
+                }
+
+                @Override
+                public void onUploadFailed(int code, String msg) {
+                    onPublishStart();
+                }
+            }).uploadVideo(publishTask.mVideoStatusInfo.videoPath);
+        } else {
+            List<String> files = new ArrayList<>();
+            for (Luban.ImageItem item : publishTask.photos) {
+                files.add(item.thumbPath);
+            }
+
+            new OssControl(new OssControl.OnUploadListener() {
+                @Override
+                public void onUploadStart() {
+
+                }
+
+                @Override
+                public void onUploadSucceed(List<String> list) {
+                    publish(publishTask, list);
+                }
+
+                @Override
+                public void onUploadFailed(int code, String msg) {
+                    onPublishStart();
+                }
+            }).uploadCircleImg(files);
         }
 
-        new OssControl(new OssControl.OnUploadListener() {
-            @Override
-            public void onUploadStart() {
-
-            }
-
-            @Override
-            public void onUploadSucceed(List<String> list) {
-                publish(publishTask, list);
-            }
-
-            @Override
-            public void onUploadFailed(int code, String msg) {
-                onPublishStart();
-            }
-        }).uploadCircleImg(files);
+        mPublishListener.onPublishStart();
     }
 
     UserDiscussListBean.DataListBean createBean(final PublishTask task) {
@@ -148,13 +203,17 @@ public class PublishControl {
 
         bean.setContent(task.content);
 
-        //媒体图片
-        List<String> photos = new ArrayList<>();
-        for (Luban.ImageItem item : task.photos) {
-            photos.add(item.thumbPath);
+        if ("2".equalsIgnoreCase(task.type)) {
+            //视频
+            bean.setMedia(task.mVideoStatusInfo.videoThumbPath + "?" + task.mVideoStatusInfo.videoPath);
+        } else {
+            //媒体图片
+            List<String> photos = new ArrayList<>();
+            for (Luban.ImageItem item : task.photos) {
+                photos.add(item.thumbPath);
+            }
+            bean.setMedia(RUtils.connect(photos));
         }
-        bean.setMedia(RUtils.connect(photos));
-
 
         LikeUserInfoBean userInfoBean = new LikeUserInfoBean();
         userInfoBean.setUid(UserCache.getUserAccount());
@@ -255,7 +314,7 @@ public class PublishControl {
          * 1-纯文本 2-视频 3-图片
          */
         public String type;
-
+        public PublishDynamicUIView.VideoStatusInfo mVideoStatusInfo;
         private String uuid;
 
         /**
@@ -274,6 +333,24 @@ public class PublishControl {
             this.lat = lat;
             type = "3";
         }
+
+        /**
+         * 构建一个视频动态的任务
+         */
+        public PublishTask(PublishDynamicUIView.VideoStatusInfo videoStatusInfo, List<Tag> selectorTags,
+                           boolean isTop, boolean shareLocation, String content, String address, String lng, String lat) {
+            uuid = UUID.randomUUID().toString();
+            mVideoStatusInfo = videoStatusInfo;
+            mSelectorTags = selectorTags;
+            this.isTop = isTop;
+            this.shareLocation = shareLocation;
+            this.content = content;
+            this.address = address;
+            this.lng = lng;
+            this.lat = lat;
+            type = "2";
+        }
+
 
         @Override
         public boolean equals(Object obj) {

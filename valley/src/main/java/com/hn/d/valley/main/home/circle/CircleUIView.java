@@ -90,8 +90,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                         } else {
                             List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
                             initConfigId(userDiscussListBean);
-                            data_list.addAll(0, PublishControl.instance().getDataListBeen());
-                            onUILoadDataEnd(data_list, userDiscussListBean.getData_count());
+                            List<UserDiscussListBean.DataListBean> newDatas = insertPublishTask();
+                            newDatas.addAll(data_list);
+                            onUILoadDataEnd(newDatas, userDiscussListBean.getData_count());
                         }
                     }
 
@@ -141,9 +142,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
         }
 
         List<UserDiscussListBean.DataListBean> allDatas = mRExBaseAdapter.getAllDatas();
-        List<UserDiscussListBean.DataListBean> newDatas = new ArrayList<>();
 
-        newDatas.addAll(PublishControl.instance().getDataListBeen());
+        List<UserDiscussListBean.DataListBean> newDatas = insertPublishTask();
+
         for (UserDiscussListBean.DataListBean bean : allDatas) {
             if (TextUtils.isEmpty(bean.uuid)) {
                 newDatas.add(bean);
@@ -152,4 +153,14 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
 
         mRExBaseAdapter.resetAllData(newDatas);
     }
+
+    List<UserDiscussListBean.DataListBean> insertPublishTask() {
+        List<UserDiscussListBean.DataListBean> newDatas = new ArrayList<>();
+        List<UserDiscussListBean.DataListBean> list = PublishControl.instance().getDataListBeen();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            newDatas.add(list.get(i));
+        }
+        return newDatas;
+    }
+
 }

@@ -143,19 +143,19 @@ public class UIDialog extends UIIDialogImpl {
         mBaseDialogCancelView.setVisibility(TextUtils.isEmpty(cancelText) ? View.GONE : View.VISIBLE);
         mBaseDialogOkView.setVisibility(TextUtils.isEmpty(okText) ? View.GONE : View.VISIBLE);
 
-        if (!isX5Style) {
-            mLineLayout.setVisibility((TextUtils.isEmpty(dialogTitle) && TextUtils.isEmpty(dialogContent)) ? View.GONE : View.VISIBLE);
-        }
-
         mBaseDialogTitleView.setText(dialogTitle);
         mBaseDialogContentView.setText(dialogContent);
         mBaseDialogOkView.setText(okText);
         mBaseDialogCancelView.setText(cancelText);
 
-        if (TextUtils.isEmpty(okText)) {
-            mBaseDialogCancelView.setBackgroundResource(R.drawable.base_bottom_round_bg_selector);
-        } else if (TextUtils.isEmpty(cancelText)) {
-            mBaseDialogOkView.setBackgroundResource(R.drawable.base_bottom_round_bg_selector);
+        if (!isX5Style) {
+            mLineLayout.setVisibility((TextUtils.isEmpty(dialogTitle) && TextUtils.isEmpty(dialogContent)) ? View.GONE : View.VISIBLE);
+
+            if (TextUtils.isEmpty(okText)) {
+                mBaseDialogCancelView.setBackgroundResource(R.drawable.base_bottom_round_bg_selector);
+            } else if (TextUtils.isEmpty(cancelText)) {
+                mBaseDialogOkView.setBackgroundResource(R.drawable.base_bottom_round_bg_selector);
+            }
         }
 
         mDialogRootLayout.setGravity(gravity);

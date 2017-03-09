@@ -188,8 +188,15 @@ public class UserDiscussItemControl {
             infoView.setText(stringBuilder);
         }
 
+        View rootLayout = holder.v(R.id.item_root_layout);
         if (itemRootAction != null) {
-            holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
+            if (TextUtils.isEmpty(dataListBean.uuid)) {
+                rootLayout.setBackgroundResource(R.drawable.base_white_bg_selector);
+            } else {
+                rootLayout.setBackgroundColor(rootLayout.getContext().getResources().getColor(R.color.theme_color_primary_dark_tran2));
+            }
+
+            rootLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (TextUtils.isEmpty(dataListBean.uuid)) {
@@ -211,7 +218,7 @@ public class UserDiscussItemControl {
                 }
             });
         } else {
-            holder.v(R.id.item_root_layout).setClickable(false);
+            rootLayout.setClickable(false);
             holder.v(R.id.comment_cnt).setClickable(false);//不允许评价
         }
 
@@ -285,7 +292,7 @@ public class UserDiscussItemControl {
                 final String videoUrl = split[1];
 
                 try {
-                    videoTimeView.setText(getVideoTime(videoUrl.split("t_")[1]));
+                    videoTimeView.setText(getVideoTime(videoUrl));
                 } catch (Exception e) {
                     videoTimeView.setTextColor(Color.RED);
                     videoTimeView.setText("video time format error");
@@ -305,7 +312,7 @@ public class UserDiscussItemControl {
                     @Override
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
                         //T_.info(videoUrl);
-                        iLayout.startIView(new VideoPlayUIView(thumbUrl, videoUrl));
+                        iLayout.startIView(new VideoPlayUIView(videoUrl, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(thumbUrl)));
                     }
                 });
                 mediaImageTypeView.setImage(thumbUrl);
@@ -963,8 +970,8 @@ public class UserDiscussItemControl {
         }
     }
 
-    public static String getVideoTime(String time) {
-        final int videoTime = Integer.parseInt(time);
+    public static String getVideoTime(int time) {
+        final int videoTime = time;
         int min = videoTime / 60;
         int second = videoTime % 60;
 
@@ -974,6 +981,10 @@ public class UserDiscussItemControl {
         builder.append(second >= 10 ? second : ("0" + second));
 
         return builder.toString();
+    }
+
+    public static String getVideoTime(String url) {
+        return getVideoTime(Integer.parseInt(url.split("t_")[1]));
     }
 
     public static void displayImage(final ImageView imageView, String url, int width, int height) {

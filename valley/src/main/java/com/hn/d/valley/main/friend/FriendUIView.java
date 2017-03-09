@@ -22,6 +22,7 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.FriendListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.widget.LetterIndexView;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import rx.functions.Action1;
 
 /**
  * Created by hewking on 2017/3/7.
@@ -63,6 +65,12 @@ public class FriendUIView extends BaseUIView {
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
         mFriendsControl.init(mBaseContentLayout,mSubscriptions);
+        mFriendsControl.setToUserDetailAction(new Action1<FriendBean>() {
+            @Override
+            public void call(FriendBean o) {
+                mOtherILayout.startIView(new UserDetailUIView(o.getUid()));
+            }
+        });
 
         loadFriends();
     }

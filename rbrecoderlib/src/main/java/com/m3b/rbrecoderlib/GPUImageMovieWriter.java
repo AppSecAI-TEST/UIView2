@@ -89,7 +89,7 @@ public class GPUImageMovieWriter extends GPUImageFilter {
         releaseEncodeSurface();
     }
 
-    public void startRecording(final String outputPath, final String level, final int rotationRecord) {
+    public void startRecording(final String outputPath, final Level level, final int rotationRecord) {
         runOnDraw(new Runnable() {
             @Override
             public void run() {
@@ -107,30 +107,33 @@ public class GPUImageMovieWriter extends GPUImageFilter {
                 * veryhigh 1080 1920
                  * */
 
-                switch (level) {
-                    case "low":
-                        width = 480;
-                        height = 640;
-                        break;
+                width = level.getWidth();
+                height = level.getHeight();
 
-                    case "meduim":
-                        width = 600;
-                        height = 800;
-                        break;
-
-                    case "high":
-                        width = 960;
-                        height = 1280;
-                        break;
-
-                    case "veryhigh":
-                        width = 1080;
-                        height = 1920;
-                        break;
-
-                    default:
-                        break;
-                }
+//                switch (level) {
+//                    case Low:
+//                        width = level.getWidth();
+//                        height = level.getHeight();
+//                        break;
+//
+//                    case Medium:
+//                        width = 600;
+//                        height = 800;
+//                        break;
+//
+//                    case High:
+//                        width = 720;
+//                        height = 1280;
+//                        break;
+//
+//                    case VeryHigh:
+//                        width = 1080;
+//                        height = 1920;
+//                        break;
+//
+//                    default:
+//                        break;
+//                }
 
                 try {
                     mMuxer = new MediaMuxerWrapper(outputPath, rotationRecord);
@@ -176,6 +179,24 @@ public class GPUImageMovieWriter extends GPUImageFilter {
         if (mCodecInput != null) {
             mCodecInput.release();
             mCodecInput = null;
+        }
+    }
+
+    public enum Level {
+        Low(480, 640), Medium(600, 800), High(720, 1280), VeryHigh(1080, 1920);
+        int width, height;
+
+        Level(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
         }
     }
 }

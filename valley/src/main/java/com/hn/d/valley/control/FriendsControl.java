@@ -41,6 +41,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
+import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -56,6 +57,16 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
     WaveSideBarView sidebar_friend;
     Context mContext;
+
+    Action1<FriendBean> toUserDetailAction;
+
+    public Action1 getToUserDetailAction() {
+        return toUserDetailAction;
+    }
+
+    public void setToUserDetailAction(Action1 toUserDetailAction) {
+        this.toUserDetailAction = toUserDetailAction;
+    }
 
     private CompositeSubscription mSubscriptions;
 
@@ -221,6 +232,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     public void onEnd() {
                         super.onEnd();
                         onUILoadFinish();
+
                     }
                 }));
     }

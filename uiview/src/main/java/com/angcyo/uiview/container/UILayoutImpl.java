@@ -762,6 +762,17 @@ public class UILayoutImpl extends SwipeBackLayout implements ILayout<UIParam>, U
             return;
         }
 
+        if (mLastShowViewPattern != null && mLastShowViewPattern.mIView.isDialog()) {
+            L.d("等待对话框:" + mLastShowViewPattern.mIView.getClass().getSimpleName() + " 的关闭");
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    replaceIView(iView, param);
+                }
+            }, DEFAULT_ANIM_TIME);
+            return;
+        }
+
         runnableCount++;
 
         final Runnable runnable = new Runnable() {

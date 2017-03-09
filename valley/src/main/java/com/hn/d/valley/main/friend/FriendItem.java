@@ -3,6 +3,8 @@ package com.hn.d.valley.main.friend;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.hn.d.valley.bean.FriendBean;
 
+import rx.functions.Action1;
+
 /**
  * Created by hewking on 2017/3/8.
  */

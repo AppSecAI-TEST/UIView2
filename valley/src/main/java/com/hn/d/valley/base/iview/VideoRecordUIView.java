@@ -3,8 +3,10 @@ package com.hn.d.valley.base.iview;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,8 +18,11 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.RecordButton;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.sub.user.PublishDynamicUIView;
+import com.hn.d.valley.widget.HnLoading;
 import com.m3b.rbrecoderlib.GPUImage;
 import com.m3b.rbrecoderlib.GPUImageFilter;
 import com.m3b.rbrecoderlib.GPUImageFilterGroup;
@@ -33,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -58,6 +64,11 @@ public class VideoRecordUIView extends UIIViewImpl {
     RecordButton mRecordView;
     @BindView(R.id.loop_recycler_view)
     RLoopRecyclerView mLoopRecyclerView;
+    Action0 publishAction;
+    /**
+     * 默认录像level
+     */
+    GPUImageMovieWriter.Level DefaultLevel = GPUImageMovieWriter.Level.High;
     private GPUImage mGPUImage;
     private OrientationEventListener mOrientationEventListener;
     private CameraHelper mCameraHelper;
@@ -66,6 +77,10 @@ public class VideoRecordUIView extends UIIViewImpl {
     private GPUImageFilter mFilter;
     private File mRecordFile;
     private RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean> mLoopAdapter;
+
+    public VideoRecordUIView(Action0 publishAction) {
+        this.publishAction = publishAction;
+    }
 
     private static File getOutputMediaFile(final int type) {
         // To be safe, you should check that the SDCard is mounted
@@ -133,20 +148,23 @@ public class VideoRecordUIView extends UIIViewImpl {
                     T_.error(getString(R.string.record_time_short));
                 } else {
                     stopRecord();
-                    T_.info(progress + " s" + mRecordFile.getAbsolutePath());
+                    if (BuildConfig.DEBUG) {
+                        T_.info(progress + " s" + mRecordFile.getAbsolutePath());
+                    }
                     final String parent = mRecordFile.getParent();
 
                     final String newName = UUID.randomUUID().toString() + "_t_" + progress;
                     final String thumbPath;
                     if (rotationRecord == 0) {
-                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + "960" + "x" + "1280";
+                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + DefaultLevel.getWidth() + "x" + DefaultLevel.getHeight();
 
                     } else {
-                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + "1280" + "x" + "960";
+                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + DefaultLevel.getHeight() + "x" + DefaultLevel.getWidth();
                     }
 
+                    HnLoading.show(mOtherILayout, false);
                     Observable.just("")
-                            .delay(300, TimeUnit.MILLISECONDS)
+                            .delay(100, TimeUnit.MILLISECONDS)
                             .map(new Func1<String, String>() {
                                 @Override
                                 public String call(String s) {
@@ -158,7 +176,7 @@ public class VideoRecordUIView extends UIIViewImpl {
                                     return "";
                                 }
                             })
-                            .delay(300, TimeUnit.MILLISECONDS)
+                            .delay(100, TimeUnit.MILLISECONDS)
                             .map(new Func1<String, String>() {
                                 @Override
                                 public String call(String s) {
@@ -175,7 +193,9 @@ public class VideoRecordUIView extends UIIViewImpl {
                             .subscribe(new Action1<String>() {
                                 @Override
                                 public void call(String s) {
-                                    startIView(new VideoPlayUIView(thumbPath, s));
+                                    //startIView(new VideoPlayUIView(thumbPath, s));
+                                    HnLoading.hide();
+                                    replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(thumbPath, s), publishAction));
                                 }
                             });
 
@@ -202,12 +222,41 @@ public class VideoRecordUIView extends UIIViewImpl {
                 switchFilterTo(mLoopAdapter.getAllDatas().get(position).createFilterForType(mActivity));
             }
         });
+
+        mLoopRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    autoShow();
+                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    autoHide();
+                }
+                return false;
+            }
+        });
+    }
+
+    void autoHide() {
+        ViewCompat
+                .animate(mLoopRecyclerView)
+                .alpha(0f)
+                .setDuration(1000)
+                .start();
+    }
+
+    void autoShow() {
+        ViewCompat
+                .animate(mLoopRecyclerView)
+                .alpha(1f)
+                .setDuration(100)
+                .start();
     }
 
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
         mCamera.onResume();
+        autoHide();
     }
 
     @Override
@@ -229,14 +278,12 @@ public class VideoRecordUIView extends UIIViewImpl {
      */
     private void startRecord() {
         mIsRecording = true;
-        mLoopRecyclerView.setVisibility(View.GONE);
         mRecordFile = getOutputMediaFile(MEDIA_TYPE_VIDEO);
-        mMovieWriter.startRecording(mRecordFile.getAbsolutePath(), "high", rotationRecord);//do not change it without standrad
+        mMovieWriter.startRecording(mRecordFile.getAbsolutePath(), DefaultLevel, rotationRecord);//do not change it without standrad
     }
 
     private void stopRecord() {
         mIsRecording = false;
-        mLoopRecyclerView.setVisibility(View.VISIBLE);
         mMovieWriter.stopRecording();
     }
 
@@ -334,7 +381,7 @@ public class VideoRecordUIView extends UIIViewImpl {
                     Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             }
-            parameters.setPreviewSize(640, 480);
+            //parameters.setPreviewSize(640, 480);
             mCameraInstance.setParameters(parameters);
 
             int orientation = mCameraHelper.getCameraDisplayOrientation(mActivity, mCurrentCameraId);

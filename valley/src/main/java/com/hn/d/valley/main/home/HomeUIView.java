@@ -17,6 +17,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.realm.Tag;
+import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.main.home.recommend.RecommendUIView2;
@@ -24,6 +25,7 @@ import com.lzy.imagepicker.ImagePickerHelper;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.functions.Action0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -255,7 +257,22 @@ public class HomeUIView extends BaseUIView {
                 .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new VideoRecordUIView());
+                        mOtherILayout.startIView(new VideoRecordUIView(new Action0() {
+                            @Override
+                            public void call() {
+                                //开始发布任务.
+                                PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
+                                    @Override
+                                    public void onPublishStart() {
+                                        HomeUIView.this.onPublishStart();
+                                    }
+
+                                    @Override
+                                    public void onPublishEnd() {
+                                    }
+                                });
+                            }
+                        }));
                     }
                 }).showDialog(mOtherILayout);
     }

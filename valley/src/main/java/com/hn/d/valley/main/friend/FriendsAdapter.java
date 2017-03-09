@@ -10,6 +10,7 @@ import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
@@ -92,7 +93,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
 
 //            mFrendsControl.initItem(holder,dataBean);
             FriendItem friendItem = (FriendItem) bean;
-            FriendBean friendBean = friendItem.getFriendBean();
+            final FriendBean friendBean = friendItem.getFriendBean();
             HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
             iv_head.setImageUrl(friendBean.getAvatar());
@@ -101,7 +102,9 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    if(mFrendsControl.getToUserDetailAction() != null ) {
+                        mFrendsControl.getToUserDetailAction().call(friendBean);
+                    }
                 }
             });
         }

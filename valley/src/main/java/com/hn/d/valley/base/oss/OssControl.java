@@ -1,5 +1,8 @@
 package com.hn.d.valley.base.oss;
 
+import android.support.v4.util.ArrayMap;
+
+import com.angcyo.library.utils.L;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 
 import java.util.ArrayList;
@@ -21,6 +24,10 @@ public class OssControl {
     public static final int uploadCircleImg = 1;
     public static final int uploadAvatorImg = 2;
     public static final int uploadVideo = 3;
+    /**
+     * 保存上传成功了的文件映射,防止重复上传
+     */
+    public static ArrayMap<String, String> urlMap = new ArrayMap();
     List<String> needUploadList;
     List<String> uploadList;
     int index = 0;//正在上传的索引位置
@@ -30,6 +37,13 @@ public class OssControl {
 
     public OssControl(OnUploadListener uploadListener) {
         mUploadListener = uploadListener;
+    }
+
+    /**
+     * 检查路径是否已经上传成功过
+     */
+    public static String isUpload(String path) {
+        return urlMap.get(path);
     }
 
     public void uploadCircleImg(List<String> files) {
@@ -65,22 +79,33 @@ public class OssControl {
             return;
         }
 
-        OssHelper.uploadCircleImg(needUploadList.get(index))
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onSucceed(String s) {
-                        uploadList.add(OssHelper.getCircleUrl(s));
-                        index++;
-                        startUpload();
-                    }
+        final String path = needUploadList.get(index);
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        mUploadListener.onUploadFailed(code, msg);
-                    }
-                });
+        String upload = isUpload(path);
+        if (upload == null) {
+            L.d("准备上传图片:" + path);
+            OssHelper.uploadCircleImg(path)
+                    .subscribe(new BaseSingleSubscriber<String>() {
+                        @Override
+                        public void onSucceed(String s) {
+                            String circleUrl = OssHelper.getCircleUrl(s);
+                            urlMap.put(path, circleUrl);
+                            uploadList.add(circleUrl);
+                            index++;
+                            startUpload();
+                        }
 
+                        @Override
+                        public void onError(int code, String msg) {
+                            super.onError(code, msg);
+                            mUploadListener.onUploadFailed(code, msg);
+                        }
+                    });
+        } else {
+            uploadList.add(upload);
+            index++;
+            startUpload();
+        }
     }
 
     public interface OnUploadListener {
