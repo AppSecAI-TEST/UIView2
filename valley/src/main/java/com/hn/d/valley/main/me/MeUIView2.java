@@ -229,6 +229,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 textView.setTextColor(Color.WHITE);
                 textView.setBackgroundResource(R.drawable.base_orange_color_round_bg);
                 int margin = getResources().getDimensionPixelOffset(R.dimen.base_xxhdpi);
+                textView.setPadding(margin / 2, margin / 4, margin / 2, margin / 4);
                 itemInfoLayout.addRightView(textView, -2, -2, margin);
             }
         }));
