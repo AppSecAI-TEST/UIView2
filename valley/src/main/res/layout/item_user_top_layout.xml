@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/user_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_bg_selector"
+        android:orientation="horizontal"
+        android:padding="@dimen/base_xhdpi">
+
+        <com.hn.d.valley.widget.HnGlideImageView
+            android:id="@+id/user_ico_view"
+            android:layout_width="@dimen/avatar_image_size"
+            android:layout_height="@dimen/avatar_image_size"
+            android:contentDescription="@string/is_circle"
+            android:src="@drawable/default_avatar"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/base_xhdpi">
+
+            <TextView
+                android:id="@+id/user_name_view"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                tools:text="玩玩的嘴角"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/user_id_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_hdpi"
+                android:tag="ID:%1$s"
+                tools:text="玩玩的嘴角"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:drawableEnd="@drawable/next_3"
+            android:drawablePadding="@dimen/base_mdpi"
+            android:text="@string/data_tip"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/default_text_size"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:background="@color/line_color"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--动态-->
+        <RelativeLayout
+            android:id="@+id/status_item_layout"
+            style="@style/BaseAvgHStyleM"
+            android:background="@drawable/base_bg_selector"
+            android:padding="@dimen/base_hdpi">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/status_count"
+                    style="@style/MainColorTextStyle"
+                    android:text="0"
+                    android:textSize="@dimen/default_text_size16"/>
+
+                <TextView
+                    style="@style/DarkTextStyle"
+                    android:text="@string/status"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!--关注-->
+        <RelativeLayout
+            android:id="@+id/follow_item_layout"
+            style="@style/BaseAvgHStyleM"
+            android:background="@drawable/base_bg_selector"
+            android:padding="@dimen/base_hdpi">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/attention_count"
+                    style="@style/MainColorTextStyle"
+                    android:text="0"
+                    android:textSize="@dimen/default_text_size16"/>
+
+                <TextView
+                    style="@style/DarkTextStyle"
+                    android:text="@string/follow"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!--粉丝-->
+        <RelativeLayout
+            android:id="@+id/follower_item_layout"
+            style="@style/BaseAvgHStyleM"
+            android:background="@drawable/base_bg_selector"
+            android:padding="@dimen/base_hdpi">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fans_count"
+                    style="@style/MainColorTextStyle"
+                    android:text="0"
+                    android:textSize="@dimen/default_text_size16"/>
+
+                <TextView
+                    style="@style/DarkTextStyle"
+                    android:text="@string/follower"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

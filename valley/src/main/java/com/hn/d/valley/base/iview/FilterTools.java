@@ -114,7 +114,7 @@ public class FilterTools {
                 return textfilter;
 
             case LOGO:
-                RBLogoFilter logofilter = new RBLogoFilter(new Rect(400, 400, 800, 800));
+                RBLogoFilter logofilter = new RBLogoFilter(new Rect(100, 100, 200, 200));
                 logofilter.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.login_logo));
                 return logofilter;
 

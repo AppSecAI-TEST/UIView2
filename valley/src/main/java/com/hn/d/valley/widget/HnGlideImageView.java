@@ -2,8 +2,8 @@ package com.hn.d.valley.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.uiview.utils.BmpUtil;
@@ -25,7 +25,7 @@ import com.hn.d.valley.base.oss.OssHelper;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HnGlideImageView extends ImageView {
+public class HnGlideImageView extends AppCompatImageView {
     public HnGlideImageView(Context context) {
         super(context);
     }

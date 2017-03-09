@@ -35,7 +35,7 @@ import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
-import com.hn.d.valley.main.me.MeUIView;
+import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
@@ -75,7 +75,7 @@ public class MainUIView extends BaseUIView {
     /*消息*/
     MessageUIView mMessageUIView;
     /*我的*/
-    MeUIView mMeUIView;
+    MeUIView2 mMeUIView;
     /*好友*/
     FriendUIView mFriend2UIView;
 
@@ -186,7 +186,7 @@ public class MainUIView extends BaseUIView {
                 } else if (position == Constant.POS_ME) {
                     //我的
                     if (mMeUIView == null) {
-                        mMeUIView = new MeUIView();
+                        mMeUIView = new MeUIView2();
                         mMeUIView.bindOtherILayout(mILayout);
                         mMeUIView.setIsRightJumpLeft(isRightToLeft);
                         mMainUILayout.startIView(mMeUIView);

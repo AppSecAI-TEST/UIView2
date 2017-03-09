@@ -109,6 +109,11 @@ public class UserInfoBean extends RealmObject {
      */
 
     private String birthday;
+    /**
+     * discuss_pic_count : 27
+     */
+
+    private int discuss_pic_count;
 
     public int getIs_attention() {
         return is_attention;
@@ -444,5 +449,13 @@ public class UserInfoBean extends RealmObject {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public int getDiscuss_pic_count() {
+        return discuss_pic_count;
+    }
+
+    public void setDiscuss_pic_count(int discuss_pic_count) {
+        this.discuss_pic_count = discuss_pic_count;
     }
 }

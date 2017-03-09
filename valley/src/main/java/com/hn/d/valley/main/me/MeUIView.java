@@ -55,6 +55,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class MeUIView extends BaseUIView {
     @BindView(R.id.view_pager)
     ViewPager mViewPager;

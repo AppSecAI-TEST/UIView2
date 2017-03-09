@@ -175,6 +175,17 @@ public class ItemInfoLayout extends RelativeLayout {
         addView(mImageView, imageParam);
     }
 
+    /**
+     * 在右边添加一个View
+     */
+    public void addRightView(View view, int width, int height, int rightMargin) {
+        LayoutParams imageParam = new LayoutParams(width, height);
+        imageParam.addRule(RelativeLayout.CENTER_VERTICAL);
+        imageParam.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        imageParam.rightMargin = rightMargin;
+        addView(view, imageParam);
+    }
+
     public ImageView getImageView() {
         return mImageView;
     }
