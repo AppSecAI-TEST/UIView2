@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="55dp">
+
+        <com.hn.d.valley.widget.HnIcoRecyclerView
+            android:id="@+id/rv_groupchat_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </RelativeLayout>
+
+
+    <com.hn.d.valley.widget.HnRefreshLayout
+        android:id="@+id/friend_add_refreshlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/friend_add_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            
+        </com.angcyo.uiview.recycler.RRecyclerView>
+    </com.hn.d.valley.widget.HnRefreshLayout>
+
+</LinearLayout>

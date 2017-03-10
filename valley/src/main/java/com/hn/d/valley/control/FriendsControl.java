@@ -131,7 +131,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 textPaint.setColor(mContext.getColor(R.color.line_color));
 
                 rectF.set(view.getLeft(), view.getTop() - getGroupHeight(), view.getRight(), view.getTop());
-                canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
+                canvas.drawRect(rectF,textPaint);
                 textPaint.setColor(Color.WHITE);
 
                 final String letter = mFriendsAdapter.getAllDatas().get(position).getGroupText();
@@ -147,7 +147,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 textPaint.setColor(mContext.getColor(R.color.line_color));
 
                 rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight() - offset);
-                canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
+                canvas.drawRect(rectF, textPaint);
                 textPaint.setColor(Color.WHITE);
 
                 final String letter = mFriendsAdapter.getAllDatas().get(position).getGroupText();
@@ -173,15 +173,19 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
 
-    public  List<FriendBean> sort(List<FriendBean> list) {
+    public  static List<FriendBean> sort(List<FriendBean> list) {
         Collections.sort(list, new Comparator<FriendBean>() {
             @Override
             public int compare(FriendBean o1, FriendBean o2) {
-                return Pinyin.toPinyin(o1.getDefaultMark().charAt(0)).toUpperCase().charAt(0)
-                        - Pinyin.toPinyin(o2.getDefaultMark().charAt(0)).toUpperCase().charAt(0);
+                return generateFirstLetter(o1)
+                        - generateFirstLetter(o2);
             }
         });
         return list;
+    }
+
+    public static char generateFirstLetter(FriendBean o2) {
+        return Pinyin.toPinyin(o2.getDefaultMark().charAt(0)).toUpperCase().charAt(0);
     }
 
     public void resetData(List<FriendBean> data_list) {
@@ -240,7 +244,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     private void generateIndexLetter(List<FriendBean> data_list) {
         List<String> letters= new ArrayList<>();
         for(FriendBean bean : data_list) {
-            String letter = String.valueOf(Pinyin.toPinyin(bean.getDefaultMark().charAt(0)).toUpperCase().charAt(0));
+            String letter = String.valueOf(generateFirstLetter(bean));
             if(!letters.contains(letter)){
                 letters.add(letter);
             }

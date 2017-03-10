@@ -5,19 +5,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.angcyo.library.utils.L;
+import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
+import com.hn.d.valley.main.friend.groupchat.AddGroupChatUIView;
 import com.hn.d.valley.sub.user.NewFriendUIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
+import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -124,10 +129,23 @@ public class MessageUIView extends BaseUIView {
                 startSearch();
             }
         }));
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.contacts)).setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build()/*.setText(mActivity.getString(R.string.contacts))*/.setRes(R.drawable.switch_camera_n).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                T_.show(mActivity.getString(R.string.contacts));
+//                T_.show(mActivity.getString(R.string.contacts));
+                UIItemDialog.build()
+                        .addItem(getString(R.string.add_friend), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                             mOtherILayout.startIView(new SearchUserUIView());
+                            }
+                        })
+                        .addItem("添加群聊", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mOtherILayout.startIView(new AddGroupChatUIView());
+                            }
+                        }).showDialog(mOtherILayout);
             }
         }));
 
@@ -146,7 +164,7 @@ public class MessageUIView extends BaseUIView {
         super.onViewShow(bundle);
         // 进入最近联系人列表界面，建议放在onResume中
         NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_ALL, SessionTypeEnum.None);
-
+        L.w("messageuiview onvidwshow");
         checkEmpty();
         MsgCache.notifyNoreadNum();
     }

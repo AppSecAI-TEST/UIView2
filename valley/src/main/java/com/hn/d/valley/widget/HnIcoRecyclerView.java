@@ -18,6 +18,8 @@ import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 
+import java.util.List;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -77,9 +79,23 @@ public class HnIcoRecyclerView extends RRecyclerView {
             private int getSize() {
                 return (int) (getResources().getDisplayMetrics().density * 40);
             }
+
+
         };
 
         mMaxAdapter.setMaxcount(5);
+    }
+
+    public void remove(String avatar) {
+        //迭代器删除多个数据会出现异常 因为数据源发生变化，删除一个没有问题
+        List<IcoInfo> icoInfos = getMaxAdapter().getAllDatas();
+        for(IcoInfo icon : icoInfos) {
+            if (icon.avatar.equals(avatar)) {
+                icoInfos.remove(icon);
+                break;
+            }
+        }
+        mMaxAdapter.notifyDataSetChanged();
     }
 
     public void setMaxCount(int maxCount) {

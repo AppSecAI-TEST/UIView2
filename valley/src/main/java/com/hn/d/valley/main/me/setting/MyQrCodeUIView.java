@@ -12,17 +12,25 @@ import com.angcyo.uiview.net.rsa.Base64Utils;
 import com.angcyo.uiview.net.rsa.RSAUtils;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.BmpUtil;
+import com.angcyo.uiview.utils.file.AttachmentStore;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.bean.realm.QrCodeBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
+import java.io.File;
+import java.util.UUID;
+
 import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -128,6 +136,41 @@ public class MyQrCodeUIView extends BaseContentUIView {
         userName.setText(userInfoBean.getUsername());
 
         final ImageView qrView = mViewHolder.v(R.id.qr_code_view);
+
+
+        RRealm.where(new Action1<Realm>() {
+            @Override
+            public void call(Realm realm) {
+                final RealmResults<QrCodeBean> realmResults = realm.where(QrCodeBean.class)
+                        .equalTo("uid", UserCache.getUserAccount()).findAll();
+                if (realmResults.isEmpty()) {
+                    createQrCodeView(imageView, qrView);
+                } else {
+                    String path = realmResults.last().getPath();
+                    String avatar = realmResults.last().getAvatar();
+                    if (!new File(path).exists() || !new File(avatar).exists()) {
+                        createQrCodeView(imageView, qrView);
+                    } else {
+                        setQrCodeView(imageView, qrView, path, avatar);
+                    }
+                }
+            }
+        });
+    }
+
+
+    private void setQrCodeView(final HnGlideImageView imageView, final ImageView qrView, String path, String avatar) {
+        Glide.with(mActivity)
+                .load(new File(path))
+                .into(qrView);
+
+        Glide.with(mActivity)
+                .load(new File(avatar))
+                .into(imageView);
+    }
+
+
+    private void createQrCodeView(final HnGlideImageView imageView, final ImageView qrView) {
         Glide.with(mActivity)
                 .load(UserCache.getUserAvatar())
                 .asBitmap()
@@ -136,6 +179,8 @@ public class MyQrCodeUIView extends BaseContentUIView {
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         Bitmap cornerBitmap = BmpUtil.getRoundedCornerBitmap(resource, 1000);
                         imageView.setImageBitmap(cornerBitmap);
+                        final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
+                        AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
 
                         createQrCode(encode("uid=" + UserCache.getUserAccount()),
                                 (int) ResUtil.dpToPx(mActivity, 300),
@@ -145,6 +190,10 @@ public class MyQrCodeUIView extends BaseContentUIView {
                                     @Override
                                     public void call(Bitmap bitmap) {
                                         qrView.setImageBitmap(bitmap);
+                                        String qrFilePath = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
+                                        AttachmentStore.saveBitmap(bitmap, qrFilePath, false);
+
+                                        RRealm.save(new QrCodeBean(UserCache.getUserAccount(), qrFilePath, avatar));
                                     }
                                 });
                     }

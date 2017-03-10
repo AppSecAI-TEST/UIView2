@@ -141,6 +141,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     LinearLayout layoutPlayAudio;
     @BindView(R.id.timer)
     Chronometer mTimer;
+    @BindView(R.id.timer_tip_container)
+    LinearLayout timpContainer;
 
 
     @Override
@@ -642,7 +644,13 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 // 不允许recyclerview 处理滑动事件
                 mRecyclerView.requestDisallowInterceptTouchEvent(true);
                 touched = false;
-                cancelAudioRecord(isCancelled(layoutPlayAudio, event));
+                boolean isCancel = isCancelled(layoutPlayAudio, event);
+                if(isCancel){
+                    timpContainer.setBackgroundResource(R.drawable.nim_cancel_record_red_bg);
+                }else {
+                    timpContainer.setBackgroundResource(0);
+                }
+                cancelAudioRecord(isCancel);
             }
 
             return true;
@@ -841,6 +849,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         final ImageView iv_play = holder.v(R.id.iv_play_audio);
         final RTextView tv_record_second = holder.v(R.id.tv_record_second);
         final ImageView iv_audio_record = holder.imgV(R.id.iv_audio_record);
+        final TextView tv_audio_record = holder.tv(R.id.tv_audio_record);
 
         if (userInfoBean.getVoice_introduce() != null
                 && !TextUtils.isEmpty(userInfoBean.getVoice_introduce())) {
@@ -870,9 +879,11 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 if(aBoolean){
                     record_layout.setBackgroundResource(R.drawable.recording_dise_s);
                     iv_audio_record.setImageResource(R.drawable.recording_2_s);
+                    tv_audio_record.setTextColor(getResources().getColor(R.color.white));
                 }else {
                     record_layout.setBackgroundResource(R.drawable.recording_dise);
                     iv_audio_record.setImageResource(R.drawable.recording_2_n);
+                    tv_audio_record.setTextColor(getResources().getColor(R.color.main_text_color));
                 }
             }
         };
