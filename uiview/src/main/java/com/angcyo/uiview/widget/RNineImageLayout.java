@@ -1,4 +1,4 @@
-package com.angcyo.library.glide;
+package com.angcyo.uiview.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：根据图片数量, 自动排列图片位置
+ * 类的描述：第一张图片可以自定义大小, 之后自动根据图片数量, 自动排列图片位置
  * 创建人员：Robi
  * 创建时间：2017/02/10 10:52
  * 修改人员：Robi
@@ -23,8 +23,7 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-@Deprecated
-public class NineImageLayout extends FrameLayout implements View.OnClickListener {
+public class RNineImageLayout extends FrameLayout implements View.OnClickListener {
 
     /**
      * 需要加载的图片列表
@@ -33,7 +32,7 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
     /**
      * 用来显示图片的ImageView
      */
-    List<ImageView> mImageViews = new ArrayList<>();
+    List<RImageView> mImageViews = new ArrayList<>();
 
     NineImageConfig mNineImageConfig;
 
@@ -41,12 +40,12 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
 
     boolean canItemClick = true;
 
-    public NineImageLayout(Context context, AttributeSet attrs) {
+    public RNineImageLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         space *= getResources().getDisplayMetrics().density;
     }
 
-    public NineImageLayout(Context context) {
+    public RNineImageLayout(Context context) {
         this(context, null);
     }
 
@@ -113,7 +112,7 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
             L.w("don't have image list , skip layout.");
         } else if (mNineImageConfig == null) {
             L.w("need set nine image config.");
-            final ImageView firstView = mImageViews.get(0);
+            final RImageView firstView = mImageViews.get(0);
             firstView.layout(left, top, right, bottom);
 
 //            if (mNineImageConfig != null) {
@@ -123,7 +122,7 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
             final int size = mImagesList.size();
             if (size == 1) {
                 //一张图片
-                final ImageView firstView = mImageViews.get(0);
+                final RImageView firstView = mImageViews.get(0);
                 firstView.layout(left, top, right, bottom);
 
 //                if (mNineImageConfig != null) {
@@ -143,7 +142,7 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
                             break;
                         }
                         //列数
-                        final ImageView imageView = mImageViews.get(index);
+                        final RImageView imageView = mImageViews.get(index);
                         final int width = imageView.getMeasuredWidth();
                         final int height = imageView.getMeasuredHeight();
                         l = left + j * width + j * space;
@@ -163,7 +162,7 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         if (mNineImageConfig != null) {
             for (int i = 0; i < mImageViews.size(); i++) {
-                ImageView imageView = mImageViews.get(i);
+                RImageView imageView = mImageViews.get(i);
                 mNineImageConfig.displayImage(imageView, mImagesList.get(i),
                         imageView.getMeasuredWidth(), imageView.getMeasuredHeight());
             }
@@ -219,7 +218,7 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
     }
 
     private void createImageView(int i) {
-        ImageView imageView = new ImageView(getContext());
+        RImageView imageView = new RImageView(getContext());
 //            imageView.setBackgroundColor(Color.BLUE);
         imageView.setTag(R.id.tag_position, i);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -286,6 +285,6 @@ public class NineImageLayout extends FrameLayout implements View.OnClickListener
 
         void displayImage(ImageView imageView, String url, int width, int height);
 
-        void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index);
+        void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index);
     }
 }

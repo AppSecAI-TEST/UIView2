@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
-import com.angcyo.library.glide.NineImageLayout;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
@@ -28,6 +27,8 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
+import com.angcyo.uiview.widget.RImageView;
+import com.angcyo.uiview.widget.RNineImageLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.BuildConfig;
@@ -101,7 +102,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     @BindView(R.id.video_control_layout)
     View mVideoControlLayout;
     @BindView(R.id.video_thumb_layout)
-    NineImageLayout mVideoThumbLayout;
+    RNineImageLayout mVideoThumbLayout;
     private ResizeAdapter mImageAdapter;
     /**
      * 选择的图片
@@ -211,7 +212,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             } else {
                 //发布视频
                 mVideoControlLayout.setVisibility(View.VISIBLE);
-                mVideoThumbLayout.setNineImageConfig(new NineImageLayout.NineImageConfig() {
+                mVideoThumbLayout.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
                         return OssHelper.getImageThumbSize2(mVideoStatusInfo.videoThumbPath);
@@ -223,7 +224,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     }
 
                     @Override
-                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
+                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //点击预览全部图片
                         //startIView(new VideoPlayUIView(mVideoStatusInfo.videoThumbPath, mVideoStatusInfo.videoPath));
                         startIView(new VideoPlayUIView(mVideoStatusInfo.videoPath, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(mVideoStatusInfo.videoThumbPath)));

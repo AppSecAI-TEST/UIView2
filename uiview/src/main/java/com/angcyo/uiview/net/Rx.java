@@ -25,12 +25,12 @@ import rx.schedulers.Schedulers;
 /**
  * Created by robi on 2016-04-21 15:41.
  */
-public class Rx {
+public class Rx<Rx> extends Observable<Rx> {
+
     /**
      * 网络请求错误, 重试的次数
      */
     public static final long RETRY_COUNT = 3;
-
     public static final Observable.Transformer<T, T> ioSchedulersTransformer = new Observable.Transformer<T, T>() {
         @Override
         public Observable<T> call(Observable<T> tObservable) {
@@ -43,6 +43,10 @@ public class Rx {
             return tObservable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
         }
     };
+
+    protected Rx(OnSubscribe<Rx> f) {
+        super(f);
+    }
 
     public static final <T> Observable.Transformer<T, T> applyNewThreadSchedulers() {
         return (Observable.Transformer<T, T>) newThreadSchedulersTransformer;

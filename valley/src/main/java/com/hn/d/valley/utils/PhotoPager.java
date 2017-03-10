@@ -3,11 +3,11 @@ package com.hn.d.valley.utils;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.control.PhotoPagerControl;
 import com.angcyo.uiview.github.luban.Luban;
+import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -51,7 +51,7 @@ public class PhotoPager {
     }
 
     @NonNull
-    public static ArrayList<ImageItem> getImageItems(List<String> photos, List<ImageView> imageList) {
+    public static ArrayList<ImageItem> getImageItems(List<String> photos, List<RImageView> imageList) {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
 
         for (int i = 0; i < photos.size(); i++) {

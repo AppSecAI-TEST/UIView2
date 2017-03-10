@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.angcyo.library.glide.NineImageLayout;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
@@ -19,6 +18,8 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.RImageView;
+import com.angcyo.uiview.widget.RNineImageLayout;
 import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -235,7 +236,7 @@ public class UserDiscussItemControl {
         final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
 //        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
-        final NineImageLayout mediaImageTypeView = holder.v(R.id.media_image_view);//
+        final RNineImageLayout mediaImageTypeView = holder.v(R.id.media_image_view);//
         final View videoPlayView = holder.v(R.id.video_play_view);
         final TextView videoTimeView = holder.v(R.id.video_time_view);
 
@@ -260,7 +261,7 @@ public class UserDiscussItemControl {
                 //DraweeViewUtil.resize(mediaImageTypeView, medias.get(0));
                 //OssHelper.setViewSize(mediaControlLayout, url);
                 //DraweeViewUtil.setDraweeViewHttp(mediaImageTypeView, OssHelper.getImageThumb(url));
-                mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
+                mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
                         return OssHelper.getImageThumbSize2(url);
@@ -272,7 +273,7 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
+                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //点击预览全部图片
                         ImagePagerUIView.start(iLayout, imageView,
                                 PhotoPager.getImageItems(medias, imageList), index);
@@ -298,7 +299,7 @@ public class UserDiscussItemControl {
                     videoTimeView.setText("video time format error");
                 }
 
-                mediaImageTypeView.setNineImageConfig(new NineImageLayout.NineImageConfig() {
+                mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
                         return OssHelper.getImageThumbSize2(thumbUrl);
@@ -310,7 +311,7 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<ImageView> imageList, int index) {
+                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //T_.info(videoUrl);
                         iLayout.startIView(new VideoPlayUIView(videoUrl, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(thumbUrl)));
                     }
