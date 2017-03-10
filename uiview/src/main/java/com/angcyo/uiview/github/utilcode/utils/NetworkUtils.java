@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.telephony.TelephonyManager;
 
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
@@ -20,8 +18,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * <pre>
@@ -33,17 +29,12 @@ import java.util.concurrent.TimeoutException;
  */
 public class NetworkUtils {
 
+    private static final int NETWORK_TYPE_GSM = 16;
+    private static final int NETWORK_TYPE_TD_SCDMA = 17;
+    private static final int NETWORK_TYPE_IWLAN = 18;
+
     private NetworkUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
-    }
-
-    public enum NetworkType {
-        NETWORK_WIFI,
-        NETWORK_4G,
-        NETWORK_3G,
-        NETWORK_2G,
-        NETWORK_UNKNOWN,
-        NETWORK_NO
     }
 
     /**
@@ -163,8 +154,8 @@ public class NetworkUtils {
      *
      * @param enabled {@code true}: 打开<br>{@code false}: 关闭
      */
-    public static void setWifiEnabled( boolean enabled) {
-        WifiManager wifiManager = (WifiManager)Utils.getContext().getSystemService(Context.WIFI_SERVICE);
+    public static void setWifiEnabled(boolean enabled) {
+        WifiManager wifiManager = (WifiManager) Utils.getContext().getSystemService(Context.WIFI_SERVICE);
         if (enabled) {
             if (!wifiManager.isWifiEnabled()) {
                 wifiManager.setWifiEnabled(true);
@@ -211,10 +202,6 @@ public class NetworkUtils {
         return tm != null ? tm.getNetworkOperatorName() : null;
     }
 
-    private static final int NETWORK_TYPE_GSM      = 16;
-    private static final int NETWORK_TYPE_TD_SCDMA = 17;
-    private static final int NETWORK_TYPE_IWLAN    = 18;
-
     /**
      * 获取当前网络类型
      * <p>需添加权限 {@code <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>}</p>
@@ -230,8 +217,16 @@ public class NetworkUtils {
      * </ul>
      */
     public static NetworkType getNetworkType() {
+        return getNetworkType(getActiveNetworkInfo());
+    }
+
+    public static NetworkType getNetworkType(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return getNetworkType(cm.getActiveNetworkInfo());
+    }
+
+    public static NetworkType getNetworkType(NetworkInfo info) {
         NetworkType netType = NetworkType.NETWORK_NO;
-        NetworkInfo info = getActiveNetworkInfo();
         if (info != null && info.isAvailable()) {
 
             if (info.getType() == ConnectivityManager.TYPE_WIFI) {
@@ -347,5 +342,31 @@ public class NetworkUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public enum NetworkType {
+        NETWORK_WIFI(4, "WIFI网络"),
+        NETWORK_4G(3, "4G网络"),
+        NETWORK_3G(2, "3G网络"),
+        NETWORK_2G(1, "2G网络"),
+        NETWORK_UNKNOWN(0, "未知网络"),
+        NETWORK_NO(-1, "无网络");
+
+        int value;
+        String des;
+
+        NetworkType(int value, String des) {
+            this.value = value;
+            this.des = des;
+        }
+
+        public int value() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return des;
+        }
     }
 }

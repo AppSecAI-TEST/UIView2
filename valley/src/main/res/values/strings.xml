@@ -259,5 +259,13 @@
     <string name="publishing_tip">动态还未发布完成...</string>
     <string name="me">我</string>
     <string name="data_tip">资料</string>
+    <string name="my_auth_title">我的身份</string>
+    <string name="weizhi">未知</string>
+    <string name="zhengfurenyuan">政府人员</string>
+    <string name="tiyurenwu">体育任务</string>
+    <string name="yulemingxing">娱乐明星</string>
+    <string name="zhichangmingren">职场名人</string>
+    <string name="auth_error">认证失败</string>
+    <string name="auth_ing">认证中</string>
 
 </resources>

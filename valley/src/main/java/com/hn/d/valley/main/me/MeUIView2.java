@@ -212,8 +212,47 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("我的身份");
-                itemInfoLayout.setItemDarkText("未认证");
+                itemInfoLayout.setItemText(getString(R.string.my_auth_title));
+                //是否已认证【0-未认证，1-已认证，2-认证中-查看自己信息才会有，3-认证失败-查看自己信息才会有，以前没有认证成功过才会有该值】
+                int is_auth = Integer.parseInt(userInfoBean.getIs_auth());
+                //是否已认证【0-未认证，1-职场名人，2-娱乐明星，3-体育任务，4-政府人员】
+                int auth_type = Integer.parseInt(userInfoBean.getAuth_type());
+                String darkString;
+                switch (is_auth) {
+                    case 1:
+                        switch (auth_type) {
+                            case 1:
+                                darkString = getString(R.string.zhichangmingren);
+                                break;
+                            case 2:
+                                darkString = getString(R.string.yulemingxing);
+                                break;
+                            case 3:
+                                darkString = getString(R.string.tiyurenwu);
+                                break;
+                            case 4:
+                                darkString = getString(R.string.zhengfurenyuan);
+                                break;
+                            default:
+                                darkString = getString(R.string.weizhi);
+                                break;
+                        }
+                        break;
+                    case 2:
+                        darkString = getString(R.string.auth_ing);
+                        break;
+                    default:
+                        darkString = getString(R.string.auth_error);
+                        break;
+                }
+                itemInfoLayout.setItemDarkText(darkString);
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new MyAuthUIView());
+                    }
+                });
             }
         }));
 

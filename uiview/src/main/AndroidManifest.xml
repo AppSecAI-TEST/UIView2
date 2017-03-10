@@ -26,6 +26,14 @@
         android:allowBackup="true"
         android:supportsRtl="true">
 
+        <!--网络状态监听-->
+        <receiver
+            android:name=".receiver.NetworkStateReceiver"
+            android:label="NetworkStateReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

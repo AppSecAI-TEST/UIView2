@@ -89,10 +89,14 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
             followView.setOnClickListener(null);
         } else {
             //关注
-            if (isAttention(bean)) {
-                followView.setImageResource(R.drawable.focus_on);
+            if (isContact(bean)) {
+                followView.setImageResource(R.drawable.huxiangguanzhu);
             } else {
-                followView.setImageResource(R.drawable.follow);
+                if (isAttention(bean)) {
+                    followView.setImageResource(R.drawable.focus_on);
+                } else {
+                    followView.setImageResource(R.drawable.follow);
+                }
             }
         }
     }
