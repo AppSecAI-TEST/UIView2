@@ -172,6 +172,7 @@ public class RefreshLayout extends ViewGroup {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        mTouchSlop = 0;//ViewConfiguration.get(getContext()).getScaledTouchSlop();
         if (getChildCount() != 1) {
             throw new IllegalArgumentException("必须包含一个子View");
         }
@@ -180,6 +181,18 @@ public class RefreshLayout extends ViewGroup {
         mScroller = new OverScroller(getContext(), new DecelerateInterpolator());
         if (!isInEditMode()) {
             initRefreshView();
+        }
+    }
+
+    @Override
+    public void addView(View child, int index, LayoutParams params) {
+        super.addView(child, index, params);
+        for (int i = 0; i < getChildCount() && mTargetView == null; i++) {
+            final View childAt = getChildAt(i);
+            if (!(childAt instanceof BaseRefreshView)) {
+                mTargetView = childAt;
+                break;
+            }
         }
     }
 
@@ -692,7 +705,7 @@ public class RefreshLayout extends ViewGroup {
         @Override
         protected void onAttachedToWindow() {
             super.onAttachedToWindow();
-            mDrawable = getResources().getDrawable(R.drawable.base_refresh_top_image);
+            mDrawable = getResources().getDrawable(R.drawable.base_refresh_top_book);
             mBitmap = getBitmapFromDrawable();
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mPaint.setColor(getResources().getColor(R.color.theme_color_primary));
@@ -765,7 +778,7 @@ public class RefreshLayout extends ViewGroup {
 
 
         private Bitmap getBitmapFromDrawable() {
-            return BitmapFactory.decodeResource(getResources(), R.drawable.base_refresh_top_image);
+            return BitmapFactory.decodeResource(getResources(), R.drawable.base_refresh_top_book);
         }
 
         private void onMove(int move, int maxHeight, @State int state) {

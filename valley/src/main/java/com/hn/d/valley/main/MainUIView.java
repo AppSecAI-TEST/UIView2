@@ -101,8 +101,8 @@ public class MainUIView extends BaseUIView {
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         MainControl.onMainCreate();
     }
 

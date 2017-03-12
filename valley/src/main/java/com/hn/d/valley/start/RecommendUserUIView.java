@@ -77,8 +77,8 @@ public class RecommendUserUIView extends BaseContentUIView {
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
     }
 
     @Override
@@ -113,6 +113,15 @@ public class RecommendUserUIView extends BaseContentUIView {
         }));
 
         return super.getTitleBar().setTitleString("推荐").setRightItems(rightItems);
+    }
+
+    @Override
+    public boolean canTryCaptureView() {
+        return true;
+    }
+
+    public interface OnUserSelectListener {
+        void onSelect(boolean boo);
     }
 
     public static class RecommendUserAdapter extends RModelAdapter<RecommendUserBean> {
@@ -186,7 +195,7 @@ public class RecommendUserUIView extends BaseContentUIView {
                 @Override
                 public void onClick(View v) {
                     setSelectorPosition(position, deleteView);
-                    if(mSelectListener != null){
+                    if (mSelectListener != null) {
                         // getAllSelector() == 0 为没有一个选中
                         mSelectListener.onSelect(getAllSelector().size() != 0);
                     }
@@ -207,14 +216,5 @@ public class RecommendUserUIView extends BaseContentUIView {
 //            return DEFAULT_MAX_COUNT;
             return mAllDatas.size() > DEFAULT_MAX_COUNT ? DEFAULT_MAX_COUNT : mAllDatas.size();
         }
-    }
-
-    public interface OnUserSelectListener {
-        void onSelect(boolean boo);
-    }
-
-    @Override
-    public boolean canTryCaptureView() {
-        return true;
     }
 }

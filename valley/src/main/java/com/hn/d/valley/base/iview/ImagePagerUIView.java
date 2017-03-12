@@ -75,8 +75,8 @@ public class ImagePagerUIView extends UIIViewImpl {
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         ImagePageAdapter mAdapter = new ImagePageAdapter(mActivity, mImageItems);
         mMViewPager.setAdapter(mAdapter);
         mMCircleIndicator.setViewPager(mMViewPager);

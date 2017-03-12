@@ -191,8 +191,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         bindPresenter(new LoginPresenter());
     }
 

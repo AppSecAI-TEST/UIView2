@@ -445,8 +445,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         ImagePickerHelper.clearAllSelectedImages();
     }
 

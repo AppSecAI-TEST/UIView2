@@ -9,11 +9,9 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
@@ -22,7 +20,6 @@ import com.hn.d.valley.sub.user.NewFriendUIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
-import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -63,8 +60,8 @@ public class MessageUIView extends BaseUIView {
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         mRecentContactsControl = new RecentContactsControl(mActivity,
                 new Action1<RecentContact>() {
                     @Override

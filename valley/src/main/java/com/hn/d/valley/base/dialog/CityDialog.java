@@ -126,8 +126,8 @@ public class CityDialog extends UIIDialogImpl {
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         mSubscriptions = new CompositeSubscription();
     }
 
