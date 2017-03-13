@@ -86,8 +86,8 @@ import rx.functions.Action1;
  */
 public class ChatUIView extends BaseContentUIView implements IAudioRecordCallback {
 
-    private static final String KEY_SESSION_ID = "key_account";
-    private static final String KEY_SESSION_TYPE = "key_sessiontype";
+    protected static final String KEY_SESSION_ID = "key_account";
+    protected static final String KEY_SESSION_TYPE = "key_sessiontype";
     protected AudioRecorder audioMessageHelper;
     String mSessionId;
     @BindView(R.id.group_view)

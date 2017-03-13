@@ -15,7 +15,8 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
-import com.hn.d.valley.main.friend.groupchat.AddGroupChatUIView;
+import com.hn.d.valley.main.message.groupchat.AddGroupChatUIView;
+import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
 import com.hn.d.valley.sub.user.NewFriendUIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -60,12 +61,16 @@ public class MessageUIView extends BaseUIView {
     }
 
     @Override
-    public void onViewCreate(View rootView) {
-        super.onViewCreate(rootView);
+    public void onViewCreate() {
+        super.onViewCreate();
         mRecentContactsControl = new RecentContactsControl(mActivity,
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
+                        if (recentContact.getSessionType() == SessionTypeEnum.Team) {
+                            GroupChatUIView.start(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                            return;
+                        }
                         //打开对话界面
                         ChatUIView.start(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
                         //HnChatActivity.launcher(mActivity, recentContact.getFromAccount());

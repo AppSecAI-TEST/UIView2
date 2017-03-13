@@ -129,6 +129,8 @@
             android:name=".main.HnMainActivity"
             android:theme="@style/BaseTranTheme"/>
 
+        <receiver android:name="com.angcyo.uiview.receiver.NetworkStateReceiver"/>
+
         <!--Bugly升级界面-->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"

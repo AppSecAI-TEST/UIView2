@@ -15,6 +15,34 @@ import com.hn.d.valley.main.message.SearchUserUIView;
 
 import java.util.ArrayList;
 
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.angcyo.uiview.github.WaveSideBarView;
+import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.R;
+import com.hn.d.valley.base.BaseRecyclerUIView;
+import com.hn.d.valley.base.BaseUIView;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.bean.FriendListModel;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.message.SearchUserUIView;
+import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.widget.LetterIndexView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 import rx.functions.Action1;
 
 /**
@@ -66,8 +94,8 @@ public class FriendUIView extends BaseUIView {
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
+        super.onViewCreate();
         mFriendsControl = new FriendsControl(mActivity);
-
     }
 
     @NonNull

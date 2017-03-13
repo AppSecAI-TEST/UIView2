@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.me;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
@@ -41,6 +43,13 @@ import rx.functions.Action0;
  */
 public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
+    Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            loadUserData();
+        }
+    };
+
     static void resize(View view, int size, int margin) {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         layoutParams.rightMargin = margin;
@@ -69,6 +78,31 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             return R.layout.item_user_top_layout;
         }
         return R.layout.item_info_layout;
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        if (System.currentTimeMillis() - mLastShowTime > 30 * 1000) {
+            //30秒后, 重新拉取新的信息
+            loadUserData();
+        } else {
+            postDelayed(refreshRunnable, 1000);
+        }
+        super.onViewShow(bundle);
+    }
+
+    private void loadUserData() {
+        UserCache.instance()
+                .fetchUserInfo()
+                .subscribe(new RSubscriber<UserInfoBean>() {
+                    @Override
+                    public void onSucceed(UserInfoBean userInfoBean) {
+                        if (userInfoBean != null) {
+                            UserCache.instance().setUserInfoBean(userInfoBean);
+                            refreshLayout();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -241,9 +275,18 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     case 2:
                         darkString = getString(R.string.auth_ing);
                         break;
+<<<<<<< HEAD
                     default:
                         darkString = getString(R.string.auth_error);
                         break;
+=======
+                    case 3:
+                        darkString = getString(R.string.auth_error);
+                        break;
+                    default:
+                        darkString = getString(R.string.not_auth);
+                        break;
+>>>>>>> adjust project structure
                 }
                 itemInfoLayout.setItemDarkText(darkString);
 

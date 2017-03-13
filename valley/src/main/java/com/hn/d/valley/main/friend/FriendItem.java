@@ -15,7 +15,9 @@ public class FriendItem extends AbsFriendItem{
     public FriendItem(FriendBean bean){
         this.friendBean = bean;
         itemType = ItemTypes.FRIEND;
-        String firstLetter = String.valueOf(Pinyin.toPinyin(bean.getDefaultMark().charAt(0)).toUpperCase().charAt(0));
+        char ch = Pinyin.toPinyin(bean.getDefaultMark().charAt(0)).toUpperCase().charAt(0);
+//        if (ch )
+        String firstLetter = String.valueOf(ch);
         groupText = firstLetter;
     }
 

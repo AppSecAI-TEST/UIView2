@@ -220,6 +220,8 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
             mSelector.add(i);
         }
 
+        boolean notify = false;
+
         for (Integer pos : getAllSelectorList()) {
             RBaseViewHolder vh = (RBaseViewHolder) recyclerView.findViewHolderForAdapterPosition(pos);
             if (vh != null) {
@@ -230,7 +232,11 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
             }
         }
 
-        notifySelectorChange();
+
+        if (notify) {
+            //防止在视图还没有加载的时候,通知事件
+            notifySelectorChange();
+        }
     }
 
     /**
@@ -245,6 +251,7 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
             mSelector.add(i);
         }
 
+        boolean notify = false;
 
         for (Integer pos : getAllSelectorList()) {
             RBaseViewHolder vh = (RBaseViewHolder) recyclerView.findViewHolderForAdapterPosition(pos);
@@ -256,7 +263,10 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
             }
         }
 
-        notifySelectorChange();
+        if (notify) {
+            //防止在视图还没有加载的时候,通知事件
+            notifySelectorChange();
+        }
     }
 
     public void addOnModelChangeListener(OnModelChangeListener listener) {
@@ -313,6 +323,10 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
                 return;
             } else {
                 mSelector.remove(position);
+                if (viewHolder == null) {
+                    //视图还为加载的时候, 直接返回
+                    return;
+                }
                 if (!onUnSelectorPosition(viewHolder, position, false)) {
                     onBindModelView(mModel, false, viewHolder, position,
                             getAllDatas().size() > position ? getAllDatas().get(position) : null);
@@ -332,6 +346,10 @@ public abstract class RModelAdapter<T> extends RBaseAdapter<T> {
                 mSelector.clear();
             }
             mSelector.add(position);
+            if (viewHolder == null) {
+                //视图还为加载的时候, 直接返回
+                return;
+            }
             if (!onSelectorPosition(viewHolder, position, true)) {
                 onBindModelView(mModel, true, viewHolder, position,
                         getAllDatas().size() > position ? getAllDatas().get(position) : null);

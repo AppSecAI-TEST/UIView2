@@ -36,12 +36,25 @@ import java.util.List;
  */
 public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
 
-    protected List<T> mItemsList;
+    protected List<T> mItemsList = new ArrayList<>();
+    protected int mBaseOffsetSize;
+    protected int mBaseLineSize;
+
+    @Override
+    public void onViewCreate() {
+        super.onViewCreate();
+        mBaseOffsetSize = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
+        mBaseLineSize = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
+    }
 
     @Override
     protected RExBaseAdapter<String, T, String> initRExBaseAdapter() {
-        mItemsList = new ArrayList<>();
-        createItems(mItemsList);
+        refreshLayout();
+        return createRExBaseAdapter();
+    }
+
+    @NonNull
+    protected RExBaseAdapter<String, T, String> createRExBaseAdapter() {
         return new RExBaseAdapter<String, T, String>(mActivity, mItemsList) {
 
             @Override
@@ -59,6 +72,17 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
                 return ItemRecyclerUIView.this.getItemLayoutId(viewType);
             }
         };
+    }
+
+    /**
+     * 更新布局
+     */
+    public void refreshLayout() {
+        mItemsList.clear();
+        createItems(mItemsList);
+        if (mRExBaseAdapter != null) {
+            mRExBaseAdapter.notifyDataSetChanged();
+        }
     }
 
     protected int getDataItemType(int posInData) {

@@ -23,7 +23,7 @@ import com.angcyo.uiview.github.utilcode.utils.NetworkUtils;
  */
 public class NetworkStateReceiver extends BroadcastReceiver {
 
-    private static NetworkUtils.NetworkType netType = NetworkUtils.NetworkType.NETWORK_NO;
+    public static NetworkUtils.NetworkType netType = NetworkUtils.NetworkType.NETWORK_NO;
 
     /**
      * 获取网络类型

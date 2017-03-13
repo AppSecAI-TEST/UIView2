@@ -385,6 +385,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
+        super.onViewCreate();
         //ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
         //TagsControl.getTags(null);//拉取一下标签
     }

@@ -99,7 +99,7 @@
     <string name="not_auth">未认证</string>
     <string name="auth_zcmr">职场名人</string>
     <string name="auth_ylmx">娱乐明星</string>
-    <string name="auth_tyrw">体育任务</string>
+    <string name="auth_tyrw">体育人物</string>
     <string name="auth_zfry">政府人员</string>
     <string name="chat_empty_tip">亲~您还没有会话!</string>
     <string name="input_hint_tip">点击输入发送新消息</string>
@@ -267,5 +267,6 @@
     <string name="zhichangmingren">职场名人</string>
     <string name="auth_error">认证失败</string>
     <string name="auth_ing">认证中</string>
+    <string name="auth_type_tip">认证类型</string>
 
 </resources>

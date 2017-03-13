@@ -1,5 +1,6 @@
 package com.hn.d.valley.widget.groupView;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -7,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 
+import com.hn.d.valley.R;
 import java.util.List;
 
 public class JoinBitmaps {
@@ -123,6 +125,27 @@ public class JoinBitmaps {
         int dimen = Math.min(width, height);
         join(canvas, dimen, bitmaps, count, size, gapSize);
         return output;
+    }
+
+    public static  Bitmap createGroupBitCircle(List<Bitmap> bitmapArray ,int width , int height,Context ctx) {
+        if (bitmapArray.size() < 1 && bitmapArray.size() > 9) {
+            return null;
+        }
+        // 先取一个获取宽和高
+        Bitmap tempBitmap = bitmapArray.get(0);
+        if (tempBitmap == null) {
+            return null;
+        }
+        // 画布的宽
+        int tempWidth = width;
+        // 画布的高
+        int tempHeight = height;
+        Bitmap canvasBitmap = Bitmap.createBitmap(tempWidth, tempHeight,
+                Bitmap.Config.ARGB_8888);
+        Canvas localCanvas = new Canvas(canvasBitmap);
+        localCanvas.drawColor(ctx.getResources().getColor(R.color.transparent));
+        JoinBitmaps.join(localCanvas, Math.min(tempWidth, tempHeight),bitmapArray);
+        return canvasBitmap;
     }
 
 }

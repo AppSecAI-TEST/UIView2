@@ -228,7 +228,12 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                         }
 
                         List<FriendBean> data_list = bean.getData_list();
+<<<<<<< HEAD
                         generateIndexLetter(sort(data_list));
+=======
+                        List<String> indexLetter = generateIndexLetter(sort(data_list));
+                        sidebar_friend.setLetters(indexLetter);
+>>>>>>> adjust project structure
                         resetData(data_list);
                     }
 
@@ -241,7 +246,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 }));
     }
 
-    private void generateIndexLetter(List<FriendBean> data_list) {
+    private List<String> generateIndexLetter(List<FriendBean> data_list) {
         List<String> letters= new ArrayList<>();
         for(FriendBean bean : data_list) {
             String letter = String.valueOf(generateFirstLetter(bean));
@@ -250,5 +255,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             }
         }
         sidebar_friend.setLetters(letters);
+        return letters;
     }
 }

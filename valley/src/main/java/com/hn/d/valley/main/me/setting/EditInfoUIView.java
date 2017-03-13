@@ -54,6 +54,7 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.bumptech.glide.Glide;
+import com.daimajia.easing.linear.Linear;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter;

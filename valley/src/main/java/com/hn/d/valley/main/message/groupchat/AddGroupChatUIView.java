@@ -1,5 +1,4 @@
 package com.hn.d.valley.main.friend.groupchat;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -26,6 +24,13 @@ import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
+import com.angcyo.uiview.utils.file.AttachmentStore;
+import com.angcyo.uiview.utils.storage.StorageType;
+import com.angcyo.uiview.utils.storage.StorageUtil;
+import com.hn.d.valley.R;
+import com.hn.d.valley.base.BaseUIView;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
@@ -35,12 +40,25 @@ import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnRefreshLayout;
 
+import com.hn.d.valley.utils.NetUtils;
+import com.hn.d.valley.widget.HnIcoRecyclerView;
+import com.hn.d.valley.widget.HnLoading;
+import com.hn.d.valley.widget.HnRefreshLayout;
+import com.hn.d.valley.widget.groupView.JoinBitmaps;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import rx.functions.Action1;
 import rx.functions.Action2;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Action2;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by hewking on 2017/3/9.
@@ -177,8 +195,88 @@ public class AddGroupChatUIView extends BaseUIView {
                         T_.show(bean.getGroupAvatar());
                     }
                 }));
+        if (selectorData == null || selectorData.size() == 0) {
+            return;
+        }
+        createAndSavePhoto(selectorData);
     }
 
+    private void createAndSavePhoto(final List<FriendBean> selectorData) {
+        HnLoading.show(mOtherILayout);
+        add(Observable.just(selectorData)
+                .flatMap(new Func1<List<FriendBean>, Observable<List<String>>>() {
+                    @Override
+                    public Observable<List<String>> call(List<FriendBean> beanList) {
+                        List<String> urls = new ArrayList<>();
+                        for(FriendBean bean : beanList){
+                            urls.add(bean.getAvatar());
+                        }
+                        return Observable.just(urls);
+                    }
+                })
+                .flatMap(new Func1<List<String>, Observable<List<Bitmap>>>() {
+                    @Override
+                    public Observable<List<Bitmap>> call(List<String> s) {
+                        List<Bitmap> bitmaps = new ArrayList<>();
+                        for(String url : s ) {
+                            Bitmap bitmap = NetUtils.createBitmapFromUrl(url);
+                            if(bitmap == null) {
+                                continue;
+                            }
+                            bitmaps.add(bitmap);
+                        }
+                        return Observable.just(bitmaps);
+                    }
+                }).map(new Func1<List<Bitmap>, String>() {
+                    @Override
+                    public String call(List<Bitmap> bitmaps) {
+                        String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE) +"/avatar2.png";
+                        //ios 目前大小为 40
+                        AttachmentStore.saveBitmap(JoinBitmaps.createGroupBitCircle(bitmaps,40,40,mActivity),filePath,true);
+
+                        File file = new File(filePath);
+                        if(!file.exists()) {
+                            return null;
+                        }
+
+                        return filePath;
+                    }
+                 })
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(String s) {
+                        return OssHelper.uploadAvatorImg(s);
+                    }
+                })
+                .flatMap(new Func1<String, Observable<GroupInfoBean>>() {
+                    @Override
+                    public Observable<GroupInfoBean> call(String s) {
+                        String circleUrl = OssHelper.getAvatorUrl(s);
+                        return RRetrofit.create(GroupChatService.class)
+                                .add(Param.buildMap("uid:" + UserCache.getUserAccount()
+                                        , "to_uid:" + RUtils.connect(selectorData)
+                                        ,"avatar:" + circleUrl))
+                                .compose(Rx.transformer(GroupInfoBean.class));
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSingleSubscriber<GroupInfoBean>() {
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        HnLoading.hide();
+                    }
+
+                    @Override
+                    public void onSucceed(GroupInfoBean s) {
+                        HnLoading.hide();
+                        AddGroupChatUIView.this.finishIView();
+                        T_.show(s.getGroupAvatar());
+                    }
+                }));
+
+    }
 
     @NonNull
     @Override
