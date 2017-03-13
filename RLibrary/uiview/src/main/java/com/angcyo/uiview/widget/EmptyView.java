@@ -205,4 +205,3 @@ public class EmptyView extends View {
         mVSpace = VSpace;
     }
 }
-

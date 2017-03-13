@@ -122,9 +122,9 @@ public class AddGroupChatUIView extends BaseUIView {
         final RectF rectF = new RectF();
         final Rect rect = new Rect();
 
-        recyclerView.addItemDecoration(new RGroupItemDecoration(new RGroupItemDecoration.GroupCallBack() {
+        recyclerView.addItemDecoration(new RGroupItemDecoration(new RGroupItemDecoration.SingleGroupCallBack() {
             @Override
-            public int getGroupHeight() {
+            public int getGroupHeight(int position) {
                 return ScreenUtil.dip2px(20);
             }
 
@@ -139,14 +139,14 @@ public class AddGroupChatUIView extends BaseUIView {
             public void onGroupDraw(Canvas canvas, View view, int position) {
                 textPaint.setColor(mActivity.getColor(R.color.line_color));
 
-                rectF.set(view.getLeft(), view.getTop() - getGroupHeight(), view.getRight(), view.getTop());
+                rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
                 canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
                 textPaint.setColor(Color.WHITE);
 
                 final String letter = String.valueOf(FriendsControl.generateFirstLetter(mGroupAdapter.getAllDatas().get(position)));
                 textPaint.getTextBounds(letter, 0, letter.length(), rect);
 
-                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), view.getTop() - (getGroupHeight() - rect.height()) / 2, textPaint);
+                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), view.getTop() - (getGroupHeight(position) - rect.height()) / 2, textPaint);
 
             }
 
@@ -155,14 +155,14 @@ public class AddGroupChatUIView extends BaseUIView {
             public void onGroupOverDraw(Canvas canvas, View view, int position, int offset) {
                 textPaint.setColor(mActivity.getColor(R.color.line_color));
 
-                rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight() - offset);
+                rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight(position) - offset);
                 canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
                 textPaint.setColor(Color.WHITE);
 
                 final String letter = String.valueOf(FriendsControl.generateFirstLetter(mGroupAdapter.getAllDatas().get(position)));
                 textPaint.getTextBounds(letter, 0, letter.length(), rect);
 
-                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), (getGroupHeight() + rect.height()) / 2 - offset, textPaint);
+                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), (getGroupHeight(position) + rect.height()) / 2 - offset, textPaint);
 
             }
         }));

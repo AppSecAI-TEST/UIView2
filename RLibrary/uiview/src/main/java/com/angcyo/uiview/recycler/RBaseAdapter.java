@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.angcyo.uiview.R;
 import com.angcyo.uiview.recycler.widget.ILoadMore;
 import com.angcyo.uiview.recycler.widget.IShowState;
+import com.angcyo.uiview.recycler.widget.ItemShowStateLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,6 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
         mAllDatas = new ArrayList<>();
         this.mContext = context;
     }
-
 
     public RBaseAdapter(Context context, List<T> datas) {
         this.mAllDatas = datas == null ? new ArrayList<T>() : datas;
@@ -423,8 +423,17 @@ public abstract class RBaseAdapter<T> extends RecyclerView.Adapter<RBaseViewHold
         }
         mShowState = showState;
 
-        if (mIShowState == null) {
-            notifyDataSetChanged();
+        if (mIShowState == null || showState == IShowState.NORMAL) {
+            if (mIShowState != null && mIShowState instanceof ItemShowStateLayout) {
+                ((ItemShowStateLayout) mIShowState).animToHide(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            } else {
+                notifyDataSetChanged();
+            }
         } else {
             mIShowState.setShowState(showState);
         }
