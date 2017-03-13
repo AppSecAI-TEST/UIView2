@@ -61,14 +61,14 @@ public class MessageUIView extends BaseUIView {
     }
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         mRecentContactsControl = new RecentContactsControl(mActivity,
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
                         if (recentContact.getSessionType() == SessionTypeEnum.Team) {
-                            GroupChatUIView.start(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                            GroupChatUIView.start(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
                             return;
                         }
                         //打开对话界面
@@ -139,7 +139,7 @@ public class MessageUIView extends BaseUIView {
                         .addItem(getString(R.string.add_friend), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                             mOtherILayout.startIView(new SearchUserUIView());
+                                mOtherILayout.startIView(new SearchUserUIView());
                             }
                         })
                         .addItem("添加群聊", new View.OnClickListener() {

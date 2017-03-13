@@ -41,8 +41,8 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
     protected int mBaseLineSize;
 
     @Override
-    public void onViewCreate() {
-        super.onViewCreate();
+    public void onViewCreate(View rootView) {
+        super.onViewCreate(rootView);
         mBaseOffsetSize = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
         mBaseLineSize = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
     }

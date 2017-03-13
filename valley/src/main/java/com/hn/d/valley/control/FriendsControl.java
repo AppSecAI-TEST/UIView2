@@ -40,7 +40,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.BindView;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
@@ -228,12 +227,8 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                         }
 
                         List<FriendBean> data_list = bean.getData_list();
-<<<<<<< HEAD
-                        generateIndexLetter(sort(data_list));
-=======
                         List<String> indexLetter = generateIndexLetter(sort(data_list));
                         sidebar_friend.setLetters(indexLetter);
->>>>>>> adjust project structure
                         resetData(data_list);
                     }
 

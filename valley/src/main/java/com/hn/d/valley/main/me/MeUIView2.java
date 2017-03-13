@@ -275,18 +275,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     case 2:
                         darkString = getString(R.string.auth_ing);
                         break;
-<<<<<<< HEAD
-                    default:
-                        darkString = getString(R.string.auth_error);
-                        break;
-=======
                     case 3:
                         darkString = getString(R.string.auth_error);
                         break;
                     default:
                         darkString = getString(R.string.not_auth);
                         break;
->>>>>>> adjust project structure
                 }
                 itemInfoLayout.setItemDarkText(darkString);
 

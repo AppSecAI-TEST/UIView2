@@ -197,7 +197,6 @@ public class MeUIView extends BaseUIView {
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
-        super.onViewCreate();
         initPhotos(UserCache.instance().getUserInfoBean());
     }
 

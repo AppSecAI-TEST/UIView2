@@ -123,6 +123,7 @@ public class RecommendUserUIView extends BaseContentUIView {
     public interface OnUserSelectListener {
         void onSelect(boolean boo);
     }
+
     public static class RecommendUserAdapter extends RModelAdapter<RecommendUserBean> {
 
         private static final int DEFAULT_MAX_COUNT = 9;
@@ -194,11 +195,7 @@ public class RecommendUserUIView extends BaseContentUIView {
                 @Override
                 public void onClick(View v) {
                     setSelectorPosition(position, deleteView);
-<<<<<<< HEAD
                     if (mSelectListener != null) {
-=======
-                    if(mSelectListener != null){
->>>>>>> adjust project structure
                         // getAllSelector() == 0 为没有一个选中
                         mSelectListener.onSelect(getAllSelector().size() != 0);
                     }
@@ -220,16 +217,4 @@ public class RecommendUserUIView extends BaseContentUIView {
             return mAllDatas.size() > DEFAULT_MAX_COUNT ? DEFAULT_MAX_COUNT : mAllDatas.size();
         }
     }
-<<<<<<< HEAD
-=======
-
-    public interface OnUserSelectListener {
-        void onSelect(boolean boo);
-    }
-
-    @Override
-    public boolean canTryCaptureView() {
-        return true;
-    }
->>>>>>> adjust project structure
 }

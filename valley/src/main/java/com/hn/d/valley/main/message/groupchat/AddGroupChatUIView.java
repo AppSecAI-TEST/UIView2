@@ -1,4 +1,6 @@
-package com.hn.d.valley.main.friend.groupchat;
+package com.hn.d.valley.main.message.groupchat;
+
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,9 +23,6 @@ import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
-import com.hn.d.valley.R;
-import com.hn.d.valley.base.BaseUIView;
-import com.hn.d.valley.base.Param;
 import com.angcyo.uiview.utils.file.AttachmentStore;
 import com.angcyo.uiview.utils.storage.StorageType;
 import com.angcyo.uiview.utils.storage.StorageUtil;
@@ -36,10 +35,9 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.friend.groupchat.AddGroupAdapter;
+import com.hn.d.valley.main.friend.groupchat.AddGroupDatatProvider;
 import com.hn.d.valley.service.GroupChatService;
-import com.hn.d.valley.widget.HnIcoRecyclerView;
-import com.hn.d.valley.widget.HnRefreshLayout;
-
 import com.hn.d.valley.utils.NetUtils;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
@@ -51,8 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.functions.Action1;
-import rx.functions.Action2;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
