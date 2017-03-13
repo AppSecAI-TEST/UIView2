@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_item_size"
+        android:background="@color/line_color"
+        android:gravity="center"
+        android:text="@string/selector_industries_title"/>
+
+    <com.hn.d.valley.widget.HnRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_0dpi"
+        android:layout_weight="1">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.hn.d.valley.widget.HnRefreshLayout>
+
+</LinearLayout>

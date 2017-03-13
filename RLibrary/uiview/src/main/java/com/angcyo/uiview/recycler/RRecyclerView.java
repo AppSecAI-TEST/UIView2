@@ -109,8 +109,7 @@ public class RRecyclerView extends RecyclerView {
         }
 
         this.setLayoutManager(layoutManager);
-        //this.setItemAnimator(new DefaultItemAnimator());
-        this.setItemAnimator(new FadeInDownAnimator());
+        setItemAnim(mItemAnim);
 
         //clearOnScrollListeners();
         removeOnScrollListener(mScrollListener);

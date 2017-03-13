@@ -268,5 +268,7 @@
     <string name="auth_error">认证失败</string>
     <string name="auth_ing">认证中</string>
     <string name="auth_type_tip">认证类型</string>
+    <string name="selector_industries_title">选择行业</string>
+    <string name="not_empty_tip">不能为空</string>
 
 </resources>
