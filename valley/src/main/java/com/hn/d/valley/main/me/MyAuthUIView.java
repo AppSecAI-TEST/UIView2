@@ -59,46 +59,15 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     protected int getItemLayoutId(int viewType) {
         if (viewType == 0) {
             return R.layout.item_info_layout;
-        } else if (viewType == 1) {
+        } else if (viewType == 1 || viewType == 6 || viewType == 8) {
             return R.layout.item_single_text_view;
-        } else {
-            if (mAuthType == AuthType.ZCMR) {
-                if (viewType == 104) {
-                    return R.layout.item_info_layout;
-                } else if (viewType == 107 || viewType == 109) {
-                    return R.layout.item_single_text_view;
-                } else if (viewType == 108 || viewType == 110) {
-                    return R.layout.item_single_input_view;
-                } else if (viewType == 111) {
-                    return R.layout.item_button_view;
-                } else {
-                    return R.layout.item_input_view;
-                }
-            } else if (mAuthType == AuthType.YLMX) {
-                if (viewType == 207 || viewType == 209) {
-                    return R.layout.item_single_input_view;
-                } else if (viewType == 210) {
-                    return R.layout.item_button_view;
-                } else if (viewType == 206 || viewType == 208) {
-                    return R.layout.item_single_text_view;
-                }
-            } else if (mAuthType == AuthType.ZFRY) {
-                if (viewType == 307 || viewType == 309) {
-                    return R.layout.item_single_input_view;
-                } else if (viewType == 310) {
-                    return R.layout.item_button_view;
-                } else if (viewType == 306 || viewType == 308) {
-                    return R.layout.item_single_text_view;
-                }
-            } else if (mAuthType == AuthType.TYRW) {
-                if (viewType == 407 || viewType == 409) {
-                    return R.layout.item_single_input_view;
-                } else if (viewType == 410) {
-                    return R.layout.item_button_view;
-                } else if (viewType == 406 || viewType == 408) {
-                    return R.layout.item_single_text_view;
-                }
-            }
+        } else if (viewType == 7 || viewType == 9) {
+            return R.layout.item_single_input_view;
+        } else if (viewType == 10) {
+            return R.layout.item_button_view;
+        } else if (viewType == 104) {
+            return R.layout.item_info_layout;
+
         }
         return R.layout.item_input_view;
     }
@@ -109,27 +78,42 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     @Override
     protected int getDataItemType(int posInData) {
         int type = posInData;
-        if (posInData == 0 || posInData == 1) {
-
-        } else {
-            if (mAuthType != null) {
-                switch (mAuthType) {
-                    case ZCMR:
-                        type += 100;
-                        break;
-                    case YLMX:
-                        type += 200;
-                        break;
-                    case ZFRY:
-                        type += 300;
-                        break;
-                    case TYRW:
-                        type += 400;
-                        break;
-                }
+        if (mAuthType != null) {
+            switch (mAuthType) {
+                case ZCMR:
+                    if (posInData == 4) {
+                        type = 104;
+                    } else if (posInData == 5) {
+                        type = 105;
+                    } else if (posInData == 6) {
+                        type = 106;
+                    } else if (posInData >= 7) {
+                        return posInData - 1;
+                    }
+                    break;
+                case YLMX:
+                    if (posInData == 4) {
+                        type = 204;
+                    } else if (posInData == 5) {
+                        type = 205;
+                    }
+                    break;
+                case ZFRY:
+                    if (posInData == 4) {
+                        type = 304;
+                    } else if (posInData == 5) {
+                        type = 305;
+                    }
+                    break;
+                case TYRW:
+                    if (posInData == 4) {
+                        type = 404;
+                    } else if (posInData == 5) {
+                        type = 405;
+                    }
+                    break;
             }
         }
-
         return type;
     }
 
