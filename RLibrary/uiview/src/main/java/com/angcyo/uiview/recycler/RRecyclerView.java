@@ -104,6 +104,10 @@ public class RRecyclerView extends RecyclerView {
             }
         }
 
+        if (layoutManager instanceof LinearLayoutManager) {
+            ((LinearLayoutManager) layoutManager).setRecycleChildrenOnDetach(true);
+        }
+
         this.setLayoutManager(layoutManager);
         //this.setItemAnimator(new DefaultItemAnimator());
         this.setItemAnimator(new FadeInDownAnimator());

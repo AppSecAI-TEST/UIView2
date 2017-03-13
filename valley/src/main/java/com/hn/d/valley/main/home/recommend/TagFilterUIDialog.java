@@ -127,6 +127,9 @@ public class TagFilterUIDialog extends UIIDialogImpl {
         setDefaultConfig(translateAnimation, true);
         setDefaultConfig(alphaAnimation, true);
 
+        translateAnimation.setDuration(DEFAULT_DIALOG_FINISH_ANIM_TIME);
+        alphaAnimation.setDuration(DEFAULT_DIALOG_FINISH_ANIM_TIME);
+
         AnimationSet animationSet = new AnimationSet(false);
         animationSet.addAnimation(alphaAnimation);
         animationSet.addAnimation(translateAnimation);

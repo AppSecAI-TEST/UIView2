@@ -1,10 +1,12 @@
 package com.hn.d.valley.main.me;
 
-import com.hn.d.valley.R;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.UI;
+import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
@@ -63,6 +65,9 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
     @Override
     protected void createItems(List<ViewItemInfo> items) {
+        //清理之前的缓存Views
+        mRecyclerView.getRecycledViewPool().clear();
+
         items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseOffsetSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -183,8 +188,14 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.edit_text_view).setHint("您可以输入您的个人经历,重大业绩,获奖记录等.");
-                holder.tv(R.id.edit_text_view).setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                ExEditText editText = holder.v(R.id.edit_text_view);
+                editText.setHint("您可以输入您的个人经历,重大业绩,获奖记录等.");
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+                editText.setSingleLine(false);
+                editText.setMaxLines(5);
+                editText.setGravity(Gravity.TOP);
+                UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
             }
         }));
 
