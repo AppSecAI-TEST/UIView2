@@ -7,7 +7,6 @@ import android.view.inputmethod.EditorInfo;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.github.utilcode.utils.IDCardUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -64,28 +63,81 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             return R.layout.item_single_text_view;
         } else {
             if (mAuthType == AuthType.ZCMR) {
-                if (viewType == 4) {
+                if (viewType == 104) {
                     return R.layout.item_info_layout;
-                } else if (viewType == 7 || viewType == 9) {
+                } else if (viewType == 107 || viewType == 109) {
                     return R.layout.item_single_text_view;
-                } else if (viewType == 8 || viewType == 10) {
+                } else if (viewType == 108 || viewType == 110) {
                     return R.layout.item_single_input_view;
-                } else if (viewType == 11) {
+                } else if (viewType == 111) {
                     return R.layout.item_button_view;
                 } else {
                     return R.layout.item_input_view;
                 }
+            } else if (mAuthType == AuthType.YLMX) {
+                if (viewType == 207 || viewType == 209) {
+                    return R.layout.item_single_input_view;
+                } else if (viewType == 210) {
+                    return R.layout.item_button_view;
+                } else if (viewType == 206 || viewType == 208) {
+                    return R.layout.item_single_text_view;
+                }
+            } else if (mAuthType == AuthType.ZFRY) {
+                if (viewType == 307 || viewType == 309) {
+                    return R.layout.item_single_input_view;
+                } else if (viewType == 310) {
+                    return R.layout.item_button_view;
+                } else if (viewType == 306 || viewType == 308) {
+                    return R.layout.item_single_text_view;
+                }
+            } else if (mAuthType == AuthType.TYRW) {
+                if (viewType == 407 || viewType == 409) {
+                    return R.layout.item_single_input_view;
+                } else if (viewType == 410) {
+                    return R.layout.item_button_view;
+                } else if (viewType == 406 || viewType == 408) {
+                    return R.layout.item_single_text_view;
+                }
             }
-
         }
         return R.layout.item_input_view;
     }
 
+    /**
+     * 防止不同认证类型, 相同item type之间的共享BUG
+     */
+    @Override
+    protected int getDataItemType(int posInData) {
+        int type = posInData;
+        if (posInData == 0 || posInData == 1) {
+
+        } else {
+            if (mAuthType != null) {
+                switch (mAuthType) {
+                    case ZCMR:
+                        type += 100;
+                        break;
+                    case YLMX:
+                        type += 200;
+                        break;
+                    case ZFRY:
+                        type += 300;
+                        break;
+                    case TYRW:
+                        type += 400;
+                        break;
+                }
+            }
+        }
+
+        return type;
+    }
+
     @Override
     protected void createItems(List<ViewItemInfo> items) {
-        //清理之前的缓存Views
-        mRecyclerView.getRecycledViewPool().clear();
+        clearEditTexts();
 
+        //类型选择
         items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseOffsetSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -126,11 +178,39 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
         if (mAuthType != null) {
 
+            //基础信息
             items.add(ViewItemInfo.build(new ItemCallback() {
                 @Override
                 public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                    holder.tv(R.id.text_view).setText("基本信息");
+                    holder.tv(R.id.text_view).setText(R.string.base_info_tip);
                     holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+                }
+            }));
+
+            //姓名
+            items.add(ViewItemInfo.build(new ItemCallback() {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    holder.tv(R.id.input_tip_view).setText(R.string.true_name_tip);
+                    ExEditText editText = holder.v(R.id.edit_text_view);
+                    editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                    editText.setMaxLength(4);
+
+                    mCheckEditTexts.add(editText);
+                }
+            }));
+
+            //身份证
+            items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    holder.tv(R.id.input_tip_view).setText(R.string.id_card_tip);
+                    ExEditText editText = holder.v(R.id.edit_text_view);
+                    editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                    editText.setMaxLength(18);
+                    editText.setInputType(EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+
+                    mCheckEditTexts.add(editText);
                 }
             }));
 
@@ -148,6 +228,78 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     tyrw(items);
                     break;
             }
+
+            //个人介绍
+            items.add(ViewItemInfo.build(new ItemCallback() {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    holder.tv(R.id.text_view).setText(R.string.introduction_tip);
+                    holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+                }
+            }));
+            items.add(ViewItemInfo.build(new ItemCallback() {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    ExEditText editText = holder.v(R.id.edit_text_view);
+                    editText.setHint(R.string.introduction_hint);
+                    editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+                    editText.setSingleLine(false);
+                    editText.setMaxLines(5);
+                    editText.setGravity(Gravity.TOP);
+                    UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
+                    mOtherEditTexts.add(editText);
+                }
+            }));
+
+            //个人作品
+            items.add(ViewItemInfo.build(new ItemCallback() {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    holder.tv(R.id.text_view).setText(R.string.link_tip);
+                    holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+                }
+            }));
+            items.add(ViewItemInfo.build(new ItemCallback() {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    holder.tv(R.id.edit_text_view).setHint(R.string.link_hint);
+
+                    ExEditText editText = holder.v(R.id.edit_text_view);
+                    editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+                    mOtherEditTexts.add(editText);
+                }
+            }));
+
+            //下一步
+            items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseOffsetSize * 2) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    holder.tv(R.id.text_view).setText(R.string.next);
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            for (ExEditText edit : mCheckEditTexts) {
+                                if (checkNotEmpty(edit)) {
+                                    return;
+                                }
+                            }
+
+                            ExEditText editText = mCheckEditTexts.get(1);
+                            if (!"YES".equalsIgnoreCase(IDCardUtil.IDCardValidate(editText.string()))) {
+                                //T_.error("无效的身份证号码!");
+                                editText.requestFocus();
+                                editText.setError(getString(R.string.error_id_card_tip));
+                                return;
+                            }
+                            if (mSelectorTag == null) {
+                                Anim.band(mInfoLayout);
+                                return;
+                            }
+                        }
+                    });
+                }
+            }));
         }
     }
 
@@ -155,36 +307,11 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
      * 职场名人
      */
     private void zcmr(List<ViewItemInfo> items) {
-        clearEditTexts();
-
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText("真实姓名*");
-                ExEditText editText = holder.v(R.id.edit_text_view);
-                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-                editText.setMaxLength(4);
-
-                mCheckEditTexts.add(editText);
-            }
-        }));
-        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText("身份证号*");
-                ExEditText editText = holder.v(R.id.edit_text_view);
-                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-                editText.setMaxLength(18);
-                editText.setInputType(EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-
-                mCheckEditTexts.add(editText);
-            }
-        }));
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 mInfoLayout = holder.v(R.id.item_info_layout);
-                mInfoLayout.setItemText("行业*");
+                mInfoLayout.setItemText(getString(R.string.industries_tip));
                 mInfoLayout.getTextView().setTextColor(getColor(R.color.main_text_color_dark));
                 mInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -203,7 +330,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText("公司*");
+                holder.tv(R.id.input_tip_view).setText(R.string.company_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
@@ -213,77 +340,11 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText("职位*");
+                holder.tv(R.id.input_tip_view).setText(R.string.job_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
                 mCheckEditTexts.add(editText);
-            }
-        }));
-
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("人物介绍");
-                holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
-            }
-        }));
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ExEditText editText = holder.v(R.id.edit_text_view);
-                editText.setHint("您可以输入您的个人经历,重大业绩,获奖记录等.");
-                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-
-                editText.setSingleLine(false);
-                editText.setMaxLines(5);
-                editText.setGravity(Gravity.TOP);
-                UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
-                mOtherEditTexts.add(editText);
-            }
-        }));
-
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("个人链接");
-                holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
-            }
-        }));
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.edit_text_view).setHint("请输入链接地址");
-
-                ExEditText editText = holder.v(R.id.edit_text_view);
-                editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-                mOtherEditTexts.add(editText);
-            }
-        }));
-
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseOffsetSize * 2) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("下一步");
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        for (ExEditText edit : mCheckEditTexts) {
-                            if (checkNotEmpty(edit)) {
-                                return;
-                            }
-                        }
-
-                        if (!"YES".equalsIgnoreCase(IDCardUtil.IDCardValidate(mCheckEditTexts.get(1).string()))) {
-                            T_.error("无效的身份证号码!");
-                            return;
-                        }
-                        if (mSelectorTag == null) {
-                            Anim.band(mInfoLayout);
-                            return;
-                        }
-                    }
-                });
             }
         }));
     }
@@ -306,42 +367,83 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
      * 娱乐明星
      */
     private void ylmx(List<ViewItemInfo> items) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.tv(R.id.input_tip_view).setText(R.string.occupation_tip);
+                ExEditText editText = holder.v(R.id.edit_text_view);
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
+                mCheckEditTexts.add(editText);
+            }
+        }));
+        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.tv(R.id.input_tip_view).setText(R.string.manage_company_tip);
+                ExEditText editText = holder.v(R.id.edit_text_view);
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+                mCheckEditTexts.add(editText);
+            }
+        }));
     }
 
     /**
      * 政府人员
      */
     private void zfry(List<ViewItemInfo> items) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.tv(R.id.input_tip_view).setText(R.string.organization_tip);
+                ExEditText editText = holder.v(R.id.edit_text_view);
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
+                mCheckEditTexts.add(editText);
+            }
+        }));
+        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.tv(R.id.input_tip_view).setText(R.string.job_tip);
+                ExEditText editText = holder.v(R.id.edit_text_view);
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+                mCheckEditTexts.add(editText);
+            }
+        }));
     }
 
     /**
      * 体育明星
      */
     private void tyrw(List<ViewItemInfo> items) {
-        items.add(ViewItemInfo.build(new ItemCallback() {
+        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.tv(R.id.input_tip_view).setText(R.string.job_tip);
+                ExEditText editText = holder.v(R.id.edit_text_view);
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+                mCheckEditTexts.add(editText);
             }
         }));
-        items.add(ViewItemInfo.build(new ItemCallback() {
+        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-            }
-        }));
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-            }
-        }));
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.tv(R.id.input_tip_view).setText(R.string.item_tip);
+                ExEditText editText = holder.v(R.id.edit_text_view);
+                editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+
+                mCheckEditTexts.add(editText);
             }
         }));
     }
 
+    /**
+     * 认证类型
+     */
     public enum AuthType {
         ZCMR(0, ValleyApp.getApp().getResources().getString(R.string.auth_zcmr)),
         YLMX(1, ValleyApp.getApp().getResources().getString(R.string.auth_ylmx)),

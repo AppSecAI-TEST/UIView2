@@ -270,5 +270,21 @@
     <string name="auth_type_tip">认证类型</string>
     <string name="selector_industries_title">选择行业</string>
     <string name="not_empty_tip">不能为空</string>
+    <string name="base_info_tip">基本信息</string>
+    <string name="true_name_tip">真实姓名*</string>
+    <string name="id_card_tip">身份证号*</string>
+    <string name="industries_tip">行业*</string>
+    <string name="company_tip">公司*</string>
+    <string name="job_tip">职位*</string>
+    <string name="introduction_tip">人物介绍</string>
+    <string name="introduction_hint">您可以输入您的个人经历,重大业绩,获奖记录等.</string>
+    <string name="link_tip">个人链接</string>
+    <string name="link_hint">请输入链接地址</string>
+    <string name="next">下一步</string>
+    <string name="error_id_card_tip">无效的身份证号码!</string>
+    <string name="occupation_tip">职业*</string>
+    <string name="manage_company_tip">经纪公司*</string>
+    <string name="organization_tip">机构/组织*</string>
+    <string name="item_tip">所属运动队*</string>
 
 </resources>
