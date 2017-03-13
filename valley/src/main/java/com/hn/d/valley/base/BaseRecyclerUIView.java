@@ -18,6 +18,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
@@ -51,6 +52,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected long loadTime = 0;//加载数据的时间
     protected boolean hasNext = true;//是否有下一页
     protected String last_id, first_id;//动态的id, 第一个和最后一个
+    protected RSoftInputLayout mRootSoftInputLayout;
 
     public static void initEmpty(final RBaseViewHolder viewHolder, boolean isEmpty, String tip) {
         if (viewHolder != null) {
@@ -176,9 +178,14 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 可以重写此方法, 实现自定义的布局
      */
     protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        mRootSoftInputLayout = new RSoftInputLayout(mActivity);
         mRefreshLayout = new HnRefreshLayout(mActivity);
         mRecyclerView = new RRecyclerView(mActivity);
         mRefreshLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-1, -1));
+
+        //mRootSoftInputLayout.addView(mRefreshLayout);
+        //mRootSoftInputLayout.addView(new View(mActivity));
+        //baseContentLayout.addView(mRootSoftInputLayout, new ViewGroup.LayoutParams(-1, -1));
         baseContentLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
     }
 

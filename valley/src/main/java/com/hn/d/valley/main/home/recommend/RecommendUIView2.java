@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.home.recommend;
 
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -57,64 +58,84 @@ public class RecommendUIView2 extends BaseContentUIView {
         return null;
     }
 
+    @NonNull
     @Override
-    protected void initOnShowContentLayout() {
-        super.initOnShowContentLayout();
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
         mAllTags = new ArrayList<>();
         mMyTags = new ArrayList<>();
         TagsControl.getTags(new Action1<List<Tag>>() {
             @Override
             public void call(List<Tag> tags) {
-                mAllTags.add(0, TagsControl.allTag);
-                mAllTags.addAll(tags);
+                if (tags.isEmpty()) {
+                    showNonetLayout(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onViewLoad();
+                        }
+                    });
+                } else {
+                    mAllTags.add(0, TagsControl.allTag);
+                    mAllTags.addAll(tags);
+                    showContentLayout();
+                }
+            }
+        });
+    }
 
-                TagsControl.initMyTags(mAllTags, mMyTags);
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
+        TagsControl.initMyTags(mAllTags, mMyTags);
 
-                initViewPager();
-                initTabLayout();
+        initViewPager();
+        initTabLayout();
 
-                //标签管理
-                mViewHolder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
+        //标签管理
+        mViewHolder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOtherILayout.startIView(new TagsManageUIView(mAllTags, new Action1<List<Tag>>() {
                     @Override
-                    public void onClick(View v) {
-                        mOtherILayout.startIView(new TagsManageUIView(mAllTags, new Action1<List<Tag>>() {
-                            @Override
-                            public void call(List<Tag> tags) {
-                                //1:得到当前的item位置
-                                int currentItem = mViewPager.getCurrentItem();
-                                //得到当前标签的id
-                                String id = mMyTags.get(currentItem).getId();
+                    public void call(List<Tag> tags) {
+                        //1:得到当前的item位置
+                        int currentItem = mViewPager.getCurrentItem();
+                        //得到当前标签的id
+                        String id = mMyTags.get(currentItem).getId();
 
-                                //2:判断当前标签的id是否被删除
-                                int index = -1;
-                                int size = tags.size();
-                                for (int i = 0; i < size; i++) {
-                                    String id1 = tags.get(i).getId();
-                                    if (TextUtils.equals(id, id1)) {
-                                        index = i;
-                                        break;
-                                    }
-                                }
-                                //如果没有找到找到了
-                                if (index == -1) {
-                                    if (size > currentItem) {
-                                        index = currentItem;
-                                    } else {
-                                        index = size - 1;
-                                    }
-                                }
-
-                                mMyTags.clear();
-                                mMyTags.addAll(tags);
-
-                                resetViewPagerAdapter();
-//                                mViewPager.getAdapter().notifyDataSetChanged();
-                                initTabLayout();
-                                mViewPager.setCurrentItem(index);
+                        //2:判断当前标签的id是否被删除
+                        int index = -1;
+                        int size = tags.size();
+                        for (int i = 0; i < size; i++) {
+                            String id1 = tags.get(i).getId();
+                            if (TextUtils.equals(id, id1)) {
+                                index = i;
+                                break;
                             }
-                        }));
+                        }
+                        //如果没有找到找到了
+                        if (index == -1) {
+                            if (size > currentItem) {
+                                index = currentItem;
+                            } else {
+                                index = size - 1;
+                            }
+                        }
+
+                        mMyTags.clear();
+                        mMyTags.addAll(tags);
+
+                        resetViewPagerAdapter();
+//                                mViewPager.getAdapter().notifyDataSetChanged();
+                        initTabLayout();
+                        mViewPager.setCurrentItem(index);
                     }
-                });
+                }));
             }
         });
     }

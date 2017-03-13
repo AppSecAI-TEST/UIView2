@@ -37,7 +37,8 @@ import butterknife.ButterKnife;
 public abstract class UIIViewImpl implements IView {
 
     public static final int DEFAULT_ANIM_TIME = 300;
-    public static final int DEFAULT_FINISH_ANIM_TIME = 150;
+    public static final int DEFAULT_FINISH_ANIM_TIME = 300;
+    public static final int DEFAULT_DIALOG_FINISH_ANIM_TIME = 100;
     public static final int STATE_NORMAL = 1;
     public static final int STATE_VIEW_SHOW = 3;
     public static final int STATE_VIEW_HIDE = 4;

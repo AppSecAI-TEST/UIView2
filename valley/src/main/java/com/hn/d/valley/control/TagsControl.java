@@ -25,6 +25,7 @@ import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.DiscussService;
 import com.orhanobut.hawk.Hawk;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -104,6 +105,14 @@ public class TagsControl {
 
                             if (listAction1 != null) {
                                 listAction1.call(cacheTags);
+                            }
+                        }
+
+                        @Override
+                        public void onError(int code, String msg) {
+                            super.onError(code, msg);
+                            if (listAction1 != null) {
+                                listAction1.call(new ArrayList<Tag>());
                             }
                         }
                     });

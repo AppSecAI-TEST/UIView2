@@ -17,6 +17,7 @@ import com.angcyo.uiview.recycler.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.widget.HnEmptyRefreshLayout;
 
@@ -112,11 +113,14 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
 
     @Override
     protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        mRootSoftInputLayout = new RSoftInputLayout(mActivity);
         mRefreshLayout = new HnEmptyRefreshLayout(mActivity);
         mRecyclerView = new RRecyclerView(mActivity);
         mRecyclerView.setHasFixedSize(true);
         mRefreshLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-1, -1));
-        baseContentLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
+        //baseContentLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
+        mRootSoftInputLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
+        baseContentLayout.addView(mRootSoftInputLayout, new ViewGroup.LayoutParams(-1, -1));
     }
 
     @NonNull
