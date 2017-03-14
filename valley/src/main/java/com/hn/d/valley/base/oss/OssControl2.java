@@ -10,6 +10,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Subscription;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -34,6 +36,7 @@ public class OssControl2 {
     int type = uploadAvatorImg;
     OnUploadListener mUploadListener;
     boolean isCancel = false;
+    private Subscription mSubscribe;
 
     public OssControl2(OnUploadListener uploadListener) {
         mUploadListener = uploadListener;
@@ -70,7 +73,7 @@ public class OssControl2 {
         String upload = OssControl.isUpload(videoPath);
         if (upload == null) {
             L.d("准备上传视频:" + videoPath);
-            OssHelper.uploadVideo(videoPath)
+            mSubscribe = OssHelper.uploadVideo(videoPath)
                     .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
                         public void onSucceed(String s) {
@@ -112,7 +115,7 @@ public class OssControl2 {
         String upload = OssControl.isUpload(audioPath);
         if (upload == null) {
             L.d("准备上传语音:" + audioPath);
-            OssHelper.uploadAudio(audioPath)
+            mSubscribe = OssHelper.uploadAudio(audioPath)
                     .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
                         public void onSucceed(String s) {
@@ -144,6 +147,9 @@ public class OssControl2 {
      */
     public void setCancel(boolean cancel) {
         isCancel = cancel;
+        if (mSubscribe != null) {
+            mSubscribe.unsubscribe();
+        }
     }
 
     private void startUpload() {
@@ -161,7 +167,7 @@ public class OssControl2 {
         if (BuildConfig.DEBUG) {
             L.i("开始上传:" + needUploadPath);
         }
-        OssHelper.uploadCircleImg(needUploadPath)
+        mSubscribe = OssHelper.uploadCircleImg(needUploadPath)
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onSucceed(String s) {

@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.main.me.UserDetailUIView;

@@ -286,5 +286,13 @@
     <string name="manage_company_tip">经纪公司*</string>
     <string name="organization_tip">机构/组织*</string>
     <string name="item_tip">所属运动队*</string>
+    <string name="upload_card_tip">上传身份证*:</string>
+    <string name="certify_info_tip">证明材料*:</string>
+    <string name="certify_info_tip2">请上传工作证明及获奖证书等(最多只能上传3张)</string>
+    <string name="certification_tip">认证头衔*</string>
+    <string name="certification_tip2">认证头衔会显示在你的个人主页上</string>
+    <string name="upload_info_tip">上传资料</string>
+    <string name="upload_card_tip2">请上传身份证照.</string>
+    <string name="upload_certify_tip">请至少上传一张证明材料</string>
 
 </resources>

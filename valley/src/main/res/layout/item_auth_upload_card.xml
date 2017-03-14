@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="@dimen/base_xhdpi">
+
+    <com.angcyo.uiview.widget.RTextView
+        style="@style/DarkTextStyle"
+        android:text="@string/upload_card_tip"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:orientation="horizontal">
+
+        <com.angcyo.uiview.widget.RImageView
+            android:id="@+id/card_front_view"
+            android:layout_width="130dp"
+            android:layout_height="80dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/id_card_front"/>
+
+        <com.angcyo.uiview.widget.RImageView
+            android:id="@+id/card_reverse_view"
+            android:layout_width="130dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            android:scaleType="fitXY"
+            android:src="@drawable/id_card_reverse"/>
+
+    </LinearLayout>
+</LinearLayout>

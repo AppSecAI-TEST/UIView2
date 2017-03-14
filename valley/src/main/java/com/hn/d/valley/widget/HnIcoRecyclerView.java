@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RMaxAdapter;
+import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
@@ -83,7 +83,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
 
         };
 
-        mMaxAdapter.setMaxcount(5);
+        mMaxAdapter.setMaxCount(5);
     }
 
     public void remove(String avatar) {
@@ -99,7 +99,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
     }
 
     public void setMaxCount(int maxCount) {
-        mMaxAdapter.setMaxcount(maxCount);
+        mMaxAdapter.setMaxCount(maxCount);
     }
 
     public RMaxAdapter<IcoInfo> getMaxAdapter() {

@@ -7,10 +7,9 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RModelAdapter;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
-import com.hn.d.valley.main.friend.FriendItem;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import rx.functions.Action2;

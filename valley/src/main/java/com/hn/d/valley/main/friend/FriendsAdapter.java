@@ -5,14 +5,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.recycler.RBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RExBaseAdapter;
-import com.angcyo.uiview.utils.string.StringUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
-import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;

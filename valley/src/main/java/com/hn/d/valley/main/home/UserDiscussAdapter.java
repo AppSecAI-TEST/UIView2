@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.control.UserDiscussItemControl;

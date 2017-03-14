@@ -1,10 +1,7 @@
 package com.hn.d.valley.main.me.setting;
 
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -95,16 +92,10 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     @Override
     protected void initRecyclerView() {
         super.initRecyclerView();
-        mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.ItemDecorationCallback() {
+        mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
             @Override
-            public Rect getItemOffsets(LinearLayoutManager layoutManager, int position) {
-                Rect rect = new Rect(0, 0, 0, 0);
-                rect.top = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
-                return rect;
-            }
-
-            @Override
-            public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+            public void getItemOffsets(Rect outRect, int position) {
+                outRect.top = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
             }
         }));
     }

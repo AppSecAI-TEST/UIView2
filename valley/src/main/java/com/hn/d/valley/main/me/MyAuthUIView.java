@@ -10,6 +10,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.bean.realm.Tag;
@@ -263,14 +264,19 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+//                            if (BuildConfig.DEBUG) {
+//                                startIView(new MyAuthNextUIView(makeAuthInfo()));
+//                                return;
+//                            }
+
                             for (ExEditText edit : mCheckEditTexts) {
-                                if (checkNotEmpty(edit)) {
+                                if (checkEmpty(edit)) {
                                     return;
                                 }
                             }
 
                             ExEditText editText = mCheckEditTexts.get(1);
-                            if (!"YES".equalsIgnoreCase(IDCardUtil.IDCardValidate(editText.string()))) {
+                            if (!BuildConfig.DEBUG && !"YES".equalsIgnoreCase(IDCardUtil.IDCardValidate(editText.string()))) {
                                 //T_.error("无效的身份证号码!");
                                 editText.requestFocus();
                                 editText.setError(getString(R.string.error_id_card_tip));
@@ -280,11 +286,21 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                                 Anim.band(mInfoLayout);
                                 return;
                             }
+                            startIView(new MyAuthNextUIView(makeAuthInfo()));
                         }
                     });
                 }
             }));
         }
+    }
+
+    private MyAuthNextUIView.AuthInfo makeAuthInfo() {
+        List<String> baseInfo = new ArrayList<>();
+        for (ExEditText editText : mCheckEditTexts) {
+            baseInfo.add(editText.string());
+        }
+        return new MyAuthNextUIView.AuthInfo(baseInfo, mSelectorTag == null ? "" : mSelectorTag.getId(),
+                mOtherEditTexts.get(0).string(), mOtherEditTexts.get(1).string(), mAuthType);
     }
 
     /**
@@ -338,10 +354,10 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         mOtherEditTexts.clear();
     }
 
-    private boolean checkNotEmpty(ExEditText view) {
+    public static boolean checkEmpty(ExEditText view) {
         if (view.isEmpty()) {
             view.requestFocus();
-            view.setError(getString(R.string.not_empty_tip));
+            view.setError(ValleyApp.getApp().getString(R.string.not_empty_tip));
             return true;
         }
         return false;
@@ -354,7 +370,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText(R.string.occupation_tip);
+                holder.tv(R.id.input_tip_view).setText(R.string.manage_company_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
@@ -364,7 +380,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText(R.string.manage_company_tip);
+                holder.tv(R.id.input_tip_view).setText(R.string.occupation_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
@@ -406,7 +422,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText(R.string.job_tip);
+                holder.tv(R.id.input_tip_view).setText(R.string.item_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
@@ -416,7 +432,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.input_tip_view).setText(R.string.item_tip);
+                holder.tv(R.id.input_tip_view).setText(R.string.job_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 

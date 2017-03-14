@@ -1,12 +1,15 @@
 package com.hn.d.valley.base.oss;
 
 import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscription;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -34,6 +37,7 @@ public class OssControl {
     int type = uploadAvatorImg;
     OnUploadListener mUploadListener;
     boolean isCancel = false;
+    private Subscription mSubscribe;
 
     public OssControl(OnUploadListener uploadListener) {
         mUploadListener = uploadListener;
@@ -61,11 +65,23 @@ public class OssControl {
         startUpload();
     }
 
+    public void uploadCircleImg(String file) {
+        if (TextUtils.isEmpty(file)) {
+            return;
+        }
+        List<String> files = new ArrayList<>();
+        files.add(file);
+        uploadCircleImg(files);
+    }
+
     /**
      * 取消上传
      */
     public void setCancel(boolean cancel) {
         isCancel = cancel;
+        if (mSubscribe != null) {
+            mSubscribe.unsubscribe();
+        }
     }
 
     private void startUpload() {
@@ -84,7 +100,7 @@ public class OssControl {
         String upload = isUpload(path);
         if (upload == null) {
             L.d("准备上传图片:" + path);
-            OssHelper.uploadCircleImg(path)
+            mSubscribe = OssHelper.uploadCircleImg(path)
                     .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
                         public void onSucceed(String s) {

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.recycler.RBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.EmojiTabLayout;
 import com.angcyo.uiview.widget.viewpager.RPagerAdapter;

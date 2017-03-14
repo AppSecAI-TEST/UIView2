@@ -1,6 +1,6 @@
 package com.hn.d.valley.bean;
 
-import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 
 import java.util.List;
 

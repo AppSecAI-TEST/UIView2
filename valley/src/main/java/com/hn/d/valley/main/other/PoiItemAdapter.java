@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.amap.api.services.core.PoiItem;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RModelAdapter;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.hn.d.valley.R;
 
 /**

@@ -22,7 +22,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RMaxAdapter;
+import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
@@ -224,7 +224,7 @@ public class UserDetailUIView extends BaseContentUIView {
 
         //动态
         final RMaxAdapter<HnIcoRecyclerView.IcoInfo> maxAdapter = mIcoRecyclerView.getMaxAdapter();
-        maxAdapter.setMaxcount(3);
+        maxAdapter.setMaxCount(3);
         List<HnIcoRecyclerView.IcoInfo> infos = new ArrayList<>();
         for (NewestDiscussPicBean picBean : mUserInfoBean.getNewest_discuss_pic()) {
             if (3 == (picBean.getMedia_type())) {

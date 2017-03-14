@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RecyclerViewPager;
-import com.angcyo.uiview.recycler.RecyclerViewPagerAdapter;
+import com.angcyo.uiview.recycler.adapter.RecyclerViewPagerAdapter;
 import com.angcyo.uiview.recycler.RecyclerViewPagerIndicator;
 import com.hn.d.valley.R;
 

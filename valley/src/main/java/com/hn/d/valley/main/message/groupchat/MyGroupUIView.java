@@ -1,7 +1,7 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 

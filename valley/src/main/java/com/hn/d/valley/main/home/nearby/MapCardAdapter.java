@@ -14,7 +14,7 @@ import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.RModelAdapter;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;

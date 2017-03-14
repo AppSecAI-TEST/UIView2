@@ -5,7 +5,7 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.angcyo.uiview.github.luban.Luban;
-import com.angcyo.uiview.recycler.RBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
