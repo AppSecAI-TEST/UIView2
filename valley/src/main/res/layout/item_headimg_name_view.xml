@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_centerInParent="true"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:showIn="@layout/item_focus_user_layout">
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/image_view"
+        android:layout_gravity="center"
+        android:layout_width="@dimen/avatar_image_size_little"
+        android:layout_height="@dimen/avatar_image_size_little"
+        android:contentDescription="@string/is_circle2"
+        android:src="@drawable/default_avatar" />
+
+    <TextView
+        android:id="@+id/tv__username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingTop="@dimen/base_xhdpi"
+        tools:text="李伟" />
+
+</LinearLayout>

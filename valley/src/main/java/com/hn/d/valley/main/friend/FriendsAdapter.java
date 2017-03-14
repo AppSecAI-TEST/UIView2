@@ -4,9 +4,11 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExBaseAdapter;
+import com.angcyo.uiview.utils.string.StringUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
@@ -14,7 +16,11 @@ import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Created by hewking on 2017/3/7.
@@ -26,6 +32,8 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
 //    public static final int ITEM_TYPE_LABEL = 10002;
 
     private FriendsControl mFrendsControl;
+
+    private Action1<List<String>> mSideAction;
 
     public FriendsAdapter(Context context, FriendsControl mFriendsControl) {
         super(context);
@@ -133,11 +141,58 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
             FriendItem item = new FriendItem(bean);
             getAllDatas().add(item);
         }
+        sort(getAllDatas());
+
+        if (mSideAction != null ) {
+            mSideAction.call(generateIndexLetter(getAllDatas()));
+        }
+
         resetData(getAllDatas());
+    }
+
+    public void sort(List<AbsFriendItem> items) {
+        Collections.sort(items, new Comparator<AbsFriendItem>() {
+            @Override
+            public int compare(AbsFriendItem o1, AbsFriendItem o2) {
+                if (o1.getGroupText().equals("#")) {
+                    L.i(o1.getGroupText());
+                    return 1;
+                }
+
+                if (o2.getGroupText().equals("#")) {
+                    return -1;
+                }
+
+                if (o1.getGroupText().equals("☆")) {
+                    L.i(o1.getGroupText());
+                    return -1;
+                }
+
+                if (o2.getGroupText().equals("☆")) {
+                    return 1;
+                }
+                return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
+            }
+        });
+    }
+
+    private List<String> generateIndexLetter(List<AbsFriendItem> data_list) {
+        List<String> letters= new ArrayList<>();
+        for(AbsFriendItem bean : data_list) {
+            String letter = bean.getGroupText();
+            if(!letters.contains(letter)){
+                letters.add(letter);
+            }
+        }
+        return letters;
     }
 
     @Override
     public void resetData(List<AbsFriendItem> datas) {
         super.resetData(datas);
+    }
+
+    public void setSideAction(Action1<List<String>> action) {
+        this.mSideAction = action;
     }
 }

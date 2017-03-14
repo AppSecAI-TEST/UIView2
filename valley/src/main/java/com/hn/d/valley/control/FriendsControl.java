@@ -102,6 +102,13 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             }
         };
 
+        mFriendsAdapter.setSideAction(new Action1<List<String>>() {
+            @Override
+            public void call(List<String> strings) {
+                sidebar_friend.setLetters(strings);
+            }
+        });
+
         mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
         mRefreshLayout.addRefreshListener(this);
         rRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -227,8 +234,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                         }
 
                         List<FriendBean> data_list = bean.getData_list();
-                        List<String> indexLetter = generateIndexLetter(sort(data_list));
-                        sidebar_friend.setLetters(indexLetter);
                         resetData(data_list);
                     }
 
@@ -241,15 +246,4 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 }));
     }
 
-    private List<String> generateIndexLetter(List<FriendBean> data_list) {
-        List<String> letters= new ArrayList<>();
-        for(FriendBean bean : data_list) {
-            String letter = String.valueOf(generateFirstLetter(bean));
-            if(!letters.contains(letter)){
-                letters.add(letter);
-            }
-        }
-        sidebar_friend.setLetters(letters);
-        return letters;
-    }
 }

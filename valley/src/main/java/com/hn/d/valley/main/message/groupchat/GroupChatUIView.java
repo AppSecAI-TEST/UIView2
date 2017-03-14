@@ -24,7 +24,7 @@ public class GroupChatUIView extends ChatUIView {
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.add_friends_s).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new  GroupInfoUIVIew());
+                GroupInfoUIVIew.start(mOtherILayout,mSessionId,sessionType);
             }
         }));
 

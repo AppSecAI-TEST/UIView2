@@ -5,31 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/base_dark_rect_shape">
 
-    <LinearLayout
-        android:layout_centerInParent="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.hn.d.valley.widget.HnGlideImageView
-            android:id="@+id/image_view"
-            android:layout_gravity="center"
-            android:layout_width="@dimen/avatar_image_size_little"
-            android:layout_height="@dimen/avatar_image_size_little"
-            android:contentDescription="@string/is_circle2"
-            android:src="@drawable/default_avatar" />
-
-        <TextView
-            android:id="@+id/tv__username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingTop="@dimen/base_xhdpi"
-            tools:text="李伟" />
-
-    </LinearLayout>
+    <include layout="@layout/item_headimg_name_view" />
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/delete_view"

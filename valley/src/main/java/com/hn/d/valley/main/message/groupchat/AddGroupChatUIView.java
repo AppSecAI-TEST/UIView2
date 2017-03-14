@@ -35,8 +35,6 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
-import com.hn.d.valley.main.friend.groupchat.AddGroupAdapter;
-import com.hn.d.valley.main.friend.groupchat.AddGroupDatatProvider;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.utils.NetUtils;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
@@ -134,10 +132,9 @@ public class AddGroupChatUIView extends BaseUIView {
                 return groupText;
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onGroupDraw(Canvas canvas, View view, int position) {
-                textPaint.setColor(mActivity.getColor(R.color.line_color));
+                textPaint.setColor(mActivity.getResources().getColor(R.color.line_color));
 
                 rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
                 canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
@@ -150,10 +147,9 @@ public class AddGroupChatUIView extends BaseUIView {
 
             }
 
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onGroupOverDraw(Canvas canvas, View view, int position, int offset) {
-                textPaint.setColor(mActivity.getColor(R.color.line_color));
+                textPaint.setColor(mActivity.getResources().getColor(R.color.line_color));
 
                 rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight(position) - offset);
                 canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
@@ -229,12 +225,15 @@ public class AddGroupChatUIView extends BaseUIView {
                         String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE) +"/avatar2.png";
                         //ios 目前大小为 40
                         AttachmentStore.saveBitmap(JoinBitmaps.createGroupBitCircle(bitmaps,40,40,mActivity),filePath,true);
-
+                        for (Bitmap bitmap : bitmaps) {
+                            if (!bitmap.isRecycled()) {
+                                bitmap.recycle();
+                            }
+                        }
                         File file = new File(filePath);
                         if(!file.exists()) {
                             return null;
                         }
-
                         return filePath;
                     }
                  })

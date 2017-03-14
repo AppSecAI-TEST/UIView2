@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/base_xhdpi"
+    android:paddingTop="@dimen/base_xhdpi"
+    android:background="@drawable/base_white_bg_selector"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/DarkTextStyle"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/base_text_color"
+        android:text="群成员列表"
+        android:textSize="@dimen/default_text_size" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_height="wrap_content">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/rv_headimg_name_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <ImageView
+            android:src="@drawable/base_next"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <include
+        layout="@layout/item_divider_line"/>
+
+    <TextView
+        android:id="@+id/tv_add_groupmembers"
+        style="@style/DarkTextStyle"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_alignParentStart="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:text="+ 添加群成员"
+        android:textSize="@dimen/default_text_size" />
+
+</LinearLayout>

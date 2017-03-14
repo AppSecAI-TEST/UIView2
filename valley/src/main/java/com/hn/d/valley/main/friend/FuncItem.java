@@ -25,6 +25,7 @@ public class FuncItem extends AbsFriendItem {
         public void call(){
             //进入群聊
             T_.show("进入群聊");
+
         }
     });
 
@@ -34,7 +35,7 @@ public class FuncItem extends AbsFriendItem {
         this.text = text;
         this.action = action;
         itemType = ItemTypes.FUNC;
-        groupText = null;
+        groupText = "☆";
     }
 
     String text ;

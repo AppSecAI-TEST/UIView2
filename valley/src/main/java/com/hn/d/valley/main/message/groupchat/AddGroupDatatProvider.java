@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.friend.groupchat;
+package com.hn.d.valley.main.message.groupchat;
 
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;

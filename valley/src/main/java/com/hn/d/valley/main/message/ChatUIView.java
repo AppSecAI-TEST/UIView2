@@ -89,7 +89,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
     protected AudioRecorder audioMessageHelper;
-    String mSessionId;
+    protected String mSessionId;
     @BindView(R.id.group_view)
     RadioGroup mGroupView;
     @BindView(R.id.chat_root_layout)
@@ -99,7 +99,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     @BindView(R.id.record_view)
     TextView mRecordView;
     ChatControl mChatControl;
-    SessionTypeEnum sessionType;
+    protected SessionTypeEnum sessionType;
     @BindView(R.id.refresh_layout)
     HnRefreshLayout mRefreshLayout;
     @BindView(R.id.recycler_view)
