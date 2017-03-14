@@ -99,9 +99,11 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 mAddPhotoAdapter.addLastItemSafe(filePath);
                 break;
             case FRONT:
+                frontPath = filePath;
                 displayImage(mFrontImageView, filePath);
                 break;
             case REVERSE:
+                reversePath = filePath;
                 displayImage(mReverseImageView, filePath);
                 break;
         }
