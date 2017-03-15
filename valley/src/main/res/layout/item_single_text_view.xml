@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/base_xhdpi">
 
-    <TextView
+    <com.angcyo.uiview.widget.RTextView
         android:id="@+id/text_view"
         style="@style/DarkTextStyle"
         android:layout_width="wrap_content"

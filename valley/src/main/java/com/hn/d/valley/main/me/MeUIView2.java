@@ -272,13 +272,14 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 });
             }
         }));
+        //我的身份
         items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 itemInfoLayout.setItemText(getString(R.string.my_auth_title));
                 //是否已认证【0-未认证，1-已认证，2-认证中-查看自己信息才会有，3-认证失败-查看自己信息才会有，以前没有认证成功过才会有该值】
-                int is_auth = Integer.parseInt(userInfoBean.getIs_auth());
+                final int is_auth = Integer.parseInt(userInfoBean.getIs_auth());
                 //是否已认证【0-未认证，1-职场名人，2-娱乐明星，3-体育任务，4-政府人员】
                 int auth_type = Integer.parseInt(userInfoBean.getAuth_type());
                 String darkString;
@@ -317,7 +318,16 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyAuthUIView());
+                        switch (is_auth) {
+                            case 1:
+                            case 2:
+                            case 3:
+                                mOtherILayout.startIView(new MyAuthStatusUIView(is_auth));
+                                break;
+                            default:
+                                mOtherILayout.startIView(new MyAuthUIView());
+                                break;
+                        }
                     }
                 });
             }

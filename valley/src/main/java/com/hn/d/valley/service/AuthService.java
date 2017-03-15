@@ -40,4 +40,13 @@ public interface AuthService {
      */
     @POST("auth/apply")
     Observable<ResponseBody> apply(@QueryMap Map<String, String> map);
+
+    /**
+     * 认证详情
+     * <p>
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     */
+    @POST("auth/detail")
+    Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
 }
