@@ -27,6 +27,8 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.AuthService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnLoading;
@@ -34,6 +36,8 @@ import com.lzy.imagepicker.ImagePickerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -255,6 +259,12 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+//                        if (BuildConfig.DEBUG) {
+//                            onApplyFinish();
+//                            return;
+//                        }
+
+
                         if (MyAuthUIView.checkEmpty(mEditText)) {
                             return;
                         }
@@ -274,6 +284,17 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 });
             }
         }));
+    }
+
+    private void onApplyFinish() {
+        mOtherILayout.finishIView(MyAuthUIView.class);
+        finishIView();
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                UserCache.instance().getUserInfoBean().setIs_auth(String.valueOf(2));
+            }
+        });
     }
 
     /**
@@ -370,8 +391,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
                         T_.show(bean);
-
-                        
+                        onApplyFinish();
                     }
 
                     @Override

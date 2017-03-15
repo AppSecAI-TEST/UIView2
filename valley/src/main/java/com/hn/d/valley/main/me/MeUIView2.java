@@ -98,7 +98,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
     @Override
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
-        if (viewShowCount > 1) {
+        if (viewShowCount >= 1) {
             mRExBaseAdapter.notifyItemChanged(6);
         }
     }
@@ -188,19 +188,21 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
+        //我的相册
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("我的相册");
+                itemInfoLayout.setItemText(getString(R.string.my_photos));
                 itemInfoLayout.setItemDarkText(userInfoBean.getDiscuss_pic_count() + "");
             }
         }));
+        //我的收藏
         items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("我的收藏");
+                itemInfoLayout.setItemText(getString(R.string.my_collect_tip));
                 itemInfoLayout.setItemDarkText(userInfoBean.getCollect_count() + "");
 
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
@@ -212,11 +214,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
+        //动态通知
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("动态通知");
+                itemInfoLayout.setItemText(getString(R.string.dynamic_notification_text));
 
                 ImageView imageView = itemInfoLayout.getImageView();
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
@@ -231,11 +234,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 });
             }
         }));
+        //我的访客
         items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("我的访客");
+                itemInfoLayout.setItemText(getString(R.string.my_visitor_text));
 
                 ImageView imageView = itemInfoLayout.getImageView();
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
@@ -251,12 +255,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
-
+        //等级
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("等级");
+                itemInfoLayout.setItemText(getString(R.string.level));
                 itemInfoLayout.setItemDarkTag("V%1$s");
                 itemInfoLayout.setItemDarkText(userInfoBean.getGrade());
 
@@ -319,27 +323,29 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
+        //邀请好友
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("邀请好友");
+                itemInfoLayout.setItemText(getString(R.string.invite_friends));
 
                 TextView textView = new TextView(mActivity);
-                textView.setText("有奖");
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelOffset(R.dimen.default_text_size));
+                textView.setText(R.string.prize_tip);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
                 textView.setTextColor(Color.WHITE);
                 textView.setBackgroundResource(R.drawable.base_orange_color_round_bg);
-                int margin = getResources().getDimensionPixelOffset(R.dimen.base_xxhdpi);
+                int margin = getResources().getDimensionPixelOffset(R.dimen.base_xhdpi);
                 textView.setPadding(margin / 2, margin / 4, margin / 2, margin / 4);
-                itemInfoLayout.addRightView(textView, -2, -2, margin);
+                itemInfoLayout.addRightView(textView, -2, -2, 2 * margin);
             }
         }));
+        //我的二维码
         items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText("我的二维码");
+                itemInfoLayout.setItemText(getString(R.string.my_qr_code));
                 ImageView imageView = itemInfoLayout.getImageView();
                 imageView.setImageResource(R.drawable.qr_code);
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_xxxhdpi);

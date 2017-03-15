@@ -276,7 +276,7 @@
     <string name="industries_tip">行业*</string>
     <string name="company_tip">公司*</string>
     <string name="job_tip">职位*</string>
-    <string name="introduction_tip">人物介绍</string>
+    <string name="introduction_tip">人物介绍*</string>
     <string name="introduction_hint">您可以输入您的个人经历,重大业绩,获奖记录等.</string>
     <string name="link_tip">个人链接</string>
     <string name="link_hint">请输入链接地址</string>
@@ -294,5 +294,9 @@
     <string name="upload_info_tip">上传资料</string>
     <string name="upload_card_tip2">请上传身份证照.</string>
     <string name="upload_certify_tip">请至少上传一张证明材料</string>
+    <string name="prize_tip">有奖</string>
+    <string name="my_photos">我的相册</string>
+    <string name="my_collect_tip">我的收藏</string>
+    <string name="url_error_tip">无效的网址,是否有http前缀?</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.me;
 
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -7,6 +8,8 @@ import android.view.inputmethod.EditorInfo;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.github.utilcode.utils.IDCardUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -50,6 +53,15 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     private List<ExEditText> mOtherEditTexts = new ArrayList<>();
     //其他Item布局
     private ItemInfoLayout mInfoLayout;
+
+    public static boolean checkEmpty(ExEditText view) {
+        if (view.isEmpty()) {
+            view.requestFocus();
+            view.setError(ValleyApp.getApp().getString(R.string.not_empty_tip));
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected int getTitleResource() {
@@ -275,6 +287,18 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                                 }
                             }
 
+                            if (checkEmpty(mOtherEditTexts.get(0))) {
+                                return;
+                            }
+
+                            if (!TextUtils.isEmpty(mOtherEditTexts.get(1).string())) {
+                                //如果不为空,则检测网址是否正确
+                                if (!RUtils.isHttpUrl(mOtherEditTexts.get(1).string())) {
+                                    T_.error(getString(R.string.url_error_tip));
+                                    return;
+                                }
+                            }
+
                             ExEditText editText = mCheckEditTexts.get(1);
                             if (!BuildConfig.DEBUG && !"YES".equalsIgnoreCase(IDCardUtil.IDCardValidate(editText.string()))) {
                                 //T_.error("无效的身份证号码!");
@@ -350,17 +374,14 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     }
 
     private void clearEditTexts() {
-        mCheckEditTexts.clear();
-        mOtherEditTexts.clear();
-    }
-
-    public static boolean checkEmpty(ExEditText view) {
-        if (view.isEmpty()) {
-            view.requestFocus();
-            view.setError(ValleyApp.getApp().getString(R.string.not_empty_tip));
-            return true;
+        for (ExEditText editText : mCheckEditTexts) {
+            editText.setError(null);
         }
-        return false;
+        mCheckEditTexts.clear();
+        for (ExEditText editText : mOtherEditTexts) {
+            editText.setError(null);
+        }
+        mOtherEditTexts.clear();
     }
 
     /**
