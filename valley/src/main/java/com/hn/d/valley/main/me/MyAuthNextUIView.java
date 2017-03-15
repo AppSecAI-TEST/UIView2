@@ -370,6 +370,8 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
                         T_.show(bean);
+
+                        
                     }
 
                     @Override

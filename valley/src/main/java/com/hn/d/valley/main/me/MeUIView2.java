@@ -44,14 +44,13 @@ import rx.functions.Action0;
  */
 public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
-    private ArrayList<String> mPhotos = new ArrayList<>();
-
     Runnable refreshRunnable = new Runnable() {
         @Override
         public void run() {
             loadUserData();
         }
     };
+    private ArrayList<String> mPhotos = new ArrayList<>();
 
     static void resize(View view, int size, int margin) {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -94,6 +93,14 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
         initPhotos(userInfoBean);
         super.onViewShow(bundle);
+    }
+
+    @Override
+    public void onViewShow(long viewShowCount) {
+        super.onViewShow(viewShowCount);
+        if (viewShowCount > 1) {
+            mRExBaseAdapter.notifyItemChanged(6);
+        }
     }
 
     private void loadUserData() {
