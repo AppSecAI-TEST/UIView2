@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.UserInfoBean;
@@ -42,6 +43,8 @@ import rx.functions.Action0;
  * Version: 1.0.0
  */
 public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
+
+    private ArrayList<String> mPhotos = new ArrayList<>();
 
     Runnable refreshRunnable = new Runnable() {
         @Override
@@ -88,6 +91,8 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         } else {
             postDelayed(refreshRunnable, 1000);
         }
+        final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+        initPhotos(userInfoBean);
         super.onViewShow(bundle);
     }
 
@@ -105,6 +110,20 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 });
     }
 
+    private void initPhotos(UserInfoBean userInfoBean) {
+        mPhotos.clear();
+        if (userInfoBean != null) {
+            List<String> stringList = RUtils.split(userInfoBean.getPhotos());
+            if (stringList.isEmpty()) {
+                mPhotos.add(UserCache.instance().getAvatar());
+            } else {
+                mPhotos.addAll(stringList);
+            }
+        } else {
+            mPhotos.add(UserCache.instance().getAvatar());
+        }
+    }
+
     @Override
     protected void createItems(List<ViewItemInfo> items) {
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
@@ -118,7 +137,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 holder.v(R.id.user_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new EditInfoUIView(new ArrayList<String>(), new Action0() {
+                        mOtherILayout.startIView(new EditInfoUIView(mPhotos, new Action0() {
                             @Override
                             public void call() {
                                 //initMeUIView();

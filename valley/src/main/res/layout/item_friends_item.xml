@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_bg_selector"
+    android:gravity="center_vertical"
+    android:minHeight="55dip">
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/iv_item_head"
+        android:layout_width="@dimen/avatar_image_size_little"
+        android:layout_height="@dimen/avatar_image_size_little"
+        android:src="@drawable/default_avatar"
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:contentDescription="@string/is_circle"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <RelativeLayout
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/avatar_image_size_little"
+        android:layout_toRightOf="@id/iv_item_head">
+
+        <TextView
+            android:id="@+id/tv_friend_name"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="hewking" />
+
+        <!--<View-->
+            <!--android:id="@+id/bottomLine"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/base_line"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="@color/line_color" />-->
+
+    </RelativeLayout>
+
+</RelativeLayout>

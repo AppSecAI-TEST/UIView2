@@ -1023,12 +1023,12 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onDeleteClick(View view, int position, Luban.ImageItem item) {
                 mHnAddImageAdapter.getAllDatas().remove(position);
                 ImagePickerHelper.deleteItemFromSelected(item.path);
-                if (position == 5) {
-                    mHnAddImageAdapter.notifyItemChanged(position);
-                } else {
+//                if (position == 5) {
+//                    mHnAddImageAdapter.notifyItemChanged(position);
+//                } else {
                     mHnAddImageAdapter.notifyItemRemoved(position);
                     mHnAddImageAdapter.notifyItemRangeChanged(position, 6);
-                }
+//                }
             }
         });
     }

@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -35,12 +36,16 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.friend.AbsFriendItem;
+import com.hn.d.valley.main.friend.FriendItem;
+import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.utils.NetUtils;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.hn.d.valley.widget.groupView.JoinBitmaps;
+import com.netease.nimlib.sdk.friend.model.Friend;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,17 +68,18 @@ public class AddGroupChatUIView extends BaseUIView {
     HnRefreshLayout refreshLayout;
     @BindView(R.id.friend_add_recyclerview)
     RecyclerView recyclerView;
-    @BindView(R.id.rv_groupchat_icon)
-    HnIcoRecyclerView iconSelectedRv;
+//    @BindView(R.id.rv_groupchat_icon)
+//    HnIcoRecyclerView iconSelectedRv;
 
     private AddGroupAdapter mGroupAdapter;
 
     private AddGroupDatatProvider datatProvider;
 
-    private Action2<Boolean,FriendBean> action = new Action2<Boolean, FriendBean>() {
+/*    private Action2<Boolean,FriendItem> action = new Action2<Boolean, FriendItem>() {
         @Override
-        public void call(Boolean aBoolean, FriendBean bean) {
+        public void call(Boolean aBoolean, FriendItem item) {
             HnIcoRecyclerView.IcoInfo icon ;
+            FriendBean bean = item.getFriendBean();
             if (aBoolean) {
                 icon = new HnIcoRecyclerView.IcoInfo(bean.getUid(),bean.getAvatar());
                 iconSelectedRv.getMaxAdapter().addLastItem(icon);
@@ -81,7 +87,7 @@ public class AddGroupChatUIView extends BaseUIView {
                 iconSelectedRv.remove(bean.getAvatar());
             }
         }
-    };
+    };*/
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -112,90 +118,46 @@ public class AddGroupChatUIView extends BaseUIView {
     private void init() {
         mGroupAdapter = new AddGroupAdapter(mActivity);
         datatProvider = new AddGroupDatatProvider();
-        mGroupAdapter.setAction(action);
+//        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-
-        final TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setTextSize(mActivity.getResources().getDisplayMetrics().scaledDensity * 20);
-        final RectF rectF = new RectF();
-        final Rect rect = new Rect();
-
-        recyclerView.addItemDecoration(new RGroupItemDecoration(new RGroupItemDecoration.SingleGroupCallBack() {
-            @Override
-            public int getGroupHeight(int position) {
-                return ScreenUtil.dip2px(20);
-            }
-
-            @Override
-            public String getGroupText(int position) {
-                String groupText = mGroupAdapter.getAllDatas().get(position).getDefaultMark();
-                return groupText;
-            }
-
-            @Override
-            public void onGroupDraw(Canvas canvas, View view, int position) {
-                textPaint.setColor(mActivity.getResources().getColor(R.color.line_color));
-
-                rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
-                canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
-                textPaint.setColor(Color.WHITE);
-
-                final String letter = String.valueOf(FriendsControl.generateFirstLetter(mGroupAdapter.getAllDatas().get(position)));
-                textPaint.getTextBounds(letter, 0, letter.length(), rect);
-
-                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), view.getTop() - (getGroupHeight(position) - rect.height()) / 2, textPaint);
-
-            }
-
-            @Override
-            public void onGroupOverDraw(Canvas canvas, View view, int position, int offset) {
-                textPaint.setColor(mActivity.getResources().getColor(R.color.line_color));
-
-                rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight(position) - offset);
-                canvas.drawRoundRect(rectF, ScreenUtil.dip2px(2), ScreenUtil.dip2px(2), textPaint);
-                textPaint.setColor(Color.WHITE);
-
-                final String letter = String.valueOf(FriendsControl.generateFirstLetter(mGroupAdapter.getAllDatas().get(position)));
-                textPaint.getTextBounds(letter, 0, letter.length(), rect);
-
-                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), (getGroupHeight(position) + rect.height()) / 2 - offset, textPaint);
-
-            }
-        }));
+        recyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mGroupAdapter)));
 
         recyclerView.setAdapter(mGroupAdapter);
 
         datatProvider.provide(mSubscriptions, new Action1<List<FriendBean>>() {
             @Override
             public void call(List<FriendBean> beanList) {
-                mGroupAdapter.resetData(beanList);
+                List<AbsFriendItem> datas = new ArrayList();
+                datas.add(new FuncItem<ILayout>("搜索",new Action1<ILayout>() {
+                    @Override
+                    public void call(ILayout o) {
+                        T_.show("搜索");
+                    }
+                }));
+                for (FriendBean bean : beanList) {
+                    datas.add(new FriendItem(bean));
+                }
+                mGroupAdapter.resetData(datas);
             }
         });
     }
 
 
     private void createGroupChat() {
-        List<FriendBean> selectorData = mGroupAdapter.getSelectorData();
-        add(RRetrofit.create(GroupChatService.class)
-                .add(Param.buildMap("uid:" + UserCache.getUserAccount()
-                        , "to_uid:" + RUtils.connect(selectorData)
-                        ,"avatar:" + "http:\\/\\/circleimg.klgwl.com\\/77500371484917281.776834"))
-                .compose(Rx.transformer(GroupInfoBean.class))
-                .subscribe(new BaseSingleSubscriber<GroupInfoBean>() {
-                    @Override
-                    public void onSucceed(GroupInfoBean bean) {
-                        T_.show(bean.getGroupAvatar());
-                    }
-                }));
+        List<AbsFriendItem> selectorData = mGroupAdapter.getSelectorData();
         if (selectorData == null || selectorData.size() == 0) {
             return;
         }
         createAndSavePhoto(selectorData);
     }
 
-    private void createAndSavePhoto(final List<FriendBean> selectorData) {
+    private void createAndSavePhoto(final List<AbsFriendItem> selectorData) {
         HnLoading.show(mOtherILayout);
-        add(Observable.just(selectorData)
+        final List<FriendBean> beans = new ArrayList<>();
+        for (AbsFriendItem item : selectorData) {
+            beans.add(((FriendItem)item).getFriendBean());
+        }
+        add(Observable.just(beans)
                 .flatMap(new Func1<List<FriendBean>, Observable<List<String>>>() {
                     @Override
                     public Observable<List<String>> call(List<FriendBean> beanList) {
@@ -249,7 +211,7 @@ public class AddGroupChatUIView extends BaseUIView {
                         String circleUrl = OssHelper.getAvatorUrl(s);
                         return RRetrofit.create(GroupChatService.class)
                                 .add(Param.buildMap("uid:" + UserCache.getUserAccount()
-                                        , "to_uid:" + RUtils.connect(selectorData)
+                                        , "to_uid:" + RUtils.connect(beans)
                                         ,"avatar:" + circleUrl))
                                 .compose(Rx.transformer(GroupInfoBean.class));
                     }

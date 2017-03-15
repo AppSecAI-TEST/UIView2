@@ -285,6 +285,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
             @Override
             public void onDismiss() {
                 isCancel = true;
+                onCancel();
             }
         });
 

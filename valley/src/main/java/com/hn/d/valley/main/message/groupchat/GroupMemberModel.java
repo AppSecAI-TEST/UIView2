@@ -112,25 +112,8 @@ public class GroupMemberModel {
                        mAdapter.resetData(beans.getData_list());
                     }
                 }));
-
-//        contentUIView.add(RRetrofit.create(GroupChatService.class)
-//                .myGroup(Param.buildMap("uid:" + UserCache.getUserAccount()))
-//                .compose(Rx.transformer(GroupList.class))
-//                .subscribe(new BaseSingleSubscriber<GroupList>() {
-//                    @Override
-//                    public void onError(int code, String msg) {
-//                        super.onError(code, msg);
-//                    }
-//
-//                    @Override
-//                    public void onSucceed(GroupList beans) {
-//                        L.i(beans);
-//                    }
-//                }));
     }
 
     public static class GroupMemberList extends ListModel<GroupMemberBean>{}
-
-    public static class GroupList extends ListModel<GroupBean>{}
 
 }

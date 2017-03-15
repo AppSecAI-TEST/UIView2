@@ -4,6 +4,7 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 
 import java.util.ArrayList;
@@ -105,10 +106,11 @@ public class OssControl {
                         @Override
                         public void onSucceed(String s) {
                             String circleUrl = OssHelper.getCircleUrl(s);
+                            if (BuildConfig.DEBUG) {
+                                L.i(path + " 上传成功至->" + circleUrl);
+                            }
                             urlMap.put(path, circleUrl);
-                            uploadList.add(circleUrl);
-                            index++;
-                            startUpload();
+                            succeed(circleUrl);
                         }
 
                         @Override
@@ -118,10 +120,17 @@ public class OssControl {
                         }
                     });
         } else {
-            uploadList.add(upload);
-            index++;
-            startUpload();
+            if (BuildConfig.DEBUG) {
+                L.i("图片已上传过->" + upload);
+            }
+            succeed(upload);
         }
+    }
+
+    private void succeed(String circleUrl) {
+        uploadList.add(circleUrl);
+        index++;
+        startUpload();
     }
 
     public interface OnUploadListener {

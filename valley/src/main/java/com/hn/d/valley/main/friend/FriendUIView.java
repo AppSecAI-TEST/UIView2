@@ -66,7 +66,7 @@ public class FriendUIView extends BaseUIView {
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
-        mFriendsControl = new FriendsControl(mActivity);
+        mFriendsControl = new FriendsControl(mActivity,mOtherILayout);
     }
 
     @NonNull

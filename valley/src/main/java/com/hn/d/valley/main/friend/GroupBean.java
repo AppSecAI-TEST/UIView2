@@ -7,27 +7,34 @@ import com.google.gson.annotations.SerializedName;
  */
 public class GroupBean {
 
+
     /**
-     * gid : 21
-     * yx_gid : 33333
+     * gid : 10395
+     * yx_gid : 23850410
      * name :
+     * default_name : 无敌,军训,安卓(ღ˘⌣˘ღ)?????
      * introduce :
-     * avatar : http://static.bzsns.cn/pic/M00/00/38/CixiMlbj0DOATFzlAABGkQXpArU717.png
-     * admin : 50001
-     * created : 1480932785
-     * member_count : 4
+     * avatar :
+     * default_avatar : http:\/\/circleimg.klgwl.com\/77500371484917281.776834
+     * admin : 50031
+     * created : 1489125764
+     * member_count : 3
      */
 
     private String gid;
     @SerializedName("yx_gid")
     private String yxGid;
     private String name;
+    @SerializedName("default_name")
+    private String defaultName;
     private String introduce;
     private String avatar;
+    @SerializedName("default_avatar")
+    private String defaultAvatar;
     private String admin;
     private String created;
     @SerializedName("member_count")
-    private String memberCcount;
+    private String memberCount;
 
     public String getGid() {
         return gid;
@@ -53,6 +60,14 @@ public class GroupBean {
         this.name = name;
     }
 
+    public String getDefaultName() {
+        return defaultName;
+    }
+
+    public void setDefaultName(String defaultName) {
+        this.defaultName = defaultName;
+    }
+
     public String getIntroduce() {
         return introduce;
     }
@@ -67,6 +82,14 @@ public class GroupBean {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getDefaultAvatar() {
+        return defaultAvatar;
+    }
+
+    public void setDefaultAvatar(String defaultAvatar) {
+        this.defaultAvatar = defaultAvatar;
     }
 
     public String getAdmin() {
@@ -85,11 +108,11 @@ public class GroupBean {
         this.created = created;
     }
 
-    public String getMemberCcount() {
-        return memberCcount;
+    public String getMemberCount() {
+        return memberCount;
     }
 
-    public void setMemberCcount(String memberCcount) {
-        this.memberCcount = memberCcount;
+    public void setMemberCount(String memberCount) {
+        this.memberCount = memberCount;
     }
 }

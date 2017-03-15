@@ -1,37 +1,40 @@
 package com.hn.d.valley.main.friend;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.main.message.groupchat.AddGroupChatUIView;
+import com.hn.d.valley.main.message.groupchat.MyGroupUIView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action0;
+import rx.functions.Action1;
 
 /**
  * Created by hewking on 2017/3/8.
  */
-public class FuncItem extends AbsFriendItem {
+public class FuncItem<T> extends AbsFriendItem {
 
-    static FuncItem newfirend = new FuncItem("新的朋友",new Action0(){
+    static FuncItem newfirend = new FuncItem<ILayout>("新的朋友",new Action1<ILayout>(){
         @Override
-        public void call() {
-            T_.show("新的朋友");
-
+        public void call(ILayout layout) {
+            layout.startIView(new AddGroupChatUIView());
         }
     });
 
-    static FuncItem groupMessage = new FuncItem("群聊",new Action0(){
+    static FuncItem groupMessage = new FuncItem<ILayout>("群聊",new Action1<ILayout>(){
         @Override
-        public void call(){
+        public void call(ILayout layout){
             //进入群聊
-            T_.show("进入群聊");
-
+            layout.startIView(new MyGroupUIView());
         }
     });
 
-    Action0 action ;
 
-    FuncItem(String text,Action0 action){
+    Action1<T> action ;
+
+    public FuncItem(String text, Action1<T> action){
         this.text = text;
         this.action = action;
         itemType = ItemTypes.FUNC;
@@ -44,13 +47,15 @@ public class FuncItem extends AbsFriendItem {
         List<FuncItem> data = new ArrayList<>();
         data.add(newfirend);
         data.add(groupMessage);
-
         return data;
     }
 
 
-    public void onFuncClick(){
+    public void onFuncClick(T t){
         //checkNotNull
-        action.call();
+        if (action == null) {
+            return;
+        }
+        action.call(t);
     }
 }

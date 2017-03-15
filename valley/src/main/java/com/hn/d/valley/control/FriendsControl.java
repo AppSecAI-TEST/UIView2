@@ -6,20 +6,20 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
@@ -35,9 +35,6 @@ import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.service.ContactService;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -53,11 +50,15 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     RRecyclerView rRecyclerView;
     RefreshLayout  mRefreshLayout;
     FriendsAdapter mFriendsAdapter;
-
     WaveSideBarView sidebar_friend;
+    ILayout otherLayout;
+
     Context mContext;
 
     Action1<FriendBean> toUserDetailAction;
+
+    private CompositeSubscription mSubscriptions;
+
 
     public Action1 getToUserDetailAction() {
         return toUserDetailAction;
@@ -67,10 +68,14 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         this.toUserDetailAction = toUserDetailAction;
     }
 
-    private CompositeSubscription mSubscriptions;
 
-    public FriendsControl(Context mContext) {
+    public FriendsControl(Context mContext, ILayout iLayout) {
         this.mContext = mContext;
+        this.otherLayout = iLayout;
+    }
+
+    public ILayout getOtherLayout() {
+        return otherLayout;
     }
 
     public void initItem(CompositeSubscription mSubscriptions, RBaseViewHolder holder, FriendBean dataBean) {
@@ -79,8 +84,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
     public void init(RelativeLayout rootview,CompositeSubscription mSubscriptions) {
 
-//        characterParser = CharacterParser.getInstance();
-//        pinyinComparator = PinyinComparator.getInstance();
         this.mSubscriptions = mSubscriptions;
 
         mViewHolder = new RBaseViewHolder(rootview);
@@ -114,55 +117,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         rRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         rRecyclerView.setAdapter(mFriendsAdapter);
 
-        final TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setTextSize(mContext.getResources().getDisplayMetrics().scaledDensity * 20);
-        final RectF rectF = new RectF();
-        final Rect rect = new Rect();
-
-        rRecyclerView.addItemDecoration(new RGroupItemDecoration(new RGroupItemDecoration.SingleGroupCallBack() {
-            @Override
-            public int getGroupHeight(int position) {
-                return ScreenUtil.dip2px(20);
-            }
-
-            @Override
-            public String getGroupText(int position) {
-                String groupText = mFriendsAdapter.getAllDatas().get(position).getGroupText();
-                return groupText;
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onGroupDraw(Canvas canvas, View view, int position) {
-                textPaint.setColor(mContext.getColor(R.color.line_color));
-
-                rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
-                canvas.drawRect(rectF,textPaint);
-                textPaint.setColor(Color.WHITE);
-
-                final String letter = mFriendsAdapter.getAllDatas().get(position).getGroupText();
-                textPaint.getTextBounds(letter, 0, letter.length(), rect);
-
-                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), view.getTop() - (getGroupHeight(position) - rect.height()) / 2, textPaint);
-
-            }
-
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onGroupOverDraw(Canvas canvas, View view, int position, int offset) {
-                textPaint.setColor(mContext.getColor(R.color.line_color));
-
-                rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight(position) - offset);
-                canvas.drawRect(rectF, textPaint);
-                textPaint.setColor(Color.WHITE);
-
-                final String letter = mFriendsAdapter.getAllDatas().get(position).getGroupText();
-                textPaint.getTextBounds(letter, 0, letter.length(), rect);
-
-                canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), (getGroupHeight(position) + rect.height()) / 2 - offset, textPaint);
-
-            }
-        }));
+        rRecyclerView.addItemDecoration(new RGroupItemDecoration(new GroupItemCallBack(mContext,mFriendsAdapter)));
     }
 
     private void scrollToLetter(String letter) {
@@ -178,17 +133,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         }
     }
 
-
-    public  static List<FriendBean> sort(List<FriendBean> list) {
-        Collections.sort(list, new Comparator<FriendBean>() {
-            @Override
-            public int compare(FriendBean o1, FriendBean o2) {
-                return generateFirstLetter(o1)
-                        - generateFirstLetter(o2);
-            }
-        });
-        return list;
-    }
 
     public static char generateFirstLetter(FriendBean o2) {
         return Pinyin.toPinyin(o2.getDefaultMark().charAt(0)).toUpperCase().charAt(0);
@@ -244,6 +188,65 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
                     }
                 }));
+    }
+
+
+    public static class GroupItemCallBack extends RGroupItemDecoration.SingleGroupCallBack {
+
+        final TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        final RectF rectF = new RectF();
+        final Rect rect = new Rect();
+
+        private Context mContext;
+
+        private RBaseAdapter<AbsFriendItem> mAdapter;
+
+        public GroupItemCallBack(Context ctx,RBaseAdapter adapter) {
+            textPaint.setTextSize(ctx.getResources().getDisplayMetrics().scaledDensity * 20);
+            this.mContext = ctx;
+            this.mAdapter = adapter;
+        }
+
+        @Override
+        public int getGroupHeight(int position) {
+            return ScreenUtil.dip2px(20);
+        }
+
+        @Override
+        public String getGroupText(int position) {
+            String groupText = mAdapter.getAllDatas().get(position).getGroupText();
+            return groupText;
+        }
+
+        @Override
+        public void onGroupDraw(Canvas canvas, View view, int position) {
+            textPaint.setColor(mContext.getResources().getColor(R.color.line_color));
+
+            rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
+            canvas.drawRect(rectF,textPaint);
+            textPaint.setColor(Color.WHITE);
+
+            final String letter = mAdapter.getAllDatas().get(position).getGroupText();
+            textPaint.getTextBounds(letter, 0, letter.length(), rect);
+
+            canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), view.getTop() - (getGroupHeight(position) - rect.height()) / 2, textPaint);
+
+        }
+
+        @Override
+        public void onGroupOverDraw(Canvas canvas, View view, int position, int offset) {
+            textPaint.setColor(mContext.getResources().getColor(R.color.line_color));
+
+            rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight(position) - offset);
+            canvas.drawRect(rectF, textPaint);
+            textPaint.setColor(Color.WHITE);
+
+            final String letter = mAdapter.getAllDatas().get(position).getGroupText();
+            textPaint.getTextBounds(letter, 0, letter.length(), rect);
+
+            canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), (getGroupHeight(position) + rect.height()) / 2 - offset, textPaint);
+
+        }
     }
 
 }

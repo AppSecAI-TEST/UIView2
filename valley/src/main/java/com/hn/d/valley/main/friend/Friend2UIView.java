@@ -39,7 +39,7 @@ public class Friend2UIView extends BaseRecyclerUIView<String,FriendBean,String> 
 
     @Override
     protected void initOnShowContentLayout() {
-        mFriendsControl = new FriendsControl(mActivity);
+        mFriendsControl = new FriendsControl(mActivity,mOtherILayout);
         super.initOnShowContentLayout();
 
     }

@@ -4,18 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:layout_height="55dp">
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:layout_height="55dp">-->
 
-        <com.hn.d.valley.widget.HnIcoRecyclerView
-            android:id="@+id/rv_groupchat_icon"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+        <!--<com.hn.d.valley.widget.HnIcoRecyclerView-->
+            <!--android:id="@+id/rv_groupchat_icon"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--/>-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
 
     <com.hn.d.valley.widget.HnRefreshLayout

@@ -35,6 +35,7 @@ import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
+import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;

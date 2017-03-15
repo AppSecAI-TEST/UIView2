@@ -71,11 +71,11 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
     @Override
     protected int getItemLayoutId(int viewType) {
         if (viewType == ItemTypes.FUNC) {
-            return R.layout.item_firends_item;
+            return R.layout.item_friends_item;
         }else if(viewType == ItemTypes.FRIEND ) {
-            return R.layout.item_firends_item;
+            return R.layout.item_friends_item;
         }
-        return R.layout.item_firends_item;
+        return R.layout.item_friends_item;
     }
 
     @Override
@@ -90,7 +90,9 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    funcItem.onFuncClick();
+                    if (mFrendsControl.getOtherLayout() != null ){
+                        funcItem.onFuncClick(mFrendsControl.getOtherLayout());
+                    }
                 }
             });
 
@@ -147,7 +149,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
         resetData(getAllDatas());
     }
 
-    public void sort(List<AbsFriendItem> items) {
+    public static void sort(List<AbsFriendItem> items) {
         Collections.sort(items, new Comparator<AbsFriendItem>() {
             @Override
             public int compare(AbsFriendItem o1, AbsFriendItem o2) {
