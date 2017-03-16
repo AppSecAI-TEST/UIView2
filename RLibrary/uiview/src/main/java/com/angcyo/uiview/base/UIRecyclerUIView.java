@@ -18,7 +18,8 @@ import com.angcyo.uiview.rsen.RefreshLayout;
  * Created by angcyo on 2017-03-11.
  */
 
-public class UIRecyclerUIView<H, T, F> extends UIContentView implements RefreshLayout.OnRefreshListener, RBaseAdapter.OnAdapterLoadMoreListener {
+public class UIRecyclerUIView<H, T, F> extends UIContentView
+        implements RefreshLayout.OnRefreshListener, RBaseAdapter.OnAdapterLoadMoreListener {
 
     /**
      * 刷新控件
