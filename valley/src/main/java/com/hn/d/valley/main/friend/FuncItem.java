@@ -16,14 +16,14 @@ import rx.functions.Action1;
  */
 public class FuncItem<T> extends AbsFriendItem {
 
-    static FuncItem newfirend = new FuncItem<ILayout>("新的朋友",new Action1<ILayout>(){
+    static FuncItem newfirend = new FuncItem<>("新的朋友",new Action1<ILayout>(){
         @Override
         public void call(ILayout layout) {
             layout.startIView(new AddGroupChatUIView());
         }
     });
 
-    static FuncItem groupMessage = new FuncItem<ILayout>("群聊",new Action1<ILayout>(){
+    static FuncItem groupMessage = new FuncItem<>("群聊",new Action1<ILayout>(){
         @Override
         public void call(ILayout layout){
             //进入群聊
@@ -38,7 +38,7 @@ public class FuncItem<T> extends AbsFriendItem {
         this.text = text;
         this.action = action;
         itemType = ItemTypes.FUNC;
-        groupText = "☆";
+        groupText = "";
     }
 
     String text ;

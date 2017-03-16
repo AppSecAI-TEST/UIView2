@@ -20,11 +20,16 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupDescBean;
+import com.hn.d.valley.cache.SimpleCallback;
+import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.team.constant.TeamMemberType;
+import com.netease.nimlib.sdk.team.model.Team;
+import com.netease.nimlib.sdk.team.model.TeamMember;
 
 import java.util.List;
 
@@ -41,6 +46,10 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
     private GroupDescBean mGroupDescBean;
 
+    // state
+    private boolean isSelfAdmin = false;
+    private boolean isSelfManager = false;
+
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleString("聊天信息");
@@ -53,10 +62,75 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         mLayout.startIView(new GroupInfoUIVIew(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
+
+    /**
+     * 初始化群组基本信息
+     */
+    private void loadTeamInfo() {
+        Team t = TeamDataCache.getInstance().getTeamById(mSessionId);
+        if (t != null) {
+            updateTeamInfo(t);
+        } else {
+            TeamDataCache.getInstance().fetchTeamById(mSessionId, new SimpleCallback<Team>() {
+                @Override
+                public void onResult(boolean success, Team result) {
+                    if (success && result != null) {
+                        updateTeamInfo(result);
+                    } else {
+//                        onGetTeamInfoFailed();
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * 更新群信息
+     *
+     * @param t
+     */
+    private void updateTeamInfo(final Team t) {
+        if (t == null) {
+            finishIView();
+            return;
+        } else {
+            if (t.getCreator().equals(UserCache.getUserAccount())) {
+                isSelfAdmin = true;
+//                mRExBaseAdapter.notifyDataSetChanged();
+            }
+
+        }
+    }
+
+    /**
+     * *************************** 加载&变更数据源 ********************************
+     */
+    private void requestMembers() {
+        TeamDataCache.getInstance().fetchTeamMemberList(mSessionId, new SimpleCallback<List<TeamMember>>() {
+            @Override
+            public void onResult(boolean success, List<TeamMember> members) {
+                if (success && members != null && !members.isEmpty()) {
+                    updateTeamMember(members);
+                }
+            }
+        });
+    }
+
+    /**
+     * 更新群成员信息
+     *
+     * @param m
+     */
+    private void updateTeamMember(final List<TeamMember> m) {
+        if (m != null && m.isEmpty()) {
+            return;
+        }
+    }
+
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-
+        loadTeamInfo();
     }
 
     @Override
@@ -110,6 +184,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         } else {
                             showContentLayout();
                             mGroupDescBean = bean;
+                            GroupMemberModel.getInstanse().loadData(bean.getGid());
                             mRExBaseAdapter.notifyDataSetChanged();
                         }
                     }
@@ -203,10 +278,21 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("退出登录");
+                infoLayout.setItemText("清空聊天记录");
 
             }
         }));
+
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                infoLayout.setItemText("举报");
+            }
+        }));
+
+
+        bindGroupOwnerFunc(items, line, left);
 
         items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * left) {
             @Override
@@ -223,6 +309,19 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             }
         }));
 
+    }
+
+    private void bindGroupOwnerFunc(List<ViewItemInfo> items, final int line, final int left) {
+        if (isSelfAdmin) {
+            items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                    infoLayout.setItemText("群管理权转让");
+
+                }
+            }));
+        }
     }
 
     private void dissolveGroup() {

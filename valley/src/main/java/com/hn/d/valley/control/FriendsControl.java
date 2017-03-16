@@ -108,6 +108,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         mFriendsAdapter.setSideAction(new Action1<List<String>>() {
             @Override
             public void call(List<String> strings) {
+                strings.add(0,"☆");
                 sidebar_friend.setLetters(strings);
             }
         });

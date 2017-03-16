@@ -294,6 +294,7 @@
     <string name="upload_info_tip">上传资料</string>
     <string name="upload_card_tip2">请上传身份证照.</string>
     <string name="upload_certify_tip">请至少上传一张证明材料</string>
+    <string name="team_invalid_tip">您已退出该群</string>
     <string name="prize_tip">有奖</string>
     <string name="my_photos">我的相册</string>
     <string name="my_collect_tip">我的收藏</string>

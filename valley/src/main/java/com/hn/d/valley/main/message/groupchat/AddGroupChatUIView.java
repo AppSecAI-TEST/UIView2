@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +18,12 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
+import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
@@ -36,10 +39,13 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.friend.AbsFriendItem;
 import com.hn.d.valley.main.friend.FriendItem;
 import com.hn.d.valley.main.friend.FuncItem;
+import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.service.GroupChatService;
+import com.hn.d.valley.sub.user.NewFriendUIView;
 import com.hn.d.valley.utils.NetUtils;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
@@ -48,6 +54,7 @@ import com.hn.d.valley.widget.groupView.JoinBitmaps;
 import com.netease.nimlib.sdk.friend.model.Friend;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +71,8 @@ import rx.schedulers.Schedulers;
  */
 public class AddGroupChatUIView extends BaseUIView {
 
+    public static final String SELECTED_UIDS = "SELECTED_UIDS";
+
     @BindView(R.id.friend_add_refreshlayout)
     HnRefreshLayout refreshLayout;
     @BindView(R.id.friend_add_recyclerview)
@@ -75,19 +84,28 @@ public class AddGroupChatUIView extends BaseUIView {
 
     private AddGroupDatatProvider datatProvider;
 
-/*    private Action2<Boolean,FriendItem> action = new Action2<Boolean, FriendItem>() {
+    private List<String> mSelectedUids;
+
+    private Action2<Boolean,FriendItem> action = new Action2<Boolean, FriendItem>() {
         @Override
         public void call(Boolean aBoolean, FriendItem item) {
             HnIcoRecyclerView.IcoInfo icon ;
             FriendBean bean = item.getFriendBean();
-            if (aBoolean) {
-                icon = new HnIcoRecyclerView.IcoInfo(bean.getUid(),bean.getAvatar());
-                iconSelectedRv.getMaxAdapter().addLastItem(icon);
-            }else {
-                iconSelectedRv.remove(bean.getAvatar());
-            }
+//            if (aBoolean) {
+//                icon = new HnIcoRecyclerView.IcoInfo(bean.getUid(),bean.getAvatar());
+//                iconSelectedRv.getMaxAdapter().addLastItem(icon);
+//            }else {
+//                iconSelectedRv.remove(bean.getAvatar());
+//            }
+
         }
-    };*/
+    };
+
+    public static void start(ILayout mLayout, List<String> uids) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
+        mLayout.startIView(new AddGroupChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
+    }
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -103,6 +121,16 @@ public class AddGroupChatUIView extends BaseUIView {
     }
 
     @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+
+        if (param != null  && param.mBundle != null) {
+            mSelectedUids = (List<String>) param.mBundle.getSerializable(SELECTED_UIDS);
+        }
+
+    }
+
+    @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_friend_addgroupchat);
     }
@@ -110,12 +138,21 @@ public class AddGroupChatUIView extends BaseUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-
         init();
-
     }
 
     private void init() {
+
+        refreshLayout.setRefreshDirection(HnRefreshLayout.TOP);
+        refreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh(@RefreshLayout.Direction int direction) {
+                if (direction == RefreshLayout.TOP) {
+                    loadData();
+                }
+            }
+        });
+
         mGroupAdapter = new AddGroupAdapter(mActivity);
         datatProvider = new AddGroupDatatProvider();
 //        mGroupAdapter.setAction(action);
@@ -124,14 +161,23 @@ public class AddGroupChatUIView extends BaseUIView {
 
         recyclerView.setAdapter(mGroupAdapter);
 
+        mGroupAdapter.setSelecteUids(mSelectedUids);
+
+        loadData();
+    }
+
+    private void loadData() {
         datatProvider.provide(mSubscriptions, new Action1<List<FriendBean>>() {
             @Override
             public void call(List<FriendBean> beanList) {
+
+                refreshLayout.setRefreshEnd();
+
                 List<AbsFriendItem> datas = new ArrayList();
-                datas.add(new FuncItem<ILayout>("搜索",new Action1<ILayout>() {
+                datas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
-                        T_.show("搜索");
+                        mOtherILayout.startIView(new SearchUserUIView());
                     }
                 }));
                 for (FriendBean bean : beanList) {
@@ -145,9 +191,11 @@ public class AddGroupChatUIView extends BaseUIView {
 
     private void createGroupChat() {
         List<AbsFriendItem> selectorData = mGroupAdapter.getSelectorData();
-        if (selectorData == null || selectorData.size() == 0) {
+        if (selectorData == null || selectorData.size() < 2) {
+            T_.show("成员不能小于两个人");
             return;
         }
+
         createAndSavePhoto(selectorData);
     }
 
@@ -172,6 +220,7 @@ public class AddGroupChatUIView extends BaseUIView {
                     @Override
                     public Observable<List<Bitmap>> call(List<String> s) {
                         List<Bitmap> bitmaps = new ArrayList<>();
+                        s.add(UserCache.getUserAvatar());
                         for(String url : s ) {
                             Bitmap bitmap = NetUtils.createBitmapFromUrl(url);
                             if(bitmap == null) {

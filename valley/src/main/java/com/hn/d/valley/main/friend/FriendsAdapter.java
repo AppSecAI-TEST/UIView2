@@ -162,12 +162,12 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
                     return -1;
                 }
 
-                if (o1.getGroupText().equals("☆")) {
+                if (o1.getGroupText().equals("")) {
                     L.i(o1.getGroupText());
                     return -1;
                 }
 
-                if (o2.getGroupText().equals("☆")) {
+                if (o2.getGroupText().equals("")) {
                     return 1;
                 }
                 return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
@@ -179,6 +179,9 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
         List<String> letters= new ArrayList<>();
         for(AbsFriendItem bean : data_list) {
             String letter = bean.getGroupText();
+            if ("".equals(letter)) {
+                continue;
+            }
             if(!letters.contains(letter)){
                 letters.add(letter);
             }

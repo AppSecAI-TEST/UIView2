@@ -20,6 +20,9 @@ import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.HnGlideImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by hewking on 2017/3/13.
  */
@@ -60,11 +63,16 @@ public class GroupMemberModel {
         tv_add_groupmembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                contentUIView.startIView(new AddGroupChatUIView());
+                List<GroupMemberBean> mAdapterAllDatas = mAdapter.getAllDatas();
+                List<String> uids = new ArrayList<>();
+                for (GroupMemberBean bean : mAdapterAllDatas) {
+                    uids.add(bean.getUserId());
+                }
+                AddGroupChatUIView.start(contentUIView.getILayout(),uids);
             }
         });
 
-        loadData();
+//        loadData();
 
 
     }
@@ -97,9 +105,9 @@ public class GroupMemberModel {
         }
     }
 
-    private void loadData() {
-        contentUIView.add(RRetrofit.create(GroupChatService.class)
-        .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + "10147"))
+    public void loadData(String gid) {
+        RRetrofit.create(GroupChatService.class)
+        .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
         .compose(Rx.transformer(GroupMemberList.class))
                 .subscribe(new BaseSingleSubscriber<GroupMemberList>() {
                     @Override
@@ -111,7 +119,7 @@ public class GroupMemberModel {
                     public void onSucceed(GroupMemberList beans) {
                        mAdapter.resetData(beans.getData_list());
                     }
-                }));
+                });
     }
 
     public static class GroupMemberList extends ListModel<GroupMemberBean>{}

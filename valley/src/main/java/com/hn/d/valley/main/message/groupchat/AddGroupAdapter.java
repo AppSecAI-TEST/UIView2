@@ -6,14 +6,18 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.main.friend.AbsFriendItem;
 import com.hn.d.valley.main.friend.FriendItem;
+import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.widget.HnGlideImageView;
+
+import java.util.List;
 
 import rx.functions.Action2;
 
@@ -22,18 +26,18 @@ import rx.functions.Action2;
  */
 public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
 
+    private Action2 action;
 
+    private List<String> mSelectedUsers;
 
     public AddGroupAdapter(Context context) {
         super(context);
         setModel(RModelAdapter.MODEL_MULTI);
     }
 
-//    private Action2 action;
-//
-//    public void setAction(Action2 action) {
-//        this.action = action;
-//    }
+    public void setAction(Action2 action) {
+        this.action = action;
+    }
 
     @Override
     protected int getItemLayoutId(int viewType) {
@@ -43,17 +47,27 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
         return R.layout.item_firends_addgroup_item;
     }
 
+    public void setSelecteUids(List<String> selecteUids) {
+        this.mSelectedUsers = selecteUids;
+    }
+
     @Override
     protected void onBindCommonView(RBaseViewHolder holder, int position, AbsFriendItem bean) {
         if (bean == null) {
             return;
         }
-
         if (getItemType(position) == ItemTypes.FUNC) {
 
+            final FuncItem item = (FuncItem) bean;
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item.onFuncClick(null);
+                }
+            });
 
         } else if (getItemType(position) == ItemTypes.FRIEND){
-
             FriendItem item = (FriendItem) bean;
 
             HnGlideImageView imageView = holder.v(R.id.iv_item_head);
@@ -72,20 +86,29 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
 
 
     @Override
-    protected void onBindModelView(int model, final boolean isSelector, RBaseViewHolder holder, final int position, final AbsFriendItem bean) {
+    protected void onBindModelView(int model, final boolean isSelector, final RBaseViewHolder holder, final int position, final AbsFriendItem bean) {
 
         if (getItemType(position) == ItemTypes.FRIEND) {
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
-//        checkBox.setChecked(isSelector);
+//            checkBox.setChecked(isSelector);
+
+            if (mSelectedUsers != null && mSelectedUsers.size() != 0) {
+                FriendItem item = (FriendItem) bean;
+                FriendBean friendBean = item.getFriendBean();
+                if (mSelectedUsers.contains(friendBean.getUid()) ){
+//                    setSelectorPosition(position,checkBox);
+                    holder.itemView.setEnabled(false);
+                }
+            }
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                if(action == null){
-//                    return;
-//                }
-//                action.call(!isSelector,bean);
                     setSelectorPosition(position,checkBox);
+                    if(action == null){
+                        return;
+                    }
+                    action.call(!isSelector,bean);
                 }
             };
 

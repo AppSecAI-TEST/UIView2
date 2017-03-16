@@ -6,9 +6,12 @@ import android.view.View;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.team.model.Team;
 
 import java.util.ArrayList;
 
@@ -24,7 +27,12 @@ public class GroupChatUIView extends ChatUIView {
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.add_friends_s).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GroupInfoUIVIew.start(mOtherILayout,mSessionId,sessionType);
+                Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
+                if (team != null && team.isMyTeam()) {
+                    GroupInfoUIVIew.start(mOtherILayout,mSessionId,sessionType);
+                } else {
+                    T_.info(mActivity.getString(R.string.team_invalid_tip));
+                }
             }
         }));
 
