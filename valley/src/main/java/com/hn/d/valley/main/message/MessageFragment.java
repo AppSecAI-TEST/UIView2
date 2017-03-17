@@ -49,7 +49,7 @@ public class MessageFragment extends RSupportFragment {
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
-                        //ChatUIView.start(mOtherILayout, recentContact.getFromAccount());
+                        //P2PChatUIView.start(mOtherILayout, recentContact.getFromAccount());
                         HnChatActivity.launcher(_mActivity, recentContact.getFromAccount());
                     }
                 },

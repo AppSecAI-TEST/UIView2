@@ -33,7 +33,27 @@ public class RecommendUserBean{
     private String industry;
     private String company;
     private String grade;
+
+    public int getIs_contact() {
+        return is_contact;
+    }
+
+    public void setIs_contact(int is_contact) {
+        this.is_contact = is_contact;
+    }
+
+    public int getIs_attention() {
+        return is_attention;
+    }
+
+    public void setIs_attention(int is_attention) {
+        this.is_attention = is_attention;
+    }
+
     private String signature;
+
+    private int is_contact;
+    private int is_attention;
 
     /**
      * RxUtil connect 调用tostring 返回uid

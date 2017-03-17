@@ -140,54 +140,16 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
             FriendItem item = new FriendItem(bean);
             getAllDatas().add(item);
         }
-        sort(getAllDatas());
+        FriendsControl.sort(getAllDatas());
 
         if (mSideAction != null ) {
-            mSideAction.call(generateIndexLetter(getAllDatas()));
+            mSideAction.call(FriendsControl.generateIndexLetter(getAllDatas()));
         }
 
         resetData(getAllDatas());
     }
 
-    public static void sort(List<AbsFriendItem> items) {
-        Collections.sort(items, new Comparator<AbsFriendItem>() {
-            @Override
-            public int compare(AbsFriendItem o1, AbsFriendItem o2) {
-                if (o1.getGroupText().equals("#")) {
-                    L.i(o1.getGroupText());
-                    return 1;
-                }
 
-                if (o2.getGroupText().equals("#")) {
-                    return -1;
-                }
-
-                if (o1.getGroupText().equals("")) {
-                    L.i(o1.getGroupText());
-                    return -1;
-                }
-
-                if (o2.getGroupText().equals("")) {
-                    return 1;
-                }
-                return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
-            }
-        });
-    }
-
-    private List<String> generateIndexLetter(List<AbsFriendItem> data_list) {
-        List<String> letters= new ArrayList<>();
-        for(AbsFriendItem bean : data_list) {
-            String letter = bean.getGroupText();
-            if ("".equals(letter)) {
-                continue;
-            }
-            if(!letters.contains(letter)){
-                letters.add(letter);
-            }
-        }
-        return letters;
-    }
 
     @Override
     public void resetData(List<AbsFriendItem> datas) {

@@ -14,7 +14,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.main.message.P2PChatUIView;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -115,7 +115,7 @@ public class UserCardAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
         final View.OnClickListener onChatListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ChatUIView.start(mILayout, dataBean.getUid(), SessionTypeEnum.P2P);
+                P2PChatUIView.start(mILayout, dataBean.getUid(), SessionTypeEnum.P2P);
             }
         };
 

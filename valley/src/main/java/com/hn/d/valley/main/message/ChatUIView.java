@@ -74,15 +74,7 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
- * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
- * 项目名称：
- * 类的描述：聊天界面
- * 创建人员：Robi
- * 创建时间：2016/12/27 17:46
- * 修改人员：Robi
- * 修改时间：2016/12/27 17:46
- * 修改备注：
- * Version: 1.0.0
+ * Created by hewking on 2017/3/16.
  */
 public class ChatUIView extends BaseContentUIView implements IAudioRecordCallback {
 
@@ -137,7 +129,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     public ChatUIView() {
     }
 
-//    public ChatUIView(String mSessionId, SessionTypeEnum sessionType) {
+//    public P2PChatUIView(String mSessionId, SessionTypeEnum sessionType) {
 //        this.mSessionId = mSessionId;
 //        this.sessionType = sessionType;
 //    }

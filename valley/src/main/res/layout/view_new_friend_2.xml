@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <com.angcyo.uiview.widget.TitleBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/theme_color_accent">
+
+        <com.angcyo.uiview.github.tablayout.SegmentTabLayout
+            android:id="@+id/tablayout_new_friend"
+            android:layout_width="160dp"
+            android:layout_height="33dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/base_ldpi"
+            app:tl_indicator_anim_enable="false"
+            app:tl_indicator_color="@color/default_base_white"
+            app:tl_indicator_corner_radius="@dimen/base_round_radius"
+            app:tl_textSelectColor="@color/colorAccent"
+            app:tl_textsize="@dimen/default_text_size"/>
+
+
+    </com.angcyo.uiview.widget.TitleBarLayout>
+
+
+    <com.angcyo.uiview.container.UILayoutImpl
+        android:id="@+id/main_new_friend"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

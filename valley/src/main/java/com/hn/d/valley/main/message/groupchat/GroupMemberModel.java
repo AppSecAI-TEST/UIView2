@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.TextView;
+
+import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
@@ -16,12 +18,14 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.friend.GroupBean;
+import com.hn.d.valley.main.friend.AbsFriendItem;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.functions.Action3;
 
 /**
  * Created by hewking on 2017/3/13.
@@ -68,7 +72,12 @@ public class GroupMemberModel {
                 for (GroupMemberBean bean : mAdapterAllDatas) {
                     uids.add(bean.getUserId());
                 }
-                AddGroupChatUIView.start(contentUIView.getILayout(),uids);
+                ContactSelectUIVIew.start(contentUIView.getILayout(),uids,new Action3< UIBaseRxView, List< AbsFriendItem >, RequestCallback>() {
+                    @Override
+                    public void call(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, RequestCallback requestCallback) {
+                        TeamCreateHelper.invite(uiBaseDataView,absFriendItems,requestCallback);
+                    }
+                });
             }
         });
 

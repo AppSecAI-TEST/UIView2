@@ -184,7 +184,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 //                    chatView.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
-//                            ChatUIView.start(mOtherILayout, dataBean.getUid(), SessionTypeEnum.P2P);
+//                            P2PChatUIView.start(mOtherILayout, dataBean.getUid(), SessionTypeEnum.P2P);
 //                        }
 //                    });
 //                } else {

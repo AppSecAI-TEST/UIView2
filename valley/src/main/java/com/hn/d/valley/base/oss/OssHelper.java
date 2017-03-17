@@ -133,7 +133,7 @@ public class OssHelper {
             return new int[]{0, 0};
         }
 //        width_640.0pictureheight_1136.0
-        final String[] pictureheight_s = url.split("_s_");
+        final String[] pictureheight_s = url.substring(0, url.lastIndexOf('.')).split("_s_");
         float height = 0, width = 0;
         if (pictureheight_s.length >= 2) {
             final String[] size = pictureheight_s[pictureheight_s.length - 1].split("x");
@@ -211,6 +211,17 @@ public class OssHelper {
         layoutParams.height = imageThumbSize[1];
         layoutParams.width = imageThumbSize[0];
         view.setLayoutParams(layoutParams);
+    }
+
+    /**
+     * 根据宽高, 创建一个符合规则的文件名
+     */
+    public static String createImageFileName(int width, int height) {
+        return "_s_" + width + "x" + height + ".png";
+    }
+
+    public static String createVideoFileName(int time) {
+        return "_t_" + time + ".mp4";
     }
 
     static class OssObservable implements Observable.OnSubscribe<String> {

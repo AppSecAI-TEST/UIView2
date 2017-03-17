@@ -22,6 +22,7 @@ import com.angcyo.uiview.widget.RecordButton;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.m3b.rbrecoderlib.GPUImage;
@@ -164,13 +165,15 @@ public class VideoRecordUIView extends UIIViewImpl {
                     }
                     final String parent = mRecordFile.getParent();
 
-                    final String newName = UUID.randomUUID().toString() + "_t_" + progress;
+                    final String newName = UUID.randomUUID().toString() + OssHelper.createVideoFileName(progress);
                     final String thumbPath;
                     if (rotationRecord == 0) {
-                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + DefaultLevel.getWidth() + "x" + DefaultLevel.getHeight();
+                        thumbPath = parent + File.separator + UUID.randomUUID().toString()
+                                + OssHelper.createImageFileName(DefaultLevel.getHeight(), DefaultLevel.getWidth());
 
                     } else {
-                        thumbPath = parent + File.separator + UUID.randomUUID().toString() + "_s_" + DefaultLevel.getHeight() + "x" + DefaultLevel.getWidth();
+                        thumbPath = parent + File.separator + UUID.randomUUID().toString()
+                                + OssHelper.createImageFileName(DefaultLevel.getHeight(), DefaultLevel.getWidth());
                     }
 
                     HnLoading.show(mOtherILayout, false);

@@ -27,7 +27,7 @@ import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
-import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.main.message.P2PChatUIView;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
@@ -121,7 +121,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     mCommandImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ChatUIView.start(getILayout(), to_uid, SessionTypeEnum.P2P);
+                            P2PChatUIView.start(getILayout(), to_uid, SessionTypeEnum.P2P);
                         }
                     });
                 } else {

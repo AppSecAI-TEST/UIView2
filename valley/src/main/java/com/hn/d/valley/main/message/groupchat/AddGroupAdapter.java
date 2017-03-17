@@ -11,10 +11,12 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.main.friend.AbsFriendItem;
 import com.hn.d.valley.main.friend.FriendItem;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
@@ -105,6 +107,7 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
                 @Override
                 public void onClick(View v) {
                     setSelectorPosition(position,checkBox);
+                    RBus.post(new SelectedUserNumEvent(getSelectorData().size()));
                     if(action == null){
                         return;
                     }

@@ -72,7 +72,7 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
 //                            chatView.setOnClickListener(new View.OnClickListener() {
 //                                @Override
 //                                public void onClick(View v) {
-//                                    ChatUIView.start(mILayout, dataBean.getUid(), SessionTypeEnum.P2P);
+//                                    P2PChatUIView.start(mILayout, dataBean.getUid(), SessionTypeEnum.P2P);
 //                                }
 //                            });
 //

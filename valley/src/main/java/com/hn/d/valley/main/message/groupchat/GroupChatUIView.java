@@ -9,7 +9,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.TeamDataCache;
-import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.main.message.P2PChatUIView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.team.model.Team;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * Created by hewking on 2017/3/10.
  */
-public class GroupChatUIView extends ChatUIView {
+public class GroupChatUIView extends P2PChatUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {

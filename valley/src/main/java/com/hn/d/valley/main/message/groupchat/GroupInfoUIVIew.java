@@ -27,7 +27,6 @@ import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 

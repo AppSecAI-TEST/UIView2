@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -15,9 +16,12 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
-import com.hn.d.valley.main.message.groupchat.AddGroupChatUIView;
+import com.hn.d.valley.main.friend.AbsFriendItem;
+import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
-import com.hn.d.valley.sub.user.NewFriendUIView;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
+import com.hn.d.valley.sub.user.NewFriend2UIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
@@ -27,10 +31,12 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Action3;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -72,7 +78,7 @@ public class MessageUIView extends BaseUIView {
                             return;
                         }
                         //打开对话界面
-                        ChatUIView.start(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
+                        P2PChatUIView.start(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
                         //HnChatActivity.launcher(mActivity, recentContact.getFromAccount());
                     }
                 },
@@ -87,7 +93,7 @@ public class MessageUIView extends BaseUIView {
             @Override
             public void call(RecentContact contact) {
                 //打开新朋友界面
-                mOtherILayout.startIView(new NewFriendUIView(contact.getContactId(), contact.getSessionType()));
+                mOtherILayout.startIView(new NewFriend2UIView());
             }
         });
 
@@ -145,7 +151,14 @@ public class MessageUIView extends BaseUIView {
                         .addItem("添加群聊", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                mOtherILayout.startIView(new AddGroupChatUIView());
+                                ContactSelectUIVIew targetView = new ContactSelectUIVIew();
+                                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsFriendItem>, RequestCallback>() {
+                                    @Override
+                                    public void call(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, RequestCallback requestCallback) {
+                                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView,absFriendItems,requestCallback);
+                                    }
+                                });
+                                mOtherILayout.startIView(targetView);
                             }
                         }).showDialog(mOtherILayout);
             }

@@ -7,11 +7,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.net.RRetrofit;
@@ -35,6 +37,9 @@ import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.service.ContactService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -91,13 +96,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
         sidebar_friend = mViewHolder.v(R.id.sidebar_friend_index);
 
-        sidebar_friend.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
-            @Override
-            public void onLetterChange(String letter) {
-                scrollToLetter(letter);
-            }
-        });
-
         mFriendsAdapter = new FriendsAdapter(mContext,this){
             @Override
             protected List<? extends AbsFriendItem> onPreProvide() {
@@ -118,17 +116,24 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         rRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         rRecyclerView.setAdapter(mFriendsAdapter);
 
+        sidebar_friend.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
+            @Override
+            public void onLetterChange(String letter) {
+                scrollToLetter(letter,rRecyclerView,mFriendsAdapter.getAllDatas());
+            }
+        });
+
         rRecyclerView.addItemDecoration(new RGroupItemDecoration(new GroupItemCallBack(mContext,mFriendsAdapter)));
     }
 
-    private void scrollToLetter(String letter) {
-        if (TextUtils.equals(letter, "#")) {
-            ((LinearLayoutManager) rRecyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
+    public static void scrollToLetter(String letter, RecyclerView recyclerView, List<AbsFriendItem> datas) {
+        if (TextUtils.equals(letter, "☆")) {
+            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
             return;
         }
-        for (int i = 0; i < mFriendsAdapter.getAllDatas().size(); i++) {
-            if (TextUtils.equals(letter, mFriendsAdapter.getAllDatas().get(i).getGroupText())) {
-                ((LinearLayoutManager) rRecyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
+        for (int i = 0; i < datas.size(); i++) {
+            if (TextUtils.equals(letter, datas.get(i).getGroupText())) {
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
                 break;
             }
         }
@@ -137,6 +142,46 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
     public static char generateFirstLetter(FriendBean o2) {
         return Pinyin.toPinyin(o2.getDefaultMark().charAt(0)).toUpperCase().charAt(0);
+    }
+
+    public static List<String> generateIndexLetter(List<AbsFriendItem> data_list) {
+        List<String> letters= new ArrayList<>();
+        for(AbsFriendItem bean : data_list) {
+            String letter = bean.getGroupText();
+            if ("".equals(letter)) {
+                continue;
+            }
+            if(!letters.contains(letter)){
+                letters.add(letter);
+            }
+        }
+        return letters;
+    }
+
+    public static void sort(List<AbsFriendItem> items) {
+        Collections.sort(items, new Comparator<AbsFriendItem>() {
+            @Override
+            public int compare(AbsFriendItem o1, AbsFriendItem o2) {
+                if (o1.getGroupText().equals("#")) {
+                    L.i(o1.getGroupText());
+                    return 1;
+                }
+
+                if (o2.getGroupText().equals("#")) {
+                    return -1;
+                }
+
+                if (o1.getGroupText().equals("")) {
+                    L.i(o1.getGroupText());
+                    return -1;
+                }
+
+                if (o2.getGroupText().equals("")) {
+                    return 1;
+                }
+                return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
+            }
+        });
     }
 
     public void resetData(List<FriendBean> data_list) {

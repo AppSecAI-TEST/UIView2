@@ -173,4 +173,5 @@ public interface UserInfoService {
     @POST("user/visitorList")
     Observable<ResponseBody> visitorList(@QueryMap Map<String, String> map);
 
+
 }

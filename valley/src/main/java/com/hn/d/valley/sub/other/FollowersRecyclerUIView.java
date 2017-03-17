@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.other;
 
+import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.R;
@@ -10,8 +11,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.ContactService;
 
 /**
- * 我的关注
- * Created by angcyo on 2017-01-15.
+ * Created by hewking on 2017/3/16.
  */
 
 public class FollowersRecyclerUIView extends UserInfoRecyclerUIView {
@@ -25,49 +25,14 @@ public class FollowersRecyclerUIView extends UserInfoRecyclerUIView {
         this.uid = UserCache.getUserAccount();
     }
 
+    @Override
+    protected TitleBarPattern getTitleBar() {
+        return null;
+    }
+
     public FollowersRecyclerUIView(String uid) {
         this.uid = uid;
     }
-
-//    @Override
-//    protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
-//        return new UserCardAdapter(mActivity, mILayout) {
-//            @Override
-//            protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
-//                super.onBindDataView(holder, posInData, dataBean);
-//                ImageView commandView = holder.v(R.id.command_item_view);
-//                if (dataBean.getIs_contact() != 1) {
-//                    commandView.setVisibility(View.VISIBLE);
-//
-//                    commandView.setImageResource(R.drawable.add_contacts_n);
-//                    commandView.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(final View v) {
-//                            add(RRetrofit.create(UserInfoService.class)
-//                                    .addContact(Param.buildMap("to_uid:" + dataBean.getUid(),
-//                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
-//                                                    UserCache.instance().getUserInfoBean().getUsername())))
-//                                    .compose(Rx.transformer(String.class))
-//                                    .subscribe(new BaseSingleSubscriber<String>() {
-//
-//                                        @Override
-//                                        public void onSucceed(String bean) {
-//                                            T_.show(bean);
-//                                        }
-//                                    }));
-//                        }
-//                    });
-//                }
-//
-//                holder.v(R.id.card_root_layout).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        startIView(new UserDetailUIView(dataBean.getUid()));
-//                    }
-//                });
-//            }
-//        };
-//    }
 
     @Override
     protected String getTitleString() {

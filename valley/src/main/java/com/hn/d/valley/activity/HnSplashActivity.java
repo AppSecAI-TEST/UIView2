@@ -90,7 +90,7 @@ public class HnSplashActivity extends BaseActivity {
 
         onParseIntent();
 
-//        ChatUIView.start(mLayout, "50033");
+//        P2PChatUIView.start(mLayout, "50033");
 
 
 //        Observable.timer(100, TimeUnit.MILLISECONDS)
