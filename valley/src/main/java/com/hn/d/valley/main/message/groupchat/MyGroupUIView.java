@@ -10,6 +10,7 @@ import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
@@ -37,14 +38,14 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("群聊");
+        return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_groupchat));
     }
 
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(GroupChatService.class)
-                .myGroup(Param.buildMap("uid:" + UserCache.getUserAccount()))
+                .myGroup(Param.buildMap("uid:" + UserCache.getUserAccount(),"page:" + page))
                 .compose(Rx.transformer(GroupList.class))
                 .subscribe(new BaseSingleSubscriber<GroupList>() {
                     @Override
@@ -65,6 +66,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                         } else {
                             showContentLayout();
                             onUILoadDataEnd(beans.getData_list());
+                            onUILoadDataFinish();
                         }
                     }
                 }));
@@ -105,6 +107,11 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
             });
 
         }
+    }
+
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        return new RBaseItemDecoration(getItemDecorationHeight()).setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
     }
 
     @NonNull

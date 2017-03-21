@@ -39,6 +39,7 @@ import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.github.pickerview.view.WheelTime;
+import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -49,6 +50,7 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
+import com.angcyo.uiview.utils.file.FileUtil;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.RTextView;
@@ -410,8 +412,18 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         RRealm.exe(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                String audioUrlAndTime = audioUrl + "--" + mAudioRecordPlayable.getDuration() / 1000;
-                                UserCache.instance().getUserInfoBean().setVoice_introduce(audioUrlAndTime);
+                                // TODO: 2017/3/17 更改上传URL显示格式
+                                String en = FileUtil.getExtensionName(audioUrl);
+                                StringBuilder sb = new StringBuilder(FileUtil.getFileNameNoEx(audioUrl));
+//                                String audioUrlAndTime = audioUrl + "--" + mAudioRecordPlayable.getDuration() / 1000;
+
+                                sb.append("_t_")
+                                        .append(mAudioRecordPlayable.getDuration() / 1000)
+                                        .append(".")
+                                        .append(en);
+
+
+                                UserCache.instance().getUserInfoBean().setVoice_introduce(sb.toString());
                             }
                         });
                         checkUserIco();
@@ -856,12 +868,27 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 && !TextUtils.isEmpty(userInfoBean.getVoice_introduce())) {
 
             String audioUrlAndTime = userInfoBean.getVoice_introduce();
-            String[] voiceIntroduces = audioUrlAndTime.split("--");
-            if(voiceIntroduces.length == 2) {
+
+            //// TODO: 2017/3/17 兼容上版本ios录音格式 --
+
+            String[] voiceIntroduces ;
+            voiceIntroduces = audioUrlAndTime.split("--");
+            if (voiceIntroduces.length == 2) {
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
                 tv_record_second.setText(Long.parseLong(voiceIntroduces[1]) + "″");
-                mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0],Long.parseLong(voiceIntroduces[1]));
+                mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0] + ".aac",Long.parseLong(voiceIntroduces[1]));
+            } else {
+                voiceIntroduces = audioUrlAndTime.split("_t_");
+                String introd1 = voiceIntroduces[1];
+                String duration = FileUtil.getFileNameNoEx(introd1);
+
+                if(voiceIntroduces.length == 2) {
+                    iv_play.setVisibility(View.VISIBLE);
+                    tv_record_second.setVisibility(View.VISIBLE);
+                    tv_record_second.setText(duration + "″");
+                    mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0] + ".aac",Long.parseLong(duration));
+                }
             }
         }
 
@@ -1327,10 +1354,13 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
         // 可播放
         // 上传语音
-        mAudioRecordPlayable = new AudioRecordPlayable(audioFile.getPath(),audioLength);
 
-        if (mOnAudioRecordSuccess != null) {
-            mOnAudioRecordSuccess.call();
+        String newName = System.currentTimeMillis() / 1000 + ".aac";
+        if (FileUtils.rename(audioFile,newName)) {
+            mAudioRecordPlayable = new AudioRecordPlayable(FileUtils.getDirName(audioFile)  + newName,audioLength);
+            if (mOnAudioRecordSuccess != null) {
+                mOnAudioRecordSuccess.call();
+            }
         }
     }
 

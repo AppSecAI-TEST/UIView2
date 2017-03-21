@@ -114,6 +114,9 @@ public class ContactSelectUIVIew extends BaseUIView {
             mSelectedUids = (List<String>) param.mBundle.getSerializable(SELECTED_UIDS);
         }
 
+        datatProvider = new AddGroupDatatProvider();
+
+
     }
 
     @Override
@@ -140,7 +143,6 @@ public class ContactSelectUIVIew extends BaseUIView {
         });
 
         mGroupAdapter = new AddGroupAdapter(mActivity);
-        datatProvider = new AddGroupDatatProvider();
 //        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         recyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mGroupAdapter)));
@@ -157,6 +159,11 @@ public class ContactSelectUIVIew extends BaseUIView {
             }
         });
 
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
         loadData();
     }
 
@@ -164,6 +171,8 @@ public class ContactSelectUIVIew extends BaseUIView {
         datatProvider.provide(mSubscriptions, new Action1<List<FriendBean>>() {
             @Override
             public void call(List<FriendBean> beanList) {
+
+                showContentLayout();
 
                 refreshLayout.setRefreshEnd();
 
@@ -217,7 +226,7 @@ public class ContactSelectUIVIew extends BaseUIView {
     @NonNull
     @Override
     protected LayoutState getDefaultLayoutState() {
-        return LayoutState.CONTENT;
+        return LayoutState.LOAD;
     }
 
 

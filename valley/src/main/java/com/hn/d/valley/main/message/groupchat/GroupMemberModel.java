@@ -1,11 +1,14 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
@@ -47,6 +50,8 @@ public class GroupMemberModel {
 
     private String mSessionId;
 
+    private String gid;
+
     public static GroupMemberModel getInstanse() {
         return Holder.instance;
     }
@@ -64,6 +69,18 @@ public class GroupMemberModel {
         icoRecyclerView.setAdapter(mAdapter);
 
         TextView tv_add_groupmembers = holder.tv(R.id.tv_add_groupmembers);
+        ImageView iv_group_members = holder.imageView(R.id.iv_group_members);
+
+        iv_group_members.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(GroupMemberUIVIew.GID,gid);
+                UIParam param = new UIParam().setBundle(bundle);
+                contentUIView.getILayout().startIView(new GroupMemberUIVIew(),param);
+            }
+        });
+
         tv_add_groupmembers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +92,7 @@ public class GroupMemberModel {
                 ContactSelectUIVIew.start(contentUIView.getILayout(),uids,new Action3< UIBaseRxView, List< AbsFriendItem >, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, RequestCallback requestCallback) {
-                        TeamCreateHelper.invite(uiBaseDataView,absFriendItems,requestCallback);
+                        TeamCreateHelper.invite(uiBaseDataView,absFriendItems,requestCallback,gid);
                     }
                 });
             }
@@ -112,9 +129,14 @@ public class GroupMemberModel {
         public int getItemCount() {
             return getAllDatas().size() > DEFAULT_COUNT ? DEFAULT_COUNT : getAllDatas().size();
         }
+
+
     }
 
     public void loadData(String gid) {
+
+        this.gid = gid;
+
         RRetrofit.create(GroupChatService.class)
         .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
         .compose(Rx.transformer(GroupMemberList.class))

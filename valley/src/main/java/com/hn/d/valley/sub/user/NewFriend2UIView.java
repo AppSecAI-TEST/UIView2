@@ -29,7 +29,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
     @BindView(R.id.tablayout_new_friend)
     SegmentTabLayout tabLayout;
 
-    private FollowersRecyclerUIView mFollowersUIView;
+    private FriendsNewUIView mFollowersUIView;
     private FriendsRecommendUIView mFriendsRecommUIView;
 
     private int lastPosition = -1;
@@ -47,8 +47,14 @@ public final class NewFriend2UIView extends BaseContentUIView {
         super.initOnShowContentLayout();
         initTablayout();
 
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+
         if (mFollowersUIView == null) {
-            mFollowersUIView = new FollowersRecyclerUIView();
+            mFollowersUIView = new FriendsNewUIView();
             mFollowersUIView.bindOtherILayout(mOtherILayout);
             mContainerLayout.startIView(mFollowersUIView, new UIParam(false));
         } else {
@@ -57,7 +63,6 @@ public final class NewFriend2UIView extends BaseContentUIView {
 
         lastPosition = 0;
     }
-
 
     private void initTablayout() {
         tabLayout.setTabData(new String[]{"新的朋友","好友推荐"});
@@ -79,7 +84,8 @@ public final class NewFriend2UIView extends BaseContentUIView {
         boolean isRightToLeft = position < lastPosition;
         if (position == 0) {
             if (mFollowersUIView == null) {
-                mFollowersUIView = new FollowersRecyclerUIView();
+                // TODO: 2017/3/17 更改为新的朋友UIVIew
+                mFollowersUIView = new FriendsNewUIView();
                 mFollowersUIView.bindOtherILayout(mOtherILayout);
                 mFollowersUIView.setIsRightJumpLeft(isRightToLeft);
                 mContainerLayout.startIView(mFollowersUIView);

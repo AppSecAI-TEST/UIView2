@@ -173,5 +173,8 @@ public interface UserInfoService {
     @POST("user/visitorList")
     Observable<ResponseBody> visitorList(@QueryMap Map<String, String> map);
 
+    @POST("user/myPhotos")
+    Observable<ResponseBody> myPhotos(@QueryMap Map<String, String> map);
+
 
 }

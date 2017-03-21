@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
@@ -76,6 +77,18 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
             TextView nickName = holder.tv(R.id.tv_friend_name);
             imageView.setImageUrl(item.getFriendBean().getAvatar());
             nickName.setText(item.getFriendBean().getDefaultMark());
+
+            if (mSelectedUsers != null && mSelectedUsers.size() != 0) {
+                CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
+                FriendBean friendBean = item.getFriendBean();
+                if (mSelectedUsers.contains(friendBean.getUid()) ){
+//                    setSelectorPosition(position,checkBox);
+                    L.i("selector position :" + friendBean.getDefaultMark());
+                    holder.itemView.setEnabled(false);
+                    checkBox.setChecked(true);
+                    checkBox.setEnabled(false);
+                }
+            }
         }
 
 
@@ -93,15 +106,6 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
         if (getItemType(position) == ItemTypes.FRIEND) {
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
 //            checkBox.setChecked(isSelector);
-
-            if (mSelectedUsers != null && mSelectedUsers.size() != 0) {
-                FriendItem item = (FriendItem) bean;
-                FriendBean friendBean = item.getFriendBean();
-                if (mSelectedUsers.contains(friendBean.getUid()) ){
-//                    setSelectorPosition(position,checkBox);
-                    holder.itemView.setEnabled(false);
-                }
-            }
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override

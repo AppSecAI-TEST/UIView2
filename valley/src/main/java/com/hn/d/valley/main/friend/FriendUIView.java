@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.friend;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +13,12 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.SearchUserUIView;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 
 import java.util.ArrayList;
 
 import rx.functions.Action1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by hewking on 2017/3/7.
@@ -48,7 +51,7 @@ public class FriendUIView extends BaseUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        mFriendsControl.init(mBaseContentLayout,mSubscriptions);
+        mFriendsControl.init(mBaseContentLayout);
         mFriendsControl.setToUserDetailAction(new Action1<FriendBean>() {
             @Override
             public void call(FriendBean o) {
@@ -56,7 +59,6 @@ public class FriendUIView extends BaseUIView {
             }
         });
 
-        loadFriends();
     }
 
     private void loadFriends() {
@@ -66,13 +68,35 @@ public class FriendUIView extends BaseUIView {
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
-        mFriendsControl = new FriendsControl(mActivity,mOtherILayout);
+        mFriendsControl = new FriendsControl(mActivity, mSubscriptions, mOtherILayout, new RequestCallback() {
+            @Override
+            public void onStart() {
+
+            }
+
+            @Override
+            public void onSuccess(Object o) {
+                showContentLayout();
+            }
+
+            @Override
+            public void onError(String msg) {
+                showContentLayout();
+            }
+        });
+
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        loadFriends();
     }
 
     @NonNull
     @Override
     protected LayoutState getDefaultLayoutState() {
-        return LayoutState.CONTENT;
+        return LayoutState.LOAD;
     }
 
     @Override

@@ -22,6 +22,7 @@ public class FuncItem<T> extends AbsFriendItem {
         }
     });
 
+
     static FuncItem groupMessage = new FuncItem<>("群聊",new Action1<ILayout>(){
         @Override
         public void call(ILayout layout){

@@ -25,11 +25,6 @@ public class FollowersRecyclerUIView extends UserInfoRecyclerUIView {
         this.uid = UserCache.getUserAccount();
     }
 
-    @Override
-    protected TitleBarPattern getTitleBar() {
-        return null;
-    }
-
     public FollowersRecyclerUIView(String uid) {
         this.uid = uid;
     }

@@ -58,6 +58,7 @@ import butterknife.OnClick;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public final class NewFriendUIView extends BaseContentUIView {
 
     String mSessionId;

@@ -22,6 +22,9 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:gravity="center"
+        android:maxEms="5"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:paddingTop="@dimen/base_xhdpi"
         tools:text="李伟" />
 

@@ -300,5 +300,8 @@
     <string name="my_collect_tip">我的收藏</string>
     <string name="url_error_tip">无效的网址,是否有http前缀?</string>
     <string name="introduction_tip2">人物介绍</string>
+    <string name="text_groupchat">群聊</string>
+    <string name="text_group_member">群成员</string>
+    <string name="text_group_announcement">群公告</string>
 
 </resources>

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -131,7 +132,48 @@ public class TeamCreateHelper {
     }
 
 
-    public static void invite(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, RequestCallback requestCallback) {
-//        Observable.from(absFriendItems)
+    public static void invite(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, final RequestCallback requestCallback, final String gid) {
+        requestCallback.onStart();
+
+       uiBaseDataView.add(Observable.just(absFriendItems)
+                .flatMap(new Func1<List<AbsFriendItem>, Observable<List<FriendBean>>>() {
+                    @Override
+                    public Observable<List<FriendBean>> call(List<AbsFriendItem> absFriendItem) {
+                        List<FriendBean> beanlist = new ArrayList();
+                        for (AbsFriendItem bean : absFriendItem) {
+                            beanlist.add(((FriendItem)bean).getFriendBean());
+                        }
+                        return Observable.just(beanlist);
+                    }
+                }).flatMap(new Func1<List<FriendBean>, Observable<String>>() {
+            @Override
+            public Observable<String> call(List<FriendBean> friendBeen) {
+                return RRetrofit.create(GroupChatService.class)
+                        .add(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
+                        .compose(Rx.transformer(String.class));
+            }
+        }).subscribe(new BaseSingleSubscriber<String>(){
+            @Override
+            public void onSucceed(String bean) {
+                requestCallback.onSuccess(bean);
+            }
+
+            @Override
+            public void onError(int code, String msg) {
+                super.onError(code, msg);
+                requestCallback.onError(msg);
+            }
+        }));
+
+//        uiBaseDataView.add(RRetrofit.create(GroupChatService.class)
+//                .add(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(absFriendItems)))
+//                .compose(Rx.transformer(String.class))
+//                .subscribe(new BaseSingleSubscriber<String>() {
+//                    @Override
+//                    public void onSucceed(String bean) {
+//                        requestCallback.onSuccess(bean);
+//                    }
+//                }));
     }
+
 }

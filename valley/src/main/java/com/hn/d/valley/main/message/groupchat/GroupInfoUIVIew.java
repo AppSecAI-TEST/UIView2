@@ -129,7 +129,6 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        loadTeamInfo();
     }
 
     @Override
@@ -140,6 +139,40 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             mSessionId = bundle.getString(KEY_SESSION_ID);
             sessionType = SessionTypeEnum.typeOfValue(bundle.getInt(KEY_SESSION_TYPE));
         }
+
+        loadTeamInfo();
+
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        add(RRetrofit.create(GroupChatService.class)
+                .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(),"yx_gid:" + mSessionId))
+                .compose(Rx.transformer(GroupDescBean.class))
+                .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        showNonetLayout(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                loadData();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onSucceed(GroupDescBean bean) {
+                        if (bean == null) {
+                            showContentLayout();
+                        } else {
+                            mGroupDescBean = bean;
+                            showContentLayout();
+                            GroupMemberModel.getInstanse().loadData(bean.getGid());
+                        }
+                    }
+                }));
     }
 
     @Override
@@ -161,33 +194,6 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-        add(RRetrofit.create(GroupChatService.class)
-                .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(),"yx_gid:" + mSessionId))
-                .compose(Rx.transformer(GroupDescBean.class))
-                .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        showNonetLayout(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadData();
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onSucceed(GroupDescBean bean) {
-                        if (bean == null) {
-//                            onUILoadDataEnd();
-                        } else {
-                            showContentLayout();
-                            mGroupDescBean = bean;
-                            GroupMemberModel.getInstanse().loadData(bean.getGid());
-                            mRExBaseAdapter.notifyDataSetChanged();
-                        }
-                    }
-                }));
     }
 
     @Override
@@ -226,6 +232,16 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText("群公告");
                 infoLayout.setItemDarkText("群公告");
+
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString(GroupMemberUIVIew.GID,mGroupDescBean.getGid());
+                        UIParam param = new UIParam().setBundle(bundle);
+                        mOtherILayout.startIView(new GroupAnnouncementUIView(),param);
+                    }
+                });
             }
         }));
 
@@ -253,7 +269,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText("我在本群的昵称");
-                infoLayout.setItemDarkText("哈哈");
+                infoLayout.setItemDarkText("".equals(mGroupDescBean.getName()) ? mGroupDescBean.getDefaultName() : mGroupDescBean.getName());
             }
         }));
 
@@ -292,22 +308,56 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
 
         bindGroupOwnerFunc(items, line, left);
+        jugeGroupOwner(items,line,left);
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * left) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                TextView textView = holder.v(R.id.text_view);
-                textView.setText("退出");
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dissolveGroup();
+
+    }
+
+    private void jugeGroupOwner(List<ViewItemInfo> items, int line, int left) {
+            items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * left) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    TextView textView = holder.v(R.id.text_view);
+                    if (isSelfAdmin) {
+                        textView.setText("解散该群");
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dissolveGroup();
+                            }
+                        });
+                    } else {
+                        textView.setText("退出该群");
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                leaveGroup();
+                            }
+                        });
                     }
-                });
-            }
-        }));
 
+                }
+            }));
+    }
+
+    private void leaveGroup() {
+        add(RRetrofit.create(GroupChatService.class)
+                .leave(Param.buildMap("uid:" + UserCache.getUserAccount()
+                        ,"gid:" + mGroupDescBean.getGid()))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String bean) {
+                        super.onSucceed(bean);
+                        T_.info("退出成功");
+                    }
+
+                    @Override
+                    public void onNoNetwork() {
+                        super.onNoNetwork();
+                    }
+                }));
     }
 
     private void bindGroupOwnerFunc(List<ViewItemInfo> items, final int line, final int left) {

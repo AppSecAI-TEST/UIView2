@@ -130,6 +130,8 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
     public void reset(List<FriendBean> beanList) {
         //checkNotNull
         if(beanList == null || beanList.size() == 0) {
+//            getAllDatas().addAll(onPreProvide());
+//            notifyDataSetChanged();
             return;
         }
 
@@ -159,4 +161,5 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
     public void setSideAction(Action1<List<String>> action) {
         this.mSideAction = action;
     }
+
 }

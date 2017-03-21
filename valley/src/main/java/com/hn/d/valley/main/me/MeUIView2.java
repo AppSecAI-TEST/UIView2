@@ -195,6 +195,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 itemInfoLayout.setItemText(getString(R.string.my_photos));
                 itemInfoLayout.setItemDarkText(userInfoBean.getDiscuss_pic_count() + "");
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new MyAlbumUIView());
+                    }
+                });
             }
         }));
         //我的收藏

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/base_xhdpi"
     android:paddingTop="@dimen/base_xhdpi"
     android:background="@drawable/base_white_bg_selector"
     android:orientation="vertical">
@@ -12,27 +11,32 @@
         android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/base_xhdpi"
         android:textColor="@color/base_text_color"
         android:text="群成员列表"
         android:textSize="@dimen/default_text_size" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_marginBottom="@dimen/base_xhdpi"
-        android:layout_height="wrap_content">
+        android:gravity="center_vertical">
 
         <com.angcyo.uiview.recycler.RRecyclerView
             android:id="@+id/rv_headimg_name_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
         <ImageView
-            android:src="@drawable/base_next"
-            android:layout_alignParentRight="true"
+            android:id="@+id/iv_group_members"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/base_xhdpi"
+            android:src="@drawable/base_next" />
     </RelativeLayout>
 
     <include
@@ -41,6 +45,7 @@
     <TextView
         android:id="@+id/tv_add_groupmembers"
         style="@style/DarkTextStyle"
+        android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_alignParentStart="true"
         android:layout_width="wrap_content"

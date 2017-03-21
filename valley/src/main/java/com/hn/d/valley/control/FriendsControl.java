@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -35,6 +36,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsFriendItem;
 import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.service.ContactService;
 
 import java.util.ArrayList;
@@ -56,11 +58,14 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     RefreshLayout  mRefreshLayout;
     FriendsAdapter mFriendsAdapter;
     WaveSideBarView sidebar_friend;
-    ILayout otherLayout;
 
-    Context mContext;
+    private ILayout otherLayout;
 
-    Action1<FriendBean> toUserDetailAction;
+    private Context mContext;
+
+    private Action1<FriendBean> toUserDetailAction;
+
+    private RequestCallback callback;
 
     private CompositeSubscription mSubscriptions;
 
@@ -74,9 +79,12 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
 
-    public FriendsControl(Context mContext, ILayout iLayout) {
+    public FriendsControl(Context mContext,CompositeSubscription mSubscriptions, ILayout iLayout, RequestCallback callback) {
         this.mContext = mContext;
         this.otherLayout = iLayout;
+        this.callback = callback;
+        this.mSubscriptions = mSubscriptions;
+
     }
 
     public ILayout getOtherLayout() {
@@ -87,9 +95,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
     }
 
-    public void init(RelativeLayout rootview,CompositeSubscription mSubscriptions) {
-
-        this.mSubscriptions = mSubscriptions;
+    public void init(RelativeLayout rootview) {
 
         mViewHolder = new RBaseViewHolder(rootview);
         rRecyclerView = mViewHolder.v(R.id.recycler_friend);
@@ -115,6 +121,8 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         mRefreshLayout.addRefreshListener(this);
         rRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         rRecyclerView.setAdapter(mFriendsAdapter);
+
+//        mFriendsAdapter.reset(null);
 
         sidebar_friend.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
             @Override
@@ -148,7 +156,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         List<String> letters= new ArrayList<>();
         for(AbsFriendItem bean : data_list) {
             String letter = bean.getGroupText();
-            if ("".equals(letter)) {
+            if (letter == null || "".equals(letter)) {
                 continue;
             }
             if(!letters.contains(letter)){
@@ -162,6 +170,16 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         Collections.sort(items, new Comparator<AbsFriendItem>() {
             @Override
             public int compare(AbsFriendItem o1, AbsFriendItem o2) {
+
+                if (o1.getGroupText() == "") {
+                    L.i(o1.getGroupText());
+                    return -1;
+                }
+
+                if (o2.getGroupText() == "") {
+                    return 1;
+                }
+
                 if (o1.getGroupText().equals("#")) {
                     L.i(o1.getGroupText());
                     return 1;
@@ -171,14 +189,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     return -1;
                 }
 
-                if (o1.getGroupText().equals("")) {
-                    L.i(o1.getGroupText());
-                    return -1;
-                }
-
-                if (o2.getGroupText().equals("")) {
-                    return 1;
-                }
                 return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
             }
         });
@@ -189,10 +199,14 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
     public void onUILoadFinish() {
-        if(mRefreshLayout != null){
-            mRefreshLayout.setRefreshEnd();
-        }
 
+        if (callback != null) {
+            callback.onSuccess("");
+            L.i(" onUILoadFinish friends onsucceed");
+            if(mRefreshLayout != null){
+                mRefreshLayout.setRefreshEnd();
+            }
+        }
     }
 
     @Override
@@ -222,9 +236,10 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                         if(bean == null || bean.getData_list().size() == 0 ) {
                             return;
                         }
-
+                        onUILoadFinish();
                         List<FriendBean> data_list = bean.getData_list();
                         resetData(data_list);
+                        L.i("friends onsucceed");
                     }
 
                     @Override

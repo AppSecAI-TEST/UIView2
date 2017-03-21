@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/base_ldpi"
+    android:paddingTop="@dimen/base_ldpi"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base_ldpi"
+        android:background="@drawable/base_dark2_round_selector"
+        android:paddingBottom="@dimen/base_ldpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_ldpi"
+        android:textColor="@android:color/white"
+        tools:text="上午 19:90"/>
+
+    <RelativeLayout
+        android:background="@drawable/dark_input_round_selector"
+        android:layout_below="@id/tv_time_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_announcement_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
