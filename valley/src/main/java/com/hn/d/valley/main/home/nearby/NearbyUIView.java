@@ -19,14 +19,15 @@ import com.amap.api.maps.TextureMapView;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RPagerSnapHelper;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.RCheckGroup;
@@ -133,11 +134,23 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     }
 
     @Override
+    protected TitleBarPattern getTitleBar() {
+        return createTitleBarPattern()
+                .setShowBackImageView(true)
+                .setTitleString(getString(R.string.nearby_perple));
+    }
+
+    @Override
     protected RBaseItemDecoration initItemDecoration() {
         return super.initItemDecoration()
                 .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
                 .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
                 .setDrawLastLine(true);
+    }
+
+    @Override
+    protected boolean hasScrollListener() {
+        return false;
     }
 
     @Override
