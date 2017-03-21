@@ -60,11 +60,11 @@ public class Constant {
      * 需要更新未读消息数量
      */
     public static final String TAG_NO_READ_NUM = "tag_no_read_num";
-    public static final int POS_HOME = 0;
-    public static final int POS_FOUND = 3;
-    public static final int POS_CONNECT = 2;
-    public static final int POS_MESSAGE = 1;
-    public static final int POS_ME = 4;
+    public static final int POS_HOME = 1;//恐龙谷
+    public static final int POS_FOUND = 2;//发现
+    public static final int POS_CONNECT = 4;//联系人
+    public static final int POS_MESSAGE = 0;//消息
+    public static final int POS_ME = 3;//我
 
     /**
      * Amap

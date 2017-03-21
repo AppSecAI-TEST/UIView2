@@ -35,7 +35,6 @@ import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
-import com.hn.d.valley.main.me.MeUIView;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
@@ -127,9 +126,9 @@ public class MainUIView extends BaseUIView {
 
     private void initTabLayout() {
         ArrayList<CustomTabEntity> tabs = new ArrayList<>();
-        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_home_text), R.drawable.home_s, R.drawable.home_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_message_text), R.drawable.message_s, R.drawable.message_n));
-        tabs.add(new TabEntity(true, mActivity.getString(R.string.friend), R.drawable.haoyou_s, R.drawable.haoyou_n));
+        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_home_text), R.drawable.konglonggu_s, R.drawable.konglonggu_n));
+//        tabs.add(new TabEntity(true, mActivity.getString(R.string.friend), R.drawable.haoyou_s, R.drawable.haoyou_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_found_text), R.drawable.found_s, R.drawable.found_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_me_text), R.drawable.me_s, R.drawable.me_n));
 
