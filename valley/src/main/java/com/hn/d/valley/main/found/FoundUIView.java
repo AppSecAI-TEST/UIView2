@@ -38,7 +38,7 @@ public class FoundUIView extends UIItemUIView<SingleItem> {
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                initItem(holder, R.drawable.hot_news, getString(R.string.hot_information), new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.hot_news, getString(R.string.hot_information), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new HotInformationUIView());
@@ -49,7 +49,7 @@ public class FoundUIView extends UIItemUIView<SingleItem> {
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                initItem(holder, R.drawable.invite_friends, getString(R.string.nearby_perple), new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.invite_friends, getString(R.string.nearby_perple), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new NearbyUIView());
@@ -60,7 +60,7 @@ public class FoundUIView extends UIItemUIView<SingleItem> {
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                initItem(holder, R.drawable.search, getString(R.string.search_title), new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.search, getString(R.string.search_title), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new SearchUIView());
@@ -71,7 +71,7 @@ public class FoundUIView extends UIItemUIView<SingleItem> {
         items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                initItem(holder, R.drawable.scan, getString(R.string.scan_title), new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.scan, getString(R.string.scan_title), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new ScanUIView());
