@@ -358,6 +358,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         L.e("加载数据..." + page);
+
+        showLoadView();
         RAmap.startLocation();
 
         add(RRetrofit.create(UserInfoService.class)
@@ -386,6 +388,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                     public void onEnd() {
                         super.onEnd();
                         onUILoadDataFinish();
+                        hideLoadView();
                     }
 
                     @Override
