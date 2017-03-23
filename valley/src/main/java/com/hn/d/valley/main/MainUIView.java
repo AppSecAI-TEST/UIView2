@@ -208,7 +208,7 @@ public class MainUIView extends BaseUIView {
 
         try {
             ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
-            RGestureDetector.onDoubleTap(group.getChildAt(0), new RGestureDetector.OnDoubleTapListener() {
+            RGestureDetector.onDoubleTap(group.getChildAt(1), new RGestureDetector.OnDoubleTapListener() {
                 @Override
                 public void onDoubleTap() {
                     //首页tab双击
@@ -217,7 +217,7 @@ public class MainUIView extends BaseUIView {
                     }
                 }
             });
-            RGestureDetector.onDoubleTap(group.getChildAt(3), new RGestureDetector.OnDoubleTapListener() {
+            RGestureDetector.onDoubleTap(group.getChildAt(0), new RGestureDetector.OnDoubleTapListener() {
                 @Override
                 public void onDoubleTap() {
                     //消息tab双击
