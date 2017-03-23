@@ -77,9 +77,11 @@ public class Param {
      * lang	否	int	接口使用的语言【目前支持三种：1-中文简体，2-中文繁体，3-英文】
      */
     public static Map<String, String> map(Map<String, String> map) {
-        Map<String, String> result = new HashMap<>();
-        StringBuilder builder = new StringBuilder();
+        return map(map, false);
+    }
 
+    public static Map<String, String> map(Map<String, String> map, boolean isInfo) {
+        Map<String, String> result = new HashMap<>();
         ArrayList<String> signList = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -91,32 +93,57 @@ public class Param {
             }
         }
 
-        /*版本信息*/
-        String versionName = RUtils.getAppVersionName(ValleyApp.getApp());
-        signList.add("app_version=" + versionName);
-        result.put("app_version", versionName);
-
-        /*时间戳*/
         long time = System.currentTimeMillis() / 1000;
-        signList.add("time_stamp=" + time);
-        result.put("time_stamp", String.valueOf(time));
+        if (isInfo) {
+            signList.add("timestamp=" + time);
+            result.put("timestamp", String.valueOf(time));
 
-        /*终端类型*/
-        signList.add("client_type=android");
-        result.put("client_type", "android");
+            /*资讯API支持*/
+            signList.add("e_type=RSA");
+            result.put("e_type", "RSA");
 
-        /*语言*/
-        signList.add("lang=" + getLang());
-        result.put("lang", String.valueOf(getLang()));
+
+        } else {
+            /*版本信息*/
+            String versionName = RUtils.getAppVersionName(ValleyApp.getApp());
+            signList.add("app_version=" + versionName);
+            result.put("app_version", versionName);
+
+            /*时间戳*/
+            signList.add("time_stamp=" + time);
+            result.put("time_stamp", String.valueOf(time));
+
+            /*终端类型*/
+            signList.add("client_type=android");
+            result.put("client_type", "android");
+
+          /*语言*/
+            signList.add("lang=" + getLang());
+            result.put("lang", String.valueOf(getLang()));
+        }
 
         Collections.sort(signList);
+
+        StringBuilder builder = new StringBuilder();
         for (String s : signList) {
             builder.append(s);
             builder.append("&");
         }
 
-        result.put("sign", RSA.encode(safe(builder)));
-        result.put("sign_type", "RSA");
+        String signString;
+
+        if (isInfo) {
+            signString = RSA.encodeInfo(safe(builder)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
+        } else {
+            signString = RSA.encode(safe(builder));
+        }
+
+        result.put("sign", signString);
+
+        if (isInfo) {
+        } else {
+            result.put("sign_type", "RSA");
+        }
         return result;
     }
 
@@ -144,15 +171,28 @@ public class Param {
      * 组装参数之后, 并签名
      */
     public static Map<String, String> buildMap(String... args) {
-        return map(build(args));
+        return map(build(args), false);
+    }
+
+    /**
+     * 组装参数之后, 并签名 (资讯API)
+     */
+    public static Map<String, String> buildInfoMap(String... args) {
+        return map(build(false, args), true);
     }
 
     /**
      * 组装参数
      */
     public static Map<String, String> build(String... args) {
+        return build(true, args);
+    }
+
+    public static Map<String, String> build(boolean uid, String... args) {
         final Map<String, String> map = new HashMap<>();
-        map.put("uid", UserCache.getUserAccount());//默认传输uid参数
+        if (uid) {
+            map.put("uid", UserCache.getUserAccount());//默认传输uid参数
+        }
         foreach(new OnPutValue() {
             @Override
             public void onValue(String key, String value) {

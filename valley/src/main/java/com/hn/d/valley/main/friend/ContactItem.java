@@ -7,11 +7,11 @@ import com.hn.d.valley.bean.FriendBean;
 /**
  * Created by hewking on 2017/3/8.
  */
-public class FriendItem extends AbsFriendItem{
+public class ContactItem extends AbsContactItem {
 
     FriendBean friendBean;
 
-    public FriendItem(FriendBean bean){
+    public ContactItem(FriendBean bean){
         this.friendBean = bean;
         itemType = ItemTypes.FRIEND;
         char ch = bean.getDefaultMark().charAt(0);

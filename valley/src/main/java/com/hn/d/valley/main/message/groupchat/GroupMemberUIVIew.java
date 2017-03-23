@@ -26,6 +26,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
 public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
 
     public static final String GID = "gid";
+    public static final String IS_ADMIN = "is_admin";
 
     private String gid;
 

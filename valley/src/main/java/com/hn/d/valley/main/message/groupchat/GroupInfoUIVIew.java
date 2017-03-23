@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
+import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -23,6 +25,8 @@ import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.cache.SimpleCallback;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.message.ChatFileUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
@@ -31,6 +35,9 @@ import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 
 import java.util.List;
+
+import rx.functions.Action1;
+import rx.functions.Action3;
 
 /**
  * Created by hewking on 2017/3/10.
@@ -147,6 +154,10 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
+        loadGoupInfo();
+    }
+
+    private void loadGoupInfo() {
         add(RRetrofit.create(GroupChatService.class)
                 .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(),"yx_gid:" + mSessionId))
                 .compose(Rx.transformer(GroupDescBean.class))
@@ -160,6 +171,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                                 loadData();
                             }
                         });
+
                     }
 
                     @Override
@@ -169,7 +181,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         } else {
                             mGroupDescBean = bean;
                             showContentLayout();
-                            GroupMemberModel.getInstanse().loadData(bean.getGid());
+                            GroupMemberModel.getInstanse().loadData(bean);
                         }
                     }
                 }));
@@ -223,6 +235,8 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setItemText("群二维码");
                 infoLayout.setDarkDrawableRes(R.drawable.qr_code);
 
+
+
             }
         }));
 
@@ -238,6 +252,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
                         bundle.putString(GroupMemberUIVIew.GID,mGroupDescBean.getGid());
+                        bundle.putBoolean(GroupMemberUIVIew.IS_ADMIN,isSelfAdmin);
                         UIParam param = new UIParam().setBundle(bundle);
                         mOtherILayout.startIView(new GroupAnnouncementUIView(),param);
                     }
@@ -278,6 +293,14 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText("聊天文件");
+
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new ChatFileUIView());
+                    }
+                });
+
             }
         }));
 
@@ -295,17 +318,29 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText("清空聊天记录");
 
+//                NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(), item.getSessionTypeEnum());
+
+
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("举报");
-            }
-        }));
+        if (!isSelfAdmin) {
+            items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                    infoLayout.setItemText("举报");
 
+                    infoLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mOtherILayout.startIView(new GroupReportUIView());
+                        }
+                    });
+
+                }
+            }));
+        }
 
         bindGroupOwnerFunc(items, line, left);
         jugeGroupOwner(items,line,left);
@@ -368,6 +403,26 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                     infoLayout.setItemText("群管理权转让");
 
+                    infoLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ContactSelectUIVIew.start(mOtherILayout,new ContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
+                                    ,null,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                                @Override
+                                public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                                    TeamCreateHelper.changeOwner(uiBaseDataView, absContactItems
+                                            ,mGroupDescBean.getGid(),requestCallback,new Action1<Boolean>() {
+                                        @Override
+                                        public void call(Boolean aBoolean) {
+                                            if (aBoolean) {
+                                                loadGoupInfo();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
                 }
             }));
         }

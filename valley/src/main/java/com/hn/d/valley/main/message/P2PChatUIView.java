@@ -104,6 +104,7 @@ public class P2PChatUIView extends ChatUIView {
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.address_book_2).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
             }
         }));
 

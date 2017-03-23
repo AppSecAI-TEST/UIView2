@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message.groupchat;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,8 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
@@ -38,6 +41,7 @@ import java.util.List;
 public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnouncementBean>{
 
     private String gid;
+    private Boolean isAdmin;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -46,6 +50,10 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
         titleBarItems.add(TitleBarPattern.TitleBarItem.build().setText("添加").setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!isAdmin) {
+                    T_.show("你不是群主。。");
+                    return;
+                }
                 startIView(InputUIView.build(inputConfigCallback));
             }
         }));
@@ -64,6 +72,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
         super.onViewCreate(rootView, param);
         if (param != null) {
             gid = param.mBundle.getString(GroupMemberUIVIew.GID);
+            isAdmin = param.mBundle.getBoolean(GroupMemberUIVIew.IS_ADMIN);
         }
     }
 
@@ -92,6 +101,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
                             onUILoadDataEnd();
                         } else {
                             onUILoadDataEnd(beans);
+                            onUILoadDataFinish();
                         }
                     }
                 });
@@ -116,10 +126,11 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
         @Override
         protected void onBindDataView(RBaseViewHolder holder, int posInData, GroupAnnouncementBean dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
+            TextView tv_time = holder.tv(R.id.tv_time_view);
             TextView tv_announce_desc = holder.tv(R.id.tv_announcement_desc);
 
             tv_announce_desc.setText(dataBean.getContent());
-
+            tv_time.setText(TimeUtil.getTimeShowString(Long.parseLong(dataBean.getCreated()), false));
         }
     }
 
@@ -153,7 +164,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
 
                                                 @Override
                                                 public void onSucceed(String beans) {
-                                                    onUILoadDataEnd();
+                                                    loadData();
                                                     finishIView(mIView);
 
                                                 }

@@ -64,7 +64,6 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                         if (beans == null || beans.getData_list() == null || beans.getData_list().isEmpty()) {
                             onUILoadDataEnd();
                         } else {
-                            showContentLayout();
                             onUILoadDataEnd(beans.getData_list());
                             onUILoadDataFinish();
                         }
@@ -113,6 +112,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
     protected RBaseItemDecoration initItemDecoration() {
         return new RBaseItemDecoration(getItemDecorationHeight()).setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
     }
+
 
     @NonNull
     @Override

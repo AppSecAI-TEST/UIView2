@@ -2,24 +2,25 @@ package com.hn.d.valley.main.message.groupchat;
 
 
 import android.content.Context;
+import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.angcyo.library.utils.L;
-import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
-import com.hn.d.valley.main.friend.AbsFriendItem;
-import com.hn.d.valley.main.friend.FriendItem;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action2;
@@ -27,15 +28,21 @@ import rx.functions.Action2;
 /**
  * Created by hewking on 2017/3/9.
  */
-public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
+public class AddGroupAdapter extends RModelAdapter<AbsContactItem> {
 
     private Action2 action;
 
     private List<String> mSelectedUsers;
 
-    public AddGroupAdapter(Context context) {
+    private ContactSelectUIVIew.Options options;
+
+    private SparseBooleanArray mCheckStats = new SparseBooleanArray();
+
+    public AddGroupAdapter(Context context, ContactSelectUIVIew.Options options) {
         super(context);
-        setModel(RModelAdapter.MODEL_MULTI);
+        this.options = options;
+        setModel(options.mode);
+
     }
 
     public void setAction(Action2 action) {
@@ -55,7 +62,7 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
     }
 
     @Override
-    protected void onBindCommonView(RBaseViewHolder holder, int position, AbsFriendItem bean) {
+    protected void onBindCommonView(RBaseViewHolder holder, int position, AbsContactItem bean) {
         if (bean == null) {
             return;
         }
@@ -71,24 +78,12 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
             });
 
         } else if (getItemType(position) == ItemTypes.FRIEND){
-            FriendItem item = (FriendItem) bean;
+            ContactItem item = (ContactItem) bean;
 
             HnGlideImageView imageView = holder.v(R.id.iv_item_head);
             TextView nickName = holder.tv(R.id.tv_friend_name);
             imageView.setImageUrl(item.getFriendBean().getAvatar());
             nickName.setText(item.getFriendBean().getDefaultMark());
-
-            if (mSelectedUsers != null && mSelectedUsers.size() != 0) {
-                CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
-                FriendBean friendBean = item.getFriendBean();
-                if (mSelectedUsers.contains(friendBean.getUid()) ){
-//                    setSelectorPosition(position,checkBox);
-                    L.i("selector position :" + friendBean.getDefaultMark());
-                    holder.itemView.setEnabled(false);
-                    checkBox.setChecked(true);
-                    checkBox.setEnabled(false);
-                }
-            }
         }
 
 
@@ -99,18 +94,56 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
         return mAllDatas.get(position).getItemType();
     }
 
+    @Override
+    protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
+        final CheckBox checkBox = viewHolder.v(R.id.cb_friend_addfirend);
+        checkBox.setChecked(false);
+        checkBox.setTag(position);
+        mCheckStats.delete(position);
+        return true;
+    }
 
     @Override
-    protected void onBindModelView(int model, final boolean isSelector, final RBaseViewHolder holder, final int position, final AbsFriendItem bean) {
+    protected void onBindModelView(int model, final boolean isSelector, final RBaseViewHolder holder, final int position, final AbsContactItem bean) {
 
         if (getItemType(position) == ItemTypes.FRIEND) {
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
-//            checkBox.setChecked(isSelector);
+            checkBox.setTag(position);
+
+            if (mSelectedUsers != null && mSelectedUsers.size() != 0) {
+                FriendBean friendBean = ((ContactItem)bean).getFriendBean();
+                if (mSelectedUsers.contains(friendBean.getUid()) ){
+                    mCheckStats.put(position,true);
+                    holder.itemView.setEnabled(false);
+                    checkBox.setEnabled(false);
+                } else {
+                    holder.itemView.setEnabled(true);
+                    checkBox.setEnabled(true);
+                }
+            }
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    if (getAllSelectorList().size() >= options.selectCountLimit) {
+                        if (!isPositionSelector(position)) {
+                            T_.show("已达到选中限制");
+                            return;
+                        }
+                    }
+
                     setSelectorPosition(position,checkBox);
+
+                    int tag = (int) checkBox.getTag();
+
+                    boolean selector = isPositionSelector(position);
+                    if (selector) {
+                        mCheckStats.put(tag,true);
+                    } else {
+                        mCheckStats.delete(tag);
+                    }
+
                     RBus.post(new SelectedUserNumEvent(getSelectorData().size()));
                     if(action == null){
                         return;
@@ -121,12 +154,23 @@ public class AddGroupAdapter extends RModelAdapter<AbsFriendItem> {
 
             checkBox.setOnClickListener(listener);
             holder.itemView.setOnClickListener(listener);
+            checkBox.setChecked(mCheckStats.get(position,false));
         }
 
     }
 
     @Override
-    protected void onBindNormalView(RBaseViewHolder holder, int position, AbsFriendItem bean) {
+    public void resetData(List<AbsContactItem> datas) {
+        if (datas == null) {
+            this.mAllDatas = new ArrayList<>();
+        } else {
+            this.mAllDatas = datas;
+        }
+        notifyItemRangeChanged(1,datas.size() - 1);
+    }
+
+    @Override
+    protected void onBindNormalView(RBaseViewHolder holder, int position, AbsContactItem bean) {
 
     }
 

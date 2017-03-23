@@ -2,6 +2,7 @@ package com.hn.d.valley.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -56,7 +57,12 @@ public class HnFollowImageView extends HnGlideImageView {
 
     void showLoading() {
         clearAnimation();
+
+        ViewGroup.LayoutParams params = getLayoutParams();
+        int height = params.height;
         setImageResource(R.drawable.loading_guanzhu);
+        params.height = height;
+        setLayoutParams(params);
 
         RotateAnimation rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(1000);

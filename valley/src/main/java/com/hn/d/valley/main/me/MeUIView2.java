@@ -19,6 +19,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
+import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
@@ -170,7 +171,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 holder.v(R.id.status_item_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        mOtherILayout.startIView(new MyStatusUIView());
                     }
                 });
 

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/image_view"
+        android:layout_width="@dimen/base_xxxhdpi"
+        android:layout_height="@dimen/base_xxxhdpi"
+        android:contentDescription="@string/is_circle"
+        android:src="@drawable/default_avatar"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/author_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/base_ldpi"
+        tools:text="测试文本"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/time_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/base_ldpi"
+        tools:text="测试文本"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/reply_cnt_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/base_ldpi"
+        android:layout_weight="1"
+        android:gravity="end"
+        android:tag="%1$s评"
+        tools:text="测试文本"/>
+
+    <ImageView
+        android:id="@+id/delete_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/cancel"/>
+
+</LinearLayout>

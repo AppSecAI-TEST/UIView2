@@ -50,7 +50,7 @@ public abstract class SingleRecyclerUIView<T> extends BaseRecyclerUIView<String,
     }
 
     @Override
-    protected boolean isDelayLoad() {
+    protected boolean isLoadInViewPager() {
         return true;
     }
 

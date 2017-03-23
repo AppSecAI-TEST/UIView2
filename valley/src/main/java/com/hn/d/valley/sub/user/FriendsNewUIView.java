@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.maps.model.Text;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -31,6 +34,8 @@ import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
+
+import retrofit2.http.Body;
 
 /**
  * Created by hewking on 2017/3/17.
@@ -101,6 +106,10 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
         @Override
         protected void onBindDataView(RBaseViewHolder holder, final int posInData, final CustomMessageBean dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
+
+            TextView userName = holder.tv(R.id.username);
+            userName.setText(dataBean.getBodyBean().getUsername());
+
             //用户个人详情
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -164,6 +173,44 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
                 }
             });
 
+            if (isContact(dataBean) || isAttention(dataBean)) {
+                final String finalTitleString = getTitleString();
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //取消关注
+                        UIBottomItemDialog.build()
+                                .setTitleString(finalTitleString)
+                                .addItem(new UIItemDialog.ItemInfo(mActivity.getResources().getString(R.string.base_ok), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        setSelectorPosition(posInData);
+                                        add(RRetrofit.create(UserInfoService.class)
+                                                .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
+                                                .compose(Rx.transformer(String.class))
+                                                .subscribe(new BaseSingleSubscriber<String>() {
+
+                                                    @Override
+                                                    public void onSucceed(String bean) {
+                                                        //dataBean.setIs_attention(0);
+                                                        onSetDataBean(dataBean, false);
+                                                        setSelectorPosition(posInData);
+                                                    }
+
+                                                    @Override
+                                                    public void onError(int code, String msg) {
+                                                        super.onError(code, msg);
+                                                        setSelectorPosition(posInData);
+                                                    }
+                                                }));
+                                    }
+                                })).showDialog(mOtherILayout);
+                    }
+                };
+                followView.setOnClickListener(clickListener);
+            }
+
+
         }
 
         @Override
@@ -197,7 +244,12 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
         }
     }
 
-
+    protected void onSetDataBean(CustomMessageBean dataBean, boolean value) {
+        if (!value) {
+            dataBean.setIs_contact(0);
+        }
+        dataBean.setIs_attention(value ? 1 : 0);
+    }
 
     @Override
     protected RBaseItemDecoration initItemDecoration() {

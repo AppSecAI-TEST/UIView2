@@ -1,6 +1,5 @@
 package com.hn.d.valley.main.friend;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -10,12 +9,12 @@ import rx.functions.Action1;
  */
 public class FriendDataProvider implements IFriendProvider {
     @Override
-    public List<AbsFriendItem> provide(Action1 action) {
+    public List<AbsContactItem> provide(Action1 action) {
         return null;
     }
 //    @Override
-//    public List<AbsFriendItem> provide(int itemType, AbsFriendItem item) {
-//        List<AbsFriendItem> friendItems = new ArrayList<>();
+//    public List<AbsContactItem> provide(int itemType, AbsContactItem item) {
+//        List<AbsContactItem> friendItems = new ArrayList<>();
 //
 //        //retrofit 加载
 //        //成功回调 往frienditems 填充数据

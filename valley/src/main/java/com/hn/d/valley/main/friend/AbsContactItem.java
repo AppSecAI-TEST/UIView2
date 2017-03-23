@@ -3,7 +3,7 @@ package com.hn.d.valley.main.friend;
 /**
  * Created by hewking on 2017/3/8.
  */
-public abstract class AbsFriendItem {
+public abstract class AbsContactItem {
 
     protected int itemType;
 

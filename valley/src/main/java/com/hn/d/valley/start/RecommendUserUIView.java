@@ -171,7 +171,7 @@ public class RecommendUserUIView extends BaseContentUIView {
             L.i("itemHeight : " + itemHeight);
 
             final HnGlideImageView imageView = (HnGlideImageView) holder.imgV(R.id.image_view);
-            final TextView username = holder.tv(R.id.tv__username);
+            final TextView username = holder.tv(R.id.tv_username);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setImageResource(R.drawable.zhanweitu_1);
             imageView.post(new Runnable() {

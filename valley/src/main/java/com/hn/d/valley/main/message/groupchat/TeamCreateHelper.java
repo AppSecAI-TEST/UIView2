@@ -3,7 +3,6 @@ package com.hn.d.valley.main.message.groupchat;
 import android.graphics.Bitmap;
 
 import com.angcyo.uiview.base.UIBaseRxView;
-import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.RUtils;
@@ -18,11 +17,10 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.friend.AbsFriendItem;
-import com.hn.d.valley.main.friend.FriendItem;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.utils.NetUtils;
-import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.groupView.JoinBitmaps;
 
 import java.io.File;
@@ -30,18 +28,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by hewking on 2017/3/16.
  */
 public class TeamCreateHelper {
 
-    public static void createAndSavePhoto(UIBaseRxView iLayout, final List<AbsFriendItem> selectorData, final RequestCallback<GroupInfoBean> callback) {
+    public static void createAndSavePhoto(UIBaseRxView iLayout, final List<AbsContactItem> selectorData, final RequestCallback<GroupInfoBean> callback) {
 
         if (selectorData == null || selectorData.size() < 2) {
             T_.show("成员不能小于两个人");
@@ -51,8 +48,8 @@ public class TeamCreateHelper {
         callback.onStart();
 
         final List<FriendBean> beans = new ArrayList<>();
-        for (AbsFriendItem item : selectorData) {
-            beans.add(((FriendItem)item).getFriendBean());
+        for (AbsContactItem item : selectorData) {
+            beans.add(((ContactItem)item).getFriendBean());
         }
         iLayout.add(Observable.just(beans)
                 .flatMap(new Func1<List<FriendBean>, Observable<List<String>>>() {
@@ -132,16 +129,16 @@ public class TeamCreateHelper {
     }
 
 
-    public static void invite(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, final RequestCallback requestCallback, final String gid) {
+    public static void invite(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, final RequestCallback requestCallback, final String gid) {
         requestCallback.onStart();
 
-       uiBaseDataView.add(Observable.just(absFriendItems)
-                .flatMap(new Func1<List<AbsFriendItem>, Observable<List<FriendBean>>>() {
+       uiBaseDataView.add(Observable.just(absContactItems)
+                .flatMap(new Func1<List<AbsContactItem>, Observable<List<FriendBean>>>() {
                     @Override
-                    public Observable<List<FriendBean>> call(List<AbsFriendItem> absFriendItem) {
+                    public Observable<List<FriendBean>> call(List<AbsContactItem> absContactItem) {
                         List<FriendBean> beanlist = new ArrayList();
-                        for (AbsFriendItem bean : absFriendItem) {
-                            beanlist.add(((FriendItem)bean).getFriendBean());
+                        for (AbsContactItem bean : absContactItem) {
+                            beanlist.add(((ContactItem)bean).getFriendBean());
                         }
                         return Observable.just(beanlist);
                     }
@@ -166,7 +163,7 @@ public class TeamCreateHelper {
         }));
 
 //        uiBaseDataView.add(RRetrofit.create(GroupChatService.class)
-//                .add(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(absFriendItems)))
+//                .add(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(absContactItems)))
 //                .compose(Rx.transformer(String.class))
 //                .subscribe(new BaseSingleSubscriber<String>() {
 //                    @Override
@@ -175,5 +172,41 @@ public class TeamCreateHelper {
 //                    }
 //                }));
     }
+
+    public static void changeOwner(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, final String gid, final RequestCallback callback, final Action1<Boolean> action) {
+        callback.onStart();
+
+        uiBaseDataView.add(Observable.just(absContactItems)
+                .flatMap(new Func1<List<AbsContactItem>, Observable<List<FriendBean>>>() {
+                    @Override
+                    public Observable<List<FriendBean>> call(List<AbsContactItem> absContactItem) {
+                        List<FriendBean> beanlist = new ArrayList();
+                        for (AbsContactItem bean : absContactItem) {
+                            beanlist.add(((ContactItem)bean).getFriendBean());
+                        }
+                        return Observable.just(beanlist);
+                    }
+                }).flatMap(new Func1<List<FriendBean>, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(List<FriendBean> friendBeen) {
+                        return RRetrofit.create(GroupChatService.class)
+                                .changeOwner(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
+                                .compose(Rx.transformer(String.class));
+                    }
+                }).subscribe(new BaseSingleSubscriber<String>(){
+                    @Override
+                    public void onSucceed(String bean) {
+                        callback.onSuccess(bean);
+                        action.call(true);
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        callback.onError(msg);
+                    }
+                }));
+    }
+
 
 }

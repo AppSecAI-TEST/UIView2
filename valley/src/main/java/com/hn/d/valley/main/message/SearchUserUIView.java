@@ -45,7 +45,6 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-// TODO: 2017/3/17 增加推荐的人以及打开通讯录 匹配通讯录
 public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implements Search.ISearchView {
 
     @BindView(R.id.search_input_view)

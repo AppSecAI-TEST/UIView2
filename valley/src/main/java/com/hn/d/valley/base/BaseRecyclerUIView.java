@@ -10,11 +10,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.T_;
@@ -97,7 +97,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         initRecyclerView();
 
         if (getDefaultLayoutState() == LayoutState.CONTENT
-                && !isDelayLoad()) {
+                && !isLoadInViewPager()) {
             loadData();
         }
     }
@@ -208,8 +208,16 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @Override
     public void onShowInPager(UIViewPager viewPager) {
         super.onShowInPager(viewPager);
-        if (mIViewStatus == STATE_VIEW_SHOW && isDelayLoad() && delayTime()) {
+        if (mIViewStatus == STATE_VIEW_SHOW && isLoadInViewPager() && delayTime()) {
             loadData();
+        }
+    }
+
+    @Override
+    public void onHideInPager(UIViewPager viewPager) {
+        super.onHideInPager(viewPager);
+        if (isLoadInViewPager()) {
+            onCancel();
         }
     }
 
@@ -226,7 +234,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     /**
      * 是否延迟调用加载数据, 在ViewPager中可以返回true
      */
-    protected boolean isDelayLoad() {
+    protected boolean isLoadInViewPager() {
         return false;
     }
 

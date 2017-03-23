@@ -3,6 +3,7 @@ package com.hn.d.valley.widget;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.AppCompatImageView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.angcyo.library.glide.GlideCircleTransform;
@@ -41,6 +42,10 @@ public class HnGlideImageView extends AppCompatImageView {
     }
 
     public void setImageThumbUrl(final String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+
         CharSequence description = getContentDescription();
         if (description != null && description.toString().contains("circle2")) {
             post(new Runnable() {
@@ -90,6 +95,10 @@ public class HnGlideImageView extends AppCompatImageView {
     }
 
     public void setImageUrl(final String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+
         CharSequence description = getContentDescription();
         if (description != null && description.toString().contains("circle")) {
             post(new Runnable() {

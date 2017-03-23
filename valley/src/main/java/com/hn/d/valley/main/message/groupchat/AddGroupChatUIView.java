@@ -1,18 +1,10 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -25,7 +17,6 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.file.AttachmentStore;
 import com.angcyo.uiview.utils.storage.StorageType;
@@ -39,19 +30,16 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
-import com.hn.d.valley.main.found.sub.SearchUIView;
-import com.hn.d.valley.main.friend.AbsFriendItem;
-import com.hn.d.valley.main.friend.FriendItem;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.service.GroupChatService;
-import com.hn.d.valley.sub.user.NewFriendUIView;
 import com.hn.d.valley.utils.NetUtils;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.hn.d.valley.widget.groupView.JoinBitmaps;
-import com.netease.nimlib.sdk.friend.model.Friend;
 
 import java.io.File;
 import java.io.Serializable;
@@ -86,9 +74,9 @@ public class AddGroupChatUIView extends BaseUIView {
 
     private List<String> mSelectedUids;
 
-    private Action2<Boolean,FriendItem> action = new Action2<Boolean, FriendItem>() {
+    private Action2<Boolean,ContactItem> action = new Action2<Boolean, ContactItem>() {
         @Override
-        public void call(Boolean aBoolean, FriendItem item) {
+        public void call(Boolean aBoolean, ContactItem item) {
             HnIcoRecyclerView.IcoInfo icon ;
             FriendBean bean = item.getFriendBean();
 //            if (aBoolean) {
@@ -153,7 +141,7 @@ public class AddGroupChatUIView extends BaseUIView {
             }
         });
 
-        mGroupAdapter = new AddGroupAdapter(mActivity);
+        mGroupAdapter = new AddGroupAdapter(mActivity,new ContactSelectUIVIew.Options());
         datatProvider = new AddGroupDatatProvider();
 //        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
@@ -173,7 +161,7 @@ public class AddGroupChatUIView extends BaseUIView {
 
                 refreshLayout.setRefreshEnd();
 
-                List<AbsFriendItem> datas = new ArrayList();
+                List<AbsContactItem> datas = new ArrayList();
                 datas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
@@ -181,7 +169,7 @@ public class AddGroupChatUIView extends BaseUIView {
                     }
                 }));
                 for (FriendBean bean : beanList) {
-                    datas.add(new FriendItem(bean));
+                    datas.add(new ContactItem(bean));
                 }
                 mGroupAdapter.resetData(datas);
             }
@@ -190,7 +178,7 @@ public class AddGroupChatUIView extends BaseUIView {
 
 
     private void createGroupChat() {
-        List<AbsFriendItem> selectorData = mGroupAdapter.getSelectorData();
+        List<AbsContactItem> selectorData = mGroupAdapter.getSelectorData();
         if (selectorData == null || selectorData.size() < 2) {
             T_.show("成员不能小于两个人");
             return;
@@ -199,11 +187,11 @@ public class AddGroupChatUIView extends BaseUIView {
         createAndSavePhoto(selectorData);
     }
 
-    private void createAndSavePhoto(final List<AbsFriendItem> selectorData) {
+    private void createAndSavePhoto(final List<AbsContactItem> selectorData) {
         HnLoading.show(mOtherILayout);
         final List<FriendBean> beans = new ArrayList<>();
-        for (AbsFriendItem item : selectorData) {
-            beans.add(((FriendItem)item).getFriendBean());
+        for (AbsContactItem item : selectorData) {
+            beans.add(((ContactItem)item).getFriendBean());
         }
         add(Observable.just(beans)
                 .flatMap(new Func1<List<FriendBean>, Observable<List<String>>>() {

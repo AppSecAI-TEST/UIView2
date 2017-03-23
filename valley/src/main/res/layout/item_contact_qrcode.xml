@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/base_bg_selector"
+    android:padding="@dimen/base_hdpi">
+
+        <TextView
+            android:id="@+id/tv_qrcode_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的id : 32176"
+            />
+
+        <ImageView
+            android:id="@+id/iv_qrcode"
+            android:src="@drawable/qr_code"
+            android:layout_toRightOf="@id/tv_qrcode_desc"
+            android:layout_marginLeft="@dimen/base_xhdpi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+</RelativeLayout>

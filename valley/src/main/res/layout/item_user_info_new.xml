@@ -55,7 +55,7 @@
     <RelativeLayout
         android:id="@+id/right_control_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/base_item_size"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:minHeight="@dimen/base_item_size">
@@ -64,6 +64,7 @@
             android:id="@+id/follow_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:background="@drawable/base_bg2_selector"
             android:padding="@dimen/base_hdpi"
             android:src="@drawable/follow"/>

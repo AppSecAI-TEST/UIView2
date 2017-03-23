@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -18,24 +20,17 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.RecommendUserBean;
-import com.hn.d.valley.bean.UserListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
-import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
 
-/**
- * 我的关注
- * Created by angcyo on 2017-01-15.
- */
 
 public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBean> {
 
@@ -58,7 +53,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
 
     @Override
     protected RExBaseAdapter<String, RecommendUserBean, String> initRExBaseAdapter() {
-        mAdapter = new RecommendFriendAdapter(mActivity) ;
+        mAdapter = new RecommendFriendAdapter(mActivity,this,mOtherILayout) ;
         mAdapter.setModel(RModelAdapter.MODEL_MULTI);
         return mAdapter;
     }
@@ -87,10 +82,16 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
 
 
 
-    public class RecommendFriendAdapter extends RExBaseAdapter<String,RecommendUserBean,String> {
+    public static class RecommendFriendAdapter extends RExBaseAdapter<String,RecommendUserBean,String> {
 
-        public RecommendFriendAdapter(Context context) {
+        private UIBaseRxView mSubscriptions;
+
+        private ILayout mLayout;
+
+        public RecommendFriendAdapter(Context context,UIBaseRxView mSubscriptions,ILayout layout) {
             super(context);
+            this.mSubscriptions = mSubscriptions;
+            this.mLayout = layout;
         }
 
         @Override
@@ -108,7 +109,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOtherILayout.startIView(new UserDetailUIView(dataBean.getUid()));
+                    mLayout.startIView(new UserDetailUIView(dataBean.getUid()));
                 }
             });
 
@@ -152,7 +153,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
                         @Override
                         public void onClick(View v) {
                             setSelectorPosition(posInData);
-                            add(RRetrofit.create(UserInfoService.class)
+                            mSubscriptions.add(RRetrofit.create(UserInfoService.class)
                                     .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
@@ -183,11 +184,11 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
                         //取消关注
                         UIBottomItemDialog.build()
                                 .setTitleString(finalTitleString)
-                                .addItem(new UIItemDialog.ItemInfo(mActivity.getResources().getString(R.string.base_ok), new View.OnClickListener() {
+                                .addItem(new UIItemDialog.ItemInfo(mContext.getResources().getString(R.string.base_ok), new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
                                         setSelectorPosition(posInData);
-                                        add(RRetrofit.create(UserInfoService.class)
+                                        mSubscriptions.add(RRetrofit.create(UserInfoService.class)
                                                 .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                                 .compose(Rx.transformer(String.class))
                                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -206,7 +207,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
                                                     }
                                                 }));
                                     }
-                                })).showDialog(mOtherILayout);
+                                })).showDialog(mLayout);
                     }
                 };
             }
@@ -219,6 +220,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
             super.onBindModelView(model, isSelector, holder, position, bean);
             final HnFollowImageView followView = holder.v(R.id.follow_image_view);
             followView.setLoadingModel(isSelector);
+
             if (isSelector) {
                 followView.setOnClickListener(null);
             } else {
@@ -234,24 +236,26 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
                 }
             }
         }
-    }
 
 
-
-    protected boolean isContact(RecommendUserBean dataBean) {
-        return dataBean.getIs_contact() == 1;
-    }
-
-    protected boolean isAttention(RecommendUserBean dataBean) {
-        return dataBean.getIs_attention() == 1;
-    }
-
-    protected void onSetDataBean(RecommendUserBean dataBean, boolean value) {
-        if (!value) {
-            dataBean.setIs_contact(0);
+        protected boolean isContact(RecommendUserBean dataBean) {
+            return dataBean.getIs_contact() == 1;
         }
-        dataBean.setIs_attention(value ? 1 : 0);
+
+        protected boolean isAttention(RecommendUserBean dataBean) {
+            return dataBean.getIs_attention() == 1;
+        }
+
+        protected void onSetDataBean(RecommendUserBean dataBean, boolean value) {
+            if (!value) {
+                dataBean.setIs_contact(0);
+            }
+            dataBean.setIs_attention(value ? 1 : 0);
+        }
     }
+
+
+
 
     @Override
     protected RBaseItemDecoration initItemDecoration() {

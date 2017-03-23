@@ -65,7 +65,6 @@ public final class NewFriend2UIView extends BaseContentUIView {
         boolean isRightToLeft = position < lastPosition;
         if (position == 0) {
             if (mFollowersUIView == null) {
-                // TODO: 2017/3/17 更改为新的朋友UIVIew
                 mFollowersUIView = new FriendsNewUIView();
                 mFollowersUIView.bindOtherILayout(mOtherILayout);
                 mFollowersUIView.setIsRightJumpLeft(isRightToLeft);

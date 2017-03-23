@@ -29,7 +29,7 @@ public abstract class NoTitleBaseRecyclerUIView<T> extends BaseRecyclerUIView<St
     }
 
     @Override
-    protected boolean isDelayLoad() {
+    protected boolean isLoadInViewPager() {
         return true;
     }
 

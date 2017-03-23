@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -33,7 +32,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.FriendListModel;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.friend.AbsFriendItem;
+import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
@@ -104,7 +103,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
         mFriendsAdapter = new FriendsAdapter(mContext,this){
             @Override
-            protected List<? extends AbsFriendItem> onPreProvide() {
+            protected List<? extends AbsContactItem> onPreProvide() {
                 return FuncItem.provide();
             }
         };
@@ -134,7 +133,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         rRecyclerView.addItemDecoration(new RGroupItemDecoration(new GroupItemCallBack(mContext,mFriendsAdapter)));
     }
 
-    public static void scrollToLetter(String letter, RecyclerView recyclerView, List<AbsFriendItem> datas) {
+    public static void scrollToLetter(String letter, RecyclerView recyclerView, List<AbsContactItem> datas) {
         if (TextUtils.equals(letter, "☆")) {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
             return;
@@ -152,9 +151,9 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         return Pinyin.toPinyin(o2.getDefaultMark().charAt(0)).toUpperCase().charAt(0);
     }
 
-    public static List<String> generateIndexLetter(List<AbsFriendItem> data_list) {
+    public static List<String> generateIndexLetter(List<AbsContactItem> data_list) {
         List<String> letters= new ArrayList<>();
-        for(AbsFriendItem bean : data_list) {
+        for(AbsContactItem bean : data_list) {
             String letter = bean.getGroupText();
             if (letter == null || "".equals(letter)) {
                 continue;
@@ -166,10 +165,10 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         return letters;
     }
 
-    public static void sort(List<AbsFriendItem> items) {
-        Collections.sort(items, new Comparator<AbsFriendItem>() {
+    public static void sort(List<AbsContactItem> items) {
+        Collections.sort(items, new Comparator<AbsContactItem>() {
             @Override
-            public int compare(AbsFriendItem o1, AbsFriendItem o2) {
+            public int compare(AbsContactItem o1, AbsContactItem o2) {
 
                 if (o1.getGroupText() == "") {
                     L.i(o1.getGroupText());
@@ -260,7 +259,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
         private Context mContext;
 
-        private RBaseAdapter<AbsFriendItem> mAdapter;
+        private RBaseAdapter<AbsContactItem> mAdapter;
 
         public GroupItemCallBack(Context ctx,RBaseAdapter adapter) {
             textPaint.setTextSize(ctx.getResources().getDisplayMetrics().scaledDensity * 20);

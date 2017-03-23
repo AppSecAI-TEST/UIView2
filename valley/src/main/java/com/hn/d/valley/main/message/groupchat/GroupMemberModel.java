@@ -18,10 +18,11 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.friend.AbsFriendItem;
+import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.HnGlideImageView;
 
@@ -50,7 +51,7 @@ public class GroupMemberModel {
 
     private String mSessionId;
 
-    private String gid;
+    private GroupDescBean bean;
 
     public static GroupMemberModel getInstanse() {
         return Holder.instance;
@@ -62,20 +63,23 @@ public class GroupMemberModel {
         this.mSessionId = sesssionId;
 
         icoRecyclerView = holder.v(R.id.rv_headimg_name_icon);
+        TextView tv_group_member_num = holder.v(R.id.tv_group_member_num);
+        TextView tv_add_groupmembers = holder.tv(R.id.tv_add_groupmembers);
+        ImageView iv_group_members = holder.imageView(R.id.iv_group_members);
 
         icoRecyclerView.setLayoutManager(new LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false));
         mAdapter = new ChatInfoAdapter(ctx);
 
         icoRecyclerView.setAdapter(mAdapter);
 
-        TextView tv_add_groupmembers = holder.tv(R.id.tv_add_groupmembers);
-        ImageView iv_group_members = holder.imageView(R.id.iv_group_members);
+        tv_group_member_num.setText(holder.itemView.getContext().getResources().getString(R.string.group_member_num)
+                + "(" + bean.getMemberCount() + "/" + bean.getMemberLimit() + ")");
 
         iv_group_members.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putString(GroupMemberUIVIew.GID,gid);
+                bundle.putString(GroupMemberUIVIew.GID,bean.getGid());
                 UIParam param = new UIParam().setBundle(bundle);
                 contentUIView.getILayout().startIView(new GroupMemberUIVIew(),param);
             }
@@ -89,10 +93,10 @@ public class GroupMemberModel {
                 for (GroupMemberBean bean : mAdapterAllDatas) {
                     uids.add(bean.getUserId());
                 }
-                ContactSelectUIVIew.start(contentUIView.getILayout(),uids,new Action3< UIBaseRxView, List< AbsFriendItem >, RequestCallback>() {
+                ContactSelectUIVIew.start(contentUIView.getILayout(),new ContactSelectUIVIew.Options(),uids,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
-                    public void call(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, RequestCallback requestCallback) {
-                        TeamCreateHelper.invite(uiBaseDataView,absFriendItems,requestCallback,gid);
+                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                        TeamCreateHelper.invite(uiBaseDataView, absContactItems,requestCallback,bean.getGid());
                     }
                 });
             }
@@ -119,7 +123,7 @@ public class GroupMemberModel {
         @Override
         protected void onBindView(RBaseViewHolder holder, int position, GroupMemberBean bean) {
             HnGlideImageView image_view = holder.v(R.id.image_view);
-            TextView username = holder.tv(R.id.tv__username);
+            TextView username = holder.tv(R.id.tv_username);
 
             image_view.setImageUrl(bean.getUserAvatar());
             username.setText(bean.getDefaultNick());
@@ -133,12 +137,12 @@ public class GroupMemberModel {
 
     }
 
-    public void loadData(String gid) {
+    public void loadData(GroupDescBean bean) {
 
-        this.gid = gid;
+        this.bean = bean;
 
         RRetrofit.create(GroupChatService.class)
-        .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
+        .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + bean.getGid()))
         .compose(Rx.transformer(GroupMemberList.class))
                 .subscribe(new BaseSingleSubscriber<GroupMemberList>() {
                     @Override

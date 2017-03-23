@@ -15,6 +15,7 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -22,8 +23,8 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.control.FriendsControl;
-import com.hn.d.valley.main.friend.AbsFriendItem;
-import com.hn.d.valley.main.friend.FriendItem;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
@@ -57,15 +58,17 @@ public class ContactSelectUIVIew extends BaseUIView {
 //    @BindView(R.id.rv_groupchat_icon)
 //    HnIcoRecyclerView iconSelectedRv;
 
+    private Options options;
+
     private AddGroupAdapter mGroupAdapter;
 
     private AddGroupDatatProvider datatProvider;
 
     private List<String> mSelectedUids;
 
-    private Action2<Boolean,FriendItem> action = new Action2<Boolean, FriendItem>() {
+    private Action2<Boolean,ContactItem> action = new Action2<Boolean, ContactItem>() {
         @Override
-        public void call(Boolean aBoolean, FriendItem item) {
+        public void call(Boolean aBoolean, ContactItem item) {
             HnIcoRecyclerView.IcoInfo icon ;
             FriendBean bean = item.getFriendBean();
 //            if (aBoolean) {
@@ -78,17 +81,22 @@ public class ContactSelectUIVIew extends BaseUIView {
         }
     };
 
-    private Action3<UIBaseRxView,List<AbsFriendItem>,RequestCallback> selectAction ;
+    private Action3<UIBaseRxView,List<AbsContactItem>,RequestCallback> selectAction ;
 
-    public void setSelectAction(Action3<UIBaseRxView,List<AbsFriendItem>, RequestCallback> selectAction) {
+    public ContactSelectUIVIew(Options options) {
+        super();
+        this.options = options;
+    }
+
+    public void setSelectAction(Action3<UIBaseRxView,List<AbsContactItem>, RequestCallback> selectAction) {
         this.selectAction = selectAction;
     }
 
-    public static void start(ILayout mLayout, List<String> uids,Action3<UIBaseRxView, List<AbsFriendItem>, RequestCallback> selectAction) {
+    public static void start(ILayout mLayout,Options options , List<String> uids,Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
 
-        ContactSelectUIVIew targetView = new ContactSelectUIVIew();
+        ContactSelectUIVIew targetView = new ContactSelectUIVIew(options);
         targetView.setSelectAction(selectAction);
 
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
@@ -103,7 +111,7 @@ public class ContactSelectUIVIew extends BaseUIView {
                 onSelected();
             }
         }));
-        return super.getTitleBar().setTitleString("选择好友").setRightItems(rightItems);
+        return super.getTitleBar().setShowBackImageView(true).setTitleString("选择好友").setRightItems(rightItems);
     }
 
     @Override
@@ -142,7 +150,7 @@ public class ContactSelectUIVIew extends BaseUIView {
             }
         });
 
-        mGroupAdapter = new AddGroupAdapter(mActivity);
+        mGroupAdapter = new AddGroupAdapter(mActivity,options);
 //        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         recyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mGroupAdapter)));
@@ -176,7 +184,7 @@ public class ContactSelectUIVIew extends BaseUIView {
 
                 refreshLayout.setRefreshEnd();
 
-                List<AbsFriendItem> datas = new ArrayList();
+                List<AbsContactItem> datas = new ArrayList();
                 datas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
@@ -184,7 +192,7 @@ public class ContactSelectUIVIew extends BaseUIView {
                     }
                 }));
                 for (FriendBean bean : beanList) {
-                    datas.add(new FriendItem(bean));
+                    datas.add(new ContactItem(bean));
                 }
 
                 FriendsControl.sort(datas);
@@ -227,6 +235,28 @@ public class ContactSelectUIVIew extends BaseUIView {
     @Override
     protected LayoutState getDefaultLayoutState() {
         return LayoutState.LOAD;
+    }
+
+    public static class Options {
+
+        public static final int DEFALUT_LIMIT = 5;
+
+        public int mode;
+        public int selectCountLimit = DEFALUT_LIMIT;
+
+        public Options(){
+            this(RModelAdapter.MODEL_MULTI);
+        }
+
+        public Options(int mode){
+            this(mode ,DEFALUT_LIMIT);
+        }
+
+        public Options(int mode , int limit) {
+            this.mode = mode;
+            this.selectCountLimit = limit;
+        }
+
     }
 
 

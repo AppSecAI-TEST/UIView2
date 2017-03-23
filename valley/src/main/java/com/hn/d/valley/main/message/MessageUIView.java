@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.UIBaseRxView;
-import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
@@ -16,11 +14,8 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
-import com.hn.d.valley.main.friend.AbsFriendItem;
-import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
+import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
-import com.hn.d.valley.main.message.groupchat.RequestCallback;
-import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
 import com.hn.d.valley.sub.user.NewFriend2UIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -31,12 +26,10 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Action3;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -137,30 +130,33 @@ public class MessageUIView extends BaseUIView {
                 startSearch();
             }
         }));
-        rightItems.add(TitleBarPattern.TitleBarItem.build()/*.setText(mActivity.getString(R.string.contacts))*/.setRes(R.drawable.switch_camera_n).setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.contacts))/*.setRes(R.drawable.switch_camera_n)*/
+        .setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                T_.show(mActivity.getString(R.string.contacts));
-                UIItemDialog.build()
-                        .addItem(getString(R.string.add_friend), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mOtherILayout.startIView(new SearchUserUIView());
-                            }
-                        })
-                        .addItem("添加群聊", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ContactSelectUIVIew targetView = new ContactSelectUIVIew();
-                                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsFriendItem>, RequestCallback>() {
-                                    @Override
-                                    public void call(UIBaseRxView uiBaseDataView, List<AbsFriendItem> absFriendItems, RequestCallback requestCallback) {
-                                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView,absFriendItems,requestCallback);
-                                    }
-                                });
-                                mOtherILayout.startIView(targetView);
-                            }
-                        }).showDialog(mOtherILayout);
+                mOtherILayout.startIView(new FriendUIView());
+
+//                UIItemDialog.build()
+//                        .addItem(getString(R.string.add_friend), new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                mOtherILayout.startIView(new SearchUserUIView());
+//                            }
+//                        })
+//                        .addItem("添加群聊", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new ContactSelectUIVIew.Options());
+//                                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+//                                    @Override
+//                                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absFriendItems, RequestCallback requestCallback) {
+//                                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView,absFriendItems,requestCallback);
+//                                    }
+//                                });
+//                                mOtherILayout.startIView(targetView);
+//                            }
+//                        }).showDialog(mOtherILayout);
             }
         }));
 
@@ -171,7 +167,7 @@ public class MessageUIView extends BaseUIView {
      * 打开搜索界面
      */
     private void startSearch() {
-        mOtherILayout.startIView(new SearchUserUIView());
+        mOtherILayout.startIView(new AddFriendUIView());
     }
 
     @Override

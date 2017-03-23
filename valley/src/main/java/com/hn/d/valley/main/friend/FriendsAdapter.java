@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
@@ -12,9 +11,6 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.widget.HnGlideImageView;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -22,7 +18,7 @@ import rx.functions.Action1;
 /**
  * Created by hewking on 2017/3/7.
  */
-public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
+public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
 
 //    public static final int ITEM_TYPE_NORMAL = 10000;
 //    public static final int ITEM_TYPE_FUNC = 10001;
@@ -79,7 +75,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
     }
 
     @Override
-    protected void onBindView(RBaseViewHolder holder, int position, AbsFriendItem bean) {
+    protected void onBindView(RBaseViewHolder holder, int position, AbsContactItem bean) {
 
         if(holder.getItemViewType() == ItemTypes.FUNC) {
             final FuncItem funcItem = (FuncItem) bean;
@@ -99,7 +95,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
         } else if (holder.getItemViewType() == ItemTypes.FRIEND) {
 
 //            mFrendsControl.initItem(holder,dataBean);
-            FriendItem friendItem = (FriendItem) bean;
+            ContactItem friendItem = (ContactItem) bean;
             final FriendBean friendBean = friendItem.getFriendBean();
             HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
@@ -123,7 +119,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
     }
 
     //实例化重写 获取数据
-    protected List<? extends AbsFriendItem> onPreProvide(){
+    protected List<? extends AbsContactItem> onPreProvide(){
        return null;
     }
 
@@ -139,7 +135,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
         //增加FUNC 类型数据
         getAllDatas().addAll(onPreProvide());
         for(FriendBean bean : beanList){
-            FriendItem item = new FriendItem(bean);
+            ContactItem item = new ContactItem(bean);
             getAllDatas().add(item);
         }
         FriendsControl.sort(getAllDatas());
@@ -154,8 +150,9 @@ public class FriendsAdapter extends RBaseAdapter<AbsFriendItem> {
 
 
     @Override
-    public void resetData(List<AbsFriendItem> datas) {
-        super.resetData(datas);
+    public void resetData(List<AbsContactItem> datas) {
+//        super.resetData(datas);
+        notifyItemRangeChanged(onPreProvide().size(),datas.size() - onPreProvide().size());
     }
 
     public void setSideAction(Action1<List<String>> action) {
