@@ -27,4 +27,10 @@ public interface SearchService {
      */
     @POST("contact/searchUser")
     Observable<ResponseBody> searchUser(@QueryMap Map<String, String> map);
+
+    /**
+     * 名人推荐
+     */
+    @POST("search/userRecommend")
+    Observable<ResponseBody> userRecommend(@QueryMap Map<String, String> map);
 }

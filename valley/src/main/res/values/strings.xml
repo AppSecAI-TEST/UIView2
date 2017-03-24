@@ -308,5 +308,6 @@
     <string name="frient_tip">好友推荐</string>
     <string name="nearby_perple">附近的人</string>
     <string name="text_context">通讯录</string>
+    <string name="user_ecommend_tip">名人推荐</string>
 
 </resources>

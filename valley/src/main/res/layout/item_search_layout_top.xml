@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:background="@drawable/pic_shouyishou_2">
+
+    <RelativeLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/base_xxxhdpi"
+        android:layout_marginEnd="@dimen/base_xxhdpi"
+        android:layout_marginStart="@dimen/base_xxhdpi"
+        android:background="@drawable/base_dark_round_selector"
+        android:padding="@dimen/base_xhdpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawableLeft="@drawable/top_search"
+            android:drawablePadding="@dimen/base_hdpi"
+            android:drawableTint="@color/main_text_color_dark"
+            android:text="@string/search"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

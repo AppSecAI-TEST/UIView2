@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/base_ldpi">
+
+    <RelativeLayout
+        android:id="@+id/item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/base_xhdpi"
+        android:background="@drawable/base_bg_selector">
+
+        <com.hn.d.valley.widget.HnGlideImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/zhanweitu_1"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/fans_count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@color/default_base_tran_dark2"
+            android:drawableEnd="@drawable/yonghu_fensi"
+            android:padding="@dimen/base_ldpi"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_text_size10"
+            tools:text="测试文本"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/username_view"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/image_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="测试文本"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

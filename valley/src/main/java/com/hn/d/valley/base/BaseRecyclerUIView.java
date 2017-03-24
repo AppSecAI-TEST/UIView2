@@ -121,6 +121,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         mRecyclerView.setItemAnim(false);
         mRecyclerView.setAdapter(mRExBaseAdapter);
 
+        initScrollListener();
+    }
+
+    protected void initScrollListener() {
         if (hasScrollListener()) {
             mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override

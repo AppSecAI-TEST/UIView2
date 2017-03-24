@@ -77,14 +77,26 @@
             <com.angcyo.uiview.widget.UnderlineTextView
                 android:id="@+id/register_view"
                 style="@style/MainColorTextButtonStyle"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:text="@string/fast_register"
                 android:textColor="@drawable/main_color_text_selector"/>
+
+            <!--<com.angcyo.uiview.widget.RTextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:drawablePadding="@dimen/base_xhdpi"-->
+                <!--android:paddingLeft="@dimen/base_ldpi"-->
+                <!--android:text="测试文本"-->
+                <!--android:textColor="@color/white"-->
+                <!--app:r_has_underline="true"-->
+                <!--app:r_left_color="@color/theme_color_primary"-->
+                <!--app:r_left_width="2dp"/>-->
 
             <TextView
                 android:id="@+id/forget_view"
                 style="@style/WhiteColorTextButtonStyle"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:text="@string/forget_password"/>
 
         </RelativeLayout>
