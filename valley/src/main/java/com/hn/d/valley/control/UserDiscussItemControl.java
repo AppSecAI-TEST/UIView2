@@ -290,15 +290,15 @@ public class UserDiscussItemControl {
 
                 String[] split = url.split("\\?");
                 final String thumbUrl = split[0];
-                final String videoUrl = split[1];
-
+                String videoUrl = "";
                 try {
+                    videoUrl = split[1];
                     videoTimeView.setText(getVideoTime(videoUrl));
                 } catch (Exception e) {
                     videoTimeView.setTextColor(Color.RED);
                     videoTimeView.setText("video time format error");
                 }
-
+                final String finalUrl = videoUrl;
                 mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
@@ -313,7 +313,9 @@ public class UserDiscussItemControl {
                     @Override
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //T_.info(videoUrl);
-                        iLayout.startIView(new VideoPlayUIView(videoUrl, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(thumbUrl)));
+                        if (!TextUtils.isEmpty(finalUrl)) {
+                            iLayout.startIView(new VideoPlayUIView(finalUrl, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(thumbUrl)));
+                        }
                     }
                 });
                 mediaImageTypeView.setImage(thumbUrl);

@@ -3,6 +3,7 @@ package com.hn.d.valley.service;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -25,7 +26,7 @@ public interface UserInfoService {
      * uid	是	int	用户id
      * to_uid	是	int	要查看的用户id【uid=to_uid就是查看自己的信息】
      */
-    @POST("user/info")
+    @GET("user/info")
     Observable<ResponseBody> userInfo(@QueryMap Map<String, String> map);
 
     /**
@@ -46,7 +47,7 @@ public interface UserInfoService {
      * last_id	否	int	默认0 目前加载的数据最后一条数据的discuss_id【避免上拉加载数据 数据重复，当该值不为0时 page不用传】
      * limit	否	int	每页显示的数量 默认20
      */
-    @POST("discuss/list")
+    @GET("discuss/list")
     Observable<ResponseBody> discussList(@QueryMap Map<String, String> map);
 
     /**

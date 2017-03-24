@@ -56,7 +56,6 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.bumptech.glide.Glide;
-import com.daimajia.easing.linear.Linear;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter;
@@ -67,7 +66,6 @@ import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.oss.OssControl2;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.bean.ProvinceBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
@@ -87,8 +85,6 @@ import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.media.record.AudioRecorder;
 import com.netease.nimlib.sdk.media.record.IAudioRecordCallback;
 import com.netease.nimlib.sdk.media.record.RecordType;
-import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
-import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -328,7 +324,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 }).uploadCircleImg(files);
             } else if (mUserSetIco.startsWith("http")) {
                 startSave();
-                startSave();
+                //startSave();
             } else {
                 startSave();
             }

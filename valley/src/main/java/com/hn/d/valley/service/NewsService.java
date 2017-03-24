@@ -3,7 +3,7 @@ package com.hn.d.valley.service;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
-import retrofit2.http.POST;
+import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -22,7 +22,7 @@ public interface NewsService {
     /**
      * 获取资讯分类列表
      */
-    @POST("news/classifylist")
+    @GET("news/classifylist")
     Observable<ResponseBody> classifylist(@QueryMap Map<String, String> map);
 
     /**
@@ -33,6 +33,6 @@ public interface NewsService {
      * amount	否	int	数量，为空则默认10
      * lastid	否	int64	上一次列表中的最小ID，用于分页
      */
-    @POST("news/abstract")
+    @GET("news/abstract")
     Observable<ResponseBody> abstract_(@QueryMap Map<String, String> map);
 }
