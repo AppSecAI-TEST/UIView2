@@ -53,6 +53,8 @@ public class GroupMemberModel {
 
     private GroupDescBean bean;
 
+    TextView tv_group_member_num;
+
     public static GroupMemberModel getInstanse() {
         return Holder.instance;
     }
@@ -63,7 +65,7 @@ public class GroupMemberModel {
         this.mSessionId = sesssionId;
 
         icoRecyclerView = holder.v(R.id.rv_headimg_name_icon);
-        TextView tv_group_member_num = holder.v(R.id.tv_group_member_num);
+        tv_group_member_num = holder.v(R.id.tv_group_member_num);
         TextView tv_add_groupmembers = holder.tv(R.id.tv_add_groupmembers);
         ImageView iv_group_members = holder.imageView(R.id.iv_group_members);
 
@@ -137,7 +139,7 @@ public class GroupMemberModel {
 
     }
 
-    public void loadData(GroupDescBean bean) {
+    public void loadData(final GroupDescBean bean) {
 
         this.bean = bean;
 
@@ -152,6 +154,8 @@ public class GroupMemberModel {
 
                     @Override
                     public void onSucceed(GroupMemberList beans) {
+                        tv_group_member_num.setText(tv_group_member_num.getContext().getResources().getString(R.string.group_member_num)
+                                + "(" + bean.getMemberCount() + "/" + bean.getMemberLimit() + ")");
                        mAdapter.resetData(beans.getData_list());
                     }
                 });

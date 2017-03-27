@@ -44,6 +44,7 @@ import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.message.p2pchat.P2PInfoUIView;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -104,7 +105,7 @@ public class P2PChatUIView extends ChatUIView {
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.address_book_2).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new P2PInfoUIView());
             }
         }));
 

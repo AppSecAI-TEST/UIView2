@@ -146,7 +146,7 @@ public class TeamCreateHelper {
             @Override
             public Observable<String> call(List<FriendBean> friendBeen) {
                 return RRetrofit.create(GroupChatService.class)
-                        .add(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
+                        .invite(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
                         .compose(Rx.transformer(String.class));
             }
         }).subscribe(new BaseSingleSubscriber<String>(){

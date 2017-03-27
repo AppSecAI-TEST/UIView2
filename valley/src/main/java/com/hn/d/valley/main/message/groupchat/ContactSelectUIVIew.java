@@ -66,10 +66,10 @@ public class ContactSelectUIVIew extends BaseUIView {
 
     private List<String> mSelectedUids;
 
-    private Action2<Boolean,ContactItem> action = new Action2<Boolean, ContactItem>() {
+    private Action2<Boolean, ContactItem> action = new Action2<Boolean, ContactItem>() {
         @Override
         public void call(Boolean aBoolean, ContactItem item) {
-            HnIcoRecyclerView.IcoInfo icon ;
+            HnIcoRecyclerView.IcoInfo icon;
             FriendBean bean = item.getFriendBean();
 //            if (aBoolean) {
 //                icon = new HnIcoRecyclerView.IcoInfo(bean.getUid(),bean.getAvatar());
@@ -81,18 +81,14 @@ public class ContactSelectUIVIew extends BaseUIView {
         }
     };
 
-    private Action3<UIBaseRxView,List<AbsContactItem>,RequestCallback> selectAction ;
+    private Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction;
 
     public ContactSelectUIVIew(Options options) {
         super();
         this.options = options;
     }
 
-    public void setSelectAction(Action3<UIBaseRxView,List<AbsContactItem>, RequestCallback> selectAction) {
-        this.selectAction = selectAction;
-    }
-
-    public static void start(ILayout mLayout,Options options , List<String> uids,Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
+    public static void start(ILayout mLayout, Options options, List<String> uids, Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
 
@@ -100,6 +96,10 @@ public class ContactSelectUIVIew extends BaseUIView {
         targetView.setSelectAction(selectAction);
 
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
+    }
+
+    public void setSelectAction(Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
+        this.selectAction = selectAction;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class ContactSelectUIVIew extends BaseUIView {
     public void onViewCreate(View rootView, UIParam param) {
         super.onViewCreate(rootView, param);
 
-        if (param != null  && param.mBundle != null) {
+        if (param != null && param.mBundle != null) {
             mSelectedUids = (List<String>) param.mBundle.getSerializable(SELECTED_UIDS);
         }
 
@@ -150,10 +150,10 @@ public class ContactSelectUIVIew extends BaseUIView {
             }
         });
 
-        mGroupAdapter = new AddGroupAdapter(mActivity,options);
+        mGroupAdapter = new AddGroupAdapter(mActivity, options);
 //        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        recyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mGroupAdapter)));
+        recyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity, mGroupAdapter)));
 
         recyclerView.setAdapter(mGroupAdapter);
 
@@ -163,7 +163,7 @@ public class ContactSelectUIVIew extends BaseUIView {
         sideBarView.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
             @Override
             public void onLetterChange(String letter) {
-                FriendsControl.scrollToLetter(letter,recyclerView,mGroupAdapter.getAllDatas());
+                FriendsControl.scrollToLetter(letter, recyclerView, mGroupAdapter.getAllDatas());
             }
         });
 
@@ -185,7 +185,7 @@ public class ContactSelectUIVIew extends BaseUIView {
                 refreshLayout.setRefreshEnd();
 
                 List<AbsContactItem> datas = new ArrayList();
-                datas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
+                datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
                         mOtherILayout.startIView(new SearchUserUIView());
@@ -208,14 +208,14 @@ public class ContactSelectUIVIew extends BaseUIView {
 
     private void onSelected() {
         if (selectAction != null) {
-            selectAction.call(this,mGroupAdapter.getSelectorData(), new RequestCallback<GroupInfoBean>() {
+            selectAction.call(this, mGroupAdapter.getSelectorData(), new RequestCallback() {
                 @Override
                 public void onStart() {
                     HnLoading.show(mOtherILayout);
                 }
 
                 @Override
-                public void onSuccess(GroupInfoBean groupInfoBean) {
+                public void onSuccess(Object groupInfoBean) {
                     HnLoading.hide();
                     ContactSelectUIVIew.this.finishIView();
                 }
@@ -230,35 +230,11 @@ public class ContactSelectUIVIew extends BaseUIView {
     }
 
 
-
     @NonNull
     @Override
     protected LayoutState getDefaultLayoutState() {
         return LayoutState.LOAD;
     }
-
-    public static class Options {
-
-        public static final int DEFALUT_LIMIT = 5;
-
-        public int mode;
-        public int selectCountLimit = DEFALUT_LIMIT;
-
-        public Options(){
-            this(RModelAdapter.MODEL_MULTI);
-        }
-
-        public Options(int mode){
-            this(mode ,DEFALUT_LIMIT);
-        }
-
-        public Options(int mode , int limit) {
-            this.mode = mode;
-            this.selectCountLimit = limit;
-        }
-
-    }
-
 
     /**************************RxBus 订阅事件  ********************************/
 
@@ -270,5 +246,27 @@ public class ContactSelectUIVIew extends BaseUIView {
         } else {
             selectNum.setText("确定");
         }
+    }
+
+    public static class Options {
+
+        public static final int DEFALUT_LIMIT = 5;
+
+        public int mode;
+        public int selectCountLimit = DEFALUT_LIMIT;
+
+        public Options() {
+            this(RModelAdapter.MODEL_MULTI);
+        }
+
+        public Options(int mode) {
+            this(mode, DEFALUT_LIMIT);
+        }
+
+        public Options(int mode, int limit) {
+            this.mode = mode;
+            this.selectCountLimit = limit;
+        }
+
     }
 }

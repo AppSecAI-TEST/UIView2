@@ -33,4 +33,11 @@ public interface SearchService {
      */
     @POST("search/userRecommend")
     Observable<ResponseBody> userRecommend(@QueryMap Map<String, String> map);
+
+
+    /**
+     * 推荐动态
+     */
+    @POST("search/discussRecommend")
+    Observable<ResponseBody> discussRecommend(@QueryMap Map<String, String> map);
 }

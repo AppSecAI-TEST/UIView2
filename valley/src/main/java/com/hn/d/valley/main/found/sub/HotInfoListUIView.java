@@ -1,14 +1,21 @@
 package com.hn.d.valley.main.found.sub;
 
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.widget.RTextImageLayout;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
@@ -45,6 +52,85 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 
     public HotInfoListUIView(String classify) {
         this.classify = classify;
+    }
+
+    public static void initTextImageLayout(final RBaseViewHolder holder, String text, List<String> images) {
+        RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
+        textImageLayout.setConfigCallback(new RTextImageLayout.ConfigCallback() {
+            @Override
+            public int[] getImageSize(int position) {
+                return null;
+            }
+
+            @Override
+            public void onCreateImageView(ImageView imageView) {
+                imageView.setImageResource(R.drawable.zhanweitu_1);
+            }
+
+            @Override
+            public void onCreateTextView(TextView textView) {
+                textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
+            }
+
+            @Override
+            public void displayImage(ImageView imageView, String url) {
+                HotInfoListUIView.displayImage(imageView, url);
+            }
+        });
+        textImageLayout.setText(text);
+        textImageLayout.setImages(images);
+    }
+
+    public static void initItem(final RBaseViewHolder holder, HotInfoListBean dataBean) {
+        holder.fillView(dataBean);
+        holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getDate() * 1000, true));
+
+        HnGlideImageView imageView = holder.v(R.id.image_view);
+        imageView.setImageUrl(dataBean.getLogo());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
+        textImageLayout.setConfigCallback(new RTextImageLayout.ConfigCallback() {
+            @Override
+            public int[] getImageSize(int position) {
+                return null;
+            }
+
+            @Override
+            public void onCreateImageView(ImageView imageView) {
+                imageView.setImageResource(R.drawable.zhanweitu_1);
+            }
+
+            @Override
+            public void onCreateTextView(TextView textView) {
+                textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
+            }
+
+            @Override
+            public void displayImage(ImageView imageView, String url) {
+                HotInfoListUIView.displayImage(imageView, url);
+            }
+        });
+
+        initTextImageLayout(holder, dataBean.getTitle(), RUtils.split(dataBean.getImgs(), ";"));
+    }
+
+    public static void displayImage(ImageView imageView, String url) {
+        Glide.with(imageView.getContext())
+                .load(url)
+                .placeholder(R.drawable.zhanweitu_1)
+                .centerCrop()
+                .into(imageView);
     }
 
     @Override
@@ -90,18 +176,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, HotInfoListBean dataBean) {
-                holder.fillView(dataBean);
-                holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getDate() * 1000, true));
-
-                HnGlideImageView imageView = holder.v(R.id.image_view);
-                imageView.setImageUrl(dataBean.getLogo());
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
+                initItem(holder, dataBean);
             }
         };
         baseAdapter.setEnableLoadMore(true);

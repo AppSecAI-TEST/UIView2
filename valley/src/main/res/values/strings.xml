@@ -309,5 +309,8 @@
     <string name="nearby_perple">附近的人</string>
     <string name="text_context">通讯录</string>
     <string name="user_ecommend_tip">名人推荐</string>
+    <string name="new_hot_info_tip">最新资讯</string>
+    <string name="new_discuss_tip">最新动态</string>
+    <string name="more">更多</string>
 
 </resources>

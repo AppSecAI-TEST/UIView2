@@ -56,11 +56,6 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     private boolean isSelfAdmin = false;
     private boolean isSelfManager = false;
 
-    @Override
-    protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("聊天信息");
-    }
-
     public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
@@ -68,6 +63,10 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         mLayout.startIView(new GroupInfoUIVIew(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
+    @Override
+    protected TitleBarPattern getTitleBar() {
+        return super.getTitleBar().setTitleString("聊天信息");
+    }
 
     /**
      * 初始化群组基本信息
@@ -136,6 +135,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
+        loadGroupInfo();
     }
 
     @Override
@@ -154,12 +154,12 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        loadGoupInfo();
+        loadGroupInfo();
     }
 
-    private void loadGoupInfo() {
+    private void loadGroupInfo() {
         add(RRetrofit.create(GroupChatService.class)
-                .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(),"yx_gid:" + mSessionId))
+                .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
                 .compose(Rx.transformer(GroupDescBean.class))
                 .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
                     @Override
@@ -228,7 +228,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
@@ -236,11 +236,10 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setDarkDrawableRes(R.drawable.qr_code);
 
 
-
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
@@ -251,10 +250,10 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onClick(View v) {
                         Bundle bundle = new Bundle();
-                        bundle.putString(GroupMemberUIVIew.GID,mGroupDescBean.getGid());
-                        bundle.putBoolean(GroupMemberUIVIew.IS_ADMIN,isSelfAdmin);
+                        bundle.putString(GroupMemberUIVIew.GID, mGroupDescBean.getGid());
+                        bundle.putBoolean(GroupMemberUIVIew.IS_ADMIN, isSelfAdmin);
                         UIParam param = new UIParam().setBundle(bundle);
-                        mOtherILayout.startIView(new GroupAnnouncementUIView(),param);
+                        mOtherILayout.startIView(new GroupAnnouncementUIView(), param);
                     }
                 });
             }
@@ -269,7 +268,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
@@ -288,7 +287,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
@@ -312,7 +311,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
@@ -343,43 +342,42 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         }
 
         bindGroupOwnerFunc(items, line, left);
-        jugeGroupOwner(items,line,left);
-
+        jugeGroupOwner(items, line, left);
 
 
     }
 
     private void jugeGroupOwner(List<ViewItemInfo> items, int line, int left) {
-            items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * left) {
-                @Override
-                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                    TextView textView = holder.v(R.id.text_view);
-                    if (isSelfAdmin) {
-                        textView.setText("解散该群");
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dissolveGroup();
-                            }
-                        });
-                    } else {
-                        textView.setText("退出该群");
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                leaveGroup();
-                            }
-                        });
-                    }
-
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * left) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                TextView textView = holder.v(R.id.text_view);
+                if (isSelfAdmin) {
+                    textView.setText("解散该群");
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dissolveGroup();
+                        }
+                    });
+                } else {
+                    textView.setText("退出该群");
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            leaveGroup();
+                        }
+                    });
                 }
-            }));
+
+            }
+        }));
     }
 
     private void leaveGroup() {
         add(RRetrofit.create(GroupChatService.class)
                 .leave(Param.buildMap("uid:" + UserCache.getUserAccount()
-                        ,"gid:" + mGroupDescBean.getGid()))
+                        , "gid:" + mGroupDescBean.getGid()))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
@@ -397,7 +395,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
     private void bindGroupOwnerFunc(List<ViewItemInfo> items, final int line, final int left) {
         if (isSelfAdmin) {
-            items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+            items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
                 @Override
                 public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                     ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
@@ -406,21 +404,21 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ContactSelectUIVIew.start(mOtherILayout,new ContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
-                                    ,null,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                                @Override
-                                public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
-                                    TeamCreateHelper.changeOwner(uiBaseDataView, absContactItems
-                                            ,mGroupDescBean.getGid(),requestCallback,new Action1<Boolean>() {
+                            ContactSelectUIVIew.start(mOtherILayout, new ContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
+                                    , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                         @Override
-                                        public void call(Boolean aBoolean) {
-                                            if (aBoolean) {
-                                                loadGoupInfo();
-                                            }
+                                        public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                                            TeamCreateHelper.changeOwner(uiBaseDataView, absContactItems
+                                                    , mGroupDescBean.getGid(), requestCallback, new Action1<Boolean>() {
+                                                        @Override
+                                                        public void call(Boolean aBoolean) {
+                                                            if (aBoolean) {
+                                                                loadGroupInfo();
+                                                            }
+                                                        }
+                                                    });
                                         }
                                     });
-                                }
-                            });
                         }
                     });
                 }
@@ -431,7 +429,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     private void dissolveGroup() {
         add(RRetrofit.create(GroupChatService.class)
                 .dissolve(Param.buildMap("uid:" + UserCache.getUserAccount()
-                        ,"gid:" + mGroupDescBean.getGid()))
+                        , "gid:" + mGroupDescBean.getGid()))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
@@ -448,7 +446,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     }
 
     private void bindGroupMemberInfo(RBaseViewHolder holder) {
-        GroupMemberModel.getInstanse().init(holder,mActivity,this,mSessionId);
+        GroupMemberModel.getInstanse().init(holder, mActivity, this, mSessionId);
     }
 
     private void bindGroupName(RBaseViewHolder holder) {
@@ -459,7 +457,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         }
 
         boolean isRawname = mGroupDescBean.getDefaultName().equals("");
-        final String currentName = isRawname?mGroupDescBean.getDefaultName():mGroupDescBean.getName();
+        final String currentName = isRawname ? mGroupDescBean.getDefaultName() : mGroupDescBean.getName();
         infoLayout.setItemDarkText(currentName);
         infoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -490,7 +488,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         super.initInputView(holder, editText, bean);
                         editText.setMaxLength(mActivity.getResources().getInteger(R.integer.name_count));
                         editText.setHint(R.string.input_name_hint);
-                        if (mGroupDescBean != null ) {
+                        if (mGroupDescBean != null) {
                             setInputText(currentName);
                         }
                     }
@@ -501,12 +499,12 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     }
 
     private void editGroupName(String name) {
-        if (mGroupDescBean == null ) {
+        if (mGroupDescBean == null) {
             return;
         }
         add(RRetrofit.create(GroupChatService.class)
                 .editGroupName(Param.buildMap("uid:" + UserCache.getUserAccount()
-                        ,"gid:" + mGroupDescBean.getGid(),"name:" + name))
+                        , "gid:" + mGroupDescBean.getGid(), "name:" + name))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override

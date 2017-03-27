@@ -116,6 +116,10 @@ public interface ContactService {
     @POST("contact/friends")
     Observable<ResponseBody> friends(@QueryMap Map<String,String> map);
 
+
+    @POST("contact/phoneUser")
+    Observable<ResponseBody> phoneUser(@QueryMap Map<String,String> map);
+
     @POST("recommend/user")
     Observable<ResponseBody> recommendUser(@QueryMap Map<String, String> map);
 }

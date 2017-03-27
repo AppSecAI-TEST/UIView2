@@ -161,12 +161,15 @@ public class AddGroupAdapter extends RModelAdapter<AbsContactItem> {
 
     @Override
     public void resetData(List<AbsContactItem> datas) {
-        if (datas == null) {
-            this.mAllDatas = new ArrayList<>();
-        } else {
-            this.mAllDatas = datas;
-        }
-        notifyItemRangeChanged(1,datas.size() - 1);
+//        if (datas == null) {
+//            this.mAllDatas = new ArrayList<>();
+//        } else {
+//            this.mAllDatas = datas;
+//        }
+        mAllDatas.clear();
+        mAllDatas.addAll(datas);
+        notifyDataSetChanged();
+        //notifyItemRangeChanged(1,datas.size() - 1);
     }
 
     @Override

@@ -555,7 +555,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             ImageView deleteImageView = new ImageView(mContext);
             deleteImageView.setImageResource(R.drawable.base_delete);
             deleteImageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            deleteImageView.setId(R.id.delete_image_vie);
+            deleteImageView.setId(R.id.delete_image_view);
             deleteImageView.setBackgroundResource(R.drawable.base_dark_main_color_circle_selector);
 //            deleteImageView.setBackgroundColor(Color.RED);
             int padding = (int) ResUtil.dpToPx(mContext, 6);
@@ -600,15 +600,15 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
                         RecyclerView.ViewHolder viewHolder = mRecyclerView.findViewHolderForLayoutPosition(i);
                         if (viewHolder != null) {
-                            ((RBaseViewHolder) viewHolder).v(R.id.delete_image_vie).setVisibility(View.VISIBLE);
+                            ((RBaseViewHolder) viewHolder).v(R.id.delete_image_view).setVisibility(View.VISIBLE);
                         }
                     }
                     return true;
                 }
             });
 
-            holder.v(R.id.delete_image_vie).setVisibility(isDeleteModel ? View.VISIBLE : View.GONE);
-            holder.v(R.id.delete_image_vie).setOnClickListener(new View.OnClickListener() {
+            holder.v(R.id.delete_image_view).setVisibility(isDeleteModel ? View.VISIBLE : View.GONE);
+            holder.v(R.id.delete_image_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (getItemCount() == 1) {

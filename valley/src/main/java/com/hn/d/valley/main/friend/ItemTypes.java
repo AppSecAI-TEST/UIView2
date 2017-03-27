@@ -11,4 +11,6 @@ public interface ItemTypes {
 
     int GFOUP = 2;
 
+    int PHONECOTACT = 3;
+
 }

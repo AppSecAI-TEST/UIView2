@@ -48,7 +48,7 @@ public class AddFriendUIView extends SingleRecyclerUIView<RecommendUserBean> {
 
     @Override
     protected void initOnShowContentLayout() {
-        mBaseContentLayout.setBackgroundResource(R.color.default_base_bg_dark2);
+        getRecyclerView().setBackgroundResource(R.color.default_base_bg_dark2);
         super.initOnShowContentLayout();
     }
 
@@ -87,13 +87,13 @@ public class AddFriendUIView extends SingleRecyclerUIView<RecommendUserBean> {
         return new AddFriendAdpater(mActivity,this,mOtherILayout);
     }
 
-    public class AddFriendAdpater extends FriendsRecommendUIView.RecommendFriendAdapter {
+    class AddFriendAdpater extends FriendsRecommendUIView.RecommendFriendAdapter {
 
-        public static final int FUNC = 10001;
-        public static final int ADDRESSBOOK = 10002;
-        public static final int QRCODE = 10003;
+        static final int FUNC = 10001;
+        static final int ADDRESSBOOK = 10002;
+        static final int QRCODE = 10003;
 
-        public AddFriendAdpater(Context context, UIBaseRxView subscriptions, ILayout layout) {
+        AddFriendAdpater(Context context, UIBaseRxView subscriptions, ILayout layout) {
             super(context,subscriptions,layout);
             setModel(RModelAdapter.MODEL_MULTI);
         }
@@ -108,7 +108,7 @@ public class AddFriendUIView extends SingleRecyclerUIView<RecommendUserBean> {
                 case QRCODE:
                     return R.layout.item_contact_qrcode;
             }
-            return R.layout.item_user_info_new;
+            return R.layout.item_contact_info_new;
         }
 
         @Override
@@ -154,7 +154,7 @@ public class AddFriendUIView extends SingleRecyclerUIView<RecommendUserBean> {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new AddressBookUIView());
+                        mOtherILayout.startIView(new AddressBookUI2View());
                     }
                 });
 
@@ -166,7 +166,7 @@ public class AddFriendUIView extends SingleRecyclerUIView<RecommendUserBean> {
 
             } else {
                 super.onBindDataView(holder, posInData, dataBean);
-                holder.itemView.setBackgroundResource(R.color.white);
+//                holder.itemView.setBackgroundResource(R.color.white);
             }
 
         }
@@ -226,7 +226,7 @@ public class AddFriendUIView extends SingleRecyclerUIView<RecommendUserBean> {
                         //垂直方向
                         if (viewLayoutPosition == 2) {
                             //这里可以决定,第3个item的分割线
-                            outRect.set(0, 0, 0, (int) mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi));
+                            outRect.set(0, 0, 0,  mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi));
                         } else {
                             outRect.set(0, 0, 0, (int) mDividerSize);
                         }

@@ -244,7 +244,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     @Override
                     public void onEnd() {
                         super.onEnd();
-                        onUILoadFinish();
 
                     }
                 }));

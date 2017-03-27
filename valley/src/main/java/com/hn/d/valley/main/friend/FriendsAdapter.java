@@ -34,32 +34,9 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
     }
 
 
-//    @Override
-//    protected void onBindView(RBaseViewHolder holder, int position, R dataBean) {
-//
-//        if(holder.getItemViewType() == ITEM_TYPE_FUNC) {
-//
-//
-//        } else if (holder.getItemViewType() == ITEM_TYPE_NORMAL) {
-//
-////            mFrendsControl.initItem(holder,dataBean);
-//            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
-//            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-//            iv_head.setImageUrl(dataBean.getAvatar());
-//            tv_friend_name.setText(dataBean.getDefaultMark());
-//        }
-//
-//    }
-
 
     @Override
     public int getItemType(int position) {
-//        if(position < 2) {
-//            return ItemTypes.FUNC;
-//        }
-//
-//        return ItemTypes.FRIEND;
-
         //根据position获取每个AbsFriendItem 的itemtype
         return getAllDatas().get(position).getItemType();
     }
@@ -151,8 +128,9 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
 
     @Override
     public void resetData(List<AbsContactItem> datas) {
+        notifyDataSetChanged();
 //        super.resetData(datas);
-        notifyItemRangeChanged(onPreProvide().size(),datas.size() - onPreProvide().size());
+//        notifyItemRangeChanged(onPreProvide().size(),datas.size() - onPreProvide().size());
     }
 
     public void setSideAction(Action1<List<String>> action) {

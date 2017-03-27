@@ -85,7 +85,7 @@ public class RecentContactsCache implements ICache {
 
     @Override
     public void buildCache() {
-        RNim.queryRecentContacts(new RequestCallbackWrapper<List<RecentContact>>() {
+                RNim.queryRecentContacts(new RequestCallbackWrapper<List<RecentContact>>() {
             @Override
             public void onResult(int code, List<RecentContact> result, Throwable exception) {
                 if (code == ResponseCode.RES_SUCCESS) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="delete_image_vie" type="id"/>
+    <item name="delete_image_view" type="id"/>
     <item name="click_view" type="id"/>
 </resources>

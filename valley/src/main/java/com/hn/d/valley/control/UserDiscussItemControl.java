@@ -242,10 +242,16 @@ public class UserDiscussItemControl {
 
         final List<String> medias = RUtils.split(dataListBean.getMedia());
         if (medias.isEmpty()) {
-            mediaControlLayout.setVisibility(View.GONE);
+            if (mediaControlLayout != null) {
+                mediaControlLayout.setVisibility(View.GONE);
+            }
         } else {
-            mediaControlLayout.setVisibility(View.VISIBLE);
-            mediaCountView.setText("" + medias.size());
+            if (mediaControlLayout != null) {
+                mediaControlLayout.setVisibility(View.VISIBLE);
+            }
+            if (mediaCountView != null) {
+                mediaCountView.setText("" + medias.size());
+            }
             final String url = medias.get(0);
 
             if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {

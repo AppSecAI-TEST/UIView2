@@ -27,6 +27,7 @@ public class AddGroupDatatProvider {
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
+                        action.call(null);
                     }
 
                     @Override
