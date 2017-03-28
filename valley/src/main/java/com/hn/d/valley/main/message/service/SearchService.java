@@ -40,4 +40,15 @@ public interface SearchService {
      */
     @POST("search/discussRecommend")
     Observable<ResponseBody> discussRecommend(@QueryMap Map<String, String> map);
+
+    /**
+     * 热搜关键词列表，默认10个，10分钟更新一次
+     * 参数名	必选	类型	说明
+     * limit	否	int	请求个数，默认10个
+     * timestamp	是	int64	当前时间戳，10位长度
+     * e_type	否	string	API签名的加密方式【rsa、md5】，默认md5
+     * sign	是	string	API签名
+     */
+    @POST("klgsearch/hotwords")
+    Observable<ResponseBody> hotwords(@QueryMap Map<String, String> map);
 }

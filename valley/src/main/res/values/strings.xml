@@ -91,6 +91,7 @@
     <string name="ok">确定</string>
     <string name="save">保存</string>
     <string name="not_save">不保存</string>
+    <string name="tag_max_tip">最多3个标签!</string>
     <string name="tag_empty_tip">至少需要一个标签!</string>
     <string name="fetch_tag_failed">标签获取失败!</string>
     <string name="known">知道了</string>
@@ -312,5 +313,7 @@
     <string name="new_hot_info_tip">最新资讯</string>
     <string name="new_discuss_tip">最新动态</string>
     <string name="more">更多</string>
+    <string name="search_history_tip">搜索历史</string>
+    <string name="search_hotword_tip">热门搜索</string>
 
 </resources>

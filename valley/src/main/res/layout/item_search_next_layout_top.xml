@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:padding="@dimen/base_xhdpi">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tip_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/search_history_tip"/>
+
+    <ImageView
+        android:id="@+id/trash_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_bg2_selector"
+        android:src="@drawable/trash"/>
+
+</LinearLayout>

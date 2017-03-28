@@ -269,7 +269,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                     holder.v(R.id.search_layout).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            startIView(new SearchNextUIView());
                         }
                     });
                 } else {

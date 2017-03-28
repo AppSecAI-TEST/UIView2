@@ -85,6 +85,10 @@ public class TagsUIView extends BaseContentUIView {
                                     T_.show(mActivity.getString(R.string.tag_empty_tip));
                                     return;
                                 }
+                                if (tags.size() > getResources().getInteger(R.integer.max_tags_count)) {
+                                    T_.show(mActivity.getString(R.string.tag_max_tip));
+                                    return;
+                                }
                                 mListAction.call(tags);
                                 finishIView();
                             }

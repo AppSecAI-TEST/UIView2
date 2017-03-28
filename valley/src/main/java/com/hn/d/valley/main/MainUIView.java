@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
@@ -48,6 +49,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import rx.Observable;
+import rx.Subscription;
 import rx.functions.Action0;
 
 /**
@@ -82,6 +84,7 @@ public class MainUIView extends BaseUIView {
     long onBackTime = 0;
 
     private int lastPosition = 0;
+    private Subscription mSubscribe;
 
     public MainUIView() {
     }
@@ -324,11 +327,20 @@ public class MainUIView extends BaseUIView {
         super.onActivityResult(requestCode, resultCode, data);
         Observable<ArrayList<Luban.ImageItem>> observable = Image.onActivityResult(mActivity, requestCode, resultCode, data);
         if (observable != null) {
-            observable.subscribe(new BaseSingleSubscriber<ArrayList<Luban.ImageItem>>() {
+            //开始发布任务.
+            //mViewHolder.v(R.id.publish_control_layout).setVisibility(View.VISIBLE);
+            mSubscribe = observable.subscribe(new BaseSingleSubscriber<ArrayList<Luban.ImageItem>>() {
                 @Override
                 public void onStart() {
                     super.onStart();
-                    HnLoading.show(mILayout, false);
+                    HnLoading.show(mILayout, true).addDismissListener(new UIIDialogImpl.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            if (mSubscribe != null) {
+                                mSubscribe.unsubscribe();
+                            }
+                        }
+                    });
                 }
 
                 @Override
