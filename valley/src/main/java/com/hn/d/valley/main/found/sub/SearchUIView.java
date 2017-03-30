@@ -39,6 +39,7 @@ import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.service.NewsService;
+import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
@@ -62,19 +63,33 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
 
     private RBaseItemDecoration mDecor;
 
-    private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout, final RBaseViewHolder holder) {
+    public static void updateMediaLayout(final UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout, final RBaseViewHolder holder) {
+        updateMediaLayout(dataListBean.getContent(), dataListBean.getDiscuss_id(), dataListBean.getMedia(), dataListBean.getMedia_type(),
+                iLayout, holder);
+    }
+
+    public static void updateMediaLayout(String content, final String discussId, String media, String mediaType,
+
+                                         final ILayout iLayout, final RBaseViewHolder holder) {
         final View videoPlayView = holder.v(R.id.video_play_view);
         final TextView videoTimeView = holder.v(R.id.video_time_view);
         RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
-        textImageLayout.setText(dataListBean.getContent());
+        textImageLayout.setText(content);
 
-        final List<String> medias = RUtils.split(dataListBean.getMedia());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iLayout.startIView(new DynamicDetailUIView(discussId));
+            }
+        });
+
+        final List<String> medias = RUtils.split(media);
         if (medias.isEmpty()) {
             return;
         } else {
             final String url = medias.get(0);
 
-            if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {
+            if ("3".equalsIgnoreCase(mediaType)) {
                 //图片类型
                 videoTimeView.setVisibility(View.INVISIBLE);
                 videoPlayView.setVisibility(View.INVISIBLE);
@@ -104,7 +119,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 });
 
                 textImageLayout.setImages(medias);
-            } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
+            } else if ("2".equalsIgnoreCase(mediaType)) {
                 //视频类型
                 videoTimeView.setVisibility(View.VISIBLE);
                 videoPlayView.setVisibility(View.VISIBLE);
@@ -243,6 +258,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 return R.layout.item_article_layout;
             }
 
+            /**最新资讯item*/
             @Override
             protected void onBindFooterView(RBaseViewHolder holder, int posInFooter, HotInfoListBean footerBean) {
                 HotInfoListUIView.initItem(holder, footerBean);
@@ -263,6 +279,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 });
             }
 
+            /**名人推荐item*/
             @Override
             protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, TopBean headerBean) {
                 if (posInHeader == 0) {
@@ -284,6 +301,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 }
             }
 
+            /**最新动态item*/
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean dataBean) {
                 if (posInData == 0) {
@@ -298,6 +316,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
 
                 HnGlideImageView imageView = holder.v(R.id.image_view);
                 imageView.setImageThumbUrl(dataBean.getUser_info().getAvatar());
+                imageView.setAuth("1".equalsIgnoreCase(dataBean.getUser_info().getIs_auth()));
 
                 holder.tv(R.id.author_view).setText(dataBean.getUser_info().getUsername());
                 holder.tv(R.id.time_view).setText(dataBean.getShow_time());
@@ -308,12 +327,6 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 holder.tv(R.id.reply_cnt_view).setText(dataBean.getComment_cnt());
                 holder.v(R.id.delete_view).setVisibility(View.GONE);
 
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
                 holder.v(R.id.tip_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

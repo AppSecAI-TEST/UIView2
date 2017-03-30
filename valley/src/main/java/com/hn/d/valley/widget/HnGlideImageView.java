@@ -2,6 +2,9 @@ package com.hn.d.valley.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -13,6 +16,7 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.hn.d.valley.R;
 import com.hn.d.valley.base.oss.OssHelper;
 
 /**
@@ -27,6 +31,10 @@ import com.hn.d.valley.base.oss.OssHelper;
  * Version: 1.0.0
  */
 public class HnGlideImageView extends AppCompatImageView {
+    Drawable authDrawable;
+    boolean isAuth;
+    boolean isAttached;
+
     public HnGlideImageView(Context context) {
         super(context);
     }
@@ -39,6 +47,37 @@ public class HnGlideImageView extends AppCompatImageView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 //        setImageResource(R.drawable.zhanweitu_1);
+        isAttached = true;
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        isAttached = false;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (isAuth) {
+            if (authDrawable == null) {
+                authDrawable = ContextCompat.getDrawable(getContext(), R.drawable.renzheng_icon);
+            }
+            int left = getMeasuredWidth() - getPaddingRight() -/* (getMeasuredWidth() - getPaddingLeft() - getPaddingRight()) / 4 - */authDrawable.getIntrinsicWidth();
+            int top = getMeasuredHeight() - getPaddingBottom() - /*(getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / 4 -*/ authDrawable.getIntrinsicHeight();
+            authDrawable.setBounds(left, top, left + authDrawable.getIntrinsicWidth(), top + authDrawable.getIntrinsicHeight());
+            authDrawable.draw(canvas);
+        }
+    }
+
+    /**
+     * 设置是否显示认证图片
+     */
+    public void setAuth(boolean auth) {
+        isAuth = auth;
+        if (isAttached) {
+            postInvalidate();
+        }
     }
 
     public void setImageThumbUrl(final String url) {

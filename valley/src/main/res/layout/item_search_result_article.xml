@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tip_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base_xhdpi"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/search_line1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"
+        android:visibility="gone"/>
+
+    <include layout="@layout/item_article_layout"/>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_xhdpi"/>
+
+    <View
+        android:id="@+id/search_line2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"
+        android:visibility="gone"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tip_more_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_bg_selector"
+        android:drawableStart="@drawable/search_xuanzhelianxiren"
+        android:padding="@dimen/base_xhdpi"
+        android:visibility="gone"/>
+
+</LinearLayout>

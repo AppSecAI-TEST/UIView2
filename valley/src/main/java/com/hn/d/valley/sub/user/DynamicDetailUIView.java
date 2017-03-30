@@ -2,7 +2,6 @@ package com.hn.d.valley.sub.user;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
 import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,9 +18,9 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
-import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
@@ -50,7 +49,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -141,14 +139,6 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
             return true;
         }
         return mDynamicRootLayout.requestBackPressed();
-    }
-
-    /**
-     * 输入框文本变化
-     */
-    @OnTextChanged(R.id.input_view)
-    public void onInputTextChanged(Editable editable) {
-        mSendView.setEnabled(!TextUtils.isEmpty(editable));
     }
 
     @Override

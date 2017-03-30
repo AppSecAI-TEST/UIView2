@@ -29,7 +29,7 @@ public class HotInfoListBean {
 
     private int id;
     private String title;
-    private int date;
+    private long date;
     private String author;
     private String from;
     private String classify;
@@ -55,11 +55,11 @@ public class HotInfoListBean {
         this.title = title;
     }
 
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

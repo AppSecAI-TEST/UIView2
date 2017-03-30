@@ -1,9 +1,7 @@
 package com.hn.d.valley.sub.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -28,6 +26,27 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
         mILayout = ILayout;
     }
 
+    public static void initUserItem(RBaseViewHolder holder, final LikeUserInfoBean dataBean, final ILayout ILayout) {
+        holder.fillView(dataBean);
+
+        //用户个人详情
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ILayout.startIView(new UserDetailUIView(dataBean.getUid()));
+            }
+        });
+
+        //头像
+        HnGlideImageView userIcoView = holder.v(R.id.image_view);
+        userIcoView.setImageThumbUrl(dataBean.getAvatar());
+        userIcoView.setAuth("1".equals(dataBean.getIs_auth()));
+
+        //等级性别
+        HnGenderView hnGenderView = holder.v(R.id.grade);
+        hnGenderView.setGender(dataBean.getSex(), dataBean.getGrade());
+    }
+
     @Override
     protected int getItemLayoutId(int viewType) {
 //        return R.layout.item_near_user_layout;
@@ -37,42 +56,26 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
     @Override
     protected void onBindDataView(RBaseViewHolder holder, final int posInData, final LikeUserInfoBean dataBean) {
         super.onBindDataView(holder, posInData, dataBean);
-        holder.fillView(dataBean);
-
-        //用户个人详情
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mILayout.startIView(new UserDetailUIView(dataBean.getUid()));
-            }
-        });
-
-        //头像
-        HnGlideImageView userIcoView = holder.v(R.id.image_view);
-        userIcoView.setImageThumbUrl(dataBean.getAvatar());
-
-        //等级性别
-        HnGenderView hnGenderView = holder.v(R.id.grade);
-        hnGenderView.setGender(dataBean.getSex(), dataBean.getGrade());
+        initUserItem(holder, dataBean, mILayout);
 
         if (dataBean.getIs_contact() == 1) {
         } else {
         }
 
         //认证
-        TextView signatureView = holder.v(R.id.signature);
-        if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
-            holder.v(R.id.auth).setVisibility(View.VISIBLE);
-            signatureView.setText(dataBean.getCompany() + dataBean.getJob());
-        } else {
-            holder.v(R.id.auth).setVisibility(View.GONE);
-            String signature = dataBean.getSignature();
-            if (TextUtils.isEmpty(signature)) {
-                signatureView.setText(R.string.signature_empty_tip);
-            } else {
-                signatureView.setText(signature);
-            }
-        }
+//        TextView signatureView = holder.v(R.id.signature);
+//        if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
+//            holder.v(R.id.auth).setVisibility(View.VISIBLE);
+//            signatureView.setText(dataBean.getCompany() + dataBean.getJob());
+//        } else {
+//            holder.v(R.id.auth).setVisibility(View.GONE);
+//            String signature = dataBean.getSignature();
+//            if (TextUtils.isEmpty(signature)) {
+//                signatureView.setText(R.string.signature_empty_tip);
+//            } else {
+//                signatureView.setText(signature);
+//            }
+//        }
     }
 
     @Override

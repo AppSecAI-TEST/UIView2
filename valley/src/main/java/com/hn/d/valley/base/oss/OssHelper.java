@@ -5,19 +5,34 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.sdk.android.oss.OSSClient;
+import com.alibaba.sdk.android.oss.common.OSSConstants;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
+import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
 import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
+import com.alibaba.sdk.android.oss.common.utils.IOUtils;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.angcyo.uiview.net.TransformUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.media.ImageUtil;
+import com.angcyo.uiview.utils.string.MD5;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.bean.realm.FileUrlRealm;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.realm.RRealm;
+
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -47,16 +62,37 @@ public class OssHelper {
     static OSSCredentialProvider credentialProvider =
             new OSSPlainTextAKSKCredentialProvider("UuyoRLLDaiTyRYD5", "06a8SRzXM0ELLnOluUMmkR9rLySFYh");
 
+    static OSSCredentialProvider credetialProvider = new OSSFederationCredentialProvider() {
+        @Override
+        public OSSFederationToken getFederationToken() {
+            try {
+                URL stsUrl = new URL("http://localhost:8080/distribute-token.json");
+                HttpURLConnection conn = (HttpURLConnection) stsUrl.openConnection();
+                InputStream input = conn.getInputStream();
+                String jsonText = IOUtils.readStreamAsString(input, OSSConstants.DEFAULT_CHARSET_NAME);
+                JSONObject jsonObjs = new JSONObject(jsonText);
+                String ak = jsonObjs.getString("accessKeyId");
+                String sk = jsonObjs.getString("accessKeySecret");
+                String token = jsonObjs.getString("securityToken");
+                String expiration = jsonObjs.getString("expiration");
+                return new OSSFederationToken(ak, sk, token, expiration);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    };
+
     private static OSSClient getAvatorOss() {
         if (avatorOss == null) {
-            avatorOss = new OSSClient(ValleyApp.getApp(), BASE_AVATOR_URL, credentialProvider);
+            avatorOss = new OSSClient(ValleyApp.getApp(), BASE_AVATOR_URL, credetialProvider);
         }
         return avatorOss;
     }
 
     private static OSSClient getCircleOss() {
         if (circleOss == null) {
-            circleOss = new OSSClient(ValleyApp.getApp(), BASE_CIRCLE_URL, credentialProvider);
+            circleOss = new OSSClient(ValleyApp.getApp(), BASE_CIRCLE_URL, credetialProvider);
         }
         return circleOss;
     }
@@ -64,14 +100,14 @@ public class OssHelper {
 
     private static OSSClient getVideoOss() {
         if (videoOss == null) {
-            videoOss = new OSSClient(ValleyApp.getApp(), BASE_VIDEO_URL, credentialProvider);
+            videoOss = new OSSClient(ValleyApp.getApp(), BASE_VIDEO_URL, credetialProvider);
         }
         return videoOss;
     }
 
     private static OSSClient getAudioOss() {
         if (audioOss == null) {
-            audioOss = new OSSClient(ValleyApp.getApp(), BASE_AUDIO_URL, credentialProvider);
+            audioOss = new OSSClient(ValleyApp.getApp(), BASE_AUDIO_URL, credetialProvider);
         }
         return audioOss;
     }
@@ -222,6 +258,23 @@ public class OssHelper {
 
     public static String createVideoFileName(int time) {
         return "_t_" + time + ".mp4";
+    }
+
+    /**
+     * 检查是否已经上传过
+     */
+    public static void checkUrl(final String filePath, final Action1<String> result) {
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<FileUrlRealm> md5 = realm.where(FileUrlRealm.class).equalTo("md5", MD5.getStreamMD5(filePath)).findAll();
+                if (md5.size() > 0) {
+                    result.call(md5.first().getUrl());
+                } else {
+                    result.call("");
+                }
+            }
+        });
     }
 
     static class OssObservable implements Observable.OnSubscribe<String> {

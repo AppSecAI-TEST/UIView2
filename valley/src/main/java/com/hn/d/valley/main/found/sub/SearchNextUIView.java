@@ -1,9 +1,11 @@
 package com.hn.d.valley.main.found.sub;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.text.Editable;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -21,19 +23,27 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.recycler.widget.IShowState;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.HotInfoListBean;
+import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.bean.SearchResultBean;
 import com.hn.d.valley.bean.realm.SearchHistoryRealm;
 import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.sub.adapter.UserInfoAdapter;
+import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.OnTextChanged;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -51,6 +61,7 @@ import io.realm.RealmResults;
 public class SearchNextUIView extends BaseContentUIView {
 
     public static final int MAX_HISTORY_COUNT = 3;
+    public static final int LAST_ITEM_TYPE = 999;
     RRecyclerView mRecyclerView;
     /**
      * 搜索历史
@@ -60,8 +71,18 @@ public class SearchNextUIView extends BaseContentUIView {
      * 热词
      */
     List<String> mHotwords;
-    private RExBaseAdapter<SearchHistoryRealm, String, String> mBaseAdapter;
+
+    boolean isNormalModel = true;
+
+    private RExBaseAdapter<SearchHistoryRealm, String, String> mNormalAdapter;
     private ExEditText mEditText;
+    private RExItemDecoration mNormalDecoration;
+    private GridLayoutManager mNormalLayoutManager;
+    private GridLayoutManager mSearchLayoutManager;
+    private RExBaseAdapter<LikeUserInfoBean,
+            SearchResultBean.DynamicsBeanX.DynamicsBean,
+            HotInfoListBean> mSearchAdapter;
+    private RExItemDecoration mSearchItemDecoration;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -133,9 +154,20 @@ public class SearchNextUIView extends BaseContentUIView {
     }
 
     /**
+     * 输入框文本变化
+     */
+    @OnTextChanged(R.id.edit_text_view)
+    public void onInputTextChanged(Editable editable) {
+        if (TextUtils.isEmpty(editable)) {
+            switchToNormal();
+        }
+    }
+
+    /**
      * 加载热词
      */
     private void loadHotwords() {
+
         add(RRetrofit.create(SearchService.class)
                 .hotwords(Param.buildInfoMap())
                 .compose(Rx.transformerList(String.class))
@@ -146,7 +178,7 @@ public class SearchNextUIView extends BaseContentUIView {
                         mHotwords.add("");//分组占位数据
                         mHotwords.addAll(bean);
 
-                        mBaseAdapter.resetAllData(mHotwords);
+                        mNormalAdapter.resetAllData(mHotwords);
                     }
                 })
         );
@@ -160,25 +192,73 @@ public class SearchNextUIView extends BaseContentUIView {
                 mHistoryRealmList.remove(mHistoryRealmList.size() - 1);
             }
             mHistoryRealmList.add(1, searchHistoryRealm);
-            mBaseAdapter.resetHeaderData(mHistoryRealmList);
-            mBaseAdapter.notifyDataSetChanged();
-        } else {
-
+            mNormalAdapter.resetHeaderData(mHistoryRealmList);
+            mNormalAdapter.notifyDataSetChanged();
         }
+        mEditText.setText(text);
+        mEditText.setSelection(text.length());
+
+        onCancel();
+        add(RRetrofit.create(SearchService.class)
+                .search(Param.buildInfoMap("type:abstract", "content:" + text))
+                .compose(Rx.transformer(SearchResultBean.class))
+                .subscribe(new BaseSingleSubscriber<SearchResultBean>() {
+                    @Override
+                    public void onSucceed(SearchResultBean bean) {
+                        super.onSucceed(bean);
+                        mSearchAdapter.setShowState(IShowState.NORMAL);
+                        mSearchAdapter.resetHeaderData(bean.getUsers());
+
+                        mSearchAdapter.resetAllData(bean.getDynamics().getDynamics());
+                        mSearchAdapter.resetFooterData(bean.getNews().getNews());
+                    }
+                })
+        );
+        switchToSearch();
+    }
+
+    /**
+     * RecyclerView显示搜索结果
+     */
+    private void switchToSearch() {
+        if (!isNormalModel) {
+            return;
+        }
+        mRecyclerView.removeItemDecoration(mNormalDecoration);
+        mRecyclerView.addItemDecoration(mSearchItemDecoration);
+        mSearchAdapter.setShowState(IShowState.LOADING);
+        mRecyclerView.setLayoutManager(mSearchLayoutManager);
+        mRecyclerView.setAdapter(mSearchAdapter);
+        isNormalModel = false;
+    }
+
+    /**
+     * RecyclerView显示搜索历史
+     */
+    private void switchToNormal() {
+        if (isNormalModel) {
+            return;
+        }
+        mRecyclerView.setLayoutManager(mNormalLayoutManager);
+        mRecyclerView.setAdapter(mNormalAdapter);
+        mRecyclerView.addItemDecoration(mNormalDecoration);
+        mRecyclerView.removeItemDecoration(mSearchItemDecoration);
+        isNormalModel = true;
     }
 
     protected void initRecyclerView() {
         mRecyclerView = mViewHolder.v(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        /**搜索历史*/
+        mNormalLayoutManager = new GridLayoutManager(mActivity, 2);
+        mNormalLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 return position <= mHistoryRealmList.size() ? 2 : 1;
             }
         });
-        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(mNormalLayoutManager);
         //空的占位数据bean
-        mBaseAdapter = new RExBaseAdapter<SearchHistoryRealm, String, String>(mActivity) {
+        mNormalAdapter = new RExBaseAdapter<SearchHistoryRealm, String, String>(mActivity) {
             @Override
             protected int getHeaderItemType(int posInHeader) {
                 if (posInHeader == 0) {
@@ -220,7 +300,7 @@ public class SearchNextUIView extends BaseContentUIView {
                                     realm.where(SearchHistoryRealm.class).findAll().deleteAllFromRealm();
                                     mHistoryRealmList = new ArrayList<>();
                                     mHistoryRealmList.add(new SearchHistoryRealm());//空的占位数据bean
-                                    mBaseAdapter.resetHeaderData(mHistoryRealmList);
+                                    mNormalAdapter.resetHeaderData(mHistoryRealmList);
                                 }
                             });
                         }
@@ -246,16 +326,16 @@ public class SearchNextUIView extends BaseContentUIView {
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            searchText(dataBean, false);
+                            searchText(dataBean, true);
                         }
                     });
                 }
             }
         };
-        mBaseAdapter.resetHeaderData(mHistoryRealmList);
-        mRecyclerView.setAdapter(mBaseAdapter);
+        mNormalAdapter.resetHeaderData(mHistoryRealmList);
+        mRecyclerView.setAdapter(mNormalAdapter);
 
-        mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
+        mNormalDecoration = new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
             @Override
             public void getItemOffsets(Rect outRect, int position) {
                 if (position != 0 && position < mHistoryRealmList.size()) {
@@ -277,7 +357,214 @@ public class SearchNextUIView extends BaseContentUIView {
                 offsetRect.set(0, itemView.getTop() - offsetRect.top, itemView.getRight(), itemView.getTop());
                 canvas.drawRect(offsetRect, paint);
             }
-        }));
+        });
+        mRecyclerView.addItemDecoration(mNormalDecoration);
+
+
+        /**搜索结果配置*/
+        mSearchLayoutManager = new GridLayoutManager(mActivity, 1);
+        mSearchAdapter = new RExBaseAdapter<LikeUserInfoBean,
+                SearchResultBean.DynamicsBeanX.DynamicsBean,
+                HotInfoListBean>(mActivity) {
+            @Override
+            protected int getItemLayoutId(int viewType) {
+                if (viewType == TYPE_HEADER) {
+                    return R.layout.item_search_result_user;
+                }
+                if (viewType == LAST_ITEM_TYPE) {
+                    return R.layout.item_search_result_search_last;
+                }
+//                if (viewType == TYPE_DATA) {
+                return R.layout.item_search_result_article;
+//                }
+//                return super.getItemLayoutId(viewType);
+            }
+
+            @Override
+            public int getItemType(int position) {
+                if (position == getItemCount() - 1) {
+                    return LAST_ITEM_TYPE;
+                }
+                return super.getItemType(position);
+            }
+
+            @Override
+            public int getItemCount() {
+                return super.getItemCount() + 1;
+            }
+
+            @Override
+            public int getDataCount() {
+                return Math.min(3, super.getDataCount());
+            }
+
+            @Override
+            public int getFooterCount() {
+                return Math.min(3, super.getFooterCount());
+            }
+
+            @Override
+            public int getHeaderCount() {
+                return Math.min(3, super.getHeaderCount());
+            }
+
+            private void resetLayout(RBaseViewHolder holder) {
+                holder.v(R.id.tip_view).setVisibility(View.GONE);
+                holder.v(R.id.search_line1).setVisibility(View.GONE);
+                holder.v(R.id.search_line2).setVisibility(View.GONE);
+                holder.v(R.id.tip_more_view).setVisibility(View.GONE);
+            }
+
+            /**用户item*/
+            @Override
+            protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, LikeUserInfoBean headerBean) {
+                UserInfoAdapter.initUserItem(holder, headerBean, mILayout);
+                holder.v(R.id.follow_image_view).setVisibility(View.GONE);
+
+                resetLayout(holder);
+                if (posInHeader == 0) {
+                    holder.tv(R.id.tip_view).setVisibility(View.VISIBLE);
+                    holder.v(R.id.search_line1).setVisibility(View.VISIBLE);
+                } else if (posInHeader == getHeaderCount() - 1 && mAllHeaderDatas.size() > 3) {
+                    holder.tv(R.id.tip_more_view).setVisibility(View.VISIBLE);
+                    holder.v(R.id.search_line2).setVisibility(View.VISIBLE);
+                    holder.tv(R.id.tip_more_view).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                }
+            }
+
+            /**动态*/
+            @Override
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, SearchResultBean.DynamicsBeanX.DynamicsBean dataBean) {
+                SearchUIView.updateMediaLayout(dataBean.getContent(), dataBean.getId(), dataBean.getMedia(), dataBean.getMedia_type(),
+                        mILayout, holder);
+
+                HnGlideImageView imageView = holder.v(R.id.image_view);
+                imageView.setImageThumbUrl(dataBean.getAvatar());
+                imageView.setAuth("1".equalsIgnoreCase(dataBean.getIs_auth()));
+
+                holder.tv(R.id.author_view).setText(dataBean.getUsername());
+                holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000, true));
+
+                holder.v(R.id.cnt_control_layout).setVisibility(View.GONE);
+                holder.v(R.id.delete_view).setVisibility(View.GONE);
+
+                resetLayout(holder);
+                if (posInData == 0) {
+                    holder.tv(R.id.tip_view).setText(R.string.status);
+                    holder.tv(R.id.tip_view).setVisibility(View.VISIBLE);
+                    holder.v(R.id.search_line1).setVisibility(View.VISIBLE);
+                } else if (posInData == getDataCount() - 1 && mAllDatas.size() > 3) {
+                    holder.tv(R.id.tip_more_view).setText(R.string.more_status);
+                    holder.tv(R.id.tip_more_view).setVisibility(View.VISIBLE);
+                    holder.v(R.id.search_line2).setVisibility(View.VISIBLE);
+                    holder.tv(R.id.tip_more_view).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                }
+            }
+
+            /**资讯item*/
+            @Override
+            protected void onBindFooterView(RBaseViewHolder holder, int posInFooter, HotInfoListBean footerBean) {
+                HotInfoListUIView.initItem(holder, footerBean);
+                holder.v(R.id.delete_view).setVisibility(View.GONE);
+//                if (posInFooter == 0) {
+//                    holder.v(R.id.tip_layout).setVisibility(View.VISIBLE);
+//                    holder.tv(R.id.tip_text_view).setText(R.string.new_hot_info_tip);
+//                } else {
+//                    holder.v(R.id.tip_layout).setVisibility(View.GONE);
+//                }
+//                holder.v(R.id.line).setVisibility(View.VISIBLE);
+//
+//                holder.v(R.id.tip_layout).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                    }
+//                });
+
+                resetLayout(holder);
+                if (posInFooter == 0) {
+                    holder.tv(R.id.tip_view).setText(R.string.information);
+                    holder.tv(R.id.tip_view).setVisibility(View.VISIBLE);
+                    holder.v(R.id.search_line1).setVisibility(View.VISIBLE);
+                } else if (posInFooter == getFooterCount() - 1 && mAllFooterDatas.size() > 3) {
+                    holder.tv(R.id.tip_more_view).setText(R.string.more_information);
+                    holder.tv(R.id.tip_more_view).setVisibility(View.VISIBLE);
+                    holder.v(R.id.search_line2).setVisibility(View.VISIBLE);
+                    holder.tv(R.id.tip_more_view).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            protected void onBindCommonView(RBaseViewHolder holder, int position, SearchResultBean.DynamicsBeanX.DynamicsBean bean) {
+                if (holder.getItemViewType() == LAST_ITEM_TYPE) {
+                    holder.tv(R.id.search_word_view).setText(mEditText.getText());
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
+                } else {
+                    super.onBindCommonView(holder, position, bean);
+                }
+            }
+        };
+        mSearchItemDecoration = new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
+            @Override
+            public void getItemOffsets(Rect outRect, int position) {
+                if (position != 0) {
+                    outRect.top = getDimensionPixelOffset(R.dimen.base_line);
+                    if (position == mSearchAdapter.getHeaderCount() ||
+                            position == mSearchAdapter.getHeaderCount() + mSearchAdapter.getDataCount() ||
+                            position == mSearchAdapter.getHeaderCount() + mSearchAdapter.getDataCount() + mSearchAdapter.getFooterCount()) {
+                        outRect.top = getDimensionPixelOffset(R.dimen.base_xhdpi);
+                    }
+                }
+            }
+
+            @Override
+            public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+                int left = 0;
+                int itemViewTop = itemView.getTop();
+                int top = itemViewTop - offsetRect.top;
+                if (position == mSearchAdapter.getHeaderCount() ||
+                        position == mSearchAdapter.getHeaderCount() + mSearchAdapter.getDataCount() ||
+                        position == mSearchAdapter.getHeaderCount() + mSearchAdapter.getDataCount() + mSearchAdapter.getFooterCount()) {
+
+                    left = 0;
+                    paint.setColor(Color.WHITE);
+                    offsetRect.set(0, top, left, itemViewTop);
+                    canvas.drawRect(offsetRect, paint);
+
+                    paint.setColor(getColor(R.color.chat_bg_color));
+                } else {
+                    left = getDimensionPixelOffset(R.dimen.base_xhdpi);
+
+                    paint.setColor(Color.WHITE);
+                    offsetRect.set(0, top, left, itemViewTop);
+                    canvas.drawRect(offsetRect, paint);
+
+                    paint.setColor(getColor(R.color.line_color));
+                }
+                offsetRect.set(left, top, itemView.getRight(), itemViewTop);
+                canvas.drawRect(offsetRect, paint);
+            }
+        });
     }
 
     @Override

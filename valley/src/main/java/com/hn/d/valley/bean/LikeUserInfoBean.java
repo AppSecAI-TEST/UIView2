@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
 /**
  * Created by angcyo on 2017-01-15.
  */
@@ -30,17 +32,17 @@ public class LikeUserInfoBean {
     private String industry;
     /**
      * is_contact : 1{
-     "uid": "50001",
-     "status": "1",
-     "sex": "0",
-     "username": "幽灵",
-     "true_name": "",
-     "is_auth": "0",
-     "is_contact": 0,
-     "introduce": "",
-     "signature": ""，
-     "grade":"1"
-     }
+     * "uid": "50001",
+     * "status": "1",
+     * "sex": "0",
+     * "username": "幽灵",
+     * "true_name": "",
+     * "is_auth": "0",
+     * "is_contact": 0,
+     * "introduce": "",
+     * "signature": ""，
+     * "grade":"1"
+     * }
      * contact_mark : 张伟
      * is_attention : 1
      */
@@ -79,6 +81,14 @@ public class LikeUserInfoBean {
     private String show_distance;
     private String created;
     private String show_time;
+    /**
+     * id : 50029
+     * grade : 1
+     * sex : 1
+     * is_auth : 0
+     */
+    private String id;
+
 
     public String getAvatar() {
         return avatar;
@@ -105,6 +115,9 @@ public class LikeUserInfoBean {
     }
 
     public String getUid() {
+        if (TextUtils.isEmpty(uid)) {
+            return id;
+        }
         return uid;
     }
 
@@ -278,5 +291,13 @@ public class LikeUserInfoBean {
 
     public void setShow_time(String show_time) {
         this.show_time = show_time;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

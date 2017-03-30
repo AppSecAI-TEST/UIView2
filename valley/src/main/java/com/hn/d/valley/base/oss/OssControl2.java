@@ -3,14 +3,18 @@ package com.hn.d.valley.base.oss;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.utils.string.MD5;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.realm.FileUrlRealm;
+import com.hn.d.valley.realm.RRealm;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -73,26 +77,46 @@ public class OssControl2 {
         String upload = OssControl.isUpload(videoPath);
         if (upload == null) {
             L.d("准备上传视频:" + videoPath);
-            mSubscribe = OssHelper.uploadVideo(videoPath)
-                    .subscribe(new BaseSingleSubscriber<String>() {
-                        @Override
-                        public void onSucceed(String s) {
-                            if (BuildConfig.DEBUG) {
-                                L.i(videoPath + " 上传成功至->" + s);
-                            }
+
+            OssHelper.checkUrl(videoPath, new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    if (TextUtils.isEmpty(s)) {
+                        mSubscribe = OssHelper.uploadVideo(videoPath)
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onSucceed(String s) {
+                                        if (BuildConfig.DEBUG) {
+                                            L.i(videoPath + " 上传成功至->" + s);
+                                        }
+                                        List<String> list = new ArrayList<>();
+                                        String videoUrl = OssHelper.getVideoUrl(s);
+                                        OssControl.urlMap.put(videoPath, videoUrl);
+                                        list.add(videoUrl);
+                                        mUploadListener.onUploadSucceed(list);
+
+                                        RRealm.save(new FileUrlRealm(MD5.getStreamMD5(videoPath), videoPath, videoUrl));
+                                    }
+
+                                    @Override
+                                    public void onError(int code, String msg) {
+                                        super.onError(code, msg);
+                                        mUploadListener.onUploadFailed(code, msg);
+                                    }
+                                });
+                    } else {
+                        if (BuildConfig.DEBUG) {
+                            L.i("秒传->" + s);
+
                             List<String> list = new ArrayList<>();
-                            String videoUrl = OssHelper.getVideoUrl(s);
-                            OssControl.urlMap.put(videoPath, videoUrl);
-                            list.add(videoUrl);
+                            OssControl.urlMap.put(videoPath, s);
+                            list.add(s);
                             mUploadListener.onUploadSucceed(list);
                         }
 
-                        @Override
-                        public void onError(int code, String msg) {
-                            super.onError(code, msg);
-                            mUploadListener.onUploadFailed(code, msg);
-                        }
-                    });
+                    }
+                }
+            });
         } else {
             List<String> list = new ArrayList<>();
             list.add(upload);
@@ -115,26 +139,46 @@ public class OssControl2 {
         String upload = OssControl.isUpload(audioPath);
         if (upload == null) {
             L.d("准备上传语音:" + audioPath);
-            mSubscribe = OssHelper.uploadAudio(audioPath)
-                    .subscribe(new BaseSingleSubscriber<String>() {
-                        @Override
-                        public void onSucceed(String s) {
-                            if (BuildConfig.DEBUG) {
-                                L.i(audioPath + " 上传成功至->" + s);
-                            }
-                            List<String> list = new ArrayList<>();
-                            String audioUrl = OssHelper.getAudioUrl(s);
-                            OssControl.urlMap.put(audioPath, audioUrl);
-                            list.add(audioUrl);
-                            mUploadListener.onUploadSucceed(list);
-                        }
 
-                        @Override
-                        public void onError(int code, String msg) {
-                            super.onError(code, msg);
-                            mUploadListener.onUploadFailed(code, msg);
+            OssHelper.checkUrl(audioPath, new Action1<String>() {
+                @Override
+                public void call(String s) {
+                    if (TextUtils.isEmpty(s)) {
+                        mSubscribe = OssHelper.uploadAudio(audioPath)
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onSucceed(String s) {
+                                        if (BuildConfig.DEBUG) {
+                                            L.i(audioPath + " 上传成功至->" + s);
+                                        }
+                                        List<String> list = new ArrayList<>();
+                                        String audioUrl = OssHelper.getAudioUrl(s);
+                                        OssControl.urlMap.put(audioPath, audioUrl);
+                                        list.add(audioUrl);
+                                        mUploadListener.onUploadSucceed(list);
+
+                                        RRealm.save(new FileUrlRealm(MD5.getStreamMD5(audioPath), audioPath, audioUrl));
+                                    }
+
+                                    @Override
+                                    public void onError(int code, String msg) {
+                                        super.onError(code, msg);
+                                        mUploadListener.onUploadFailed(code, msg);
+                                    }
+                                });
+                    } else {
+                        if (BuildConfig.DEBUG) {
+                            L.i("秒传->" + s);
                         }
-                    });
+                        List<String> list = new ArrayList<>();
+                        OssControl.urlMap.put(audioPath, s);
+                        list.add(s);
+                        mUploadListener.onUploadSucceed(list);
+                    }
+                }
+            });
+
+
         } else {
             List<String> list = new ArrayList<>();
             list.add(upload);
@@ -167,25 +211,42 @@ public class OssControl2 {
         if (BuildConfig.DEBUG) {
             L.i("开始上传:" + needUploadPath);
         }
-        mSubscribe = OssHelper.uploadCircleImg(needUploadPath)
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onSucceed(String s) {
-                        if (BuildConfig.DEBUG) {
-                            L.i(needUploadPath + " 上传成功至->" + s);
-                        }
-                        uploadList.add(needUploadPath + "|" + OssHelper.getCircleUrl(s));
-                        index++;
-                        startUpload();
-                    }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        mUploadListener.onUploadFailed(code, msg);
-                    }
-                });
+        OssHelper.checkUrl(needUploadPath, new Action1<String>() {
+            @Override
+            public void call(String s) {
+                if (TextUtils.isEmpty(s)) {
+                    mSubscribe = OssHelper.uploadCircleImg(needUploadPath)
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String s) {
+                                    if (BuildConfig.DEBUG) {
+                                        L.i(needUploadPath + " 上传成功至->" + s);
+                                    }
+                                    String circleUrl = OssHelper.getCircleUrl(s);
+                                    uploadList.add(needUploadPath + "|" + circleUrl);
+                                    index++;
+                                    startUpload();
 
+                                    RRealm.save(new FileUrlRealm(MD5.getStreamMD5(needUploadPath), needUploadPath, circleUrl));
+                                }
+
+                                @Override
+                                public void onError(int code, String msg) {
+                                    super.onError(code, msg);
+                                    mUploadListener.onUploadFailed(code, msg);
+                                }
+                            });
+                } else {
+                    if (BuildConfig.DEBUG) {
+                        L.i("秒传->" + s);
+                    }
+                    uploadList.add(needUploadPath + "|" + s);
+                    index++;
+                    startUpload();
+                }
+            }
+        });
     }
 
     public interface OnUploadListener {

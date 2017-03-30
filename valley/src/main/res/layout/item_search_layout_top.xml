@@ -22,8 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:drawablePadding="@dimen/base_hdpi"
-            android:drawableStart="@drawable/top_search"
-            android:drawableTint="@color/main_text_color_dark"
+            android:drawableStart="@drawable/search_xuanzhelianxiren"
             android:text="@string/search"/>
 
     </RelativeLayout>
