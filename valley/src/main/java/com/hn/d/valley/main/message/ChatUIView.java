@@ -39,6 +39,7 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
@@ -80,8 +81,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
-    protected AudioRecorder audioMessageHelper;
-    protected String mSessionId;
+    protected static final String KEY_ANCHOR = "anchor";
+
     @BindView(R.id.group_view)
     RadioGroup mGroupView;
     @BindView(R.id.chat_root_layout)
@@ -90,7 +91,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     ExEditText mInputView;
     @BindView(R.id.record_view)
     TextView mRecordView;
-    ChatControl mChatControl;
+    protected ChatControl mChatControl;
     protected SessionTypeEnum sessionType;
     @BindView(R.id.refresh_layout)
     HnRefreshLayout mRefreshLayout;
@@ -118,13 +119,19 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     RelativeLayout mCommandControlLayout;
     @BindView(R.id.message_voice_box)
     CheckBox mMessageVoiceBox;
+
     private String mLastInputText = "";
     private boolean touched;
     private boolean started;
     private boolean cancelled;
+
     private EmojiLayoutControl mEmojiLayoutControl;
     private CommandLayoutControl mCommandLayoutControl;
+
     private int mLastId = View.NO_ID;
+    protected AudioRecorder audioMessageHelper;
+    protected String mSessionId;
+    protected IMMessage mAnchor;
 
     public ChatUIView() {
     }
@@ -217,7 +224,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                     Hawk.put(Constant.KEYBOARD_HEIGHT, height);
                 }
 
-                if (isKeyboardShow || !isEmojiShow) {
+                    if (isKeyboardShow || !isEmojiShow) {
                     mMessageAddView.setChecked(false);
                     mMessageExpressionView.setChecked(false);
                 }
@@ -544,12 +551,13 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 
             mSessionId = bundle.getString(KEY_SESSION_ID);
             sessionType = SessionTypeEnum.typeOfValue(bundle.getInt(KEY_SESSION_TYPE));
+            mAnchor = (IMMessage) bundle.getSerializable(KEY_ANCHOR);
 
             setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
 
             if (!TextUtils.equals(lastId, mSessionId)) {
                 msgService().queryMessageListEx(
-                        getEmptyMessage(),
+                        anchor(),
                         QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
                         , true)
                         .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
@@ -573,8 +581,16 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     }
 
     @NonNull
-    private IMMessage getEmptyMessage() {
+    protected IMMessage getEmptyMessage() {
         return MessageBuilder.createEmptyMessage(mSessionId, sessionType, System.currentTimeMillis());
+    }
+
+    private IMMessage anchor() {
+        if (mChatControl.mChatAdapter.getAllDatas().size() == 0) {
+            return mAnchor == null ? getEmptyMessage() : mAnchor;
+        } else {
+            return getEmptyMessage();
+        }
     }
 
     @Override
@@ -789,4 +805,5 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
             });
         }
     }
+
 }

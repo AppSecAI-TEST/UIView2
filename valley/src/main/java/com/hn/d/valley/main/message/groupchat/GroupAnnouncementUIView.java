@@ -2,7 +2,6 @@ package com.hn.d.valley.main.message.groupchat;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.BoolRes;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,11 +9,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.T_;
@@ -202,4 +201,14 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
             });
         }
     };
+
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        return super.initItemDecoration();
+    }
+
+    @Override
+    protected boolean hasDecoration() {
+        return false;
+    }
 }

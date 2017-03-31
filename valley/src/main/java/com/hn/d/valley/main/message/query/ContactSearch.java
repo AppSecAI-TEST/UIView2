@@ -1,6 +1,8 @@
 package com.hn.d.valley.main.message.query;
 
 import com.angcyo.uiview.utils.ContactsPickerHelper;
+import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.main.friend.GroupBean;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -20,6 +22,16 @@ public class ContactSearch {
         String phonenum = info.phone;
 
         return TextSearcher.contains(textQuery.t9,name,textQuery.text) || TextSearcher.contains(textQuery.t9,phonenum,textQuery.text);
+    }
+
+    public static boolean hitFriend(FriendBean bean, TextQuery textQuery,RecordHitInfo hitInfo) {
+        return TextSearcher.contains(textQuery.t9,bean.getDefaultMark(),textQuery.text,hitInfo)
+                || TextSearcher.contains(textQuery.t9,bean.getMark(),textQuery.text,hitInfo);
+    }
+
+    public static boolean hitGroup(GroupBean bean, TextQuery textQuery,RecordHitInfo hitInfo) {
+        return TextSearcher.contains(textQuery.t9, bean.getDefaultName(), textQuery.text,hitInfo)
+                || TextSearcher.contains(textQuery.t9,bean.getName(),textQuery.text,hitInfo);
     }
 
 }

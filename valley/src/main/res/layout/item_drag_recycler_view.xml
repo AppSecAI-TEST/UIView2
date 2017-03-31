@@ -9,6 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:background="@drawable/base_bg_selector"
         android:paddingLeft="@dimen/base_xhdpi"
         android:paddingRight="@dimen/base_xhdpi">
 
@@ -24,7 +25,6 @@
         <TextView
             android:id="@+id/tv_add_photos"
             style="@style/DarkTextStyle"
-            android:background="@drawable/base_bg_selector"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

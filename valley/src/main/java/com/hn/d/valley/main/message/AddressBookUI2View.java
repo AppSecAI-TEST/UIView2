@@ -42,6 +42,7 @@ import com.hn.d.valley.main.friend.DataResourceRepository;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.PhoneContactItem;
+import com.hn.d.valley.main.message.query.ContactSearch;
 import com.hn.d.valley.main.message.query.TextQuery;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.widget.HnFollowImageView;
@@ -68,7 +69,6 @@ import rx.schedulers.Schedulers;
 /**
  * Created by hewking on 2017/3/22.
  */
-@SuppressWarnings("ALL")
 public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRefreshListener{
 
     private AddressBookAdapter mAddressAdapter;
@@ -79,6 +79,8 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     ExEditText et_search;
     @BindView(R.id.refresh_layout)
     HnRefreshLayout refreshLayout;
+
+    private List<AbsContactItem> mContacts;
 
     public AddressBookUI2View() {
 
@@ -124,8 +126,21 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 //                                        if (TextUtils.isEmpty(charSequence)) {
 //                                            return null;
 //                                        } else {
-                                List<AbsContactItem> items = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT, new TextQuery(et_search.getText().toString()));
-                                return  Observable.just(items);
+                                if (mContacts != null) {
+                                    List<AbsContactItem> datas = new ArrayList<>();
+                                    for(Iterator<AbsContactItem> it = mContacts.iterator();it.hasNext();) {
+                                        PhoneContactItem item = (PhoneContactItem) it.next();
+                                        boolean hit = ContactSearch.hitContactInfo(item.getContactsInfo(), new TextQuery(et_search.getText().toString()));
+                                        if (!hit) {
+                                            continue;
+                                        }
+                                        datas.add(item);
+                                    }
+                                    return Observable.just(datas);
+                                } else {
+                                    mContacts = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT, new TextQuery(et_search.getText().toString()));
+                                    return  Observable.just(mContacts);
+                                }
 //                                        }
                             }
                         });
@@ -195,15 +210,14 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
             public void call(Subscriber<? super List<AbsContactItem>> subscriber) {
                 L.i("AddressBookUIView : call " + Thread.currentThread().getName());
                 subscriber.onStart();
-                List<AbsContactItem> contactItems = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT,null);
-                subscriber.onNext(contactItems);
+                mContacts = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT,null);
+                subscriber.onNext(mContacts);
                 subscriber.onCompleted();
             }
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSingleSubscriber<List<AbsContactItem>>() {
-
                     @Override
                     public void onCompleted() {
                         super.onCompleted();
@@ -222,14 +236,14 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                         super.onSucceed(bean);
                         L.i("AddressBookUIView : " + Thread.currentThread().getName());
                         showContentLayout();
-//                        buildPhoneMatch(bean);
+//                        checkPhoneMatch(bean);
                         mAddressAdapter.resetData(bean);
                     }
 
                 });
     }
 
-    private void buildPhoneMatch(final List<AbsContactItem> absContactItems) {
+    private void checkPhoneMatch(final List<AbsContactItem> absContactItems) {
         String phones = buildJsonParam(absContactItems);
         RRetrofit.create(ContactService.class)
                 .phoneUser(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:" + phones
@@ -354,7 +368,6 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         protected void onBindDataView(RBaseViewHolder holder, final int posInData, final AbsContactItem dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
 
-
             TextView username = holder.tv(R.id.username);
             TextView signature = holder.tv(R.id.signature);
             HnGlideImageView image_view = holder.v(R.id.image_view);
@@ -380,31 +393,9 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     follow_image_view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
-//                            NSString *spm = [NSString stringWithFormat:@"%@_invite_%@",[ToolObject getUid],[ToolObject returnNowDate]];
-//                            NSString *shareUrl = [NSString stringWithFormat:@"wap.klgwl.com/user/register?spm=%@",[ToolObject encryptString:spm publicKey:RSAPUBLICKEY]];
-//
-//                            NSString *message = [NSString stringWithFormat:@"【恐龙谷】%@通过手机通讯录邀请你加入恐龙谷,快点击 %@ 注册吧。",[ToolObject getUserName],shareUrl];
-
-                            //未关注
-                            StringBuilder sb = new StringBuilder();
-                            sb.append(UserCache.getUserAccount())
-                                    .append("_invite_")
-                                    .append(TimeUtil.getNowDatetime());
-
-                            String encodeInfo = RSA.encodeInfo(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
-                            sb = new StringBuilder();
-                            sb.append("【恐龙谷】")
-                            .append(UserCache.getUserAccount())
-                            .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
-                            .append("wap.klgwl.com/user/register?spm=")
-                            .append(encodeInfo)
-                            .append(" 注册吧");
-
-                            RUtils.sendSMS(mActivity,sb.toString(), item.getContactsInfo().phone);
+                            buildMsg(item);
                         }
                     });
-
 
                     Glide.with(mActivity)
                             .load(ContactsPickerHelper.getPhotoByte(mActivity, item.getContactsInfo().contactId))
@@ -430,6 +421,30 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         protected RBaseViewHolder createBaseViewHolder(int viewType, View item) {
             return super.createBaseViewHolder(viewType, item);
         }
+    }
+
+    private void buildMsg(PhoneContactItem item) {
+        //                            NSString *spm = [NSString stringWithFormat:@"%@_invite_%@",[ToolObject getUid],[ToolObject returnNowDate]];
+//                            NSString *shareUrl = [NSString stringWithFormat:@"wap.klgwl.com/user/register?spm=%@",[ToolObject encryptString:spm publicKey:RSAPUBLICKEY]];
+//
+//                            NSString *message = [NSString stringWithFormat:@"【恐龙谷】%@通过手机通讯录邀请你加入恐龙谷,快点击 %@ 注册吧。",[ToolObject getUserName],shareUrl];
+
+        //未关注
+        StringBuilder sb = new StringBuilder();
+        sb.append(UserCache.getUserAccount())
+                .append("_invite_")
+                .append(TimeUtil.getNowDatetime());
+
+        String encodeInfo = RSA.encodeInfo(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
+        sb = new StringBuilder();
+        sb.append("【恐龙谷】")
+        .append(UserCache.getUserAccount())
+        .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
+        .append("wap.klgwl.com/user/register?spm=")
+        .append(encodeInfo)
+        .append(" 注册吧");
+
+        RUtils.sendSMS(mActivity,sb.toString(), item.getContactsInfo().phone);
     }
 
     public class AddressBookViewHolder extends RBaseViewHolder{

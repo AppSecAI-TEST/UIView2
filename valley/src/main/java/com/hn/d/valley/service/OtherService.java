@@ -29,4 +29,13 @@ public interface OtherService {
      */
     @POST("sms/sendPhoneVerifyCode")
     Observable<ResponseBody> sendPhoneVerifyCode(@QueryMap Map<String, String> map);
+
+
+    /**
+     * 文件上传前获取oss sts token
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     */
+    @POST("upload/getToken")
+    Observable<ResponseBody> getToken(@QueryMap Map<String, String> map);
 }

@@ -2,10 +2,12 @@ package com.hn.d.valley.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 /**
  * Created by hewking on 2017/3/7.
  */
-public class FriendBean {
+public class FriendBean extends RealmObject {
 
     /**
      * uid : 50004
@@ -32,7 +34,7 @@ public class FriendBean {
     private String avatar;
     @SerializedName("is_auth")
     private String isAuth;
-    private Object introduce;
+    private String introduce;
     private String signature;
     private String grade;
 
@@ -100,11 +102,11 @@ public class FriendBean {
         this.isAuth = isAuth;
     }
 
-    public Object getIntroduce() {
+    public String getIntroduce() {
         return introduce;
     }
 
-    public void setIntroduce(Object introduce) {
+    public void setIntroduce(String introduce) {
         this.introduce = introduce;
     }
 

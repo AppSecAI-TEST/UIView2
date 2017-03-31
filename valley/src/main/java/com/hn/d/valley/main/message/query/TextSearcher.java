@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message.query;
 
 import android.text.TextUtils;
 
+
 public final class TextSearcher {
 	/** T9 */
 	private boolean mT9;
@@ -235,30 +236,39 @@ EAT:	for (int index = 0; index < str.length(); index++) {
 	 * @return contains
 	 */
 	public static final boolean contains(boolean t9, String str, String query) {
+		return contains(t9,str,query,null);
+	}
+
+	public static final boolean contains(boolean t9, String str, String query,RecordHitInfo hitInfo) {
 		if (TextUtils.isEmpty(str) || TextUtils.isEmpty(query)) {
 			return false;
 		}
-		
+
 		TextSearcher searcher = TextSearcher.obtain(t9);
-		
+
 		// move
-EAT:	for (int index = 0; index < str.length(); index++) {
+		EAT:	for (int index = 0; index < str.length(); index++) {
 			searcher.initialize(str, index);
-	
+
 			for (int subIndex = 0; subIndex < query.length(); subIndex++) {
 				if (!searcher.eat(query.charAt(subIndex))) {
 					// next
 					continue EAT;
 				}
 			}
-		  
+
+			// 赋值 匹配区间
+			if (hitInfo != null ) {
+				hitInfo.start = index;
+				hitInfo.end = searcher.index();
+			}
 			// eaten
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @param t9

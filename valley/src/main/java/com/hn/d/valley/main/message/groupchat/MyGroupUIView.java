@@ -5,8 +5,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -19,10 +17,17 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.GroupBean;
+import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+
+import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Created by hewking on 2017/3/13.
@@ -45,7 +50,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(GroupChatService.class)
-                .myGroup(Param.buildMap("uid:" + UserCache.getUserAccount(),"page:" + page))
+                .myGroup(Param.buildMap("uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformer(GroupList.class))
                 .subscribe(new BaseSingleSubscriber<GroupList>() {
                     @Override
@@ -66,9 +71,31 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                         } else {
                             onUILoadDataEnd(beans.getData_list());
                             onUILoadDataFinish();
+                            mRExBaseAdapter.setEnableLoadMore(false);
+                            //save to realm
+                            saveToReaml(beans.getData_list());
                         }
                     }
                 }));
+    }
+
+    @Override
+    public void loadMoreData() {
+        super.loadMoreData();
+    }
+
+    private void saveToReaml(final List<GroupBean> data_list) {
+        final RealmResults<GroupBean> results = RRealm.realm().where(GroupBean.class).findAll();
+
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                results.deleteAllFromRealm();
+                for (GroupBean bean : data_list) {
+                    realm.copyToRealm(bean);
+                }
+            }
+        });
     }
 
     public static class GroupList extends ListModel<GroupBean> {}
@@ -101,10 +128,15 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    GroupChatUIView.start(mOtherILayout,yxGid, SessionTypeEnum.Team);
+                    SessionHelper.startTeamSession(mOtherILayout,yxGid, SessionTypeEnum.Team);
                 }
             });
 
+        }
+
+        @Override
+        public boolean isEnableLoadMore() {
+            return false;
         }
     }
 

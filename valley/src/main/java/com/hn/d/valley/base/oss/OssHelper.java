@@ -5,28 +5,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.sdk.android.oss.OSSClient;
-import com.alibaba.sdk.android.oss.common.OSSConstants;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSFederationCredentialProvider;
-import com.alibaba.sdk.android.oss.common.auth.OSSFederationToken;
-import com.alibaba.sdk.android.oss.common.auth.OSSPlainTextAKSKCredentialProvider;
-import com.alibaba.sdk.android.oss.common.utils.IOUtils;
+import com.alibaba.sdk.android.oss.common.auth.OSSStsTokenCredentialProvider;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.TransformUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.angcyo.uiview.utils.string.MD5;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.TokenBean;
 import com.hn.d.valley.bean.realm.FileUrlRealm;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.realm.RRealm;
-
-import org.json.JSONObject;
+import com.hn.d.valley.service.OtherService;
 
 import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -59,59 +56,108 @@ public class OssHelper {
     public static final String BASE_AUDIO_BUCKET = "klg-audio";
 
     static OSSClient avatorOss, circleOss, videoOss, audioOss;
-    static OSSCredentialProvider credentialProvider =
-            new OSSPlainTextAKSKCredentialProvider("UuyoRLLDaiTyRYD5", "06a8SRzXM0ELLnOluUMmkR9rLySFYh");
+//    static OSSCredentialProvider credentialProvider =
+//            new OSSPlainTextAKSKCredentialProvider("UuyoRLLDaiTyRYD5", "06a8SRzXM0ELLnOluUMmkR9rLySFYh");
+//
+//    static OSSCredentialProvider credetialProvider = new OSSFederationCredentialProvider() {
+//        @Override
+//        public OSSFederationToken getFederationToken() {
+//            try {
+//                URL stsUrl = new URL("http://localhost:8080/distribute-token.json");
+//                HttpURLConnection conn = (HttpURLConnection) stsUrl.openConnection();
+//                InputStream input = conn.getInputStream();
+//                String jsonText = IOUtils.readStreamAsString(input, OSSConstants.DEFAULT_CHARSET_NAME);
+//                JSONObject jsonObjs = new JSONObject(jsonText);
+//                String ak = jsonObjs.getString("accessKeyId");
+//                String sk = jsonObjs.getString("accessKeySecret");
+//                String token = jsonObjs.getString("securityToken");
+//                String expiration = jsonObjs.getString("expiration");
+//                return new OSSFederationToken(ak, sk, token, expiration);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//    };
 
-    static OSSCredentialProvider credetialProvider = new OSSFederationCredentialProvider() {
-        @Override
-        public OSSFederationToken getFederationToken() {
-            try {
-                URL stsUrl = new URL("http://localhost:8080/distribute-token.json");
-                HttpURLConnection conn = (HttpURLConnection) stsUrl.openConnection();
-                InputStream input = conn.getInputStream();
-                String jsonText = IOUtils.readStreamAsString(input, OSSConstants.DEFAULT_CHARSET_NAME);
-                JSONObject jsonObjs = new JSONObject(jsonText);
-                String ak = jsonObjs.getString("accessKeyId");
-                String sk = jsonObjs.getString("accessKeySecret");
-                String token = jsonObjs.getString("securityToken");
-                String expiration = jsonObjs.getString("expiration");
-                return new OSSFederationToken(ak, sk, token, expiration);
-            } catch (Exception e) {
-                e.printStackTrace();
+    static OSSCredentialProvider credetialProvider;
+    static long lastTokenTime = 0;
+
+    private static void checkToken(final Action1<OSSCredentialProvider> action) {
+        final long time = System.currentTimeMillis();
+        if (credetialProvider == null || time - lastTokenTime >= 60 * 30 * 1000) {
+            RRetrofit.create(OtherService.class)
+                    .getToken(Param.buildMap())
+                    .compose(Rx.transformer(TokenBean.class))
+                    .subscribe(new BaseSingleSubscriber<TokenBean>() {
+                        @Override
+                        public void onSucceed(TokenBean bean) {
+                            lastTokenTime = time;
+                            credetialProvider = new OSSStsTokenCredentialProvider(bean.getAccess_key(), bean.getAccess_key_secret(), bean.getToken());
+                            action.call(credetialProvider);
+                        }
+                    });
+        } else {
+            action.call(credetialProvider);
+        }
+    }
+
+    private static void getAvatorOss(final Action1<OSSClient> action) {
+        checkToken(new Action1<OSSCredentialProvider>() {
+            @Override
+            public void call(OSSCredentialProvider ossCredentialProvider) {
+                if (avatorOss == null) {
+                    avatorOss = new OSSClient(ValleyApp.getApp(), BASE_AVATOR_URL, credetialProvider);
+                } else {
+                    avatorOss.updateCredentialProvider(credetialProvider);
+                }
+                action.call(avatorOss);
             }
-            return null;
-        }
-    };
-
-    private static OSSClient getAvatorOss() {
-        if (avatorOss == null) {
-            avatorOss = new OSSClient(ValleyApp.getApp(), BASE_AVATOR_URL, credetialProvider);
-        }
-        return avatorOss;
-    }
-
-    private static OSSClient getCircleOss() {
-        if (circleOss == null) {
-            circleOss = new OSSClient(ValleyApp.getApp(), BASE_CIRCLE_URL, credetialProvider);
-        }
-        return circleOss;
+        });
     }
 
 
-    private static OSSClient getVideoOss() {
-        if (videoOss == null) {
-            videoOss = new OSSClient(ValleyApp.getApp(), BASE_VIDEO_URL, credetialProvider);
-        }
-        return videoOss;
+    private static void getAudioOss(final Action1<OSSClient> action) {
+        checkToken(new Action1<OSSCredentialProvider>() {
+            @Override
+            public void call(OSSCredentialProvider ossCredentialProvider) {
+                if (audioOss == null) {
+                    audioOss = new OSSClient(ValleyApp.getApp(), BASE_AUDIO_URL, credetialProvider);
+                } else {
+                    audioOss.updateCredentialProvider(credetialProvider);
+                }
+                action.call(audioOss);
+            }
+        });
     }
 
-    private static OSSClient getAudioOss() {
-        if (audioOss == null) {
-            audioOss = new OSSClient(ValleyApp.getApp(), BASE_AUDIO_URL, credetialProvider);
-        }
-        return audioOss;
+    private static void getCircleOss(final Action1<OSSClient> action) {
+        checkToken(new Action1<OSSCredentialProvider>() {
+            @Override
+            public void call(OSSCredentialProvider ossCredentialProvider) {
+                if (circleOss == null) {
+                    circleOss = new OSSClient(ValleyApp.getApp(), BASE_CIRCLE_URL, credetialProvider);
+                } else {
+                    circleOss.updateCredentialProvider(credetialProvider);
+                }
+                action.call(circleOss);
+            }
+        });
     }
 
+    private static void getVideoOss(final Action1<OSSClient> action) {
+        checkToken(new Action1<OSSCredentialProvider>() {
+            @Override
+            public void call(OSSCredentialProvider ossCredentialProvider) {
+                if (videoOss == null) {
+                    videoOss = new OSSClient(ValleyApp.getApp(), BASE_VIDEO_URL, credetialProvider);
+                } else {
+                    videoOss.updateCredentialProvider(credetialProvider);
+                }
+                action.call(videoOss);
+            }
+        });
+    }
 
     public static String getVideoUrl(String key) {
         return BASE_VIDEO_URL + File.separator + key;
@@ -287,29 +333,43 @@ public class OssHelper {
             this.uploadFilePath = uploadFilePath;
         }
 
+        Action1<OSSClient> createAction(final String uuid, final PutObjectRequest put,
+                                        final Subscriber<? super String> subscriber) {
+            return new Action1<OSSClient>() {
+                @Override
+                public void call(OSSClient ossClient) {
+                    try {
+                        ossClient.putObject(put);
+                        subscriber.onNext(uuid);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        subscriber.onError(e);
+                    }
+                }
+            };
+        }
+
         @Override
-        public void call(Subscriber<? super String> subscriber) {
+        public void call(final Subscriber<? super String> subscriber) {
             if (subscriber.isUnsubscribed()) {
                 return;
             }
 //            String uuid = UUID.randomUUID().toString();
             String uuid = UserCache.getUserAccount() + uploadFilePath.substring(uploadFilePath.lastIndexOf('/'));
             // 构造上传请求
-            PutObjectRequest put = new PutObjectRequest(bucket, uuid, uploadFilePath);
+            final PutObjectRequest put = new PutObjectRequest(bucket, uuid, uploadFilePath);
             try {
                 if (TextUtils.equals(bucket, BASE_AVATOR_BUCKET)) {
-                    getAvatorOss().putObject(put);
+                    getAvatorOss(createAction(uuid, put, subscriber));
                 } else if (TextUtils.equals(bucket, BASE_VIDEO_BUCKET)) {
-                    getVideoOss().putObject(put);
+                    getVideoOss(createAction(uuid, put, subscriber));
                 } else if (TextUtils.equals(bucket, BASE_CIRCLE_BUCKET)) {
-                    getCircleOss().putObject(put);
+                    getCircleOss(createAction(uuid, put, subscriber));
                 } else if (TextUtils.equals(bucket, BASE_AUDIO_BUCKET)) {
-                    getAudioOss().putObject(put);
+                    getAudioOss(createAction(uuid, put, subscriber));
                 }
-                subscriber.onNext(uuid);
             } catch (Exception e) {
                 e.printStackTrace();
-                subscriber.onError(e);
             }
         }
     }

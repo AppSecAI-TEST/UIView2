@@ -9,8 +9,10 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.TeamDataCache;
-import com.hn.d.valley.main.message.P2PChatUIView;
+import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.team.model.Team;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by hewking on 2017/3/10.
  */
-public class GroupChatUIView extends P2PChatUIView {
+public class GroupChatUIView extends ChatUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -49,10 +51,11 @@ public class GroupChatUIView extends P2PChatUIView {
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType) {
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType , IMMessage anchor) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
+        bundle.putSerializable(KEY_ANCHOR,anchor);
         mLayout.startIView(new GroupChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 

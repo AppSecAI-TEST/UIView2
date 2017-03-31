@@ -3,6 +3,7 @@ package com.hn.d.valley.service;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -113,7 +114,7 @@ public interface ContactService {
      page	否	int	第几页【不传就是所有数据全部返回】
      limit	否	int	页面显示的数量
      */
-    @POST("contact/friends")
+    @GET("contact/friends")
     Observable<ResponseBody> friends(@QueryMap Map<String,String> map);
 
 

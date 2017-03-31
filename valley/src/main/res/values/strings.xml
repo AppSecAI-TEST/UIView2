@@ -315,6 +315,13 @@
     <string name="more">更多</string>
     <string name="search_history_tip">搜索历史</string>
     <string name="search_hotword_tip">热门搜索</string>
+    <string name="text_chat_info">聊天信息</string>
+    <string name="text_stick_chat">置顶聊天</string>
+    <string name="text_chat_file">聊天文件</string>
+    <string name="text_messge_notallow">消息免打扰</string>
+    <string name="text_find_chat_record">查找聊天记录</string>
+    <string name="text_empty_record">清空聊天记录</string>
+    <string name="text_report">举报</string>
     <string name="user">用户</string>
     <string name="more_user">更多用户</string>
     <string name="search_more_tip">没有想要的内容? 试试更多搜索</string>

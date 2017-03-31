@@ -16,6 +16,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -84,13 +85,19 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, int posInData, GroupMemberBean dataBean) {
+        protected void onBindDataView(RBaseViewHolder holder, int posInData, final GroupMemberBean dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
             HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
 
             iv_head.setImageUrl(dataBean.getUserAvatar());
             tv_friend_name.setText(dataBean.getDefaultNick());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOtherILayout.startIView(new UserDetailUIView(dataBean.getUserId()));
+                }
+            });
         }
     }
 

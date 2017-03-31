@@ -85,4 +85,9 @@ public class GroupMemberBean {
     public void setContactMark(String contactMark) {
         this.contactMark = contactMark;
     }
+
+    @Override
+    public String toString() {
+        return userId;
+    }
 }

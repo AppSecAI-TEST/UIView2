@@ -10,6 +10,7 @@ import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -26,10 +27,16 @@ import com.hn.d.valley.cache.SimpleCallback;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.ChatFileUIView;
+import com.hn.d.valley.main.message.search.ChatRecordSearchUIView;
+import com.hn.d.valley.main.message.search.GlobalSearchUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
@@ -135,7 +142,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        loadGroupInfo();
+//        loadGroupInfo();
     }
 
     @Override
@@ -308,6 +315,12 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText("查找聊天记录");
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ChatRecordSearchUIView.start(mOtherILayout,mSessionId,sessionType,new int[]{ItemTypes.MSG});
+                    }
+                });
             }
         }));
 
@@ -315,10 +328,24 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("清空聊天记录");
-
-//                NIMClient.getService(MsgService.class).clearChattingHistory(item.getSessionId(), item.getSessionTypeEnum());
-
+                infoLayout.setItemText(mActivity.getString(R.string.text_empty_record));
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UIDialog.build()
+                                .setDialogContent("确定清空吗?")
+                                .setOkText("确定")
+                                .setCancelText("取消")
+                                .setOkListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        NIMClient.getService(MsgService.class).clearChattingHistory(mSessionId, sessionType);
+//                                        RBus.post(new );
+                                    }
+                                })
+                                .showDialog(mOtherILayout);
+                    }
+                });
 
             }
         }));
@@ -383,6 +410,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
+                        finishIView();
                         T_.info("退出成功");
                     }
 
@@ -404,8 +432,8 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ContactSelectUIVIew.start(mOtherILayout, new ContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
-                                    , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                            GroupMemberSelectUIVIew.start(mOtherILayout, new GroupMemberSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
+                                    , null,mGroupDescBean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                         @Override
                                         public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
                                             TeamCreateHelper.changeOwner(uiBaseDataView, absContactItems
@@ -414,6 +442,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                                                         public void call(Boolean aBoolean) {
                                                             if (aBoolean) {
                                                                 loadGroupInfo();
+                                                                finishIView();
                                                             }
                                                         }
                                                     });
@@ -435,6 +464,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
+                        finishIView();
                         T_.info("解散成功");
                     }
 

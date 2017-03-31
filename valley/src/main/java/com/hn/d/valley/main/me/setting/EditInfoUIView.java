@@ -108,32 +108,12 @@ import rx.functions.Action2;
  * 修改备注：
  * Version: 1.0.0
  */
-public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> implements IAudioRecordCallback{
-
-    private HnAddImageAdapter mHnAddImageAdapter;
-    private List<Luban.ImageItem> mOldItems = new ArrayList<>();//原先的照片地址
-    private List<Luban.ImageItem> mPhones = new ArrayList<>();//原先的照片地址用来adapter
-    private SparseArray<String> mUrls = new SparseArray<>();//所有照片墙的图片网络地址
-
-    private OssControl2 mOssControl;
-    private Action0 mOnFinishAction;
-    private Action0 mOnAudioRecordSuccess;
-    private Action1 mOnAudioRecordStatus;
-
-    //选择用户头像图片返回
-    private boolean isSetUserIco = false;
-    private String mUserSetIco;
-    OldParams mOldParams;
-    boolean canBack = false;
+public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> implements IAudioRecordCallback {
 
     // 语音
     protected AudioRecorder audioMessageHelper;
-    private PathAudioControl mPathAudioControl;
-    private boolean touched;
-    private boolean started;
-    private boolean cancelled;
-
-    private ItemInfoLayout mUserIcoInfoLayout;
+    OldParams mOldParams;
+    boolean canBack = false;
     @BindView(R.id.over_layout)
     FrameLayout over_layout;
     @BindView(R.id.layoutPlayAudio)
@@ -142,12 +122,53 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     Chronometer mTimer;
     @BindView(R.id.timer_tip_container)
     LinearLayout timpContainer;
+    private HnAddImageAdapter mHnAddImageAdapter;
+    private List<Luban.ImageItem> mOldItems = new ArrayList<>();//原先的照片地址
+    private List<Luban.ImageItem> mPhones = new ArrayList<>();//原先的照片地址用来adapter
+    private SparseArray<String> mUrls = new SparseArray<>();//所有照片墙的图片网络地址
+    private OssControl2 mOssControl;
+    private Action0 mOnFinishAction;
+    private Action0 mOnAudioRecordSuccess;
+    private Action1 mOnAudioRecordStatus;
+    //选择用户头像图片返回
+    private boolean isSetUserIco = false;
+    private String mUserSetIco;
+    private PathAudioControl mPathAudioControl;
+    private boolean touched;
+    private boolean started;
+    private boolean cancelled;
+    private ItemInfoLayout mUserIcoInfoLayout;
+    private View.OnTouchListener audioRecordListener = new View.OnTouchListener() {
 
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                touched = true;
+                initAudioRecord();
+                onStartAudioRecord();
+                over_layout.setVisibility(View.VISIBLE);
+            } else if (event.getAction() == MotionEvent.ACTION_CANCEL
+                    || event.getAction() == MotionEvent.ACTION_UP) {
+                touched = false;
+                onEndAudioRecord(isCancelled(layoutPlayAudio, event));
+                over_layout.setVisibility(View.GONE);
+            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                // 不允许recyclerview 处理滑动事件
+                mRecyclerView.requestDisallowInterceptTouchEvent(true);
+                touched = false;
+                boolean isCancel = isCancelled(layoutPlayAudio, event);
+                if (isCancel) {
+                    timpContainer.setBackgroundResource(R.drawable.nim_cancel_record_red_bg);
+                } else {
+                    timpContainer.setBackgroundResource(0);
+                }
+                cancelAudioRecord(isCancel);
+            }
 
-    @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
-        super.inflateRecyclerRootLayout(baseContentLayout, inflater);
-    }
+            return true;
+        }
+    };
+    private AudioRecordPlayable mAudioRecordPlayable;
 
     public EditInfoUIView(List<String> urls, Action0 onFinishAction) {
         for (String url : urls) {
@@ -169,6 +190,24 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         mOldParams.mSignature = userInfoBean.getSignature();
         mOldParams.pName = userInfoBean.getProvince_name();
         mOldParams.cName = userInfoBean.getCity_name();
+    }
+
+    // 滑动到指定view区域取消录音判断
+    private static boolean isCancelled(View view, MotionEvent event) {
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+
+        RectF rectf = new RectF(location[0], location[1], location[0] + view.getWidth()
+                , location[1] + view.getHeight());
+        if (rectf.contains(event.getRawX(), event.getRawY())) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        super.inflateRecyclerRootLayout(baseContentLayout, inflater);
     }
 
     @Override
@@ -388,49 +427,47 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         mOssControl.uploadCircleImg(needUploadFiles);
     }
 
-    private void checkAudioRecord(){
-        if (mAudioRecordPlayable == null ) {
+    private void checkAudioRecord() {
+        if (mAudioRecordPlayable == null) {
             checkUserIco();
             return;
         }
         String audioPath = mAudioRecordPlayable.getPath();
         File audioFile = new File(audioPath);
-        if(!audioFile.exists()){
+        if (!audioFile.exists()) {
             checkUserIco();
             return;
         }
         add(OssHelper.uploadAudio(audioPath)
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onSucceed(String s) {
-                        L.i(s + ":::  audio upload success");
-                        final String audioUrl = OssHelper.getAudioUrl(s);
-                        RRealm.exe(new Realm.Transaction() {
+                        .subscribe(new BaseSingleSubscriber<String>() {
                             @Override
-                            public void execute(Realm realm) {
-                                // TODO: 2017/3/17 更改上传URL显示格式
-                                String en = FileUtil.getExtensionName(audioUrl);
-                                StringBuilder sb = new StringBuilder(FileUtil.getFileNameNoEx(audioUrl));
+                            public void onSucceed(String s) {
+                                L.i(s + ":::  audio upload success");
+                                final String audioUrl = OssHelper.getAudioUrl(s);
+                                RRealm.exe(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        // TODO: 2017/3/17 更改上传URL显示格式
+//                                String en = FileUtil.getExtensionName(audioUrl);
+//                                StringBuilder sb = new StringBuilder(FileUtil.getFileNameNoEx(audioUrl));
 //                                String audioUrlAndTime = audioUrl + "--" + mAudioRecordPlayable.getDuration() / 1000;
 
-                                sb.append("_t_")
-                                        .append(mAudioRecordPlayable.getDuration() / 1000)
-                                        .append(".")
-                                        .append(en);
-
-
-                                UserCache.instance().getUserInfoBean().setVoice_introduce(sb.toString());
+//                                sb.append("_t_")
+//                                        .append(mAudioRecordPlayable.getDuration() / 1000)
+//                                        .append(".")
+//                                        .append(en);
+                                        UserCache.instance().getUserInfoBean().setVoice_introduce(audioUrl);
+                                    }
+                                });
+                                checkUserIco();
                             }
-                        });
-                        checkUserIco();
-                    }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        T_.show(msg);
-                        HnLoading.hide();
-                    }
-                })
+                            @Override
+                            public void onError(int code, String msg) {
+                                T_.show(msg);
+                                HnLoading.hide();
+                            }
+                        })
         );
     }
 
@@ -566,7 +603,6 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         }
     }
 
-
     /**
      * 初始化AudioRecord
      */
@@ -612,7 +648,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             return;
         }
 
-        if(mOnAudioRecordStatus != null){
+        if (mOnAudioRecordStatus != null) {
             mOnAudioRecordStatus.call(true);
         }
 
@@ -635,38 +671,6 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         mTimer.setBase(SystemClock.elapsedRealtime());
     }
 
-    private View.OnTouchListener audioRecordListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                touched = true;
-                initAudioRecord();
-                onStartAudioRecord();
-                over_layout.setVisibility(View.VISIBLE);
-            } else if (event.getAction() == MotionEvent.ACTION_CANCEL
-                    || event.getAction() == MotionEvent.ACTION_UP) {
-                touched = false;
-                onEndAudioRecord(isCancelled(layoutPlayAudio, event));
-                over_layout.setVisibility(View.GONE);
-            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                // 不允许recyclerview 处理滑动事件
-                mRecyclerView.requestDisallowInterceptTouchEvent(true);
-                touched = false;
-                boolean isCancel = isCancelled(layoutPlayAudio, event);
-                if(isCancel){
-                    timpContainer.setBackgroundResource(R.drawable.nim_cancel_record_red_bg);
-                }else {
-                    timpContainer.setBackgroundResource(0);
-                }
-                cancelAudioRecord(isCancel);
-            }
-
-            return true;
-        }
-    };
-
-
     @Override
     protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.layout_audio_record);
@@ -683,23 +687,10 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     private void onEndAudioRecord(boolean cancel) {
         mActivity.getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         audioMessageHelper.completeRecord(cancel);
-        if(mOnAudioRecordStatus != null) {
+        if (mOnAudioRecordStatus != null) {
             mOnAudioRecordStatus.call(false);
         }
         stopAudioRecordAnim();
-    }
-
-    // 滑动到指定view区域取消录音判断
-    private static boolean isCancelled(View view, MotionEvent event) {
-        int[] location = new int[2];
-        view.getLocationOnScreen(location);
-
-        RectF rectf = new RectF(location[0],location[1],location[0] + view.getWidth()
-                , location[1] + view.getHeight());
-        if (rectf.contains(event.getRawX(),event.getRawY())) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -722,7 +713,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                bindAudioIntroduce(holder,userInfoBean);
+                bindAudioIntroduce(holder, userInfoBean);
             }
         }));
 
@@ -867,23 +858,23 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
             //// TODO: 2017/3/17 兼容上版本ios录音格式 --
 
-            String[] voiceIntroduces ;
+            String[] voiceIntroduces;
             voiceIntroduces = audioUrlAndTime.split("--");
             if (voiceIntroduces.length == 2) {
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
                 tv_record_second.setText(Long.parseLong(voiceIntroduces[1]) + "″");
-                mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0] + ".aac",Long.parseLong(voiceIntroduces[1]));
+                mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0] + ".aac", Long.parseLong(voiceIntroduces[1]));
             } else {
                 voiceIntroduces = audioUrlAndTime.split("_t_");
                 String introd1 = voiceIntroduces[1];
                 String duration = FileUtil.getFileNameNoEx(introd1);
 
-                if(voiceIntroduces.length == 2) {
+                if (voiceIntroduces.length == 2) {
                     iv_play.setVisibility(View.VISIBLE);
                     tv_record_second.setVisibility(View.VISIBLE);
                     tv_record_second.setText(duration + "″");
-                    mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0] + ".aac",Long.parseLong(duration));
+                    mAudioRecordPlayable = new AudioRecordPlayable(audioUrlAndTime, Long.parseLong(duration));
                 }
             }
         }
@@ -897,14 +888,14 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         };
 
-        mOnAudioRecordStatus = new Action1<Boolean>(){
+        mOnAudioRecordStatus = new Action1<Boolean>() {
             @Override
             public void call(Boolean aBoolean) {
-                if(aBoolean){
+                if (aBoolean) {
                     record_layout.setBackgroundResource(R.drawable.recording_dise_s);
                     iv_audio_record.setImageResource(R.drawable.recording_2_s);
                     tv_audio_record.setTextColor(getResources().getColor(R.color.white));
-                }else {
+                } else {
                     record_layout.setBackgroundResource(R.drawable.recording_dise);
                     iv_audio_record.setImageResource(R.drawable.recording_2_n);
                     tv_audio_record.setTextColor(getResources().getColor(R.color.main_text_color));
@@ -916,14 +907,14 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         iv_play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mAudioRecordPlayable == null ) {
+                if (mAudioRecordPlayable == null) {
                     return;
                 }
                 mPathAudioControl.startPlayAudioDelay(0, mAudioRecordPlayable, new BaseAudioControl.AudioControlListener() {
                     @Override
                     public void onAudioControllerReady(Playable playable) {
                         iv_play.setImageResource(R.drawable.voice_playing_n);
-                        Animation animation = AnimationUtils.loadAnimation(mActivity,R.anim.base_rotate);
+                        Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.base_rotate);
                         animation.setInterpolator(new LinearInterpolator());
                         animation.setRepeatMode(Animation.RESTART);
                         animation.setRepeatCount(Animation.INFINITE);
@@ -1011,7 +1002,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         mHnAddImageAdapter.resetData(mPhones);
 
 
-        GridLayoutManager layoutManager = new GridLayoutManager(mActivity,3);
+        GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 3);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -1049,8 +1040,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 //                if (position == 5) {
 //                    mHnAddImageAdapter.notifyItemChanged(position);
 //                } else {
-                    mHnAddImageAdapter.notifyItemRemoved(position);
-                    mHnAddImageAdapter.notifyItemRangeChanged(position, 6);
+                mHnAddImageAdapter.notifyItemRemoved(position);
+                mHnAddImageAdapter.notifyItemRangeChanged(position, 6);
 //                }
             }
         });
@@ -1344,16 +1335,22 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     }
 
-    private AudioRecordPlayable mAudioRecordPlayable;
-
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
+
         // 可播放
         // 上传语音
 
-        String newName = System.currentTimeMillis() / 1000 + ".aac";
-        if (FileUtils.rename(audioFile,newName)) {
-            mAudioRecordPlayable = new AudioRecordPlayable(FileUtils.getDirName(audioFile)  + newName,audioLength);
+        StringBuilder sb = new StringBuilder();
+        sb.append(System.currentTimeMillis() / 1000)
+                .append("_t_")
+                .append(audioLength / 1000)
+                .append(".")
+                .append("aac");
+
+        String newName = sb.toString();
+        if (FileUtils.rename(audioFile, newName)) {
+            mAudioRecordPlayable = new AudioRecordPlayable(FileUtils.getDirName(audioFile) + newName, audioLength);
             if (mOnAudioRecordSuccess != null) {
                 mOnAudioRecordSuccess.call();
             }

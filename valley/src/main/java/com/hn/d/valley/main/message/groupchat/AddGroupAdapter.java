@@ -20,45 +20,14 @@ import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import rx.functions.Action2;
-
 /**
  * Created by hewking on 2017/3/9.
  */
-public class AddGroupAdapter extends RModelAdapter<AbsContactItem> {
+public class AddGroupAdapter extends BaseContactSelectAdapter {
 
-    private Action2 action;
-
-    private List<String> mSelectedUsers;
-
-    private ContactSelectUIVIew.Options options;
-
-    private SparseBooleanArray mCheckStats = new SparseBooleanArray();
-
-    public AddGroupAdapter(Context context, ContactSelectUIVIew.Options options) {
-        super(context);
-        this.options = options;
-        setModel(options.mode);
-
-    }
-
-    public void setAction(Action2 action) {
-        this.action = action;
-    }
-
-    @Override
-    protected int getItemLayoutId(int viewType) {
-        if(viewType == ItemTypes.FUNC) {
-            return R.layout.item_recent_search;
-        }
-        return R.layout.item_firends_addgroup_item;
-    }
-
-    public void setSelecteUids(List<String> selecteUids) {
-        this.mSelectedUsers = selecteUids;
+    public AddGroupAdapter(Context context, BaseContactSelectUIVIew.Options options) {
+        super(context,options);
     }
 
     @Override

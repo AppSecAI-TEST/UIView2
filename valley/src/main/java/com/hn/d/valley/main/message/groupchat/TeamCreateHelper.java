@@ -16,6 +16,7 @@ import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
+import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
@@ -129,7 +130,7 @@ public class TeamCreateHelper {
     }
 
 
-    public static void invite(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, final RequestCallback requestCallback, final String gid) {
+    public static void invite(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, final RequestCallback requestCallback, final String gid, final Action1<Boolean> successAction) {
         requestCallback.onStart();
 
        uiBaseDataView.add(Observable.just(absContactItems)
@@ -153,6 +154,9 @@ public class TeamCreateHelper {
             @Override
             public void onSucceed(String bean) {
                 requestCallback.onSuccess(bean);
+                if (successAction != null) {
+                    successAction.call(true);
+                }
             }
 
             @Override
@@ -177,18 +181,18 @@ public class TeamCreateHelper {
         callback.onStart();
 
         uiBaseDataView.add(Observable.just(absContactItems)
-                .flatMap(new Func1<List<AbsContactItem>, Observable<List<FriendBean>>>() {
+                .flatMap(new Func1<List<AbsContactItem>, Observable<List<GroupMemberBean>>>() {
                     @Override
-                    public Observable<List<FriendBean>> call(List<AbsContactItem> absContactItem) {
-                        List<FriendBean> beanlist = new ArrayList();
+                    public Observable<List<GroupMemberBean>> call(List<AbsContactItem> absContactItem) {
+                        List<GroupMemberBean> beanlist = new ArrayList();
                         for (AbsContactItem bean : absContactItem) {
-                            beanlist.add(((ContactItem)bean).getFriendBean());
+                            beanlist.add(((GroupMemberItem)bean).getMemberBean());
                         }
                         return Observable.just(beanlist);
                     }
-                }).flatMap(new Func1<List<FriendBean>, Observable<String>>() {
+                }).flatMap(new Func1<List<GroupMemberBean>, Observable<String>>() {
                     @Override
-                    public Observable<String> call(List<FriendBean> friendBeen) {
+                    public Observable<String> call(List<GroupMemberBean> friendBeen) {
                         return RRetrofit.create(GroupChatService.class)
                                 .changeOwner(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
                                 .compose(Rx.transformer(String.class));

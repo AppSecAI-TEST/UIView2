@@ -2,10 +2,12 @@ package com.hn.d.valley.main.friend;
 
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmObject;
+
 /**
  * Created by hewking on 2017/3/13.
  */
-public class GroupBean {
+public class GroupBean extends RealmObject{
 
 
     /**

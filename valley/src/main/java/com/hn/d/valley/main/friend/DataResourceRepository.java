@@ -1,5 +1,8 @@
 package com.hn.d.valley.main.friend;
 
+import com.hn.d.valley.main.message.provider.ContactDataProvider;
+import com.hn.d.valley.main.message.provider.GroupListProvider;
+import com.hn.d.valley.main.message.provider.MsgDataProvider;
 import com.hn.d.valley.main.message.query.TextQuery;
 
 import java.util.ArrayList;
@@ -10,10 +13,7 @@ import java.util.List;
  */
 public class DataResourceRepository implements IDataResource.IDataRepository {
 
-    private int[] itemTypes;
-
     private DataResourceRepository(){}
-
 
     private static class Holder {
         private static DataResourceRepository sInstance = new DataResourceRepository();
@@ -37,10 +37,15 @@ public class DataResourceRepository implements IDataResource.IDataRepository {
 
     @Override
     public List<AbsContactItem> provide(int type, TextQuery query) {
-
         switch (type) {
             case ItemTypes.PHONECOTACT:
                 return PhoneContactDataProvider.getInstance().provide(query);
+            case ItemTypes.MSG:
+                return MsgDataProvider.provide(query);
+            case ItemTypes.FRIEND:
+                return ContactDataProvider.getInstance().provide(query);
+            case ItemTypes.GROUP:
+                return GroupListProvider.getInstance().provide(query);
             default:
                 return new ArrayList<>();
         }

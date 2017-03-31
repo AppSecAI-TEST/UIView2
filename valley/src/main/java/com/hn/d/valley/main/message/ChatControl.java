@@ -233,6 +233,14 @@ public class ChatControl {
         }
 
         @Override
+        public int getItemType(int position) {
+
+//            if
+
+            return super.getItemType(position);
+        }
+
+        @Override
         public void onViewDetachedFromWindow(RBaseViewHolder holder) {
             super.onViewDetachedFromWindow(holder);
             final View view = holder.v(R.id.message_item_audio_playing_animation);

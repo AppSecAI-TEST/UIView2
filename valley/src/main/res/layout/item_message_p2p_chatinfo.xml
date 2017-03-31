@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_white_bg_selector"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/base_xhdpi">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:gravity="center_vertical">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <include layout="@layout/item_headimg_name_view" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_user_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/base_xhdpi"
+            android:src="@drawable/base_next" />
+    </LinearLayout>
+
+    <include layout="@layout/item_divider_line" />
+
+    <TextView
+        android:id="@+id/tv_add_group"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:text="+ 发起群聊"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/default_text_size" />
+
+</LinearLayout>

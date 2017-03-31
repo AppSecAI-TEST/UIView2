@@ -36,6 +36,7 @@ import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.ContactService;
 
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
@@ -170,12 +173,12 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             @Override
             public int compare(AbsContactItem o1, AbsContactItem o2) {
 
-                if (o1.getGroupText() == "") {
+                if (o1.getGroupText().equals("")) {
                     L.i(o1.getGroupText());
                     return -1;
                 }
 
-                if (o2.getGroupText() == "") {
+                if (o2.getGroupText().equals("")) {
                     return 1;
                 }
 
@@ -219,7 +222,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
     public void loadData() {
-        mSubscriptions.add(RRetrofit.create(ContactService.class)
+        mSubscriptions.add(RRetrofit.create(ContactService.class, RRetrofit.CacheType.MAX_AGE)
                 .friends(Param.buildMap("uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformer(FriendListModel.class))
                 .subscribe(new BaseSingleSubscriber<FriendListModel>() {
@@ -237,6 +240,9 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                         }
                         onUILoadFinish();
                         List<FriendBean> data_list = bean.getData_list();
+
+                        saveToRealm(data_list);
+
                         resetData(data_list);
                         L.i("friends onsucceed");
                     }
@@ -247,6 +253,20 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
                     }
                 }));
+    }
+
+    private void saveToRealm(final List<FriendBean> data_list) {
+        final RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
+
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                results.deleteAllFromRealm();
+                for(FriendBean bean : data_list) {
+                    realm.copyToRealm(bean);
+                }
+            }
+        });
     }
 
 

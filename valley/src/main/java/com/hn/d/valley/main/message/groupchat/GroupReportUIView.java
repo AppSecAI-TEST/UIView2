@@ -3,12 +3,14 @@ package com.hn.d.valley.main.message.groupchat;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -31,9 +33,11 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
             return R.layout.item_button_view;
         }
 
+        if (vType == 0) {
+            return R.layout.item_single_text_view;
+        }
 
-
-        return R.layout.item_single_text_view;
+        return R.layout.item_radio_view;
     }
 
     @NonNull
@@ -44,6 +48,11 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
     @Override
     protected void createItems(List<ViewItemInfo> items) {
+
+        final int line = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
+        final int left = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
+
+
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -52,47 +61,42 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemCallback() {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
             @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("骚扰辱骂");
-                holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+            public void onBindView(RBaseViewHolder holder, final int posInData, ViewItemInfo dataBean) {
+                initItem(holder,"骚扰辱骂", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemCallback() {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("淫秽色情");
-                holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+                initItem(holder,"淫秽色情",posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemCallback() {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("血腥暴力");
-                holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+                initItem(holder,"血腥暴力", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemCallback() {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("欺诈(酒托，话费托等诈骗行为)");
-                holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+                initItem(holder,"欺诈(酒托，话费托等诈骗行为)", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemCallback() {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("违法行为(诈骗，违禁品，反动等)");
-                holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
+                initItem(holder,"违法行为(诈骗，违禁品，反动等)", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * 10) {
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * left) {
             @Override
             public void onBindView(final RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
@@ -107,8 +111,22 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         }));
     }
 
+    private void initItem(RBaseViewHolder holder,String desc, final int posInData) {
+        ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+        infoLayout.setItemText(desc);
 
-    public  class ReportModeAdapter extends RExBaseAdapter<String,ItemRecyclerUIView.ViewItemInfo,String>{
+        holder.v(R.id.radio_view).setEnabled(false);
+        holder.v(R.id.radio_view).setClickable(false);
+        infoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRExBaseAdapter.setSelectorPosition(posInData);
+            }
+        });
+    }
+
+
+    public  class ReportModeAdapter extends RExBaseAdapter<String,ViewItemInfo,String>{
 
         public ReportModeAdapter(Context context,List<ViewItemInfo> items) {
             super(context,items);
@@ -121,7 +139,7 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, int posInData, ItemRecyclerUIView.ViewItemInfo dataBean) {
+        protected void onBindDataView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
             GroupReportUIView.this.onBindDataView(holder, posInData, dataBean);
         }
 
@@ -133,18 +151,22 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         @Override
         protected void onBindModelView(int model, boolean isSelector, final RBaseViewHolder holder, int position, ViewItemInfo bean) {
             super.onBindModelView(model, isSelector, holder, position, bean);
-            if (position > 1 || position < 5) {
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        holder.itemView.setSelected(true);
-                    }
-                });
+            if (position > 0 && position < 6) {
+                CompoundButton compoundButton = holder.v(R.id.radio_view);
+                if (isSelector) {
+                    compoundButton.setVisibility(View.VISIBLE);
+                    compoundButton.setChecked(isSelector);
+                } else {
+                    compoundButton.setVisibility(View.INVISIBLE);
+                }
             }
         }
 
         @Override
         protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
+            CompoundButton compoundButton = viewHolder.v(R.id.radio_view);
+            compoundButton.setChecked(false);
+            compoundButton.setVisibility(View.INVISIBLE);
             return true;
         }
     }

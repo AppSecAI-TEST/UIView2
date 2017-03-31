@@ -9,8 +9,12 @@ public interface ItemTypes {
 
     int FRIEND = 1;
 
-    int GFOUP = 2;
+    int GROUP = 2;
+
+    int GROUPMEMBER = 4;
 
     int PHONECOTACT = 3;
+
+    int MSG = 5;
 
 }

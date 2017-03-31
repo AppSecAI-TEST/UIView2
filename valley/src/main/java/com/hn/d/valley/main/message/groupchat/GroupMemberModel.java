@@ -29,6 +29,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.functions.Action1;
 import rx.functions.Action3;
 
 /**
@@ -98,7 +99,12 @@ public class GroupMemberModel {
                 ContactSelectUIVIew.start(contentUIView.getILayout(),new ContactSelectUIVIew.Options(),uids,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
-                        TeamCreateHelper.invite(uiBaseDataView, absContactItems,requestCallback,bean.getGid());
+                        TeamCreateHelper.invite(uiBaseDataView, absContactItems,requestCallback,bean.getGid(), new Action1<Boolean>() {
+                                    @Override
+                                    public void call(Boolean aBoolean) {
+                                        loadData(bean);
+                                    }
+                                });
                     }
                 });
             }
@@ -155,7 +161,7 @@ public class GroupMemberModel {
                     @Override
                     public void onSucceed(GroupMemberList beans) {
                         tv_group_member_num.setText(tv_group_member_num.getContext().getResources().getString(R.string.group_member_num)
-                                + "(" + bean.getMemberCount() + "/" + bean.getMemberLimit() + ")");
+                                + "(" + beans.getData_count() + "/" + bean.getMemberLimit() + ")");
                        mAdapter.resetData(beans.getData_list());
                     }
                 });
