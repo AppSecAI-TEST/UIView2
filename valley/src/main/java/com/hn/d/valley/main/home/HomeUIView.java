@@ -13,6 +13,9 @@ import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.skin.ISkin;
+import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.iview.VideoRecordUIView;
@@ -20,17 +23,17 @@ import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
+import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.main.home.recommend.RecommendUIView2;
 import com.lzy.imagepicker.ImagePickerHelper;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import rx.functions.Action0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：首页
+ * 类的描述：首页/恐龙谷
  * 创建人员：Robi
  * 创建时间：2016/12/16 9:44
  * 修改人员：Robi
@@ -38,15 +41,14 @@ import rx.functions.Action0;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HomeUIView extends BaseUIView {
+public class HomeUIView extends BaseUIView implements LoadStatusCallback {
 
     //    @BindView(R.id.home_nav_layout)
 //    CommonTabLayout mHomeNavLayout;
     //    @BindView(R.id.view_pager)
 //    UIViewPager mViewPager;
-    @BindView(R.id.home_layout)
+    @BindView(R.id.ui_layout)
     UILayoutImpl mHomeLayout;
-    @BindView(R.id.home_nav_layout)
     SegmentTabLayout mHomeNavLayout;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
     private RecommendUIView2 mRecommendUIView2;
@@ -57,7 +59,7 @@ public class HomeUIView extends BaseUIView {
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
-        inflate(R.layout.view_main_home_layout);
+        inflate(R.layout.ui_layout);
     }
 
     @Override
@@ -77,7 +79,7 @@ public class HomeUIView extends BaseUIView {
 //        mHomeNavLayout.setCurrentTab(1, false);
 
         if (mRecommendUIView2 == null) {
-            mRecommendUIView2 = new RecommendUIView2();
+            mRecommendUIView2 = new RecommendUIView2(this);
             mRecommendUIView2.bindOtherILayout(mOtherILayout);
             mHomeLayout.startIView(mRecommendUIView2, new UIParam(false));
         } else {
@@ -167,6 +169,7 @@ public class HomeUIView extends BaseUIView {
 
             }
         });
+        updateSkin();
     }
 
     private void changeViewPager(int position) {
@@ -177,7 +180,7 @@ public class HomeUIView extends BaseUIView {
         boolean isRightToLeft = position < lastPosition;
         if (position == 0) {
             if (mCircleUIView == null) {
-                mCircleUIView = new CircleUIView();
+                mCircleUIView = new CircleUIView(this);
                 mCircleUIView.bindOtherILayout(mOtherILayout);
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
                 mHomeLayout.startIView(mCircleUIView);
@@ -187,7 +190,7 @@ public class HomeUIView extends BaseUIView {
             }
         } else if (position == 1) {
             if (mRecommendUIView2 == null) {
-                mRecommendUIView2 = new RecommendUIView2();
+                mRecommendUIView2 = new RecommendUIView2(this);
                 mRecommendUIView2.bindOtherILayout(mOtherILayout);
                 mRecommendUIView2.setIsRightJumpLeft(isRightToLeft);
                 mHomeLayout.startIView(mRecommendUIView2);
@@ -226,7 +229,23 @@ public class HomeUIView extends BaseUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return null;
+        return super.getTitleBar()
+                .setTitleString("")
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.switch_camera_n, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        HomeUIView.this.onClick();
+                    }
+                }))
+                .setOnInitTitleLayout(new TitleBarPattern.OnInitTitleLayout() {
+                    @Override
+                    public void onInitLayout(RTitleCenterLayout parent) {
+                        mHomeNavLayout = (SegmentTabLayout) LayoutInflater.from(mActivity)
+                                .inflate(R.layout.segment_tab_layout, parent)
+                                .findViewById(R.id.tab_layout);
+                        parent.setTitleView(mHomeNavLayout);
+                    }
+                });
     }
 
     @NonNull
@@ -244,7 +263,6 @@ public class HomeUIView extends BaseUIView {
         }
     }
 
-    @OnClick(R.id.publish_view)
     public void onClick() {
         //发布动态
         UIItemDialog.build()
@@ -275,5 +293,21 @@ public class HomeUIView extends BaseUIView {
                         }));
                     }
                 }).showDialog(mOtherILayout);
+    }
+
+    @Override
+    public void onLoadStart() {
+        showLoadView();
+    }
+
+    @Override
+    public void onLoadEnd() {
+        hideLoadView();
+    }
+
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        mHomeNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeColor());
     }
 }

@@ -37,10 +37,15 @@ import rx.functions.Action1;
 @Deprecated
 public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
 
+    LoadStatusCallback mLoadStatusCallback;
     /**
      * 需要过滤的tag
      */
     private Tag filterTag;
+
+    public RecommendUIView(LoadStatusCallback loadStatusCallback) {
+        mLoadStatusCallback = loadStatusCallback;
+    }
 
     public void setFilterTag(Tag filterTag) {
         this.filterTag = filterTag;
@@ -75,6 +80,7 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
 
     @Override
     protected void onUILoadData(final String page) {
+        mLoadStatusCallback.onLoadStart();
         add(RRetrofit.create(UserInfoService.class)
                 .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
                         "type:" + 2, "page:" + page, "tag:" + getFilterTagId(), "first_id:" + first_id, "last_id:" + last_id))
@@ -95,6 +101,7 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                     @Override
                     public void onEnd() {
                         onUILoadDataFinish();
+                        mLoadStatusCallback.onLoadEnd();
                     }
 
                     @Override

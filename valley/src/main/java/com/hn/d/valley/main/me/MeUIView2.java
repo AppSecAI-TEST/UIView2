@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.skin.ISkin;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
@@ -185,6 +187,9 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 holder.tv(R.id.attention_count).setText(userInfoBean.getAttention_count() + "");
                 holder.tv(R.id.status_count).setText(userInfoBean.getDiscuss_count() + "");
 
+                holder.tv(R.id.fans_count).setTextColor(SkinHelper.getSkin().getThemeColor());
+                holder.tv(R.id.attention_count).setTextColor(SkinHelper.getSkin().getThemeColor());
+                holder.tv(R.id.status_count).setTextColor(SkinHelper.getSkin().getThemeColor());
 
             }
         }));
@@ -340,6 +345,22 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
+        //个性装扮
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                itemInfoLayout.setItemText(getString(R.string.personalized_dress));
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new SkinManagerUIView());
+                    }
+                });
+            }
+        }));
+
         //邀请好友
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
@@ -376,5 +397,11 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 });
             }
         }));
+    }
+
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        mRExBaseAdapter.notifyItemChanged(0);
     }
 }

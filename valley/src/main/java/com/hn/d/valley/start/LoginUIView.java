@@ -1,6 +1,7 @@
 package com.hn.d.valley.start;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -20,6 +21,8 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -88,6 +91,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         inflate(R.layout.view_login);
         mBaseRootLayout.setBackgroundResource(R.drawable.login_pic);
         fixInsertsTop();
+
+        ResUtil.setBgDrawable(baseContentLayout.findViewById(R.id.login_view), createLoginDrawable());
+        ((TextView) baseContentLayout.findViewById(R.id.register_view)).setTextColor(SkinHelper.getSkin().getThemeColor());
     }
 
     @Override
@@ -417,4 +423,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         return translateAnimation;
     }
 
+    private Drawable createLoginDrawable() {
+        return ResUtil.generateRoundRippleMaskDrawable(getResources().getDimensionPixelOffset(R.dimen.little_round_radius), Color.WHITE,
+                SkinHelper.getSkin().getThemeDarkColor(), SkinHelper.getSkin().getThemeColor());
+    }
 }

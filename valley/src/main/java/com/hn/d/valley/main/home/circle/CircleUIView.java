@@ -20,6 +20,7 @@ import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
+import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -43,6 +44,12 @@ import rx.functions.Action1;
  * Version: 1.0.0
  */
 public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
+
+    LoadStatusCallback mLoadStatusCallback;
+
+    public CircleUIView(LoadStatusCallback loadStatusCallback) {
+        mLoadStatusCallback = loadStatusCallback;
+    }
 
     @Override
     protected RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> initRExBaseAdapter() {
@@ -77,6 +84,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
 
     @Override
     protected void onUILoadData(String page) {
+        mLoadStatusCallback.onLoadStart();
         add(RRetrofit.create(UserInfoService.class)
                 .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
                         "type:" + 1, "page:" + page, "first_id:" + first_id, "last_id:" + last_id))
@@ -99,6 +107,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                     @Override
                     public void onEnd() {
                         onUILoadDataFinish();
+                        mLoadStatusCallback.onLoadEnd();
                     }
 
                     @Override

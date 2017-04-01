@@ -21,7 +21,10 @@ import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.model.ViewPattern;
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.RGestureDetector;
+import com.angcyo.uiview.skin.ISkin;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
@@ -208,6 +211,7 @@ public class MainUIView extends BaseUIView {
         });
 
         mBottomNavLayout.setTabData(tabs);
+        onSkinChanged(SkinHelper.getSkin());
 
         try {
             ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
@@ -379,6 +383,18 @@ public class MainUIView extends BaseUIView {
                     HnLoading.hide();
                 }
             });
+        }
+    }
+
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        if (mBottomNavLayout != null) {
+            ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
+            for (int i = 0; i < (group).getChildCount(); i++) {
+                ResUtil.setBgDrawable(group.getChildAt(i), skin.getThemeBackgroundSelector());
+            }
+            mBottomNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeColor());
         }
     }
 }

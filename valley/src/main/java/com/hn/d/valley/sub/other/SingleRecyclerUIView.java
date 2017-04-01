@@ -25,7 +25,7 @@ public abstract class SingleRecyclerUIView<T> extends BaseRecyclerUIView<String,
         return super.getTitleBar()
                 .setFloating(false)
                 .setTitleHide(false)
-                .setTitleBarBGColor(mActivity.getResources().getColor(R.color.theme_color_primary));
+                .setTitleBarBGColor(getTitleBarBGColor());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.home.recommend;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.viewpager.FadeInOutPageTransformer;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
@@ -46,7 +48,12 @@ public class RecommendUIView2 extends BaseContentUIView {
     ArrayList<Tag> mAllTags, mMyTags;
 
     BaseRecyclerUIView mLastUIView;
+    LoadStatusCallback mLoadStatusCallback;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
+
+    public RecommendUIView2(LoadStatusCallback loadStatusCallback) {
+        mLoadStatusCallback = loadStatusCallback;
+    }
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -69,6 +76,12 @@ public class RecommendUIView2 extends BaseContentUIView {
         super.onViewLoad();
         mAllTags = new ArrayList<>();
         mMyTags = new ArrayList<>();
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        mLoadStatusCallback.onLoadStart();
         TagsControl.getTags(new Action1<List<Tag>>() {
             @Override
             public void call(List<Tag> tags) {
@@ -154,6 +167,8 @@ public class RecommendUIView2 extends BaseContentUIView {
         });
 
         mSlidTabLayout.setViewPager(mViewPager);
+
+        updateSkin();
     }
 
     private void changeViewPager(int position) {
@@ -179,7 +194,7 @@ public class RecommendUIView2 extends BaseContentUIView {
         mViewPager.setAdapter(new UIPagerAdapter() {
             @Override
             protected IView getIView(int position) {
-                final RecommendUIView uiView = new RecommendUIView();
+                final RecommendUIView uiView = new RecommendUIView(mLoadStatusCallback);
                 uiView.bindOtherILayout(mOtherILayout);
                 uiView.setFilterTag(mMyTags.get(position));
                 if (position == mViewPager.getCurrentItem()) {
@@ -207,5 +222,11 @@ public class RecommendUIView2 extends BaseContentUIView {
         if (mLastUIView != null) {
             mLastUIView.scrollToTop();
         }
+    }
+
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        mSlidTabLayout.setTextSelectColor(skin.getThemeColor());
     }
 }

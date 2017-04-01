@@ -11,6 +11,7 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.cache.UserCache;
@@ -115,7 +116,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
                 .setTitleString("")
                 .setOnInitTitleLayout(new TitleBarPattern.OnInitTitleLayout() {
                     @Override
-                    public void onInitLayout(RelativeLayout parent) {
+                    public void onInitLayout(RTitleCenterLayout parent) {
                         View.inflate(mActivity, R.layout.item_segment_layout, parent);
                         tabLayout = (SegmentTabLayout) parent.findViewById(R.id.tablayout_new_friend);
                         initTablayout();
