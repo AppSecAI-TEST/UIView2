@@ -70,7 +70,7 @@ public class FriendUIView extends BaseUIView {
             }
         }));
 
-        return super.getTitleBar().setTitleString(mActivity.getString(R.string.friend)).setRightItems(rightItems);
+        return super.getTitleBar().setShowBackImageView(true).setTitleString(mActivity.getString(R.string.friend)).setRightItems(rightItems);
     }
 
     @Override

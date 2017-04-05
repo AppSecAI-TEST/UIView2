@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.angcyo.uiview.utils.storage.StorageUtil;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.ChatAdapter;
 import com.hn.d.valley.main.message.ChatControl;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -22,7 +23,7 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
 
     private boolean mIsNeedPlayNext = false;
 
-    private ChatControl.ChatAdapter mAdapter = null;
+    private ChatAdapter mAdapter = null;
 
     private IMMessage mItem = null;
 
@@ -134,7 +135,7 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
         }
     }
 
-    private boolean playNextAudio(ChatControl.ChatAdapter tAdapter, IMMessage messageItem) {
+    private boolean playNextAudio(ChatAdapter tAdapter, IMMessage messageItem) {
         List<?> list = tAdapter.getAllDatas();
         int index = 0;
         int nextIndex = -1;
@@ -186,7 +187,7 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
         setPlayNext(false, null, null);
     }
 
-    public void setPlayNext(boolean isPlayNext, ChatControl.ChatAdapter adapter, IMMessage item) {
+    public void setPlayNext(boolean isPlayNext, ChatAdapter adapter, IMMessage item) {
         mIsNeedPlayNext = isPlayNext;
         mAdapter = adapter;
         mItem = item;

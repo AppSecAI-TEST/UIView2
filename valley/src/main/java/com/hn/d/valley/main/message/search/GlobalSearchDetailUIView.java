@@ -10,6 +10,7 @@ import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.TimeUtil;
@@ -17,6 +18,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.message.query.TextQuery;
+import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -55,9 +57,11 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
+
+
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("群消息列表");
+        return super.getTitleBar().setTitleString("群消息记录");
     }
 
     @Override
@@ -92,6 +96,7 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
 
     @Override
     public void onSearchSuccess(List<AbsContactItem> items) {
+        showContentLayout();
         mRExBaseAdapter.resetData(items);
     }
 
@@ -102,7 +107,7 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
 
     @Override
     public void onRequestFinish() {
-
+        onUILoadDataFinish();
     }
 
     @Override
@@ -113,6 +118,12 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
     @Override
     public void onRequestError(int code, @NonNull String msg) {
 
+    }
+
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        return super.initItemDecoration().setMarginStart(getResources().getDimensionPixelSize(R.dimen.base_xhdpi))
+                .setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.base_xhdpi));
     }
 
     public class SearchMessageListAdatper extends RExBaseAdapter<String,AbsContactItem,String>{
@@ -167,11 +178,22 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
 
                 if (indexRecord.getSessionType() == SessionTypeEnum.P2P) {
                     UserInfoProvider.UserInfo userInfo = DefaultUserInfoProvider.getInstance().getUserInfo(indexRecord.getSessionId());
-                    iv_icon.setImageThumbUrl(userInfo.getAvatar());
+                    iv_icon.setImageUrl(userInfo.getAvatar());
                 } else {
                     Team team = TeamDataCache.getInstance().getTeamById(indexRecord.getSessionId());
-                    iv_icon.setImageThumbUrl(team.getIcon());
+                    iv_icon.setImageUrl(team.getIcon());
                 }
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (SessionTypeEnum.Team == sessionType) {
+                            SessionHelper.startTeamSession(mOtherILayout, sessionId, SessionTypeEnum.Team, imMessage);
+                        } else if (SessionTypeEnum.P2P == sessionType) {
+                            SessionHelper.startP2PSession(mOtherILayout, sessionId, SessionTypeEnum.P2P, imMessage);
+                        }
+                    }
+                });
 
                 msg_content_view.setText(imMessage.getContent());
 
@@ -201,6 +223,6 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
     @NonNull
     @Override
     protected LayoutState getDefaultLayoutState() {
-        return LayoutState.CONTENT;
+        return LayoutState.LOAD;
     }
 }

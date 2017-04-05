@@ -38,7 +38,7 @@ public class AudioViewControl {
     private final MessageAudioControl audioControl;
     RBaseViewHolder mViewHolder;
     IMMessage mIMMessage;
-    ChatControl.ChatAdapter mChatAdapter;
+    ChatAdapter mChatAdapter;
 
     private MessageAudioControl.AudioControlListener onPlayListener = new MessageAudioControl.AudioControlListener() {
 
@@ -63,7 +63,7 @@ public class AudioViewControl {
         }
     };
 
-    public AudioViewControl(Context context, RBaseViewHolder viewHolder, final ChatControl.ChatAdapter adapter, IMMessage message) {
+    public AudioViewControl(Context context, RBaseViewHolder viewHolder, final ChatAdapter adapter, IMMessage message) {
         mViewHolder = viewHolder;
         mIMMessage = message;
         mChatAdapter = adapter;

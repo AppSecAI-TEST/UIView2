@@ -11,10 +11,12 @@ import android.widget.TextView;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.control.MainControl;
+import com.hn.d.valley.start.LoginUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.x5.X5WebUIView;
 
@@ -39,6 +41,8 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             TextView textView = holder.v(R.id.text_view);
             textView.setText(dataBean.itemString);
             textView.setOnClickListener(dataBean.itemClickListener);
+
+            ResUtil.setBgDrawable(textView, LoginUIView.createLoginDrawable(mActivity));
         } else {
             ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
             infoLayout.setItemText(dataBean.itemString);

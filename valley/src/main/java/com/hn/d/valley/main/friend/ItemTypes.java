@@ -17,4 +17,6 @@ public interface ItemTypes {
 
     int MSG = 5;
 
+    int SECTION = 6;
+
 }

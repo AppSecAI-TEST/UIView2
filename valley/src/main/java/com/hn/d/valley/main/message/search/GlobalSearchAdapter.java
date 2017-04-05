@@ -54,40 +54,19 @@ public class GlobalSearchAdapter extends RBaseAdapter<AbsContactItem> {
         this.mOtherLayout = layout;
     }
 
-    public static void display(TextView tv, String text, RecordHitInfo hitInfo) {
-        if (hitInfo == null || hitInfo.isInvalied()) {
-            tv.setText(text);
-            return;
-        }
+    @Override
+    public void resetData(List<AbsContactItem> datas) {
 
-        SpannableStringBuilder sb = new SpannableStringBuilder();
-        SpannableString ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(tv.getResources().getColor(R.color.colorAccent)), hitInfo.start, hitInfo.end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
-        sb.append(ss);
-        tv.setText(sb);
-    }
 
-    public static final void display(TextView tv, String text, List<com.netease.nimlib.sdk.search.model.RecordHitInfo> hitInfos) {
-        if (hitInfos == null || hitInfos.isEmpty()) {
-            tv.setText(text);
-            return;
-        }
-
-        SpannableStringBuilder sb = new SpannableStringBuilder();
-        SpannableString ss = new SpannableString(text);
-        for (com.netease.nimlib.sdk.search.model.RecordHitInfo r : hitInfos) {
-            ss.setSpan(new ForegroundColorSpan(tv.getResources().getColor(R.color.colorAccent)), r.start, r.end + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        }
-
-        sb.append(ss);
-        tv.setText(sb);
+        super.resetData(datas);
     }
 
     @Override
     public int getItemType(int position) {
         return mAllDatas.get(position).getItemType();
     }
+
 
     @Override
     protected int getItemLayoutId(int viewType) {
@@ -117,6 +96,8 @@ public class GlobalSearchAdapter extends RBaseAdapter<AbsContactItem> {
             bindContact(holder, (RecordContactItem) bean);
         }
     }
+
+
 
     private void bindContact(RBaseViewHolder holder, RecordContactItem bean) {
         RecordContactItem friendItem = bean;
@@ -298,6 +279,36 @@ public class GlobalSearchAdapter extends RBaseAdapter<AbsContactItem> {
             r1 = 0;
         }
         return new Object[]{r0, r1};
+    }
+
+    public static void display(TextView tv, String text, RecordHitInfo hitInfo) {
+        if (hitInfo == null || hitInfo.isInvalied()) {
+            tv.setText(text);
+            return;
+        }
+
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        SpannableString ss = new SpannableString(text);
+        ss.setSpan(new ForegroundColorSpan(tv.getResources().getColor(R.color.colorAccent)), hitInfo.start, hitInfo.end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+        sb.append(ss);
+        tv.setText(sb);
+    }
+
+    public static final void display(TextView tv, String text, List<com.netease.nimlib.sdk.search.model.RecordHitInfo> hitInfos) {
+        if (hitInfos == null || hitInfos.isEmpty()) {
+            tv.setText(text);
+            return;
+        }
+
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        SpannableString ss = new SpannableString(text);
+        for (com.netease.nimlib.sdk.search.model.RecordHitInfo r : hitInfos) {
+            ss.setSpan(new ForegroundColorSpan(tv.getResources().getColor(R.color.colorAccent)), r.start, r.end + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        }
+
+        sb.append(ss);
+        tv.setText(sb);
     }
 
 

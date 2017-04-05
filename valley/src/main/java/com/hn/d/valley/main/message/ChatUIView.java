@@ -39,7 +39,6 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
@@ -91,8 +90,6 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     ExEditText mInputView;
     @BindView(R.id.record_view)
     TextView mRecordView;
-    protected ChatControl mChatControl;
-    protected SessionTypeEnum sessionType;
     @BindView(R.id.refresh_layout)
     HnRefreshLayout mRefreshLayout;
     @BindView(R.id.recycler_view)
@@ -127,19 +124,21 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 
     private EmojiLayoutControl mEmojiLayoutControl;
     private CommandLayoutControl mCommandLayoutControl;
+    protected ChatControl mChatControl;
+    protected SessionTypeEnum sessionType;
 
     private int mLastId = View.NO_ID;
     protected AudioRecorder audioMessageHelper;
     protected String mSessionId;
     protected IMMessage mAnchor;
 
+    QueryDirectionEnum direction;
+
+    boolean firstLoad = true;
+
     public ChatUIView() {
     }
 
-//    public P2PChatUIView(String mSessionId, SessionTypeEnum sessionType) {
-//        this.mSessionId = mSessionId;
-//        this.sessionType = sessionType;
-//    }
 
     /**
      * @param sessionId   聊天对象账户
@@ -461,32 +460,9 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                 @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
                 if (direction == RefreshLayout.TOP) {
-                    //加载历史记录
-                    List<IMMessage> allDatas = mChatControl.mChatAdapter.getAllDatas();
-                    IMMessage lastMessage = null;
-                    if (allDatas.isEmpty()) {
-                        lastMessage = getEmptyMessage();
-                    } else {
-                        lastMessage = allDatas.get(0);
-                    }
-                    msgService().queryMessageListEx(lastMessage,
-                            QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
-                            , true)
-                            .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
-                                @Override
-                                public void onResult(int code, List<IMMessage> result, Throwable exception) {
-                                    mRefreshLayout.setRefreshEnd();
-                                    if (code == ResponseCode.RES_SUCCESS) {
-                                        if (result.size() == 0) {
-                                            mRefreshLayout.setRefreshDirection(RefreshLayout.BOTTOM);
-                                        } else {
-                                            mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH);
-                                            mChatControl.mChatAdapter.getAllDatas().addAll(0, result);
-                                            mChatControl.mChatAdapter.notifyDataSetChanged();
-                                        }
-                                    }
-                                }
-                            });
+
+                    onRefreshFetch();
+
                 } else {
                     //显示键盘
                     mRefreshLayout.setRefreshEnd();
@@ -496,6 +472,37 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                 }
             }
         });
+    }
+
+    private void onRefreshFetch() {
+        //加载历史记录
+        List<IMMessage> allDatas = mChatControl.mChatAdapter.getAllDatas();
+        IMMessage lastMessage = null;
+        if (allDatas.isEmpty()) {
+            lastMessage = getEmptyMessage();
+        } else {
+            lastMessage = allDatas.get(0);
+        }
+
+        msgService().queryMessageListEx(lastMessage,
+                QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
+                , true)
+                .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+                    @Override
+                    public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                        mRefreshLayout.setRefreshEnd();
+                        if (code == ResponseCode.RES_SUCCESS) {
+                            if (result.size() == 0) {
+                                mRefreshLayout.setRefreshDirection(RefreshLayout.BOTTOM);
+                            } else {
+                                mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH);
+//                                mChatControl.mChatAdapter.getAllDatas().addAll(0, result);
+//                                mChatControl.mChatAdapter.notifyDataSetChanged();
+                                mChatControl.mChatAdapter.fetchMoreComplete(mRecyclerView,result);
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -546,38 +553,121 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
+
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+
         if (bundle != null) {
             final String lastId = mSessionId;
 
-            mSessionId = bundle.getString(KEY_SESSION_ID);
-            sessionType = SessionTypeEnum.typeOfValue(bundle.getInt(KEY_SESSION_TYPE));
-            mAnchor = (IMMessage) bundle.getSerializable(KEY_ANCHOR);
+            parseBundle(bundle);
 
             setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
 
-            if (!TextUtils.equals(lastId, mSessionId)) {
-                msgService().queryMessageListEx(
-                        anchor(),
-                        QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
-                        , true)
-                        .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
-                            @Override
-                            public void onResult(int code, List<IMMessage> result, Throwable exception) {
-                                if (code == ResponseCode.RES_SUCCESS) {
-                                    mChatControl.resetData(result);
-                                }
-                            }
-                        });
-            }
-            if (mChatControl != null) {
-                mChatControl.mChatAdapter.notifyDataSetChanged();
-            }
+            loadFirst(lastId);
         }
 
         UnreadMessageControl.removeMessageUnread(mSessionId);
 
         msgService().setChattingAccount(mSessionId, sessionType);
         mActivity.setVolumeControlStream(AudioManager.STREAM_VOICE_CALL); // 默认使用听筒播放
+
+    }
+
+    private void loadFirst(String lastId) {
+        if (!TextUtils.equals(lastId, mSessionId)) {
+
+            if (mAnchor == null) {
+                loadFromLocal();
+            } else {
+                loadFromAnchor();
+            }
+
+
+        }
+        if (mChatControl != null) {
+            mChatControl.mChatAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void loadFromAnchor() {
+        this.direction = QueryDirectionEnum.QUERY_NEW;
+        msgService().queryMessageListEx(
+                mAnchor,
+                direction, mActivity.getResources().getInteger(R.integer.message_limit)
+                , true)
+                .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+                    @Override
+                    public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                        if (code != ResponseCode.RES_SUCCESS || exception != null) {
+                            return;
+                        }
+
+                        onAnchorContextMessageLoaded(result);
+                    }
+                });
+
+    }
+
+    private void onAnchorContextMessageLoaded(List<IMMessage> result) {
+
+        if (result == null ) {
+            return;
+        }
+
+        if (firstLoad && mAnchor != null) {
+            result.add(0,mAnchor);
+        }
+
+        mChatControl.mChatAdapter.resetData(result);
+
+        firstLoad = false;
+
+    }
+
+    private void loadFromLocal() {
+        this.direction = QueryDirectionEnum.QUERY_OLD;
+        msgService().queryMessageListEx(
+                anchor(),
+                direction, mActivity.getResources().getInteger(R.integer.message_limit)
+                , true)
+                .setCallback(requestCallback);
+    }
+
+    private RequestCallbackWrapper<List<IMMessage>> requestCallback = new RequestCallbackWrapper<List<IMMessage>>() {
+        @Override
+        public void onResult(int code, List<IMMessage> result, Throwable exception) {
+            if (code == ResponseCode.RES_SUCCESS) {
+                mChatControl.resetData(result);
+            }
+
+            if (code != ResponseCode.RES_SUCCESS || exception != null) {
+                if (direction == QueryDirectionEnum.QUERY_OLD) {
+                    mChatControl.mChatAdapter.fetchMoreFailed();
+                } else if (direction == QueryDirectionEnum.QUERY_NEW) {
+                    mChatControl.mChatAdapter.loadMoreFail();
+                }
+
+                return;
+            }
+
+            if (result != null) {
+                onMessageLoaded(result);
+            }
+        }
+    };
+
+    private void onMessageLoaded(List<IMMessage> result) {
+
+    }
+
+    private void parseBundle(Bundle bundle) {
+        mSessionId = bundle.getString(KEY_SESSION_ID);
+        sessionType = SessionTypeEnum.typeOfValue(bundle.getInt(KEY_SESSION_TYPE));
+        mAnchor = (IMMessage) bundle.getSerializable(KEY_ANCHOR);
     }
 
     @NonNull
@@ -589,7 +679,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         if (mChatControl.mChatAdapter.getAllDatas().size() == 0) {
             return mAnchor == null ? getEmptyMessage() : mAnchor;
         } else {
-            return getEmptyMessage();
+            return mChatControl.mChatAdapter.getAllDatas().get(0);
         }
     }
 

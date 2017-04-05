@@ -145,4 +145,9 @@ public class SkinManagerUIView extends BaseRecyclerUIView<String, ISkin, String>
         skinBeanList.add(new BlueSkin(mActivity));
         return skinBeanList;
     }
+
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+    }
 }

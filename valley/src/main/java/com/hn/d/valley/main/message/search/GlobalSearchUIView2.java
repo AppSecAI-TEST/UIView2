@@ -1,54 +1,38 @@
 package com.hn.d.valley.main.message.search;
 
-import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.Editable;
-import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
+import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
-import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.ExEditText;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.SearchUserBean;
-import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.query.TextQuery;
-import com.hn.d.valley.nim.RNim;
-import com.hn.d.valley.sub.user.UserInfoUIView;
-import com.hn.d.valley.widget.HnGlideImageView;
 import com.jakewharton.rxbinding.widget.RxTextView;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.team.model.Team;
-import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -63,7 +47,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter> implements GlobalSearch.ISearchView {
+public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresenter> implements GlobalSearch.ISearchView {
 
     public static final String ITEMTYPES = "itemTypes";
 
@@ -76,16 +60,22 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
 //    @BindView(R.id.refresh_layout)
 //    RefreshLayout refreshLayout;
 
-    private GlobalSearchAdapter mSearchUserAdapter;
+    private GlobalSearchAdapter2 mSearchUserAdapter;
 
     protected int[] itemTypes;
 
-    public static void start(ILayout mLayout,int[] itemTypes) {
+    private Options option;
+
+    public static void start(ILayout mLayout,Options options, int[] itemTypes) {
         Bundle bundle = new Bundle();
         bundle.putIntArray(ITEMTYPES,itemTypes);
 
-        GlobalSearchUIView targetView = new GlobalSearchUIView();
-        mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
+        GlobalSearchUIView2 targetView = new GlobalSearchUIView2(options);
+        mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.NORMAL));
+    }
+
+    public GlobalSearchUIView2(Options options) {
+        this.option = options;
     }
 
     @Override
@@ -119,8 +109,9 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
 //        refreshLayout.setRefreshDirection(RefreshLayout.TOP);
 //        refreshLayout.setNotifyListener(false);
 
-        mSearchUserAdapter = new GlobalSearchAdapter(mActivity,mOtherILayout);
-        mRecyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mSearchUserAdapter)));
+        mSearchUserAdapter = new GlobalSearchAdapter2(mActivity,mOtherILayout,option);
+//        mRecyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mSearchUserAdapter)));
+        mRecyclerView.addItemDecoration(mSearchItemDecoration);
         mRecyclerView.setAdapter(mSearchUserAdapter);
 
         buildSearchView();
@@ -142,10 +133,10 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
                 });
     }
 
-    @Override
-    public int getDefaultBackgroundColor() {
-        return mActivity.getResources().getColor(R.color.default_base_bg_dark2);
-    }
+//    @Override
+//    public int getDefaultBackgroundColor() {
+//        return mActivity.getResources().getColor(R.color.default_base_bg_dark2);
+//    }
 
     @NonNull
     @Override
@@ -160,13 +151,6 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
         mEmptyTipView.setText("");
     }
 
-//    /**
-//     * 开始搜索用户
-//     */
-//    @OnClick(R.id.search_tip_view)
-//    public void onSearchTipClick() {
-//        mPresenter.search();
-//    }
 
     @Override
     public void onSearchSuccess(List<AbsContactItem> items) {
@@ -176,6 +160,77 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
             mEmptyTipView.setText("");
         }
         mSearchUserAdapter.resetData(items);
+    }
+
+    private RExItemDecoration mSearchItemDecoration  = new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
+        @Override
+        public void getItemOffsets(Rect outRect, int position) {
+            if (position != 0) {
+                outRect.top = getDimensionPixelOffset(R.dimen.base_line);
+
+                AbsContactItem item = mSearchUserAdapter.getItem(position);
+                if (item instanceof SectionItem) {
+                    outRect.top = getDimensionPixelOffset(R.dimen.base_xhdpi);
+                }
+
+                if (position == mSearchUserAdapter.getItemCount() - 1) {
+                    outRect.top = getDimensionPixelOffset(R.dimen.base_xhdpi);
+                }
+            }
+        }
+
+        @Override
+        public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+            int left = 0;
+            int itemViewTop = itemView.getTop();
+            int top = itemViewTop - offsetRect.top;
+
+
+            if (position == 0) {
+                return;
+            }
+
+            AbsContactItem item = mSearchUserAdapter.getItem(position);
+
+            if (item instanceof SectionItem || position == mSearchUserAdapter.getItemCount() - 1) {
+
+                left = 0;
+                paint.setColor(Color.WHITE);
+                offsetRect.set(0, top, left, itemViewTop);
+                canvas.drawRect(offsetRect, paint);
+
+                paint.setColor(getColor(R.color.chat_bg_color));
+            } else {
+                left = getDimensionPixelOffset(R.dimen.base_xhdpi);
+
+                paint.setColor(Color.WHITE);
+                offsetRect.set(0, top, left, itemViewTop);
+                canvas.drawRect(offsetRect, paint);
+
+                paint.setColor(getColor(R.color.line_color));
+            }
+            offsetRect.set(left, top, itemView.getRight(), itemViewTop);
+            canvas.drawRect(offsetRect, paint);
+        }
+    });
+
+    public static class Options {
+
+        public static Options sOptions = new Options(true);
+
+        protected boolean searchFlag  = true;
+
+        public boolean isSearchMuti() {
+            return searchFlag;
+        }
+
+        public void setSearchFlag(boolean searchFlag) {
+            this.searchFlag = searchFlag;
+        }
+
+        public Options(boolean searchFlag) {
+            this.searchFlag = searchFlag;
+        }
     }
 
 

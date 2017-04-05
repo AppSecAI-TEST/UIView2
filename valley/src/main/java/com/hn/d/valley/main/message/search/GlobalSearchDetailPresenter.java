@@ -1,10 +1,12 @@
 package com.hn.d.valley.main.message.search;
 
 import com.angcyo.uiview.mvp.presenter.BasePresenter;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.DataResourceRepository;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.query.TextQuery;
+import com.hn.d.valley.sub.other.SingleRSubscriber;
 
 import java.util.List;
 
@@ -31,20 +33,17 @@ public class GlobalSearchDetailPresenter extends BasePresenter<GlobalSearch.ISea
             }
         }).subscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<AbsContactItem>>() {
+                .subscribe(new BaseSingleSubscriber<List<AbsContactItem>>() {
                     @Override
                     public void onCompleted() {
-
+                        super.onCompleted();
+                        mBaseView.onRequestFinish();
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(List<AbsContactItem> o) {
-                        mBaseView.onSearchSuccess(o);
+                    public void onSucceed(List<AbsContactItem> bean) {
+                        super.onSucceed(bean);
+                        mBaseView.onSearchSuccess(bean);
                     }
                 });
 

@@ -19,6 +19,7 @@ import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView;
+import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.sub.user.NewFriend2UIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
@@ -171,7 +172,7 @@ public class MessageUIView extends BaseUIView {
      * 打开搜索界面
      */
     private void startSearch() {
-        GlobalSearchUIView.start(mOtherILayout,new int[]{ItemTypes.MSG,ItemTypes.FRIEND,ItemTypes.GROUP});
+        GlobalSearchUIView2.start(mOtherILayout, GlobalSearchUIView2.Options.sOptions,new int[]{ItemTypes.FRIEND,ItemTypes.GROUP,ItemTypes.MSG,});
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.hn.d.valley.start;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -86,13 +87,18 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 
     AbortableFuture loginFuture;
 
+    public static Drawable createLoginDrawable(Context context) {
+        return ResUtil.generateRoundRippleMaskDrawable(context.getResources().getDimensionPixelOffset(R.dimen.little_round_radius), Color.WHITE,
+                SkinHelper.getSkin().getThemeDarkColor(), SkinHelper.getSkin().getThemeColor());
+    }
+
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_login);
         mBaseRootLayout.setBackgroundResource(R.drawable.login_pic);
         fixInsertsTop();
 
-        ResUtil.setBgDrawable(baseContentLayout.findViewById(R.id.login_view), createLoginDrawable());
+        ResUtil.setBgDrawable(baseContentLayout.findViewById(R.id.login_view), createLoginDrawable(mActivity));
         ((TextView) baseContentLayout.findViewById(R.id.register_view)).setTextColor(SkinHelper.getSkin().getThemeColor());
     }
 
@@ -421,10 +427,5 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                 Animation.RELATIVE_TO_PARENT, 0f, Animation.RELATIVE_TO_PARENT, 0f);
         setDefaultConfig(translateAnimation, false);
         return translateAnimation;
-    }
-
-    private Drawable createLoginDrawable() {
-        return ResUtil.generateRoundRippleMaskDrawable(getResources().getDimensionPixelOffset(R.dimen.little_round_radius), Color.WHITE,
-                SkinHelper.getSkin().getThemeDarkColor(), SkinHelper.getSkin().getThemeColor());
     }
 }

@@ -50,7 +50,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyPhotoBean> {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("我的相册");
+        return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_my_album));
     }
 
     @Override
@@ -101,7 +101,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyPhotoBean> {
             tv_timeline = holder.tv(R.id.tv_timeline);
             recyclerView = holder.v(R.id.rv_album_photo);
 
-            String formatDateTime = TimeUtil.getDividerDateFormat(Long.parseLong(dataBean.getCreated()));
+            String formatDateTime = TimeUtil.getDividerDateFormat(Long.parseLong(dataBean.getCreated()) * 1000);
             tv_timeline.setText(getSlectedSpannable(formatDateTime));
 
             int itemHeight = (ScreenUtil.screenWidth - 2 * ScreenUtil.dip2px(5)) / 3;
