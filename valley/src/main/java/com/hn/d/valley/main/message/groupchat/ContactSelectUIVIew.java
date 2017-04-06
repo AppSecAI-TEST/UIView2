@@ -78,58 +78,58 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
     @Override
     protected void loadData() {
 
-        RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
-        if (!results.isEmpty()) {
-
-            showContentLayout();
-
-            refreshLayout.setRefreshEnd();
-
-            List<AbsContactItem> datas = new ArrayList();
-            datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
-                @Override
-                public void call(ILayout o) {
-                    mOtherILayout.startIView(new SearchUserUIView());
-                }
-            }));
-            for (FriendBean bean : results) {
-                datas.add(new ContactItem(bean));
-            }
-
-            FriendsControl.sort(datas);
-
-            mGroupAdapter.resetData(datas);
-
-            sideBarView.setLetters(FriendsControl.generateIndexLetter(datas));
-        }
-
-//        datatProvider.provide(mSubscriptions, new Action1<List<FriendBean>>() {
-//            @Override
-//            public void call(List<FriendBean> beanList) {
+//        RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
+//        if (!results.isEmpty()) {
 //
-//                showContentLayout();
+//            showContentLayout();
 //
-//                refreshLayout.setRefreshEnd();
+//            refreshLayout.setRefreshEnd();
 //
-//                List<AbsContactItem> datas = new ArrayList();
-//                datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
-//                    @Override
-//                    public void call(ILayout o) {
-//                        mOtherILayout.startIView(new SearchUserUIView());
-//                    }
-//                }));
-//                for (FriendBean bean : beanList) {
-//                    datas.add(new ContactItem(bean));
+//            List<AbsContactItem> datas = new ArrayList();
+//            datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
+//                @Override
+//                public void call(ILayout o) {
+//                    mOtherILayout.startIView(new SearchUserUIView());
 //                }
-//
-//                FriendsControl.sort(datas);
-//
-//                mGroupAdapter.resetData(datas);
-//
-//                sideBarView.setLetters(FriendsControl.generateIndexLetter(datas));
-//
+//            }));
+//            for (FriendBean bean : results) {
+//                datas.add(new ContactItem(bean));
 //            }
-//        });
+//
+//            FriendsControl.sort(datas);
+//
+//            mGroupAdapter.resetData(datas);
+//
+//            sideBarView.setLetters(FriendsControl.generateIndexLetter(datas));
+//        }
+
+        datatProvider.provide(mSubscriptions, new Action1<List<FriendBean>>() {
+            @Override
+            public void call(List<FriendBean> beanList) {
+
+                showContentLayout();
+
+                refreshLayout.setRefreshEnd();
+
+                List<AbsContactItem> datas = new ArrayList();
+                datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
+                    @Override
+                    public void call(ILayout o) {
+                        mOtherILayout.startIView(new SearchUserUIView());
+                    }
+                }));
+                for (FriendBean bean : beanList) {
+                    datas.add(new ContactItem(bean));
+                }
+
+                FriendsControl.sort(datas);
+
+                mGroupAdapter.resetData(datas);
+
+                sideBarView.setLetters(FriendsControl.generateIndexLetter(datas));
+
+            }
+        });
     }
 
     @Subscribe

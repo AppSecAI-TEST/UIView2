@@ -12,7 +12,7 @@
         android:layout_height="@dimen/base_line"
         android:layout_marginStart="@dimen/base_xhdpi"
         android:background="@color/line_color"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/tip_more_view"

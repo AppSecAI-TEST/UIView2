@@ -432,7 +432,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            GroupMemberSelectUIVIew.start(mOtherILayout, new GroupMemberSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
+                            GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
                                     , null,mGroupDescBean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                         @Override
                                         public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
@@ -442,7 +442,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                                                         public void call(Boolean aBoolean) {
                                                             if (aBoolean) {
                                                                 loadGroupInfo();
-                                                                finishIView();
+//                                                                finishIView();
                                                             }
                                                         }
                                                     });

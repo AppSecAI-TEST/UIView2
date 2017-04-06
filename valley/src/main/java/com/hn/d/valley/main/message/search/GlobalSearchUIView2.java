@@ -47,7 +47,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresenter> implements GlobalSearch.ISearchView {
+public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresenter> implements GlobalSearch.ISearchView ,GlobalSearchAdapter2.OnTextChangeListener{
 
     public static final String ITEMTYPES = "itemTypes";
 
@@ -113,7 +113,8 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
 //        mRecyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mSearchUserAdapter)));
         mRecyclerView.addItemDecoration(mSearchItemDecoration);
         mRecyclerView.setAdapter(mSearchUserAdapter);
-
+        // 搜索变化回调
+        mSearchUserAdapter.setTextChangeListener(this);
         buildSearchView();
     }
 
@@ -171,6 +172,7 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
                 AbsContactItem item = mSearchUserAdapter.getItem(position);
                 if (item instanceof SectionItem) {
                     outRect.top = getDimensionPixelOffset(R.dimen.base_xhdpi);
+                    return;
                 }
 
                 if (position == mSearchUserAdapter.getItemCount() - 1) {
@@ -213,6 +215,11 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
             canvas.drawRect(offsetRect, paint);
         }
     });
+
+    @Override
+    public String textChange() {
+        return mSearchInputView.getText().toString();
+    }
 
     public static class Options {
 

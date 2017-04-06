@@ -9,6 +9,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;

@@ -2,6 +2,8 @@ package com.hn.d.valley.main.message;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +45,7 @@ public class CommandLayoutControl {
         mRecyclerViewPager = viewHolder.v(R.id.recycler_view_pager);
         mRecyclerViewPagerIndicator = viewHolder.v(R.id.recycler_view_pager_indicator);
         mRecyclerViewPager.setItemAnim(false);
+//        mRecyclerViewPager.setLayoutManager(new GridLayoutManager(context,4,GridLayoutManager.VERTICAL,false));
 //        mRecyclerViewPager.setAdapter(new CommandAdapter(mRecyclerViewPager, mCommandItemInfos));
 //        mRecyclerViewPagerIndicator.setupRecyclerViewPager(mRecyclerViewPager);
     }

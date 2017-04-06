@@ -7,7 +7,7 @@ import io.realm.RealmObject;
 /**
  * Created by hewking on 2017/3/7.
  */
-public class FriendBean extends RealmObject {
+public class FriendBean {
 
     /**
      * uid : 50004

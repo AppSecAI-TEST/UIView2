@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
@@ -31,6 +32,7 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.T_;
@@ -39,11 +41,18 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
+import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -72,6 +81,7 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Action3;
 
 /**
  * Created by hewking on 2017/3/16.
@@ -273,7 +283,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                         if (bean == null) {
                             return;
                         }
-                        final IMMessage locationMessage = MessageBuilder.createLocationMessage(mSessionId, sessionType, bean.latitude, bean.longitude, bean.address);
+                        IMMessage locationMessage = MessageBuilder.createLocationMessage(mSessionId, sessionType, bean.latitude, bean.longitude, bean.address);
                         sendMessage(locationMessage);
 //                        final IMMessage message = MessageBuilder.createTextMessage(mSessionId, sessionType, "测试");
 //                        sendMessage(message);
@@ -281,48 +291,30 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                 }, null, null, true));
             }
         }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_audio_chat_normal, "语音通话", new View.OnClickListener() {
+
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_rts_normal, "个人名片", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //语音通话
+                //个人名片
+                ContactSelectUIVIew.start(mOtherILayout,new BaseContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
+                        ,null,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                    @Override
+                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+
+                        requestCallback.onSuccess("");
+
+                        ContactItem contactItem = (ContactItem) absContactItems.get(0);
+                        FriendBean friendBean = contactItem.getFriendBean();
+                        PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
+                        IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, friendBean.getIntroduce(), attachment);
+                        sendMessage(message);
+
+
+                    }
+                });
             }
         }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_video_chat_normal, "视频通话", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //视频通话
-            }
-        }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_rts_normal, "白板", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //白板
-            }
-        }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_snapchat_normal, "阅后即焚", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //阅后即焚
-            }
-        }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_guess_normal, "猜拳", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //猜拳
-            }
-        }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_file_normal, "发送文件", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //发送文件
-            }
-        }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_tip_normal, "Tip", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Tip
-            }
-        }));
+
         return items;
     }
 
@@ -557,13 +549,21 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     }
 
     @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+
+        if (param.mBundle != null) {
+            parseBundle(param.mBundle);
+
+        }
+    }
+
+    @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
 
         if (bundle != null) {
             final String lastId = mSessionId;
-
-            parseBundle(bundle);
 
             setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
 
@@ -578,7 +578,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     }
 
     private void loadFirst(String lastId) {
-        if (!TextUtils.equals(lastId, mSessionId)) {
+        if (TextUtils.equals(lastId, mSessionId)) {
 
             if (mAnchor == null) {
                 loadFromLocal();

@@ -17,7 +17,7 @@
         android:text="@string/group_member_num"
         android:textSize="@dimen/default_text_size" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/base_xhdpi"
@@ -27,7 +27,8 @@
 
         <com.angcyo.uiview.recycler.RRecyclerView
             android:id="@+id/rv_headimg_name_icon"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content" />
 
         <ImageView
@@ -37,8 +38,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/base_xhdpi"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:src="@drawable/base_next" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <include
         layout="@layout/item_divider_line"/>

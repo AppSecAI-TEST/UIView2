@@ -25,11 +25,16 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.message.attachment.BaseCustomBean;
+import com.hn.d.valley.main.message.attachment.CustomAttachment;
+import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
+import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -38,6 +43,7 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
 import com.netease.nimlib.sdk.msg.attachment.LocationAttachment;
+import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
@@ -304,8 +310,7 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
                 contentView.setText("[音视频通话]");
                 break;
             case custom://第三方APP自定义消息
-                msgTextLayout.setVisibility(View.VISIBLE);
-                contentView.setText("[第三方APP自定义消息]");
+                bindCustomMessage(bean,msgTextLayout, contentView);
                 break;
             case file:
                 msgTextLayout.setVisibility(View.VISIBLE);
@@ -413,6 +418,27 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
                 break;
 
         }
+    }
+
+    private void bindCustomMessage(IMMessage bean, View msgTextLayout, TextView contentView) {
+        msgTextLayout.setVisibility(View.VISIBLE);
+        contentView.setText("[第三方APP自定义消息]");
+
+        CustomAttachment attachment = (CustomAttachment) bean.getAttachment();
+        switch (attachment.getType()) {
+
+            case CustomAttachmentType.PersonalCard :
+                PersonalCardAttachment pcAttachment = (PersonalCardAttachment) attachment;
+
+                BaseCustomBean<FriendBean> from = pcAttachment.from(pcAttachment.toJson(true));
+                contentView.setText(from.getBean().getDefaultMark());
+
+                break;
+            default:
+                break;
+
+        }
+
     }
 
     private void updateMsgStatus(RBaseViewHolder viewHolder, final IMMessage bean) {

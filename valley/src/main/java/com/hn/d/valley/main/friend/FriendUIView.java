@@ -18,6 +18,9 @@ import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
+import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
+import com.hn.d.valley.main.message.service.SessionHelper;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +83,8 @@ public class FriendUIView extends BaseUIView {
         mFriendsControl.setToUserDetailAction(new Action1<FriendBean>() {
             @Override
             public void call(FriendBean o) {
-                mOtherILayout.startIView(new UserDetailUIView(o.getUid()));
+//                mOtherILayout.startIView(new UserDetailUIView(o.getUid()));
+                SessionHelper.startP2PSession(mOtherILayout,o.getUid(), SessionTypeEnum.P2P);
             }
         });
 

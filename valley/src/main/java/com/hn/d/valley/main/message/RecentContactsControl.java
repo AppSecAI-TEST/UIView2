@@ -30,7 +30,7 @@ import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
-import com.hn.d.valley.nim.CustomAttachment;
+import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.RNim;
 import com.netease.nimlib.sdk.NIMClient;
@@ -595,8 +595,8 @@ public class RecentContactsControl {
                 case custom:
                     if (isAddContact(recent)) {
                         //添加好友通知
-                        if (attachment instanceof CustomAttachment) {
-                            CustomBean bean = ((CustomAttachment) attachment).getBean();
+                        if (attachment instanceof NoticeAttachment) {
+                            CustomBean bean = ((NoticeAttachment) attachment).getBean();
                             if (bean != null) {
                                 String tip = bean.getTip();
                                 if (TextUtils.isEmpty(tip)) {
@@ -607,8 +607,8 @@ public class RecentContactsControl {
                         }
                     } else if (isComment(recent)) {
                         //动态通知
-                        if (attachment instanceof CustomAttachment) {
-                            CustomBean bean = ((CustomAttachment) attachment).getBean();
+                        if (attachment instanceof NoticeAttachment) {
+                            CustomBean bean = ((NoticeAttachment) attachment).getBean();
                             if (bean != null) {
                                 return bean.getMsg();
                             }

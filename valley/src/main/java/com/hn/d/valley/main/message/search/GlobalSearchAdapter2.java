@@ -63,7 +63,13 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     private LayoutInflater mLayoutInflater;
 
+    public void setTextChangeListener(OnTextChangeListener onTextChangeListener) {
+        this.onTextChangeListener = onTextChangeListener;
+    }
+
     private GlobalSearchUIView2.Options option;
+
+    private OnTextChangeListener onTextChangeListener;
 
     public GlobalSearchAdapter2(Context context, ILayout layout, GlobalSearchUIView2.Options option) {
         this.mOtherLayout = layout;
@@ -154,6 +160,11 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
             return LAST_ITEM_TYPE;
         }
         return mResultList.getItem(position).getItemType();
+    }
+
+
+    public interface OnTextChangeListener {
+        String textChange();
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
@@ -263,7 +274,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     }
 
-    public static class FuncVH extends RecyclerView.ViewHolder {
+    public  class FuncVH extends RecyclerView.ViewHolder {
 
         @BindView(R.id.search_line2)
         View searchLine2;
@@ -278,14 +289,20 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
         }
 
         public void onBind(final FuncItem<ILayout> item) {
-            tipMoreView.setText("更多群聊");
+            tipMoreView.setText(item.getText());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 //                    mLayout.startIView(new SearchNextUIView());
-                    GlobalSingleSearchUIView.start(mLayout,"",new GlobalSearchUIView2.Options(false),new int[]{ItemTypes.GROUP});
 
+                    if (onTextChangeListener != null) {
+                        if ("聊天信息".equals(item.getText())) {
+                            GlobalSingleSearchUIView.start(mLayout,onTextChangeListener.textChange(),new GlobalSearchUIView2.Options(false),new int[]{ItemTypes.MSG});
+                        } else {
+                            GlobalSingleSearchUIView.start(mLayout,onTextChangeListener.textChange(),new GlobalSearchUIView2.Options(false),new int[]{ItemTypes.GROUP});
+                        }
+                    }
                     item.onFuncClick(mLayout);
                 }
             });

@@ -30,7 +30,7 @@ public class GlobalSingleSearchUIView extends GlobalSearchUIView2 {
         bundle.putIntArray(ITEMTYPES,itemTypes);
         bundle.putString(TEXT_QUERY,textQuery);
 
-        GlobalSearchUIView2 targetView = new GlobalSearchUIView2(options);
+        GlobalSingleSearchUIView targetView = new GlobalSingleSearchUIView(options);
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.NORMAL));
     }
 
@@ -49,6 +49,7 @@ public class GlobalSingleSearchUIView extends GlobalSearchUIView2 {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mSearchInputView.setText(textQuery);
         mPresenter.search(new TextQuery(textQuery), itemTypes);
 
     }

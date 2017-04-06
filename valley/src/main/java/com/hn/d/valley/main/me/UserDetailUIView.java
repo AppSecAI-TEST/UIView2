@@ -37,6 +37,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
+import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
@@ -333,7 +334,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     mCommandItemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            P2PChatUIView.start(getILayout(), to_uid, SessionTypeEnum.P2P);
+                            SessionHelper.startP2PSession(getILayout(),to_uid,SessionTypeEnum.P2P);
                         }
                     });
                 } else {

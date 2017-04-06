@@ -40,6 +40,10 @@ public class FuncItem<T> extends AbsContactItem {
         groupText = "";
     }
 
+    public String getText() {
+        return text;
+    }
+
     String text ;
 
     public static List<FuncItem> provide(){

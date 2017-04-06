@@ -26,7 +26,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.nim.CustomAttachment;
+import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.widget.HnGenderView;
@@ -178,11 +178,11 @@ public final class NewFriendUIView extends BaseContentUIView {
                             for (IMMessage message : result) {
                                 if (message.getMsgType() == MsgTypeEnum.custom) {
                                     MsgAttachment attachment = message.getAttachment();
-                                    if (attachment instanceof CustomAttachment) {
+                                    if (attachment instanceof NoticeAttachment) {
                                         beans.add(message);
 
                                         try {
-                                            users.add(((CustomAttachment) attachment).getBean().getUid());
+                                            users.add(((NoticeAttachment) attachment).getBean().getUid());
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
@@ -224,7 +224,7 @@ public final class NewFriendUIView extends BaseContentUIView {
     }
 
     private CustomBean getBean(IMMessage bean) {
-        CustomAttachment attachment = (CustomAttachment) bean.getAttachment();
+        NoticeAttachment attachment = (NoticeAttachment) bean.getAttachment();
         CustomBean customBean = attachment.getBean();
         return customBean;
     }
