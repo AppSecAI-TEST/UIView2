@@ -15,11 +15,11 @@ public class BaseCustomBean <T> {
 
     T data;
 
-    int bean;
+    int type;
 
     public BaseCustomBean(T bean, int type) {
         this.data = bean;
-        this.bean = type;
+        this.type = type;
     }
 
     public T getBean() {

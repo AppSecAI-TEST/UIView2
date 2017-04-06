@@ -2,32 +2,30 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_interest_desc"
         style="@style/MainTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/base_xhdpi"
-        android:gravity="center"
-        android:textColor="@color/main_text_color"
-        android:text="@string/intest_preson"
-        android:textSize="@dimen/base_title_size"
-        android:layout_marginTop="15dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/intest_preson"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/base_title_size"/>
 
     <com.angcyo.uiview.recycler.RRecyclerView
         android:id="@+id/recycler_view"
-        android:layout_below="@id/tv_interest_desc"
-        android:layout_marginTop="@dimen/base_35dpi"
-        android:paddingLeft="@dimen/base_xhdpi"
-        android:paddingRight="@dimen/base_hdpi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:layout_below="@id/tv_interest_desc"
+        android:layout_marginTop="@dimen/base_35dpi"
+        android:paddingEnd="@dimen/base_hdpi"
+        android:paddingStart="@dimen/base_xhdpi">
 
     </com.angcyo.uiview.recycler.RRecyclerView>
 
@@ -36,14 +34,14 @@
         style="@style/DarkTextStyle"
         android:layout_width="135dp"
         android:layout_height="wrap_content"
-        android:padding="@dimen/base_xhdpi"
-        android:gravity="center"
-        android:background="@drawable/main_color_bg_round_selector"
-        android:text="@string/recommend_focus_user"
-        android:textSize="@dimen/default_text_little_size"
-        android:textColor="@color/white"
-        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="54dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="54dp"
+        android:background="@drawable/main_color_bg_round_selector"
+        android:gravity="center"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/recommend_focus_user"
+        android:textColor="@color/white"
+        android:textSize="@dimen/default_text_little_size"/>
 
 </RelativeLayout>
