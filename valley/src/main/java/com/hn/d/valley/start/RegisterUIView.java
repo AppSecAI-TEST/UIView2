@@ -10,17 +10,19 @@ import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.VerifyButton;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.service.OtherService;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
 import com.hn.d.valley.start.mvp.Start;
-import com.hn.d.valley.service.OtherService;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -71,6 +73,9 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
         if (BuildConfig.DEBUG) {
             mCodeView.setText("888888");
         }
+
+        ResUtil.setBgDrawable(mViewHolder.v(R.id.next_view), LoginUIView.createLoginDrawable(mActivity));
+        mViewHolder.tv(R.id.verify_view).setTextColor(SkinHelper.getSkin().getThemeColor());
     }
 
     /**

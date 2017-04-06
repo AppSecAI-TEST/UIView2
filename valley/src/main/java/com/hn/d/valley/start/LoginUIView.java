@@ -99,7 +99,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         fixInsertsTop();
 
         ResUtil.setBgDrawable(baseContentLayout.findViewById(R.id.login_view), createLoginDrawable(mActivity));
-        ((TextView) baseContentLayout.findViewById(R.id.register_view)).setTextColor(SkinHelper.getSkin().getThemeColor());
+        //((TextView) baseContentLayout.findViewById(R.id.register_view)).setTextColor(SkinHelper.getSkin().getThemeColor());
+        ((TextView) baseContentLayout.findViewById(R.id.register_view)).setTextColor(SkinHelper.getSkin().getThemeSubColor());
     }
 
     @Override

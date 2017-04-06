@@ -25,6 +25,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.widget.IShowState;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
@@ -125,6 +126,8 @@ public class SearchNextUIView extends BaseContentUIView {
     @Override
     public void onViewLoad() {
         super.onViewLoad();
+        mViewHolder.v(R.id.title_bar_layout).setBackgroundColor(SkinHelper.getSkin().getThemeColor());
+
         RefreshLayout refreshLayout = mViewHolder.v(R.id.refresh_layout);
         refreshLayout.setNotifyListener(false);
         refreshLayout.setRefreshDirection(RefreshLayout.TOP);
@@ -513,6 +516,7 @@ public class SearchNextUIView extends BaseContentUIView {
             protected void onBindCommonView(RBaseViewHolder holder, int position, SearchResultBean.DynamicsBeanX.DynamicsBean bean) {
                 if (holder.getItemViewType() == LAST_ITEM_TYPE) {
                     holder.tv(R.id.search_word_view).setText(mEditText.getText());
+                    holder.tv(R.id.search_word_view).setTextColor(SkinHelper.getSkin().getThemeColor());
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

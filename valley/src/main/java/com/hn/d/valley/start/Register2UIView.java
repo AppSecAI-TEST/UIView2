@@ -16,18 +16,19 @@ import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssHelper;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.EmptyAction;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -66,7 +67,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     @BindView(R.id.name_view)
     ExEditText mNameView;
     @BindView(R.id.sex_view)
-    ExEditText mSexView;
+    TextView mSexView;
     @BindView(R.id.password_view)
     ExEditText mPasswordView;
 
@@ -106,6 +107,8 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                         onFinishClick();
                     }
                 });
+
+        ResUtil.setBgDrawable(mFinishView, LoginUIView.createLoginDrawable(mActivity));
     }
 
     @Override
@@ -154,7 +157,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
             return;
         }
 
-        if (TextUtils.isEmpty(mSexView.string())) {
+        if (TextUtils.isEmpty(mSexView.getText())) {
             Anim.band(mSexView);
             return;
         }

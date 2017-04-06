@@ -26,7 +26,7 @@
             android:background="@drawable/base_main_color_border_selector"
             android:hint="@string/input_phone_hint"
             android:imeOptions="actionNext"
-            android:paddingLeft="@dimen/base_60dpi"
+            android:paddingLeft="@dimen/base_70dpi"
             android:textColor="@color/main_text_color"/>
 
     </RelativeLayout>
@@ -51,23 +51,22 @@
             android:drawablePadding="@dimen/base_40dpi"
             android:hint="@string/input_code_hint"
             android:imeOptions="actionDone"
-            android:paddingLeft="@dimen/base_60dpi"
+            android:paddingLeft="@dimen/base_70dpi"
             android:paddingRight="@dimen/base_100dpi"
             android:textColor="@color/main_text_color"
             android:textColorHint="@color/main_text_color_dark"/>
 
-        <View
+        <com.hn.d.valley.widget.HnSkinLine
             android:layout_width="@dimen/base_line"
             android:layout_height="@dimen/base_xxhdpi"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/base_ldpi"
-            android:layout_toLeftOf="@+id/verify_view"
-            android:background="@color/colorAccent"/>
+            android:layout_toLeftOf="@+id/verify_view"/>
 
         <com.angcyo.uiview.widget.VerifyButton
             android:id="@+id/verify_view"
             style="@style/MainColorTextButtonStyle"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/base_mdpi"
             android:paddingBottom="@dimen/base_xhdpi"

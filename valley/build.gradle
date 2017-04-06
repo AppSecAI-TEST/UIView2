@@ -16,8 +16,8 @@ android {
         applicationId "com.hn.d.valley"
         minSdkVersion Integer.parseInt(rootProject.M_SDK)
         targetSdkVersion Integer.parseInt(rootProject.T_SDK)
-        versionCode 21
-        versionName "1.0.21"
+        versionCode 22
+        versionName "1.0.22"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -34,6 +34,16 @@ android {
 
         multiDexEnabled true
     }
+
+    productFlavors {
+        dev {
+            minSdkVersion 21
+        }
+        pord {
+            minSdkVersion Integer.parseInt(rootProject.M_SDK)
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -52,7 +62,6 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -63,14 +72,12 @@ android {
         jumboMode true
         javaMaxHeapSize "4g"
     }
-
     getApplicationVariants().all { variant ->
         variant.outputs.each { output ->
             def appName = "DValley-${variant.buildType.name}-${variant.versionName}.apk"
             output.outputFile = new File(output.outputFile.parent, appName)
         }
     }
-
     useLibrary 'org.apache.http.legacy'
 }
 
@@ -81,6 +88,11 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':RLibrary:uiview')
     compile project(':RLibrary:imagepicker')
+    compile project(':RLibrary:fragmentation')
+    compile project(':RLibrary:zxing')
+    compile project(':rbplayerlib')
+    compile project(':rbrecoderlib')
+
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     /*腾讯Bugly依赖*/
     //compile 'com.tencent.bugly:crashreport:latest.release'
@@ -100,9 +112,4 @@ dependencies {
     compile "com.netease.nimlib:rts:${nim_ver}"
     // 全文检索服务需要
     compile "com.netease.nimlib:lucene:${nim_ver}"
-
-    compile project(':RLibrary:fragmentation')
-    compile project(':RLibrary:zxing')
-    compile project(':rbplayerlib')
-    compile project(':rbrecoderlib')
 }

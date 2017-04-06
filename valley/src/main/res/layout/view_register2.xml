@@ -19,7 +19,7 @@
         app:placeholderImage="@drawable/add_picture"
         app:placeholderImageScaleType="fitXY"/>
 
-    <TextView
+    <com.hn.d.valley.widget.HnSkinTextView
         style="@style/MainColorTextStyle"
         android:layout_marginTop="@dimen/base_xhdpi"
         android:text="@string/register_add_ico"/>
@@ -58,7 +58,7 @@
             android:layout_marginLeft="@dimen/base_hdpi"
             android:text="性别:"/>
 
-        <com.angcyo.uiview.widget.ExEditText
+        <com.angcyo.uiview.widget.RTextView
             android:id="@+id/sex_view"
             style="@style/EditStyle"
             android:layout_alignParentStart="true"
@@ -66,12 +66,10 @@
             android:background="@drawable/base_main_color_border_selector"
             android:drawablePadding="@dimen/base_40dpi"
             android:editable="false"
+            android:gravity="center_vertical"
             android:hint="请选择性别"
-            android:imeOptions="actionNext"
-            android:inputType="none"
             android:paddingLeft="@dimen/base_60dpi"
             android:paddingRight="@dimen/base_40dpi"
-            android:tag="hide"
             android:textColor="@color/main_text_color"
             android:textColorHint="@color/main_text_color_dark"/>
 
@@ -102,8 +100,8 @@
             android:background="@drawable/base_main_color_border_selector"
             android:hint="@string/register_password_hint"
             android:imeOptions="actionDone"
-            android:paddingStart="@dimen/base_60dpi"
             android:paddingEnd="@dimen/base_40dpi"
+            android:paddingStart="@dimen/base_60dpi"
             android:textColor="@color/main_text_color"/>
 
         <CheckBox

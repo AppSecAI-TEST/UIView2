@@ -30,6 +30,7 @@ import io.realm.RealmResults;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -89,6 +90,7 @@ public class OssHelper {
             RRetrofit.create(OtherService.class)
                     .getToken(Param.buildMap())
                     .compose(Rx.transformer(TokenBean.class))
+                    .observeOn(Schedulers.io())
                     .subscribe(new BaseSingleSubscriber<TokenBean>() {
                         @Override
                         public void onSucceed(TokenBean bean) {

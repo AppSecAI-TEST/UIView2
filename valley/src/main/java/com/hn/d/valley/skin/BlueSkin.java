@@ -31,4 +31,9 @@ public class BlueSkin extends BaseSkin {
     public int getThemeColor() {
         return Color.parseColor("#2483CB");
     }
+
+    @Override
+    public int getThemeDarkColor() {
+        return Color.parseColor("#802483CB");
+    }
 }

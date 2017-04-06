@@ -27,7 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/base_hdpi"
-            app:r_left_color="@color/theme_color_primary"
             app:r_left_width="2dp"
             tools:text="最新动态"/>
 

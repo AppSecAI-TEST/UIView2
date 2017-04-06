@@ -237,7 +237,7 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
                         HomeUIView.this.onClick();
                     }
                 }))
-                .setOnInitTitleLayout(new TitleBarPattern.OnInitTitleLayout() {
+                .setOnInitTitleLayout(new TitleBarPattern.SingleTitleInit() {
                     @Override
                     public void onInitLayout(RTitleCenterLayout parent) {
                         mHomeNavLayout = (SegmentTabLayout) LayoutInflater.from(mActivity)

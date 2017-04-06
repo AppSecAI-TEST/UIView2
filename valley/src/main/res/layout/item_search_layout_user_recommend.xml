@@ -8,11 +8,11 @@
     android:padding="@dimen/base_xhdpi">
 
     <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tip_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/base_hdpi"
         android:text="@string/user_ecommend_tip"
-        app:r_left_color="@color/theme_color_primary"
         app:r_left_width="2dp"/>
 
     <com.angcyo.uiview.recycler.RRecyclerView

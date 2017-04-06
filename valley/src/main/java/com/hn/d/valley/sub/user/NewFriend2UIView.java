@@ -114,7 +114,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
         return super.getTitleBar()
                 .setShowBackImageView(true)
                 .setTitleString("")
-                .setOnInitTitleLayout(new TitleBarPattern.OnInitTitleLayout() {
+                .setOnInitTitleLayout(new TitleBarPattern.SingleTitleInit() {
                     @Override
                     public void onInitLayout(RTitleCenterLayout parent) {
                         View.inflate(mActivity, R.layout.item_segment_layout, parent);
