@@ -34,8 +34,12 @@ public class RecentContactsCache implements ICache {
     private Observer<List<RecentContact>> mRecentContactObserver = new Observer<List<RecentContact>>() {
         @Override
         public void onEvent(List<RecentContact> recentContacts) {
-            if (recentContacts.isEmpty()) {
+            if (recentContacts == null || recentContacts.isEmpty()) {
                 return;
+            }
+
+            if (mRecentContactList == null) {
+                mRecentContactList = new ArrayList<>();
             }
 
             mRecentContactList.clear();
@@ -85,7 +89,7 @@ public class RecentContactsCache implements ICache {
 
     @Override
     public void buildCache() {
-                RNim.queryRecentContacts(new RequestCallbackWrapper<List<RecentContact>>() {
+        RNim.queryRecentContacts(new RequestCallbackWrapper<List<RecentContact>>() {
             @Override
             public void onResult(int code, List<RecentContact> result, Throwable exception) {
                 if (code == ResponseCode.RES_SUCCESS) {

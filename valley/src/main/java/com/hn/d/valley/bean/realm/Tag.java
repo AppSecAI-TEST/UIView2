@@ -23,6 +23,10 @@ public class Tag extends RealmObject {
      */
 
     private String content;
+    /**
+     * "attention_count": "4"
+     */
+    private String attention_count;
 
     public String getId() {
         return id;
@@ -60,5 +64,13 @@ public class Tag extends RealmObject {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getAttention_count() {
+        return attention_count;
+    }
+
+    public void setAttention_count(String attention_count) {
+        this.attention_count = attention_count;
     }
 }

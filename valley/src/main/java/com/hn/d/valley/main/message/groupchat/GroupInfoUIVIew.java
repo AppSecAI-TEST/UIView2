@@ -242,7 +242,13 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setItemText("群二维码");
                 infoLayout.setDarkDrawableRes(R.drawable.qr_code);
 
-
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        mOtherILayout.startIView(new GroupQrCodeUIView());
+                        GroupQrCodeUIView.start(mOtherILayout,mSessionId,SessionTypeEnum.Team);
+                    }
+                });
             }
         }));
 

@@ -87,6 +87,14 @@
                 layout="@layout/msg_image_layout"
                 android:visibility="gone"/>
 
+            <!--个人名片-->
+            <include
+                android:id="@+id/msg_pc_layout"
+                layout="@layout/msg_personalcard_layout"
+                android:visibility="gone"
+                />
+
+
         </FrameLayout>
 
         <!--状态-->

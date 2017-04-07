@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -15,6 +16,8 @@ import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.view.IView;
+import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -25,10 +28,12 @@ import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.main.home.recommend.RecommendUIView2;
+import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.lzy.imagepicker.ImagePickerHelper;
 
 import butterknife.BindView;
 import rx.functions.Action0;
+import rx.functions.Action3;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -275,20 +280,26 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
                 .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new VideoRecordUIView(new Action0() {
+                        mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl,String,String>() {
                             @Override
-                            public void call() {
-                                //开始发布任务.
-                                PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
-                                    @Override
-                                    public void onPublishStart() {
-                                        HomeUIView.this.onPublishStart();
-                                    }
+                            public void call(UIIViewImpl iView , String path , String s) {
 
+                                iView.replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(path, s), new Action0() {
                                     @Override
-                                    public void onPublishEnd() {
+                                    public void call() {
+                                        //开始发布任务.
+                                        PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
+                                            @Override
+                                            public void onPublishStart() {
+                                                HomeUIView.this.onPublishStart();
+                                            }
+
+                                            @Override
+                                            public void onPublishEnd() {
+                                            }
+                                        });
                                     }
-                                });
+                                }));
                             }
                         }));
                     }

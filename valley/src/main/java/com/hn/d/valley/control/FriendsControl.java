@@ -236,6 +236,12 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     public void onSucceed(FriendListModel bean) {
                         super.onSucceed(bean);
                         if(bean == null || bean.getData_list().size() == 0 ) {
+                            onUILoadFinish();
+                            if (bean == null) {
+                                resetData(new ArrayList<FriendBean>());
+                            } else {
+                                resetData(bean.getData_list());
+                            }
                             return;
                         }
                         onUILoadFinish();

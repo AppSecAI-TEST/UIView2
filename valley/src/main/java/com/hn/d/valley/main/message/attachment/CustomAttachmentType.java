@@ -16,4 +16,6 @@ public interface CustomAttachmentType {
     int PersonalCard = 1;
 
     int Notice = 2;
+
+    String PersonalCard_ = "user";
 }

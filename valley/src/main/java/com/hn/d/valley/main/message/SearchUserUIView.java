@@ -22,6 +22,7 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.mvp.Search;
 import com.hn.d.valley.main.message.mvp.SearchPresenter;
 import com.hn.d.valley.sub.user.UserInfoUIView;
@@ -166,7 +167,7 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
             holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new UserInfoUIView(bean));
+                    startIView(new UserDetailUIView(bean.getUid()));
                 }
             });
         }

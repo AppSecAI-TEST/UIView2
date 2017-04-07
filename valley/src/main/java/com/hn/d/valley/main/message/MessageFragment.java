@@ -10,6 +10,7 @@ import com.hn.d.valley.base.inner.RSupportFragment;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
+import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 import com.netease.nimlib.sdk.msg.model.RecentContact;

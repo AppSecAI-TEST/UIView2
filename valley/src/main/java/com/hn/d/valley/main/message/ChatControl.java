@@ -159,7 +159,7 @@ public class ChatControl {
 
 
 
-    static class Images {
+    public static class Images {
         public int positon;
         public ArrayList<ImageItem> images;
 

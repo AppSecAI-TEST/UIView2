@@ -27,6 +27,7 @@ import com.hn.d.valley.widget.groupView.JoinBitmaps;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -80,7 +81,7 @@ public class TeamCreateHelper {
                 }).map(new Func1<List<Bitmap>, String>() {
                     @Override
                     public String call(List<Bitmap> bitmaps) {
-                        String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE) +"/avatar2.png";
+                        String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE)  + UUID.randomUUID().toString() + ".png";
                         //ios 目前大小为 40
                         AttachmentStore.saveBitmap(JoinBitmaps.createGroupBitCircle(bitmaps,100,100, ValleyApp.getApp().getApplicationContext()),filePath,true);
                         for (Bitmap bitmap : bitmaps) {

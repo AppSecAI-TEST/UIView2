@@ -31,7 +31,7 @@ import rx.functions.Action1;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：首页 下面的 推荐
+ * 类的描述：首页 下面的 推荐, 广场
  * 创建人员：Robi
  * 创建时间：2016/12/16 11:18
  * 修改人员：Robi
@@ -113,7 +113,7 @@ public class RecommendUIView2 extends BaseContentUIView {
         mViewHolder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new TagsManageUIView(mAllTags, new Action1<List<Tag>>() {
+                mOtherILayout.startIView(new TagsManageUIView2(mAllTags, new Action1<List<Tag>>() {
                     @Override
                     public void call(List<Tag> tags) {
                         //1:得到当前的item位置

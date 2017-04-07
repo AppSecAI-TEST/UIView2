@@ -2,9 +2,12 @@ package com.hn.d.valley.main.message.mvp;
 
 import com.angcyo.uiview.mvp.presenter.BasePresenter;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.net.TransformUtils;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.UIStringSubscriber;
+import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.main.message.service.SearchService;
 
@@ -31,13 +34,21 @@ public class SearchPresenter extends BasePresenter<Search.ISearchView> implement
 
         add(RRetrofit.create(SearchService.class)
                 .searchUser(Param.map(map))
-                .compose(Transform.defaultStringSchedulers(mBaseView, SearchUserBean.class))
-                .subscribe(new UIStringSubscriber<SearchUserBean, Search.ISearchView>(mBaseView) {
+                .compose(Rx.transformer(SearchUserList.class))
+                .subscribe(new UIStringSubscriber<SearchUserList, Search.ISearchView>(mBaseView) {
                     @Override
-                    public void onSuccess(SearchUserBean bean) {
-                        mBaseView.onSearchSucceed(bean);
+                    public void onSuccess(SearchUserList bean) {
+                        if (bean == null || bean.getData_list().size() == 0) {
+                            mBaseView.onRequestFinish();
+                            return;
+                        }
+                        mBaseView.onSearchSucceed(bean.getData_list().get(0));
                     }
                 })
         );
+    }
+
+    public static class SearchUserList extends ListModel<SearchUserBean> {
+
     }
 }

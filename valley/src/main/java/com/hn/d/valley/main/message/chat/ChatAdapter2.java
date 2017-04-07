@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.message;
+package com.hn.d.valley.main.message.chat;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -33,6 +33,8 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.message.AudioViewControl;
+import com.hn.d.valley.main.message.ChatControl;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
@@ -68,12 +70,12 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-public class ChatAdapter extends RBaseAdapter<IMMessage> {
+public class ChatAdapter2 extends RBaseAdapter<IMMessage> {
 
     public RBaseViewHolder mViewHolder;
     UIBaseView mUIBaseView;
 
-    public ChatAdapter(Context context, List<IMMessage> datas,RBaseViewHolder viewHolder, UIBaseView uIBaseView) {
+    public ChatAdapter2(Context context, List<IMMessage> datas, RBaseViewHolder viewHolder, UIBaseView uIBaseView) {
         super(context, datas);
         this.mViewHolder = viewHolder;
         this.mUIBaseView = uIBaseView;
@@ -299,12 +301,12 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
 
                 selectDrawable(imageView);
 
-                final AudioViewControl audioViewControl = new AudioViewControl(mContext, holder, this, bean);
+//                final AudioViewControl audioViewControl = new AudioViewControl(mContext, holder, this, bean);
 
                 msgContentLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        audioViewControl.onItemClick();
+//                        audioViewControl.onItemClick();
                     }
                 });
 
@@ -362,56 +364,9 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
             case video://视频消息
                 msgTextLayout.setVisibility(View.VISIBLE);
                 contentView.setText("[视频消息]");
-                bindVideoLayout(holder, bean, msgContentLayout, msgImageLayout);
-
                 break;
 
         }
-    }
-
-    private void bindVideoLayout(RBaseViewHolder holder, final IMMessage bean, View msgContentLayout, View msgImageLayout) {
-        msgContentLayout.setVisibility(View.GONE);
-        msgImageLayout.setVisibility(View.VISIBLE);
-        final SimpleDraweeView draweeView = holder.v(R.id.msg_image_view);
-        final View clickView = holder.v(R.id.click_view);
-
-        VideoAttachment msgAttachment = (VideoAttachment) bean.getAttachment();
-        final String path = msgAttachment.getPath();
-        final String thumbPath = msgAttachment.getThumbPath();
-
-        String fileUri = "";
-        boolean isFile;
-        if (TextUtils.isEmpty(thumbPath) && TextUtils.isEmpty(path)) {
-            isFile = false;
-            fileUri = msgAttachment.getUrl();
-            downloadAttachment(bean);
-        } else {
-            isFile = true;
-            if (!TextUtils.isEmpty(thumbPath)) {
-                setImageSize(draweeView, clickView, bean, thumbPath);
-                //DraweeViewUtil.setDraweeViewFile(draweeView, thumbPath);
-                fileUri = thumbPath;
-            } else if (!TextUtils.isEmpty(path)) {
-                setImageSize(draweeView, clickView, bean, path);
-                //DraweeViewUtil.setDraweeViewFile(draweeView, path);
-                fileUri = path;
-            } else {
-                //DraweeViewUtil.setDraweeViewHttp(draweeView, msgAttachment.getUrl());
-            }
-        }
-
-        String thumb = msgAttachment.getThumbPathForSave();
-        String s = BitmapDecoder.extractThumbnail(msgAttachment.getPath(), thumb) ? thumb : null;
-
-        if (isReceivedMessage(bean)) {
-            clickView.setBackgroundResource(R.drawable.bubble_box_left_selector2);
-            RFresco.mask(mContext, draweeView, R.drawable.bubble_box_left, thumb, isFile);
-        } else {
-            clickView.setBackgroundResource(R.drawable.bubble_box_right_selector2);
-            RFresco.mask(mContext, draweeView, R.drawable.bubble_box_right_n2, thumb, isFile);
-        }
-
-
     }
 
     private void bindImageLayout(RBaseViewHolder holder, final IMMessage bean, View msgContentLayout, View msgImageLayout) {

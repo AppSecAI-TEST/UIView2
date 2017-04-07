@@ -2,6 +2,8 @@ package com.hn.d.valley.main.message;
 
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -36,11 +38,14 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.string.MD5;
+import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
@@ -53,6 +58,7 @@ import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -97,7 +103,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     @BindView(R.id.chat_root_layout)
     RSoftInputLayout mChatRootLayout;
     @BindView(R.id.input_view)
-    ExEditText mInputView;
+    protected ExEditText mInputView;
     @BindView(R.id.record_view)
     TextView mRecordView;
     @BindView(R.id.refresh_layout)
@@ -189,6 +195,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         mBaseRootLayout.fitsSystemWindows(false);
 
         mChatControl = new ChatControl(mActivity, mViewHolder, this);
+
         mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
             @Override
             public void onEmojiText(String emoji) {
@@ -271,7 +278,30 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
             @Override
             public void onClick(View v) {
                 //视频
+
+                mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
+                    @Override
+                    public void call(UIIViewImpl view, String s, String s2) {
+
+                        view.finishIView();
+
+                        File file = new File(s2);
+                        if (!file.exists()) {
+                            return;
+                        }
+
+                        MediaPlayer mediaPlayer = getVideoMediaPlayer(file);
+                        long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
+                        int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
+                        int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
+                        String md5 = MD5.getStreamMD5(s2);
+                        IMMessage message = MessageBuilder.createVideoMessage(mSessionId, sessionType, file, duration, width, height, md5);
+                        sendMessage(message);
+
+                    }
+                }));
             }
+
         }));
         items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_location_normal, "位置", new View.OnClickListener() {
             @Override
@@ -687,6 +717,20 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     public void onViewHide() {
         super.onViewHide();
         msgService().setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, sessionType);
+    }
+
+    /**
+     * 获取视频mediaPlayer
+     * @param file 视频文件
+     * @return mediaPlayer
+     */
+    private MediaPlayer getVideoMediaPlayer(File file) {
+        try {
+            return MediaPlayer.create(mActivity, Uri.fromFile(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

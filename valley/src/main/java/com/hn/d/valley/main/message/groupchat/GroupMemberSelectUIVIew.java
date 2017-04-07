@@ -102,6 +102,11 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
                                 }
                             }));
                             for (GroupMemberBean bean : beans.getData_list()) {
+
+                                if (!options.showMe && bean.getUserId().equals(UserCache.getUserAccount())) {
+                                    continue;
+                                }
+
                                 datas.add(new GroupMemberItem(bean));
                             }
 

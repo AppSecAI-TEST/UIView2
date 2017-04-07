@@ -130,7 +130,6 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
         mGroupAdapter.setSelecteUids(mSelectedUids);
 
-
         sideBarView.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
             @Override
             public void onLetterChange(String letter) {
@@ -204,6 +203,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
         public int mode;
         public int selectCountLimit = DEFALUT_LIMIT;
+        public boolean showMe = false;
 
         public Options() {
             this(RModelAdapter.MODEL_MULTI);

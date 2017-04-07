@@ -1,6 +1,7 @@
 package com.hn.d.valley.widget;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -83,6 +84,9 @@ public class HnGenderView extends LinearLayout {
     public void setGender(String sex, String level) {
         //setTag(sex);
         //setText(level);
+        if (TextUtils.isEmpty(sex)) {
+            return;
+        }
         if (sex.equals("1")) {
             mSexImageView.setVisibility(VISIBLE);
             mSexImageView.setImageResource(R.drawable.boy);

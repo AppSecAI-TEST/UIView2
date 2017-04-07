@@ -1,21 +1,39 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.view.View;
+import android.widget.TextView;
 
+import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.cache.TeamDataCache;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
+import com.hn.d.valley.service.GroupChatService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.team.model.Team;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import rx.functions.Action3;
 
 /**
  * Created by hewking on 2017/3/10.
@@ -45,6 +63,36 @@ public class GroupChatUIView extends ChatUIView {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
+
+        if(!checkInGroup()){
+            showNotice();
+        }
+
+    }
+
+    private boolean checkInGroup() {
+        Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
+        if (team == null || !team.isMyTeam()) {
+            return false;
+        }
+        return true;
+    }
+
+    private void showNotice() {
+
+        final View layout = mViewHolder.v(R.id.recent_contact_layout);
+        final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
+        content.setText(R.string.team_invalid_tip);
+        if (layout.getVisibility() == View.GONE) {
+            layout.setVisibility(View.VISIBLE);
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    layout.setTranslationY(-layout.getMeasuredHeight());
+                    ViewCompat.animate(layout).translationY(0).setDuration(UIBaseView.DEFAULT_ANIM_TIME).start();
+                }
+            });
+        }
     }
 
     /**
@@ -59,6 +107,49 @@ public class GroupChatUIView extends ChatUIView {
         mLayout.startIView(new GroupChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
 
+        if(checkInGroup()) {
+            add(RRetrofit.create(GroupChatService.class)
+                    .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
+                    .compose(Rx.transformer(GroupDescBean.class))
+                    .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
+                        @Override
+                        public void onError(int code, String msg) {
+                            super.onError(code, msg);
+                        }
 
+                        @Override
+                        public void onSucceed(GroupDescBean bean) {
+                            if (bean != null) {
+                                initMentionListener(bean);
+                            }
+                        }
+                    }));
+        }
+    }
+
+    @Override
+    public void onSendClick() {
+        super.onSendClick();
+    }
+
+    private void initMentionListener(final GroupDescBean bean) {
+        mInputView.setOnMentionInputListener(new ExEditText.OnMentionInputListener() {
+            @Override
+            public void onMentionCharacterInput() {
+                GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE), null,bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                    @Override
+                    public void call(UIBaseRxView uiBaseRxView, List<AbsContactItem> items, RequestCallback callback) {
+                        callback.onSuccess("");
+
+                        GroupMemberItem item = (GroupMemberItem) items.get(0);
+                        mInputView.addMention(item.getMemberBean().getDefaultNick());
+                    }
+                });
+            }
+        });
+    }
 }

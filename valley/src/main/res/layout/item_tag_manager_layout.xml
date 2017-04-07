@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/base_xhdpi">
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_bg2_selector"
+        android:clickable="true"
+        android:padding="@dimen/base_hdpi"
+        tools:src="@drawable/yichu_biaoqian_icon"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/name_view"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="推荐"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/count_tip_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/attention_count_tip"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/count_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="54000"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/right_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/base_bg2_selector"
+        android:clickable="true"
+        android:src="@drawable/yidong_biaoqian_icon"/>
+
+</LinearLayout>

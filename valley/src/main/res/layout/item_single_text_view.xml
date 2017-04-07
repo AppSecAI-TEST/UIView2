@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="@dimen/base_xhdpi">
 
+    <!--左边的文本-->
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/text_view"
         style="@style/DarkTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@string/register_warning" />
+        tools:text="@string/register_warning"/>
+
+    <!--右边的文本-->
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/right_text_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end"
+        tools:text="@string/register_warning"/>
 
 </LinearLayout>
