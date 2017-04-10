@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -41,6 +40,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.main.other.KLJUIView;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -88,8 +88,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     AbortableFuture loginFuture;
 
     public static Drawable createLoginDrawable(Context context) {
-        return ResUtil.generateRoundRippleMaskDrawable(context.getResources().getDimensionPixelOffset(R.dimen.little_round_radius), Color.WHITE,
-                SkinHelper.getSkin().getThemeDarkColor(), SkinHelper.getSkin().getThemeColor());
+//        return ResUtil.generateRoundRippleMaskDrawable(context.getResources().getDimensionPixelOffset(R.dimen.little_round_radius), Color.WHITE,
+//                SkinHelper.getSkin().getThemeDarkColor(), SkinHelper.getSkin().getThemeColor());
+        return SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector();
     }
 
     @Override
@@ -361,11 +362,13 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         //startIView(new RecommendUser2UIView());
         //startIView(new VideoRecordUIView(null));
 
-        UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
-                .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
-                .setCancelText("").setOkText(mActivity.getString(R.string.known))
-                .setCanCanceledOnOutside(false)
-                .showDialog(this);
+//        UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
+//                .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
+//                .setCancelText("").setOkText(mActivity.getString(R.string.known))
+//                .setCanCanceledOnOutside(false)
+//                .showDialog(this);
+
+        startIView(new KLJUIView());
     }
 
     @Override

@@ -22,6 +22,8 @@ import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.main.me.SkinManagerUIView;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.ArrayList;
@@ -233,7 +235,18 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                 mOtherGroup = new RGroupData<Tag>(mOtherTag) {
                     @Override
                     protected void onBindDataView(RBaseViewHolder holder, final int position, final int indexInData) {
-                        holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon);
+                        switch (SkinUtils.getSkin()) {
+                            case SkinManagerUIView.SKIN_BLUE:
+                                holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon_blue);
+                                break;
+                            case SkinManagerUIView.SKIN_GREEN:
+                                holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon_black);
+                                break;
+                            default:
+                                holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon);
+                                break;
+                        }
+
                         holder.imgV(R.id.right_image_view).setImageDrawable(null);
                         holder.tv(R.id.name_view).setText(getAllDatas().get(indexInData).getName());
                         //holder.tv(R.id.count_tip_view).setText(getAllDatas().get(indexInData).getName());

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="260dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/beijing_pic_2"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="160dp"
+            android:src="@drawable/logo_yijian"/>
+    </RelativeLayout>
+
+    <com.angcyo.uiview.widget.RTextView
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_xhdpi"
+        android:background="@drawable/base_dark_border_line_little_selector"
+        android:lineSpacingExtra="6dp"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/klj_info"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_xhdpi"
+        android:background="@drawable/base_dark_border_line_little_selector"
+        android:divider="@drawable/base_shape_line"
+        android:dividerPadding="@dimen/base_xhdpi"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            android:background="@color/transparent"
+            app:item_dark_text="885222222"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_left_res="@drawable/qq_qun"
+            app:item_right_res="@null"
+            app:item_text="QQ群"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            android:background="@color/transparent"
+            app:item_dark_text="0755-26777170"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_left_res="@drawable/customer_hotline"
+            app:item_right_res="@null"
+            app:item_text="客户热线"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            android:background="@color/transparent"
+            app:item_dark_text="support@konglonggu.com"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_left_res="@drawable/email"
+            app:item_right_res="@null"
+            app:item_text="邮件"/>
+
+    </LinearLayout>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/text_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height"
+        android:layout_margin="@dimen/base_xhdpi"
+        android:gravity="center"
+        android:text="@string/feedback"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

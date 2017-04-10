@@ -33,6 +33,11 @@ public class GreenSkin extends BaseSkin {
     }
 
     @Override
+    public int getThemeSubColor() {
+        return Color.parseColor("#0BD1A0");
+    }
+
+    @Override
     public int getThemeDarkColor() {
         return Color.parseColor("#800BD1A0");
     }

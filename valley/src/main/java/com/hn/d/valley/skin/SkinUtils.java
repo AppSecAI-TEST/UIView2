@@ -21,7 +21,7 @@ import com.orhanobut.hawk.Hawk;
  */
 public class SkinUtils {
     public static ISkin getSkin(Context context) {
-        int skin = Hawk.get(SkinManagerUIView.SKIN_KEY, SkinManagerUIView.SKIN_BLACK);
+        int skin = getSkin();
         ISkin iSkin = SkinHelper.getSkin();
         switch (skin) {
             case SkinManagerUIView.SKIN_BLACK:
@@ -37,8 +37,12 @@ public class SkinUtils {
         return iSkin;
     }
 
+    public static Integer getSkin() {
+        return Hawk.get(SkinManagerUIView.SKIN_KEY, SkinManagerUIView.SKIN_BLACK);
+    }
+
     public static int getSkinStyle() {
-        int skin = Hawk.get(SkinManagerUIView.SKIN_KEY, SkinManagerUIView.SKIN_BLACK);
+        int skin = getSkin();
         int style = R.style.AppTheme;
         switch (skin) {
             case SkinManagerUIView.SKIN_BLACK:

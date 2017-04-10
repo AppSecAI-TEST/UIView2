@@ -39,6 +39,6 @@ public class BlackSkin extends BaseSkin {
 
     @Override
     public int getThemeSubColor() {
-        return Color.GRAY;
+        return Color.parseColor("#FC6B38");
     }
 }

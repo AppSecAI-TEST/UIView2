@@ -337,6 +337,8 @@
     <string name="green">绿色</string>
     <string name="blue">蓝色</string>
     <string name="str_text_pd">个人名片</string>
-   <string name="attention_count_tip">关注量:</string>
+    <string name="attention_count_tip">关注量:</string>
     <string name="default_text">默认</string>
+    <string name="klj_info">哈喽, 大家好, 我是恐龙君, 你的专属小秘书, 为你提供全方位的服务.
+                            如果有任何不爽或者建议, 欢迎通过以下方式联系我们, 很高兴能给我们提供意见和建议.</string>
 </resources>
