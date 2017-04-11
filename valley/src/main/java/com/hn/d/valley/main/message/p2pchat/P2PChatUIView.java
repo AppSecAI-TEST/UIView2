@@ -8,7 +8,7 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
-import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -30,7 +30,7 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-public class P2PChatUIView extends ChatUIView {
+public class P2PChatUIView extends ChatUIView2 {
 
     /**
      * @param sessionId   聊天对象账户

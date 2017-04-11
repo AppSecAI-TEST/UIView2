@@ -46,8 +46,8 @@ public class FuncItem<T> extends AbsContactItem {
 
     String text ;
 
-    public static List<FuncItem> provide(){
-        List<FuncItem> data = new ArrayList<>();
+    public static List<AbsContactItem> provide(){
+        List<AbsContactItem> data = new ArrayList<>();
         data.add(newfirend);
         data.add(groupMessage);
         return data;

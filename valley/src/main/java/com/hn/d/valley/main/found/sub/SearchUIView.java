@@ -36,7 +36,7 @@ import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.UserRecommendBean;
 import com.hn.d.valley.control.UserDiscussItemControl;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.sub.user.DynamicDetailUIView;
@@ -431,7 +431,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
             holder.v(R.id.item_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new UserDetailUIView(bean.getUid()));
+                    startIView(new UserDetailUIView2(bean.getUid()));
                 }
             });
         }

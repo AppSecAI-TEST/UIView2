@@ -52,7 +52,7 @@
             app:item_left_draw_padding="@dimen/base_xhdpi"
             app:item_left_res="@drawable/qq_qun"
             app:item_right_res="@null"
-            app:item_text="QQ群"/>
+            app:item_text="@string/qq_qun"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
             style="@style/DefaultItemInfoStyle"
@@ -62,7 +62,7 @@
             app:item_left_draw_padding="@dimen/base_xhdpi"
             app:item_left_res="@drawable/customer_hotline"
             app:item_right_res="@null"
-            app:item_text="客户热线"/>
+            app:item_text="@string/line_phone"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
             style="@style/DefaultItemInfoStyle"
@@ -72,7 +72,7 @@
             app:item_left_draw_padding="@dimen/base_xhdpi"
             app:item_left_res="@drawable/email"
             app:item_right_res="@null"
-            app:item_text="邮件"/>
+            app:item_text="@string/email"/>
 
     </LinearLayout>
 

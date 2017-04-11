@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
@@ -33,6 +35,7 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.FriendListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
@@ -107,7 +110,16 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         mFriendsAdapter = new FriendsAdapter(mContext,this){
             @Override
             protected List<? extends AbsContactItem> onPreProvide() {
-                return FuncItem.provide();
+
+                FriendBean bean = new FriendBean();
+                bean.setDefaultMark("恐龙君");
+                bean.setUid("13");
+                bean.setAvatar("http://avatorimg.klgwl.com/13/13696.png");
+
+                ContactItem item = new ContactItem(bean);
+                List<AbsContactItem> items = FuncItem.provide();
+                items.add(item);
+                return items;
             }
         };
 
@@ -226,6 +238,13 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 .friends(Param.buildMap("uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformer(FriendListModel.class))
                 .subscribe(new BaseSingleSubscriber<FriendListModel>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        callback.onStart();
+                    }
+
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
@@ -330,6 +349,22 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             textPaint.getTextBounds(letter, 0, letter.length(), rect);
 
             canvas.drawText(letter, view.getLeft() + ScreenUtil.dip2px(10), (getGroupHeight(position) + rect.height()) / 2 - offset, textPaint);
+
+        }
+
+        @Override
+        public void onItemOffsets(Rect outRect, int position) {
+            super.onItemOffsets(outRect, position);
+            outRect.bottom = ScreenUtil.dip2px(1);
+        }
+
+        @Override
+        public void onItemDraw(Canvas canvas, View view, int position) {
+            super.onItemDraw(canvas, view, position);
+            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(mContext,R.color.line_color));
+            int left = ScreenUtil.dip2px(10);
+            colorDrawable.setBounds(view.getLeft() + left,view.getBottom(),view.getRight(),view.getBottom() + ScreenUtil.dip2px(1));
+            colorDrawable.draw(canvas);
 
         }
     }

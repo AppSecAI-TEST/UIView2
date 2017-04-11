@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -16,7 +15,6 @@ import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
@@ -236,7 +234,7 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
                 .setTitleString("")
-                .addRightItem(TitleBarPattern.buildImage(R.drawable.switch_camera_n, new View.OnClickListener() {
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.fabudongtai, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         HomeUIView.this.onClick();

@@ -9,12 +9,14 @@
     android:paddingLeft="@dimen/base_xhdpi"
     android:paddingRight="@dimen/base_xhdpi">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/avatar"
         style="@style/UserMidIcoStyle"
         android:layout_width="@dimen/base_50dpi"
         android:layout_height="@dimen/base_50dpi"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/is_circle"
+        android:src="@drawable/default_avatar"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -58,20 +60,22 @@
                 style="@style/DarkTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/default_text_little_size"
                 tools:text="1分钟前"/>
 
             <View
                 android:layout_width="@dimen/base_ldpi"
                 android:layout_height="@dimen/base_ldpi"
                 android:layout_marginLeft="@dimen/base_ldpi"
-                android:background="@drawable/dark_round_shape"/>
+                android:background="@drawable/dark_round_shape"
+                android:visibility="gone"/>
 
             <com.hn.d.valley.widget.HnViewCountTextView
-                android:id="@+id/view_cnt"
                 style="@style/MainTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/base_ldpi"
+                android:visibility="gone"
                 tools:text="320"/>
 
             <TextView
@@ -108,13 +112,13 @@
         <!--tools:text="取消关注"/>-->
 
         <ImageButton
-            android:id="@+id/command_item_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/base_bg2_selector"
             android:minHeight="@dimen/base_xxxhdpi"
             android:minWidth="@dimen/base_xxxhdpi"
-            android:src="@drawable/an"/>
+            android:src="@drawable/an"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -127,5 +131,18 @@
         android:layout_marginEnd="@dimen/base_50dpi"
         android:src="@drawable/zhiding"
         android:visibility="gone"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/view_cnt"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:tag="%1$s人阅"
+        android:textColor="@color/main_text_color_6666666"
+        android:textSize="@dimen/default_text_little_size"
+        tools:text="122"/>
 
 </RelativeLayout>

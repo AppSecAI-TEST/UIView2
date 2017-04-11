@@ -209,6 +209,7 @@
     <string name="create_qr_tip">二维码生成中...</string>
     <string name="tags_manage_title">标签管理</string>
     <string name="signature_empty_tip">此人很懒, 什么也没有留下.</string>
+    <string name="introduce_empty_tip">此人很懒, 什么也没有留下.</string>
     <string name="unattention_tip2">你们是好友,取消关注后将会解除好友,你们将从各自的联系人列表中消失,对方不会收到任何提示</string>
     <string name="unattention_tip1">确定不再关注此人?</string>
     <string name="my_visitor_text">我的访客</string>
@@ -341,4 +342,25 @@
     <string name="default_text">默认</string>
     <string name="klj_info">哈喽, 大家好, 我是恐龙君, 你的专属小秘书, 为你提供全方位的服务.
                             如果有任何不爽或者建议, 欢迎通过以下方式联系我们, 很高兴能给我们提供意见和建议.</string>
+    <string name="line_phone">客户热线</string>
+    <string name="email">邮件</string>
+    <string name="qq_qun">QQ群</string>
+    <string name="info">资料</string>
+    <string name="photo">相册</string>
+    <string name="attention_format">关注 %1$s</string>
+    <string name="fans_format">粉丝 %1$s</string>
+    <string name="klg_auth_format">恐龙谷认证: %1$s</string>
+    <string name="photo_wall">照片墙</string>
+    <string name="more_info_tip">更多基本资料</string>
+    <string name="base_info">基本资料</string>
+    <string name="base_introduce">人物介绍</string>
+    <string name="register_time">注册时间</string>
+    <string name="more_introduce_tip">更多人物介绍</string>
+    <string name="repeat_send_has_blank">重发</string>
+    <string name="copy_has_blank">复制</string>
+    <string name="withdrawn_msg">撤回</string>
+    <string name="revoke_failed">撤回失败</string>
+    <string name="delete_has_blank">删除</string>
+    <string name="forward_to_person">转发到个人</string>
+    <string name="forward_to_team">转发到群</string>
 </resources>

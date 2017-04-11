@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Text;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -21,12 +20,9 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.CustomMessageBean;
-import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.ListModel;
-import com.hn.d.valley.bean.RecommendUserBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.friend.GroupBean;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.MessageService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
@@ -34,8 +30,6 @@ import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
-
-import retrofit2.http.Body;
 
 /**
  * Created by hewking on 2017/3/17.
@@ -114,7 +108,7 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOtherILayout.startIView(new UserDetailUIView(dataBean.getBodyBean().getUid()));
+                    mOtherILayout.startIView(new UserDetailUIView2(dataBean.getBodyBean().getUid()));
                 }
             });
 

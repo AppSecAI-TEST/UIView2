@@ -32,11 +32,12 @@ import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.audio.AudioPlayCallback;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -252,7 +253,7 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
         holder.v(R.id.msg_ico_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mUIBaseView.startIView(new UserDetailUIView(bean.getFromAccount()));
+                mUIBaseView.startIView(new UserDetailUIView2(bean.getFromAccount()));
             }
         });
     }
@@ -299,7 +300,17 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
 
                 selectDrawable(imageView);
 
-                final AudioViewControl audioViewControl = new AudioViewControl(mContext, holder, this, bean);
+                final AudioViewControl audioViewControl = new AudioViewControl(mContext, holder.itemView, new AudioPlayCallback<IMMessage>() {
+                    @Override
+                    public List<IMMessage> getAllData() {
+                        return ChatAdapter.this.getAllDatas();
+                    }
+
+                    @Override
+                    public void notifyDataSetChanged() {
+                        ChatAdapter.this.notifyDataSetChanged();
+                    }
+                }, bean);
 
                 msgContentLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -510,7 +521,7 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
                 msgPcLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mUIBaseView.startIView(new UserDetailUIView(from.getUid()));
+                        mUIBaseView.startIView(new UserDetailUIView2(from.getUid()));
                     }
                 });
 
@@ -666,4 +677,6 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
             clickView.setLayoutParams(maskParams2);
         }
     }
+
+
 }

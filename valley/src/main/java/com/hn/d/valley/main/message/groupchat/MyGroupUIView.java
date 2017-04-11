@@ -53,6 +53,19 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                 .myGroup(Param.buildMap("uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformer(GroupList.class))
                 .subscribe(new BaseSingleSubscriber<GroupList>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        showLoadView();
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        hideLoadView();
+                    }
+
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);

@@ -9,6 +9,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.rsen.RefreshLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
@@ -28,6 +29,7 @@ import com.hwangjr.rxbus.annotation.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -35,7 +37,7 @@ import rx.functions.Action1;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：首页 下面的 圈子
+ * 类的描述：首页 下面的 圈子, 朋友圈
  * 创建人员：Robi
  * 创建时间：2016/12/16 11:18
  * 修改人员：Robi
@@ -46,6 +48,11 @@ import rx.functions.Action1;
 public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
 
     LoadStatusCallback mLoadStatusCallback;
+    private String to_uid;
+
+    public CircleUIView(String to_uid) {
+        this.to_uid = to_uid;
+    }
 
     public CircleUIView(LoadStatusCallback loadStatusCallback) {
         mLoadStatusCallback = loadStatusCallback;
@@ -78,16 +85,23 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     }
 
     @Override
+    protected void initRefreshLayout() {
+        super.initRefreshLayout();
+        mRefreshLayout.setRefreshDirection(RefreshLayout.NONE);
+    }
+
+    @Override
     protected int getEmptyTipStringId() {
         return R.string.default_empty_circle_tip;
     }
 
     @Override
     protected void onUILoadData(String page) {
-        mLoadStatusCallback.onLoadStart();
+        if (mLoadStatusCallback != null) {
+            mLoadStatusCallback.onLoadStart();
+        }
         add(RRetrofit.create(UserInfoService.class)
-                .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
-                        "type:" + 1, "page:" + page, "first_id:" + first_id, "last_id:" + last_id))
+                .discussList(buildParam(page))
                 .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
@@ -107,7 +121,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                     @Override
                     public void onEnd() {
                         onUILoadDataFinish();
-                        mLoadStatusCallback.onLoadEnd();
+                        if (mLoadStatusCallback != null) {
+                            mLoadStatusCallback.onLoadEnd();
+                        }
                     }
 
                     @Override
@@ -121,6 +137,15 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                         });
                     }
                 }));
+    }
+
+    private Map<String, String> buildParam(String page) {
+        if (TextUtils.isEmpty(to_uid)) {
+            return Param.buildMap("uid:" + UserCache.getUserAccount(),
+                    "type:" + 1, "page:" + page, "first_id:" + first_id, "last_id:" + last_id);
+        } else {
+            return Param.buildMap("to_uid:" + to_uid, "page:" + page, "first_id:" + first_id, "last_id:" + last_id);
+        }
     }
 
     @Override

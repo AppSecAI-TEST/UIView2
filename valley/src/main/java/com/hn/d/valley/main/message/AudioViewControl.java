@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.audio.AudioPlayCallback;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
 import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
@@ -36,9 +36,9 @@ public class AudioViewControl {
     public static final int CLICK_TO_PLAY_AUDIO_DELAY = 500;
     public static int MAX_AUDIO_TIME_SECOND = 120;
     private final MessageAudioControl audioControl;
-    RBaseViewHolder mViewHolder;
+    View itemView;
     IMMessage mIMMessage;
-    ChatAdapter mChatAdapter;
+    AudioPlayCallback playCallback;
 
     private MessageAudioControl.AudioControlListener onPlayListener = new MessageAudioControl.AudioControlListener() {
 
@@ -63,10 +63,10 @@ public class AudioViewControl {
         }
     };
 
-    public AudioViewControl(Context context, RBaseViewHolder viewHolder, final ChatAdapter adapter, IMMessage message) {
-        mViewHolder = viewHolder;
+    public AudioViewControl(Context context, View itemView, AudioPlayCallback callback, IMMessage message) {
+        this.itemView = itemView;
         mIMMessage = message;
-        mChatAdapter = adapter;
+        playCallback = callback;
 
         audioControl = MessageAudioControl.getInstance(context);
 
@@ -104,8 +104,8 @@ public class AudioViewControl {
     }
 
     private View getContainverView() {
-//        return mViewHolder.v(R.id.message_item_audio_layout);
-        return mViewHolder.v(R.id.msg_audio_layout);
+//        return itemView.v(R.id.message_item_audio_layout);
+        return itemView.findViewById(R.id.message_item_audio_layout);
     }
 
     private int calculateBubbleWidth(long seconds, int MAX_TIME) {
@@ -161,7 +161,7 @@ public class AudioViewControl {
     }
 
     private TextView getTimeView() {
-        return mViewHolder.v(R.id.message_item_audio_duration);
+        return (TextView) itemView.findViewById(R.id.message_item_audio_duration);
     }
 
     private void play() {
@@ -172,7 +172,7 @@ public class AudioViewControl {
     }
 
     private ImageView getAnimationView() {
-        return mViewHolder.v(R.id.message_item_audio_playing_animation);
+        return (ImageView) itemView.findViewById(R.id.message_item_audio_playing_animation);
     }
 
     private void stop() {
@@ -213,7 +213,7 @@ public class AudioViewControl {
     }
 
     private View getUnreadIndicator() {
-        return mViewHolder.v(R.id.message_item_audio_unread_indicator);
+        return itemView.findViewById(R.id.message_item_audio_unread_indicator);
     }
 
     // 判断消息方向，是否是接收到的消息
@@ -233,7 +233,7 @@ public class AudioViewControl {
             }
 
             audioControl.startPlayAudioDelay(CLICK_TO_PLAY_AUDIO_DELAY, mIMMessage, onPlayListener);
-            audioControl.setPlayNext(true, mChatAdapter, mIMMessage);
+            audioControl.setPlayNext(true, playCallback, mIMMessage);
         }
     }
 }

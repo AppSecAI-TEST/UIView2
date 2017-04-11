@@ -16,7 +16,7 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.ChatFileUIView;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.GroupReportUIView;
@@ -202,7 +202,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
         iv_user_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mILayout.startIView(new UserDetailUIView(mUserInfo.getAccount()));
+                mILayout.startIView(new UserDetailUIView2(mUserInfo.getAccount()));
             }
         });
         tv_add_group.setOnClickListener(new View.OnClickListener() {

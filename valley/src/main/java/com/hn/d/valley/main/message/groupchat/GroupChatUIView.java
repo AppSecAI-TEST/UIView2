@@ -24,6 +24,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.ChatUIView;
+import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -38,7 +39,7 @@ import rx.functions.Action3;
 /**
  * Created by hewking on 2017/3/10.
  */
-public class GroupChatUIView extends ChatUIView {
+public class GroupChatUIView extends ChatUIView2 {
 
     @Override
     protected TitleBarPattern getTitleBar() {

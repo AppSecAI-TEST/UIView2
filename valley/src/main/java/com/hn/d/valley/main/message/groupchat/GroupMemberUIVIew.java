@@ -16,7 +16,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -95,7 +95,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOtherILayout.startIView(new UserDetailUIView(dataBean.getUserId()));
+                    mOtherILayout.startIView(new UserDetailUIView2(dataBean.getUserId()));
                 }
             });
         }

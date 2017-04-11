@@ -92,7 +92,7 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
 //                holder.v(R.id.card_root_layout).setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        startIView(new UserDetailUIView(dataBean.getUid()));
+//                        startIView(new UserDetailUIView2(dataBean.getUid()));
 //                    }
 //                });
 //            }

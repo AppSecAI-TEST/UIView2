@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <!--头像背景-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="250dp">
+
+        <ImageView
+            android:id="@+id/bg_view"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/yonghuxiangqing_3"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/bg_view"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/base_ldpi">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/base_hdpi"
+                android:layout_marginStart="@dimen/base_hdpi"
+                android:src="@drawable/bukantade_icon"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bugeitakan_icon"/>
+
+        </LinearLayout>
+
+        <com.hn.d.valley.widget.HnGlideImageView
+            android:id="@+id/user_ico_view"
+            android:layout_width="@dimen/avatar_image_size"
+            android:layout_height="@dimen/avatar_image_size"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="170dp"
+            android:contentDescription="@string/is_circle"
+            android:src="@drawable/logo_yijian"/>
+
+        <!--语音介绍布局-->
+        <LinearLayout
+            android:id="@+id/voice_control_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/base_left_round_selector"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/base_ldpi"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/voice_play_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/voice_playing_blue"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/voice_time_view"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/base_ldpi"
+                android:tag="%1$s″"
+                tools:text="13"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/attention_count"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="@string/attention_format"
+            tools:text="120"/>
+
+        <View
+            android:layout_width="@dimen/base_line"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/base_xxhdpi"
+            android:layout_marginStart="@dimen/base_xxhdpi"
+            android:background="@color/black"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/fans_count"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="@string/fans_format"
+            tools:text="120"/>
+    </LinearLayout>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/auth_desc"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/base_xxhdpi"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:gravity="center"
+        android:tag="@string/klg_auth_format"
+        tools:text="阿里巴巴董事长马云"/>
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/base_line"-->
+    <!--android:layout_marginTop="@dimen/base_xxhdpi"-->
+    <!--android:background="@color/line_color"/>-->
+
+</LinearLayout>

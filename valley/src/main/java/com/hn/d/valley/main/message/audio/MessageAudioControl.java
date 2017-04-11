@@ -3,10 +3,9 @@ package com.hn.d.valley.main.message.audio;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.utils.storage.StorageUtil;
 import com.hn.d.valley.R;
-import com.hn.d.valley.main.message.ChatAdapter;
-import com.hn.d.valley.main.message.ChatControl;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
@@ -23,7 +22,7 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
 
     private boolean mIsNeedPlayNext = false;
 
-    private ChatAdapter mAdapter = null;
+    private AudioPlayCallback playCallback = null;
 
     private IMMessage mItem = null;
 
@@ -79,8 +78,8 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
 
                 boolean isLoop = false;
                 if (mIsNeedPlayNext) {
-                    if (mAdapter != null && mItem != null) {
-                        isLoop = playNextAudio(mAdapter, mItem);
+                    if (playCallback != null && mItem != null) {
+                        isLoop = playNextAudio(playCallback, mItem);
                     }
                 }
 
@@ -135,8 +134,8 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
         }
     }
 
-    private boolean playNextAudio(ChatAdapter tAdapter, IMMessage messageItem) {
-        List<?> list = tAdapter.getAllDatas();
+    private boolean playNextAudio(AudioPlayCallback callback, IMMessage messageItem) {
+        List<?> list = callback.getAllData();
         int index = 0;
         int nextIndex = -1;
         //找到当前已经播放的
@@ -177,7 +176,7 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
             //连续播放 1.继续使用playingAudioStreamType 2.不需要resetOrigAudioStreamType
             mMessageAudioControl.startPlayAudio(message, null, getCurrentAudioStreamType(), false, 0);
             mItem = (IMMessage) list.get(nextIndex);
-            tAdapter.notifyDataSetChanged();
+            callback.notifyDataSetChanged();
             return true;
         }
         return false;
@@ -187,9 +186,9 @@ public class MessageAudioControl extends BaseAudioControl<IMMessage> {
         setPlayNext(false, null, null);
     }
 
-    public void setPlayNext(boolean isPlayNext, ChatAdapter adapter, IMMessage item) {
+    public void setPlayNext(boolean isPlayNext, AudioPlayCallback adapter, IMMessage item) {
         mIsNeedPlayNext = isPlayNext;
-        mAdapter = adapter;
+        playCallback = adapter;
         mItem = item;
     }
 

@@ -36,7 +36,6 @@ import com.hn.d.valley.bean.realm.NewestDiscussPicBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
-import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
@@ -66,6 +65,7 @@ import butterknife.OnClick;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class UserDetailUIView extends BaseContentUIView {
 
     String to_uid;

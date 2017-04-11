@@ -22,7 +22,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.RecommendUserBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.widget.HnFollowImageView;
@@ -109,7 +109,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mLayout.startIView(new UserDetailUIView(dataBean.getUid()));
+                    mLayout.startIView(new UserDetailUIView2(dataBean.getUid()));
                 }
             });
 

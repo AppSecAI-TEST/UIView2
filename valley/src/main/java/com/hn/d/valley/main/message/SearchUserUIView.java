@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
@@ -22,10 +22,9 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.mvp.Search;
 import com.hn.d.valley.main.message.mvp.SearchPresenter;
-import com.hn.d.valley.sub.user.UserInfoUIView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
@@ -167,7 +166,7 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
             holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new UserDetailUIView(bean.getUid()));
+                    startIView(new UserDetailUIView2(bean.getUid()));
                 }
             });
         }

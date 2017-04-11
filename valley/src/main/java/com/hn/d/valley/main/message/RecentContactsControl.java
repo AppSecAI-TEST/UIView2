@@ -338,7 +338,7 @@ public class RecentContactsControl {
 //                                viewHolder.itemView.post(new Runnable() {
 //                                    @Override
 //                                    public void run() {
-//                                        mRecentContactsAdapter.showUnreadNum(mViewHolder, recentContact);
+//                                        mRecentContactsAdapter.showUnreadNum(itemView, recentContact);
 //                                    }
 //                                });
 //                            }

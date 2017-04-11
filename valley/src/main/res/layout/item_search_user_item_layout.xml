@@ -18,208 +18,217 @@
     <include
         layout="@layout/layout_user_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/base_xxxhdpi"/>
-
-    <com.angcyo.uiview.widget.RTextView
-        android:id="@+id/content"
-        style="@style/MainTextStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/base_xhdpi"
-        android:layout_marginStart="@dimen/base_xhdpi"
-        android:contentDescription="@string/all"
-        android:lineSpacingExtra="4dp"
-        android:paddingBottom="@dimen/base_ldpi"
-        tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
-
-    <RelativeLayout
-        android:id="@+id/media_control_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/base_xhdpi"
-        android:layout_marginStart="@dimen/base_xhdpi"
-        tools:background="@color/main_text_color_dark">
-
-        <!--<com.facebook.drawee.view.SimpleDraweeView-->
-        <!--android:id="@+id/media_image_view"-->
-        <!--style="@style/ImageStyle"/>-->
-
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <com.angcyo.uiview.widget.RNineImageLayout
-                android:id="@+id/media_image_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <ImageView
-                android:id="@+id/video_play_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/play_redianzixun"
-                android:visibility="invisible"/>
-
-            <TextView
-                android:id="@+id/video_time_view"
-                style="@style/WhiteColorTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|bottom"
-                android:layout_marginEnd="@dimen/base_ldpi"
-                android:visibility="invisible"
-                tools:text="00:07"/>
-        </FrameLayout>
-
-        <!--媒体文件(图片), 的数量-->
-        <TextView
-            android:id="@+id/media_count_view"
-            style="@style/WhiteColorTextStyle"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/base_xhdpi"
-            android:background="@drawable/fold"
-            android:gravity="center"
-            android:textSize="@dimen/default_text_size10"
-            android:visibility="gone"
-            tools:text="99"/>
-    </RelativeLayout>
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/base_xhdpi"
-        android:paddingRight="@dimen/base_xhdpi">
+        android:paddingStart="@dimen/base_60dpi">
 
         <com.angcyo.uiview.widget.RTextView
-            android:id="@+id/copy_info_view"
+            android:id="@+id/content"
+            style="@style/MainTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/base_xhdpi_"
-            android:layout_marginStart="@dimen/base_xhdpi_"
-            android:background="@color/line_color"
-            android:padding="@dimen/base_xhdpi"
-            android:visibility="gone"
-            tools:text="据说据说据说据说据说据说据说据说据说据说据说据说"/>
-
-        <TextView
-            android:id="@+id/address"
-            style="@style/AddressTextStyle"
+            android:layout_marginEnd="@dimen/base_xhdpi"
+            android:contentDescription="@string/all"
+            android:lineSpacingExtra="4dp"
             android:paddingBottom="@dimen/base_ldpi"
-            android:paddingTop="@dimen/base_ldpi"
-            tools:text="广东 深圳"/>
+            android:paddingStart="@dimen/base_xhdpi"
+            tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
 
         <com.hn.d.valley.widget.HnTagsNameTextView
             android:id="@+id/tags_name"
-            style="@style/DarkTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:paddingBottom="@dimen/base_ldpi"
+            android:paddingStart="@dimen/base_xhdpi"
             android:paddingTop="@dimen/base_ldpi"
             tools:text="广东 深圳"/>
 
-        <View
-            style="@style/BaseHLine"
-            android:layout_marginTop="@dimen/base_xhdpi"/>
+        <RelativeLayout
+            android:id="@+id/media_control_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/base_xhdpi"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            tools:background="@color/main_text_color_dark">
 
-    </LinearLayout>
+            <!--<com.facebook.drawee.view.SimpleDraweeView-->
+            <!--android:id="@+id/media_image_view"-->
+            <!--style="@style/ImageStyle"/>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/base_title_bar_item_size"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/base_xhdpi"
-        android:paddingRight="@dimen/base_xhdpi">
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-        <com.hn.d.valley.widget.HnItemTextView
-            android:id="@+id/forward_cnt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:drawableLeft="@drawable/forwarding_icon"
-            tools:text="40"/>
+                <com.angcyo.uiview.widget.RNineImageLayout
+                    android:id="@+id/media_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
-        <com.hn.d.valley.widget.HnItemTextView
-            android:id="@+id/fav_cnt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_xxhdpi"
-            android:drawableLeft="@drawable/collection_icon_n"
-            android:visibility="gone"
-            tools:text="40"/>
+                <ImageView
+                    android:id="@+id/video_play_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/play_redianzixun"
+                    android:visibility="invisible"/>
 
-        <com.hn.d.valley.widget.HnItemTextView
-            android:id="@+id/comment_cnt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/base_xhdpi"
-            android:drawableLeft="@drawable/comments_icon"
-            tools:text="40"/>
+                <TextView
+                    android:id="@+id/video_time_view"
+                    style="@style/WhiteColorTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginEnd="@dimen/base_ldpi"
+                    android:visibility="invisible"
+                    tools:text="00:07"/>
+            </FrameLayout>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"/>
-
-        <com.hn.d.valley.widget.HnItemTextView
-            android:id="@+id/like_cnt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:drawableLeft="@drawable/thumb_up_icon_n"
-            tools:text="40"/>
-
-    </LinearLayout>
-
-    <RelativeLayout
-        android:id="@+id/like_users_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/base_50dpi"
-        android:background="@drawable/base_bg_selector"
-        android:clickable="true"
-        android:visibility="gone">
+            <!--媒体文件(图片), 的数量-->
+            <TextView
+                android:id="@+id/media_count_view"
+                style="@style/WhiteColorTextStyle"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="@dimen/base_xhdpi"
+                android:background="@drawable/fold"
+                android:gravity="center"
+                android:textSize="@dimen/default_text_size10"
+                android:visibility="gone"
+                tools:text="99"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/base_50dpi"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/base_xhdpi"
-            android:paddingRight="@dimen/base_xhdpi">
-
-            <com.hn.d.valley.widget.HnIcoRecyclerView
-                android:id="@+id/like_user_recycler_view"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:tag="H"/>
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/base_xhdpi">
 
             <com.angcyo.uiview.widget.RTextView
-                android:id="@+id/like_user_count_view"
-                style="@style/DarkTextStyle"
-                android:layout_width="wrap_content"
+                android:id="@+id/copy_info_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="@dimen/base_ldpi"
-                android:drawableRight="@drawable/next"
-                android:tag="@string/link_count_tip"
-                tools:text="109个人赞过"/>
+                android:layout_marginEnd="@dimen/base_xhdpi_"
+                android:layout_marginStart="@dimen/base_xhdpi_"
+                android:background="@color/line_color"
+                android:padding="@dimen/base_xhdpi"
+                android:visibility="gone"
+                tools:text="据说据说据说据说据说据说据说据说据说据说据说据说"/>
+
+            <TextView
+                android:id="@+id/address"
+                style="@style/AddressTextStyle"
+                android:paddingTop="@dimen/base_ldpi"
+                tools:text="广东 深圳"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_title_bar_item_size"
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/base_xhdpi"
+            android:paddingStart="@dimen/base_ldpi">
+
+            <com.hn.d.valley.widget.HnItemTextView
+                android:id="@+id/like_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/love_icon_n"
+                tools:text="40"/>
+
+            <com.hn.d.valley.widget.HnItemTextView
+                android:id="@+id/comment_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/base_xhdpi"
+                android:drawableStart="@drawable/comments_icon"
+                tools:text="40"/>
+
+            <com.hn.d.valley.widget.HnItemTextView
+                android:id="@+id/forward_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/base_xhdpi"
+                android:drawableStart="@drawable/forwarding_icon"
+                tools:text="40"/>
+
+            <com.hn.d.valley.widget.HnItemTextView
+                android:id="@+id/fav_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/base_xxhdpi"
+                android:drawableStart="@drawable/collection_icon_n"
+                android:visibility="gone"
+                tools:text="40"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/command_item_view"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/base_bg2_selector"
+                android:padding="@dimen/base_ldpi"
+                android:src="@drawable/more_dongtai"/>
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/click_view"
+        <RelativeLayout
+            android:id="@+id/like_users_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/base_50dpi"
             android:background="@drawable/base_bg_selector"
-            android:clickable="true"/>
-    </RelativeLayout>
+            android:clickable="true"
+            android:visibility="gone">
 
-    <View
-        android:id="@+id/bottom_line_view"
-        style="@style/BaseHLine"
-        android:layout_marginEnd="@dimen/base_xhdpi"
-        android:layout_marginStart="@dimen/base_xhdpi"
-        android:layout_marginTop="@dimen/base_ldpi"
-        android:visibility="gone"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_50dpi"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/base_xhdpi"
+                android:paddingRight="@dimen/base_xhdpi">
 
+                <com.hn.d.valley.widget.HnIcoRecyclerView
+                    android:id="@+id/like_user_recycler_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tag="H"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/like_user_count_view"
+                    style="@style/DarkTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/base_ldpi"
+                    android:drawableRight="@drawable/next"
+                    android:tag="@string/link_count_tip"
+                    tools:text="109个人赞过"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/click_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/base_bg_selector"
+                android:clickable="true"/>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/bottom_line_view"
+            style="@style/BaseHLine"
+            android:layout_marginEnd="@dimen/base_xhdpi"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            android:layout_marginTop="@dimen/base_ldpi"
+            android:visibility="gone"/>
+    </LinearLayout>
 </LinearLayout>

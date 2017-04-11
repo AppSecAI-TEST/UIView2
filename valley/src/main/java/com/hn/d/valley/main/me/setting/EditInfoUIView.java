@@ -864,7 +864,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
                 tv_record_second.setText(Long.parseLong(voiceIntroduces[1]) + "″");
-                mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0] + ".aac", Long.parseLong(voiceIntroduces[1]));
+                mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0], Long.parseLong(voiceIntroduces[1]));
             } else {
                 voiceIntroduces = audioUrlAndTime.split("_t_");
                 String introd1 = voiceIntroduces[1];

@@ -21,31 +21,31 @@
             android:padding="@dimen/base_ldpi">
 
             <!--输入框, 发送按钮-->
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!--发送按钮-->
-                <TextView
-                    android:id="@+id/send_view"
-                    style="@style/MainColorRoundButtonStyle"
-                    android:layout_width="@dimen/base_50dpi"
-                    android:layout_height="35dp"
-                    android:layout_alignBottom="@+id/left_layout"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="@dimen/base_mdpi"
-                    android:layout_marginStart="@dimen/base_ldpi"
-                    android:enabled="false"
-                    android:text="@string/send"
-                    android:visibility="visible"/>
+
+                <CheckBox
+                    android:id="@+id/message_voice_box"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:button="@drawable/message_voice_selector"/>
+
+
 
                 <!--文本输入, 语音录制-->
                 <RelativeLayout
                     android:id="@+id/left_layout"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/send_view">
+                    >
 
                     <com.angcyo.uiview.widget.ExEditText
                         android:id="@+id/input_view"
@@ -72,49 +72,65 @@
                 </RelativeLayout>
 
 
-            </RelativeLayout>
-
-            <!--输入控制按钮-->
-            <LinearLayout
-                android:id="@+id/input_layout"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/base_40dpi"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/message_voice_box"
-                    android:layout_width="@dimen/base_40dpi"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/base_xhdpi"
-                    android:button="@drawable/message_voice_selector"/>
-
-                <!--表情, 功能切换-->
-                <RadioGroup
-                    android:id="@+id/group_view"
+                <!--输入控制按钮-->
+                <LinearLayout
+                    android:id="@+id/input_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingBottom="@dimen/base_mdpi">
+                    android:layout_height="@dimen/base_40dpi"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/base_mdpi"
+                    android:layout_marginStart="@dimen/base_ldpi"
+                    android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/message_expression_view"
-                        android:layout_width="@dimen/base_40dpi"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/base_hdpi"
-                        android:button="@drawable/message_expression_selector"/>
 
-                    <RadioButton
-                        android:id="@+id/message_add_view"
-                        android:layout_width="@dimen/base_40dpi"
+                    <!--表情, 功能切换-->
+                    <RadioGroup
+                        android:id="@+id/group_view"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/base_hdpi"
-                        android:layout_marginRight="@dimen/base_hdpi"
-                        android:button="@drawable/message_add_selector"/>
-                </RadioGroup>
+                        android:layout_gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingBottom="@dimen/base_mdpi">
+
+                        <RadioButton
+                            android:id="@+id/message_expression_view"
+                            android:layout_width="@dimen/base_40dpi"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:layout_marginStart="@dimen/base_hdpi"
+                            android:button="@drawable/message_expression_selector"/>
+
+                        <RadioButton
+                            android:id="@+id/message_add_view"
+                            android:layout_width="@dimen/base_40dpi"
+                            android:gravity="center"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/base_hdpi"
+                            android:layout_marginRight="@dimen/base_hdpi"
+                            android:button="@drawable/message_add_selector"/>
+
+                        <!--发送按钮-->
+                        <TextView
+                            android:id="@+id/send_view"
+                            style="@style/MainColorRoundButtonStyle"
+                            android:layout_width="@dimen/base_50dpi"
+                            android:layout_height="35dp"
+                            android:layout_marginBottom="@dimen/base_mdpi"
+                            android:layout_marginStart="@dimen/base_ldpi"
+                            android:enabled="false"
+                            android:text="@string/send"
+                            android:visibility="gone"/>
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+
+
 
             </LinearLayout>
+
+
         </LinearLayout>
 
         <!--内容-->

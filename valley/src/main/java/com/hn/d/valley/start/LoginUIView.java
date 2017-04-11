@@ -38,9 +38,9 @@ import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.MainControl;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.other.AmapUIView;
-import com.hn.d.valley.main.other.KLJUIView;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -368,7 +368,8 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //                .setCanCanceledOnOutside(false)
 //                .showDialog(this);
 
-        startIView(new KLJUIView());
+        //startIView(new KLJUIView());
+        startIView(new UserDetailUIView2(UserCache.getUserAccount()));
     }
 
     @Override

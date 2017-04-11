@@ -37,7 +37,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.emoji.EmojiRecyclerView;
 import com.hn.d.valley.emoji.MoonUtil;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
@@ -322,7 +322,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                 holder.v(R.id.avatar).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new UserDetailUIView(dataBean.getUid()));
+                        startIView(new UserDetailUIView2(dataBean.getUid()));
                     }
                 });
             }

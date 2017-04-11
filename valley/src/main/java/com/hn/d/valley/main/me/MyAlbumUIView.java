@@ -6,19 +6,15 @@ import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
-import android.text.format.DateUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.angcyo.uiview.base.UIBaseView;
-import com.angcyo.uiview.github.swipe.recyclerview.touch.DefaultItemTouchHelper;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -26,8 +22,8 @@ import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
@@ -50,6 +46,9 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyPhotoBean> {
 
     @Override
     protected TitleBarPattern getTitleBar() {
+        if (mOtherILayout != mILayout) {
+            return null;
+        }
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_my_album));
     }
 
@@ -62,7 +61,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyPhotoBean> {
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(UserInfoService.class)
-                .myPhotos(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + UserCache.getUserAccount() , "page:" + page))
+                .myPhotos(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + UserCache.getUserAccount(), "page:" + page))
                 .compose(Rx.transformerList(MyPhotoBean.class))
                 .subscribe(new SingleRSubscriber<List<MyPhotoBean>>(this) {
                     @Override
@@ -81,7 +80,38 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyPhotoBean> {
                 }));
     }
 
-    public class AlbumAdapter extends RExBaseAdapter<String,MyPhotoBean,String> {
+    private SpannableString getSlectedSpannable(String str) {
+        SpannableString ss = new SpannableString(str);
+        int splitpos = str.indexOf("/");
+        ss.setSpan(new AbsoluteSizeSpan(70), 0, splitpos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ss;
+    }
+
+    @Override
+    protected void initRefreshLayout() {
+        super.initRefreshLayout();
+        if (mOtherILayout != mILayout) {
+            getRefreshLayout().setRefreshDirection(RefreshLayout.NONE);
+        }
+    }
+
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
+    }
+
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        return super.initItemDecoration();
+    }
+
+    @Override
+    protected boolean hasDecoration() {
+        return false;
+    }
+
+    public class AlbumAdapter extends RExBaseAdapter<String, MyPhotoBean, String> {
 
         private TextView tv_timeline;
         private RRecyclerView recyclerView;
@@ -128,22 +158,22 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyPhotoBean> {
 
                 }
             }));
-            recyclerView.setLayoutManager(new GridLayoutManager(mActivity,3));
+            recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
 
-            AlbumPhotoAdapter albumAdapter = new AlbumPhotoAdapter(mActivity,itemHeight);
+            AlbumPhotoAdapter albumAdapter = new AlbumPhotoAdapter(mActivity, itemHeight);
 
             recyclerView.setAdapter(albumAdapter);
             albumAdapter.setData(dataBean.getMedia());
         }
     }
 
-    public class AlbumPhotoAdapter extends RExBaseAdapter<String,String,String> {
+    public class AlbumPhotoAdapter extends RExBaseAdapter<String, String, String> {
 
         private int itemHeight;
 
         private ImageView imageView;
 
-        public AlbumPhotoAdapter(Context context,int itemHeight) {
+        public AlbumPhotoAdapter(Context context, int itemHeight) {
             super(context);
             this.itemHeight = itemHeight;
         }
@@ -172,28 +202,5 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyPhotoBean> {
             Glide.with(mActivity).load(dataBean).into(imageView);
 
         }
-    }
-
-    private SpannableString getSlectedSpannable(String str) {
-        SpannableString ss = new SpannableString(str);
-        int splitpos = str.indexOf("/");
-        ss.setSpan(new AbsoluteSizeSpan(70), 0, splitpos, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return ss;
-    }
-
-    @NonNull
-    @Override
-    protected LayoutState getDefaultLayoutState() {
-        return LayoutState.LOAD;
-    }
-
-    @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration();
-    }
-
-    @Override
-    protected boolean hasDecoration() {
-        return false;
     }
 }

@@ -40,7 +40,9 @@ import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView2;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.MessageUIView;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.widget.HnLoading;
@@ -130,6 +132,31 @@ public class MainUIView extends BaseUIView {
 
     }
 
+    private void resetTabLayoutIco(ArrayList<CustomTabEntity> tabs) {
+        switch (SkinUtils.getSkin()) {
+            case SkinManagerUIView.SKIN_BLUE:
+                tabs.get(0).setTabSelectedIcon(R.drawable.message_s_blue).setTabUnselectedIcon(R.drawable.message_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_s_blue).setTabUnselectedIcon(R.drawable.konglonggu_n);
+                tabs.get(2).setTabSelectedIcon(R.drawable.found_s_blue).setTabUnselectedIcon(R.drawable.found_n);
+                tabs.get(3).setTabSelectedIcon(R.drawable.me_s_blue).setTabUnselectedIcon(R.drawable.me_n);
+
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                tabs.get(0).setTabSelectedIcon(R.drawable.message_s_green).setTabUnselectedIcon(R.drawable.message_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_s_green).setTabUnselectedIcon(R.drawable.konglonggu_n);
+                tabs.get(2).setTabSelectedIcon(R.drawable.found_s_green).setTabUnselectedIcon(R.drawable.found_n);
+                tabs.get(3).setTabSelectedIcon(R.drawable.me_s_green).setTabUnselectedIcon(R.drawable.me_n);
+
+                break;
+            default:
+                tabs.get(0).setTabSelectedIcon(R.drawable.message_s_black).setTabUnselectedIcon(R.drawable.message_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_s_black).setTabUnselectedIcon(R.drawable.konglonggu_n);
+                tabs.get(2).setTabSelectedIcon(R.drawable.found_s_black).setTabUnselectedIcon(R.drawable.found_n);
+                tabs.get(3).setTabSelectedIcon(R.drawable.me_s_black).setTabUnselectedIcon(R.drawable.me_n);
+                break;
+        }
+    }
+
     private void initTabLayout() {
         ArrayList<CustomTabEntity> tabs = new ArrayList<>();
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_message_text), R.drawable.message_s, R.drawable.message_n));
@@ -137,6 +164,7 @@ public class MainUIView extends BaseUIView {
 //        tabs.add(new TabEntity(true, mActivity.getString(R.string.friend), R.drawable.haoyou_s, R.drawable.haoyou_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_found_text), R.drawable.found_s, R.drawable.found_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_me_text), R.drawable.me_s, R.drawable.me_n));
+        resetTabLayoutIco(tabs);
 
         mBottomNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
@@ -392,9 +420,12 @@ public class MainUIView extends BaseUIView {
         if (mBottomNavLayout != null) {
             ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
             for (int i = 0; i < (group).getChildCount(); i++) {
-                ResUtil.setBgDrawable(group.getChildAt(i), skin.getThemeBackgroundSelector());
+                ResUtil.setBgDrawable(group.getChildAt(i), skin.getThemeTranBackgroundSelector());
             }
-            mBottomNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeColor());
+            mBottomNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
+
+            resetTabLayoutIco(mBottomNavLayout.getTabEntitys());
+            mBottomNavLayout.updateTabStyles();
         }
     }
 }

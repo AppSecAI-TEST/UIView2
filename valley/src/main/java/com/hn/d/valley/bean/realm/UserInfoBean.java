@@ -1,5 +1,16 @@
 package com.hn.d.valley.bean.realm;
 
+import android.content.res.Resources;
+import android.text.TextUtils;
+
+import com.angcyo.uiview.github.pickerview.DateDialog;
+import com.angcyo.uiview.github.pickerview.view.WheelTime;
+import com.angcyo.uiview.utils.file.FileUtil;
+import com.hn.d.valley.R;
+import com.hn.d.valley.cache.UserCache;
+
+import java.util.Date;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
@@ -16,6 +27,8 @@ import io.realm.RealmObject;
  */
 public class UserInfoBean extends RealmObject {
 
+    public int is_login_protect;
+    public String test;
     /**
      * is_attention : 1
      * is_contact : 0
@@ -88,7 +101,6 @@ public class UserInfoBean extends RealmObject {
     private String industry;
     private String signature;
     private int is_set_password;
-    public int is_login_protect;
     private RealmList<NewestDiscussPicBean> newest_discuss_pic;
     /**
      * look_fans : 1
@@ -103,7 +115,6 @@ public class UserInfoBean extends RealmObject {
     private int look_his_discuss;
     private String created;
     private String voice_introduce;
-    public String test;
     /**
      * birthday : 2017-02-21
      */
@@ -114,6 +125,13 @@ public class UserInfoBean extends RealmObject {
      */
 
     private int discuss_pic_count;
+    /**
+     * website : 个人网址
+     * cover : http://klg-circleimg.oss-cn-shenzhen.aliyuncs.com/50017/141489630474_s_828.0x620.0.jpg
+     */
+
+    private String website;
+    private String cover;
 
     public int getIs_attention() {
         return is_attention;
@@ -435,6 +453,17 @@ public class UserInfoBean extends RealmObject {
         this.created = created;
     }
 
+    public String getCreatedTime() {
+        String parse = null;
+        try {
+            parse = WheelTime.Date_FORMAT.format(new Date(Long.valueOf(created) * 1000l));
+            return parse;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return created;
+        }
+    }
+
     public String getVoice_introduce() {
         return voice_introduce;
     }
@@ -442,6 +471,46 @@ public class UserInfoBean extends RealmObject {
     public void setVoice_introduce(String voice_introduce) {
         this.voice_introduce = voice_introduce;
     }
+
+    public String getVoiceTime() {
+        if (TextUtils.isEmpty(voice_introduce)) {
+            return "0";
+        } else {
+            String[] voiceIntroduces;
+            voiceIntroduces = voice_introduce.split("--");
+            if (voiceIntroduces.length == 2) {
+                return voiceIntroduces[1];
+            } else {
+                voiceIntroduces = voice_introduce.split("_t_");
+                String introd1 = voiceIntroduces[1];
+                String duration = FileUtil.getFileNameNoEx(introd1);
+
+                if (voiceIntroduces.length == 2) {
+                    return duration;
+                }
+            }
+        }
+        return "0";
+    }
+
+    public long getVoiceDuration() {
+        return Long.parseLong(getVoiceTime());
+    }
+
+    public String getVoiceUrl() {
+        if (TextUtils.isEmpty(voice_introduce)) {
+            return "";
+        } else {
+            String[] voiceIntroduces;
+            voiceIntroduces = voice_introduce.split("--");
+            if (voiceIntroduces.length == 2) {
+                return voiceIntroduces[0];
+            } else {
+                return voice_introduce;
+            }
+        }
+    }
+
 
     public String getBirthday() {
         return birthday;
@@ -451,11 +520,42 @@ public class UserInfoBean extends RealmObject {
         this.birthday = birthday;
     }
 
+    public String getBirthday(Resources resources) {
+        if (TextUtils.isEmpty(birthday)) {
+            return resources.getString(R.string.secret);
+        }
+        return resources.getString(R.string.birthday_format, DateDialog.getBirthday(birthday));
+    }
+
+    public String getAddress() {
+        return getProvince_name() + " " + getCity_name();
+    }
+
     public int getDiscuss_pic_count() {
         return discuss_pic_count;
     }
 
     public void setDiscuss_pic_count(int discuss_pic_count) {
         this.discuss_pic_count = discuss_pic_count;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public boolean isMe() {
+        return TextUtils.equals(uid, UserCache.getUserAccount());
     }
 }

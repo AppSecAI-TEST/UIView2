@@ -518,8 +518,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
                                 mRefreshLayout.setRefreshDirection(RefreshLayout.BOTTOM);
                             } else {
                                 mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH);
-//                                mChatControl.mChatAdapter.getAllDatas().addAll(0, result);
-//                                mChatControl.mChatAdapter.notifyDataSetChanged();
+//                                mChatControl.playCallback.getAllDatas().addAll(0, result);
+//                                mChatControl.playCallback.notifyDataSetChanged();
                                 mChatControl.mChatAdapter.fetchMoreComplete(mRecyclerView,result);
                             }
                         }
@@ -879,8 +879,8 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 //    @Subscribe
 //    public void onEvent(LastContactsEvent lastContactsEvent) {
 //        if (lastContactsEvent.mRecentContact != null) {
-//            final View layout = mViewHolder.v(R.id.recent_contact_layout);
-//            final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
+//            final View layout = itemView.v(R.id.recent_contact_layout);
+//            final TextView content = itemView.v(R.id.recent_recent_content_view);
 //
 //            final RecentContactsControl.RecentContactsInfo userInfo = RecentContactsControl.getRecentContactsInfo(lastContactsEvent.mRecentContact);
 //            MoonUtil.show(mActivity, content, userInfo.name + ":" + userInfo.lastContent);

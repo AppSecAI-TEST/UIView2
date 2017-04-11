@@ -22,7 +22,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 
@@ -182,7 +182,7 @@ public class MapCardAdapter extends UserInfoAdapter {
         holder.v(R.id.card_root_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mILayout.startIView(new UserDetailUIView(dataBean.getUid()));
+                mILayout.startIView(new UserDetailUIView2(dataBean.getUid()));
             }
         });
     }

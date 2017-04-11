@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_msg_chat_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/base_ldpi"
+    android:paddingTop="@dimen/base_ldpi"
+    tools:background="@android:color/darker_gray">
+
+    <TextView
+        android:id="@+id/msg_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base_ldpi"
+        android:background="@drawable/base_dark2_round_selector"
+        android:paddingBottom="@dimen/base_ldpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_ldpi"
+        android:textColor="@android:color/white"
+        tools:text="上午 19:90"/>
+
+    <LinearLayout
+        android:id="@+id/item_root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/msg_time_view"
+        android:gravity="bottom"
+        android:layoutDirection="rtl"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/base_xhdpi">
+
+        <!--头像-->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/msg_ico_view"
+            style="@style/MsgUserLittleIcoStyle"
+            android:layout_marginBottom="@dimen/base_xhdpi"/>
+
+        <FrameLayout
+            android:id="@+id/msg_content_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/base_80dpi">
+
+            <!--&lt;!&ndash;内容&ndash;&gt;-->
+            <!--<FrameLayout-->
+                <!--android:id="@+id/msg_content_layout"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--tools:background="@drawable/bubble_box_right_selector">-->
+
+                <!--&lt;!&ndash;文本消息&ndash;&gt;-->
+                <!--<include-->
+                    <!--android:id="@+id/msg_text_layout"-->
+                    <!--layout="@layout/msg_text_layout"/>-->
+
+                <!--&lt;!&ndash;地理位置消息&ndash;&gt;-->
+                <!--<include-->
+                    <!--android:id="@+id/msg_location_layout"-->
+                    <!--layout="@layout/msg_location_layout"-->
+                    <!--android:visibility="gone"/>-->
+
+                <!--&lt;!&ndash;&lt;!&ndash;图片消息&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;<include&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/msg_image_layout"&ndash;&gt;-->
+                <!--&lt;!&ndash;layout="@layout/msg_image_layout"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:visibility="gone"/>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;音频消息&ndash;&gt;-->
+                <!--<include-->
+                    <!--android:id="@+id/msg_audio_layout"-->
+                    <!--layout="@layout/msg_audio_layout"-->
+                    <!--android:visibility="gone"/>-->
+
+                <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                <!--&lt;!&ndash;android:id="@+id/msg_image_view"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;tools:src="@drawable/login_logo"/>&ndash;&gt;-->
+            <!--</FrameLayout>-->
+
+            <!--&lt;!&ndash;图片消息&ndash;&gt;-->
+            <!--<include-->
+                <!--android:id="@+id/msg_image_layout"-->
+                <!--layout="@layout/msg_image_layout"-->
+                <!--android:visibility="gone"/>-->
+
+            <!--&lt;!&ndash;个人名片&ndash;&gt;-->
+            <!--<include-->
+                <!--android:id="@+id/msg_pc_layout"-->
+                <!--layout="@layout/msg_personalcard_layout"-->
+                <!--android:visibility="gone"-->
+                <!--/>-->
+
+
+        </FrameLayout>
+
+        <!--状态-->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/base_xxhdpi"
+            android:layout_marginStart="@dimen/base_80dpi_"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/base_xxhdpi"
+            android:orientation="horizontal">
+
+            <!--语音消息未读提示-->
+            <FrameLayout
+                android:id="@+id/message_item_audio_unread_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/base_xhdpi"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/nim_new_message_notify"
+                    android:contentDescription="@string/empty"
+                    android:focusable="false"
+                    android:gravity="center_horizontal"
+                    android:longClickable="true"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <!--发送失败的view-->
+                <ImageView
+                    android:id="@+id/status_fail_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/nim_ic_failed"
+                    android:visibility="gone"/>
+
+                <ProgressBar
+                    android:id="@+id/status_sending_view"
+                    style="?android:attr/progressBarStyleSmall"
+                    android:layout_width="@dimen/base_xxhdpi"
+                    android:layout_height="@dimen/base_xxhdpi"
+                    android:visibility="visible"/>
+            </FrameLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    tools:background="@android:color/darker_gray">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/msg_image_view"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        app:actualImageScaleType="centerInside"
+        app:placeholderImage="@drawable/default_image"
+        app:placeholderImageScaleType="fitXY"
+        app:progressBarAutoRotateInterval="1000"
+        app:progressBarImage="@drawable/loading"
+        app:progressBarImageScaleType="centerInside"
+        app:roundAsCircle="false"
+        app:roundBottomLeft="true"
+        app:roundBottomRight="true"
+        app:roundTopLeft="true"
+        app:roundTopRight="true"
+        app:roundedCornerRadius="@dimen/base_xhdpi"/>
+
+    <ImageView
+        android:id="@+id/click_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/play_redianzixun"
+        android:visibility="visible"/>
+
+    <include
+        layout="@layout/item_msg_thumb_progress_bar_text"
+        />
+
+</FrameLayout>

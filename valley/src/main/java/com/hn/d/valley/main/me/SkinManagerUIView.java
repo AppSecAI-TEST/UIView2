@@ -84,9 +84,7 @@ public class SkinManagerUIView extends BaseRecyclerUIView<String, ISkin, String>
             protected void onBindDataView(RBaseViewHolder holder, final int posInData, ISkin dataBean) {
                 if (posInData == 0) {
                     RTextView textView = holder.v(R.id.text_view);
-                    textView.setText(R.string.theme_skin);
-                    textView.setPadding(getDimensionPixelOffset(R.dimen.base_hdpi), 0, 0, 0);
-                    textView.setLeftColor(SkinHelper.getSkin().getThemeColor(), getDimensionPixelOffset(R.dimen.base_mdpi));
+                    textView.setDefaultSKin(R.string.theme_skin);
                 } else {
                     holder.tv(R.id.text_view).setText(dataBean.skinName());
                     holder.v(R.id.skin_view).setBackgroundColor(dataBean.getThemeColor());
@@ -109,8 +107,8 @@ public class SkinManagerUIView extends BaseRecyclerUIView<String, ISkin, String>
 
             @Override
             protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
-                SkinHelper.changeSkin(mAllDatas.get(position), mILayout);
                 Hawk.put(SKIN_KEY, position);
+                SkinHelper.changeSkin(mAllDatas.get(position), mILayout);
                 notifyItemChanged(0);
                 return super.onSelectorPosition(viewHolder, position, isSelector);
             }

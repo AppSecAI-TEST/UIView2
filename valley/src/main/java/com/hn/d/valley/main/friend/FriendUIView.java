@@ -13,12 +13,10 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
-import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
-import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.main.message.service.SessionHelper;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
@@ -32,13 +30,6 @@ import rx.functions.Action3;
  * Created by hewking on 2017/3/7.
  */
 public class FriendUIView extends BaseUIView {
-
-//    @BindView(R.id.iv_index_bg)
-//    ImageView iv_index;
-//    @BindView(R.id.tv_friend_index)
-//    TextView tv_index;
-//    @BindView(R.id.sidebar_friend_index)
-//    WaveSideBarView sidebar_friend;
 
     private FriendsControl mFriendsControl;
 
@@ -83,7 +74,7 @@ public class FriendUIView extends BaseUIView {
         mFriendsControl.setToUserDetailAction(new Action1<FriendBean>() {
             @Override
             public void call(FriendBean o) {
-//                mOtherILayout.startIView(new UserDetailUIView(o.getUid()));
+//                mOtherILayout.startIView(new UserDetailUIView2(o.getUid()));
                 SessionHelper.startP2PSession(mOtherILayout,o.getUid(), SessionTypeEnum.P2P);
             }
         });
@@ -100,16 +91,19 @@ public class FriendUIView extends BaseUIView {
         mFriendsControl = new FriendsControl(mActivity, mSubscriptions, mOtherILayout, new RequestCallback() {
             @Override
             public void onStart() {
-
+                showLoadView();
             }
+
 
             @Override
             public void onSuccess(Object o) {
+                hideLoadView();
                 showContentLayout();
             }
 
             @Override
             public void onError(String msg) {
+                hideLoadView();
                 showContentLayout();
             }
         });

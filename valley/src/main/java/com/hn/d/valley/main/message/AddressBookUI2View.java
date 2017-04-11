@@ -224,11 +224,14 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                         if (refreshLayout != null) {
                             refreshLayout.setRefreshEnd();
                         }
+
+                        hideLoadView();
                     }
 
                     @Override
                     public void onStart() {
                         super.onStart();
+                        showLoadView();
                     }
 
                     @Override

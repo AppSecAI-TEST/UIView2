@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.angcyo.uiview.design.StickLayout
+        android:id="@+id/stick_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!--用户详情, 头部-->
+        <include layout="@layout/item_user_detail_top"/>
+
+        <!--内容部分-->
+        <com.angcyo.uiview.widget.viewpager.UIViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!--悬浮Tab-->
+        <include layout="@layout/base_common_tab_layout"/>
+
+    </com.angcyo.uiview.design.StickLayout>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/command_item_view"
+        style="@style/MainColorButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_item_size"
+        tools:text="+关注"/>
+</LinearLayout>

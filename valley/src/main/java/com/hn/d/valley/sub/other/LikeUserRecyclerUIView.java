@@ -11,7 +11,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.LikeUserModel;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnGenderView;
 
@@ -76,7 +76,7 @@ public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBea
                 holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new UserDetailUIView(dataBean.getUid()));
+                        startIView(new UserDetailUIView2(dataBean.getUid()));
                     }
                 });
             }

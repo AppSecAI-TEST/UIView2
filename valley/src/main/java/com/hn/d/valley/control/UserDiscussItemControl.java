@@ -36,7 +36,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SettingService;
@@ -46,7 +46,9 @@ import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnItemTextView;
+import com.hn.d.valley.widget.HnTagsNameTextView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImageUtils;
 
@@ -93,15 +95,17 @@ public class UserDiscussItemControl {
         showTimeView.setText(dataListBean.getShow_time());
 
         /**头像*/
-        final View avatarView = holder.v(R.id.avatar);
+        final HnGlideImageView avatarView = holder.v(R.id.avatar);
         avatarView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (iLayout != null) {
-                    iLayout.startIView(new UserDetailUIView(dataListBean.getUid()));
+                    iLayout.startIView(new UserDetailUIView2(dataListBean.getUid()));
                 }
             }
         });
+        avatarView.setAuth(user_info.getIs_auth());
+        avatarView.setImageThumbUrl(user_info.getAvatar());
 
         final HnGenderView genderView = holder.v(R.id.grade);//性别,等级
         if (user_info != null) {
@@ -110,6 +114,10 @@ public class UserDiscussItemControl {
         } else {
             genderView.setVisibility(View.GONE);
         }
+
+        //标签处理
+        HnTagsNameTextView tagsNameTextView = holder.v(R.id.tags_name);
+        tagsNameTextView.setTags(dataListBean.getTags_name());
 
         //图片视频处理
         updateMediaLayout(dataListBean, iLayout, holder);
@@ -839,7 +847,7 @@ public class UserDiscussItemControl {
                                      final CompositeSubscription subscription, final Action1<Boolean> likeAction) {
         final String uid = UserCache.getUserAccount();
 
-        itemTextView.setLeftIco(R.drawable.thumb_up_icon_s);
+        itemTextView.setLeftIco(R.drawable.love_icon_s);
         itemTextView.setText(tBean.getLike_cnt());
 
 //        RxView.clicks(itemTextView)
@@ -904,7 +912,7 @@ public class UserDiscussItemControl {
                                        final CompositeSubscription subscription, final Action1<Boolean> likeAction) {
         final String uid = UserCache.getUserAccount();
 
-        itemTextView.setLeftIco(R.drawable.thumb_up_icon_n);
+        itemTextView.setLeftIco(R.drawable.love_icon_n);
         itemTextView.setText(tBean.getLike_cnt());
 
 //        RxView.clicks(itemTextView)

@@ -71,10 +71,10 @@ public interface UserInfoService {
 
     /**
      * 批量关注
-       注册引导可以用到
+     * 注册引导可以用到
      */
     @POST("contact/attentionBatch")
-    Observable<ResponseBody> attentionBatch(@QueryMap Map<String,String> map);
+    Observable<ResponseBody> attentionBatch(@QueryMap Map<String, String> map);
 
     /**
      * 取消关注
@@ -177,5 +177,12 @@ public interface UserInfoService {
     @POST("user/myPhotos")
     Observable<ResponseBody> myPhotos(@QueryMap Map<String, String> map);
 
-
+    /**
+     * 邀请上传照片墙
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	被邀请的用户id
+     */
+    @POST("user/inviteUploadPhotos")
+    Observable<ResponseBody> inviteUploadPhotos(@QueryMap Map<String, String> map);
 }

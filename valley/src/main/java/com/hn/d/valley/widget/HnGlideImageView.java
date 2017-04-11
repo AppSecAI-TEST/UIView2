@@ -3,6 +3,8 @@ package com.hn.d.valley.widget;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
@@ -32,8 +34,10 @@ import com.hn.d.valley.base.oss.OssHelper;
  */
 public class HnGlideImageView extends AppCompatImageView {
     Drawable authDrawable;
-    boolean isAuth;
+    boolean isAuth;//是否显示认证图标
     boolean isAttached;
+    Paint mPaint;
+    private boolean showBorder;//是否显示白色边框
 
     public HnGlideImageView(Context context) {
         super(context);
@@ -59,6 +63,21 @@ public class HnGlideImageView extends AppCompatImageView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (showBorder) {
+            int width = getResources().getDimensionPixelOffset(R.dimen.base_line);
+            if (mPaint == null) {
+                mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mPaint.setColor(Color.WHITE);
+                mPaint.setStrokeWidth(width);
+                mPaint.setStyle(Paint.Style.STROKE);
+            }
+            float cx, cy, radius;
+            radius = Math.min((getMeasuredWidth() - getPaddingRight() - getPaddingLeft()) / 2,
+                    (getMeasuredHeight() - getPaddingBottom() - getPaddingTop()) / 2);
+            cx = getPaddingLeft() + radius;
+            cy = getPaddingTop() + radius;
+            canvas.drawCircle(cx, cy, radius, mPaint);
+        }
         if (isAuth) {
             if (authDrawable == null) {
                 authDrawable = ContextCompat.getDrawable(getContext(), R.drawable.renzheng_icon);
@@ -75,6 +94,17 @@ public class HnGlideImageView extends AppCompatImageView {
      */
     public void setAuth(boolean auth) {
         isAuth = auth;
+        if (isAttached) {
+            postInvalidate();
+        }
+    }
+
+    public void setAuth(String is_auth) {
+        setAuth("1".equalsIgnoreCase(is_auth));
+    }
+
+    public void setShowBorder(boolean showBorder) {
+        this.showBorder = showBorder;
         if (isAttached) {
             postInvalidate();
         }

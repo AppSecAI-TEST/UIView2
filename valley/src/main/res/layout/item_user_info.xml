@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/default_button_height"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/base_xhdpi">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tip_view"
+        style="@style/MainTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:text="@string/signature"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/value_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="8"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="保密保密保密保密保密保密保密保密保密保密"/>
+
+</LinearLayout>

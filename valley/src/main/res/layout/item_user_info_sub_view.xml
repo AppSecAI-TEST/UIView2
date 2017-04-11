@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tip_view"
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_xhdpi"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"/>
+
+    <!--年龄-->
+    <com.angcyo.uiview.widget.ItemSubInfoLayout
+        android:id="@+id/birthday_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/base_xhdpi"
+        app:item_text="@string/birthday"
+        tools:item_dark_text="保密"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"/>
+
+    <com.angcyo.uiview.widget.ItemSubInfoLayout
+        android:id="@+id/address_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/base_xhdpi"
+        app:item_text="@string/address"
+        tools:item_dark_text="广东 深圳"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"/>
+
+    <com.angcyo.uiview.widget.ItemSubInfoLayout
+        android:id="@+id/signature_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/base_xhdpi"
+        app:item_text="@string/signature"
+        tools:item_dark_text="保密保密保密保密保密保密保密保密保密保密"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/more_info_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height"
+        android:background="@drawable/base_bg_selector"
+        android:gravity="center"
+        android:text="@string/more_info_tip"/>
+
+</LinearLayout>

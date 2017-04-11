@@ -45,7 +45,7 @@
                             android:src="@drawable/qr_code"/>
 
                         <com.angcyo.uiview.widget.RTextView
-                            android:id="@+id/uid"
+                            android:id="@+id/to_uid"
                             style="@style/DarkTextStyle"
                             android:tag="ID:%1$s"/>
 
