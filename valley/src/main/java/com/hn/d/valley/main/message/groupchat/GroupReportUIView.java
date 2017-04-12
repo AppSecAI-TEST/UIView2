@@ -19,11 +19,11 @@ import java.util.List;
 /**
  * Created by hewking on 2017/3/21.
  */
-public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>{
+public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("举报");
+        return super.getTitleBar().setTitleString(getString(R.string.report));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     @NonNull
     @Override
     protected RExBaseAdapter<String, ViewItemInfo, String> createRExBaseAdapter() {
-        return new ReportModeAdapter(mActivity,mItemsList);
+        return new ReportModeAdapter(mActivity, mItemsList);
     }
 
     @Override
@@ -56,43 +56,43 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.tv(R.id.text_view).setText("请选择举报原因");
+                holder.tv(R.id.text_view).setText(R.string.selector_report_tip);
                 holder.tv(R.id.text_view).setTextColor(getResources().getColor(R.color.main_text_color));
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, final int posInData, ViewItemInfo dataBean) {
-                initItem(holder,"骚扰辱骂", posInData);
+                initItem(holder, "骚扰辱骂", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                initItem(holder,"淫秽色情",posInData);
+                initItem(holder, "淫秽色情", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                initItem(holder,"血腥暴力", posInData);
+                initItem(holder, "血腥暴力", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                initItem(holder,"欺诈(酒托，话费托等诈骗行为)", posInData);
+                initItem(holder, "欺诈(酒托，话费托等诈骗行为)", posInData);
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(left,line) {
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                initItem(holder,"违法行为(诈骗，违禁品，反动等)", posInData);
+                initItem(holder, "违法行为(诈骗，违禁品，反动等)", posInData);
             }
         }));
 
@@ -100,18 +100,18 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
             @Override
             public void onBindView(final RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
-                    textView.setText("下一步");
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            holder.itemView.setSelected(true);
-                        }
-                    });
-                }
+                textView.setText("下一步");
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        holder.itemView.setSelected(true);
+                    }
+                });
+            }
         }));
     }
 
-    private void initItem(RBaseViewHolder holder,String desc, final int posInData) {
+    private void initItem(RBaseViewHolder holder, String desc, final int posInData) {
         ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
         infoLayout.setItemText(desc);
 
@@ -126,10 +126,10 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     }
 
 
-    public  class ReportModeAdapter extends RExBaseAdapter<String,ViewItemInfo,String>{
+    public class ReportModeAdapter extends RExBaseAdapter<String, ViewItemInfo, String> {
 
-        public ReportModeAdapter(Context context,List<ViewItemInfo> items) {
-            super(context,items);
+        public ReportModeAdapter(Context context, List<ViewItemInfo> items) {
+            super(context, items);
             setModel(RModelAdapter.MODEL_SINGLE);
         }
 

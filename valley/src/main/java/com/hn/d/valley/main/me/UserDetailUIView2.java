@@ -123,7 +123,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             mCommonTabLayout.setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
         }
         if (mCommandItemView != null) {
-            ResUtil.setBgDrawable(mCommandItemView, skin.getThemeBackgroundSelector());
+            ResUtil.setBgDrawable(mCommandItemView, skin.getThemeMaskBackgroundSelector());
         }
     }
 

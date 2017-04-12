@@ -63,7 +63,7 @@ public class SkinImpl implements ISkin {
 
     @Override
     public Drawable getThemeMaskBackgroundRoundSelector() {
-        return ResUtil.generateRoundRippleMaskDrawable(RApplication.getApp()
+        return ResUtil.generateRippleRoundMaskDrawable(RApplication.getApp()
                         .getResources()
                         .getDimensionPixelOffset(R.dimen.base_round_little_radius),
                 Color.WHITE, getThemeDarkColor(), getThemeSubColor()
@@ -71,36 +71,19 @@ public class SkinImpl implements ISkin {
     }
 
     @Override
-    public Drawable getThemeBackgroundSelector() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return ResUtil.generateRippleDrawable(getThemeSubColor());
-        } else {
-            return ResUtil.generateBgDrawable(getThemeDarkColor(), getThemeSubColor());
-        }
-    }
-
-    @Override
-    public Drawable getThemeBackgroundSelector(int pressColor) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return ResUtil.generateRippleDrawable(getThemeColor());
-        } else {
-            return ResUtil.generateBgDrawable(pressColor, getThemeColor());
-        }
+    public Drawable getThemeMaskBackgroundSelector() {
+        return getThemeMaskBackgroundSelector(getThemeDarkColor());
     }
 
     @Override
     public Drawable getThemeMaskBackgroundSelector(int pressColor) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return ResUtil.generateRippleMaskDrawable(getThemeSubColor());
-        } else {
-            return ResUtil.generateBgDrawable(pressColor, getThemeSubColor());
-        }
+        return ResUtil.generateRippleMaskDrawable(Color.WHITE, pressColor, getThemeSubColor());
     }
 
 
     @Override
     public Drawable getThemeMaskBackgroundRoundSelector(int pressColor) {
-        return ResUtil.generateRoundRippleMaskDrawable(RApplication.getApp()
+        return ResUtil.generateRippleRoundMaskDrawable(RApplication.getApp()
                         .getResources()
                         .getDimensionPixelOffset(R.dimen.base_round_little_radius),
                 Color.WHITE, pressColor, getThemeSubColor()

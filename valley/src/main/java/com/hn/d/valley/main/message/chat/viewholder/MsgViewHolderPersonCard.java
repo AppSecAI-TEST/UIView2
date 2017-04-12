@@ -8,8 +8,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
-import com.hn.d.valley.emoji.MoonUtil;
-import com.hn.d.valley.main.me.UserDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
@@ -17,10 +16,7 @@ import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
-
-import static com.hn.d.valley.R.*;
 
 /**
  * Created by hewking on 2017/4/9.
@@ -34,7 +30,7 @@ public class MsgViewHolderPersonCard extends MsgViewHolderBase {
 
     @Override
     public void convert(RBaseViewHolder holder, IMMessage data, int position, boolean isScrolling) {
-        super.convert(holder,data,position,isScrolling);
+        super.convert(holder, data, position, isScrolling);
     }
 
     @Override
@@ -74,7 +70,7 @@ public class MsgViewHolderPersonCard extends MsgViewHolderBase {
         }
         switch (attachment.getType()) {
 
-            case CustomAttachmentType.PersonalCard :
+            case CustomAttachmentType.PersonalCard:
                 PersonalCardAttachment pcAttachment = (PersonalCardAttachment) attachment;
                 final PersonalCard from = PersonalCardAttachment.from(pcAttachment.toJson(true));
                 tv_pc_name.setText(from.getUsername());

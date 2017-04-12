@@ -41,13 +41,11 @@ public interface ISkin {
      */
     Drawable getThemeMaskBackgroundRoundSelector();
 
-    Drawable getThemeBackgroundSelector();
-
-    Drawable getThemeBackgroundSelector(int pressColor);
-
     /**
-     * 带mask
+     * 带mask, 显示内容Drawable的ripple
      */
+    Drawable getThemeMaskBackgroundSelector();
+
     Drawable getThemeMaskBackgroundSelector(int pressColor);
 
     /**

@@ -13,6 +13,8 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RCheckGroup;
 import com.hn.d.valley.R;
@@ -66,6 +68,12 @@ public class ReportUIView extends BaseContentUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_report);
+    }
+
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
+        ResUtil.setBgDrawable(mViewHolder.v(R.id.submit_view), SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
     }
 
     @Override
