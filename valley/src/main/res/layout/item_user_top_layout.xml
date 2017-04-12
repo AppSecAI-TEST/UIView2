@@ -50,13 +50,13 @@
         </LinearLayout>
 
         <TextView
+            style="@style/DarkTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:drawableEnd="@drawable/next_3"
+            android:drawableEnd="@drawable/next"
             android:drawablePadding="@dimen/base_mdpi"
             android:text="@string/data_tip"
-            android:textColor="@color/orange"
             android:textSize="@dimen/default_text_size"/>
     </LinearLayout>
 

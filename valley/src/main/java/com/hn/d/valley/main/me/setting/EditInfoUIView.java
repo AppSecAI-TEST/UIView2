@@ -292,7 +292,9 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         T_.ok(mActivity.getString(R.string.save_ok_tip));
                         HnLoading.hide();
                         finishIView();
-                        mOnFinishAction.call();
+                        if (mOnFinishAction != null) {
+                            mOnFinishAction.call();
+                        }
                     }
 
                     @Override

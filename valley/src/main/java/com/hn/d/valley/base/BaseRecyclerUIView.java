@@ -46,6 +46,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected RefreshLayout mRefreshLayout;
     protected RRecyclerView mRecyclerView;
     protected RExBaseAdapter<H, T, F> mRExBaseAdapter;
+    @Deprecated
     protected int data_count;//服务返回的数据库中数据的条数,用来翻页
     protected int page = 1;//当前请求第几页
     protected int next = 1;//下一页
@@ -359,6 +360,16 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
                 mRExBaseAdapter.setNoMore();
             }
         }
+    }
+
+    /**
+     * 当第一页返回的数据, 大于等于默认的页面数量时, 激活加载更多功能
+     */
+    public void onUILoadDataFinish(int dataSize) {
+        if (1 == page && dataSize >= Constant.DEFAULT_PAGE_DATA_COUNT) {
+            mRExBaseAdapter.setEnableLoadMore(true);
+        }
+        onUILoadDataFinish();
     }
 
     /**

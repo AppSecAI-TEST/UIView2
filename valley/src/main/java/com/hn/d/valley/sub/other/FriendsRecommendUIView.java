@@ -34,26 +34,30 @@ import java.util.List;
 
 public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBean> {
 
-    /**
-     * 默认是自己
-     */
-    String uid;
-
+    boolean isInSubUIView = true;
     private RecommendFriendAdapter mAdapter;
 
+    public FriendsRecommendUIView(boolean isInSubUIView) {
+        this.isInSubUIView = isInSubUIView;
+    }
 
     public FriendsRecommendUIView(String uid) {
-        this.uid = uid;
+        this(true);
     }
+
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return null;
+        if (isInSubUIView) {
+            return null;
+        } else {
+            return super.getTitleBar().setTitleString(mActivity, R.string.frient_tip);
+        }
     }
 
     @Override
     protected RExBaseAdapter<String, RecommendUserBean, String> initRExBaseAdapter() {
-        mAdapter = new RecommendFriendAdapter(mActivity,this,mOtherILayout) ;
+        mAdapter = new RecommendFriendAdapter(mActivity, this, mOtherILayout);
         mAdapter.setModel(RModelAdapter.MODEL_MULTI);
         return mAdapter;
     }
@@ -63,7 +67,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(ContactService.class)
-                .recommendUser(Param.buildMap("uid:" + uid, "page:" + page))
+                .recommendUser(Param.buildMap("page:" + page))
                 .compose(Rx.transformerList(RecommendUserBean.class))
                 .subscribe(new SingleRSubscriber<List<RecommendUserBean>>(this) {
                     @Override
@@ -80,15 +84,21 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
                 }));
     }
 
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        return super.initItemDecoration()
+                .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
+                .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
+                .setDrawLastLine(true);
+    }
 
-
-    public static class RecommendFriendAdapter extends RExBaseAdapter<String,RecommendUserBean,String> {
+    public static class RecommendFriendAdapter extends RExBaseAdapter<String, RecommendUserBean, String> {
 
         private UIBaseRxView mSubscriptions;
 
         private ILayout mLayout;
 
-        public RecommendFriendAdapter(Context context,UIBaseRxView mSubscriptions,ILayout layout) {
+        public RecommendFriendAdapter(Context context, UIBaseRxView mSubscriptions, ILayout layout) {
             super(context);
             this.mSubscriptions = mSubscriptions;
             this.mLayout = layout;
@@ -116,6 +126,7 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
             //头像
             HnGlideImageView userIcoView = holder.v(R.id.image_view);
             userIcoView.setImageThumbUrl(dataBean.getAvatar());
+            userIcoView.setAuth(dataBean.getIs_auth());
 
             //等级性别
             HnGenderView hnGenderView = holder.v(R.id.grade);
@@ -252,16 +263,5 @@ public class FriendsRecommendUIView extends SingleRecyclerUIView<RecommendUserBe
             }
             dataBean.setIs_attention(value ? 1 : 0);
         }
-    }
-
-
-
-
-    @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration()
-                .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
-                .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
-                .setDrawLastLine(true);
     }
 }

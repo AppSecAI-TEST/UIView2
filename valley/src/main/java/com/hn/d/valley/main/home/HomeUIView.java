@@ -116,7 +116,7 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
 //            }
 //
 //            @Override
-//            public int getCount() {
+//            public int getCountFromGroup() {
 //                return 3;
 //            }
 //        });

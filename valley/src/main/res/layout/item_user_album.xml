@@ -1,34 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="@dimen/base_xhdpi"
-    android:background="@drawable/base_white_bg_selector"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/base_white_bg_selector"
+              android:orientation="vertical"
+              android:paddingTop="@dimen/base_xhdpi">
 
-    <TextView
-        android:id="@+id/tv_timeline"
-        style="@style/DarkTextStyle"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/base_xhdpi"
-        android:textColor="@color/base_text_color"
-        android:text="12/2017"
-        android:textSize="@dimen/default_text_size" />
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="120dp"
+            android:layout_height="@dimen/base_line"
+            android:layout_centerInParent="true"
+            android:background="@color/line_color"/>
+
+        <TextView
+            android:id="@+id/tv_timeline"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingEnd="@dimen/base_ldpi"
+            android:paddingStart="@dimen/base_ldpi"
+            android:textColor="@color/base_text_color"
+            android:textSize="@dimen/default_text_size"
+            tools:text="12/2017"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
         android:gravity="center_vertical">
 
         <com.angcyo.uiview.recycler.RRecyclerView
             android:id="@+id/rv_album_photo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 

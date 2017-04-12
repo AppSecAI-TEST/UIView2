@@ -206,9 +206,11 @@
     <string name="area">地区</string>
     <string name="edit_info_quit_tip">您的个人资料已经修改, 退出前要保存吗?</string>
     <string name="my_qr_code">我的二维码</string>
+    <string name="my_code">我的名片</string>
     <string name="create_qr_tip">二维码生成中...</string>
     <string name="tags_manage_title">标签管理</string>
     <string name="signature_empty_tip">此人很懒, 什么也没有留下.</string>
+    <string name="address_empty_tip">此人很懒, 什么也没有留下.</string>
     <string name="introduce_empty_tip">此人很懒, 什么也没有留下.</string>
     <string name="unattention_tip2">你们是好友,取消关注后将会解除好友,你们将从各自的联系人列表中消失,对方不会收到任何提示</string>
     <string name="unattention_tip1">确定不再关注此人?</string>
@@ -260,7 +262,7 @@
     <string name="publish_video_tip">发布视频</string>
     <string name="publishing_tip">动态还未发布完成...</string>
     <string name="me">我</string>
-    <string name="data_tip">资料</string>
+    <string name="data_tip">主页</string>
     <string name="my_auth_title">我的身份</string>
     <string name="weizhi">未知</string>
     <string name="zhengfurenyuan">政府人员</string>
@@ -350,6 +352,7 @@
     <string name="attention_format">关注 %1$s</string>
     <string name="fans_format">粉丝 %1$s</string>
     <string name="klg_auth_format">恐龙谷认证: %1$s</string>
+    <string name="klg_auth">恐龙谷认证: </string>
     <string name="photo_wall">照片墙</string>
     <string name="more_info_tip">更多基本资料</string>
     <string name="base_info">基本资料</string>
@@ -363,4 +366,7 @@
     <string name="delete_has_blank">删除</string>
     <string name="forward_to_person">转发到个人</string>
     <string name="forward_to_team">转发到群</string>
+    <string name="vip_tip">会员中心</string>
+    <string name="my_wallet_tip">我的钱包</string>
+    <string name="friends_recommend_tip">好友推荐</string>
 </resources>

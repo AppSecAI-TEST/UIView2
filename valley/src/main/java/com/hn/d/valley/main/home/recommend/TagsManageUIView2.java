@@ -48,7 +48,7 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     List<Tag> mAllTag, mMyTag, mOtherTag;
     boolean isChanged = false;
     Action1<List<Tag>> mTagsAction1;
-    private RGroupAdapter<String, Tag, String> mGroupAdapter;
+    private RGroupAdapter<String, RGroupData, String> mGroupAdapter;
     private RGroupData<Tag> mMyGroup;
     private RGroupData<Tag> mOtherGroup;
     private RExItemDecoration mRExItemDecoration;
@@ -103,6 +103,12 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     @Override
     public int getDefaultBackgroundColor() {
         return Color.WHITE;
+    }
+
+    @Override
+    protected void initRecyclerView() {
+        super.initRecyclerView();
+        mRecyclerView.setItemAnimator(null);
     }
 
     @Override

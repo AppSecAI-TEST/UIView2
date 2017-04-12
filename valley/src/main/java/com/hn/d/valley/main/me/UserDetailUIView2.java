@@ -35,6 +35,7 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
@@ -45,6 +46,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
+import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.me.sub.UserInfoSubUIView;
 import com.hn.d.valley.main.message.audio.AudioRecordPlayable;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
@@ -90,6 +92,10 @@ public class UserDetailUIView2 extends BaseContentUIView {
         this.to_uid = to_uid;
     }
 
+    public UserDetailUIView2() {
+        this(UserCache.getUserAccount());
+    }
+
     @Override
     protected TitleBarPattern getTitleBar() {
         TitleBarPattern titleBarPattern = super.getTitleBar()
@@ -98,14 +104,20 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 .setFloating(true)
                 .setTitleBarBGColor(Color.TRANSPARENT);
 
-        if (!isMe()) {
-            titleBarPattern.addRightItem(TitleBarPattern.buildText(getString(R.string.more), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showBottomDialog();
-                }
-            }).setVisibility(View.GONE));
-        }
+        titleBarPattern.addRightItem(TitleBarPattern.buildText(getString(R.string.more), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showBottomDialog();
+            }
+        }).setVisibility(View.GONE));
+
+        titleBarPattern.addRightItem(TitleBarPattern.buildImage(R.drawable.editor, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), null));
+            }
+        }).setVisibility(View.GONE));
+
         return titleBarPattern;
     }
 
@@ -236,7 +248,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     circleUIView.bindOtherILayout(mOtherILayout);
                     return circleUIView;
                 } else {
-                    MyAlbumUIView myAlbumUIView = new MyAlbumUIView();
+                    MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
                     myAlbumUIView.bindOtherILayout(mOtherILayout);
                     return myAlbumUIView;
                 }
@@ -282,18 +294,38 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
     private void initView(UserInfoBean bean) {
         mUserInfoBean = bean;
+        String is_auth = bean.getIs_auth();
+
         HnGlideImageView hnGlideImageView = mViewHolder.v(R.id.user_ico_view);
         hnGlideImageView.setImageThumbUrl(bean.getAvatar());
-        hnGlideImageView.setAuth(bean.getIs_auth());
+        hnGlideImageView.setAuth(is_auth);
         hnGlideImageView.setShowBorder(true);
 
         setTitleString(mUserInfoBean.getUsername());
         //getUITitleBarContainer().setBackgroundColor(Color.TRANSPARENT);
         mViewHolder.fillView(mUserInfoBean);
 
+        RTextView authTextView = mViewHolder.v(R.id.auth_desc_tview);
+        //是否已认证【0-未认证，1-已认证，2-认证中-查看自己信息才会有，3-认证失败-查看自己信息才会有，以前没有认证成功过才会有该值】
+        if ("1".equalsIgnoreCase(is_auth)) {
+            authTextView.setText(bean.getAuth_desc());
+            authTextView.setBackgroundColor(Color.TRANSPARENT);
+            authTextView.setTextColor(getColor(R.color.base_text_color_dark));
+        } else {
+            authTextView.setText(R.string.not_auth);
+            authTextView.setBackground(SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
+            authTextView.setTextColor(Color.WHITE);
+        }
+
         initCommandView();
         //语音介绍
         initVoiceView();
+
+        if (isMe()) {
+            getUITitleBarContainer().showRightItem(1);
+        } else {
+            getUITitleBarContainer().showRightItem(0);
+        }
     }
 
     private void initVoiceView() {

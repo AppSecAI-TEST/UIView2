@@ -192,6 +192,7 @@ public class Param {
         final Map<String, String> map = new HashMap<>();
         if (uid) {
             map.put("uid", UserCache.getUserAccount());//默认传输uid参数
+            map.put("limit", Constant.DEFAULT_PAGE_DATA_COUNT + "");
         }
         foreach(new OnPutValue() {
             @Override

@@ -217,7 +217,12 @@ public class OssHelper {
             return new int[]{0, 0};
         }
 //        width_640.0pictureheight_1136.0
-        final String[] pictureheight_s = url.substring(0, url.lastIndexOf('.')).split("_s_");
+        final String[] pictureheight_s;
+        try {
+            pictureheight_s = url.substring(0, url.lastIndexOf('.')).split("_s_");
+        } catch (Exception e) {
+            return new int[]{0, 0};
+        }
         float height = 0, width = 0;
         if (pictureheight_s.length >= 2) {
             final String[] size = pictureheight_s[pictureheight_s.length - 1].split("x");

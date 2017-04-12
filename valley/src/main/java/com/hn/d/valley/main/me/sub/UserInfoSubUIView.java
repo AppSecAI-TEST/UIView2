@@ -102,7 +102,7 @@ public class UserInfoSubUIView extends UIItemUIView<SingleItem> {
                     @Override
                     public boolean onBindView(final RBaseViewHolder holder, final int position, final String bean) {
                         if (!mUserInfoBean.isMe() && RUtils.isLast(stringList, position)) {
-                            holder.imgV(R.id.image_view).setImageResource(R.drawable.shangchuanzhaopian_zhaopianqiang);
+                            holder.imgV(R.id.image_view).setImageResource(R.drawable.yaoqingshangchuan_zhaopianqiang);
                             holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -135,9 +135,19 @@ public class UserInfoSubUIView extends UIItemUIView<SingleItem> {
                 tv.setDefaultSKin(R.string.base_info);
                 //tv.setBackgroundColor(Color.RED);
 
-                holder.sub(R.id.signature_item).setItemDarkText(mUserInfoBean.getSignature());
+                if (TextUtils.isEmpty(mUserInfoBean.getSignature())) {
+                    holder.sub(R.id.signature_item).setItemDarkText(getString(R.string.signature_empty_tip));
+                } else {
+                    holder.sub(R.id.signature_item).setItemDarkText(mUserInfoBean.getSignature());
+                }
+
                 holder.sub(R.id.birthday_item).setItemDarkText(mUserInfoBean.getBirthday(getResources()));
-                holder.sub(R.id.address_item).setItemDarkText(mUserInfoBean.getAddress());
+
+                if (TextUtils.isEmpty(mUserInfoBean.getAddress())) {
+                    holder.sub(R.id.address_item).setItemDarkText(getString(R.string.address_empty_tip));
+                } else {
+                    holder.sub(R.id.address_item).setItemDarkText(mUserInfoBean.getAddress());
+                }
 
                 holder.v(R.id.more_info_view).setOnClickListener(new View.OnClickListener() {
                     @Override
