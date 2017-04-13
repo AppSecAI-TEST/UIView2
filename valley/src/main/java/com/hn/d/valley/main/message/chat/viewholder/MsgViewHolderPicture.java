@@ -89,22 +89,6 @@ public class MsgViewHolderPicture extends MsgViewHolderBase {
             }
         });
 
-        draweeView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final ChatControl2.Images images = getAllImageMessage(message);
-                ImagePagerUIView.start(mUIBaseView.getILayout(), v, images.images, images.positon);
-            }
-        });
-
-        clickView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final ChatControl2.Images images = getAllImageMessage(message);
-                ImagePagerUIView.start(mUIBaseView.getILayout(), v, images.images, images.positon);
-            }
-        });
-
     }
 
     private ChatControl2.Images getAllImageMessage(IMMessage messageAnchor) {

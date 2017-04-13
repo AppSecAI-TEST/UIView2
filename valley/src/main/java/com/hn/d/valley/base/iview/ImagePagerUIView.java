@@ -94,7 +94,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         super.onViewLoad();
         startAnimation();
         //startAnimation2();
-        fullscreen(true);
+        fullscreen(true, true);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ImagePagerUIView extends UIIViewImpl {
             mValueAnimator.cancel();
             mValueAnimator = null;
         }
-        fullscreen(false);
+        fullscreen(false, true);
     }
 
     @Override

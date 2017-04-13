@@ -7,8 +7,8 @@
 
     <color name="colorPrimaryBlack">#383738</color>
     <color name="colorPrimaryTranBlack">#383738</color>
-    <color name="colorPrimaryDarkBlack">#383738</color>
-    <color name="colorAccentBlack">#383738</color>
+    <color name="colorPrimaryDarkBlack">#80FC6B38</color>
+    <color name="colorAccentBlack">#FC6B38</color>
 
     <color name="colorPrimaryBlue">#2483CB</color>
     <color name="colorPrimaryTranBlue">#2483CB</color>

@@ -65,6 +65,8 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.functions.Action0;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -114,7 +116,12 @@ public class UserDetailUIView2 extends BaseContentUIView {
         titleBarPattern.addRightItem(TitleBarPattern.buildImage(R.drawable.editor, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), null));
+                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), new Action0() {
+                    @Override
+                    public void call() {
+                        setTitleString(UserCache.instance().getUserInfoBean().getUsername());
+                    }
+                }));
             }
         }).setVisibility(View.GONE));
 
@@ -246,6 +253,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 } else if (position == 1) {
                     CircleUIView circleUIView = new CircleUIView(mUserInfoBean.getUid());
                     circleUIView.bindOtherILayout(mOtherILayout);
+                    circleUIView.setInSubUIView(true);
                     return circleUIView;
                 } else {
                     MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());

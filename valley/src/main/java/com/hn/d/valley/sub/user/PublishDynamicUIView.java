@@ -548,7 +548,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         protected View createContentView(ViewGroup parent, int viewType) {
             RelativeLayout relativeLayout = new RelativeLayout(mContext);
 
-            ImageView imageView = new ImageView(mContext);
+            RImageView imageView = new RImageView(mContext);
             imageView.setId(R.id.image_view);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
@@ -566,10 +566,10 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             RelativeLayout.LayoutParams deleteParams = new RelativeLayout.LayoutParams(-2, -2);
             deleteParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 
-            View clickView = new View(mContext);
-            clickView.setId(R.id.click_view);
-            clickView.setBackgroundResource(R.drawable.base_bg_selector);
-            relativeLayout.addView(clickView, new ViewGroup.LayoutParams(-1, -1));
+            //View clickView = new View(mContext);
+            //clickView.setId(R.id.click_view);
+            //clickView.setBackgroundResource(R.drawable.base_bg_selector);
+            //relativeLayout.addView(clickView, new ViewGroup.LayoutParams(-1, -1));
             relativeLayout.addView(deleteImageView, deleteParams);
 
             return relativeLayout;
@@ -584,13 +584,13 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
 
             UserDiscussItemControl.displayImage(holder.imgV(R.id.image_view), bean.thumbPath, 0, 0);
 
-            holder.v(R.id.click_view).setOnClickListener(new View.OnClickListener() {
+            holder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ImagePickerHelper.startImagePicker(mActivity, false, false, false, true, 9);
                 }
             });
-            holder.v(R.id.click_view).setOnLongClickListener(new View.OnLongClickListener() {
+            holder.v(R.id.image_view).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (isDeleteModel) {

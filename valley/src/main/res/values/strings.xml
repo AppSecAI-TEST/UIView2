@@ -76,6 +76,7 @@
     <string name="default_empty_circle_tip">亲~您还没有关注用户!</string>
     <string name="add_contact_tip">我是 %1$s</string>
     <string name="default_empty_no_status_tip">亲~没有动态可以查看!</string>
+    <string name="status_empty__tip">亲~您还没有发布过动态!</string>
     <string name="code_error_tip">请输入正确的验证码!</string>
     <string name="code_send_tip">验证码已发送, 请注意查收.</string>
     <string name="voice_code_send_tip">请注意接听语音验证码.</string>
@@ -369,4 +370,5 @@
     <string name="vip_tip">会员中心</string>
     <string name="my_wallet_tip">我的钱包</string>
     <string name="friends_recommend_tip">好友推荐</string>
+    <string name="kick_out_tip">您的账户在 %1$s 登录.</string>
 </resources>

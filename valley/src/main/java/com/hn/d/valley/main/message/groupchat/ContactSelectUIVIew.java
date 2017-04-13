@@ -103,10 +103,15 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 //            sideBarView.setLetters(FriendsControl.generateIndexLetter(datas));
 //        }
 
-        datatProvider.provide(mSubscriptions, new Action1<List<FriendBean>>() {
+        datatProvider.provide(mSubscriptions, new RequestCallback<List<FriendBean>>() {
             @Override
-            public void call(List<FriendBean> beanList) {
+            public void onStart() {
+                showLoadView();
+            }
 
+            @Override
+            public void onSuccess(List<FriendBean> beanList) {
+                hideLoadView();
                 showContentLayout();
 
                 refreshLayout.setRefreshEnd();
@@ -129,7 +134,13 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                 sideBarView.setLetters(FriendsControl.generateIndexLetter(datas));
 
             }
+
+            @Override
+            public void onError(String msg) {
+                hideLoadView();
+            }
         });
+
     }
 
     @Subscribe

@@ -83,34 +83,42 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
         contentContainer.setBackgroundResource(0);
 
-        if (TextUtils.isEmpty(thumbPath) && TextUtils.isEmpty(path)) {
-            downloadAttachment(message);
+        if (!TextUtils.isEmpty(thumbPath)) {
+            loadThumbnailImage(thumbPath);
+        } else if (!TextUtils.isEmpty(path)) {
+            loadThumbnailImage(thumbFromSourceFile(path));
         } else {
-            if (!TextUtils.isEmpty(thumbPath)) {
-                setImageSize(draweeView, thumbPath);
+            loadThumbnailImage(null);
+            if (message.getAttachStatus() == AttachStatusEnum.transferred
+                    || message.getAttachStatus() == AttachStatusEnum.def) {
+                downloadAttachment(message);
             }
         }
-
-        String thumb = msgAttachment.getThumbPathForSave();
-        String s = BitmapDecoder.extractThumbnail(msgAttachment.getPath(), thumb) ? thumb : thumb;
-        setImageSize(draweeView, s);
-        if (isReceivedMessage(message)) {
-//            draweeView.setImageResource(R.drawable.bubble_box_left_selector2);
-        } else {
-//            draweeView.setImageResource(R.drawable.bubble_box_right_selector2);
-        }
-        Glide.with(context)
-                .load(s)
-                .placeholder(com.angcyo.uiview.R.drawable.default_image)
-                .error(com.angcyo.uiview.R.drawable.default_image)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop()
-                .into(draweeView);
+//        if (TextUtils.isEmpty(thumbPath) && TextUtils.isEmpty(path)) {
+//            downloadAttachment(message);
+//        } else {
+//            if (!TextUtils.isEmpty(thumbPath)) {
+//                setImageSize(draweeView, thumbPath);
+//            }
+//        }
+//
+//        String thumb = msgAttachment.getThumbPathForSave();
+//        String s = BitmapDecoder.extractThumbnail(msgAttachment.getPath(), thumb) ? thumb : thumb;
+//        setImageSize(draweeView, s);
+//        if (isReceivedMessage(message)) {
+//            clickView.setImageResource(R.drawable.bubble_box_left_selector2);
+//        } else {
+//            clickView.setImageResource(R.drawable.bubble_box_right_selector2);
+//        }
+//        Glide.with(context)
+//                .load(s)
+//                .placeholder(com.angcyo.uiview.R.drawable.default_image)
+//                .error(com.angcyo.uiview.R.drawable.default_image)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .centerCrop()
+//                .into(draweeView);
 
 //        String url = "/storage/emulated/0/com.hn.d.valley/nim/image/a74c10e3bbcf5b4313a56de822535814.png";
-//
-//        RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, s, true);
-
 
         clickView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +126,9 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
                 if (isReceivedMessage()) {
                     download(message);
                 } else {
-                    mUIBaseView.startIView(new VideoPlayUIView(((VideoAttachment) message.getAttachment()).getPath()
-                            , draweeView.getDrawable(), new int[]{msgAttachment.getWidth(),msgAttachment.getHeight()}));
+//                    mUIBaseView.startIView(new VideoPlayUIView(((VideoAttachment) message.getAttachment()).getPath()
+//                            , draweeView.getDrawable(), new int[]{msgAttachment.getWidth(),msgAttachment.getHeight()}));
+                    download(message);
                 }
 
             }
@@ -127,6 +136,34 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
         refreshStatus();
 
+    }
+
+    private void loadThumbnailImage(String thumbPath) {
+        setImageSize(draweeView,thumbPath);
+        if (thumbPath != null) {
+            if (isReceivedMessage()) {
+                RFresco.mask(context, draweeView, R.drawable.bubble_box_left, thumbPath, true);
+            }else {
+                RFresco.mask(context,draweeView,R.drawable.bubble_box_right_n2,thumbPath,true);
+            }
+
+//            Glide.with(context)
+//                    .load(thumbPath)
+//                    .placeholder(com.angcyo.uiview.R.drawable.default_image)
+//                    .error(com.angcyo.uiview.R.drawable.default_image)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .centerCrop()
+//                    .into(draweeView);
+
+        } else {
+//            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, thumbPath, true);
+        }
+    }
+
+    private String thumbFromSourceFile(String path) {
+        VideoAttachment attachment = (VideoAttachment) message.getAttachment();
+        String thumb = attachment.getThumbPathForSave();
+        return BitmapDecoder.extractThumbnail(path, thumb) ? thumb : null;
     }
 
     private void download(IMMessage message) {

@@ -88,7 +88,7 @@ public class ChatControl2 {
         items = new ArrayList<>();
         mChatAdapter = new ChatAdapter2(mRecyclerView, items, mViewHolder, mUIBaseView);
         mChatAdapter.setEventListener(new MsgItemEventListener());
-        mRecyclerView.setItemAnim(false);
+//        mRecyclerView.setItemAnim(true);
         mRecyclerView.setAdapter(mChatAdapter);
 
     }
@@ -253,7 +253,7 @@ public class ChatControl2 {
                                     return;
                                 }
                                 NIMClient.getService(MsgService.class).sendMessage(message, false);
-                                if (mSessionId.equals(mSessionId)) {
+                                if (mSessionId.equals(friendBean.getUid())) {
                                     onMsgSend(message);
                                 }
                             }
@@ -430,7 +430,9 @@ public class ChatControl2 {
                 if (index < 0) {
                     return;
                 }
-                mChatAdapter.notifyItemChanged(index);
+                // 采用 带 playload 参数notify 方法 防止刷新闪烁
+                mChatAdapter.notifyItemChanged(index,"testst");
+//                mChatAdapter.notifyDataSetChanged();
             }
         });
     }

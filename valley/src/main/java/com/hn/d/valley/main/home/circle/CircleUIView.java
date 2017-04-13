@@ -10,6 +10,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
@@ -49,6 +50,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
 
     LoadStatusCallback mLoadStatusCallback;
     private String to_uid;
+    private boolean isInSubUIView = false;
 
     public CircleUIView(String to_uid) {
         this.to_uid = to_uid;
@@ -56,6 +58,10 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
 
     public CircleUIView(LoadStatusCallback loadStatusCallback) {
         mLoadStatusCallback = loadStatusCallback;
+    }
+
+    public void setInSubUIView(boolean inSubUIView) {
+        isInSubUIView = inSubUIView;
     }
 
     @Override
@@ -92,7 +98,20 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
 
     @Override
     protected int getEmptyTipStringId() {
+        if (isInSubUIView) {
+            return R.string.status_empty__tip;
+        }
         return R.string.default_empty_circle_tip;
+    }
+
+    @Override
+    public void onShowInPager(UIViewPager viewPager) {
+        super.onShowInPager(viewPager);
+    }
+
+    @Override
+    public void onHideInPager(UIViewPager viewPager) {
+        super.onHideInPager(viewPager);
     }
 
     @Override
@@ -151,7 +170,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        onShowInPager(null);
+        if (!isInSubUIView) {
+            onShowInPager(null);
+        }
     }
 
     /**

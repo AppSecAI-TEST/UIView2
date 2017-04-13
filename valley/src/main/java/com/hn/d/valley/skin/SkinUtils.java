@@ -6,6 +6,7 @@ import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.me.SkinManagerUIView;
+import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.orhanobut.hawk.Hawk;
 
 /**
@@ -39,6 +40,11 @@ public class SkinUtils {
 
     public static Integer getSkin() {
         return Hawk.get(SkinManagerUIView.SKIN_KEY, SkinManagerUIView.SKIN_BLACK);
+    }
+
+    public static void setSkin(int skin) {
+        Hawk.put(SkinManagerUIView.SKIN_KEY, skin);
+        Hawk.put(MyQrCodeUIView.KEY_NEED_CREATE_QR, true);
     }
 
     public static int getSkinStyle() {

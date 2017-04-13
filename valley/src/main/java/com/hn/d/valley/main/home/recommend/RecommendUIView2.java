@@ -227,6 +227,6 @@ public class RecommendUIView2 extends BaseContentUIView {
     @Override
     public void onSkinChanged(ISkin skin) {
         super.onSkinChanged(skin);
-        mSlidTabLayout.setTextSelectColor(skin.getThemeColor());
+        mSlidTabLayout.setTextSelectColor(skin.getThemeSubColor());
     }
 }

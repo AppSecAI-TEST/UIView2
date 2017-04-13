@@ -7,7 +7,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.widget.TextView;
 
 import com.hn.d.valley.R;
 
@@ -31,7 +30,7 @@ public class HnItemTextView extends AppCompatTextView {
         super(context, attrs);
         setCompoundDrawablePadding(getResources().getDimensionPixelOffset(R.dimen.base_mdpi));
         setClickable(true);
-        setBackgroundResource(R.drawable.default_bg_selector);
+        setBackgroundResource(R.drawable.default_bg_noen_selector);
         int padding = getResources().getDimensionPixelOffset(R.dimen.base_ldpi);
         setPadding(padding + getPaddingLeft(), getPaddingTop(), padding + getPaddingRight(), getPaddingBottom());
         setGravity(Gravity.CENTER_VERTICAL);

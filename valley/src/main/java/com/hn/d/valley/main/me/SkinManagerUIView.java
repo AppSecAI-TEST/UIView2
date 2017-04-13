@@ -17,6 +17,7 @@ import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.skin.BlackSkin;
 import com.hn.d.valley.skin.BlueSkin;
 import com.hn.d.valley.skin.GreenSkin;
+import com.hn.d.valley.skin.SkinUtils;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
@@ -107,7 +108,7 @@ public class SkinManagerUIView extends BaseRecyclerUIView<String, ISkin, String>
 
             @Override
             protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
-                Hawk.put(SKIN_KEY, position);
+                SkinUtils.setSkin(position);
                 SkinHelper.changeSkin(mAllDatas.get(position), mILayout);
                 notifyItemChanged(0);
                 return super.onSelectorPosition(viewHolder, position, isSelector);

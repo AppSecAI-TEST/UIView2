@@ -17,5 +17,16 @@ public interface CustomAttachmentType {
 
     int Notice = 2;
 
+    int SYSTEMP_PUSH = 3;
+
+    int SP_SINGLE_TEXT = 31;
+
+    int SP_TEXT_PICTURE = 32;
+
+    int SP_MULTI_PICTURE = 33;
+
     String PersonalCard_ = "user";
+
+    String SystemPush = "system_push";
+
 }

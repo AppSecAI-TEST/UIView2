@@ -57,9 +57,22 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                 .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
                 .compose(Rx.transformer(GroupMemberModel.GroupMemberList.class))
                 .subscribe(new BaseSingleSubscriber<GroupMemberModel.GroupMemberList>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        showLoadView();
+                    }
+
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        hideLoadView();
                     }
 
                     @Override

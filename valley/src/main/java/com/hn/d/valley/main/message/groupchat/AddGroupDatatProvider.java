@@ -23,26 +23,33 @@ import rx.subscriptions.CompositeSubscription;
 public class AddGroupDatatProvider implements IDataResource.IDataActionProvider<List<FriendBean>>{
 
     @Override
-    public void provide(CompositeSubscription subscription, final Action1<List<FriendBean>> action) {
+    public void provide(CompositeSubscription subscription, final RequestCallback<List<FriendBean>> requestCallback) {
         subscription.add(RRetrofit.create(ContactService.class)
                 .friends(Param.buildMap("uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformer(FriendListModel.class))
                 .subscribe(new BaseSingleSubscriber<FriendListModel>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        requestCallback.onStart();
+                    }
+
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
-                        action.call(null);
+                        requestCallback.onError(msg);
                     }
 
                     @Override
                     public void onSucceed(FriendListModel bean) {
                         super.onSucceed(bean);
                         if(bean == null || bean.getData_list().size() == 0 ) {
-                            action.call(null);
+                            requestCallback.onSuccess(null);
                             return;
                         }
                         List<FriendBean> data_list = bean.getData_list();
-                        action.call(data_list);
+                        requestCallback.onSuccess(data_list);
                     }
 
                     @Override

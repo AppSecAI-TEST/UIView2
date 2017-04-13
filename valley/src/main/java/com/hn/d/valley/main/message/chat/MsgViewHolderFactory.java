@@ -1,11 +1,15 @@
 package com.hn.d.valley.main.message.chat;
 
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderAudio;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderLocation;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderNotification;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderPersonCard;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderPicture;
+import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderPushMultiPicture;
+import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderPushPictureText;
+import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderPushText;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderText;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderTip;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderUnknown;
@@ -40,6 +44,9 @@ public class MsgViewHolderFactory {
         register(LocationAttachment.class, MsgViewHolderLocation.class);
         register(NotificationAttachment.class, MsgViewHolderNotification.class);
         register(PersonalCardAttachment.class, MsgViewHolderPersonCard.class);
+        register(SystemPushAttachment.SingleTextSPAttachment.class, MsgViewHolderPushText.class);
+        register(SystemPushAttachment.TextAndPictureSPAttachment.class, MsgViewHolderPushPictureText.class);
+        register(SystemPushAttachment.MultiPictureSPAttachment.class, MsgViewHolderPushMultiPicture.class);
     }
 
     public static void register(Class<? extends MsgAttachment> attach, Class<? extends MsgViewHolderBase> viewHolder) {

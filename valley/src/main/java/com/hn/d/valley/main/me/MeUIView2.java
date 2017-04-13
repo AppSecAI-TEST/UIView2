@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.me;
 
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -140,7 +141,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 
         final int size = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
         int line = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
-        final int drawPadding = size / 2;
+        final int drawPadding = size;
 
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
@@ -453,6 +454,13 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 
         //好友推荐
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+
+            @Override
+            public void setItemOffsets(Rect rect) {
+                super.setItemOffsets(rect);
+                rect.bottom = size / 2;
+            }
+
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);

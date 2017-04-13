@@ -155,10 +155,15 @@ public class AddGroupChatUIView extends BaseUIView {
     }
 
     private void loadData() {
-        datatProvider.provide(mSubscriptions, new Action1<List<FriendBean>>() {
+        datatProvider.provide(mSubscriptions, new RequestCallback<List<FriendBean>>() {
             @Override
-            public void call(List<FriendBean> beanList) {
+            public void onStart() {
+                showLoadView();
+            }
 
+            @Override
+            public void onSuccess(List<FriendBean> beanList) {
+                hideLoadView();
                 refreshLayout.setRefreshEnd();
 
                 List<AbsContactItem> datas = new ArrayList();
@@ -172,6 +177,11 @@ public class AddGroupChatUIView extends BaseUIView {
                     datas.add(new ContactItem(bean));
                 }
                 mGroupAdapter.resetData(datas);
+            }
+
+            @Override
+            public void onError(String msg) {
+                hideLoadView();
             }
         });
     }

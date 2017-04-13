@@ -106,14 +106,13 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:orientation="vertical"
+            android:paddingEnd="@dimen/base_xhdpi"
             android:paddingStart="@dimen/base_xhdpi">
 
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/copy_info_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/base_xhdpi_"
-                android:layout_marginStart="@dimen/base_xhdpi_"
                 android:background="@color/line_color"
                 android:padding="@dimen/base_xhdpi"
                 android:visibility="gone"
@@ -123,7 +122,7 @@
                 android:id="@+id/address"
                 style="@style/AddressTextStyle"
                 android:paddingTop="@dimen/base_ldpi"
-                tools:text="广东 深圳"/>
+                tools:text="广东 深圳广东 深圳广东 深圳广东 深圳广东 深圳"/>
         </LinearLayout>
 
         <LinearLayout

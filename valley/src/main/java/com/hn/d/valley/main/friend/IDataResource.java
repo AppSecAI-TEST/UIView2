@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.friend;
 
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.query.TextQuery;
 
 import java.util.List;
@@ -26,6 +27,6 @@ public interface IDataResource {
     }
 
     interface IDataActionProvider<T> {
-        void provide(CompositeSubscription subscription,Action1<T> action);
+        void provide(CompositeSubscription subscription,RequestCallback<T> requestCallback);
     }
 }

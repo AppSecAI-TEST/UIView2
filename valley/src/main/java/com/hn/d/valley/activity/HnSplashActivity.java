@@ -130,7 +130,7 @@ public class HnSplashActivity extends BaseActivity {
                     break;
             }
             startIView(UIDialog.build()
-                    .setDialogContent("您的账户在 " + client + " 登录.")
+                    .setDialogContent(getString(R.string.kick_out_tip, client))
                     .setGravity(Gravity.CENTER));
         }
     }
