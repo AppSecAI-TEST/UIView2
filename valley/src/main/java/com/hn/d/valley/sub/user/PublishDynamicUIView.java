@@ -2,9 +2,11 @@ package com.hn.d.valley.sub.user;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -246,6 +248,21 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         mInputView.setAutoHideSoftInput(true);
 
         mSingleTextIndicatorView.initIndicator(getResources().getInteger(R.integer.dynamic_status_text_count), mInputView);
+
+        final NestedScrollView nestedScrollView = mViewHolder.v(R.id.scroll_view);
+        mInputView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (mInputView.canVerticalScroll()) {
+                        nestedScrollView.requestDisallowInterceptTouchEvent(true);
+                    }
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    nestedScrollView.requestDisallowInterceptTouchEvent(false);
+                }
+                return false;
+            }
+        });
     }
 
     @Override

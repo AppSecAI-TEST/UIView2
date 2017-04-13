@@ -1,12 +1,15 @@
 package com.hn.d.valley.main.home;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -16,6 +19,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.view.UIIViewImpl;
+import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -24,8 +28,8 @@ import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
-import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.main.home.recommend.RecommendUIView2;
+import com.hn.d.valley.main.home.recommend.TagLoadStatusCallback;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.lzy.imagepicker.ImagePickerHelper;
 
@@ -44,7 +48,7 @@ import rx.functions.Action3;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HomeUIView extends BaseUIView implements LoadStatusCallback {
+public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 
     //    @BindView(R.id.home_nav_layout)
 //    CommonTabLayout mHomeNavLayout;
@@ -59,10 +63,15 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
     private NearbyUIView mNearbyUIView;
     private CircleUIView mCircleUIView;
     private int lastPosition = -1;
+    private EmptyView mEmptyView;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.ui_layout);
+        mEmptyView = new EmptyView(mActivity);
+        int offset = getDimensionPixelOffset(R.dimen.base_xhdpi);
+        mEmptyView.setPadding(offset, offset, offset, offset);
+        baseContentLayout.addView(mEmptyView, new ViewGroup.LayoutParams(-1, -1));
     }
 
     @Override
@@ -73,14 +82,19 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        initViewPager();
+        //initViewPager();
         initTabLayout();
 
         mHomeLayout.setEnableSwipeBack(false);
         /**默认显示第二页*/
 //        mViewPager.setCurrentItem(1);
 //        mHomeNavLayout.setCurrentTab(1, false);
+    }
 
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
         if (mRecommendUIView2 == null) {
             mRecommendUIView2 = new RecommendUIView2(this);
             mRecommendUIView2.bindOtherILayout(mOtherILayout);
@@ -278,9 +292,9 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
                 .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl,String,String>() {
+                        mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
                             @Override
-                            public void call(UIIViewImpl iView , String path , String s) {
+                            public void call(UIIViewImpl iView, String path, String s) {
 
                                 iView.replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(path, s), new Action0() {
                                     @Override
@@ -315,8 +329,14 @@ public class HomeUIView extends BaseUIView implements LoadStatusCallback {
     }
 
     @Override
+    public void onTagLoadEnd() {
+        UIBaseView.safeSetVisibility(mEmptyView, View.GONE);
+    }
+
+    @Override
     public void onSkinChanged(ISkin skin) {
         super.onSkinChanged(skin);
         mHomeNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeColor());
     }
+
 }

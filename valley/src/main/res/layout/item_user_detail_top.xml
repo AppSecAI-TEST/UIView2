@@ -60,6 +60,7 @@
             android:id="@+id/voice_control_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="@dimen/base_80dpi"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/base_left_round_selector"

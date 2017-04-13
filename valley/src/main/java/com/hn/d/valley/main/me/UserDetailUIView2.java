@@ -374,7 +374,18 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     mPathAudioControl.startPlayAudioDelay(0, mAudioRecordPlayable, new BaseAudioControl.AudioControlListener() {
                         @Override
                         public void onAudioControllerReady(Playable playable) {
-                            voicePlayView.setImageResource(R.drawable.voice_playing_n);
+                            switch (SkinUtils.getSkin()) {
+                                case SkinManagerUIView.SKIN_BLUE:
+                                    voicePlayView.setImageResource(R.drawable.near_voice_playing_s_blue);
+                                    break;
+                                case SkinManagerUIView.SKIN_GREEN:
+                                    voicePlayView.setImageResource(R.drawable.voice_playing_n);
+                                    break;
+                                default:
+                                    voicePlayView.setImageResource(R.drawable.near_voice_playing_s_black);
+                                    break;
+                            }
+
                             Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.base_rotate);
                             animation.setInterpolator(new LinearInterpolator());
                             animation.setRepeatMode(Animation.RESTART);

@@ -48,10 +48,10 @@ public class RecommendUIView2 extends BaseContentUIView {
     ArrayList<Tag> mAllTags, mMyTags;
 
     BaseRecyclerUIView mLastUIView;
-    LoadStatusCallback mLoadStatusCallback;
+    TagLoadStatusCallback mLoadStatusCallback;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
 
-    public RecommendUIView2(LoadStatusCallback loadStatusCallback) {
+    public RecommendUIView2(TagLoadStatusCallback loadStatusCallback) {
         mLoadStatusCallback = loadStatusCallback;
     }
 
@@ -97,6 +97,7 @@ public class RecommendUIView2 extends BaseContentUIView {
                     mAllTags.addAll(tags);
                     showContentLayout();
                 }
+                mLoadStatusCallback.onTagLoadEnd();
             }
         });
     }
