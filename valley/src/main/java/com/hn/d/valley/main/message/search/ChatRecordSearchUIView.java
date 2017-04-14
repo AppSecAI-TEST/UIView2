@@ -28,7 +28,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class ChatRecordSearchUIView extends GlobalSearchUIView {
+public class ChatRecordSearchUIView extends GlobalSearchUIView2 {
 
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
@@ -36,17 +36,21 @@ public class ChatRecordSearchUIView extends GlobalSearchUIView {
     private String mSessionId;
     private SessionTypeEnum sessionType;
 
+    public ChatRecordSearchUIView(Options options) {
+        super(options);
+    }
+
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleString("聊天信息");
     }
 
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType,int[] itemTypes) {
+    public static void start(ILayout mLayout,Options options, String sessionId, SessionTypeEnum sessionType,int[] itemTypes) {
         Bundle bundle = new Bundle();
         bundle.putIntArray(ITEMTYPES,itemTypes);
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
-        ChatRecordSearchUIView targetView = new ChatRecordSearchUIView();
+        ChatRecordSearchUIView targetView = new ChatRecordSearchUIView(options);
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 

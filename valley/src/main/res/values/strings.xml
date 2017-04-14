@@ -370,5 +370,8 @@
     <string name="vip_tip">会员中心</string>
     <string name="my_wallet_tip">我的钱包</string>
     <string name="friends_recommend_tip">好友推荐</string>
+    <string name="text_select_friend">选择好友</string>
     <string name="kick_out_tip">您的账户在 %1$s 登录.</string>
+    <string name="only_gril">只看女生</string>
+    <string name="only_boy">只看男生</string>
 </resources>

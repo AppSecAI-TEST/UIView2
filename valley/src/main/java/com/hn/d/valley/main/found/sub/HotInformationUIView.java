@@ -12,6 +12,7 @@ import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.viewpager.FadeInOutPageTransformer;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
@@ -67,6 +68,7 @@ public class HotInformationUIView extends BaseContentUIView {
         super.initOnShowContentLayout();
         initViewPager();
         initTabLayout();
+        updateSkin();
     }
 
     @Override
@@ -158,5 +160,11 @@ public class HotInformationUIView extends BaseContentUIView {
                 return mTypeList.get(position);
             }
         });
+    }
+
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        mSlidTabLayout.setTextSelectColor(skin.getThemeSubColor());
     }
 }

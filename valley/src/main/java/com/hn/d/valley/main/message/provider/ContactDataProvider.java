@@ -48,17 +48,17 @@ public class ContactDataProvider implements IDataProvider{
     @Override
     public List<AbsContactItem> provide(TextQuery query) {
         // mainthread 线程访问 RRealm.realm()
-//        RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
+        RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
         List<AbsContactItem> contactItems = new ArrayList<>();
-//        for (Iterator<FriendBean> it = results.iterator(); it.hasNext() ;) {
-//            FriendBean bean = it.next();
-//            RecordHitInfo hitInfo = new RecordHitInfo();
-//            boolean hit = ContactSearch.hitFriend(bean, query,hitInfo);
-//            if (!hit) {
-//                continue;
-//            }
-//            contactItems.add(new RecordContactItem(bean,hitInfo));
-//        }
+        for (Iterator<FriendBean> it = results.iterator(); it.hasNext() ;) {
+            FriendBean bean = it.next();
+            RecordHitInfo hitInfo = new RecordHitInfo();
+            boolean hit = ContactSearch.hitFriend(bean, query,hitInfo);
+            if (!hit) {
+                continue;
+            }
+            contactItems.add(new RecordContactItem(bean,hitInfo));
+        }
         return contactItems;
     }
 

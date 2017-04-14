@@ -281,17 +281,17 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
     private void saveToRealm(final List<FriendBean> data_list) {
-//        final RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
-//
-//        RRealm.exe(new Realm.Transaction() {
-//            @Override
-//            public void execute(Realm realm) {
-//                results.deleteAllFromRealm();
-//                for(FriendBean bean : data_list) {
-//                    realm.copyToRealm(bean);
-//                }
-//            }
-//        });
+        final RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
+
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                results.deleteAllFromRealm();
+                for(FriendBean bean : data_list) {
+                    realm.copyToRealm(bean);
+                }
+            }
+        });
     }
 
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.angcyo.uiview.widget.RSoftInputLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.angcyo.uiview.widget.RSoftInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/chat_root_layout"
     android:layout_width="match_parent"
@@ -31,21 +30,19 @@
                     android:id="@+id/message_voice_box"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/base_xhdpi"
                     android:layout_marginEnd="@dimen/base_xhdpi"
-                    android:button="@drawable/message_voice_selector"/>
-
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:button="@drawable/message_voice_selector"
+                    android:gravity="center" />
 
 
                 <!--文本输入, 语音录制-->
                 <RelativeLayout
                     android:id="@+id/left_layout"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    >
+                    android:layout_weight="1">
 
                     <com.angcyo.uiview.widget.ExEditText
                         android:id="@+id/input_view"
@@ -57,7 +54,7 @@
                         android:maxHeight="@dimen/base_80dpi"
                         android:minHeight="38dp"
                         android:padding="@dimen/base_ldpi"
-                        android:textSize="@dimen/default_text_size16"/>
+                        android:textSize="@dimen/default_text_size16" />
 
                     <TextView
                         android:id="@+id/record_view"
@@ -67,7 +64,7 @@
                         android:clickable="true"
                         android:gravity="center"
                         android:text="@string/record_audio"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                 </RelativeLayout>
 
@@ -77,9 +74,9 @@
                     android:id="@+id/input_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/base_40dpi"
-                    android:gravity="center_vertical"
                     android:layout_marginBottom="@dimen/base_mdpi"
                     android:layout_marginStart="@dimen/base_ldpi"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
 
 
@@ -96,36 +93,34 @@
                             android:id="@+id/message_expression_view"
                             android:layout_width="@dimen/base_40dpi"
                             android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:layout_marginStart="@dimen/base_hdpi"
-                            android:button="@drawable/message_expression_selector"/>
+                            android:layout_marginStart="@dimen/base_ldpi"
+                            android:button="@drawable/message_expression_selector"
+                            android:gravity="center" />
 
                         <RadioButton
                             android:id="@+id/message_add_view"
                             android:layout_width="@dimen/base_40dpi"
-                            android:gravity="center"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/base_hdpi"
-                            android:layout_marginRight="@dimen/base_hdpi"
-                            android:button="@drawable/message_add_selector"/>
+                            android:layout_marginLeft="@dimen/base_ldpi"
+                            android:layout_marginRight="@dimen/base_ldpi"
+                            android:button="@drawable/message_add_selector"
+                            android:gravity="center" />
 
                         <!--发送按钮-->
                         <TextView
                             android:id="@+id/send_view"
                             style="@style/MainColorRoundButtonStyle"
-                            android:layout_width="@dimen/base_50dpi"
-                            android:layout_height="35dp"
-                            android:layout_marginBottom="@dimen/base_mdpi"
-                            android:layout_marginStart="@dimen/base_ldpi"
+                            android:layout_width="@dimen/base_40dpi"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/base_ldpi"
+                            android:layout_marginRight="@dimen/base_ldpi"
                             android:enabled="false"
                             android:text="@string/send"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                     </RadioGroup>
 
                 </LinearLayout>
-
-
 
 
             </LinearLayout>
@@ -144,13 +139,13 @@
             <com.angcyo.uiview.recycler.RRecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
         </com.hn.d.valley.widget.HnRefreshLayout>
 
         <View
             style="@style/BaseHLine"
             android:layout_below="@id/refresh_layout"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <!--其他联系人发来消息-->
         <RelativeLayout
@@ -170,7 +165,7 @@
                 android:gravity="center_vertical"
                 android:padding="@dimen/base_ldpi"
                 android:textColor="@color/colorPrimary"
-                tools:text="angcyo:angcyo"/>
+                tools:text="angcyo:angcyo" />
 
         </RelativeLayout>
 
@@ -196,7 +191,7 @@
                     android:layout_gravity="center"
                     android:text="@string/timer_default"
                     android:textColor="@color/white"
-                    android:textSize="45sp"/>
+                    android:textSize="45sp" />
 
                 <LinearLayout
                     android:id="@+id/timer_tip_container"
@@ -212,7 +207,7 @@
                         android:layout_gravity="center"
                         android:text="@string/recording_cancel"
                         android:textColor="@color/white"
-                        android:textSize="20sp"/>
+                        android:textSize="20sp" />
                 </LinearLayout>
             </FrameLayout>
         </FrameLayout>
@@ -241,14 +236,14 @@
                 <com.angcyo.uiview.widget.EmojiTabLayout
                     android:id="@+id/emoji_tab_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="@dimen/base_title_bar_item_size"/>
+                    android:layout_height="@dimen/base_title_bar_item_size" />
             </HorizontalScrollView>
 
             <com.angcyo.uiview.widget.viewpager.UIViewPager
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/emoji_tab_view_container"/>
+                android:layout_above="@id/emoji_tab_view_container" />
 
         </RelativeLayout>
 
@@ -269,12 +264,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="160dp"
-                    android:tag="GV4"/>
+                    android:tag="GV4" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1" />
             </LinearLayout>
 
             <com.angcyo.uiview.recycler.RecyclerViewPagerIndicator
@@ -283,7 +278,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="@dimen/base_xhdpi"/>
+                android:layout_marginBottom="@dimen/base_xhdpi" />
 
         </RelativeLayout>
 

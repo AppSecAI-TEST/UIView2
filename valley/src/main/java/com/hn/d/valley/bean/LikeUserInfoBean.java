@@ -2,6 +2,8 @@ package com.hn.d.valley.bean;
 
 import android.text.TextUtils;
 
+import com.angcyo.uiview.utils.file.FileUtil;
+
 /**
  * Created by angcyo on 2017-01-15.
  */
@@ -93,6 +95,13 @@ public class LikeUserInfoBean {
      */
 
     private String newest_dynamic;
+    /**
+     * voice_introduce :
+     * fans_count : 1
+     */
+
+    private String voice_introduce;
+    private int fans_count;
 
 
     public String getAvatar() {
@@ -313,4 +322,60 @@ public class LikeUserInfoBean {
     public void setNewest_dynamic(String newest_dynamic) {
         this.newest_dynamic = newest_dynamic;
     }
+
+    public String getVoice_introduce() {
+        return voice_introduce;
+    }
+
+    public void setVoice_introduce(String voice_introduce) {
+        this.voice_introduce = voice_introduce;
+    }
+
+    public int getFans_count() {
+        return fans_count;
+    }
+
+    public void setFans_count(int fans_count) {
+        this.fans_count = fans_count;
+    }
+
+    public String getVoiceTime() {
+        if (TextUtils.isEmpty(voice_introduce)) {
+            return "0";
+        } else {
+            String[] voiceIntroduces;
+            voiceIntroduces = voice_introduce.split("--");
+            if (voiceIntroduces.length == 2) {
+                return voiceIntroduces[1];
+            } else {
+                voiceIntroduces = voice_introduce.split("_t_");
+                String introd1 = voiceIntroduces[1];
+                String duration = FileUtil.getFileNameNoEx(introd1);
+
+                if (voiceIntroduces.length == 2) {
+                    return duration;
+                }
+            }
+        }
+        return "0";
+    }
+
+    public long getVoiceDuration() {
+        return Long.parseLong(getVoiceTime());
+    }
+
+    public String getVoiceUrl() {
+        if (TextUtils.isEmpty(voice_introduce)) {
+            return "";
+        } else {
+            String[] voiceIntroduces;
+            voiceIntroduces = voice_introduce.split("--");
+            if (voiceIntroduces.length == 2) {
+                return voiceIntroduces[0];
+            } else {
+                return voice_introduce;
+            }
+        }
+    }
+
 }

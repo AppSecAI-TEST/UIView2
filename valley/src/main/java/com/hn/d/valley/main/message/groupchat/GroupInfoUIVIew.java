@@ -30,11 +30,10 @@ import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.ChatFileUIView;
 import com.hn.d.valley.main.message.search.ChatRecordSearchUIView;
-import com.hn.d.valley.main.message.search.GlobalSearchUIView;
+import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -324,7 +323,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ChatRecordSearchUIView.start(mOtherILayout,mSessionId,sessionType,new int[]{ItemTypes.MSG});
+                        ChatRecordSearchUIView.start(mOtherILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
                     }
                 });
             }

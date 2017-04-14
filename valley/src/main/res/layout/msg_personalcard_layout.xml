@@ -4,12 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/msg_card_layout"
-    android:layout_width="250dp"
+    android:layout_width="220dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:layoutDirection="ltr"
     android:orientation="vertical"
-    android:layout_marginEnd="@dimen/base_xhdpi"
     android:background="@drawable/base_rect_solid_shape"
     tools:background="@drawable/base_rect_solid_shape">
 

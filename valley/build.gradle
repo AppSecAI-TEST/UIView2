@@ -16,8 +16,8 @@ android {
         applicationId "com.hn.d.valley"
         minSdkVersion Integer.parseInt(rootProject.M_SDK)
         targetSdkVersion Integer.parseInt(rootProject.T_SDK)
-        versionCode 24
-        versionName "1.0.24"
+        versionCode 25
+        versionName "1.0.25"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         ndk {
@@ -92,6 +92,8 @@ dependencies {
     compile project(':RLibrary:zxing')
     compile project(':rbplayerlib')
     compile project(':rbrecoderlib')
+
+    compile 'org.jsoup:jsoup:1.10.2'
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     /*腾讯Bugly依赖*/

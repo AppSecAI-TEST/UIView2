@@ -45,6 +45,9 @@ public class AudioPlayHelper {
         }
     }
 
+    /**
+     * 是否使用耳机模式
+     */
     public void setEarPhoneModeEnable(boolean isEarPhoneModeEnable) {
         initPlay();
         mPathAudioControl.setEarPhoneModeEnable(isEarPhoneModeEnable);
@@ -74,7 +77,9 @@ public class AudioPlayHelper {
         } else {
             if (mPathAudioControl.isPlayingAudio()) {
                 stopAudio();
-                return;
+                if (TextUtils.equals(lastPath, path)) {
+                    return;
+                }
             }
         }
         if (mAudioRecordPlayable == null) {

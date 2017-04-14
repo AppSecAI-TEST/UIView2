@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,11 +10,10 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.ImageVideoBitmapDecoder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
-import com.hn.d.valley.widget.HnGlideImageView;
+import com.hn.d.valley.x5.X5WebUIView;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class MsgViewHolderPushMultiPicture extends MsgViewHolderBase {
 
     private RRecyclerView mRecyclerView;
 
-    public MsgViewHolderPushMultiPicture(BaseMultiAdapter adapter) {
+    public MsgViewHolderPushMultiPicture(BaseMultiAdapter<RBaseViewHolder> adapter) {
         super(adapter);
     }
 
@@ -73,7 +73,7 @@ public class MsgViewHolderPushMultiPicture extends MsgViewHolderBase {
             }
 
             @Override
-            protected void onBindView(RBaseViewHolder holder, int position, HashMap<String, String> bean) {
+            protected void onBindView(RBaseViewHolder holder, int position, final HashMap<String, String> bean) {
 
                 ImageView imageView = holder.imgV(R.id.image_view);
                 TextView desc = holder.tv(R.id.tv_desc);
@@ -85,6 +85,13 @@ public class MsgViewHolderPushMultiPicture extends MsgViewHolderBase {
                         .error(com.angcyo.uiview.R.drawable.default_image)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mUIBaseView.startIView(new X5WebUIView(bean.get("link")));
+                    }
+                });
             }
 
         });

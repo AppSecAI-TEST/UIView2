@@ -43,7 +43,7 @@
             android:id="@+id/msg_content_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/base_80dpi">
+            android:layout_marginEnd="@dimen/base_40dpi">
 
             <!--&lt;!&ndash;内容&ndash;&gt;-->
             <!--<FrameLayout-->

@@ -6,7 +6,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
@@ -55,13 +54,13 @@ public class MsgViewHolderPersonCard extends MsgViewHolderBase {
 
         tv_pc_name.setText("[第三方APP自定义消息]");
 
-        contentContainer.setBackgroundResource(0);
+//        contentContainer.setBackgroundResource(0);
 
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) pc_layout.getLayoutParams();
         if (isReceivedMessage()) {
-            params.setMarginStart(ScreenUtil.dip2px(10));
+//            params.setMarginStart(ScreenUtil.dip2px(10));
         } else {
-            params.setMarginEnd(ScreenUtil.dip2px(10));
+//            params.setMarginEnd(ScreenUtil.dip2px(10));
         }
 
         CustomAttachment attachment = (CustomAttachment) message.getAttachment();

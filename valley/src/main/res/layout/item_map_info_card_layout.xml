@@ -41,14 +41,12 @@
                     android:visibility="visible"
                     tools:text="阿里巴巴董事长马云"/>
 
-                <com.angcyo.uiview.widget.RTextView
-                    android:id="@+id/follower_num_view"
-                    style="@style/DarkTextStyle"
+                <ImageView
+                    android:id="@+id/voice_play_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/base_ldpi"
-                    android:tag="@string/follower_count_format"
-                    tools:text="211"/>
+                    android:visibility="gone"
+                    android:src="@drawable/voice_playing_blue"/>
 
             </LinearLayout>
 

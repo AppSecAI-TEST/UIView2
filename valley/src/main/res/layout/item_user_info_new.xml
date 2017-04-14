@@ -100,7 +100,6 @@
                 style="@style/NameTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLength="10"
                 tools:text="爱宠物的默默"/>
 
             <com.hn.d.valley.widget.HnGenderView
@@ -112,20 +111,20 @@
                 tools:text="2"/>
 
             <ImageView
-                android:id="@+id/auth"
+                android:id="@+id/auth_iview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/base_ldpi"
                 android:src="@drawable/certification_icon"
                 android:visibility="gone"/>
 
-            <ImageView
-                android:id="@+id/voice_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/base_ldpi"
-                android:src="@drawable/near_voice_playing_n"
-                android:visibility="invisible"/>
+            <!--<ImageView-->
+            <!--android:id="@+id/voice_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginStart="@dimen/base_ldpi"-->
+            <!--android:src="@drawable/near_voice_playing_n"-->
+            <!--android:visibility="gone"/>-->
 
             <!--<TextView-->
             <!--android:id="@+id/city_name"-->
@@ -158,8 +157,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/show_distance"
@@ -206,5 +205,18 @@
     <!--android:layout_marginTop="@dimen/base_xhdpi"-->
     <!--android:background="@color/line_color"-->
     <!--android:visibility="gone"/>-->
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/follower_num_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="false"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
+        android:tag="@string/follower_count_format"
+        android:textColor="@color/orange"
+        tools:text="211"/>
 
 </RelativeLayout>

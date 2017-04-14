@@ -15,6 +15,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -22,7 +23,10 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.main.message.audio.BaseAudioControl;
+import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 
@@ -41,11 +45,16 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class MapCardAdapter extends UserInfoAdapter {
     CompositeSubscription mSubscription;
+    AudioPlayHelper mAudioPlayHelper;
 
     public MapCardAdapter(Context context, ILayout ILayout, CompositeSubscription subscription) {
         super(context, ILayout);
         mSubscription = subscription;
         setModel(RModelAdapter.MODEL_MULTI);
+    }
+
+    public void setAudioPlayHelper(AudioPlayHelper audioPlayHelper) {
+        mAudioPlayHelper = audioPlayHelper;
     }
 
     @Override
@@ -63,6 +72,7 @@ public class MapCardAdapter extends UserInfoAdapter {
 
         //关注
         final ImageView followView = holder.v(R.id.follow_image_view);
+        followView.setVisibility(View.GONE);
         final String to_uid = dataBean.getUid();
 
         View.OnClickListener clickListener = null;
@@ -153,10 +163,10 @@ public class MapCardAdapter extends UserInfoAdapter {
         //认证
         TextView signatureView = holder.v(R.id.signature_view);
         if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
-            holder.v(R.id.auth).setVisibility(View.VISIBLE);
+            //holder.v(R.id.auth).setVisibility(View.VISIBLE);
             signatureView.setText(dataBean.getCompany() + dataBean.getJob());
         } else {
-            holder.v(R.id.auth).setVisibility(View.GONE);
+            //holder.v(R.id.auth).setVisibility(View.GONE);
             String signature = dataBean.getSignature();
             if (TextUtils.isEmpty(signature)) {
                 signatureView.setText(R.string.signature_empty_tip);
@@ -167,11 +177,10 @@ public class MapCardAdapter extends UserInfoAdapter {
 
         //粉丝数
         RTextView textView = holder.v(R.id.follower_num_view);
-        textView.setText("1000");
+        textView.setText(RUtils.getShortString(dataBean.getFans_count()));
 
         //语音介绍
-        View voiceView = holder.v(R.id.voice_view);
-        voiceView.setVisibility(View.VISIBLE);
+        initVoiceView(holder, dataBean);
 
         //用户个人详情
         holder.itemView.setClickable(false);
@@ -185,6 +194,38 @@ public class MapCardAdapter extends UserInfoAdapter {
                 mILayout.startIView(new UserDetailUIView2(dataBean.getUid()));
             }
         });
+    }
+
+    private void initVoiceView(final RBaseViewHolder holder, final LikeUserInfoBean dataBean) {
+        ImageView voiceView = holder.v(R.id.video_play_view);
+        if (voiceView == null) {
+            return;
+        }
+
+        if (!TextUtils.isEmpty(dataBean.getVoice_introduce())) {
+            mAudioPlayHelper.initPlayImageView(voiceView);
+            voiceView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAudioPlayHelper.playAudio(dataBean.getVoiceUrl(), dataBean.getVoiceDuration(), new BaseAudioControl.AudioControlListener() {
+                        @Override
+                        public void onAudioControllerReady(Playable playable) {
+
+                        }
+
+                        @Override
+                        public void onEndPlay(Playable playable) {
+                            initVoiceView(holder, dataBean);
+                        }
+
+                        @Override
+                        public void updatePlayingProgress(Playable playable, long curPosition) {
+
+                        }
+                    });
+                }
+            });
+        }
     }
 
 

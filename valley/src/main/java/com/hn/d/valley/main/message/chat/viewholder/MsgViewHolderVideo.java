@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.angcyo.library.facebook.RFresco;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.angcyo.uiview.utils.string.StringUtil;
@@ -45,6 +46,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
     protected View progressCover;
     protected TextView progressLabel;
     protected ProgressBar progressBar;
+    protected ImageView clickView;
 
     SimpleDraweeView draweeView;
 
@@ -75,7 +77,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
     @Override
     protected void bindContentView() {
-        final ImageView clickView = (ImageView) findViewById(R.id.click_view);
+        clickView = (ImageView) findViewById(R.id.click_view);
 
         final VideoAttachment msgAttachment = (VideoAttachment) message.getAttachment();
         final String path = msgAttachment.getPath();
@@ -140,6 +142,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
     private void loadThumbnailImage(String thumbPath) {
         setImageSize(draweeView,thumbPath);
+        L.i(thumbPath);
         if (thumbPath != null) {
             if (isReceivedMessage()) {
                 RFresco.mask(context, draweeView, R.drawable.bubble_box_left, thumbPath, true);
@@ -189,6 +192,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
         progressCover.setVisibility(visible);
         progressBar.setVisibility(visible);
         progressLabel.setVisibility(visible);
+        clickView.setVisibility(View.VISIBLE == visible ? View.GONE : View.VISIBLE);
     }
 
     private boolean isVideoHasDownloaded(final IMMessage message) {
@@ -244,7 +248,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
     private void playVideo() {
         final VideoAttachment msgAttachment = (VideoAttachment) message.getAttachment();
         mUIBaseView.startIView(new VideoPlayUIView(((VideoAttachment) message.getAttachment()).getPath()
-                , draweeView.getDrawable(), new int[]{msgAttachment.getWidth(),msgAttachment.getHeight()}));
+                , null, new int[]{msgAttachment.getWidth(),msgAttachment.getHeight()}));
     }
 
     private Observer<AttachmentProgress> attachmentProgressObserver = new Observer<AttachmentProgress>() {

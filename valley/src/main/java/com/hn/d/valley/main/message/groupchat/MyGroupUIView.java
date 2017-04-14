@@ -147,6 +147,14 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
 
         }
 
+
+
+        @Override
+        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, GroupBean bean) {
+            super.onBindModelView(model, isSelector, holder, position, bean);
+        }
+
+
         @Override
         public boolean isEnableLoadMore() {
             return false;

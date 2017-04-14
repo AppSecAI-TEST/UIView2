@@ -26,6 +26,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.BmpUtil;
 import com.angcyo.uiview.utils.T;
 import com.bumptech.glide.Glide;
@@ -149,11 +150,11 @@ public class AmapControl implements LocationSource, AMapLocationListener {
             myLocationStyle.myLocationIcon(BitmapDescriptorFactory.
                     fromResource(R.drawable.dingwei_icon));
             // 自定义精度范围的圆形边框颜色
-            myLocationStyle.strokeColor(ValleyApp.getApp().getResources().getColor(R.color.colorAccent));
+            myLocationStyle.strokeColor(SkinHelper.getSkin().getThemeSubColor());
             //自定义精度范围的圆形边框宽度
             myLocationStyle.strokeWidth(5);
             // 设置圆形的填充颜色
-            myLocationStyle.radiusFillColor(ValleyApp.getApp().getResources().getColor(R.color.theme_color_primary_dark_tran2));
+            myLocationStyle.radiusFillColor(SkinHelper.getSkin().getThemeTranColor(0x20));
             // 将自定义的 myLocationStyle 对象添加到地图上
             aMap.setMyLocationStyle(myLocationStyle);
             //end--------------------

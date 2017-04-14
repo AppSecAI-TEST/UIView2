@@ -19,6 +19,7 @@ import com.amap.api.maps.TextureMapView;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
@@ -41,6 +42,7 @@ import com.hn.d.valley.bean.NearUserBean;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AmapControl;
+import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
@@ -80,6 +82,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     RRecyclerView mCardRecyclerView;
     @BindView(R.id.bottom_control_layout)
     LinearLayout mBottomControlLayout;
+    AudioPlayHelper mAudioPlayHelper;
     private AmapBean lastAmapBean;
     /**
      * 1-男 2-女 0-所有
@@ -87,6 +90,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     private int mSex = 0;
     private MapCardPagerAdapter mMapCardPagerAdapter;
     private MapCardAdapter mMapCardAdapter;
+    private boolean isMapMode = true;
 
     public static void setAttentionView(final ImageView view, final LikeUserInfoBean dataBean, final String to_uid) {
         if (dataBean.getIs_attention() == 1) {
@@ -137,7 +141,43 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     protected TitleBarPattern getTitleBar() {
         return createTitleBarPattern()
                 .setShowBackImageView(true)
-                .setTitleString(getString(R.string.nearby_perple));
+                .setTitleString(getString(R.string.nearby_perple))
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.more, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showMoreDialog();
+                    }
+                }));
+    }
+
+    private void showMoreDialog() {
+        UIBottomItemDialog.build()
+                .setUseWxStyle(true)
+                .addItem(getString(R.string.only_gril), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onFilter(R.id.girl_check_view);
+                    }
+                })
+                .addItem(getString(R.string.only_boy), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onFilter(R.id.boy_check_view);
+                    }
+                })
+                .addItem(getString(R.string.see_all), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onFilter(R.id.all_check_view);
+                    }
+                })
+                .addItem(getString(R.string.base_cancel), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .showDialog(this);
     }
 
     @Override
@@ -245,6 +285,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
         mMapCardAdapter = new MapCardAdapter(mActivity, mOtherILayout, mSubscriptions);
+        mMapCardAdapter.setAudioPlayHelper(mAudioPlayHelper);
+
         mCardRecyclerView.setAdapter(mMapCardAdapter);
         new RPagerSnapHelper().setOnPageListener(new RPagerSnapHelper.OnPageListener() {
             @Override
@@ -269,17 +311,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         mCheckGroupView.setOnCheckChangedListener(new RCheckGroup.OnCheckChangedListener() {
             @Override
             public void onChecked(View fromm, View to) {
-                if (to.getId() == R.id.boy_check_view) {
-                    mSex = 1;
-                } else if (to.getId() == R.id.girl_check_view) {
-                    mSex = 2;
-                } else if (to.getId() == R.id.all_check_view) {
-                    mSex = 0;
-                }
-                L.e("开始刷新...");
-                mRecyclerView.scrollToPosition(0);
-                //开始刷新
-                mRefreshLayout.setRefreshState(RefreshLayout.TOP);
+                onFilter(to.getId());
             }
 
             @Override
@@ -306,6 +338,20 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         mMapCheckView.setChecked(true);
     }
 
+    protected void onFilter(int id) {
+        if (id == R.id.boy_check_view) {
+            mSex = 1;
+        } else if (id == R.id.girl_check_view) {
+            mSex = 2;
+        } else if (id == R.id.all_check_view) {
+            mSex = 0;
+        }
+        L.e("开始刷新...");
+        mRecyclerView.scrollToPosition(0);
+        //开始刷新
+        mRefreshLayout.setRefreshState(RefreshLayout.TOP);
+    }
+
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
@@ -318,7 +364,9 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         RAmap.startLocation();
         if (isMapMode()) {
 //            UIViewPager.interceptTouch = false;
-            mMapView.onResume();
+            if (mMapView != null) {
+                mMapView.onResume();
+            }
         }
     }
 
@@ -329,7 +377,9 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 
         RAmap.stopLocation();
         if (isMapMode()) {
-            mMapView.onPause();
+            if (mMapView != null) {
+                mMapView.onPause();
+            }
         }
     }
 
@@ -363,8 +413,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         RAmap.startLocation();
 
         add(RRetrofit.create(UserInfoService.class)
-                .nearUser(Param.buildMap("uid:" + UserCache.getUserAccount(),
-                        "page:" + page,
+                .nearUser(Param.buildMap(
+                        "page:" + (isMapMode() ? "" : page),
                         "sex:" + mSex,
                         "lng:" + getLongitude(),
                         "lat:" + getLatitude()))
@@ -372,6 +422,11 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                 .subscribe(new RSubscriber<NearUserBean>() {
                     @Override
                     public void onSucceed(NearUserBean nearUserBean) {
+                        showContentLayout();
+                        if (isMapMode()) {
+                            showMapView();
+                        }
+
                         if (nearUserBean == null) {
                             onUILoadDataEnd();
                         } else {
@@ -432,20 +487,31 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         return lastAmapBean.longitude;
     }
 
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        mAudioPlayHelper = new AudioPlayHelper(mActivity);
+        mAudioPlayHelper.setEarPhoneModeEnable(false);
+    }
 
     @Override
     public void onViewHide() {
         super.onViewHide();
         if (isMapMode()) {
-            mMapView.onPause();
+            if (mMapView != null) {
+                mMapView.onPause();
+            }
         }
+        mAudioPlayHelper.stopAudio();
     }
 
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
         if (isMapMode()) {
-            mMapView.onResume();
+            if (mMapView != null) {
+                mMapView.onResume();
+            }
         }
     }
 
@@ -469,16 +535,19 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
      * 判断是否是地图模式
      */
     private boolean isMapMode() {
-        if (mMapCheckView == null) {
-            return false;
-        }
-        return mMapCheckView.isChecked();
+//        if (mMapCheckView == null) {
+//            return false;
+//        }
+//        return mMapCheckView.isChecked();
+        return isMapMode;
     }
 
     /**
      * 显示地图模式
      */
     private void showMapView() {
+        isMapMode = true;
+
 //        UIViewPager.interceptTouch = false;
         mMapView.setVisibility(View.VISIBLE);
         ViewCompat.setAlpha(mMapView, 0);
@@ -567,6 +636,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
      * 隐藏地图模式
      */
     private void hideMapView() {
+        isMapMode = false;
+
 //        UIViewPager.interceptTouch = true;
         mMapView.onPause();
         mBottomControlLayout.setVisibility(View.GONE);

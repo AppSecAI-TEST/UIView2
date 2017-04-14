@@ -110,6 +110,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         titleBarPattern.addRightItem(TitleBarPattern.buildImage(R.drawable.editor, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), null));
                 startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), new Action0() {
                     @Override
                     public void call() {
@@ -136,7 +137,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             mCommonTabLayout.setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
         }
         if (mCommandItemView != null) {
-            ResUtil.setBgDrawable(mCommandItemView, skin.getThemeMaskBackgroundSelector());
+//            ResUtil.setBgDrawable(mCommandItemView, skin.getThemeMaskBackgroundSelector());
         }
     }
 
@@ -250,11 +251,14 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     circleUIView.bindOtherILayout(mOtherILayout);
                     circleUIView.setInSubUIView(true);
                     return circleUIView;
-                } else {
-                    MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
-                    myAlbumUIView.bindOtherILayout(mOtherILayout);
-                    return myAlbumUIView;
                 }
+//                else {
+//                    MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
+//                    myAlbumUIView.bindOtherILayout(mOtherILayout);
+//
+//                    return
+//                }
+                return null;
             }
 
             @Override
