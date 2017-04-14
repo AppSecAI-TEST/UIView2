@@ -548,6 +548,10 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     private void showMapView() {
         isMapMode = true;
 
+        if (mMapView == null || mMapView.getVisibility() == View.VISIBLE) {
+            return;
+        }
+
 //        UIViewPager.interceptTouch = false;
         mMapView.setVisibility(View.VISIBLE);
         ViewCompat.setAlpha(mMapView, 0);
