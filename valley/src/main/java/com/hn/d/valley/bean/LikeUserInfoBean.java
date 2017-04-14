@@ -88,6 +88,11 @@ public class LikeUserInfoBean {
      * is_auth : 0
      */
     private String id;
+    /**
+     * newest_dynamic : 最新动态
+     */
+
+    private String newest_dynamic;
 
 
     public String getAvatar() {
@@ -299,5 +304,13 @@ public class LikeUserInfoBean {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getNewest_dynamic() {
+        return newest_dynamic;
+    }
+
+    public void setNewest_dynamic(String newest_dynamic) {
+        this.newest_dynamic = newest_dynamic;
     }
 }

@@ -7,9 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,18 +41,16 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.me.sub.UserInfoSubUIView;
-import com.hn.d.valley.main.message.audio.AudioRecordPlayable;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
-import com.hn.d.valley.main.message.audio.PathAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
-import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
@@ -87,8 +82,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     private UIViewPager mViewPager;
     private UserInfoBean mUserInfoBean;
 
-    private PathAudioControl mPathAudioControl;
-    private AudioRecordPlayable mAudioRecordPlayable;
+    private AudioPlayHelper mAudioPlayHelper;
 
     public UserDetailUIView2(String to_uid) {
         this.to_uid = to_uid;
@@ -154,6 +148,9 @@ public class UserDetailUIView2 extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+
+        mAudioPlayHelper = new AudioPlayHelper(mActivity);
+
         StickLayout stickLayout = mViewHolder.v(R.id.stick_layout);
         stickLayout.setFloatTopOffset((int) getTitleBarHeight());
         mCommandItemView = mViewHolder.v(R.id.command_item_view);
@@ -172,15 +169,13 @@ public class UserDetailUIView2 extends BaseContentUIView {
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        mPathAudioControl = PathAudioControl.getInstance(mActivity);
-        mPathAudioControl.setEarPhoneModeEnable(false);
+        mAudioPlayHelper.setEarPhoneModeEnable(false);
     }
 
     @Override
     public void onViewHide() {
         super.onViewHide();
-        mPathAudioControl.stopAudio();
-        mViewHolder.v(R.id.voice_play_view).clearAnimation();
+        mAudioPlayHelper.stopAudio();
     }
 
     @Override
@@ -346,57 +341,21 @@ public class UserDetailUIView2 extends BaseContentUIView {
             controlLayout.setVisibility(View.GONE);
         } else {
             controlLayout.setVisibility(View.VISIBLE);
-            switch (SkinUtils.getSkin()) {
-                case SkinManagerUIView.SKIN_BLUE:
-                    voicePlayView.setImageResource(R.drawable.voice_playing_blue);
-                    break;
-                case SkinManagerUIView.SKIN_GREEN:
-                    voicePlayView.setImageResource(R.drawable.voice_playing);
-                    break;
-                default:
-                    voicePlayView.setImageResource(R.drawable.voice_playing_black);
-                    break;
-            }
+            mAudioPlayHelper.initPlayImageView(voicePlayView);
 
             voiceTimeView.setText(mUserInfoBean.getVoiceTime());
 
             controlLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mPathAudioControl.isPlayingAudio()) {
-                        mPathAudioControl.stopAudio();
-                        return;
-                    }
-                    //开始播放语音介绍
-                    if (mAudioRecordPlayable == null) {
-                        mAudioRecordPlayable = new AudioRecordPlayable(mUserInfoBean.getVoiceUrl(), mUserInfoBean.getVoiceDuration());
-                    }
-                    mPathAudioControl.startPlayAudioDelay(0, mAudioRecordPlayable, new BaseAudioControl.AudioControlListener() {
+                    mAudioPlayHelper.playAudio(mUserInfoBean.getVoiceUrl(), mUserInfoBean.getVoiceDuration(), new BaseAudioControl.AudioControlListener() {
                         @Override
                         public void onAudioControllerReady(Playable playable) {
-                            switch (SkinUtils.getSkin()) {
-                                case SkinManagerUIView.SKIN_BLUE:
-                                    voicePlayView.setImageResource(R.drawable.near_voice_playing_s_blue);
-                                    break;
-                                case SkinManagerUIView.SKIN_GREEN:
-                                    voicePlayView.setImageResource(R.drawable.voice_playing_n);
-                                    break;
-                                default:
-                                    voicePlayView.setImageResource(R.drawable.near_voice_playing_s_black);
-                                    break;
-                            }
 
-                            Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.base_rotate);
-                            animation.setInterpolator(new LinearInterpolator());
-                            animation.setRepeatMode(Animation.RESTART);
-                            animation.setRepeatCount(Animation.INFINITE);
-                            voicePlayView.setAnimation(animation);
-                            voicePlayView.startAnimation(animation);
                         }
 
                         @Override
                         public void onEndPlay(Playable playable) {
-                            voicePlayView.clearAnimation();
                             initVoiceView();
                         }
 

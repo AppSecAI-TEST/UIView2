@@ -4,7 +4,7 @@ package com.hn.d.valley.bean;
 /**
  * Created by hewking on 2017/3/1.
  */
-
+@Deprecated
 public class RecommendUserBean{
 
     /**

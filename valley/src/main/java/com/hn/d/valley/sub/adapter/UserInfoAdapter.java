@@ -1,14 +1,18 @@
 package com.hn.d.valley.sub.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -45,6 +49,8 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
         //等级性别
         HnGenderView hnGenderView = holder.v(R.id.grade);
         hnGenderView.setGender(dataBean.getSex(), dataBean.getGrade());
+
+
     }
 
     @Override
@@ -63,19 +69,19 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
         }
 
         //认证
-//        TextView signatureView = holder.v(R.id.signature);
-//        if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
-//            holder.v(R.id.auth).setVisibility(View.VISIBLE);
-//            signatureView.setText(dataBean.getCompany() + dataBean.getJob());
-//        } else {
-//            holder.v(R.id.auth).setVisibility(View.GONE);
-//            String signature = dataBean.getSignature();
-//            if (TextUtils.isEmpty(signature)) {
-//                signatureView.setText(R.string.signature_empty_tip);
-//            } else {
-//                signatureView.setText(signature);
-//            }
-//        }
+        TextView signatureView = holder.v(R.id.signature);
+        if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
+            holder.v(R.id.auth).setVisibility(View.VISIBLE);
+            signatureView.setText(dataBean.getAuth_desc());
+        } else {
+            holder.v(R.id.auth).setVisibility(View.GONE);
+            String signature = dataBean.getSignature();
+            if (TextUtils.isEmpty(signature)) {
+                signatureView.setText(R.string.signature_empty_tip);
+            } else {
+                signatureView.setText(signature);
+            }
+        }
     }
 
     @Override
@@ -98,7 +104,17 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
                 if (isAttention(bean)) {
                     followView.setImageResource(R.drawable.focus_on);
                 } else {
-                    followView.setImageResource(R.drawable.follow);
+                    switch (SkinUtils.getSkin()) {
+                        case SkinManagerUIView.SKIN_BLUE:
+                            followView.setImageResource(R.drawable.follow_blue);
+                            break;
+                        case SkinManagerUIView.SKIN_GREEN:
+                            followView.setImageResource(R.drawable.follow);
+                            break;
+                        default:
+                            followView.setImageResource(R.drawable.follow_black);
+                            break;
+                    }
                 }
             }
         }
@@ -114,8 +130,15 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
         return dataBean.getIs_attention() == 1;
     }
 
+    /**
+     * @param value true 关注, false 未关注
+     */
     protected void onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {
-
+        //请根据界面设置对应关系值
+        if (!value) {
+            dataBean.setIs_contact(0);
+        }
+        dataBean.setIs_attention(value ? 1 : 0);
     }
 
 }

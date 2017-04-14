@@ -26,10 +26,12 @@ public class HnFollowImageView extends HnGlideImageView {
 
     public HnFollowImageView(Context context) {
         super(context);
+        setScaleType(ScaleType.CENTER);
     }
 
     public HnFollowImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setScaleType(ScaleType.CENTER);
     }
 
     @Override
@@ -59,9 +61,9 @@ public class HnFollowImageView extends HnGlideImageView {
         clearAnimation();
 
         ViewGroup.LayoutParams params = getLayoutParams();
-        int height = params.height;
         setImageResource(R.drawable.loading_guanzhu);
-        params.height = height;
+        params.width = getMeasuredWidth();
+        params.height = getMeasuredHeight();
         setLayoutParams(params);
 
         RotateAnimation rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);

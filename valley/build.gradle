@@ -39,7 +39,7 @@ android {
         dev {
             minSdkVersion 21
         }
-        pord {
+        apk {
             minSdkVersion Integer.parseInt(rootProject.M_SDK)
         }
     }

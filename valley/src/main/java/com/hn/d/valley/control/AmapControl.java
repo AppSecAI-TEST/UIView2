@@ -305,11 +305,13 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                         if (resource == null || resource.isRecycled()) {
                             return;
                         }
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(
-                                BmpUtil.getRoundedCornerBitmap(mContext, resource,
-                                        width, height,
-                                        R.drawable.touxiang_kuang_s, width, AVATAR_OFFSET / 2)
-                        ));
+                        if (marker == selectorMarker) {
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                    BmpUtil.getRoundedCornerBitmap(mContext, resource,
+                                            width, height,
+                                            R.drawable.touxiang_kuang_s, width, AVATAR_OFFSET / 2)
+                            ));
+                        }
                     }
                 });
     }
