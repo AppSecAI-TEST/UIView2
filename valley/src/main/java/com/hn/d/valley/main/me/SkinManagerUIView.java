@@ -109,6 +109,7 @@ public class SkinManagerUIView extends BaseRecyclerUIView<String, ISkin, String>
             @Override
             protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
                 SkinUtils.setSkin(position);
+                mActivity.setTheme(SkinUtils.getSkinStyle());
                 SkinHelper.changeSkin(mAllDatas.get(position), mILayout);
                 notifyItemChanged(0);
                 return super.onSelectorPosition(viewHolder, position, isSelector);
