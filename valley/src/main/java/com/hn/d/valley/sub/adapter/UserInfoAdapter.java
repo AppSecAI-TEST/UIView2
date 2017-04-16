@@ -53,6 +53,26 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
 
     }
 
+    public static void initSignatureItem(TextView signatureView, LikeUserInfoBean dataBean) {
+        if (TextUtils.isEmpty(dataBean.getNewest_dynamic())) {
+
+            if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
+                //holder.v(R.id.auth).setVisibility(View.VISIBLE);
+                signatureView.setText(dataBean.getAuth_desc());
+            } else {
+                //holder.v(R.id.auth).setVisibility(View.GONE);
+                String signature = dataBean.getSignature();
+                if (TextUtils.isEmpty(signature)) {
+                    signatureView.setText(R.string.signature_empty_tip);
+                } else {
+                    signatureView.setText(signature);
+                }
+            }
+        } else {
+            signatureView.setText(dataBean.getNewest_dynamic());
+        }
+    }
+
     @Override
     protected int getItemLayoutId(int viewType) {
 //        return R.layout.item_near_user_layout;
@@ -69,19 +89,7 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
         }
 
         //认证
-        TextView signatureView = holder.v(R.id.signature);
-        if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
-            //holder.v(R.id.auth).setVisibility(View.VISIBLE);
-            signatureView.setText(dataBean.getAuth_desc());
-        } else {
-            //holder.v(R.id.auth).setVisibility(View.GONE);
-            String signature = dataBean.getSignature();
-            if (TextUtils.isEmpty(signature)) {
-                signatureView.setText(R.string.signature_empty_tip);
-            } else {
-                signatureView.setText(signature);
-            }
-        }
+        initSignatureItem(holder.tv(R.id.signature), dataBean);
     }
 
     @Override

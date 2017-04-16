@@ -251,14 +251,11 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     circleUIView.bindOtherILayout(mOtherILayout);
                     circleUIView.setInSubUIView(true);
                     return circleUIView;
+                } else {
+                    MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
+                    myAlbumUIView.bindOtherILayout(mOtherILayout);
+                    return myAlbumUIView;
                 }
-//                else {
-//                    MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
-//                    myAlbumUIView.bindOtherILayout(mOtherILayout);
-//
-//                    return
-//                }
-                return null;
             }
 
             @Override

@@ -374,4 +374,5 @@
     <string name="kick_out_tip">您的账户在 %1$s 登录.</string>
     <string name="only_gril">只看女生</string>
     <string name="only_boy">只看男生</string>
+    <string name="game">游戏</string>
 </resources>

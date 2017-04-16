@@ -238,7 +238,7 @@ public class OssHelper {
      * 根据宽高, 返回对应的oss url地址
      */
     public static String getImageThumb(String url, int width, int height) {
-        return url + "?x-oss-process=image/resize,m_fill,h_" + height + ",w_" + width;
+        return url + "?x-oss-process=image/resize,m_mfit,h_" + height + ",w_" + width;
     }
 
     public static String getImageThumb(String url) {

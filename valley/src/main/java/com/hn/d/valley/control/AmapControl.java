@@ -1,5 +1,6 @@
 package com.hn.d.valley.control;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -25,6 +26,7 @@ import com.amap.api.maps.model.animation.TranslateAnimation;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.BmpUtil;
@@ -39,6 +41,7 @@ import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
 
 import java.util.ArrayList;
@@ -46,6 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import rx.functions.Func1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -77,7 +82,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
      */
     Map<String, Marker> mMarkerMap;
     AMap map;
-    Context mContext;
+    Activity mContext;
     /**
      * 自己的位置
      */
@@ -95,7 +100,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     private int mMarkerWidth, mMarkerHeight, mMarkerMaxOffset;
     private long lastSaveTime;
 
-    public AmapControl(Context context, final AMap map) {
+    public AmapControl(Activity context, final AMap map) {
         mContext = context;
         this.map = map;
         mMarkerList = new ArrayList<>();
@@ -262,14 +267,27 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     public void addMarks(List<LikeUserInfoBean> userInfos) {
         clearMarker();
         onMarkerUnSelector();
+        Rx.from(userInfos)
+                .map(new Func1<LikeUserInfoBean, String>() {
+                    @Override
+                    public String call(LikeUserInfoBean likeUserIfoBean) {
+                        LatLng latLng = new LatLng(Double.valueOf(likeUserIfoBean.getLat()), Double.valueOf(likeUserIfoBean.getLng()));
+                        Marker marker = addMarks(latLng, likeUserIfoBean);
+                        mMarkerMap.put(likeUserIfoBean.getUid(), marker);
+                        return likeUserIfoBean.getUid();
+                    }
+                })
+                .compose(Rx.<String>transformer())
+                .subscribe();
 
-        for (final LikeUserInfoBean info : userInfos) {
-            LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
-            Marker marker = addMarks(latLng, info);
-//            marker.setObject(info.getUid());
-//            marker.setObject(info);
-            mMarkerMap.put(info.getUid(), marker);
-        }
+
+//        for (final LikeUserInfoBean info : userInfos) {
+//            LatLng latLng = new LatLng(Double.valueOf(info.getLat()), Double.valueOf(info.getLng()));
+//            Marker marker = addMarks(latLng, info);
+////            marker.setObject(info.getUid());
+////            marker.setObject(info);
+//            mMarkerMap.put(info.getUid(), marker);
+//        }
 
 //        /**开始动画*/
 //        Set<Map.Entry<String, Marker>> entries = mMarkerMap.entrySet();
@@ -280,7 +298,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
     }
 
     /**
-     * 选中Marker, 并且高亮
+     * 选中Marker, 并且高亮, 并自动滚动到Map位置
      */
     public void selectorMarker(final Marker marker) {
         unSelectorMarker();
@@ -315,6 +333,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                         }
                     }
                 });
+        moveToLocation(marker.getPosition());
     }
 
     public void selectorMarker(String uid) {
@@ -336,38 +355,50 @@ public class AmapControl implements LocationSource, AMapLocationListener {
         if (marker == null) {
             return;
         }
-        LikeUserInfoBean userInfoBean = (LikeUserInfoBean) marker.getObject();
+        final LikeUserInfoBean userInfoBean = (LikeUserInfoBean) marker.getObject();
         if (userInfoBean == null) {
             return;
         }
-        Glide.with(mContext)
-                .load(OssHelper.getImageThumb(userInfoBean.getAvatar(), mMarkerWidth, mMarkerWidth))
-                .asBitmap()
-                .centerCrop()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onLoadStarted(Drawable placeholder) {
-                        super.onLoadStarted(placeholder);
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(
-                                BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
-                                        mMarkerWidth, mMarkerHeight,
-                                        R.drawable.touxiang_kuang_n, mMarkerWidth)
-                        ));
-                    }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Glide.with(mContext)
+                        .load(OssHelper.getImageThumb(userInfoBean.getAvatar(), mMarkerWidth, mMarkerWidth))
+                        .asBitmap()
+                        .centerCrop()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onLoadStarted(Drawable placeholder) {
+                                super.onLoadStarted(placeholder);
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                        BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
+                                                mMarkerWidth, mMarkerHeight,
+                                                R.drawable.touxiang_kuang_n, mMarkerWidth)
+                                ));
+                            }
 
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if (resource == null || resource.isRecycled()) {
-                            return;
-                        }
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                if (resource == null || resource.isRecycled()) {
+                                    return;
+                                }
 
-                        marker.setIcon(BitmapDescriptorFactory.fromBitmap(
-                                BmpUtil.getRoundedCornerBitmap(mContext, resource,
-                                        mMarkerWidth, mMarkerHeight,
-                                        R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET / 2)
-                        ));
-                    }
-                });
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(
+                                        BmpUtil.getRoundedCornerBitmap(mContext, resource,
+                                                mMarkerWidth, mMarkerHeight,
+                                                R.drawable.touxiang_kuang_n, mMarkerWidth, AVATAR_OFFSET / 2)
+                                ));
+                            }
+                        });
+            }
+        };
+
+        if (RRealm.checkMainThread()) {
+            runnable.run();
+        } else {
+            mContext.getWindow().getDecorView().post(runnable);
+        }
+
     }
 
     public Marker addMarks(LatLng latLng, LikeUserInfoBean infoBean) {

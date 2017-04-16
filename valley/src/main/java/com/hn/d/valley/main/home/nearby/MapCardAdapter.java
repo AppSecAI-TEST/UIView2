@@ -162,18 +162,7 @@ public class MapCardAdapter extends UserInfoAdapter {
 
         //认证
         TextView signatureView = holder.v(R.id.signature_view);
-        if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
-            //holder.v(R.id.auth).setVisibility(View.VISIBLE);
-            signatureView.setText(dataBean.getCompany() + dataBean.getJob());
-        } else {
-            //holder.v(R.id.auth).setVisibility(View.GONE);
-            String signature = dataBean.getSignature();
-            if (TextUtils.isEmpty(signature)) {
-                signatureView.setText(R.string.signature_empty_tip);
-            } else {
-                signatureView.setText(signature);
-            }
-        }
+        UserInfoAdapter.initSignatureItem(signatureView, dataBean);
 
         //粉丝数
         RTextView textView = holder.v(R.id.follower_num_view);

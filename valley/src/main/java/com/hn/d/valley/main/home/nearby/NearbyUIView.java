@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.home.nearby;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +49,8 @@ import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 import com.hn.d.valley.utils.RAmap;
 import com.hwangjr.rxbus.annotation.Subscribe;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -135,6 +138,12 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                 }
             });
         }
+    }
+
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.CONTENT;
     }
 
     @Override
@@ -404,6 +413,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 //        }
     }
 
+
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
@@ -412,9 +422,11 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         showLoadView();
         RAmap.startLocation();
 
+        final boolean mapMode = isMapMode();
+
         add(RRetrofit.create(UserInfoService.class)
                 .nearUser(Param.buildMap(
-                        "page:" + (isMapMode() ? "" : page),
+                        "page:" + (mapMode ? "" : page),
                         "sex:" + mSex,
                         "lng:" + getLongitude(),
                         "lat:" + getLatitude()))
@@ -422,20 +434,18 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                 .subscribe(new RSubscriber<NearUserBean>() {
                     @Override
                     public void onSucceed(NearUserBean nearUserBean) {
-                        showContentLayout();
-                        if (isMapMode()) {
-                            showMapView();
-                        }
 
                         if (nearUserBean == null) {
                             onUILoadDataEnd();
                         } else {
-                            if (isMapMode()) {
+                            if (mapMode) {
                                 mAmapControl.addMarks(nearUserBean.getData_list());
                                 //mMapCardPagerAdapter.resetDatas(mRExBaseAdapter.getAllDatas());
+                                mMapCardAdapter.resetData(nearUserBean.getData_list());
+                            } else {
+                                onUILoadDataEnd(nearUserBean.getData_list(), nearUserBean.getData_count());
+                                onUILoadDataFinish(nearUserBean.getData_list().size());
                             }
-                            onUILoadDataEnd(nearUserBean.getData_list(), nearUserBean.getData_count());
-                            mMapCardAdapter.resetData(mRExBaseAdapter.getAllDatas());
                         }
                     }
 
@@ -548,10 +558,6 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     private void showMapView() {
         isMapMode = true;
 
-        if (mMapView == null || mMapView.getVisibility() == View.VISIBLE) {
-            return;
-        }
-
 //        UIViewPager.interceptTouch = false;
         mMapView.setVisibility(View.VISIBLE);
         ViewCompat.setAlpha(mMapView, 0);
@@ -607,9 +613,9 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
             //mMapCardPagerAdapter = new MapCardPagerAdapter(mRExBaseAdapter.getAllDatas());
             //mViewPager.setAdapter(mMapCardPagerAdapter);
         } else {
-            mAmapControl.addMarks(mRExBaseAdapter.getAllDatas());
+            //mAmapControl.addMarks(mRExBaseAdapter.getAllDatas());
             //mMapCardPagerAdapter.resetDatas(mRExBaseAdapter.getAllDatas());
-            mMapCardAdapter.resetData(mRExBaseAdapter.getAllDatas());
+            //mMapCardAdapter.resetData(mRExBaseAdapter.getAllDatas());
         }
 
         mMapView.onResume();
@@ -621,12 +627,13 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
      * 卡片滚动到指定的用户
      */
     private void scrollToMarker(LikeUserInfoBean userInfo) {
-        if (mCardRecyclerView == null || mRExBaseAdapter == null || userInfo == null) {
+        if (mCardRecyclerView == null || mMapCardAdapter == null || userInfo == null) {
             return;
         }
         String uid = userInfo.getUid();
-        for (int i = 0; i < mRExBaseAdapter.getAllDatas().size(); i++) {
-            LikeUserInfoBean likeUserInfoBean = mRExBaseAdapter.getAllDatas().get(i);
+        List<LikeUserInfoBean> allDatas = mMapCardAdapter.getAllDatas();
+        for (int i = 0; i < allDatas.size(); i++) {
+            LikeUserInfoBean likeUserInfoBean = allDatas.get(i);
             if (TextUtils.equals(uid, likeUserInfoBean.getUid())) {
                 //((LinearLayoutManager) mRecyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
                 ((LinearLayoutManager) mCardRecyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
@@ -651,6 +658,10 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                 mMapView.setVisibility(View.GONE);
             }
         }).start();
+
+        if (mRExBaseAdapter.getItemCount() == 0) {
+            loadData();
+        }
     }
 
     /**
