@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.user;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -22,6 +23,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
@@ -134,6 +136,13 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                 return false;
             }
         });
+
+        ResUtil.setBgDrawable(mSendView, ResUtil.generateRippleRoundMaskDrawable(density() * 3,
+                Color.WHITE,
+                SkinHelper.getSkin().getThemeDarkColor(),
+                getColor(R.color.colorDisable),
+                SkinHelper.getSkin().getThemeSubColor()
+        ));
     }
 
     @Override
@@ -459,4 +468,5 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     public void onDismiss() {
         onCancel();
     }
+
 }

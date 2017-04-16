@@ -12,6 +12,8 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
@@ -43,6 +45,14 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             textView.setOnClickListener(dataBean.itemClickListener);
 
             ResUtil.setBgDrawable(textView, LoginUIView.createLoginDrawable(mActivity));
+
+            textView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    T_.show("当前版本:" + RUtils.getAppVersionName(mActivity));
+                    return false;
+                }
+            });
         } else {
             ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
             infoLayout.setItemText(dataBean.itemString);
