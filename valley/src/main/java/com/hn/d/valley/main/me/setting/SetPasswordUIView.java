@@ -3,7 +3,7 @@ package com.hn.d.valley.main.me.setting;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -342,7 +342,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
         super.initRecyclerView();
         mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.ItemDecorationCallback() {
             @Override
-            public Rect getItemOffsets(LinearLayoutManager layoutManager, int position) {
+            public Rect getItemOffsets(RecyclerView.LayoutManager layoutManager, int position, int edge) {
                 Rect rect = new Rect();
                 if (!isLastPosition(position)) {
                     if (type == TYPE_FORGET_PW && position == 1) {

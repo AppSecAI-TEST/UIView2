@@ -7,7 +7,6 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextPaint;
@@ -962,7 +961,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         //分割线
         dragRecyclerView.addItemDecoration(RExItemDecoration.build(new RExItemDecoration.ItemDecorationCallback() {
             @Override
-            public Rect getItemOffsets(LinearLayoutManager layoutManager, int position) {
+            public Rect getItemOffsets(RecyclerView.LayoutManager layoutManager, int position, int edge) {
                 int size = ScreenUtil.dip2px(10);
                 Rect rect = new Rect(0, 0, 0, 0);
                 rect.top = size / 2;

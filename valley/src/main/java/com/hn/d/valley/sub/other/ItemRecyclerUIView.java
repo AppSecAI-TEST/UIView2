@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,7 +149,7 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         mRecyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.ItemDecorationCallback() {
             @Override
-            public Rect getItemOffsets(LinearLayoutManager layoutManager, int position) {
+            public Rect getItemOffsets(RecyclerView.LayoutManager layoutManager, int position, int edge) {
                 Rect rect = new Rect(0, 0, 0, 0);
                 T t = mItemsList.get(position);
                 if (t instanceof ViewItemInfo) {

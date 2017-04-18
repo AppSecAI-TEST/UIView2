@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
@@ -392,7 +393,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
 
             recyclerView.addItemDecoration(RExItemDecoration.build(new RExItemDecoration.ItemDecorationCallback() {
                 @Override
-                public Rect getItemOffsets(LinearLayoutManager layoutManager, int position) {
+                public Rect getItemOffsets(RecyclerView.LayoutManager layoutManager, int position, int edge) {
                     int size = ScreenUtil.dip2px(5);
                     Rect rect = new Rect(0, 0, 0, 0);
 
