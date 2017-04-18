@@ -88,13 +88,13 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':RLibrary:uiview')
     compile project(':RLibrary:imagepicker')
-//    compile project(':RLibrary:fragmentation')
+    //    compile project(':RLibrary:fragmentation')
     compile project(':RLibrary:zxing')
     compile project(':rbplayerlib')
     compile project(':rbrecoderlib')
+    compile project(':RLibrary:rcode')
 
     compile 'org.jsoup:jsoup:1.10.2'
-
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     /*腾讯Bugly依赖*/
     //compile 'com.tencent.bugly:crashreport:latest.release'
