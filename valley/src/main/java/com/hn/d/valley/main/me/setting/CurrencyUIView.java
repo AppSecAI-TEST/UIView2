@@ -54,7 +54,7 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 switchCompat.setVisibility(View.GONE);
 
                 itemInfoLayout.setItemText(mActivity.getString(R.string.language));
-                itemInfoLayout.setRightDrawableRes(R.drawable.ic_right);
+                itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
 
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -80,7 +80,7 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 switchCompat.setVisibility(View.GONE);
 
                 itemInfoLayout.setItemText("存储空间");
-                itemInfoLayout.setRightDrawableRes(R.drawable.ic_right);
+                itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
                 //String cacheSize = GlideCacheUtil.getInstance().getCacheSize(mActivity);
                 String cacheFolderSize = GlideCacheUtil.getInstance().getCacheFolderSize(mActivity);
                 itemInfoLayout.setItemDarkText(cacheFolderSize);

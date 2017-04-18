@@ -87,7 +87,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setRightDrawableRes(R.drawable.ic_right);
+                infoLayout.setRightDrawableRes(R.drawable.base_next);
                 infoLayout.setItemText("功能消息免打扰");
                 holder.v(R.id.switch_view).setVisibility(View.GONE);
             }

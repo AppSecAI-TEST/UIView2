@@ -88,7 +88,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':RLibrary:uiview')
     compile project(':RLibrary:imagepicker')
-    compile project(':RLibrary:fragmentation')
+//    compile project(':RLibrary:fragmentation')
     compile project(':RLibrary:zxing')
     compile project(':rbplayerlib')
     compile project(':rbrecoderlib')

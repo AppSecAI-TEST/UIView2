@@ -52,7 +52,7 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 switchCompat.setVisibility(View.GONE);
 
                 itemInfoLayout.setItemText("联系人黑名单");
-                itemInfoLayout.setRightDrawableRes(R.drawable.ic_right);
+                itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
             }
         }));
     }
