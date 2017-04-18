@@ -4,6 +4,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.storage.StorageUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
@@ -44,6 +45,8 @@ public class ValleyApp extends RApplication {
     @Override
     protected void onInit() {
         L.init(BuildConfig.DEBUG, "dvalley");
+
+        Fresco.initialize(this);
 
         RRetrofit.DEBUG = BuildConfig.DEBUG;
 
