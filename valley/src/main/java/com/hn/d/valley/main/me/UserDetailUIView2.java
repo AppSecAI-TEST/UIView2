@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.design.StickLayout;
 import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
@@ -46,6 +47,7 @@ import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
+import com.hn.d.valley.main.me.sub.UserDetailMoreUIView;
 import com.hn.d.valley.main.me.sub.UserInfoSubUIView;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
@@ -62,6 +64,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action0;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -93,6 +96,119 @@ public class UserDetailUIView2 extends BaseContentUIView {
         this(UserCache.getUserAccount());
     }
 
+    /**
+     * 命令按钮
+     */
+    public static void initCommandView(final TextView commandView, final UserInfoBean userInfoBean,
+                                       final ILayout iLayout, final CompositeSubscription subscription) {
+        final String to_uid = userInfoBean.getUid();
+        final String uid = UserCache.getUserAccount();
+        if (isMe(to_uid)) {
+            commandView.setVisibility(View.GONE);
+        } else {
+            commandView.setVisibility(View.VISIBLE);
+            if (userInfoBean.getIs_attention() == 1) {
+                //已关注
+                if (userInfoBean.getIs_contact() == 1) {
+                    //是联系人
+                    commandView.setText(R.string.send_message);
+                    //commandView.setImageResource(R.drawable.send_message_selector);
+                    commandView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            SessionHelper.startP2PSession(iLayout, to_uid, SessionTypeEnum.P2P);
+                        }
+                    });
+                } else {
+                    //不是联系人
+                    //commandView.setImageResource(R.drawable.add_contact2_selector);
+                    commandView.setText(R.string.add_friend);
+                    commandView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onAddFriend(iLayout, userInfoBean, subscription);
+                        }
+                    });
+                }
+            } else {
+                //未关注
+                // commandView.setImageResource(R.drawable.attention_selector);
+                commandView.setText(R.string.add_follow);
+                commandView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        subscription.add(RRetrofit.create(UserInfoService.class)
+                                .attention(Param.buildMap("to_uid:" + uid, "to_uid:" + to_uid))
+                                .compose(Rx.transformer(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+
+                                    @Override
+                                    public void onSucceed(String bean) {
+                                        T_.show(commandView.getResources().getString(R.string.attention_successed_tip));
+                                        userInfoBean.setIs_attention(1);
+                                        initCommandView(commandView, userInfoBean, iLayout, subscription);
+                                    }
+                                }));
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * 添加好友事件
+     */
+    public static void onAddFriend(final ILayout iLayout, final UserInfoBean userInfoBean, final CompositeSubscription subscription) {
+        iLayout.startIView(InputUIView.build(new InputUIView.InputConfigCallback() {
+            @Override
+            public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
+                return super.initTitleBar(titleBarPattern)
+                        .setTitleString(iLayout.getLayout().getContext(), R.string.add_friend)
+                        .addRightItem(TitleBarPattern.TitleBarItem.build(iLayout.getLayout().getContext().getString(R.string.send), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                iLayout.finishIView(mIView);
+                                subscription.add(RRetrofit.create(UserInfoService.class)
+                                        .addContact(Param.buildMap("to_uid:" + userInfoBean.getUid(),
+                                                "tip:" + mExEditText.string()))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                                            @Override
+                                            public void onSucceed(String bean) {
+                                                T_.show(bean);
+                                            }
+                                        }));
+                            }
+                        }));
+            }
+
+            @Override
+            public void initInputView(RBaseViewHolder holder, ExEditText editText, ItemRecyclerUIView.ViewItemInfo bean) {
+                super.initInputView(holder, editText, bean);
+                TextView tipView = holder.v(R.id.input_tip_view);
+                tipView.setVisibility(View.VISIBLE);
+                tipView.setText(R.string.add_friend_tip);
+
+                String username = UserCache.instance().getUserInfoBean().getUsername();
+                if (!TextUtils.isEmpty(username)) {
+                    setInputText(iLayout.getLayout().getContext().getString(R.string.add_friend_format, username));
+                    mExEditText.setSelection(2, username.length() + 2);
+                    mExEditText.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((InputUIView) mIView).showSoftInput(mExEditText);
+                        }
+                    }, DEFAULT_ANIM_TIME);
+                }
+            }
+        }));
+    }
+
+    public static boolean isMe(String uid) {
+        return TextUtils.equals(uid, UserCache.getUserAccount());
+    }
+
     @Override
     protected TitleBarPattern getTitleBar() {
         TitleBarPattern titleBarPattern = super.getTitleBar()
@@ -104,7 +220,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
         titleBarPattern.addRightItem(TitleBarPattern.buildText(getString(R.string.more), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showBottomDialog();
+                //showBottomDialog();
+                showMoreUIView();
             }
         }).setVisibility(View.GONE));
 
@@ -122,10 +239,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
         }).setVisibility(View.GONE));
 
         return titleBarPattern;
-    }
-
-    private boolean isMe() {
-        return TextUtils.equals(to_uid, UserCache.getUserAccount());
     }
 
     @Override
@@ -218,7 +331,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 })
         );
 
-        if (!isMe()) {
+        if (!isMe(to_uid)) {
             add(RRetrofit.create(ContactService.class)
                     .getRelationship(Param.buildMap("to_uid:" + to_uid))
                     .compose(Rx.transformer(Integer.class))
@@ -322,11 +435,11 @@ public class UserDetailUIView2 extends BaseContentUIView {
             authTextView.setTextColor(Color.WHITE);
         }
 
-        initCommandView();
+        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions);
         //语音介绍
         initVoiceView();
 
-        if (isMe()) {
+        if (isMe(to_uid)) {
             getUITitleBarContainer().showRightItem(1);
         } else {
             getUITitleBarContainer().showRightItem(0);
@@ -374,6 +487,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     /**
      * 更多弹窗
      */
+    @Deprecated
     private void showBottomDialog() {
         if (mUserInfoBean.getIs_contact() == 1) {
             //联系人, 也就是好友
@@ -392,6 +506,10 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 }
             }
         }
+    }
+
+    private void showMoreUIView() {
+        startIView(new UserDetailMoreUIView(mUserInfoBean));
     }
 
     /**
@@ -538,7 +656,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     @Override
                     public void onSucceed(String bean) {
                         mUserInfoBean.setIs_attention(0);
-                        initCommandView();
+                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions);
                     }
                 }));
     }
@@ -607,7 +725,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         isFollower = false;
                         mUserInfoBean.setIs_attention(0);
                         mUserInfoBean.setIs_contact(0);
-                        initCommandView();
+                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions);
                     }
                 }));
     }
@@ -656,114 +774,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         addBlackList();
                     }
                 });
-    }
-
-    /**
-     * 命令按钮
-     */
-    private void initCommandView() {
-        final String to_uid = mUserInfoBean.getUid();
-        final String uid = UserCache.getUserAccount();
-        if (isMe()) {
-            mCommandItemView.setVisibility(View.GONE);
-        } else {
-            mCommandItemView.setVisibility(View.VISIBLE);
-            if (mUserInfoBean.getIs_attention() == 1) {
-                //已关注
-                if (mUserInfoBean.getIs_contact() == 1) {
-                    //是联系人
-                    mCommandItemView.setText(R.string.send_message);
-                    //mCommandItemView.setImageResource(R.drawable.send_message_selector);
-                    mCommandItemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            SessionHelper.startP2PSession(getILayout(), to_uid, SessionTypeEnum.P2P);
-                        }
-                    });
-                } else {
-                    //不是联系人
-                    //mCommandItemView.setImageResource(R.drawable.add_contact2_selector);
-                    mCommandItemView.setText(R.string.add_friend);
-                    mCommandItemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onAddFriend();
-                        }
-                    });
-                }
-            } else {
-                //未关注
-                // mCommandItemView.setImageResource(R.drawable.attention_selector);
-                mCommandItemView.setText(R.string.add_follow);
-                mCommandItemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        add(RRetrofit.create(UserInfoService.class)
-                                .attention(Param.buildMap("to_uid:" + uid, "to_uid:" + to_uid))
-                                .compose(Rx.transformer(String.class))
-                                .subscribe(new BaseSingleSubscriber<String>() {
-
-                                    @Override
-                                    public void onSucceed(String bean) {
-                                        T_.show(getString(R.string.attention_successed_tip));
-                                        mUserInfoBean.setIs_attention(1);
-                                        initCommandView();
-                                    }
-                                }));
-                    }
-                });
-            }
-        }
-    }
-
-    /**
-     * 添加好友事件
-     */
-    private void onAddFriend() {
-        startIView(InputUIView.build(new InputUIView.InputConfigCallback() {
-            @Override
-            public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
-                return super.initTitleBar(titleBarPattern)
-                        .setTitleString(mActivity, R.string.add_friend)
-                        .addRightItem(TitleBarPattern.TitleBarItem.build(getString(R.string.send), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                finishIView(mIView);
-                                add(RRetrofit.create(UserInfoService.class)
-                                        .addContact(Param.buildMap("to_uid:" + to_uid,
-                                                "tip:" + mExEditText.string()))
-                                        .compose(Rx.transformer(String.class))
-                                        .subscribe(new BaseSingleSubscriber<String>() {
-
-                                            @Override
-                                            public void onSucceed(String bean) {
-                                                T_.show(bean);
-                                            }
-                                        }));
-                            }
-                        }));
-            }
-
-            @Override
-            public void initInputView(RBaseViewHolder holder, ExEditText editText, ItemRecyclerUIView.ViewItemInfo bean) {
-                super.initInputView(holder, editText, bean);
-                TextView tipView = holder.v(R.id.input_tip_view);
-                tipView.setVisibility(View.VISIBLE);
-                tipView.setText(R.string.add_friend_tip);
-
-                String username = UserCache.instance().getUserInfoBean().getUsername();
-                if (!TextUtils.isEmpty(username)) {
-                    setInputText(getString(R.string.add_friend_format, username));
-                    mExEditText.setSelection(2, username.length() + 2);
-                    mExEditText.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showSoftInput(mExEditText);
-                        }
-                    }, DEFAULT_ANIM_TIME);
-                }
-            }
-        }));
     }
 
     /**

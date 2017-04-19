@@ -5,10 +5,10 @@ import android.view.View;
 
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
-import com.angcyo.uiview.base.UIItemUIView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.main.found.sub.HotInformationUIView;
 import com.hn.d.valley.main.found.sub.ScanUIView;
 import com.hn.d.valley.main.found.sub.SearchUIView;
@@ -27,7 +27,7 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-public class FoundUIView extends UIItemUIView<SingleItem> {
+public class FoundUIView extends BaseItemUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {

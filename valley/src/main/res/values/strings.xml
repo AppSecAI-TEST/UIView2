@@ -376,4 +376,11 @@
     <string name="only_boy">只看男生</string>
     <string name="game">游戏</string>
     <string name="text_searchuseridnickname">搜索用户ID/昵称</string>
+    <string name="share_to_tip">分享到</string>
+    <string name="weixin_friend_tip">微信好友</string>
+    <string name="weixin_circle_tip">微信朋友圈</string>
+    <string name="qq_friend_tip">QQ好友</string>
+    <string name="qq_qzone_tip">QQ空间</string>
+    <string name="set_remark_tip">设置备注名</string>
+    <string name="recommend_to_other_tip">把TA推荐给好友</string>
 </resources>

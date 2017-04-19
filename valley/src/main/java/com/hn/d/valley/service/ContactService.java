@@ -109,17 +109,17 @@ public interface ContactService {
     Observable<ResponseBody> setMark(@QueryMap Map<String, String> map);
 
     /**
-     *好友列表
+     * 好友列表
      * uid	是	int	用户id
-     page	否	int	第几页【不传就是所有数据全部返回】
-     limit	否	int	页面显示的数量
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	页面显示的数量
      */
     @GET("contact/friends")
-    Observable<ResponseBody> friends(@QueryMap Map<String,String> map);
+    Observable<ResponseBody> friends(@QueryMap Map<String, String> map);
 
 
     @POST("contact/phoneUser")
-    Observable<ResponseBody> phoneUser(@QueryMap Map<String,String> map);
+    Observable<ResponseBody> phoneUser(@QueryMap Map<String, String> map);
 
     @POST("recommend/user")
     Observable<ResponseBody> recommendUser(@QueryMap Map<String, String> map);

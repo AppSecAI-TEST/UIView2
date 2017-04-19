@@ -1038,7 +1038,11 @@ public class UserDiscussItemControl {
                                 return;
                             }
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                            imageView.setImageBitmap(resource);
+                            if (imageView instanceof RImageView) {
+                                ((RImageView) imageView).setImageBitmap(imageView.getDrawable(), resource);
+                            } else {
+                                imageView.setImageBitmap(resource);
+                            }
                         }
 
                         @Override

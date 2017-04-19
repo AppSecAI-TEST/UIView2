@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -124,6 +125,11 @@ public class ReportUIView extends BaseContentUIView {
                                 final View inflate = mInflater.inflate(R.layout.item_report, parent, false);
                                 ((TextView) inflate.findViewById(R.id.text_view)).setText(data.getContent());
                                 inflate.setTag(data);
+                                View check = inflate.findViewWithTag("check");
+                                if (check instanceof ImageView) {
+                                    ((ImageView) check).setColorFilter(SkinHelper.getSkin().getThemeSubColor());
+                                }
+
                                 return inflate;
                             }
                         });

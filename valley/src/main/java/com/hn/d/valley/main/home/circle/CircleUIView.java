@@ -93,7 +93,9 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     @Override
     protected void initRefreshLayout() {
         super.initRefreshLayout();
-        mRefreshLayout.setRefreshDirection(RefreshLayout.NONE);
+        if (isInSubUIView) {
+            mRefreshLayout.setRefreshDirection(RefreshLayout.NONE);
+        }
     }
 
     @Override
