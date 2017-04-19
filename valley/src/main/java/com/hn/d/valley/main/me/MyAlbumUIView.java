@@ -115,25 +115,26 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
                             //onUILoadDataEnd(bean);
 
                             AlbumGroup lastGroup = null;
-                            List<AlbumGroup> allDatas = mAlbumAdapter.getAllDatas();
-                            if (allDatas.size() > 0) {
-                                lastGroup = allDatas.get(allDatas.size() - 1);
+                            if (!"1".equalsIgnoreCase(page)) {
+                                List<AlbumGroup> allDatas = mAlbumAdapter.getAllDatas();
+                                if (allDatas.size() > 0) {
+                                    lastGroup = allDatas.get(allDatas.size() - 1);
+                                }
                             }
+
 
                             List<AlbumGroup> albumGroups = getAlbumGroups(bean);
 
                             if (lastGroup == null) {
-                                mAlbumAdapter.appendData(albumGroups);
+                                mAlbumAdapter.resetAllData(albumGroups);
                             } else {
                                 if (albumGroups.size() > 0) {
                                     AlbumGroup firstGroup = albumGroups.get(0);
                                     if (lastGroup.year == firstGroup.year && lastGroup.month == firstGroup.month) {
                                         lastGroup.appendDatas(mAlbumAdapter, firstGroup.getAllDatas());
                                         albumGroups.remove(0);
-                                        mAlbumAdapter.appendData(albumGroups);
-                                    } else {
-                                        mAlbumAdapter.appendData(albumGroups);
                                     }
+                                    mAlbumAdapter.appendData(albumGroups);
                                 }
                             }
                             if (mAlbumAdapter.getItemCount() > 0) {

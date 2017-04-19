@@ -26,7 +26,7 @@ import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.FriendsRecommendUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.sub.other.MyVisitorUserUIView;
+import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
 import com.hn.d.valley.sub.other.SeeStateUserUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.X5WebUIView;
@@ -249,7 +249,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyVisitorUserUIView());
+                        mOtherILayout.startIView(new MyVisitorUserUIView2());
                     }
                 });
             }

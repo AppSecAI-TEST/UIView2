@@ -383,4 +383,8 @@
     <string name="qq_qzone_tip">QQ空间</string>
     <string name="set_remark_tip">设置备注名</string>
     <string name="recommend_to_other_tip">把TA推荐给好友</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <string name="time_format">%1$d月%2$d日</string>
+    <string name="full_time_format">%1$d年%2$d月%3$d日</string>
 </resources>
