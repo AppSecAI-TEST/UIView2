@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.angcyo.uiview.design.StickLayout
+    <com.angcyo.uiview.design.StickLayout2
         android:id="@+id/stick_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -24,7 +24,7 @@
         <!--悬浮Tab-->
         <include layout="@layout/base_common_tab_layout"/>
 
-    </com.angcyo.uiview.design.StickLayout>
+    </com.angcyo.uiview.design.StickLayout2>
 
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/command_item_view"

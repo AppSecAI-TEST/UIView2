@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.design.StickLayout;
+import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
@@ -137,7 +138,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             mCommonTabLayout.setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
         }
         if (mCommandItemView != null) {
-//            ResUtil.setBgDrawable(mCommandItemView, skin.getThemeMaskBackgroundSelector());
+            ResUtil.setBgDrawable(mCommandItemView, skin.getThemeMaskBackgroundSelector());
         }
     }
 
@@ -152,7 +153,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
         mAudioPlayHelper = new AudioPlayHelper(mActivity);
 
-        StickLayout stickLayout = mViewHolder.v(R.id.stick_layout);
+        StickLayout2 stickLayout = mViewHolder.v(R.id.stick_layout);
         stickLayout.setFloatTopOffset((int) getTitleBarHeight());
         mCommandItemView = mViewHolder.v(R.id.command_item_view);
         initTabLayout();
