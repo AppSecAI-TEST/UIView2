@@ -44,6 +44,13 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
+
+        if (viewType == ItemTypes.SEARCH) {
+            return R.layout.item_recent_search;
+        }
+        if (viewType == ItemTypes.SYSTEMPUSH) {
+            return R.layout.item_friends_item;
+        }
         if (viewType == ItemTypes.FUNC) {
             return R.layout.item_friends_item;
         }else if(viewType == ItemTypes.FRIEND ) {
@@ -55,12 +62,37 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
     @Override
     protected void onBindView(RBaseViewHolder holder, int position, AbsContactItem bean) {
 
+        if (holder.getItemViewType() == ItemTypes.SEARCH) {
+            final FuncItem funcItem = (FuncItem) bean;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    funcItem.onFuncClick(mFrendsControl.getOtherLayout());
+                }
+            });
+        }
+
+        if (holder.getItemViewType() == ItemTypes.SYSTEMPUSH) {
+            final SystemPushItem pushItem = (SystemPushItem) bean;
+            final FriendBean friendBean = pushItem.getFriendBean();
+            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
+            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
+            iv_head.setImageUrl(friendBean.getAvatar());
+            tv_friend_name.setText(friendBean.getDefaultMark());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pushItem.onFuncClick(pushItem.getFriendBean());
+                }
+            });
+        }
+
         if(holder.getItemViewType() == ItemTypes.FUNC) {
             final FuncItem funcItem = (FuncItem) bean;
-
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
+            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
+            iv_head.setImageResource(funcItem.getDrawableRes());
             tv_friend_name.setText(funcItem.text);
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -71,8 +103,6 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             });
 
         } else if (holder.getItemViewType() == ItemTypes.FRIEND) {
-
-//            mFrendsControl.initItem(holder,dataBean);
             ContactItem friendItem = (ContactItem) bean;
             final FriendBean friendBean = friendItem.getFriendBean();
             HnGlideImageView iv_head = holder.v(R.id.iv_item_head);

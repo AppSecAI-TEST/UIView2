@@ -83,8 +83,18 @@ public class GroupMemberModel {
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
                 bundle.putString(GroupMemberUIVIew.GID,bean.getGid());
+                bundle.putBoolean(GroupMemberUIVIew.IS_ADMIN,UserCache.getUserAccount().equals(bean.getAdmin()));
                 UIParam param = new UIParam().setBundle(bundle);
-                contentUIView.getILayout().startIView(new GroupMemberUIVIew(),param);
+                GroupMemberUIVIew memberUIVIew = new GroupMemberUIVIew();
+                memberUIVIew.setKictAction(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            loadData(bean);
+                        }
+                    }
+                });
+                contentUIView.getILayout().startIView(memberUIVIew,param);
             }
         });
 
@@ -96,7 +106,7 @@ public class GroupMemberModel {
                 for (GroupMemberBean bean : mAdapterAllDatas) {
                     uids.add(bean.getUserId());
                 }
-                ContactSelectUIVIew.start(contentUIView.getILayout(),new ContactSelectUIVIew.Options(),uids,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                ContactSelectUIVIew.start(contentUIView.getILayout(),new BaseContactSelectAdapter.Options(),uids,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
                         TeamCreateHelper.invite(uiBaseDataView, absContactItems,requestCallback,bean.getGid(), new Action1<Boolean>() {
@@ -146,7 +156,9 @@ public class GroupMemberModel {
     }
 
     public void loadData(final GroupDescBean bean) {
-
+        if (bean == null) {
+            return;
+        }
         this.bean = bean;
 
         RRetrofit.create(GroupChatService.class)

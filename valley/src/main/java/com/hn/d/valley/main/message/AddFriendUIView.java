@@ -17,6 +17,7 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
@@ -37,7 +38,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString(mActivity, R.string.add_friend);
+        return super.getTitleBar().setTitleString(mActivity, R.string.new_friend);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
 
     public List<LikeUserInfoBean> onPreProvider() {
         List<LikeUserInfoBean> preBeans = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             preBeans.add(new LikeUserInfoBean());
         }
         return preBeans;
@@ -113,8 +114,8 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                 LinearLayoutManager linearLayoutManager = ((LinearLayoutManager) layoutManager);
                 if (linearLayoutManager.getOrientation() == LinearLayoutManager.VERTICAL) {
                     //垂直方向
-                    if (viewLayoutPosition == 2) {
-                        //这里可以决定,第3个item的分割线
+                    if (viewLayoutPosition == 1) {
+                        //这里可以决定,第2个item的分割线
                         outRect.set(0, 0, 0, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi));
                     } else {
                         outRect.set(0, 0, 0, (int) mDividerSize);
@@ -143,8 +144,8 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                     return R.layout.item_recent_search;
                 case ADDRESSBOOK:
                     return R.layout.item_contact_addressbook;
-                case QRCODE:
-                    return R.layout.item_contact_qrcode;
+//                case QRCODE:
+//                    return R.layout.item_contact_qrcode;
             }
             return R.layout.item_contact_info_new;
         }
@@ -155,11 +156,11 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                 return FUNC;
             }
 
-            if (posInData == 1) {
-                return QRCODE;
-            }
+//            if (posInData == 1) {
+//                return QRCODE;
+//            }
 
-            if (posInData == 2) {
+            if (posInData == 1) {
                 return ADDRESSBOOK;
             }
             return super.getDataItemType(posInData);
@@ -178,16 +179,21 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                     }
                 });
 
-            } else if (QRCODE == getDataItemType(posInData)) {
-
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOtherILayout.startIView(new MyQrCodeUIView());
-                    }
-                });
-
-            } else if (ADDRESSBOOK == getDataItemType(posInData)) {
+            }
+//            else if (QRCODE == getDataItemType(posInData)) {
+//
+//                TextView tv_uid = holder.tv(R.id.tv_qrcode_desc);
+//                tv_uid.setText(String.format("我的id : %s", UserCache.getUserAccount()));
+//
+//               holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mOtherILayout.startIView(new MyQrCodeUIView());
+//                    }
+//                });
+//
+//            }
+            else if (ADDRESSBOOK == getDataItemType(posInData)) {
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -226,7 +232,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
             } else {
                 this.mAllDatas.addAll(datas);
             }
-            notifyItemRangeChanged(3, datas.size());
+            notifyItemRangeChanged(2, datas.size());
         }
     }
 }

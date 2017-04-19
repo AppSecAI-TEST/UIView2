@@ -309,10 +309,10 @@
     <string name="text_group_member">群成员</string>
     <string name="text_group_announcement">群公告</string>
     <string name="group_member_num">群成员列表</string>
-    <string name="new_frient">新的朋友</string>
+    <string name="new_friend">新的朋友</string>
     <string name="frient_tip">好友推荐</string>
-    <string name="nearby_perple">附近的人</string>
-    <string name="text_context">通讯录</string>
+    <string name="nearby_perple">附近</string>
+    <string name="text_context">通讯录好友</string>
     <string name="user_ecommend_tip">名人推荐</string>
     <string name="new_hot_info_tip">最新资讯</string>
     <string name="new_discuss_tip">最新动态</string>
@@ -375,4 +375,5 @@
     <string name="only_gril">只看女生</string>
     <string name="only_boy">只看男生</string>
     <string name="game">游戏</string>
+    <string name="text_searchuseridnickname">搜索用户ID/昵称</string>
 </resources>

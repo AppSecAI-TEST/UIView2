@@ -10,35 +10,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
-import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
-import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
-import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
-import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.IDataResource;
-import com.hn.d.valley.main.message.SearchUserUIView;
-import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.hwangjr.rxbus.annotation.Subscribe;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.functions.Action1;
-import rx.functions.Action2;
 import rx.functions.Action3;
 
 /**
@@ -55,7 +45,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     @BindView(R.id.sidebar_friend_index)
     WaveSideBarView sideBarView;
 
-    protected BaseContactSelectUIVIew.Options options;
+    protected BaseContactSelectAdapter.Options options;
 
     protected BaseContactSelectAdapter mGroupAdapter;
 
@@ -66,7 +56,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
     protected Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction;
 
-    public BaseContactSelectUIVIew(ContactSelectUIVIew.Options options) {
+    public BaseContactSelectUIVIew(BaseContactSelectAdapter.Options options) {
         super();
         this.options = options;
     }
@@ -196,28 +186,5 @@ public class BaseContactSelectUIVIew extends BaseUIView {
         }
     }
 
-
-    public static class Options {
-
-        public static final int DEFALUT_LIMIT = 5;
-
-        public int mode;
-        public int selectCountLimit = DEFALUT_LIMIT;
-        public boolean showMe = false;
-
-        public Options() {
-            this(RModelAdapter.MODEL_MULTI);
-        }
-
-        public Options(int mode) {
-            this(mode, DEFALUT_LIMIT);
-        }
-
-        public Options(int mode, int limit) {
-            this.mode = mode;
-            this.selectCountLimit = limit;
-        }
-
-    }
 
 }

@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -21,6 +22,7 @@ import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.sub.user.NewFriend2UIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
+import com.hn.d.valley.widget.MenuPopUpWindow;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 import com.netease.nimlib.sdk.NIMClient;
@@ -49,7 +51,9 @@ public class MessageUIView extends BaseUIView {
 
     @BindView(R.id.swipe_recycler_view)
     SwipeMenuRecyclerView mSwipeRecyclerView;
+
     private boolean isLoading = false;
+
     private RecentContactsControl mRecentContactsControl;
 
     @Override
@@ -89,7 +93,7 @@ public class MessageUIView extends BaseUIView {
             @Override
             public void call(RecentContact contact) {
                 //打开新朋友界面
-                mOtherILayout.startIView(new NewFriend2UIView());
+                mOtherILayout.startIView(new AddFriendUIView());
             }
         });
 
@@ -129,37 +133,18 @@ public class MessageUIView extends BaseUIView {
         leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_add_friends).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //T_.show(mActivity.getString(R.string.searchUser));
-                mOtherILayout.startIView(new AddFriendUIView());
+                mOtherILayout.startIView(new FriendUIView());
             }
         }));
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.contacts))/*.setRes(R.drawable.switch_camera_n)*/
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.tianjia_3)
         .setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                T_.show(mActivity.getString(R.string.contacts));
-                mOtherILayout.startIView(new FriendUIView());
+//                mOtherILayout.startIView(new FriendUIView());
 
-//                UIItemDialog.build()
-//                        .addItem(getString(R.string.add_friend), new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                mOtherILayout.startIView(new SearchUserUIView());
-//                            }
-//                        })
-//                        .addItem("添加群聊", new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new ContactSelectUIVIew.Options());
-//                                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-//                                    @Override
-//                                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absFriendItems, RequestCallback requestCallback) {
-//                                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView,absFriendItems,requestCallback);
-//                                    }
-//                                });
-//                                mOtherILayout.startIView(targetView);
-//                            }
-//                        }).showDialog(mOtherILayout);
+                MenuPopUpWindow popUpWindow = new MenuPopUpWindow(mActivity,mOtherILayout);
+                popUpWindow.showAsDropDown(v, Gravity.BOTTOM,0,0);
+
             }
         }));
 

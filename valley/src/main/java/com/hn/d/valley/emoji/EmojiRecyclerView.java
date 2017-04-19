@@ -2,17 +2,20 @@ package com.hn.d.valley.emoji;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
+
+import static com.hn.d.valley.main.message.EmojiLayoutControl.EMOJI_PER_PAGE;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -26,17 +29,21 @@ import com.hn.d.valley.main.message.EmojiLayoutControl;
  * Version: 1.0.0
  */
 public class EmojiRecyclerView extends RRecyclerView {
+
     EmojiLayoutControl.OnEmojiSelectListener mOnEmojiSelectListener;
 
-    public EmojiRecyclerView(Context context) {
+    private int startIndex;
+
+    public EmojiRecyclerView(Context context, int startIndex) {
         this(context, null);
+        this.startIndex = startIndex;
     }
 
 
     public EmojiRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setItemAnim(false);
-        setTag("GV8");
+        setTag("GV7");
     }
 
     @Override
@@ -84,20 +91,41 @@ public class EmojiRecyclerView extends RRecyclerView {
 
         @Override
         public int getItemCount() {
-            return EmojiManager.getDisplayCount();
+            int count = EmojiManager.getDisplayCount() - startIndex + 1;
+            count = Math.min(count, EMOJI_PER_PAGE + 1);
+            return count;
         }
 
         @Override
         protected void onBindView(RBaseViewHolder holder, final int position, String bean) {
-            ((ImageView) ((ViewGroup) holder.itemView).getChildAt(0)).setImageDrawable(EmojiManager.getDisplayDrawable(mContext, position));
+            ImageView emojiThumb = ((ImageView) ((ViewGroup) holder.itemView).getChildAt(0));
+
+            final int count = EmojiManager.getDisplayCount();
+            final int index = startIndex + position;
+
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnEmojiSelectListener != null) {
-                        mOnEmojiSelectListener.onEmojiText(EmojiManager.getDisplayText(position));
+                        if (position == EMOJI_PER_PAGE || index >= count) {
+                            mOnEmojiSelectListener.onEmojiText("/DEL");
+                        } else {
+                            String text = EmojiManager.getDisplayText(index);
+                            if (!TextUtils.isEmpty(text)) {
+                                mOnEmojiSelectListener.onEmojiText(text);
+                            }
+                        }
                     }
                 }
             });
+
+            if (position == EMOJI_PER_PAGE || index == count) {
+                emojiThumb.setImageDrawable(getContext().getDrawable(R.drawable.nim_emoji_del));
+
+            } else if (index < count) {
+                emojiThumb.setImageDrawable(EmojiManager.getDisplayDrawable(mContext, index));
+            }
         }
     }
 }

@@ -127,10 +127,10 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
             //认证
             TextView signatureView = holder.v(R.id.signature);
             if ("1".equalsIgnoreCase(dataBean.getBodyBean().getIs_auth())) {
-                holder.v(R.id.auth).setVisibility(View.VISIBLE);
+                holder.v(R.id.auth_iview).setVisibility(View.VISIBLE);
                 signatureView.setText(dataBean.getBodyBean().getCompany() + dataBean.getBodyBean().getJob());
             } else {
-                holder.v(R.id.auth).setVisibility(View.GONE);
+                holder.v(R.id.auth_iview).setVisibility(View.GONE);
                 String signature = dataBean.getBodyBean().getSignature();
                 if (TextUtils.isEmpty(signature)) {
                     signatureView.setText(R.string.signature_empty_tip);

@@ -3,22 +3,12 @@ package com.hn.d.valley.main.message.groupchat;
 
 import android.content.Context;
 import android.util.SparseBooleanArray;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
-import com.hn.d.valley.bean.FriendBean;
-import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
-import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
-import com.hn.d.valley.utils.RBus;
-import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
 
@@ -33,11 +23,11 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     protected List<String> mSelectedUsers;
 
-    protected ContactSelectUIVIew.Options options;
+    protected Options options;
 
     protected SparseBooleanArray mCheckStats = new SparseBooleanArray();
 
-    public BaseContactSelectAdapter(Context context, ContactSelectUIVIew.Options options) {
+    public BaseContactSelectAdapter(Context context, Options options) {
         super(context);
         this.options = options;
         setModel(options.mode);
@@ -50,7 +40,7 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        if(viewType == ItemTypes.FUNC) {
+        if (viewType == ItemTypes.FUNC) {
             return R.layout.item_recent_search;
         }
         return R.layout.item_firends_addgroup_item;
@@ -73,12 +63,11 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     @Override
     protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
-        return super.onUnSelectorPosition(viewHolder,position,isSelector);
+        return super.onUnSelectorPosition(viewHolder, position, isSelector);
     }
 
     @Override
     protected void onBindModelView(int model, final boolean isSelector, final RBaseViewHolder holder, final int position, final AbsContactItem bean) {
-
 
 
     }
@@ -95,4 +84,32 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     }
 
+    public static class Options {
+
+        static final int DEFALUT_LIMIT = 5;
+
+        int mode;
+        int selectCountLimit = DEFALUT_LIMIT;
+        boolean showMe = false;
+        boolean showCheckBox = false;
+
+        public Options() {
+            this(MODEL_MULTI);
+        }
+
+        public Options(int mode) {
+            this(mode, DEFALUT_LIMIT);
+        }
+
+        public Options(int mode,int limit) {
+            this(mode, limit,false);
+        }
+
+        public Options(int mode, int limit,boolean showCheckBox) {
+            this.mode = mode;
+            this.selectCountLimit = limit;
+            this.showCheckBox = showCheckBox;
+        }
+
+    }
 }

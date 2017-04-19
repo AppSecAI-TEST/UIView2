@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -12,8 +13,6 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.angcyo.uiview.utils.string.StringUtil;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
@@ -34,8 +33,6 @@ import com.netease.nimlib.sdk.msg.model.AttachmentProgress;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.io.File;
-
-import static com.hn.d.valley.main.message.ChatAdapter.setImageSize;
 
 /**
  * Created by hewking on 2017/4/9.
@@ -90,10 +87,12 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
         } else if (!TextUtils.isEmpty(path)) {
             loadThumbnailImage(thumbFromSourceFile(path));
         } else {
+            Log.e("receive"," no image");
             loadThumbnailImage(null);
             if (message.getAttachStatus() == AttachStatusEnum.transferred
                     || message.getAttachStatus() == AttachStatusEnum.def) {
                 downloadAttachment(message);
+                Log.e("receive"," no image download");
             }
         }
 //        if (TextUtils.isEmpty(thumbPath) && TextUtils.isEmpty(path)) {
@@ -159,6 +158,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 //                    .into(draweeView);
 
         } else {
+
 //            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, thumbPath, true);
         }
     }
@@ -177,7 +177,6 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
             downloadFuture = NIMClient.getService(MsgService.class).downloadAttachment(message, false);
             downloading = true;
             registerObservers(true);
-
         } else {
             onDownloadSuccess(message);
         }
@@ -185,7 +184,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
     private void onDownloadStart(IMMessage message) {
         showStatusView(View.VISIBLE);
-        progressLabel.setText(((VideoAttachment) message.getAttachment()).getSize() + "");
+//        progressLabel.setText(((VideoAttachment) message.getAttachment()).getSize() + "");
     }
 
     private void showStatusView(int visible) {
@@ -207,7 +206,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
     private void registerObservers(boolean register) {
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(statusObserver, register);
-        NIMClient.getService(MsgServiceObserve.class).observeAttachmentProgress(attachmentProgressObserver, register);
+//        NIMClient.getService(MsgServiceObserve.class).observeAttachmentProgress(attachmentProgressObserver, register);
     }
 
     private Observer<IMMessage> statusObserver = new Observer<IMMessage>() {
@@ -240,6 +239,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
     }
 
     private void onDownloadSuccess(final IMMessage message) {
+        registerObservers(false);
         downloadFuture = null;
         showStatusView(View.GONE);
         playVideo();
@@ -267,6 +267,8 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
                 percent = (float) 1.0;
                 progress = total;
             }
+            progressLabel.setVisibility(View.VISIBLE);
+
             if (percent - lastPercent >= 0.10) {
                 lastPercent = percent;
                 progressLabel.setText(StringUtil.getPercentString(progress / total));
@@ -294,7 +296,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
         }
 
         if (message.getStatus() == MsgStatusEnum.sending
-                || (isReceivedMessage() && message.getAttachStatus() == AttachStatusEnum.transferring)) {
+                || message.getAttachStatus() == AttachStatusEnum.transferring) {
             showStatusView(View.VISIBLE);
             progressLabel.setText(StringUtil.getPercentString(getMsgAdapter().getProgress(message)));
         } else {

@@ -3,6 +3,7 @@ package com.hn.d.valley.main.message.p2pchat;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,17 +17,23 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.me.UserDetailUIView2;
-import com.hn.d.valley.main.message.ChatFileUIView;
+import com.hn.d.valley.main.message.SessionSettingDelegate;
+import com.hn.d.valley.main.message.chatfile.ChatFileUIView;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.GroupReportUIView;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
+import com.hn.d.valley.main.message.search.ChatRecordSearchUIView;
 import com.hn.d.valley.main.message.search.DefaultUserInfoProvider;
+import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
@@ -109,6 +116,18 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 SwitchCompat switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_stick_chat));
+                switchCompat.setChecked(SessionSettingDelegate.getInstance().checkTop(mSessionId));
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked) {
+                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,"1");
+
+                        } else {
+                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,"0");
+                        }
+                    }
+                });
             }
         }));
 
@@ -116,8 +135,17 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                final SwitchCompat switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_messge_notallow));
+                boolean notice = NIMClient.getService(FriendService.class).isNeedMessageNotify(mSessionId);
+                switchCompat.setChecked(notice);
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        SessionSettingDelegate.getInstance().setMessageNotify(mSessionId,isChecked,switchCompat);
+                    }
+                });
+
             }
         }));
 
@@ -130,7 +158,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new ChatFileUIView());
+                        mOtherILayout.startIView(new ChatFileUIView(mSessionId,sessionType));
                     }
                 });
 
@@ -142,6 +170,12 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_find_chat_record));
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ChatRecordSearchUIView.start(mOtherILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
+                    }
+                });
             }
         }));
 
@@ -162,7 +196,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                                     @Override
                                     public void onClick(View v) {
                                         NIMClient.getService(MsgService.class).clearChattingHistory(mSessionId, sessionType);
-                                        RBus.post(new EmptyChatEvent());
+                                        RBus.post(new EmptyChatEvent(mSessionId));
                                     }
                                 })
                                 .showDialog(mOtherILayout);
@@ -208,7 +242,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
         tv_add_group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new ContactSelectUIVIew.Options());
+                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new BaseContactSelectAdapter.Options());
                 targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {

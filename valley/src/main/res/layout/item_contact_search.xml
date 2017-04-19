@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_title_bar_item_size"
         android:layout_marginTop="@dimen/base_xhdpi"
-        android:background="@android:color/white"
+        android:background="@drawable/base_dark_round_selector_dark"
         android:drawablePadding="@dimen/base_xhdpi"
         android:drawableStart="@drawable/search_xuanzhelianxiren"
         android:hint="@string/search_hint"

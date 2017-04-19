@@ -9,11 +9,9 @@ import android.widget.TextView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
-import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.utils.RBus;
@@ -26,7 +24,7 @@ import java.util.List;
  */
 public class GroupMemberSelectAdapter extends BaseContactSelectAdapter {
 
-    public GroupMemberSelectAdapter(Context context, BaseContactSelectUIVIew.Options options) {
+    public GroupMemberSelectAdapter(Context context, Options options) {
         super(context,options);
     }
 

@@ -11,12 +11,10 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.service.GroupChatService;
@@ -36,11 +34,11 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
     public static final String GID = "gid";
     private String gid;
 
-    public GroupMemberSelectUIVIew(Options options) {
+    public GroupMemberSelectUIVIew(BaseContactSelectAdapter.Options options) {
         super(options);
     }
 
-    public static void start(ILayout mLayout, Options options, List<String> uids,String gid, Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
+    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options, List<String> uids, String gid, Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
         bundle.putString(GID,gid);

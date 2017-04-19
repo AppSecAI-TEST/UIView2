@@ -47,7 +47,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
     }
 
     private void initTablayout() {
-        tabLayout.setTabData(new String[]{getString(R.string.new_frient), getString(R.string.frient_tip)});
+        tabLayout.setTabData(new String[]{getString(R.string.new_friend), getString(R.string.frient_tip)});
         tabLayout.setCurrentTab(0);
         tabLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override

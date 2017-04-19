@@ -1,12 +1,7 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
@@ -38,11 +33,11 @@ import rx.functions.Action3;
 public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 
 
-    public ContactSelectUIVIew(Options options) {
+    public ContactSelectUIVIew(BaseContactSelectAdapter.Options options) {
         super(options);
     }
 
-    public static void start(ILayout mLayout, Options options, List<String> uids, Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
+    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options, List<String> uids, Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
 
@@ -78,13 +73,13 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 
     @Override
     protected void loadData() {
-
-        RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
-        if (!results.isEmpty()) {
-
-            processResult(results);
-
-        } else {
+        // TODO: 2017/4/16 创建群聊 无法访问 realm 只能在创建的线程中访问
+//        RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
+//        if (!results.isEmpty()) {
+//
+//            processResult(results);
+//
+//        } else {
 
             datatProvider.provide(mSubscriptions, new RequestCallback<List<FriendBean>>() {
                 @Override
@@ -105,7 +100,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                 }
             });
 
-        }
+//        }
 
 
 

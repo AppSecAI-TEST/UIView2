@@ -2,15 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_layout"
-    android:layout_width="wrap_content"
+    android:layout_width="210dp"
     android:layout_height="130dp"
     android:background="@drawable/base_bg_selector"
     android:paddingBottom="@dimen/base_xhdpi">
 
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:src="@drawable/zhanweitu_1" />
 
     <com.angcyo.uiview.widget.RTextView
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/base_shadow_shape_top"
+        android:background="#C000"
         android:layout_marginTop="@dimen/base_xhdpi"
         android:ellipsize="end"
         android:maxLines="1"

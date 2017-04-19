@@ -8,6 +8,7 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
+import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -54,6 +55,8 @@ public class P2PChatUIView extends ChatUIView2 {
             public void onClick(View v) {
 //                startIView(new P2PInfoUIView());
                 P2PInfoUIView.start(mOtherILayout, mSessionId, sessionType);
+                SessionSettingDelegate.getInstance().fetchTopList(mSessionId);
+
             }
         }));
 
@@ -62,6 +65,9 @@ public class P2PChatUIView extends ChatUIView2 {
 
     @Subscribe
     public void onEvent(EmptyChatEvent event) {
+        if (!mSessionId.equals(event.sessionId)) {
+            return;
+        }
         msgService().queryMessageListEx(
                 getEmptyMessage(),
                 QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)

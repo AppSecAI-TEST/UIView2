@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Toast;
 
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
@@ -22,9 +21,11 @@ import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.helper.MessageHelper;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
+import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.MyGroupUIView;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -46,6 +47,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.functions.Action2;
 import rx.functions.Action3;
 
 /**
@@ -219,7 +221,7 @@ public class ChatControl2 {
         // 2 copy
         longClickItemCopy(selectedItem, itemDialog, msgType);
         // 3 revoke
-        if (selectedItem.getDirect() == MsgDirectionEnum.Out && selectedItem.getStatus() == MsgStatusEnum.success ) {
+        if (selectedItem.getDirect() == MsgDirectionEnum.Out && selectedItem.getStatus() == MsgStatusEnum.success) {
             longClickRevokeMsg(selectedItem, itemDialog);
         }
         // 4 delete
@@ -238,28 +240,44 @@ public class ChatControl2 {
         itemDialog.addItem(itemTitle, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContactSelectUIVIew.start(mUIBaseView.getILayout(),new BaseContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
-                        ,null,new Action3< UIBaseRxView, List<AbsContactItem>, com.hn.d.valley.main.message.groupchat.RequestCallback>() {
-                            @Override
-                            public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
-                                forwardMessage = item;
-                                requestCallback.onSuccess("");
-                                ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                                FriendBean friendBean = contactItem.getFriendBean();
 
-                                IMMessage message = MessageBuilder.createForwardMessage(forwardMessage, friendBean.getUid(), sessionType);
-                                if (message == null) {
-                                    T_.show("该类型不支持转发");
-                                    return;
+                if (SessionTypeEnum.P2P == sessionType) {
+                    ContactSelectUIVIew.start(mUIBaseView.getILayout(), new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                            , null, new Action3<UIBaseRxView, List<AbsContactItem>, com.hn.d.valley.main.message.groupchat.RequestCallback>() {
+                                @Override
+                                public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
+                                    ContactItem contactItem = (ContactItem) absContactItems.get(0);
+                                    FriendBean friendBean = contactItem.getFriendBean();
+                                    forwardMessage(friendBean.getUid(), requestCallback, item, sessionType);
                                 }
-                                NIMClient.getService(MsgService.class).sendMessage(message, false);
-                                if (mSessionId.equals(friendBean.getUid())) {
-                                    onMsgSend(message);
-                                }
-                            }
-                        });
+                            });
+                } else if (SessionTypeEnum.Team == sessionType) {
+
+                    MyGroupUIView.start(mUIBaseView.getILayout(), new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE,1,true)
+                            , new Action2<GroupBean, com.hn.d.valley.main.message.groupchat.RequestCallback>() {
+                        @Override
+                        public void call(GroupBean groupBean, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
+                            forwardMessage(groupBean.getYxGid(), requestCallback, item, sessionType);
+                        }
+                    });
+                }
             }
         });
+    }
+
+    private void forwardMessage(String uid, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback, IMMessage item, SessionTypeEnum sessionType) {
+        forwardMessage = item;
+        requestCallback.onSuccess("");
+
+        IMMessage message = MessageBuilder.createForwardMessage(forwardMessage, uid, sessionType);
+        if (message == null) {
+            T_.show("该类型不支持转发");
+            return;
+        }
+        NIMClient.getService(MsgService.class).sendMessage(message, false);
+        if (mSessionId.equals(uid)) {
+            onMsgSend(message);
+        }
     }
 
     // 长按菜单项--删除
@@ -321,7 +339,7 @@ public class ChatControl2 {
     }
 
     private void onCopyMessageItem(IMMessage item) {
-        ClipboardUtils.clipboardCopyText(mActivity,item.getContent());
+        ClipboardUtils.clipboardCopyText(mActivity, item.getContent());
     }
 
     // 长按菜单项--重发
@@ -431,7 +449,7 @@ public class ChatControl2 {
                     return;
                 }
                 // 采用 带 playload 参数notify 方法 防止刷新闪烁
-                mChatAdapter.notifyItemChanged(index,"testst");
+                mChatAdapter.notifyItemChanged(index, "testst");
 //                mChatAdapter.notifyDataSetChanged();
             }
         });

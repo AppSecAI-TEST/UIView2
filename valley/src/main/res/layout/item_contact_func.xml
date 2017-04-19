@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="@dimen/base_hdpi">
+
+    <ImageView
+        android:id="@+id/iv_item_head"
+        android:layout_width="@dimen/avatar_image_size_little"
+        android:layout_height="@dimen/avatar_image_size_little"
+        android:src="@drawable/default_avatar"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_height="@dimen/avatar_image_size_little"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/iv_item_head">
+
+        <TextView
+            android:id="@+id/tv_friend_name"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="hewking" />
+
+        <TextView
+            android:id="@+id/tv_func_desc"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:textSize="@dimen/default_text_size10"
+            android:textColor="@color/base_gray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="hewking" />
+
+    </LinearLayout>
+
+</RelativeLayout>

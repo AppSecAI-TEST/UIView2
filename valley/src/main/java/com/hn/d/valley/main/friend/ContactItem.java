@@ -14,6 +14,10 @@ public class ContactItem extends AbsContactItem {
     public ContactItem(FriendBean bean){
         this.friendBean = bean;
         itemType = ItemTypes.FRIEND;
+        if ("1".equals(bean.getIsStar())) {
+            groupText = "☆";
+            return;
+        }
         char ch = bean.getDefaultMark().charAt(0);
         String letter = StringUtils.getAsciiLeadingUp(ch);
         if (letter != null ) {

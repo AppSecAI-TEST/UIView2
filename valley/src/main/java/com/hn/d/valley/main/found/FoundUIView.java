@@ -68,10 +68,10 @@ public class FoundUIView extends UIItemUIView<SingleItem> {
 
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                baseInitItem(holder, R.drawable.search, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.search, getString(R.string.scan_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SearchUIView());
+                        mOtherILayout.startIView(new ScanUIView());
                     }
                 });
             }
@@ -80,10 +80,10 @@ public class FoundUIView extends UIItemUIView<SingleItem> {
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                baseInitItem(holder, R.drawable.scan, getString(R.string.scan_title), mBaseOffsetSize, new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.scan, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new ScanUIView());
+                        mOtherILayout.startIView(new SearchUIView());
                     }
                 });
             }

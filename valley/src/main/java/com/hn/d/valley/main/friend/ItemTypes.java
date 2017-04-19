@@ -19,4 +19,8 @@ public interface ItemTypes {
 
     int SECTION = 6;
 
+    int SEARCH = 7;
+
+    int SYSTEMPUSH = 8;
+
 }

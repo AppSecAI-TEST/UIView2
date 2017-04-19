@@ -31,13 +31,6 @@
             android:layout_height="wrap_content"
             android:text="hewking" />
 
-        <!--<View-->
-            <!--android:id="@+id/bottomLine"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="@dimen/base_line"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:background="@color/line_color" />-->
-
     </RelativeLayout>
 
 </RelativeLayout>

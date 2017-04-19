@@ -153,4 +153,22 @@ public interface GroupChatService {
     @POST("group/report")
     Observable<ResponseBody> report(@QueryMap Map<String, String> map);
 
+    /**
+     * 设置/取消聊天置顶
+     * @param map
+     * @return
+     */
+    @POST("chat/setTop")
+    Observable<ResponseBody> setTop(@QueryMap Map<String, String> map);
+
+    /**
+     * 聊天置顶
+     * @param map
+     * @return
+     */
+    @POST("chat/topList")
+    Observable<ResponseBody> topList(@QueryMap Map<String, String> map);
+
+
+
 }

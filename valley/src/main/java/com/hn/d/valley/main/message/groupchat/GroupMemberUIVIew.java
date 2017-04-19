@@ -1,25 +1,34 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.content.Context;
+import android.icu.text.DateFormat;
 import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupMemberBean;
+import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
+
+import rx.functions.Action1;
 
 /**
  * Created by hewking on 2017/3/20.
@@ -30,11 +39,24 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
     public static final String IS_ADMIN = "is_admin";
 
     private String gid;
+    private boolean isAdmin;
+
+    private Action1<Boolean> kictAction;
+
+    public Action1<Boolean> getKictAction() {
+        return kictAction;
+    }
+
+    public void setKictAction(Action1<Boolean> kictAction) {
+        this.kictAction = kictAction;
+    }
 
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_group_member));
     }
+
+
 
     @Override
     protected RExBaseAdapter<String, GroupMemberBean, String> initRExBaseAdapter() {
@@ -46,6 +68,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         super.onViewCreate(rootView, param);
         if (param != null) {
             gid = param.mBundle.getString(GID);
+            isAdmin = param.mBundle.getBoolean(IS_ADMIN);
         }
     }
 
@@ -111,7 +134,59 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                     mOtherILayout.startIView(new UserDetailUIView2(dataBean.getUserId()));
                 }
             });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    if (!isAdmin) {
+                        return false;
+                    }
+
+                    UIDialog.build()
+                            .setDialogContent("确定踢出群聊吗?")
+                            .setOkText("确定")
+                            .setCancelText("取消")
+                            .setOkListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    kickMember(dataBean.getUserId());
+
+                                }
+                            })
+                            .showDialog(mOtherILayout);
+
+                    return true;
+                }
+            });
         }
+    }
+
+    private void kickMember(String userId) {
+
+        add(RRetrofit.create(GroupChatService.class)
+                .kick(Param.buildMap("to_uid:" + userId, "gid:" + gid))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        if (code == 1044) {
+                            T_.show("你不是群主！");
+                        }
+                    }
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        T_.show("踢出群成员成功！");
+                        onUILoadData("0");
+                        if (kictAction != null) {
+                            kictAction.call(true);
+                        }
+                    }
+                }));
+
     }
 
     @Override

@@ -141,7 +141,7 @@ public class AddGroupChatUIView extends BaseUIView {
             }
         });
 
-        mGroupAdapter = new AddGroupAdapter(mActivity,new ContactSelectUIVIew.Options());
+        mGroupAdapter = new AddGroupAdapter(mActivity,new BaseContactSelectAdapter.Options());
         datatProvider = new AddGroupDatatProvider();
 //        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));

@@ -154,7 +154,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
         if (!option.isSearchMuti()) {
             return mResultList.getItem(position).getItemType();
-        }
+    }
 
         if (position == getItemCount() - 1) {
             return LAST_ITEM_TYPE;

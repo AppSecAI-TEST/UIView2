@@ -11,6 +11,7 @@ import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,7 +56,7 @@ import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
@@ -199,11 +200,16 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
             @Override
             public void onEmojiText(String emoji) {
-                final int selectionStart = mInputView.getSelectionStart();
-                mInputView.getText().insert(selectionStart, emoji);
-                MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
-                mInputView.setSelection(selectionStart + emoji.length());
-                mInputView.requestFocus();
+                if (emoji.equals("/DEL")) {
+                    mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                } else {
+                    final int selectionStart = mInputView.getSelectionStart();
+                    mInputView.getText().insert(selectionStart, emoji);
+                    MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
+                    mInputView.setSelection(selectionStart + emoji.length());
+                    mInputView.requestFocus();
+                }
+
             }
         });
 
@@ -326,7 +332,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
             @Override
             public void onClick(View v) {
                 //个人名片
-                ContactSelectUIVIew.start(mOtherILayout,new BaseContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
+                ContactSelectUIVIew.start(mOtherILayout,new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
                         ,null,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {

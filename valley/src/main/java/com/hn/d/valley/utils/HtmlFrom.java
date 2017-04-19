@@ -25,9 +25,9 @@ import static com.hn.d.valley.utils.Regex.TITLE_PATTERN2;
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
  * 类的描述：
- * 创建人员：Robi
+ * 创建人员：hewking
  * 创建时间：2017/04/13 19:27
- * 修改人员：Robi
+ * 修改人员：hewking
  * 修改时间：2017/04/13 19:27
  * 修改备注：
  * Version: 1.0.0
@@ -70,7 +70,7 @@ public class HtmlFrom {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-                L.e("getPageAsyc" ,s);
+//                L.e("getPageAsyc" ,s);
                 if (TextUtils.isEmpty(s)) {
                     callback.onError("error");
                     return;

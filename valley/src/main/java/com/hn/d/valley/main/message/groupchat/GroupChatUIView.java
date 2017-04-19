@@ -19,16 +19,18 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupDescBean;
+import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
-import com.hn.d.valley.main.message.ChatUIView;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
-import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.service.GroupChatService;
+import com.hwangjr.rxbus.annotation.Subscribe;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.team.model.Team;
 
 import java.util.ArrayList;
@@ -141,7 +143,7 @@ public class GroupChatUIView extends ChatUIView2 {
         mInputView.setOnMentionInputListener(new ExEditText.OnMentionInputListener() {
             @Override
             public void onMentionCharacterInput() {
-                GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE), null,bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null,bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseRxView, List<AbsContactItem> items, RequestCallback callback) {
                         callback.onSuccess("");
@@ -152,5 +154,24 @@ public class GroupChatUIView extends ChatUIView2 {
                 });
             }
         });
+    }
+
+    @Subscribe
+    public void onEvent(EmptyChatEvent event) {
+        if (!mSessionId.equals(event.sessionId)) {
+            return;
+        }
+        msgService().queryMessageListEx(
+                getEmptyMessage(),
+                QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
+                , true)
+                .setCallback(new RequestCallbackWrapper<List<IMMessage>>() {
+                    @Override
+                    public void onResult(int code, List<IMMessage> result, Throwable exception) {
+                        if (code == ResponseCode.RES_SUCCESS) {
+                            mChatControl.resetData(result);
+                        }
+                    }
+                });
     }
 }

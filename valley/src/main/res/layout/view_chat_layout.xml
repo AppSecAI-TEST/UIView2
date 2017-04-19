@@ -226,24 +226,24 @@
             android:layout_height="match_parent"
             android:visibility="gone">
 
-            <HorizontalScrollView
-                android:id="@+id/emoji_tab_view_container"
+            <LinearLayout
+                android:id="@+id/layout_scr_bottom"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base_title_bar_item_size"
                 android:layout_alignParentBottom="true"
-                android:scrollbars="none">
-
-                <com.angcyo.uiview.widget.EmojiTabLayout
-                    android:id="@+id/emoji_tab_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/base_title_bar_item_size" />
-            </HorizontalScrollView>
+                android:layout_marginBottom="4dp"
+                android:gravity="center"
+                android:orientation="horizontal"/>
 
             <com.angcyo.uiview.widget.viewpager.UIViewPager
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/emoji_tab_view_container" />
+                android:layout_above="@id/layout_scr_bottom"
+                 />
+
+
+
 
         </RelativeLayout>
 

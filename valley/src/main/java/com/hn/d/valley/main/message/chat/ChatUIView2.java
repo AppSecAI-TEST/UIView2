@@ -11,6 +11,7 @@ import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -57,7 +58,7 @@ import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.CommandLayoutControl;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
@@ -201,11 +202,15 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
             @Override
             public void onEmojiText(String emoji) {
-                final int selectionStart = mInputView.getSelectionStart();
-                mInputView.getText().insert(selectionStart, emoji);
-                MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
-                mInputView.setSelection(selectionStart + emoji.length());
-                mInputView.requestFocus();
+                if (emoji.equals("/DEL")) {
+                    mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                } else {
+                    final int selectionStart = mInputView.getSelectionStart();
+                    mInputView.getText().insert(selectionStart, emoji);
+                    MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
+                    mInputView.setSelection(selectionStart + emoji.length());
+                    mInputView.requestFocus();
+                }
             }
         });
 
@@ -328,7 +333,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             @Override
             public void onClick(View v) {
                 //个人名片
-                ContactSelectUIVIew.start(mOtherILayout,new BaseContactSelectUIVIew.Options(RModelAdapter.MODEL_SINGLE)
+                ContactSelectUIVIew.start(mOtherILayout,new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
                         ,null,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
@@ -752,8 +757,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
+                    mMessageExpressionView.setButtonDrawable(R.drawable.message_keyboard_n);
                 } else if (mLastId == R.id.message_expression_view && mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.hideEmojiLayout();
+                    mMessageExpressionView.setButtonDrawable(R.drawable.message_expression_selector);
                     return;
                 }
                 mLastId = R.id.message_expression_view;

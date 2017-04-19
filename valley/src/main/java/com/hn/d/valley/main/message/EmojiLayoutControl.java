@@ -6,12 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
-import com.angcyo.library.utils.L;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.widget.EmojiTabLayout;
 import com.angcyo.uiview.widget.viewpager.RPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
@@ -30,121 +27,108 @@ import com.hn.d.valley.emoji.EmojiRecyclerView;
  * Version: 1.0.0
  */
 public class EmojiLayoutControl {
+
+    public static final int EMOJI_PER_PAGE = 27; // 最后一个是删除键
+
     RBaseViewHolder mViewHolder;
     UIViewPager mUIViewPager;
-    EmojiTabLayout mTabLayout;
     OnEmojiSelectListener mOnEmojiSelectListener;
+    LinearLayout pageNumberLayout;
+
+    Context context;
+
+    /**
+     * 总页数.
+     */
+    private int pageCount;
 
     public EmojiLayoutControl(RBaseViewHolder viewHolder, final OnEmojiSelectListener listener) {
         mViewHolder = viewHolder;
         mUIViewPager = mViewHolder.v(R.id.view_pager);
-        mTabLayout = mViewHolder.v(R.id.emoji_tab_layout);
+        pageNumberLayout = mViewHolder.v(R.id.layout_scr_bottom);
         mOnEmojiSelectListener = listener;
+        context = viewHolder.getContext();
 
-        mTabLayout.addItem(R.drawable.nim_emoji_icon);
-        mTabLayout.addItem(R.drawable.nim_emoji_icon);
-        mTabLayout.addItem(R.drawable.nim_emoji_icon);
-        mTabLayout.addItem(R.drawable.nim_emoji_icon);
-        mTabLayout.addItem(R.drawable.nim_emoji_icon);
-
-        mTabLayout.setOnTabSelectorListener(new EmojiTabLayout.OnTabSelectorListener() {
-            @Override
-            public void onTabSelect(int index) {
-                L.i("" + index);
-                if (index > mUIViewPager.getAdapter().getCount()) {
-                    return;
-                }
-                mUIViewPager.setCurrentItem(index);
-            }
-
-            @Override
-            public void onTabReselect(int index) {
-                L.i("" + index);
-            }
-        });
-
-        mUIViewPager.setAdapter(new RPagerAdapter() {
-            @Override
-            protected View getView(LayoutInflater from, ViewGroup container, int position) {
-//                RRecyclerView recyclerView = new RRecyclerView(container.getContext());
-//                recyclerView.setItemAnim(false);
-//                recyclerView.setAdapter(new EmojiAdapter(container.getContext()));
-//                recyclerView.setTag("GV8");
-                EmojiRecyclerView recyclerView = new EmojiRecyclerView(container.getContext());
-                recyclerView.setOnEmojiSelectListener(mOnEmojiSelectListener);
-                container.addView(recyclerView);
-                return recyclerView;
-            }
-
-            @Override
-            public int getCount() {
-                return 5;
-            }
-        });
+        mUIViewPager.setAdapter(pagerAdapter);
 
         mUIViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                mTabLayout.setCheckedIndex(position, false);
+//                mTabLayout.setCheckedIndex(position, false);
+                setCurEmotionPage(position);
             }
         });
 
+        showEmojiGridView();
+
+
     }
 
-    public void init() {
-//        mUIViewPager.setAdapter();
+    RPagerAdapter pagerAdapter = new RPagerAdapter() {
+        @Override
+        protected View getView(LayoutInflater from, ViewGroup container, int position) {
+
+            int pos = position;
+
+            EmojiRecyclerView recyclerView = new EmojiRecyclerView(context, pos * EMOJI_PER_PAGE);
+            recyclerView.setOnEmojiSelectListener(mOnEmojiSelectListener);
+            container.addView(recyclerView);
+            return recyclerView;
+        }
+
+        @Override
+        public int getCount() {
+            return pageCount == 0 ? 1 : pageCount;
+        }
+    };
+
+    private void setCurEmotionPage(int position) {
+        setCurPage(position, pageCount);
     }
+
+    private void showEmojiGridView() {
+        pageCount = (int) Math.ceil(EmojiManager.getDisplayCount() / (float) EMOJI_PER_PAGE);
+        pagerAdapter.notifyDataSetChanged();
+        resetEmotionPager();
+    }
+
+    private void resetEmotionPager() {
+        setCurEmotionPage(0);
+        mUIViewPager.setCurrentItem(0, false);
+    }
+
+    private void setCurPage(int page, int pageCount) {
+        int hasCount = pageNumberLayout.getChildCount();
+        int forMax = Math.max(hasCount, pageCount);
+
+        ImageView imgCur = null;
+        for (int i = 0; i < forMax; i++) {
+            if (pageCount <= hasCount) {
+                if (i >= pageCount) {
+                    pageNumberLayout.getChildAt(i).setVisibility(View.GONE);
+                    continue;
+                } else {
+                    imgCur = (ImageView) pageNumberLayout.getChildAt(i);
+                }
+            } else {
+                if (i < hasCount) {
+                    imgCur = (ImageView) pageNumberLayout.getChildAt(i);
+                } else {
+                    imgCur = new ImageView(context);
+                    imgCur.setBackgroundResource(R.drawable.nim_view_pager_indicator_selector);
+                    pageNumberLayout.addView(imgCur);
+                }
+            }
+
+            imgCur.setId(i);
+            imgCur.setSelected(i == page); // 判断当前页码来更新
+            imgCur.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     public interface OnEmojiSelectListener {
         void onEmojiText(String emoji);
     }
 
-    @Deprecated
-    class EmojiAdapter extends RBaseAdapter<String> {
-
-        public EmojiAdapter(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected int getItemLayoutId(int viewType) {
-            return 0;
-        }
-
-        @Override
-        protected View createContentView(ViewGroup parent, int viewType) {
-            RelativeLayout layout = new RelativeLayout(mContext);
-            layout.setBackgroundResource(R.drawable.base_bg_selector);
-
-            ImageView imageView = new ImageView(mContext);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-
-            final float density = mContext.getResources().getDisplayMetrics().density;
-            int width = (int) (density * 28);
-            int height = (int) (density * 40);
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
-            params.addRule(RelativeLayout.CENTER_IN_PARENT);
-            layout.addView(imageView, params);
-            return layout;
-        }
-
-        @Override
-        public int getItemCount() {
-            return EmojiManager.getDisplayCount();
-        }
-
-        @Override
-        protected void onBindView(RBaseViewHolder holder, final int position, String bean) {
-            ((ImageView) ((ViewGroup) holder.itemView).getChildAt(0)).setImageDrawable(EmojiManager.getDisplayDrawable(mContext, position));
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnEmojiSelectListener != null) {
-                        mOnEmojiSelectListener.onEmojiText(EmojiManager.getDisplayText(position));
-                    }
-                }
-            });
-        }
-    }
 }

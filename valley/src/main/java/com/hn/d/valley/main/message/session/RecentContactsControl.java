@@ -290,7 +290,7 @@ public class RecentContactsControl {
         });
 
         final RBaseItemDecoration itemDecoration = new RBaseItemDecoration();
-        itemDecoration.setMarginStart(mContext.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi));
+        itemDecoration.setMarginStart(mContext.getResources().getDimensionPixelOffset(R.dimen.base_65dpi));
         mSwipeMenuRecyclerView.addItemDecoration(itemDecoration);
         mSwipeMenuRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mSwipeMenuRecyclerView.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -307,7 +307,6 @@ public class RecentContactsControl {
                         final RecentContact recentContact = mRecentContactsAdapter.getAllDatas().get(adapterPosition - getTopItemCount());
                         String messageId = recentContact.getRecentMessageId();
                         String contactId = recentContact.getContactId();
-
                         if (tag == MENU_DELETE) {
                             UnreadMessageControl.removeMessageUnread(contactId);
                             MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount()
@@ -461,7 +460,7 @@ public class RecentContactsControl {
         @Override
         protected void onBindView(final RBaseViewHolder holder, final int position, final RecentContact b) {
             if (holder.getItemViewType() == ITEM_TYPE_SEARCH) {
-                holder.v(R.id.search_view).setOnClickListener(new View.OnClickListener() {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //T_.show("搜索...");

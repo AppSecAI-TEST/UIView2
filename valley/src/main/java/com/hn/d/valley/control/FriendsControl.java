@@ -38,9 +38,16 @@ import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
+import com.hn.d.valley.main.friend.ItemTypes;
+import com.hn.d.valley.main.friend.SystemPushItem;
+import com.hn.d.valley.main.message.SearchUserUIView;
+import com.hn.d.valley.main.message.attachment.SystemPush;
+import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.ContactService;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -116,9 +123,22 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 bean.setUid("13");
                 bean.setAvatar("http://avatorimg.klgwl.com/13/13696.png");
 
-                ContactItem item = new ContactItem(bean);
+                SystemPushItem item = new SystemPushItem(bean, new Action1<FriendBean>() {
+                    @Override
+                    public void call(FriendBean o) {
+                        ChatUIView2.start(getOtherLayout(),o.getUid(),SessionTypeEnum.P2P);
+                    }
+                });
                 List<AbsContactItem> items = FuncItem.provide();
                 items.add(item);
+
+                items.add(new FuncItem<>("搜索", ItemTypes.SEARCH, new Action1<ILayout>() {
+                    @Override
+                    public void call(ILayout o) {
+                        getOtherLayout().startIView(new SearchUserUIView());
+                    }
+                }));
+
                 return items;
             }
         };
@@ -126,7 +146,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         mFriendsAdapter.setSideAction(new Action1<List<String>>() {
             @Override
             public void call(List<String> strings) {
-                strings.add(0,"☆");
+                strings.add(0,"↑");
                 sidebar_friend.setLetters(strings);
             }
         });
@@ -149,7 +169,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
     public static void scrollToLetter(String letter, RecyclerView recyclerView, List<AbsContactItem> datas) {
-        if (TextUtils.equals(letter, "☆")) {
+        if (TextUtils.equals(letter, "↑")) {
             ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
             return;
         }
@@ -186,7 +206,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             public int compare(AbsContactItem o1, AbsContactItem o2) {
 
                 if (o1.getGroupText().equals("")) {
-                    L.i(o1.getGroupText());
                     return -1;
                 }
 
@@ -194,8 +213,15 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     return 1;
                 }
 
+                if (o1.getGroupText().equals("☆")) {
+                    return -1;
+                }
+
+                if (o2.getGroupText().equals("☆")) {
+                    return 1;
+                }
+
                 if (o1.getGroupText().equals("#")) {
-                    L.i(o1.getGroupText());
                     return 1;
                 }
 
@@ -324,7 +350,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
         @Override
         public void onGroupDraw(Canvas canvas, View view, int position) {
-            textPaint.setColor(mContext.getResources().getColor(R.color.line_color));
+            textPaint.setColor(mContext.getResources().getColor(R.color.chat_bg_color));
 
             rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
             canvas.drawRect(rectF,textPaint);
@@ -339,7 +365,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
         @Override
         public void onGroupOverDraw(Canvas canvas, View view, int position, int offset) {
-            textPaint.setColor(mContext.getResources().getColor(R.color.line_color));
+            textPaint.setColor(mContext.getResources().getColor(R.color.chat_bg_color));
 
             rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight(position) - offset);
             canvas.drawRect(rectF, textPaint);
@@ -355,15 +381,15 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         @Override
         public void onItemOffsets(Rect outRect, int position) {
             super.onItemOffsets(outRect, position);
-            outRect.bottom = ScreenUtil.dip2px(1);
+            outRect.bottom = ScreenUtil.px2dip(1);
         }
 
         @Override
         public void onItemDraw(Canvas canvas, View view, int position) {
             super.onItemDraw(canvas, view, position);
-            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(mContext,R.color.line_color));
-            int left = ScreenUtil.dip2px(10);
-            colorDrawable.setBounds(view.getLeft() + left,view.getBottom(),view.getRight(),view.getBottom() + ScreenUtil.dip2px(1));
+            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(mContext,R.color.chat_bg_color));
+            int left = ScreenUtil.dip2px(70);
+            colorDrawable.setBounds(view.getLeft() + left,view.getBottom(),view.getRight() - ScreenUtil.dip2px(10),view.getBottom() + ScreenUtil.dip2px(1));
             colorDrawable.draw(canvas);
 
         }

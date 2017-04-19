@@ -2,13 +2,11 @@ package com.hn.d.valley.main.message.groupchat;
 
 
 import android.content.Context;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
@@ -26,7 +24,7 @@ import java.util.List;
  */
 public class AddGroupAdapter extends BaseContactSelectAdapter {
 
-    public AddGroupAdapter(Context context, BaseContactSelectUIVIew.Options options) {
+    public AddGroupAdapter(Context context, Options options) {
         super(context,options);
     }
 

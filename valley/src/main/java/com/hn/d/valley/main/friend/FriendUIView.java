@@ -13,7 +13,9 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.message.AddFriendUIView;
 import com.hn.d.valley.main.message.SearchUserUIView;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
@@ -40,27 +42,27 @@ public class FriendUIView extends BaseUIView {
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.add_s).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mOtherILayout.startIView(new SearchUserUIView());
-                UIItemDialog.build()
-                        .addItem(getString(R.string.add_friend), new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mOtherILayout.startIView(new SearchUserUIView());
-                            }
-                        })
-                        .addItem("添加群聊", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new ContactSelectUIVIew.Options());
-                                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                                    @Override
-                                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
-                                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView, absContactItems, requestCallback);
-                                    }
-                                });
-                                mOtherILayout.startIView(targetView);
-                            }
-                        }).showDialog(mOtherILayout);
+                mOtherILayout.startIView(new NewFriend3UIView());
+//                UIItemDialog.build()
+//                        .addItem(getString(R.string.add_friend), new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                mOtherILayout.startIView(new SearchUserUIView());
+//                            }
+//                        })
+//                        .addItem("添加群聊", new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new BaseContactSelectAdapter.Options());
+//                                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+//                                    @Override
+//                                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+//                                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView, absContactItems, requestCallback);
+//                                    }
+//                                });
+//                                mOtherILayout.startIView(targetView);
+//                            }
+//                        }).showDialog(mOtherILayout);
             }
         }));
 
