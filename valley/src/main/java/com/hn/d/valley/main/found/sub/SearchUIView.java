@@ -28,6 +28,7 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.RTextImageLayout;
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
@@ -263,9 +264,10 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
             protected void onBindFooterView(RBaseViewHolder holder, int posInFooter, HotInfoListBean footerBean) {
                 HotInfoListUIView.initItem(holder, footerBean);
                 holder.v(R.id.delete_view).setVisibility(View.GONE);
+                RTextView tv = holder.v(R.id.tip_text_view);
                 if (posInFooter == 0) {
                     holder.v(R.id.tip_layout).setVisibility(View.VISIBLE);
-                    holder.tv(R.id.tip_text_view).setText(R.string.new_hot_info_tip);
+                    tv.setDefaultSKin(R.string.new_hot_info_tip);
                 } else {
                     holder.v(R.id.tip_layout).setVisibility(View.GONE);
                 }
@@ -290,6 +292,9 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         }
                     });
                 } else {
+                    RTextView tv = holder.v(R.id.tip_view);
+                    tv.setDefaultSKin(R.string.user_ecommend_tip);
+
                     RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
                     if (mDecor == null) {
                         mDecor = new RBaseItemDecoration((int) (density() * 10), Color.TRANSPARENT);
@@ -304,9 +309,10 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
             /**最新动态item*/
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean dataBean) {
+                RTextView tv = holder.v(R.id.tip_text_view);
                 if (posInData == 0) {
                     holder.v(R.id.tip_layout).setVisibility(View.VISIBLE);
-                    holder.tv(R.id.tip_text_view).setText(R.string.new_discuss_tip);
+                    tv.setDefaultSKin(R.string.new_discuss_tip);
                 } else {
                     holder.v(R.id.tip_layout).setVisibility(View.GONE);
                 }
