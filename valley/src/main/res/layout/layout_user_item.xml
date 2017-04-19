@@ -140,6 +140,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/base_xhdpi"
         android:layout_marginTop="@dimen/base_xxhdpi"
+        android:background="@drawable/base_bg2_selector"
         android:tag="%1$s人阅"
         android:textColor="@color/main_text_color_6666666"
         android:textSize="@dimen/default_text_little_size"

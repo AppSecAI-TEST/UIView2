@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.session;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.angcyo.uiview.github.tablayout.UnreadMsgUtils;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
@@ -32,8 +34,8 @@ import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
-import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.CustomBean;
+import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -392,6 +394,36 @@ public class RecentContactsControl {
         mRecentContactsAdapter.deleteItem(recentContact);
     }
 
+    private String bindCustomSession(RecentContact recent, MsgAttachment attachment) {
+        if (isAddContact(recent)) {
+            //添加好友通知
+            if (attachment instanceof NoticeAttachment) {
+                CustomBean bean = ((NoticeAttachment) attachment).getBean();
+                if (bean != null) {
+                    String tip = bean.getTip();
+                    if (TextUtils.isEmpty(tip)) {
+                        return bean.getUsername() + " " + bean.getMsg();
+                    }
+                    return tip + " " + bean.getMsg();
+                }
+            }
+        } else if (isComment(recent)) {
+            //动态通知
+            if (attachment instanceof NoticeAttachment) {
+                CustomBean bean = ((NoticeAttachment) attachment).getBean();
+                if (bean != null) {
+                    return bean.getMsg();
+                }
+            }
+        } else if (attachment instanceof PersonalCardAttachment) {
+            PersonalCard card = ((PersonalCardAttachment) attachment).getPersonalCard();
+            if (card != null) {
+                return card.getMsg();
+            }
+        }
+        return "[自定义消息]";
+    }
+
     public static class RecentContactsInfo {
         public String name = "";//显示的名称
         public String icoUrl = "";//显示的头像
@@ -490,10 +522,15 @@ public class RecentContactsControl {
             //会话item
             final View itemLayout = holder.v(R.id.item_root_layout);
             if (RNim.isRecentContactTag(bean, IS_TOP)) {
-                itemLayout.setBackgroundResource(R.drawable.base_main_color_reverse_bg_selector);
+                //itemLayout.setBackgroundResource(R.drawable.base_main_color_reverse_bg_selector);
+                holder.itemView.setBackgroundResource(R.color.default_base_bg_dark2);
             } else {
-                itemLayout.setBackgroundResource(R.drawable.base_main_color_bg_selector);
+                holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+                //itemLayout.setBackgroundResource(R.drawable.base_main_color_bg_selector);
             }
+
+            itemLayout.setBackground(SkinHelper.getSkin().getThemeTranMaskBackgroundSelector());
+
             itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -599,35 +636,5 @@ public class RecentContactsControl {
                     return "[未知类型消息]";
             }
         }
-    }
-
-    private String bindCustomSession(RecentContact recent, MsgAttachment attachment) {
-        if (isAddContact(recent)) {
-            //添加好友通知
-            if (attachment instanceof NoticeAttachment) {
-                CustomBean bean = ((NoticeAttachment) attachment).getBean();
-                if (bean != null) {
-                    String tip = bean.getTip();
-                    if (TextUtils.isEmpty(tip)) {
-                        return bean.getUsername() + " " + bean.getMsg();
-                    }
-                    return tip + " " + bean.getMsg();
-                }
-            }
-        } else if (isComment(recent)) {
-            //动态通知
-            if (attachment instanceof NoticeAttachment) {
-                CustomBean bean = ((NoticeAttachment) attachment).getBean();
-                if (bean != null) {
-                    return bean.getMsg();
-                }
-            }
-        } else if (attachment instanceof PersonalCardAttachment) {
-            PersonalCard card = ((PersonalCardAttachment) attachment).getPersonalCard();
-            if (card != null) {
-                return card.getMsg();
-            }
-        }
-        return "[自定义消息]";
     }
 }

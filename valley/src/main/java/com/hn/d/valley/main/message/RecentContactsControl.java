@@ -30,8 +30,8 @@ import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
-import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.CustomBean;
+import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -58,6 +58,7 @@ import rx.functions.Action1;
  * Created by angcyo on 2016-12-25.
  */
 
+@Deprecated
 public class RecentContactsControl {
 
     public static final int ITEM_TYPE_NORMAL = 0x0001;
@@ -493,6 +494,7 @@ public class RecentContactsControl {
             } else {
                 itemLayout.setBackgroundResource(R.drawable.base_main_color_bg_selector);
             }
+
             itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

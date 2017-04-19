@@ -147,4 +147,16 @@ public interface SocialService {
     @POST("social/myCollect")
     Observable<ResponseBody> myCollect(@QueryMap Map<String, String> map);
 
+    /**
+     * 动态浏览列表
+     * <p>
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * discuss_id	是	int	动态id
+     * page	否	int	默认第一页
+     * limit	否	int	页面显示的数量 默认20
+     */
+    @POST("social/readList")
+    Observable<ResponseBody> readList(@QueryMap Map<String, String> map);
+
 }

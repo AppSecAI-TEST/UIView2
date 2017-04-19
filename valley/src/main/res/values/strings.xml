@@ -387,4 +387,5 @@
     <string name="yesterday">昨天</string>
     <string name="time_format">%1$d月%2$d日</string>
     <string name="full_time_format">%1$d年%2$d月%3$d日</string>
+    <string name="read_list_title">浏览的人</string>
 </resources>

@@ -42,6 +42,7 @@ import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.other.ReadListUserUIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
@@ -114,6 +115,16 @@ public class UserDiscussItemControl {
         } else {
             genderView.setVisibility(View.GONE);
         }
+
+        //阅读人数
+        holder.v(R.id.view_cnt).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (iLayout != null) {
+                    iLayout.startIView(new ReadListUserUIView(dataListBean.getDiscuss_id()));
+                }
+            }
+        });
 
         //标签处理
         HnTagsNameTextView tagsNameTextView = holder.v(R.id.tags_name);
