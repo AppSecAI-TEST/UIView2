@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Message;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -44,7 +45,7 @@ public class X5WebView extends WebView {
     TextView title;
     private String resourceUrl = "";
     private WebView smallWebView;
-    private boolean isClampedY = false;
+    private boolean isClampedY = true;
     private Map<String, Object> mJsBridges;
     private TextView tog;
     private RelativeLayout refreshRela;
@@ -221,21 +222,25 @@ public class X5WebView extends WebView {
     };
     private OnScrollChangedCallback mOnScrollChangedCallback;
 
+    private int mScrollY = 0;//Y轴滚动的距离, 用来下拉刷新判断使用
+    private float mDownY;
+    private boolean isScrollTop = false;
+
     @SuppressLint("SetJavaScriptEnabled")
     public X5WebView(Context arg0, AttributeSet arg1) {
         super(arg0, arg1);
-//        this.setWebViewClientExtension(new X5WebViewEventHandler(this));// 配置X5webview的事件处理
+        this.setWebViewClientExtension(new X5WebViewEventHandler(this));// 配置X5webview的事件处理
         this.setWebViewClient(client);
 //        //this.setWebChromeClient(chromeClient);
 //        //WebStorage webStorage = WebStorage.getInstance();
         initWebViewSettings();
-//        this.getView().setClickable(true);
-//        this.getView().setOnTouchListener(new OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return false;
-//            }
-//        });
+        this.getView().setClickable(true);
+        this.getView().setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
     }
 
     public X5WebView(Context arg0) {
@@ -352,7 +357,7 @@ public class X5WebView extends WebView {
     // TBS: Do not use @Override to avoid false calls
     public boolean tbs_dispatchTouchEvent(MotionEvent ev, View view) {
         boolean r = super.super_dispatchTouchEvent(ev);
-        Log.d("Bran", "dispatchTouchEvent " + ev.getAction() + " " + r);
+//        Log.d("Bran", "dispatchTouchEvent " + ev.getAction() + " " + r);
         return r;
     }
 
@@ -364,6 +369,10 @@ public class X5WebView extends WebView {
 
     protected void tbs_onScrollChanged(int l, int t, int oldl, int oldt, View view) {
         super_onScrollChanged(l, t, oldl, oldt);
+
+        if (mOnScrollChangedCallback != null) {
+            mOnScrollChangedCallback.onScroll(l, t, l - oldl, t - oldt);
+        }
     }
 
     protected void tbs_onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY, View view) {
@@ -383,7 +392,16 @@ public class X5WebView extends WebView {
 //                this.isClampedY = false;
 //            }
 //        }
-//        super_onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+        this.isClampedY = clampedY && scrollY == 0 && isScrollTop;
+//        L.e("call: tbs_onOverScrolled([scrollX, scrollY, clampedX, clampedY, view])-> " + scrollY + " " + clampedY);
+        super_onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+    }
+
+    /**
+     * 顶部是否还可以滚动
+     */
+    public boolean canTopScroll() {
+        return !isClampedY;
     }
 
     protected void tbs_computeScroll(View view) {
@@ -404,6 +422,14 @@ public class X5WebView extends WebView {
 //                        this.getBottom() + (-deltaY) / 2);
 //            }
 //        }
+
+        mScrollY = scrollY;
+
+        if (scrollY == 0) {
+            if (mOnScrollChangedCallback != null) {
+                mOnScrollChangedCallback.onOverScroll(deltaY);
+            }
+        }
         return super_overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX,
                 maxOverScrollY, isTouchEvent);
     }
@@ -422,17 +448,22 @@ public class X5WebView extends WebView {
 //            }
 //
 //        }
-        return super_onTouchEvent(event);
-    }
-
-
-    @Override
-    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-        super.onScrollChanged(l, t, oldl, oldt);
-
-        if (mOnScrollChangedCallback != null) {
-            mOnScrollChangedCallback.onScroll(l, t, l - oldl, t - oldt);
+        int actionMasked = MotionEventCompat.getActionMasked(event);
+        if (actionMasked == MotionEvent.ACTION_DOWN) {
+            mDownY = event.getY();
+        } else if (actionMasked == MotionEvent.ACTION_MOVE) {
+            float eventY = event.getY();
+            if (mDownY != eventY) {
+                isClampedY = false;
+            }
+            isScrollTop = eventY > mDownY;
+        } else if (actionMasked == MotionEvent.ACTION_UP) {
+            isClampedY = false;
+            isScrollTop = false;
         }
+        boolean touchEvent = super_onTouchEvent(event);
+//        L.e("call: tbs_onTouchEvent([event, view])-> " + touchEvent);
+        return touchEvent;
     }
 
     public OnScrollChangedCallback getOnScrollChangedCallback() {
@@ -445,6 +476,8 @@ public class X5WebView extends WebView {
 
     public interface OnScrollChangedCallback {
         void onScroll(int left, int top, int dx, int dy);
+
+        void onOverScroll(int scrollY);
     }
 
 }

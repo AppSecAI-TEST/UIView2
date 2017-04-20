@@ -38,7 +38,6 @@ import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.MainControl;
-import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.nim.RNim;
@@ -46,6 +45,7 @@ import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnLoading;
+import com.hn.d.valley.x5.X5WebUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.AbortableFuture;
@@ -369,7 +369,10 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //                .showDialog(this);
 
         //startIView(new KLJUIView());
-        startIView(new UserDetailUIView2(UserCache.getUserAccount()));
+
+//        startIView(new UserDetailUIView2(UserCache.getUserAccount()));
+        //startIView(new X5WebUIView("http://wap.klgwlcom/user/rank"));
+        startIView(new X5WebUIView("http://www.baidu.com"));
     }
 
     @Override

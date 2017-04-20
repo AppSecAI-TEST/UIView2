@@ -1,6 +1,5 @@
 package com.hn.d.valley.x5;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.EmptyView;
@@ -36,6 +36,7 @@ public class X5WebUIView extends BaseContentUIView {
     SimpleProgressBar mProgressBarView;
     EmptyView mEmptyView;
     private int mSoftInputMode;
+    private X5RefreshLayout mRefreshLayout;
 
     public X5WebUIView(String targetUrl) {
         mTargetUrl = targetUrl;
@@ -46,8 +47,9 @@ public class X5WebUIView extends BaseContentUIView {
         return super.getTitleBar()
                 .setShowBackImageView(true)
                 .setTitleString("")
-                .setTitleBarBGColor(Color.TRANSPARENT)
-                .setFloating(true);
+                //.setTitleBarBGColor(Color.TRANSPARENT)
+                //.setFloating(true)
+                ;
     }
 
     @Override
@@ -66,15 +68,15 @@ public class X5WebUIView extends BaseContentUIView {
         //mEmptyView = mViewHolder.v(R.id.empty_view);
         mWebView = mViewHolder.v(R.id.web_view);
         mProgressBarView = mViewHolder.v(R.id.progress_bar_view);
-        RefreshLayout refreshLayout = mViewHolder.v(R.id.refresh_layout);
-        refreshLayout.setRefreshDirection(RefreshLayout.TOP);
+        mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
+        mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
 
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView webView, String url) {
                 webView.getSettings().setDefaultTextEncodingName("utf-8");
                 webView.loadUrl(url);
-                getUITitleBarContainer().evaluateBackgroundColorSelf(webView.getScrollY());
+                //getUITitleBarContainer().evaluateBackgroundColorSelf(webView.getScrollY());
                 return true;
             }
         });
@@ -84,7 +86,7 @@ public class X5WebUIView extends BaseContentUIView {
             public void onProgressChanged(WebView webView, int progress) {
                 super.onProgressChanged(webView, progress);
                 mProgressBarView.setProgress(progress);
-                if (progress > 80) {
+                if (progress >= 90) {
                     mEmptyView.setVisibility(View.GONE);
                 }
             }
@@ -100,7 +102,13 @@ public class X5WebUIView extends BaseContentUIView {
         mWebView.setOnScrollChangedCallback(new X5WebView.OnScrollChangedCallback() {
             @Override
             public void onScroll(int left, int top, int dx, int dy) {
-                getUITitleBarContainer().evaluateBackgroundColorSelf(top);
+                //getUITitleBarContainer().evaluateBackgroundColorSelf(top);
+                //L.e("call: onScroll([left, top, dx, dy])-> " + top);
+            }
+
+            @Override
+            public void onOverScroll(int scrollY) {
+                L.e("call: onOverScroll([scrollY])-> " + scrollY);
             }
         });
     }
@@ -108,6 +116,8 @@ public class X5WebUIView extends BaseContentUIView {
     @Override
     public void onViewLoad() {
         super.onViewLoad();
+        mSoftInputMode = mActivity.getWindow().getAttributes().softInputMode;
+
         if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 11) {
             mActivity.getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                     android.view.WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
@@ -117,7 +127,6 @@ public class X5WebUIView extends BaseContentUIView {
     @Override
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
-        mSoftInputMode = mActivity.getWindow().getAttributes().softInputMode;
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
