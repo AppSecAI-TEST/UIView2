@@ -7,16 +7,13 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.SimpleProgressBar;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
-import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -35,6 +32,7 @@ public class X5WebUIView extends BaseContentUIView {
     X5WebView mWebView;
     SimpleProgressBar mProgressBarView;
     EmptyView mEmptyView;
+    WebCallback mWebCallback;
     private int mSoftInputMode;
     private X5RefreshLayout mRefreshLayout;
 
@@ -71,35 +69,36 @@ public class X5WebUIView extends BaseContentUIView {
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
         mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
 
-        mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-                webView.getSettings().setDefaultTextEncodingName("utf-8");
-                webView.loadUrl(url);
-                //getUITitleBarContainer().evaluateBackgroundColorSelf(webView.getScrollY());
-                return true;
-            }
-        });
+//        mWebView.setWebViewClient(new WebViewClient() {
+//            @Override
+//            public boolean shouldOverrideUrlLoading(WebView webView, String url) {
+//                webView.getSettings().setDefaultTextEncodingName("utf-8");
+//                webView.loadUrl(url);
+//                //getUITitleBarContainer().evaluateBackgroundColorSelf(webView.getScrollY());
+//                return true;
+//            }
+//        });
 
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView webView, int progress) {
-                super.onProgressChanged(webView, progress);
-                mProgressBarView.setProgress(progress);
-                if (progress >= 90) {
-                    mEmptyView.setVisibility(View.GONE);
-                }
-            }
+//        mWebView.setWebChromeClient(new WebChromeClient() {
+//            @Override
+//            public void onProgressChanged(WebView webView, int progress) {
+//                super.onProgressChanged(webView, progress);
+//                mProgressBarView.setProgress(progress);
+//                if (progress >= 90) {
+//                    mEmptyView.setVisibility(View.GONE);
+//                }
+//            }
+//
+//            @Override
+//            public void onReceivedTitle(WebView webView, String title) {
+//                super.onReceivedTitle(webView, title);
+//                setTitleString(title);
+//            }
+//        });
 
-            @Override
-            public void onReceivedTitle(WebView webView, String title) {
-                super.onReceivedTitle(webView, title);
-                setTitleString(title);
-            }
-        });
         mWebView.loadUrl(mTargetUrl);
 
-        mWebView.setOnScrollChangedCallback(new X5WebView.OnScrollChangedCallback() {
+        mWebView.setOnWebViewListener(new X5WebView.OnWebViewListener() {
             @Override
             public void onScroll(int left, int top, int dx, int dy) {
                 //getUITitleBarContainer().evaluateBackgroundColorSelf(top);
@@ -108,7 +107,27 @@ public class X5WebUIView extends BaseContentUIView {
 
             @Override
             public void onOverScroll(int scrollY) {
-                L.e("call: onOverScroll([scrollY])-> " + scrollY);
+                //L.e("call: onOverScroll([scrollY])-> " + scrollY);
+            }
+
+            @Override
+            public void onPageFinished(WebView webView, String url) {
+                if (mWebCallback != null) {
+                    mWebCallback.onPageFinished(webView, url);
+                }
+            }
+
+            @Override
+            public void onReceivedTitle(WebView webView, String title) {
+                setTitleString(title);
+            }
+
+            @Override
+            public void onProgressChanged(WebView webView, int progress) {
+                mProgressBarView.setProgress(progress);
+                if (progress >= 90) {
+                    mEmptyView.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -143,6 +162,17 @@ public class X5WebUIView extends BaseContentUIView {
             return false;
         }
         return true;
+    }
+
+    public X5WebUIView setWebCallback(WebCallback webCallback) {
+        mWebCallback = webCallback;
+        return this;
+    }
+
+    public static abstract class WebCallback {
+        public void onPageFinished(WebView webView, String url) {
+
+        }
     }
 
 }

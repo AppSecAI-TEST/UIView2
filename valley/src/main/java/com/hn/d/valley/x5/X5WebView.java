@@ -1,28 +1,26 @@
 package com.hn.d.valley.x5;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Message;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.utils.RUtils;
+import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
 import com.tencent.smtt.export.external.interfaces.JsPromptResult;
 import com.tencent.smtt.export.external.interfaces.JsResult;
+import com.tencent.smtt.export.external.interfaces.WebResourceError;
+import com.tencent.smtt.export.external.interfaces.WebResourceRequest;
+import com.tencent.smtt.export.external.interfaces.WebResourceResponse;
 import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.DownloadListener;
 import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
@@ -49,13 +47,47 @@ public class X5WebView extends WebView {
     private Map<String, Object> mJsBridges;
     private TextView tog;
     private RelativeLayout refreshRela;
+    private OnWebViewListener mOnWebViewListener;
     private WebViewClient client = new WebViewClient() {
         @Override
         public boolean shouldOverrideUrlLoading(WebView webView, String url) {
-            webView.getSettings().setDefaultTextEncodingName("utf-8");
             webView.loadUrl(url);
             return true;
         }
+
+        @Override
+        public void onPageFinished(WebView webView, String url) {
+            super.onPageFinished(webView, url);
+            //L.e("call: onPageFinished([webView, url])-> ");
+            if (mOnWebViewListener != null) {
+                mOnWebViewListener.onPageFinished(webView, url);
+            }
+        }
+
+        @Override
+        public void onReceivedError(WebView webView, int i, String s, String s1) {
+            super.onReceivedError(webView, i, s, s1);
+            //L.e("call: onReceivedError([webView, i, s, s1])-> ");
+        }
+
+        @Override
+        public void onReceivedError(WebView webView, WebResourceRequest webResourceRequest, WebResourceError webResourceError) {
+            super.onReceivedError(webView, webResourceRequest, webResourceError);
+            //L.e("call: onReceivedError([webView, webResourceRequest, webResourceError])-> ");
+        }
+
+        @Override
+        public void onReceivedHttpError(WebView webView, WebResourceRequest webResourceRequest, WebResourceResponse webResourceResponse) {
+            super.onReceivedHttpError(webView, webResourceRequest, webResourceResponse);
+            //L.e("call: onReceivedHttpError([webView, webResourceRequest, webResourceResponse])-> ");
+        }
+
+        @Override
+        public void onReceivedClientCertRequest(WebView webView, ClientCertRequest clientCertRequest) {
+            super.onReceivedClientCertRequest(webView, clientCertRequest);
+            //L.e("call: onReceivedClientCertRequest([webView, clientCertRequest])-> ");
+        }
+
         //        /**
 //         * 防止加载网页时调起系统浏览器
 //         */
@@ -101,37 +133,37 @@ public class X5WebView extends WebView {
 
         @Override
         public void onHideCustomView() {
-            if (callback != null) {
-                callback.onCustomViewHidden();
-                callback = null;
-            }
-            if (myVideoView != null) {
-                ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
-                viewGroup.removeView(myVideoView);
-                viewGroup.addView(myNormalView);
-            }
+//            if (callback != null) {
+//                callback.onCustomViewHidden();
+//                callback = null;
+//            }
+//            if (myVideoView != null) {
+//                ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
+//                viewGroup.removeView(myVideoView);
+//                viewGroup.addView(myNormalView);
+//            }
         }
 
         @Override
         public boolean onShowFileChooser(WebView arg0,
                                          ValueCallback<Uri[]> arg1, FileChooserParams arg2) {
             // TODO Auto-generated method stub
-            Log.e("app", "onShowFileChooser");
+            //Log.e("app", "onShowFileChooser");
             return super.onShowFileChooser(arg0, arg1, arg2);
         }
 
         @Override
         public void openFileChooser(ValueCallback<Uri> uploadFile, String acceptType, String captureType) {
-            Log.e("app", "openFileChooser");
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            try {
-                ((Activity) (X5WebView.this.getContext())).startActivityForResult(Intent.createChooser(intent, "choose files"),
-                        1);
-            } catch (android.content.ActivityNotFoundException ex) {
-
-            }
+//            Log.e("app", "openFileChooser");
+//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//            intent.setType("*/*");
+//            intent.addCategory(Intent.CATEGORY_OPENABLE);
+//            try {
+//                ((Activity) (X5WebView.this.getContext())).startActivityForResult(Intent.createChooser(intent, "choose files"),
+//                        1);
+//            } catch (android.content.ActivityNotFoundException ex) {
+//
+//            }
 
             super.openFileChooser(uploadFile, acceptType, captureType);
         }
@@ -141,37 +173,38 @@ public class X5WebView extends WebView {
          */
         @Override
         public boolean onCreateWindow(WebView arg0, boolean arg1, boolean arg2, Message msg) {
-            // TODO Auto-generated method stub
-            if (X5WebView.isSmallWebViewDisplayed == true) {
-
-                WebView.WebViewTransport webViewTransport = (WebView.WebViewTransport) msg.obj;
-                WebView webView = new WebView(X5WebView.this.getContext()) {
-
-                    protected void onDraw(Canvas canvas) {
-                        super.onDraw(canvas);
-                        Paint paint = new Paint();
-                        paint.setColor(Color.GREEN);
-                        paint.setTextSize(15);
-                        canvas.drawText("新建窗口", 10, 10, paint);
-                    }
-
-                    ;
-                };
-                webView.setWebViewClient(new WebViewClient() {
-                    public boolean shouldOverrideUrlLoading(WebView arg0, String arg1) {
-                        arg0.loadUrl(arg1);
-                        return true;
-                    }
-
-                    ;
-                });
-                LayoutParams lp = new LayoutParams(400, 600);
-                lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-                X5WebView.this.addView(webView, lp);
-                webViewTransport.setWebView(webView);
-                msg.sendToTarget();
-            }
-            return true;
+//            // TODO Auto-generated method stub
+//            if (X5WebView.isSmallWebViewDisplayed == true) {
+//
+//                WebView.WebViewTransport webViewTransport = (WebView.WebViewTransport) msg.obj;
+//                WebView webView = new WebView(X5WebView.this.getContext()) {
+//
+//                    protected void onDraw(Canvas canvas) {
+//                        super.onDraw(canvas);
+//                        Paint paint = new Paint();
+//                        paint.setColor(Color.GREEN);
+//                        paint.setTextSize(15);
+//                        canvas.drawText("新建窗口", 10, 10, paint);
+//                    }
+//
+//                    ;
+//                };
+//                webView.setWebViewClient(new WebViewClient() {
+//                    public boolean shouldOverrideUrlLoading(WebView arg0, String arg1) {
+//                        arg0.loadUrl(arg1);
+//                        return true;
+//                    }
+//
+//                    ;
+//                });
+//                LayoutParams lp = new LayoutParams(400, 600);
+//                lp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
+//                X5WebView.this.addView(webView, lp);
+//                webViewTransport.setWebView(webView);
+//                msg.sendToTarget();
+//            }
+//            return true;
+            return super.onCreateWindow(arg0, arg1, arg2, msg);
         }
 
         @Override
@@ -193,7 +226,7 @@ public class X5WebView extends WebView {
             // builder.show();
             // arg3.confirm();
             // return true;
-            Log.i("yuanhaizhou", "setX5webview = null");
+            //Log.i("yuanhaizhou", "setX5webview = null");
             return super.onJsAlert(null, "www.baidu.com", "aa", arg3);
         }
 
@@ -214,14 +247,22 @@ public class X5WebView extends WebView {
         }
 
         @Override
-        public void onReceivedTitle(WebView arg0, final String arg1) {
-            super.onReceivedTitle(arg0, arg1);
-            Log.i("yuanhaizhou", "webpage title is " + arg1);
+        public void onReceivedTitle(WebView webView, final String title) {
+            super.onReceivedTitle(webView, title);
+            if (mOnWebViewListener != null) {
+                mOnWebViewListener.onReceivedTitle(webView, title);
+            }
 
         }
-    };
-    private OnScrollChangedCallback mOnScrollChangedCallback;
 
+        @Override
+        public void onProgressChanged(WebView webView, int progress) {
+            super.onProgressChanged(webView, progress);
+            if (mOnWebViewListener != null) {
+                mOnWebViewListener.onProgressChanged(webView, progress);
+            }
+        }
+    };
     private int mScrollY = 0;//Y轴滚动的距离, 用来下拉刷新判断使用
     private float mDownY;
     private boolean isScrollTop = false;
@@ -231,14 +272,23 @@ public class X5WebView extends WebView {
         super(arg0, arg1);
         this.setWebViewClientExtension(new X5WebViewEventHandler(this));// 配置X5webview的事件处理
         this.setWebViewClient(client);
-//        //this.setWebChromeClient(chromeClient);
-//        //WebStorage webStorage = WebStorage.getInstance();
+        this.setWebChromeClient(chromeClient);
+        //WebStorage webStorage = WebStorage.getInstance();
         initWebViewSettings();
         this.getView().setClickable(true);
         this.getView().setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return false;
+            }
+        });
+        this.setDownloadListener(new DownloadListener() {
+            @Override
+            public void onDownloadStart(String s, String s1, String s2, String s3, long l) {
+                //L.e("call: onDownloadStart([s, s1, s2, s3, l])-> " + s);
+                if (RUtils.downLoadFile(getContext(), s) != -1) {
+                    goBack();
+                }
             }
         });
     }
@@ -303,6 +353,9 @@ public class X5WebView extends WebView {
         webSetting.setDatabasePath(getContext().getDir("databases", 0).getPath());
         webSetting.setGeolocationDatabasePath(getContext().getDir("geolocation", 0)
                 .getPath());
+
+        webSetting.setDefaultTextEncodingName("utf-8");
+
         // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
         //webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
         // webSetting.setPreFectch(true);
@@ -370,8 +423,8 @@ public class X5WebView extends WebView {
     protected void tbs_onScrollChanged(int l, int t, int oldl, int oldt, View view) {
         super_onScrollChanged(l, t, oldl, oldt);
 
-        if (mOnScrollChangedCallback != null) {
-            mOnScrollChangedCallback.onScroll(l, t, l - oldl, t - oldt);
+        if (mOnWebViewListener != null) {
+            mOnWebViewListener.onScroll(l, t, l - oldl, t - oldt);
         }
     }
 
@@ -426,8 +479,8 @@ public class X5WebView extends WebView {
         mScrollY = scrollY;
 
         if (scrollY == 0) {
-            if (mOnScrollChangedCallback != null) {
-                mOnScrollChangedCallback.onOverScroll(deltaY);
+            if (mOnWebViewListener != null) {
+                mOnWebViewListener.onOverScroll(deltaY);
             }
         }
         return super_overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX,
@@ -466,18 +519,24 @@ public class X5WebView extends WebView {
         return touchEvent;
     }
 
-    public OnScrollChangedCallback getOnScrollChangedCallback() {
-        return mOnScrollChangedCallback;
+    public OnWebViewListener getOnWebViewListener() {
+        return mOnWebViewListener;
     }
 
-    public void setOnScrollChangedCallback(OnScrollChangedCallback onScrollChangedCallback) {
-        mOnScrollChangedCallback = onScrollChangedCallback;
+    public void setOnWebViewListener(OnWebViewListener onWebViewListener) {
+        mOnWebViewListener = onWebViewListener;
     }
 
-    public interface OnScrollChangedCallback {
+    public interface OnWebViewListener {
         void onScroll(int left, int top, int dx, int dy);
 
         void onOverScroll(int scrollY);
+
+        void onPageFinished(WebView webView, String url);
+
+        void onReceivedTitle(WebView webView, final String title);
+
+        void onProgressChanged(WebView webView, int progress);
     }
 
 }
