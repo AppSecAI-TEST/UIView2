@@ -11,6 +11,9 @@ import com.hn.d.valley.service.ContactService;
 
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 
 public class FriendsRecommendUIView extends UserInfoRecyclerUIView {
 

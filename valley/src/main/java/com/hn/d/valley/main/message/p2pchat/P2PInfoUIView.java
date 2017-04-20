@@ -15,7 +15,9 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.me.UserDetailUIView2;
@@ -121,11 +123,14 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,"1");
+                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,1);
 
                         } else {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,"0");
+                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,0);
                         }
+
+                        RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
+
                     }
                 });
             }

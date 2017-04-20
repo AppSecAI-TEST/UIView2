@@ -15,6 +15,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
@@ -47,7 +48,7 @@ import rx.functions.Action1;
  */
 public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implements Search.ISearchView {
 
-    @BindView(R.id.search_input_view)
+    @BindView(R.id.edit_text_view)
     ExEditText mSearchInputView;
     @BindView(R.id.search_tip_view)
     TextView mSearchTipView;
@@ -66,7 +67,8 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString(mActivity.getString(R.string.add_friend)).setShowBackImageView(true);
+//        return super.getTitleBar().setTitleString(mActivity.getString(R.string.add_friend)).setShowBackImageView(true);
+        return null;
     }
 
     @Override
@@ -80,6 +82,8 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
         bindPresenter(new SearchPresenter());
         mSearchUserAdapter = new SearchUserAdapter(mActivity);
         mRecyclerView.setAdapter(mSearchUserAdapter);
+
+        mViewHolder.v(R.id.title_bar_layout).setBackgroundColor(SkinHelper.getSkin().getThemeColor());
 
         RxTextView.textChanges(mSearchInputView)
                 .debounce(Constant.DEBOUNCE_TIME_700, TimeUnit.MILLISECONDS)

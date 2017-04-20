@@ -223,7 +223,7 @@
     <style name="AddressTextStyle" parent="DarkTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:drawableLeft">@drawable/address</item>
+        <item name="android:drawableLeft">@drawable/icon_location</item>
         <item name="android:drawablePadding">@dimen/base_ldpi</item>
     </style>
 

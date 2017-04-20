@@ -121,7 +121,9 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
             hnGenderView.setGender(dataBean.getBodyBean().getSex(), dataBean.getBodyBean().getGrade());
 
             if (dataBean.getIs_contact() == 1) {
+
             } else {
+
             }
 
             //认证

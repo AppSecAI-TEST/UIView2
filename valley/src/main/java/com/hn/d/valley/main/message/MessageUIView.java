@@ -15,6 +15,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
+import com.hn.d.valley.main.friend.FriendNewUIView2;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
@@ -93,7 +94,7 @@ public class MessageUIView extends BaseUIView {
             @Override
             public void call(RecentContact contact) {
                 //打开新朋友界面
-                mOtherILayout.startIView(new AddFriendUIView());
+                mOtherILayout.startIView(new FriendNewUIView2());
             }
         });
 
@@ -104,6 +105,13 @@ public class MessageUIView extends BaseUIView {
                 mOtherILayout.startIView(new NewNotifyUIView(contact.getContactId(), contact.getSessionType()));
             }
         });
+
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        SessionSettingDelegate.getInstance().fetchTopList();
 
     }
 

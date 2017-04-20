@@ -46,6 +46,11 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFile> {
     }
 
     @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
+
+    @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleString("聊天文件");
     }

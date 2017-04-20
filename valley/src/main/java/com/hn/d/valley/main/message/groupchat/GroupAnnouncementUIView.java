@@ -46,13 +46,9 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
     protected TitleBarPattern getTitleBar() {
 
         ArrayList<TitleBarPattern.TitleBarItem> titleBarItems = new ArrayList<>();
-        titleBarItems.add(TitleBarPattern.TitleBarItem.build().setText("添加").setListener(new View.OnClickListener() {
+        titleBarItems.add(TitleBarPattern.TitleBarItem.build().setText("添加").setVisibility(View.GONE).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isAdmin) {
-                    T_.show("你不是群主。。");
-                    return;
-                }
                 startIView(InputUIView.build(inputConfigCallback));
             }
         }));
@@ -62,8 +58,22 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
     }
 
     @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
+
+    @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
+        loadData();
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        if (isAdmin) {
+            getUITitleBarContainer().showRightItem(0);
+        }
     }
 
     @Override
@@ -85,7 +95,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
 
-        RRetrofit.create(GroupChatService.class)
+        add(RRetrofit.create(GroupChatService.class)
                 .announcementList(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
                 .compose(Rx.transformerList(GroupAnnouncementBean.class))
                 .subscribe(new BaseSingleSubscriber<List<GroupAnnouncementBean>>() {
@@ -103,7 +113,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
                             onUILoadDataFinish();
                         }
                     }
-                });
+                }));
     }
 
     @Override
@@ -123,13 +133,20 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, int posInData, GroupAnnouncementBean dataBean) {
+        protected void onBindDataView(RBaseViewHolder holder, int posInData, final GroupAnnouncementBean dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
             TextView tv_time = holder.tv(R.id.tv_time_view);
             TextView tv_announce_desc = holder.tv(R.id.tv_announcement_desc);
 
             tv_announce_desc.setText(dataBean.getContent());
-            tv_time.setText(TimeUtil.getTimeShowString(Long.parseLong(dataBean.getCreated()), false));
+            tv_time.setText(TimeUtil.getTimeShowString(Long.parseLong(dataBean.getCreated()) * 1000, false));
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new EditGroupAnnounceUIView(gid,dataBean.getAn_id(),isAdmin));
+                }
+            });
         }
     }
 
@@ -152,7 +169,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
                                         value = mExEditText.string();
                                     }
 
-                                    RRetrofit.create(GroupChatService.class)
+                                   add(RRetrofit.create(GroupChatService.class)
                                             .setAnnouncement(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid,"content:" + value))
                                             .compose(Rx.transformer(String.class))
                                             .subscribe(new BaseSingleSubscriber<String>() {
@@ -167,7 +184,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
                                                     finishIView(mIView);
 
                                                 }
-                                            });
+                                            }));
                                 }
                             }));
         }

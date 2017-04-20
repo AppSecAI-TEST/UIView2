@@ -188,4 +188,14 @@ public interface UserInfoService {
      */
     @POST("user/inviteUploadPhotos")
     Observable<ResponseBody> inviteUploadPhotos(@QueryMap Map<String, String> map);
+
+
+    /**
+     * 获取登录token
+     * 10分钟过期/使用后过期
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     */
+    @POST("user/getToken")
+    Observable<ResponseBody> getToken(@QueryMap Map<String, String> map);
 }

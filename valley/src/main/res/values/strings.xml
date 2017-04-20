@@ -50,7 +50,7 @@
     <string name="team_need_authentication">需要身份验证</string>
     <string name="team_allow_anyone_join">允许任何人加入</string>
     <string name="team_not_allow_anyone_join">不允许任何人申请加入</string>
-    <string name="search_hint">手机号/ID</string>
+    <string name="search_hint">搜索用户ID/昵称</string>
     <string name="add_friend">添加好友</string>
     <string name="add_friend_format">我是%1$s</string>
     <string name="search_tip">搜索: </string>
@@ -388,4 +388,12 @@
     <string name="time_format">%1$d月%2$d日</string>
     <string name="full_time_format">%1$d年%2$d月%3$d日</string>
     <string name="read_list_title">浏览的人</string>
+    <string name="text_group_change_owner">群管理权转让</string>
+    <string name="text_disolve_group">解散该群</string>
+    <string name="text_quit_group">退出该群</string>
+    <string name="text_sure_empty">确定清空吗?</string>
+    <string name="cancel">text_cancel</string>
+    <string name="text_search_chat_record">查找聊天记录</string>
+    <string name="text_me_in_group_nickname">我在本群的昵称</string>
+    <string name="text_message_notity_no">消息免打扰</string>
 </resources>

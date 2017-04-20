@@ -20,6 +20,7 @@ import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -51,7 +52,7 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
 
     public static final String ITEMTYPES = "itemTypes";
 
-    @BindView(R.id.search_input_view)
+    @BindView(R.id.edit_text_view)
     ExEditText mSearchInputView;
     @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
@@ -85,7 +86,8 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("搜索").setShowBackImageView(true);
+//        return super.getTitleBar().setTitleString("搜索").setShowBackImageView(true);
+        return null;
     }
 
     @Override
@@ -108,6 +110,8 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
 
 //        refreshLayout.setRefreshDirection(RefreshLayout.TOP);
 //        refreshLayout.setNotifyListener(false);
+
+        mViewHolder.v(R.id.title_bar_layout).setBackgroundColor(SkinHelper.getSkin().getThemeColor());
 
         mSearchUserAdapter = new GlobalSearchAdapter2(mActivity,mOtherILayout,option);
 //        mRecyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mSearchUserAdapter)));

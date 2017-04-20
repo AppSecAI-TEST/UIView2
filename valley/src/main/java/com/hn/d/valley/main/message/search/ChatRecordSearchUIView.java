@@ -42,7 +42,8 @@ public class ChatRecordSearchUIView extends GlobalSearchUIView2 {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("聊天信息");
+//        return super.getTitleBar().setTitleString("聊天信息");
+        return null;
     }
 
     public static void start(ILayout mLayout,Options options, String sessionId, SessionTypeEnum sessionType,int[] itemTypes) {

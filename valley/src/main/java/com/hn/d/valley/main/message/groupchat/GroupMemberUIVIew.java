@@ -56,7 +56,10 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_group_member));
     }
 
-
+    @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
 
     @Override
     protected RExBaseAdapter<String, GroupMemberBean, String> initRExBaseAdapter() {

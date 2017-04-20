@@ -6,7 +6,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
@@ -17,6 +19,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -60,6 +63,15 @@ public class MsgViewHolderText extends MsgViewHolderBase {
         if (TextUtils.isEmpty(msg)) {
             return;
         }
+
+//        Map<String, Object> extension = message.getRemoteExtension();
+//        if (extension != null) {
+//            String at_text = (String) extension.get("@");
+//            if(at_text.contains(UserCache.instance().getUserInfoBean().getUsername())) {
+//                T_.show(message.getPushContent());
+//            }
+//        }
+
         String regex = Regex.URL_PATTERN2;
         Pattern pattern = Pattern.compile(regex);
         if (pattern.matcher(msg.toLowerCase().trim()).matches()) {

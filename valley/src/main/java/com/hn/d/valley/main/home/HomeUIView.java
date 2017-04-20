@@ -248,7 +248,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
                 .setTitleString("")
-                .addRightItem(TitleBarPattern.buildImage(R.drawable.fabudongtai, new View.OnClickListener() {
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.icon_fabudongtai, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         HomeUIView.this.onClick();

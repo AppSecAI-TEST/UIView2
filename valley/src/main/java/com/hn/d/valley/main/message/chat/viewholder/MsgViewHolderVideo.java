@@ -18,6 +18,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
+import com.hn.d.valley.widget.MsgThumbImageView;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -45,7 +46,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
     protected ProgressBar progressBar;
     protected ImageView clickView;
 
-    SimpleDraweeView draweeView;
+    MsgThumbImageView draweeView;
 
     private float lastPercent;
 
@@ -69,7 +70,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
         progressBar = (ProgressBar) findViewById(R.id.msg_item_thumb_progress_bar); // 覆盖掉
         progressCover = findViewById(R.id.msg_item_thumb_progress_cover);
         progressLabel = (TextView) findViewById(R.id.msg_item_thumb_progress_text);
-        draweeView = (SimpleDraweeView) findViewById(R.id.msg_image_view);
+        draweeView = (MsgThumbImageView) findViewById(R.id.msg_image_view);
     }
 
     @Override
@@ -80,46 +81,21 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
         final String path = msgAttachment.getPath();
         final String thumbPath = msgAttachment.getThumbPath();
 
-        contentContainer.setBackgroundResource(0);
+//        contentContainer.setBackgroundResource(0);
 
         if (!TextUtils.isEmpty(thumbPath)) {
-            loadThumbnailImage(thumbPath);
+            loadThumbnailImage(thumbPath,true);
         } else if (!TextUtils.isEmpty(path)) {
-            loadThumbnailImage(thumbFromSourceFile(path));
+            loadThumbnailImage(thumbFromSourceFile(path),false);
         } else {
             Log.e("receive"," no image");
-            loadThumbnailImage(null);
+            loadThumbnailImage(null,false);
             if (message.getAttachStatus() == AttachStatusEnum.transferred
                     || message.getAttachStatus() == AttachStatusEnum.def) {
                 downloadAttachment(message);
                 Log.e("receive"," no image download");
             }
         }
-//        if (TextUtils.isEmpty(thumbPath) && TextUtils.isEmpty(path)) {
-//            downloadAttachment(message);
-//        } else {
-//            if (!TextUtils.isEmpty(thumbPath)) {
-//                setImageSize(draweeView, thumbPath);
-//            }
-//        }
-//
-//        String thumb = msgAttachment.getThumbPathForSave();
-//        String s = BitmapDecoder.extractThumbnail(msgAttachment.getPath(), thumb) ? thumb : thumb;
-//        setImageSize(draweeView, s);
-//        if (isReceivedMessage(message)) {
-//            clickView.setImageResource(R.drawable.bubble_box_left_selector2);
-//        } else {
-//            clickView.setImageResource(R.drawable.bubble_box_right_selector2);
-//        }
-//        Glide.with(context)
-//                .load(s)
-//                .placeholder(com.angcyo.uiview.R.drawable.default_image)
-//                .error(com.angcyo.uiview.R.drawable.default_image)
-//                .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                .centerCrop()
-//                .into(draweeView);
-
-//        String url = "/storage/emulated/0/com.hn.d.valley/nim/image/a74c10e3bbcf5b4313a56de822535814.png";
 
         clickView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,26 +115,19 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
     }
 
-    private void loadThumbnailImage(String thumbPath) {
+    private void loadThumbnailImage(String thumbPath,boolean isOriginal) {
         setImageSize(draweeView,thumbPath);
         L.i(thumbPath);
-        if (thumbPath != null) {
+        if (!TextUtils.isEmpty(thumbPath)) {
             if (isReceivedMessage()) {
-                RFresco.mask(context, draweeView, R.drawable.bubble_box_left, thumbPath, true);
+//                RFresco.mask(context, draweeView, R.drawable.bubble_box_left, thumbPath, true);
+                draweeView.loadAsPath(isOriginal,thumbPath,message.getUuid(), ImageUtil.getImageMaxEdge(),ImageUtil.getImageMaxEdge(),R.drawable.nim_message_item_round_bg);
+
             }else {
-                RFresco.mask(context,draweeView,R.drawable.bubble_box_right_n2,thumbPath,true);
+//                RFresco.mask(context,draweeView,R.drawable.bubble_box_right_n2,thumbPath,true);
+                draweeView.loadAsPath(isOriginal,thumbPath,message.getUuid(), ImageUtil.getImageMaxEdge(),ImageUtil.getImageMaxEdge(),R.drawable.nim_message_item_round_bg);
             }
-
-//            Glide.with(context)
-//                    .load(thumbPath)
-//                    .placeholder(com.angcyo.uiview.R.drawable.default_image)
-//                    .error(com.angcyo.uiview.R.drawable.default_image)
-//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-//                    .centerCrop()
-//                    .into(draweeView);
-
         } else {
-
 //            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, thumbPath, true);
         }
     }

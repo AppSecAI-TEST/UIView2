@@ -17,14 +17,18 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.skin.ISkin;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.SimpleCallback;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
@@ -287,11 +291,14 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,"1");
+                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,1);
 
                         } else {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,"0");
+                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,0);
                         }
+
+                        RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
+
                     }
                 });
 
@@ -303,7 +310,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 final SwitchCompat switchCompat = holder.v(R.id.switch_view);
-                itemInfoLayout.setItemText("消息免打扰");
+                itemInfoLayout.setItemText(mActivity.getString(R.string.text_message_notity_no));
                 boolean notice = NIMClient.getService(FriendService.class).isNeedMessageNotify(mSessionId);
                 switchCompat.setChecked(notice);
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -320,8 +327,8 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("我在本群的昵称");
-//                infoLayout.setItemDarkText("".equals(mGroupDescBean.getName()) ? mGroupDescBean.getDefaultName() : mGroupDescBean.getName());
+                infoLayout.setItemText(mActivity.getString(R.string.text_me_in_group_nickname));
+                infoLayout.setItemDarkText("".equals(mGroupDescBean.getNick()) ? mGroupDescBean.getDefaultName() : mGroupDescBean.getNick());
             }
         }));
 
@@ -329,7 +336,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("聊天文件");
+                infoLayout.setItemText(mActivity.getString(R.string.text_chat_file));
 
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -345,7 +352,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("查找聊天记录");
+                infoLayout.setItemText(mActivity.getString(R.string.text_search_chat_record));
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -364,9 +371,9 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onClick(View v) {
                         UIDialog.build()
-                                .setDialogContent("确定清空吗?")
-                                .setOkText("确定")
-                                .setCancelText("取消")
+                                .setDialogContent(mActivity.getString(R.string.text_sure_empty))
+                                .setOkText(mActivity.getString(R.string.ok))
+                                .setCancelText(mActivity.getString(R.string.cancel))
                                 .setOkListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -386,7 +393,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 @Override
                 public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                     ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                    infoLayout.setItemText("举报");
+                    infoLayout.setItemText(mActivity.getString(R.string.text_report));
 
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -410,8 +417,9 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
+                textView.setBackground(SkinHelper.getSkin().getThemeMaskBackgroundSelector());
                 if (isSelfAdmin) {
-                    textView.setText("解散该群");
+                    textView.setText(R.string.text_disolve_group);
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -419,7 +427,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         }
                     });
                 } else {
-                    textView.setText("退出该群");
+                    textView.setText(R.string.text_quit_group);
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -458,7 +466,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 @Override
                 public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                     ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                    infoLayout.setItemText("群管理权转让");
+                    infoLayout.setItemText(mActivity.getString(R.string.text_group_change_owner));
 
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -466,14 +474,15 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                             GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
                                     , null,mGroupDescBean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                         @Override
-                                        public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                                        public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, final RequestCallback requestCallback) {
+                                            requestCallback.onStart();
                                             TeamCreateHelper.changeOwner(uiBaseDataView, absContactItems
                                                     , mGroupDescBean.getGid(), requestCallback, new Action1<Boolean>() {
                                                         @Override
                                                         public void call(Boolean aBoolean) {
                                                             if (aBoolean) {
 //                                                                loadGroupInfo();
-                                                                GroupInfoUIVIew.this.finishIView();
+                                                                mILayout.finishIView(GroupInfoUIVIew.class);
                                                             }
                                                         }
                                                     });
@@ -578,6 +587,13 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         super.onNoNetwork();
                     }
                 }));
+    }
+
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+
+
     }
 
     @NonNull

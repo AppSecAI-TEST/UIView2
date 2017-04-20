@@ -68,6 +68,11 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
     }
 
     @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
+
+    @Override
     protected RExBaseAdapter<String, GroupBean, String> initRExBaseAdapter() {
 
         return new GroupListAdapter(mActivity);

@@ -45,7 +45,7 @@ import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnLoading;
-import com.hn.d.valley.x5.X5WebUIView;
+import com.hn.d.valley.x5.VipWebUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.AbortableFuture;
@@ -53,7 +53,6 @@ import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.orhanobut.hawk.Hawk;
-import com.tencent.smtt.sdk.WebView;
 
 import java.util.concurrent.TimeUnit;
 
@@ -374,19 +373,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //        startIView(new UserDetailUIView2(UserCache.getUserAccount()));
         //startIView(new X5WebUIView("http://wap.klgwl.com/user/rank"));
 
-        startIView(new X5WebUIView("http://wap.klgwl.com/user/rank")
-                .setWebCallback(new X5WebUIView.WebCallback() {
-                    boolean isLogin = false;
-
-                    @Override
-                    public void onPageFinished(WebView webView, String url) {
-                        if (!isLogin) {
-                            webView.loadUrl("javascript:app_login('" + UserCache.getUserAccount() + "', '123456', 'log')");
-                            webView.reload();
-                            isLogin = true;
-                        }
-                    }
-                }));
+        startIView(new VipWebUIView());
     }
 
     @Override

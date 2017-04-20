@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.hn.d.valley.main.message.session.AitHelper;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +33,13 @@ public class MoonUtil {
     public static void identifyFaceExpressionAndATags(Context context,
                                                       View textView, String value, int align) {
         SpannableString mSpannableString = makeSpannableStringTags(context, value, DEF_SCALE, align);
+        viewSetText(textView, mSpannableString);
+    }
+
+    public static void identifyRecentVHFaceExpressionAndTags(Context context, View textView,
+                                                             String value, int align, float scale) {
+        SpannableString mSpannableString = makeSpannableStringTags(context, value, scale, align, false);
+        AitHelper.replaceAitForeground(value, mSpannableString);
         viewSetText(textView, mSpannableString);
     }
 

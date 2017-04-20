@@ -55,7 +55,6 @@ public class P2PChatUIView extends ChatUIView2 {
             public void onClick(View v) {
 //                startIView(new P2PInfoUIView());
                 P2PInfoUIView.start(mOtherILayout, mSessionId, sessionType);
-                SessionSettingDelegate.getInstance().fetchTopList(mSessionId);
 
             }
         }));

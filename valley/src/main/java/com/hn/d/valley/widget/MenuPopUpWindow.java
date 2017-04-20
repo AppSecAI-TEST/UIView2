@@ -19,8 +19,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.main.found.sub.ScanUIView;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.NewFriend3UIView;
-import com.hn.d.valley.main.message.AddFriendUIView;
-import com.hn.d.valley.main.message.SearchUserUIView;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;

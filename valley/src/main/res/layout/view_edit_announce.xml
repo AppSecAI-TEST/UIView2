@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.hn.d.valley.widget.HnEmptyRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/item_contact_func"
+                />
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/tv_announcement_desc"
+                style="@style/DarkTextStyle"
+                android:layout_margin="@dimen/base_xhdpi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="@string/no_selector_report_tip" />
+
+
+        </LinearLayout>
+    </com.hn.d.valley.widget.HnEmptyRefreshLayout>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/command_item_view"
+        style="@style/MainColorButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_item_size"
+        android:visibility="gone"
+        android:text="编辑公告" />
+</RelativeLayout>

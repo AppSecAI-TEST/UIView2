@@ -58,6 +58,11 @@ public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUs
     }
 
     @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
+
+    @Override
     protected RBaseItemDecoration initItemDecoration() {
         return super.initItemDecoration()
                 .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))

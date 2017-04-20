@@ -8,22 +8,15 @@
     android:layout_gravity="center_vertical"
     tools:background="@android:color/darker_gray">
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.hn.d.valley.widget.MsgThumbImageView
         android:id="@+id/msg_image_view"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:actualImageScaleType="centerInside"
-        app:placeholderImage="@drawable/default_image"
-        app:placeholderImageScaleType="fitXY"
-        app:progressBarAutoRotateInterval="1000"
-        app:progressBarImage="@drawable/loading"
-        app:progressBarImageScaleType="centerInside"
-        app:roundAsCircle="false"
-        app:roundBottomLeft="true"
-        app:roundBottomRight="true"
-        app:roundTopLeft="true"
-        app:roundTopRight="true"
-        app:roundedCornerRadius="@dimen/base_xhdpi"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/empty"
+        android:gravity="center"
+        android:padding="0dip"
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/click_view"

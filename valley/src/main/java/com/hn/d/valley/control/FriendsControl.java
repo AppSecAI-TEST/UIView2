@@ -35,16 +35,13 @@ import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.FriendListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.SystemPushItem;
-import com.hn.d.valley.main.message.SearchUserUIView;
-import com.hn.d.valley.main.message.attachment.SystemPush;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.ContactService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -135,7 +132,9 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 items.add(new FuncItem<>("搜索", ItemTypes.SEARCH, new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
-                        getOtherLayout().startIView(new SearchUserUIView());
+//                        getOtherLayout().startIView(new SearchUserUIView());
+                        GlobalSearchUIView2.start(getOtherLayout(), GlobalSearchUIView2.Options.sOptions,new int[]{ItemTypes.FRIEND,ItemTypes.GROUP,ItemTypes.MSG,});
+
                     }
                 }));
 

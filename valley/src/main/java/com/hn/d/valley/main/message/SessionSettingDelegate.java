@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message;
 
 import android.support.v7.widget.SwitchCompat;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.NetworkUtil;
@@ -17,8 +18,10 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -33,9 +36,14 @@ import java.util.List;
  */
 public class SessionSettingDelegate {
 
-    List<String> toplist;
+    Set<String> remoteTopList;
 
-    private SessionSettingDelegate(){}
+    Set<String> localTopList;
+
+    private SessionSettingDelegate() {
+        remoteTopList = new HashSet<>();
+        localTopList = new HashSet<>();
+    }
 
     private static class Holder {
         private static SessionSettingDelegate sInstance = new SessionSettingDelegate();
@@ -45,31 +53,51 @@ public class SessionSettingDelegate {
         return Holder.sInstance;
     }
 
-    public boolean checkTop (String sessionId) {
-        if(toplist == null) {
-            toplist = new ArrayList<>();
+    public boolean checkTop(String sessionId) {
+        if (remoteTopList == null) {
+            remoteTopList = new HashSet<>();
+            fetchTopList();
         }
 
-        Iterator<String> it = toplist.iterator();
-        for(;it.hasNext();) {
-            String uid = it.next();
-            if (uid.equals(sessionId)) {
-                return true;
-            }
+        if (localTopList == null) {
+            localTopList = new HashSet<>();
         }
-        fetchTopList(sessionId);
+
+//        Iterator<String> it = remoteTopList.iterator();
+//        for (; it.hasNext(); ) {
+//            String uid = it.next();
+//            if (uid.equals(sessionId)) {
+//                return true;
+//            }
+//        }
+
+        L.i("checkTop fetchTopList", remoteTopList.toString());
+        L.i("checkTop localTopList", localTopList.toString());
+
+        if (remoteTopList.contains(sessionId)) {
+            return true;
+        }
+
+        if (localTopList.contains(sessionId)) {
+            return true;
+        }
+
         return false;
     }
 
-    public void fetchTopList(String sessionId) {
+    public void fetchTopList() {
+        L.i("call fetchTopList");
         RRetrofit.create(GroupChatService.class)
-                .topList(Param.buildMap("sessionId:" + sessionId))
+                .topList(Param.buildMap())
                 .compose(Rx.transformerList(String.class))
                 .subscribe(new BaseSingleSubscriber<List<String>>() {
                     @Override
                     public void onSucceed(List<String> bean) {
                         super.onSucceed(bean);
-                        toplist = bean;
+                        remoteTopList = new HashSet<>(bean);
+                        localTopList.addAll(remoteTopList);
+                        L.i("fetchTopList", remoteTopList.toString());
+                        L.i("localTopList", localTopList.toString());
                     }
 
                     @Override
@@ -79,16 +107,28 @@ public class SessionSettingDelegate {
                 });
     }
 
-    public void setTop(final String sessionId, SessionTypeEnum sessionType,String isTop) {
+    public void setTop(final String sessionId, SessionTypeEnum sessionType, int isTop) {
+        if (isTop == 1) {
+            localTopList.add(sessionId);
+        } else if (isTop == 0) {
+            localTopList.remove(sessionId);
+            if (remoteTopList.contains(sessionId)) {
+                remoteTopList.remove(sessionId);
+            }
+        }
+
+        L.i("settop fetchTopList", remoteTopList.toString());
+        L.i("settop localTopList", localTopList.toString());
+
         String type = sessionType == SessionTypeEnum.Team ? "2" : "1";
         RRetrofit.create(GroupChatService.class)
-                .setTop(Param.buildMap("to:" + sessionId,"is_top:" + isTop, "type:" + type))
+                .setTop(Param.buildMap("to:" + sessionId, "is_top:" + isTop, "type:" + type))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
-                        fetchTopList(sessionId);
+                        fetchTopList();
                     }
 
                     @Override
@@ -98,7 +138,7 @@ public class SessionSettingDelegate {
                 });
     }
 
-    public void setMessageNotify(String sessionId , final boolean checkState, final SwitchCompat switchCompat) {
+    public void setMessageNotify(String sessionId, final boolean checkState, final SwitchCompat switchCompat) {
         if (!NetworkUtil.isNetAvailable(ValleyApp.getApp())) {
             T_.show("无网络！");
             switchCompat.setSelected(!checkState);

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.EmptyView;
@@ -28,8 +29,8 @@ import com.tencent.smtt.sdk.WebView;
  */
 public class X5WebUIView extends BaseContentUIView {
 
-    String mTargetUrl;
-    X5WebView mWebView;
+    protected X5WebView mWebView;
+    protected String mTargetUrl;
     SimpleProgressBar mProgressBarView;
     EmptyView mEmptyView;
     WebCallback mWebCallback;
@@ -96,8 +97,12 @@ public class X5WebUIView extends BaseContentUIView {
 //            }
 //        });
 
-        mWebView.loadUrl(mTargetUrl);
+        initWebView();
 
+        onLoadUrl();
+    }
+
+    protected void initWebView() {
         mWebView.setOnWebViewListener(new X5WebView.OnWebViewListener() {
             @Override
             public void onScroll(int left, int top, int dx, int dy) {
@@ -112,9 +117,7 @@ public class X5WebUIView extends BaseContentUIView {
 
             @Override
             public void onPageFinished(WebView webView, String url) {
-                if (mWebCallback != null) {
-                    mWebCallback.onPageFinished(webView, url);
-                }
+                X5WebUIView.this.onPageFinished(webView, url);
             }
 
             @Override
@@ -124,12 +127,31 @@ public class X5WebUIView extends BaseContentUIView {
 
             @Override
             public void onProgressChanged(WebView webView, int progress) {
-                mProgressBarView.setProgress(progress);
-                if (progress >= 90) {
-                    mEmptyView.setVisibility(View.GONE);
-                }
+                X5WebUIView.this.onProgressChanged(webView, progress);
             }
         });
+    }
+
+    protected void onLoadUrl() {
+        mWebView.loadUrl(mTargetUrl);
+    }
+
+    protected void onPageFinished(WebView webView, String url) {
+        if (mWebCallback != null) {
+            mWebCallback.onPageFinished(webView, url);
+        }
+        L.e("call: onPageFinished([webView, url])-> ");
+    }
+
+    protected void onProgressChanged(WebView webView, int progress) {
+        mProgressBarView.setProgress(progress);
+        if (progress >= 90) {
+            mEmptyView.setVisibility(View.GONE);
+            L.e("call: onProgressChanged([webView, progress])-> " + progress);
+        }
+        if (mWebCallback != null) {
+            mWebCallback.onProgressChanged(webView, progress);
+        }
     }
 
     @Override
@@ -172,6 +194,9 @@ public class X5WebUIView extends BaseContentUIView {
     public static abstract class WebCallback {
         public void onPageFinished(WebView webView, String url) {
 
+        }
+
+        public void onProgressChanged(WebView webView, int progress) {
         }
     }
 

@@ -198,7 +198,9 @@ public class TeamCreateHelper {
                                 .changeOwner(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
                                 .compose(Rx.transformer(String.class));
                     }
-                }).subscribe(new BaseSingleSubscriber<String>(){
+                }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSingleSubscriber<String>(){
                     @Override
                     public void onSucceed(String bean) {
                         callback.onSuccess(bean);

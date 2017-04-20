@@ -29,6 +29,7 @@ import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
 import com.hn.d.valley.sub.other.SeeStateUserUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.hn.d.valley.x5.VipWebUIView;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
@@ -310,7 +311,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new X5WebUIView("http://www.baidu.com"));
+                        mOtherILayout.startIView(new VipWebUIView());
                     }
                 });
             }

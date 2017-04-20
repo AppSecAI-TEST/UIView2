@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -29,9 +30,11 @@ import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.cache.TeamDataCache;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
+import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.nim.CustomBean;
@@ -53,7 +56,11 @@ import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -90,10 +97,15 @@ public class RecentContactsControl {
     Action1<RecentContact> itemCommentAction;
     Action0 searchAction;
 
+    // data
+    private List<RecentContact> items;
+
+    // 暂存消息，当RecentContact 监听回来时使用，结束后清掉
+    private Map<String, Set<IMMessage>> cacheMessages = new HashMap<>();
     /**
      * 监听消息的状态改变
      */
-    Observer<IMMessage> mMessageObserver = new Observer<IMMessage>() {
+    Observer<IMMessage> statusObserver = new Observer<IMMessage>() {
         @Override
         public void onEvent(IMMessage imMessage) {
             //消息状态发生了改变
@@ -167,8 +179,75 @@ public class RecentContactsControl {
         this.searchAction = searchAction;
         mRecentContactsAdapter = new RecentContactsAdapter(mContext, null);
 
-        NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(mMessageObserver, true);
+        initMessageList();
+        registerObservers(true);
+
     }
+
+    private void initMessageList() {
+        items = new ArrayList<>();
+
+    }
+
+    private void registerObservers(boolean register) {
+        MsgServiceObserve service = NIMClient.getService(MsgServiceObserve.class);
+        service.observeMsgStatus(statusObserver, register);
+        service.observeRecentContact(messageObserver, register);
+        service.observeReceiveMessage(messageReceiverObserver, register);
+
+
+    }
+
+    Observer<List<RecentContact>> messageObserver = new Observer<List<RecentContact>>() {
+        @Override
+        public void onEvent(List<RecentContact> recentContacts) {
+            onRecentContactChanged(recentContacts);
+        }
+    };
+
+    //监听在线消息中是否有@我
+    private Observer<List<IMMessage>> messageReceiverObserver = new Observer<List<IMMessage>>() {
+        @Override
+        public void onEvent(List<IMMessage> imMessages) {
+            if (imMessages != null) {
+                for (IMMessage imMessage : imMessages) {
+                    if (!AitHelper.isAitMessage(imMessage)) {
+                        continue;
+                    }
+                    Set<IMMessage> cacheMessageSet = cacheMessages.get(imMessage.getSessionId());
+                    if (cacheMessageSet == null) {
+                        cacheMessageSet = new HashSet<>();
+                        cacheMessages.put(imMessage.getSessionId(), cacheMessageSet);
+                    }
+                    cacheMessageSet.add(imMessage);
+                }
+            }
+        }
+    };
+
+    private void onRecentContactChanged(List<RecentContact> recentContacts) {
+        int index;
+        for (RecentContact r : recentContacts) {
+            index = -1;
+            for (int i = 0; i < items.size(); i++) {
+                if (r.getContactId().equals(items.get(i).getContactId())
+                        && r.getSessionType() == (items.get(i).getSessionType())) {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (index >= 0) {
+                items.remove(index);
+            }
+
+            items.add(r);
+            if (r.getSessionType() == SessionTypeEnum.Team && cacheMessages.get(r.getContactId()) != null) {
+                AitHelper.setRecentContactAited(r, cacheMessages.get(r.getContactId()));
+            }
+        }
+    }
+
 
     public static RecentContactsInfo getRecentContactsInfo(RecentContact bean) {
         return getRecentContactsInfo(bean.getContactId(), bean.getFromAccount(), bean.getSessionType(), bean.getContent());
@@ -251,7 +330,7 @@ public class RecentContactsControl {
     }
 
     public void unLoad() {
-        NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(mMessageObserver, false);
+        NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(statusObserver, false);
     }
 
 
@@ -352,8 +431,14 @@ public class RecentContactsControl {
                         } else {
                             if (tag == MENU_ADD_TOP) {
                                 RNim.addRecentContactTag(recentContact, IS_TOP);
+
+                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(),recentContact.getSessionType(),1);
+
                             } else if (tag == MENU_RM_TOP) {
                                 RNim.removeRecentContactTag(recentContact, IS_TOP);
+
+                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(),recentContact.getSessionType(),0);
+
                             }
 
                             mViewHolder.post(new Runnable() {
@@ -374,6 +459,23 @@ public class RecentContactsControl {
             Collections.sort(recentContact, new Comparator<RecentContact>() {
                 @Override
                 public int compare(RecentContact o1, RecentContact o2) {
+
+                    if (SessionSettingDelegate.getInstance().checkTop(o1.getContactId())) {
+                        RNim.addRecentContactTag(o1,IS_TOP);
+                    } else {
+                        if(RNim.isRecentContactTag(o1,IS_TOP)) {
+                            RNim.removeRecentContactTag(o1,IS_TOP);
+                        }
+                    }
+
+                    if (SessionSettingDelegate.getInstance().checkTop(o2.getContactId())) {
+                        RNim.addRecentContactTag(o2,IS_TOP);
+                    } else {
+                        if (RNim.isRecentContactTag(o2,IS_TOP)) {
+                            RNim.removeRecentContactTag(o2,IS_TOP);
+                        }
+                    }
+
                     if (RNim.isRecentContactTag(o2, IS_TOP)) {
                         return 1;
                     }
@@ -506,8 +608,43 @@ public class RecentContactsControl {
 
             updateUserInfo(holder, bean);
 
-            //最后一条消息内容
-            MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), getShowContent(bean));
+//            IMMessage imMessage = getMessageFromUuid(bean.getRecentMessageId());
+//            assert imMessage != null;
+//            Map<String, Object> remoteExtension = imMessage.getRemoteExtension();
+//            String ait = "";
+//            if ( remoteExtension!= null) {
+//                String ait_text = (String) remoteExtension.get("@");
+//
+//                if (ait_text.contains(UserCache.instance().getUserInfoBean().getUsername())) {
+//                    ait = imMessage.getPushContent();
+//                }
+//            }
+
+            String fromId = bean.getFromAccount();
+            if (SessionTypeEnum.Team == bean.getSessionType()
+                    &&!TextUtils.isEmpty(fromId)
+                    && !fromId.equals(UserCache.getUserAccount())
+                    && !(bean.getAttachment() instanceof NotificationAttachment)) {
+                String tid = bean.getContactId();
+                String teamNick = getTeamUserDisplayName(tid, fromId);
+
+                String content = teamNick + ": " + bean.getContent();
+
+                if (AitHelper.hasAitExtention(bean)) {
+                    if (bean.getUnreadCount() == 0) {
+                        AitHelper.clearRecentContactAited(bean);
+                    } else {
+                        content = AitHelper.getAitAlertString(content);
+                    }
+                }
+//                MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), content);
+                MoonUtil.identifyRecentVHFaceExpressionAndTags(mContext, holder.tv(R.id.msg_content_view)
+                        , content, ImageSpan.ALIGN_BOTTOM, 0.45f);
+
+            } else {
+                //最后一条消息内容
+                MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), getShowContent(bean));
+            }
 
             //消息发送状态
             updateMsgStatus(bean, holder);
@@ -528,7 +665,6 @@ public class RecentContactsControl {
                 holder.itemView.setBackgroundColor(Color.TRANSPARENT);
                 //itemLayout.setBackgroundResource(R.drawable.base_main_color_bg_selector);
             }
-
             itemLayout.setBackground(SkinHelper.getSkin().getThemeTranMaskBackgroundSelector());
 
             itemLayout.setOnClickListener(new View.OnClickListener() {
@@ -555,6 +691,10 @@ public class RecentContactsControl {
             });
         }
 
+        private String getTeamUserDisplayName(String tid, String account) {
+            return TeamDataCache.getInstance().getTeamMemberDisplayName(tid, account);
+        }
+
         private void showUnreadNum(RBaseViewHolder holder, RecentContact bean) {
             int unreadNum = bean.getUnreadCount() + UnreadMessageControl.getMessageUnreadCount(bean.getRecentMessageId());
             UnreadMsgUtils.showUnreadNum((MsgView) holder.v(R.id.msg_num_view), unreadNum);
@@ -565,9 +705,17 @@ public class RecentContactsControl {
          */
         private void updateUserInfo(RBaseViewHolder holder, RecentContact bean) {
             final RecentContactsInfo recentContactsInfo = getRecentContactsInfo(bean);
-
-            DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), recentContactsInfo.icoUrl);
+            SimpleDraweeView draweeView = holder.v(R.id.ico_view);
             holder.tv(R.id.recent_name_view).setText(recentContactsInfo.name);
+
+            if (isAddContact(bean)) {
+                draweeView.setImageResource(R.drawable.new_friend);
+                return;
+            } else if (isComment(bean)) {
+                draweeView.setImageResource(R.drawable.dynamic_notification);
+                return;
+            }
+            DraweeViewUtil.setDraweeViewHttp(draweeView, recentContactsInfo.icoUrl);
         }
 
         /**

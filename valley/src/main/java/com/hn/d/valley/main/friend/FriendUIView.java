@@ -6,27 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.base.UIBaseRxView;
-import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
-import com.hn.d.valley.main.message.AddFriendUIView;
-import com.hn.d.valley.main.message.SearchUserUIView;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
-import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
-import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
 import com.hn.d.valley.main.message.service.SessionHelper;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import rx.functions.Action1;
-import rx.functions.Action3;
 
 /**
  * Created by hewking on 2017/3/7.

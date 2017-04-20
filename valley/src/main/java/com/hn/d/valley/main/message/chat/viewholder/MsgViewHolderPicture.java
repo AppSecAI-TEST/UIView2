@@ -4,12 +4,14 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.angcyo.library.facebook.RFresco;
+import com.angcyo.uiview.utils.media.ImageUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.ChatControl2;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
+import com.hn.d.valley.widget.MsgThumbImageView;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
@@ -43,14 +45,14 @@ public class MsgViewHolderPicture extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
 
-        final SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.msg_image_view);
+        final MsgThumbImageView draweeView = (MsgThumbImageView) findViewById(R.id.msg_image_view);
         final View clickView = findViewById(R.id.click_view);
 
         final FileAttachment msgAttachment = (FileAttachment) message.getAttachment();
         final String path = msgAttachment.getPath();
         final String thumbPath = msgAttachment.getThumbPath();
 
-        contentContainer.setBackgroundResource(0);
+//        contentContainer.setBackgroundResource(0);
 
         String fileUri = "";
         boolean isFile;
@@ -75,10 +77,13 @@ public class MsgViewHolderPicture extends MsgViewHolderBase {
 
         if (isReceivedMessage(message)) {
             clickView.setBackgroundResource(R.drawable.bubble_box_left_selector2);
-            RFresco.mask(context, draweeView, R.drawable.bubble_box_left, fileUri, isFile);
+//            RFresco.mask(context, draweeView, R.drawable.bubble_box_left, fileUri, isFile);
+            draweeView.loadAsPath(isFile,fileUri,message.getUuid(), ImageUtil.getImageMaxEdge(),ImageUtil.getImageMaxEdge(),R.drawable.nim_message_item_round_bg);
         } else {
             clickView.setBackgroundResource(R.drawable.bubble_box_right_selector2);
-            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, fileUri, isFile);
+//            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, fileUri, isFile);
+            draweeView.loadAsPath(isFile,fileUri,message.getUuid(), ImageUtil.getImageMaxEdge(),ImageUtil.getImageMaxEdge(),R.drawable.nim_message_item_round_bg);
+
         }
 
         contentContainer.setOnClickListener(new View.OnClickListener() {

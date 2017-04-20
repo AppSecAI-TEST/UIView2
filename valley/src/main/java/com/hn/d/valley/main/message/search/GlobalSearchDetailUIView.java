@@ -95,6 +95,11 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
     }
 
     @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
+
+    @Override
     public void onSearchSuccess(List<AbsContactItem> items) {
         showContentLayout();
         mRExBaseAdapter.resetData(items);

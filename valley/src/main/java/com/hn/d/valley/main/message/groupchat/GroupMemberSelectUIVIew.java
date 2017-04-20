@@ -16,7 +16,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
-import com.hn.d.valley.main.message.SearchUserUIView;
+import com.hn.d.valley.main.friend.SearchUserUIView;
 import com.hn.d.valley.service.GroupChatService;
 
 import java.io.Serializable;

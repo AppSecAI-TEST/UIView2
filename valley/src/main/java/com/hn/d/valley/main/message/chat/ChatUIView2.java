@@ -247,9 +247,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     Hawk.put(Constant.KEYBOARD_HEIGHT, height);
                 }
 
-                    if (isKeyboardShow || !isEmojiShow) {
+                if (isKeyboardShow || !isEmojiShow) {
                     mMessageAddView.setChecked(false);
                     mMessageExpressionView.setChecked(false);
+                    mMessageExpressionView.setButtonDrawable(R.drawable.message_expression_selector);
                 }
 
                 if (isEmojiShow) {
@@ -333,22 +334,22 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             @Override
             public void onClick(View v) {
                 //个人名片
-                ContactSelectUIVIew.start(mOtherILayout,new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
-                        ,null,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                    @Override
-                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                ContactSelectUIVIew.start(mOtherILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                        , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                            @Override
+                            public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
 
-                        requestCallback.onSuccess("");
+                                requestCallback.onSuccess("");
 
-                        ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                        FriendBean friendBean = contactItem.getFriendBean();
-                        PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
-                        IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, friendBean.getIntroduce(), attachment);
-                        sendMessage(message);
+                                ContactItem contactItem = (ContactItem) absContactItems.get(0);
+                                FriendBean friendBean = contactItem.getFriendBean();
+                                PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
+                                IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, friendBean.getIntroduce(), attachment);
+                                sendMessage(message);
 
 
-                    }
-                });
+                            }
+                        });
             }
         }));
 
@@ -486,7 +487,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     private void initRefreshLayout() {
         mRefreshLayout.setBottomView(new PlaceholderView(mActivity));
         mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
-                @Override
+            @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
                 if (direction == RefreshLayout.TOP) {
 
@@ -527,7 +528,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                                 mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH);
 //                                mChatControl.mChatAdapter.getAllDatas().addAll(0, result);
 //                                mChatControl.mChatAdapter.notifyDataSetChanged();
-                                mChatControl.mChatAdapter.fetchMoreComplete(mRecyclerView,result);
+                                mChatControl.mChatAdapter.fetchMoreComplete(mRecyclerView, result);
                             }
                         }
                     }
@@ -653,12 +654,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     private void onAnchorContextMessageLoaded(List<IMMessage> result) {
 
-        if (result == null ) {
+        if (result == null) {
             return;
         }
 
         if (firstLoad && mAnchor != null) {
-            result.add(0,mAnchor);
+            result.add(0, mAnchor);
         }
 
         mChatControl.mChatAdapter.resetData(result);
@@ -730,6 +731,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     /**
      * 获取视频mediaPlayer
+     *
      * @param file 视频文件
      * @return mediaPlayer
      */
@@ -814,13 +816,13 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         mInputView.setText("");
     }
 
-    private void sendMessage(IMMessage message) {
+    protected void sendMessage(IMMessage message) {
         msgService().sendMessage(message, false);
         mChatControl.addData(message);
     }
 
     @NonNull
-    private IMMessage createTextMessage(String text) {
+    protected IMMessage createTextMessage(String text) {
         return MessageBuilder.createTextMessage(mSessionId, sessionType, text);
     }
 

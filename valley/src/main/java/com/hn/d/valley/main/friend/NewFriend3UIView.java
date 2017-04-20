@@ -1,30 +1,18 @@
 package com.hn.d.valley.main.friend;
 
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
-import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.sub.ScanUIView;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
-import com.hn.d.valley.main.message.AddressBookUI2View;
-import com.hn.d.valley.main.message.SearchUserUIView;
-import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.sub.other.UserInfoRecyclerUIView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

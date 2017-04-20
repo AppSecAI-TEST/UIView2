@@ -4,16 +4,12 @@ import android.support.annotation.DrawableRes;
 
 import com.angcyo.uiview.container.ILayout;
 import com.hn.d.valley.R;
-import com.hn.d.valley.main.message.AddFriendUIView;
-import com.hn.d.valley.main.message.AddressBookUI2View;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.MyGroupUIView;
-import com.hn.d.valley.sub.user.NewFriend2UIView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import rx.functions.Action1;
 
 /**
@@ -73,7 +69,7 @@ public class FuncItem<T> extends AbsContactItem {
     static FuncItem newfirend = new FuncItem<>("新的朋友",new Action1<ILayout>() {
         @Override
         public void call(ILayout layout) {
-            layout.startIView(new AddFriendUIView());
+            layout.startIView(new FriendNewUIView2());
         }
     },R.drawable.new_friend);
 

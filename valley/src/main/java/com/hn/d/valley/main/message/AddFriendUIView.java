@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -171,7 +172,8 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
 
             if (FUNC == getDataItemType(posInData)) {
                 TextView searchview = holder.tv(R.id.search_view);
-                searchview.setBackgroundResource(R.color.white);
+                RelativeLayout layout_search_view = holder.v(R.id.layout_search_view);
+                layout_search_view.setBackgroundResource(R.drawable.base_dark_round_selector_white);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

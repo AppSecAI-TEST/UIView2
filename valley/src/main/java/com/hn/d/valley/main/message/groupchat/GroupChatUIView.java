@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message.groupchat;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,22 +20,31 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupDescBean;
+import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
+import com.hn.d.valley.main.message.session.AitHelper;
 import com.hn.d.valley.service.GroupChatService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.MemberPushOption;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.team.model.Team;
+import com.netease.nimlib.sdk.team.model.TeamMember;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import rx.functions.Action3;
 
@@ -42,6 +52,9 @@ import rx.functions.Action3;
  * Created by hewking on 2017/3/10.
  */
 public class GroupChatUIView extends ChatUIView2 {
+
+    private Map<String, GroupMemberBean> selectedMembers;
+
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -136,7 +149,31 @@ public class GroupChatUIView extends ChatUIView2 {
 
     @Override
     public void onSendClick() {
-        super.onSendClick();
+        final String text = mInputView.getText().toString();
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        IMMessage imMessage = createTextMessage(text);
+
+//        imMessage.getRemoteExtension();
+
+//        if (text.contains("@")) {
+//            imMessage.setPushContent("有人@我");
+//            Map<String, Object> data = new HashMap<>();
+//            data.put("@", text);
+//            imMessage.setRemoteExtension(data);
+//        }
+
+
+        if (selectedMembers != null && !selectedMembers.isEmpty()) {
+            // 从消息中构造 option 字段
+            MemberPushOption option = createMemPushOption(selectedMembers, imMessage);
+            imMessage.setMemberPushOption(option);
+            selectedMembers = null;
+        }
+
+        sendMessage(imMessage);
+        mInputView.setText("");
     }
 
     private void initMentionListener(final GroupDescBean bean) {
@@ -149,12 +186,62 @@ public class GroupChatUIView extends ChatUIView2 {
                         callback.onSuccess("");
 
                         GroupMemberItem item = (GroupMemberItem) items.get(0);
+
+                        if (selectedMembers == null) {
+                            selectedMembers = new HashMap<>();
+                        }
+//                        selectedMembers.put(item.getMemberBean().getUserId(), item.getMemberBean());
+                        selectedMembers.put(item.getMemberBean().getDefaultNick(), item.getMemberBean());
                         mInputView.addMention(item.getMemberBean().getDefaultNick());
                     }
                 });
             }
         });
     }
+
+    private MemberPushOption createMemPushOption(Map<String, GroupMemberBean> selectedMembers, IMMessage message) {
+        if (message == null || selectedMembers == null) {
+            return null;
+        }
+
+        List<String> pushList = new ArrayList<>();
+
+        String text = message.getContent();
+
+        // remove invalid account
+        Iterator<String> keys = selectedMembers.keySet().iterator();
+        while (keys.hasNext()) {
+            String account = keys.next();
+            Pattern p = Pattern.compile("(@" + account + " )");
+            Matcher matcher = p.matcher(text);
+            if (matcher.find()) {
+                continue;
+            }
+            keys.remove();
+        }
+
+        // replace
+        keys = selectedMembers.keySet().iterator();
+        while (keys.hasNext()) {
+            String account = keys.next();
+            String aitName = AitHelper.getAitName(selectedMembers.get(account));
+            text = text.replaceAll("(@" + account + " )", "@" + aitName + " ");
+
+            pushList.add(account);
+        }
+        message.setContent(text);
+
+        if (pushList.isEmpty()) {
+            return null;
+        }
+
+        MemberPushOption memberPushOption = new MemberPushOption();
+        memberPushOption.setForcePush(true);
+        memberPushOption.setForcePushContent(message.getContent());
+        memberPushOption.setForcePushList(pushList);
+        return memberPushOption;
+    }
+
 
     @Subscribe
     public void onEvent(EmptyChatEvent event) {

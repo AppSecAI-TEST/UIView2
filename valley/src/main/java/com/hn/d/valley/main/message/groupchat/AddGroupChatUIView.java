@@ -33,7 +33,7 @@ import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
-import com.hn.d.valley.main.message.SearchUserUIView;
+import com.hn.d.valley.main.friend.SearchUserUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.utils.NetUtils;
 import com.hn.d.valley.widget.HnIcoRecyclerView;

@@ -15,15 +15,13 @@ import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
-import com.hn.d.valley.main.message.SearchUserUIView;
-import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.main.friend.SearchUserUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.RealmResults;
 import rx.functions.Action1;
 import rx.functions.Action3;
 
