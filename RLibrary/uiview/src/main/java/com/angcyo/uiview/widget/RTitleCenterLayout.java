@@ -65,7 +65,6 @@ public class RTitleCenterLayout extends RelativeLayout {
         int height = getMeasuredHeight();
 
         float offset = getResources().getDisplayMetrics().density * 4;
-
         int loadViewRight = -1;
         //有标题view的情况
         if (mTitleView != null && mTitleView.getVisibility() == VISIBLE) {
@@ -147,12 +146,5 @@ public class RTitleCenterLayout extends RelativeLayout {
      */
     public void setTitleView(View titleView) {
         mTitleView = titleView;
-    }
-
-    private void layoutCenter(View view) {
-        int width = getMeasuredWidth();
-        int height = getMeasuredHeight();
-        view.layout((width - view.getMeasuredWidth()) / 2, (height - view.getMeasuredHeight()) / 2,
-                width / 2 + view.getMeasuredWidth() / 2, height / 2 + view.getMeasuredHeight() / 2);
     }
 }
