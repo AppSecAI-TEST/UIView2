@@ -10,7 +10,7 @@
         style="@style/DarkTextStyle"
         android:layout_marginStart="@dimen/base_hdpi"/>
 
-    <com.angcyo.uiview.widget.ExEditText
+    <com.hn.d.valley.widget.HnEditText
         android:id="@+id/edit_text_view"
         style="@style/VerityEditStyle"
         android:layout_alignParentStart="true"

@@ -43,6 +43,7 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         }
         if (posInData == 0) {
             infoLayout.setItemDarkText(UserCache.getUserAccount());
+            infoLayout.setRightDrawableRes(-1);
         } else if (posInData == 1) {
             final String phone = UserCache.instance().getUserInfoBean().getPhone();
             if (TextUtils.isEmpty(phone)) {
@@ -95,7 +96,11 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
             @Override
             public void getItemOffsets(Rect outRect, int position) {
-                outRect.top = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
+                if (position == 0) {
+                    outRect.top = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
+                } else {
+                    outRect.top = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
+                }
             }
         }));
     }

@@ -1,6 +1,7 @@
 package com.hn.d.valley.skin;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
@@ -215,5 +216,13 @@ public class SkinUtils {
                 );
                 break;
         }
+    }
+
+    public static void setEditText(View editText) {
+        ResUtil.setBgDrawable(editText, SkinHelper.getThemeRoundBorderSelector());
+    }
+
+    public static void setButton(View editText) {
+        ResUtil.setBgDrawable(editText, SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
     }
 }

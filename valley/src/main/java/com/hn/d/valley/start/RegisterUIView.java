@@ -21,6 +21,7 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.service.OtherService;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
 import com.hn.d.valley.start.mvp.Start;
 
@@ -75,6 +76,8 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
         }
 
         ResUtil.setBgDrawable(mViewHolder.v(R.id.next_view), LoginUIView.createLoginDrawable(mActivity));
+        SkinUtils.setEditText(mViewHolder.eV(R.id.phone_view));
+        SkinUtils.setEditText(mViewHolder.eV(R.id.code_view));
         mViewHolder.tv(R.id.verify_view).setTextColor(SkinHelper.getSkin().getThemeColor());
     }
 

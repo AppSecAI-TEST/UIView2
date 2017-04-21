@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/base_xhdpi">
 
-    <TextView
+    <com.hn.d.valley.widget.HnButton
         android:id="@+id/text_view"
         style="@style/WhiteColorTextStyle"
         android:layout_width="match_parent"

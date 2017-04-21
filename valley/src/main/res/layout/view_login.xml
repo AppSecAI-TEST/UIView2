@@ -53,7 +53,7 @@
                 android:imeOptions="actionDone"
                 android:textColorHint="@color/white"/>
 
-            <CheckBox
+            <com.hn.d.valley.widget.HnPasswordSeeBox
                 android:id="@+id/show_password_checkbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

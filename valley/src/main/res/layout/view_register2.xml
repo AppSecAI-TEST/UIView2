@@ -1,124 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.hn.d.valley.widget.HnEmptyRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="@dimen/base_xxhdpi">
+    android:layout_height="match_parent">
 
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/ico_view"
-        style="@style/UserBigIcoStyle"
-        android:layout_marginTop="@dimen/base_xxxhdpi"
-        app:placeholderImage="@drawable/add_picture"
-        app:placeholderImageScaleType="fitXY"/>
-
-    <com.hn.d.valley.widget.HnSkinTextView
-        style="@style/MainColorTextStyle"
-        android:layout_marginTop="@dimen/base_xhdpi"
-        android:text="@string/register_add_ico"/>
-
-    <!--昵称-->
-    <RelativeLayout
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xxhdpi">
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/base_xxhdpi">
 
-        <TextView
-            style="@style/DarkTextStyle"
-            android:layout_marginLeft="@dimen/base_hdpi"
-            android:text="@string/register_name_tip"/>
 
-        <com.angcyo.uiview.widget.ExEditText
-            android:id="@+id/name_view"
-            style="@style/EditStyle"
-            android:background="@drawable/base_main_color_border_selector"
-            android:hint="@string/register_name_hint"
-            android:imeOptions="actionNext"
-            android:maxLength="@integer/name_count"
-            android:paddingLeft="@dimen/base_60dpi"
-            android:textColor="@color/main_text_color"/>
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/ico_view"
+            style="@style/UserBigIcoStyle"
+            android:layout_marginTop="@dimen/base_xxxhdpi"
+            app:placeholderImage="@drawable/add_picture"
+            app:placeholderImageScaleType="fitXY"/>
 
-    </RelativeLayout>
+        <com.hn.d.valley.widget.HnSkinTextView
+            style="@style/MainColorTextStyle"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:text="@string/register_add_ico"/>
 
-    <!--性别-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xhdpi">
-
-        <TextView
-            style="@style/DarkTextStyle"
-            android:layout_marginLeft="@dimen/base_hdpi"
-            android:text="性别:"/>
-
-        <com.angcyo.uiview.widget.RTextView
-            android:id="@+id/sex_view"
-            style="@style/EditStyle"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/base_main_color_border_selector"
-            android:drawablePadding="@dimen/base_40dpi"
-            android:editable="false"
-            android:gravity="center_vertical"
-            android:hint="请选择性别"
-            android:paddingLeft="@dimen/base_60dpi"
-            android:paddingRight="@dimen/base_40dpi"
-            android:textColor="@color/main_text_color"
-            android:textColorHint="@color/main_text_color_dark"/>
-
-        <ImageView
-            style="@style/SingleImageButtonStyle"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/base_hdpi"
-            android:background="@null"
-            android:clickable="false"
-            android:src="@drawable/an"/>
-
-    </RelativeLayout>
-
-    <!--密码-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xhdpi">
-
-        <TextView
-            style="@style/DarkTextStyle"
-            android:layout_marginLeft="@dimen/base_hdpi"
-            android:text="@string/register_password_tip"/>
-
-        <com.angcyo.uiview.widget.ExEditText
-            android:id="@+id/password_view"
-            style="@style/PasswordEditStyle"
-            android:background="@drawable/base_main_color_border_selector"
-            android:hint="@string/register_password_hint"
-            android:imeOptions="actionDone"
-            android:paddingEnd="@dimen/base_40dpi"
-            android:paddingStart="@dimen/base_60dpi"
-            android:textColor="@color/main_text_color"/>
-
-        <CheckBox
-            android:id="@+id/show_password_checkbox"
-            android:layout_width="wrap_content"
+        <!--昵称-->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/base_hdpi"
-            android:button="@drawable/password_zhuce_checkbox_selector"/>
+            android:layout_marginTop="@dimen/base_xxhdpi">
 
-    </RelativeLayout>
+            <TextView
+                style="@style/DarkTextStyle"
+                android:layout_marginLeft="@dimen/base_hdpi"
+                android:text="@string/register_name_tip"/>
 
-    <!--下一步-->
-    <TextView
-        android:id="@+id/finish_view"
-        style="@style/MainColorRoundButtonStyle"
-        android:layout_marginTop="@dimen/base_xxxhdpi"
-        android:text="@string/finish"/>
-</LinearLayout>
+            <com.angcyo.uiview.widget.ExEditText
+                android:id="@+id/name_view"
+                style="@style/EditStyle"
+                android:background="@drawable/base_main_color_border_selector"
+                android:hint="@string/register_name_hint"
+                android:imeOptions="actionNext"
+                android:maxLength="@integer/name_count"
+                android:paddingLeft="@dimen/base_60dpi"
+                android:textColor="@color/main_text_color"/>
+
+        </RelativeLayout>
+
+        <!--性别-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi">
+
+            <TextView
+                style="@style/DarkTextStyle"
+                android:layout_marginLeft="@dimen/base_hdpi"
+                android:text="性别:"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/sex_view"
+                style="@style/EditStyle"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/base_main_color_border_selector"
+                android:drawablePadding="@dimen/base_40dpi"
+                android:editable="false"
+                android:gravity="center_vertical"
+                android:hint="请选择性别"
+                android:paddingLeft="@dimen/base_60dpi"
+                android:paddingRight="@dimen/base_40dpi"
+                android:textColor="@color/main_text_color"
+                android:textColorHint="@color/main_text_color_dark"/>
+
+            <ImageView
+                style="@style/SingleImageButtonStyle"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/base_hdpi"
+                android:background="@drawable/base_bg2_selector"
+                android:clickable="false"
+                android:src="@drawable/an"/>
+
+        </RelativeLayout>
+
+        <!--密码-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi">
+
+            <TextView
+                style="@style/DarkTextStyle"
+                android:layout_marginLeft="@dimen/base_hdpi"
+                android:text="@string/register_password_tip"/>
+
+            <com.angcyo.uiview.widget.ExEditText
+                android:id="@+id/password_view"
+                style="@style/PasswordEditStyle"
+                android:background="@drawable/base_main_color_border_selector"
+                android:hint="@string/register_password_hint"
+                android:imeOptions="actionDone"
+                android:paddingEnd="@dimen/base_40dpi"
+                android:paddingStart="@dimen/base_60dpi"
+                android:textColor="@color/main_text_color"/>
+
+            <com.hn.d.valley.widget.HnPasswordSeeBox
+                android:id="@+id/show_password_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base_hdpi"
+                android:button="@drawable/password_zhuce_checkbox_selector"/>
+
+        </RelativeLayout>
+
+        <!--下一步-->
+        <TextView
+            android:id="@+id/finish_view"
+            style="@style/MainColorRoundButtonStyle"
+            android:layout_marginTop="@dimen/base_xxxhdpi"
+            android:text="@string/finish"/>
+    </LinearLayout>
+</com.hn.d.valley.widget.HnEmptyRefreshLayout>

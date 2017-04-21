@@ -1,103 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.hn.d.valley.widget.HnEmptyRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:clipChildren="false"
-    android:clipToPadding="false"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="@dimen/base_xxhdpi">
+    android:layout_height="match_parent">
 
-    <!--手机号码-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            style="@style/DarkTextStyle"
-            android:layout_marginLeft="@dimen/base_hdpi"
-            android:text="@string/phone_number"/>
-
-        <com.angcyo.uiview.widget.ExEditText
-            android:id="@+id/phone_view"
-            style="@style/PhoneEditStyle"
-            android:background="@drawable/base_main_color_border_selector"
-            android:hint="@string/input_phone_hint"
-            android:imeOptions="actionNext"
-            android:paddingLeft="@dimen/base_70dpi"
-            android:textColor="@color/main_text_color"/>
-
-    </RelativeLayout>
-
-    <!--验证码-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xhdpi">
-
-        <TextView
-            style="@style/DarkTextStyle"
-            android:layout_marginLeft="@dimen/base_hdpi"
-            android:text="@string/code_text_tip"/>
-
-        <com.angcyo.uiview.widget.ExEditText
-            android:id="@+id/code_view"
-            style="@style/VerityEditStyle"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/base_main_color_border_selector"
-            android:drawablePadding="@dimen/base_40dpi"
-            android:hint="@string/input_code_hint"
-            android:imeOptions="actionDone"
-            android:paddingLeft="@dimen/base_70dpi"
-            android:paddingRight="@dimen/base_100dpi"
-            android:textColor="@color/main_text_color"
-            android:textColorHint="@color/main_text_color_dark"/>
-
-        <com.hn.d.valley.widget.HnSkinLine
-            android:layout_width="@dimen/base_line"
-            android:layout_height="@dimen/base_xxhdpi"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/base_ldpi"
-            android:layout_toLeftOf="@+id/verify_view"/>
-
-        <com.angcyo.uiview.widget.VerifyButton
-            android:id="@+id/verify_view"
-            style="@style/MainColorTextButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/base_mdpi"
-            android:paddingBottom="@dimen/base_xhdpi"
-            android:paddingTop="@dimen/base_xhdpi"
-            android:text="@string/get_code_text"/>
-    </RelativeLayout>
-
-    <!--下一步-->
-    <TextView
-        android:id="@+id/next_view"
-        style="@style/MainColorRoundButtonStyle"
-        android:layout_marginTop="@dimen/base_xxxhdpi"
-        android:text="@string/next_text"/>
-
-    <!--注册协议-->
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xhdpi"
-        android:orientation="horizontal">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/base_xxhdpi">
 
+        <!--手机号码-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/DarkTextStyle"
+                android:layout_marginLeft="@dimen/base_hdpi"
+                android:text="@string/phone_number"/>
+
+            <com.angcyo.uiview.widget.ExEditText
+                android:id="@+id/phone_view"
+                style="@style/PhoneEditStyle"
+                android:background="@drawable/base_main_color_border_selector"
+                android:hint="@string/input_phone_hint"
+                android:imeOptions="actionNext"
+                android:paddingLeft="@dimen/base_70dpi"
+                android:textColor="@color/main_text_color"/>
+
+        </RelativeLayout>
+
+        <!--验证码-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi">
+
+            <TextView
+                style="@style/DarkTextStyle"
+                android:layout_marginLeft="@dimen/base_hdpi"
+                android:text="@string/code_text_tip"/>
+
+            <com.angcyo.uiview.widget.ExEditText
+                android:id="@+id/code_view"
+                style="@style/VerityEditStyle"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/base_main_color_border_selector"
+                android:drawablePadding="@dimen/base_40dpi"
+                android:hint="@string/input_code_hint"
+                android:imeOptions="actionDone"
+                android:paddingLeft="@dimen/base_70dpi"
+                android:paddingRight="@dimen/base_100dpi"
+                android:textColor="@color/main_text_color"
+                android:textColorHint="@color/main_text_color_dark"/>
+
+            <com.hn.d.valley.widget.HnSkinLine
+                android:layout_width="@dimen/base_line"
+                android:layout_height="@dimen/base_xxhdpi"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/base_ldpi"
+                android:layout_toLeftOf="@+id/verify_view"/>
+
+            <com.angcyo.uiview.widget.VerifyButton
+                android:id="@+id/verify_view"
+                style="@style/MainColorTextButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/base_mdpi"
+                android:paddingBottom="@dimen/base_xhdpi"
+                android:paddingTop="@dimen/base_xhdpi"
+                android:text="@string/get_code_text"/>
+        </RelativeLayout>
+
+        <!--下一步-->
         <TextView
+            android:id="@+id/next_view"
+            style="@style/MainColorRoundButtonStyle"
+            android:layout_marginTop="@dimen/base_xxxhdpi"
+            android:text="@string/next_text"/>
+
+        <!--注册协议-->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/register_warning"/>
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/protocol_view"
-            style="@style/SingleButtonStyle"
-            android:text="@string/register_protocol"
-            android:textColor="@color/orange"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_warning"/>
+
+            <TextView
+                android:id="@+id/protocol_view"
+                style="@style/SingleButtonStyle"
+                android:text="@string/register_protocol"
+                android:textColor="@color/orange"/>
+        </LinearLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</com.hn.d.valley.widget.HnEmptyRefreshLayout>

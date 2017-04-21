@@ -30,6 +30,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.EmptyAction;
 import com.hn.d.valley.bean.LoginUserInfo;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.widget.HnLoading;
@@ -109,6 +110,10 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                 });
 
         ResUtil.setBgDrawable(mFinishView, LoginUIView.createLoginDrawable(mActivity));
+        SkinUtils.setEditText(mNameView);
+        SkinUtils.setEditText(mNameView);
+        SkinUtils.setEditText(mPasswordView);
+        SkinUtils.setEditText(mSexView);
     }
 
     @Override
