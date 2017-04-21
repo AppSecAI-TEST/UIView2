@@ -178,6 +178,11 @@ public abstract class ItemRecyclerUIView<T> extends SingleRecyclerUIView<T> {
         mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH);
     }
 
+    @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
+
     protected abstract void createItems(List<T> items);
 
     public interface ItemConfig {
