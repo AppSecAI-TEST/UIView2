@@ -24,6 +24,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.SettingService;
+import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
@@ -45,8 +46,24 @@ public class UserDetailMoreUIView extends BaseItemUIView {
 
     private UserInfoBean mUserInfoBean;
 
+    /**
+     * 0	int	普通陌生人【没有拉黑情况】
+     * 1	int	双方拉黑
+     * 2	int	我拉对方黑
+     * 3	int	对方拉我黑
+     * 4	int	互为联系人【互相关注就为联系人】
+     * 5	int	我关注了对方
+     * 6	int	对方关注了我
+     */
+    private Integer relation = 0;//与用户之间的关系
+
     public UserDetailMoreUIView(UserInfoBean userInfoBean) {
         mUserInfoBean = userInfoBean;
+    }
+
+    public UserDetailMoreUIView(UserInfoBean userInfoBean, Integer relation) {
+        mUserInfoBean = userInfoBean;
+        this.relation = relation;
     }
 
     public static void initShareControlLayout(RBaseViewHolder holder, ILayout iLayout) {
@@ -83,15 +100,41 @@ public class UserDetailMoreUIView extends BaseItemUIView {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        if (viewType > 1 && viewType < 6) {
-            return R.layout.item_switch_view;
+        if (relation == 4) {
+            //互为联系人【互相关注就为联系人】
+            if (viewType > 1 && viewType < 6) {
+                return R.layout.item_switch_view;
+            }
+            if (isLast(viewType + 1)) {
+                return R.layout.item_share_button_view;
+            }
+            if (isLast(viewType)) {
+                return R.layout.item_button_view;
+            }
+        } else if (relation == 5 || relation == 6) {
+            //我关注了对方              //对方关注了我
+            if (viewType > 1 && viewType < 4) {
+                return R.layout.item_switch_view;
+            }
+            if (isLast(viewType + 1)) {
+                return R.layout.item_share_button_view;
+            }
+            if (isLast(viewType)) {
+                return R.layout.item_button_view;
+            }
+
+        } else {
+//             if (relation == 0) {
+            //普通陌生人【没有拉黑情况】
+            if (viewType > 1 && viewType < 3) {
+                return R.layout.item_switch_view;
+            }
+            if (viewType == 4) {
+                return R.layout.item_share_button_view;
+            }
+//             }
         }
-        if (viewType == 7) {
-            return R.layout.item_share_button_view;
-        }
-        if (viewType == 8) {
-            return R.layout.item_button_view;
-        }
+
         return super.getItemLayoutId(viewType);
     }
 
@@ -112,6 +155,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         });
             }
         });
+
         //把TA推荐给好友
         items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
             @Override
@@ -126,95 +170,29 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         });
             }
         });
-        //标为星标好友
-        items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                holder.item(R.id.item_info_layout)
-                        .setItemText(getString(R.string.set_star_tip))
-                        .setRightDrawableRes(-1)
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setStar();
-                            }
-                        });
-                holder.cV(R.id.switch_view).setChecked(isSetStar());
-                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setStar();
-                    }
-                });
-            }
-        });
-        //不让TA看我的动态
-        items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                holder.item(R.id.item_info_layout)
-                        .setItemText(getString(R.string.cant_see_my_status_tip))
-                        .setRightDrawableRes(-1)
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setLook_my_discuss();
-                            }
-                        });
-                holder.cV(R.id.switch_view).setChecked(mUserInfoBean.getLook_my_discuss() != 1);
-                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setLook_my_discuss();
-                    }
-                });
-            }
-        });
-        //不看TA的动态
-        items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                holder.item(R.id.item_info_layout)
-                        .setItemText(getString(R.string.not_see_status))
-                        .setRightDrawableRes(-1)
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                setLook_his_discuss();
-                            }
-                        });
-                holder.cV(R.id.switch_view).setChecked(mUserInfoBean.getLook_his_discuss() != 1);
-                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setLook_his_discuss();
-                    }
-                });
-            }
-        });
 
-        //加入黑名单
-        items.add(new SingleItem(SingleItem.Type.TOP) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                holder.item(R.id.item_info_layout)
-                        .setItemText(getString(R.string.add_blackList_tip))
-                        .setRightDrawableRes(-1)
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                addBlackList();
-                            }
-                        });
-                holder.cV(R.id.switch_view).setChecked(isInBlackList());
-                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        addBlackList();
-                    }
-                });
-            }
-        });
+        if (relation == 4) {
+            //互为联系人【互相关注就为联系人】
+            startItem(items, SingleItem.Type.TOP_LINE);
+            lookMyItem(items, SingleItem.Type.TOP_LINE);
+            lookHisItem(items, SingleItem.Type.TOP_LINE);
+
+            blackListItem(items, SingleItem.Type.TOP);
+        } else if (relation == 5) {
+            //我关注了对方
+            lookHisItem(items, SingleItem.Type.TOP);
+            blackListItem(items, SingleItem.Type.TOP);
+        } else if (relation == 6) {
+            //对方关注了我
+            lookMyItem(items, SingleItem.Type.TOP);
+            blackListItem(items, SingleItem.Type.TOP);
+        } else {
+//            if (relation == 0) {
+            //普通陌生人【没有拉黑情况】
+            blackListItem(items, SingleItem.Type.TOP);
+//            }
+        }
+
 
         //举报
         items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
@@ -240,36 +218,188 @@ public class UserDetailMoreUIView extends BaseItemUIView {
             }
         });
 
-        if (mUserInfoBean.getIs_contact() == 1) {
-            //解除好友
+        if (relation == 4 || relation == 5 || relation == 6) {
+
             items.add(new SingleItem() {
                 @Override
                 public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
                     TextView textView = holder.tv(R.id.text_view);
-                    textView.setText(getString(R.string.del_friend));
-                    ResUtil.setBgDrawable(textView, SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
-                    textView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            add(RRetrofit.create(ContactService.class)
-                                    .delFriend(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
-                                    .compose(Rx.transformer(String.class))
-                                    .subscribe(new BaseSingleSubscriber<String>() {
+                    String string = "";
+                    if (relation == 4) {
+                        //互为联系人【互相关注就为联系人】
+                        string = getString(R.string.del_friend);
 
-                                        @Override
-                                        public void onSucceed(String bean) {
-                                            mUserInfoBean.setIs_attention(0);
-                                            mUserInfoBean.setIs_contact(0);
-                                            T_.show(bean);
-                                            finishIView();
-                                        }
-                                    }));
-                        }
-                    });
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                add(RRetrofit.create(ContactService.class)
+                                        .delFriend(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                                            @Override
+                                            public void onSucceed(String bean) {
+                                                mUserInfoBean.setIs_attention(0);
+                                                mUserInfoBean.setIs_contact(0);
+                                                T_.show(bean);
+                                                finishIView();
+                                            }
+                                        }));
+                            }
+                        });
+                    } else if (relation == 5) {
+                        //我关注了对方
+                        string = getString(R.string.cancel_followers);
+
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                add(RRetrofit.create(UserInfoService.class)
+                                        .unAttention(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                                            @Override
+                                            public void onSucceed(String bean) {
+                                                mUserInfoBean.setIs_attention(0);
+                                                mUserInfoBean.setIs_contact(0);
+                                                T_.show(bean);
+                                                finishIView();
+                                            }
+                                        }));
+                            }
+                        });
+                    } else if (relation == 6) {
+                        //对方关注了我
+                        string = getString(R.string.del_fans);
+
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                add(RRetrofit.create(ContactService.class)
+                                        .delFans(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                                            @Override
+                                            public void onSucceed(String bean) {
+                                                mUserInfoBean.setIs_attention(0);
+                                                mUserInfoBean.setIs_contact(0);
+                                                T_.show(bean);
+                                                finishIView();
+                                            }
+                                        }));
+                            }
+                        });
+                    }
+                    textView.setText(string);
+
+                    ResUtil.setBgDrawable(textView, SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
                     //UserDetailUIView2.initCommandView(holder.tv(R.id.text_view), mUserInfoBean, mILayout, mSubscriptions);
                 }
             });
+
         }
+    }
+
+    private void lookHisItem(List<SingleItem> items, SingleItem.Type type) {
+        //不看TA的动态
+        items.add(new SingleItem(type) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
+                holder.item(R.id.item_info_layout)
+                        .setItemText(getString(R.string.not_see_status))
+                        .setRightDrawableRes(-1)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setLook_his_discuss();
+                            }
+                        });
+                holder.cV(R.id.switch_view).setChecked(mUserInfoBean.getLook_his_discuss() != 1);
+                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setLook_his_discuss();
+                    }
+                });
+            }
+        });
+    }
+
+    private void lookMyItem(List<SingleItem> items, SingleItem.Type type) {
+        //不让TA看我的动态
+        items.add(new SingleItem(type) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
+                holder.item(R.id.item_info_layout)
+                        .setItemText(getString(R.string.cant_see_my_status_tip))
+                        .setRightDrawableRes(-1)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setLook_my_discuss();
+                            }
+                        });
+                holder.cV(R.id.switch_view).setChecked(mUserInfoBean.getLook_my_discuss() != 1);
+                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setLook_my_discuss();
+                    }
+                });
+            }
+        });
+    }
+
+    private void startItem(List<SingleItem> items, SingleItem.Type type) {
+        //标为星标好友
+        items.add(new SingleItem(type) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
+                holder.item(R.id.item_info_layout)
+                        .setItemText(getString(R.string.set_star_tip))
+                        .setRightDrawableRes(-1)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                setStar();
+                            }
+                        });
+                holder.cV(R.id.switch_view).setChecked(isSetStar());
+                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setStar();
+                    }
+                });
+            }
+        });
+    }
+
+    private void blackListItem(List<SingleItem> items, SingleItem.Type type) {
+        //加入黑名单
+        items.add(new SingleItem(type) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
+                holder.item(R.id.item_info_layout)
+                        .setItemText(getString(R.string.add_blackList_tip))
+                        .setRightDrawableRes(-1)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                addBlackList();
+                            }
+                        });
+                holder.cV(R.id.switch_view).setChecked(isInBlackList());
+                holder.cV(R.id.switch_view).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addBlackList();
+                    }
+                });
+            }
+        });
     }
 
     boolean isInBlackList() {
@@ -295,7 +425,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         @Override
                         public void onEnd() {
                             super.onEnd();
-                            mExBaseAdapter.notifyItemChanged(5);
+                            mExBaseAdapter.notifyDataSetChanged();
                         }
                     }));
         } else {
@@ -313,7 +443,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         @Override
                         public void onEnd() {
                             super.onEnd();
-                            mExBaseAdapter.notifyItemChanged(5);
+                            mExBaseAdapter.notifyDataSetChanged();
                         }
                     }));
         }
@@ -340,7 +470,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                     @Override
                     public void onEnd() {
                         super.onEnd();
-                        mExBaseAdapter.notifyItemChanged(3);
+                        mExBaseAdapter.notifyDataSetChanged();
                     }
                 }));
     }
@@ -366,7 +496,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                     @Override
                     public void onEnd() {
                         super.onEnd();
-                        mExBaseAdapter.notifyItemChanged(4);
+                        mExBaseAdapter.notifyDataSetChanged();
                     }
                 }));
     }
@@ -389,7 +519,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         @Override
                         public void onEnd() {
                             super.onEnd();
-                            mExBaseAdapter.notifyItemChanged(2);
+                            mExBaseAdapter.notifyDataSetChanged();
                         }
                     }));
         } else {
@@ -406,7 +536,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         @Override
                         public void onEnd() {
                             super.onEnd();
-                            mExBaseAdapter.notifyItemChanged(2);
+                            mExBaseAdapter.notifyDataSetChanged();
                         }
                     }));
         }
@@ -444,7 +574,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                                             public void onSucceed(String bean) {
                                                 mUserInfoBean.setContact_remark(string);
                                                 T_.show(bean);
-                                                mExBaseAdapter.notifyItemChanged(0);
+                                                mExBaseAdapter.notifyDataSetChanged();
                                             }
                                         }));
                             }

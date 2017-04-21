@@ -51,8 +51,8 @@ public class TagsControl {
      * 推荐标签
      */
     public static Tag recommendTag;
-    private static List<Tag> sAllTags;
-    private static List<Tag> sMyTags;
+    private static List<Tag> sAllTags = new ArrayList<>();
+    private static List<Tag> sMyTags = new ArrayList<>();
 
     static {
         recommendTag = new Tag();

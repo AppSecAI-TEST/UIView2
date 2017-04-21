@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/default_base_white"
+    android:orientation="vertical"
+    android:padding="@dimen/base_xhdpi">
+
+    <com.angcyo.uiview.widget.RTextView
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:text="@string/invite_friends"/>
+
+    <include layout="@layout/layout_share_control"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/cancel_view"
+        style="@style/MainColorRoundButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:gravity="center"
+        android:text="@string/base_cancel"/>
+
+</LinearLayout>

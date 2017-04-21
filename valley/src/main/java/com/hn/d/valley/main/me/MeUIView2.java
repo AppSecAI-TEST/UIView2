@@ -21,6 +21,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
+import com.hn.d.valley.main.me.sub.InviteFriendsUIDialog;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
@@ -476,6 +477,13 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 
                 itemInfoLayout.setLeftDrawableRes(R.drawable.icon_invitation);
                 itemInfoLayout.setLeftDrawPadding(drawPadding);
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new InviteFriendsUIDialog());
+                    }
+                });
             }
         }));
 

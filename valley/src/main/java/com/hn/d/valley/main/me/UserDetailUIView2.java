@@ -89,6 +89,17 @@ public class UserDetailUIView2 extends BaseContentUIView {
     private AudioPlayHelper mAudioPlayHelper;
     private Action0 mOnFinishAction;
 
+    /**
+     * 0	int	普通陌生人【没有拉黑情况】
+     * 1	int	双方拉黑
+     * 2	int	我拉对方黑
+     * 3	int	对方拉我黑
+     * 4	int	互为联系人【互相关注就为联系人】
+     * 5	int	我关注了对方
+     * 6	int	对方关注了我
+     */
+    private Integer relation = 0;//与用户之间的关系
+
     public UserDetailUIView2(String to_uid) {
         this.to_uid = to_uid;
     }
@@ -101,7 +112,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
      * 命令按钮
      */
     public static void initCommandView(final TextView commandView, final UserInfoBean userInfoBean,
-                                       final ILayout iLayout, final CompositeSubscription subscription) {
+                                       final ILayout iLayout, final CompositeSubscription subscription,
+                                       final Action0 onRequestEnd) {
         final String to_uid = userInfoBean.getUid();
         final String uid = UserCache.getUserAccount();
         if (isMe(to_uid)) {
@@ -147,7 +159,10 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                     public void onSucceed(String bean) {
                                         T_.show(commandView.getResources().getString(R.string.attention_successed_tip));
                                         userInfoBean.setIs_attention(1);
-                                        initCommandView(commandView, userInfoBean, iLayout, subscription);
+                                        initCommandView(commandView, userInfoBean, iLayout, subscription, onRequestEnd);
+                                        if (onRequestEnd != null) {
+                                            onRequestEnd.call();
+                                        }
                                     }
                                 }));
                     }
@@ -334,6 +349,10 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 })
         );
 
+        updateRelationship();
+    }
+
+    protected void updateRelationship() {
         if (!isMe(to_uid)) {
             add(RRetrofit.create(ContactService.class)
                     .getRelationship(Param.buildMap("to_uid:" + to_uid))
@@ -342,11 +361,13 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         @Override
                         public void onSucceed(Integer bean) {
                             super.onSucceed(bean);
+                            relation = bean;
                             isFollower = bean == 6;
                         }
                     }));
         }
     }
+
 
     private void initViewPager() {
         mViewPager.setOffscreenPageLimit(2);
@@ -457,7 +478,12 @@ public class UserDetailUIView2 extends BaseContentUIView {
             });
         }
 
-        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions);
+        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+            @Override
+            public void call() {
+                updateRelationship();
+            }
+        });
         //语音介绍
         initVoiceView();
 
@@ -531,14 +557,18 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
     private void showMoreUIView() {
-        startIView(new UserDetailMoreUIView(mUserInfoBean));
+        startIView(new UserDetailMoreUIView(mUserInfoBean, relation));
     }
 
+
     @Override
-    public void onViewShow(Bundle bundle) {
-        super.onViewShow(bundle);
-        if (mUserInfoBean != null) {
-            initView(mUserInfoBean);
+    public void onViewShow(long viewShowCount) {
+        super.onViewShow(viewShowCount);
+        if (viewShowCount > 1) {
+            if (mUserInfoBean != null) {
+                initView(mUserInfoBean);
+            }
+            updateRelationship();
         }
     }
 
@@ -686,7 +716,13 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     @Override
                     public void onSucceed(String bean) {
                         mUserInfoBean.setIs_attention(0);
-                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions);
+                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+                            @Override
+                            public void call() {
+                                updateRelationship();
+                            }
+                        });
+                        updateRelationship();
                     }
                 }));
     }
@@ -703,6 +739,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     @Override
                     public void onSucceed(String bean) {
                         isFollower = false;
+                        updateRelationship();
                     }
                 }));
     }
@@ -720,6 +757,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         @Override
                         public void onSucceed(String bean) {
                             mUserInfoBean.setIs_star(0);
+                            updateRelationship();
                         }
                     }));
         } else {
@@ -731,6 +769,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         @Override
                         public void onSucceed(String bean) {
                             mUserInfoBean.setIs_star(1);
+                            updateRelationship();
                         }
                     }));
         }
@@ -755,7 +794,13 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         isFollower = false;
                         mUserInfoBean.setIs_attention(0);
                         mUserInfoBean.setIs_contact(0);
-                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions);
+                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+                            @Override
+                            public void call() {
+                                updateRelationship();
+                            }
+                        });
+                        updateRelationship();
                     }
                 }));
     }
@@ -778,6 +823,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         public void onSucceed(String bean) {
                             T_.show(bean);
                             mUserInfoBean.setIs_blacklist(0);
+                            updateRelationship();
                         }
                     }));
         } else {
@@ -790,6 +836,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         public void onSucceed(String bean) {
                             T_.show(bean);
                             mUserInfoBean.setIs_blacklist(1);
+                            updateRelationship();
                         }
                     }));
         }
