@@ -14,6 +14,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.UILayoutImpl;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
@@ -90,6 +91,7 @@ public class MainUIView extends BaseUIView {
 
     private int lastPosition = 0;
     private Subscription mSubscribe;
+    private boolean isFirst = true;//第一次显示页面, 不执行动画
 
     public MainUIView() {
     }
@@ -169,67 +171,7 @@ public class MainUIView extends BaseUIView {
         mBottomNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
-                boolean isRightToLeft = position < lastPosition;
-
-                if (position == Constant.POS_HOME) {
-                    //首页
-                    if (mHomeUIView == null) {
-                        mHomeUIView = new HomeUIView();
-                        mHomeUIView.bindOtherILayout(mILayout);
-                        mHomeUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.startIView(mHomeUIView);
-                    } else {
-                        mHomeUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.showIView(mHomeUIView);
-                    }
-                } else if (position == Constant.POS_FOUND) {
-                    //发现
-                    if (mFoundUIView == null) {
-                        mFoundUIView = new FoundUIView();
-                        mFoundUIView.bindOtherILayout(mILayout);
-                        mFoundUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.startIView(mFoundUIView);
-                    } else {
-                        mFoundUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.showIView(mFoundUIView);
-                    }
-                } else if (position == Constant.POS_CONNECT) {
-                    //联系人, 好友
-                    if (mFriend2UIView == null) {
-                        mFriend2UIView = new FriendUIView();
-                        mFriend2UIView.bindOtherILayout(mILayout);
-                        mFriend2UIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.startIView(mFriend2UIView);
-                    } else {
-                        mFriend2UIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.showIView(mFriend2UIView);
-                    }
-
-                } else if (position == Constant.POS_MESSAGE) {
-//                    HnChatActivity.launcher(mActivity, "50033");
-                    //消息
-                    if (mMessageUIView == null) {
-                        mMessageUIView = new MessageUIView();
-                        mMessageUIView.bindOtherILayout(mILayout);
-                        mMessageUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.startIView(mMessageUIView);
-                    } else {
-                        mMessageUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.showIView(mMessageUIView);
-                    }
-                } else if (position == Constant.POS_ME) {
-                    //我的
-                    if (mMeUIView == null) {
-                        mMeUIView = new MeUIView2();
-                        mMeUIView.bindOtherILayout(mILayout);
-                        mMeUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.startIView(mMeUIView);
-                    } else {
-                        mMeUIView.setIsRightJumpLeft(isRightToLeft);
-                        mMainUILayout.showIView(mMeUIView);
-                    }
-                }
-                lastPosition = position;
+                changePage(position);
             }
 
             @Override
@@ -264,6 +206,74 @@ public class MainUIView extends BaseUIView {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 页面切换
+     */
+    protected void changePage(int position) {
+        boolean isRightToLeft = position < lastPosition;
+
+        if (position == Constant.POS_HOME) {
+            //首页
+            if (mHomeUIView == null) {
+                mHomeUIView = new HomeUIView();
+                mHomeUIView.bindOtherILayout(mILayout);
+                mHomeUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.startIView(mHomeUIView);
+            } else {
+                mHomeUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.showIView(mHomeUIView);
+            }
+        } else if (position == Constant.POS_FOUND) {
+            //发现
+            if (mFoundUIView == null) {
+                mFoundUIView = new FoundUIView();
+                mFoundUIView.bindOtherILayout(mILayout);
+                mFoundUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.startIView(mFoundUIView);
+            } else {
+                mFoundUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.showIView(mFoundUIView);
+            }
+        } else if (position == Constant.POS_CONNECT) {
+            //联系人, 好友
+            if (mFriend2UIView == null) {
+                mFriend2UIView = new FriendUIView();
+                mFriend2UIView.bindOtherILayout(mILayout);
+                mFriend2UIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.startIView(mFriend2UIView);
+            } else {
+                mFriend2UIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.showIView(mFriend2UIView);
+            }
+
+        } else if (position == Constant.POS_MESSAGE) {
+//                    HnChatActivity.launcher(mActivity, "50033");
+            //消息
+            if (mMessageUIView == null) {
+                mMessageUIView = new MessageUIView();
+                mMessageUIView.bindOtherILayout(mILayout);
+                mMessageUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.startIView(mMessageUIView, new UIParam(!isFirst));
+            } else {
+                mMessageUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.showIView(mMessageUIView);
+            }
+        } else if (position == Constant.POS_ME) {
+            //我的
+            if (mMeUIView == null) {
+                mMeUIView = new MeUIView2();
+                mMeUIView.bindOtherILayout(mILayout);
+                mMeUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.startIView(mMeUIView);
+            } else {
+                mMeUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.showIView(mMeUIView);
+            }
+        }
+        lastPosition = position;
+        isFirst = false;
     }
 
     @Override

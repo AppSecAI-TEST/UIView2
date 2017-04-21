@@ -60,7 +60,7 @@ public class GroupChatUIView extends ChatUIView2 {
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
 
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.add_friends_s).setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_chat_messages_icon).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Team team = TeamDataCache.getInstance().getTeamById(mSessionId);

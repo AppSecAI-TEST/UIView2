@@ -1,23 +1,16 @@
 package com.hn.d.valley.sub.other;
 
-import android.text.TextUtils;
-import android.view.View;
-
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.LikeUserModel;
-import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.SocialService;
-import com.hn.d.valley.widget.HnGenderView;
 
 import java.util.Locale;
-
-import static android.view.View.VISIBLE;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -30,7 +23,7 @@ import static android.view.View.VISIBLE;
  * 修改备注：
  * Version: 1.0.0
  */
-public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
+public class LikeUserRecyclerUIView extends UserInfoRecyclerUIView {
 
     private String discuss_id;
 
@@ -41,46 +34,6 @@ public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBea
     @Override
     protected String getTitleString() {
         return mActivity.getString(R.string.like_title);
-    }
-
-    @Override
-    protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
-        return new RExBaseAdapter<String, LikeUserInfoBean, String>(mActivity) {
-            @Override
-            protected int getItemLayoutId(int viewType) {
-                return R.layout.layout_user_info;
-            }
-
-            @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
-                super.onBindDataView(holder, posInData, dataBean);
-                holder.fillView(dataBean, true);
-                holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
-                holder.v(R.id.right_layout).setVisibility(View.GONE);
-                holder.v(R.id.bottom_line_view).setVisibility(View.GONE);
-                holder.v(R.id.avatar).setVisibility(VISIBLE);
-                HnGenderView genderView = holder.v(R.id.grade);
-                genderView.setGender(dataBean.getSex(), dataBean.getGrade());
-
-                holder.v(R.id.auth).setVisibility("1".equalsIgnoreCase(dataBean.getIs_auth()) ? View.VISIBLE : View.GONE);
-                holder.tv(R.id.introduce).setVisibility(TextUtils.isEmpty(dataBean.getSignature()) ? View.GONE : VISIBLE);
-                holder.tv(R.id.auth_desc).setVisibility(TextUtils.isEmpty(dataBean.getCompany()) ? View.GONE : VISIBLE);
-                holder.tv(R.id.introduce).setText(dataBean.getSignature());
-                holder.tv(R.id.auth_desc).setText(dataBean.getCompany());
-
-                holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startIView(new UserDetailUIView2(dataBean.getUid()));
-                    }
-                });
-            }
-        };
     }
 
     @Override
@@ -96,20 +49,55 @@ public class LikeUserRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBea
     }
 
     @Override
+    protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
+        super.initRExBaseAdapter();
+        return mUserInfoAdapter.setShowFollowView(false);
+    }
+
+    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(SocialService.class)
                 .likeList(Param.buildMap("type:discuss", "item_id:" + discuss_id, "page:" + page))
                 .compose(Rx.transformer(LikeUserModel.class))
-                .subscribe(new SingleRSubscriber<LikeUserModel>(this) {
+                .subscribe(new BaseSingleSubscriber<LikeUserModel>() {
+
                     @Override
-                    protected void onResult(LikeUserModel bean) {
+                    public void onStart() {
+                        super.onStart();
+                        showLoadView();
+                    }
+
+                    @Override
+                    public void onSucceed(LikeUserModel bean) {
+                        super.onSucceed(bean);
                         if (bean == null || bean.getData_list() == null || bean.getData_list().isEmpty()) {
                             onUILoadDataEnd();
                         } else {
-                            onUILoadDataEnd(bean.getData_list(), bean.getData_count());
+                            onUILoadDataEnd(bean.getData_list());
                         }
                     }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        hideLoadView();
+                    }
+
                 }));
+
+//        add(RRetrofit.create(SocialService.class)
+//                .likeList(Param.buildMap("type:discuss", "item_id:" + discuss_id, "page:" + page))
+//                .compose(Rx.transformer(LikeUserModel.class))
+//                .subscribe(new SingleRSubscriber<LikeUserModel>(this) {
+//                    @Override
+//                    protected void onResult(LikeUserModel bean) {
+//                        if (bean == null || bean.getData_list() == null || bean.getData_list().isEmpty()) {
+//                            onUILoadDataEnd();
+//                        } else {
+//                            onUILoadDataEnd(bean.getData_list(), bean.getData_count());
+//                        }
+//                    }
+//                }));
     }
 }

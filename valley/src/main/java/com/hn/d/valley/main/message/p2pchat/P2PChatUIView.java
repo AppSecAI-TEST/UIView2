@@ -50,7 +50,7 @@ public class P2PChatUIView extends ChatUIView2 {
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
 
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.address_book_2).setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_friends).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                startIView(new P2PInfoUIView());

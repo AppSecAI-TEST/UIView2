@@ -84,6 +84,12 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
         mRecyclerView.setAdapter(mSearchUserAdapter);
 
         mViewHolder.v(R.id.title_bar_layout).setBackgroundColor(SkinHelper.getSkin().getThemeColor());
+        mViewHolder.v(R.id.cancel_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishIView();
+            }
+        });
 
         mSearchInputView.setHint(R.string.search_hint);
 

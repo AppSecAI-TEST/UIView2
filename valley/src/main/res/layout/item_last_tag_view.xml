@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/base_xhdpi"
+    android:paddingEnd="@dimen/base_xxxhdpi"
+    android:paddingStart="@dimen/base_xxxhdpi"
+    android:paddingTop="@dimen/base_xhdpi">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/text_view"
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_line_border_selector"
+        android:gravity="center"
+        android:padding="@dimen/base_ldpi"
+        tools:text="@string/edit_tag_tip"/>
+
+</RelativeLayout>

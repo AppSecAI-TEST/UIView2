@@ -1,6 +1,5 @@
 package com.hn.d.valley.sub.other;
 
-import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.R;
@@ -70,10 +69,11 @@ public class FollowersRecyclerUIView extends UserInfoRecyclerUIView {
     }
 
     @Override
-    protected void onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
+    protected boolean onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
         if (!value) {
             dataBean.setIs_contact(0);
         }
         dataBean.setIs_attention(value ? 1 : 0);
+        return true;
     }
 }

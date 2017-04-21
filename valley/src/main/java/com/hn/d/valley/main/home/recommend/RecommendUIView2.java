@@ -39,6 +39,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class RecommendUIView2 extends BaseContentUIView {
 
     @BindView(R.id.slid_tab_layout)
@@ -93,7 +94,6 @@ public class RecommendUIView2 extends BaseContentUIView {
                         }
                     });
                 } else {
-                    mAllTags.add(0, TagsControl.allTag);
                     mAllTags.addAll(tags);
                     showContentLayout();
                 }
@@ -114,7 +114,7 @@ public class RecommendUIView2 extends BaseContentUIView {
         mViewHolder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new TagsManageUIView2(mAllTags, new Action1<List<Tag>>() {
+                mOtherILayout.startIView(new TagsManageUIView2(new Action1<List<Tag>>() {
                     @Override
                     public void call(List<Tag> tags) {
                         //1:得到当前的item位置

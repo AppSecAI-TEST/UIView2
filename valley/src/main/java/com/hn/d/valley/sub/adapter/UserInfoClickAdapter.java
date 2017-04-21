@@ -67,8 +67,9 @@ public class UserInfoClickAdapter extends UserInfoAdapter {
 
                                     @Override
                                     public void onSucceed(String bean) {
-                                        //dataBean.setIs_attention(1);
-                                        onSetDataBean(dataBean, true);
+                                        if (!onSetDataBean(dataBean, true)) {
+                                            dataBean.setIs_attention(1);
+                                        }
                                         setSelectorPosition(posInData);
                                     }
 
@@ -102,8 +103,9 @@ public class UserInfoClickAdapter extends UserInfoAdapter {
 
                                                 @Override
                                                 public void onSucceed(String bean) {
-                                                    //dataBean.setIs_attention(0);
-                                                    onSetDataBean(dataBean, false);
+                                                    if (!onSetDataBean(dataBean, false)) {
+                                                        dataBean.setIs_attention(0);
+                                                    }
                                                     setSelectorPosition(posInData);
                                                 }
 

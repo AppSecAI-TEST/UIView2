@@ -38,6 +38,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.string.MD5;
 import com.angcyo.uiview.view.UIIViewImpl;
@@ -63,6 +64,7 @@ import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -100,13 +102,17 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
     protected static final String KEY_ANCHOR = "anchor";
-
+    @BindView(R.id.input_view)
+    protected ExEditText mInputView;
+    protected ChatControl2 mChatControl;
+    protected SessionTypeEnum sessionType;
+    protected AudioRecorder audioMessageHelper;
+    protected String mSessionId;
+    protected IMMessage mAnchor;
     @BindView(R.id.group_view)
     RadioGroup mGroupView;
     @BindView(R.id.chat_root_layout)
     RSoftInputLayout mChatRootLayout;
-    @BindView(R.id.input_view)
-    protected ExEditText mInputView;
     @BindView(R.id.record_view)
     TextView mRecordView;
     @BindView(R.id.refresh_layout)
@@ -135,29 +141,41 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     RelativeLayout mCommandControlLayout;
     @BindView(R.id.message_voice_box)
     CheckBox mMessageVoiceBox;
-
+    QueryDirectionEnum direction;
+    boolean firstLoad = true;
     private String mLastInputText = "";
     private boolean touched;
     private boolean started;
     private boolean cancelled;
-
     private EmojiLayoutControl mEmojiLayoutControl;
     private CommandLayoutControl mCommandLayoutControl;
-    protected ChatControl2 mChatControl;
-    protected SessionTypeEnum sessionType;
-
     private int mLastId = View.NO_ID;
-    protected AudioRecorder audioMessageHelper;
-    protected String mSessionId;
-    protected IMMessage mAnchor;
+    private RequestCallbackWrapper<List<IMMessage>> requestCallback = new RequestCallbackWrapper<List<IMMessage>>() {
+        @Override
+        public void onResult(int code, List<IMMessage> result, Throwable exception) {
+            if (code == ResponseCode.RES_SUCCESS) {
+                mChatControl.resetData(result);
+            }
 
-    QueryDirectionEnum direction;
+            if (code != ResponseCode.RES_SUCCESS || exception != null) {
+                if (direction == QueryDirectionEnum.QUERY_OLD) {
+                    mChatControl.mChatAdapter.fetchMoreFailed();
+                } else if (direction == QueryDirectionEnum.QUERY_NEW) {
+                    mChatControl.mChatAdapter.loadMoreFail();
+                }
 
-    boolean firstLoad = true;
+                return;
+            }
+
+            if (result != null) {
+                onMessageLoaded(result);
+            }
+        }
+    };
+
 
     public ChatUIView2() {
     }
-
 
     /**
      * @param sessionId   聊天对象账户
@@ -250,7 +268,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 if (isKeyboardShow || !isEmojiShow) {
                     mMessageAddView.setChecked(false);
                     mMessageExpressionView.setChecked(false);
-                    mMessageExpressionView.setButtonDrawable(R.drawable.message_expression_selector);
+                    SkinUtils.setExpressView(mMessageExpressionView);
                 }
 
                 if (isEmojiShow) {
@@ -271,6 +289,8 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         });
 
         initAudioRecordButton();
+
+        updateSkin();//更新皮肤资源
     }
 
     private List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
@@ -552,12 +572,13 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             mLastInputText = mInputView.getText().toString();
             mInputView.setText("");
             mChatRootLayout.requestBackPressed();
-            mMessageVoiceBox.setButtonDrawable(R.drawable.message_keyboard_n);
+            SkinUtils.setKeyboardView(mMessageVoiceBox);
+
         } else {
             mInputView.setText(mLastInputText);
             MoonUtil.show(mActivity, mInputView, mLastInputText);
             mInputView.setSelection(mLastInputText.length());
-            mMessageVoiceBox.setButtonDrawable(R.drawable.message_voice_selector);
+            SkinUtils.setVoiceView(mMessageVoiceBox);
         }
     }
 
@@ -677,29 +698,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 .setCallback(requestCallback);
     }
 
-    private RequestCallbackWrapper<List<IMMessage>> requestCallback = new RequestCallbackWrapper<List<IMMessage>>() {
-        @Override
-        public void onResult(int code, List<IMMessage> result, Throwable exception) {
-            if (code == ResponseCode.RES_SUCCESS) {
-                mChatControl.resetData(result);
-            }
-
-            if (code != ResponseCode.RES_SUCCESS || exception != null) {
-                if (direction == QueryDirectionEnum.QUERY_OLD) {
-                    mChatControl.mChatAdapter.fetchMoreFailed();
-                } else if (direction == QueryDirectionEnum.QUERY_NEW) {
-                    mChatControl.mChatAdapter.loadMoreFail();
-                }
-
-                return;
-            }
-
-            if (result != null) {
-                onMessageLoaded(result);
-            }
-        }
-    };
-
     private void onMessageLoaded(List<IMMessage> result) {
 
     }
@@ -759,10 +757,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
-                    mMessageExpressionView.setButtonDrawable(R.drawable.message_keyboard_n);
+                    SkinUtils.setKeyboardView(mMessageExpressionView);
                 } else if (mLastId == R.id.message_expression_view && mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.hideEmojiLayout();
-                    mMessageExpressionView.setButtonDrawable(R.drawable.message_expression_selector);
+                    SkinUtils.setExpressView(mMessageExpressionView);
                     return;
                 }
                 mLastId = R.id.message_expression_view;
@@ -961,4 +959,11 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         }
     }
 
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        SkinUtils.setExpressView(mMessageExpressionView);
+        SkinUtils.setAddView(mMessageAddView);
+        SkinUtils.setVoiceView(mMessageVoiceBox);
+    }
 }

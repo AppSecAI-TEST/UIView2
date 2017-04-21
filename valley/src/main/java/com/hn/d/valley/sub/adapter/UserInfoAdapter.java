@@ -25,6 +25,11 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
 
     protected ILayout mILayout;
 
+    /**
+     * 是否显示加关注按钮
+     */
+    private boolean showFollowView = true;
+
     public UserInfoAdapter(Context context, ILayout ILayout) {
         super(context);
         mILayout = ILayout;
@@ -49,8 +54,6 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
         //等级性别
         HnGenderView hnGenderView = holder.v(R.id.grade);
         hnGenderView.setGender(dataBean.getSex(), dataBean.getGrade());
-
-
     }
 
     public static void initSignatureItem(TextView signatureView, LikeUserInfoBean dataBean) {
@@ -90,6 +93,9 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
 
         //认证
         initSignatureItem(holder.tv(R.id.signature), dataBean);
+
+        HnFollowImageView followView = holder.v(R.id.follow_image_view);
+        followView.setVisibility(showFollowView ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -141,12 +147,17 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
     /**
      * @param value true 关注, false 未关注
      */
-    protected void onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {
+    protected boolean onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {
         //请根据界面设置对应关系值
         if (!value) {
             dataBean.setIs_contact(0);
         }
         dataBean.setIs_attention(value ? 1 : 0);
+        return true;
     }
 
+    public UserInfoAdapter setShowFollowView(boolean showFollowView) {
+        this.showFollowView = showFollowView;
+        return this;
+    }
 }

@@ -50,6 +50,7 @@ import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 import com.hn.d.valley.utils.RAmap;
 import com.hwangjr.rxbus.annotation.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -429,7 +430,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                         "page:" + (mapMode ? "" : page),
                         "sex:" + mSex,
                         "lng:" + getLongitude(),
-                        "lat:" + getLatitude()))
+                        "lat:" + getLatitude(),
+                        "distance:" + (mapMode ? "1000" : "")))
                 .compose(Rx.transformer(NearUserBean.class))
                 .subscribe(new RSubscriber<NearUserBean>() {
                     @Override
@@ -439,9 +441,14 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                             onUILoadDataEnd();
                         } else {
                             if (mapMode) {
-                                mAmapControl.addMarks(nearUserBean.getData_list());
+                                List<LikeUserInfoBean> datas = new ArrayList<>();
+                                for (int i = 0; i < 100; i++) {
+                                    datas.add(nearUserBean.getData_list().get(i));
+                                }
+
+                                mAmapControl.addMarks(datas);
                                 //mMapCardPagerAdapter.resetDatas(mRExBaseAdapter.getAllDatas());
-                                mMapCardAdapter.resetData(nearUserBean.getData_list());
+                                mMapCardAdapter.resetData(datas);
                             } else {
                                 onUILoadDataEnd(nearUserBean.getData_list(), nearUserBean.getData_count());
                                 onUILoadDataFinish(nearUserBean.getData_list().size());

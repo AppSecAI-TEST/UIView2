@@ -22,7 +22,6 @@ import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
-import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.sub.other.InputUIView;
@@ -241,16 +240,36 @@ public class UserDetailMoreUIView extends BaseItemUIView {
             }
         });
 
-        //解除好友
-        items.add(new SingleItem() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                holder.tv(R.id.text_view).setText(getString(R.string.del_friend));
-                ResUtil.setBgDrawable(holder.tv(R.id.text_view), SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
+        if (mUserInfoBean.getIs_contact() == 1) {
+            //解除好友
+            items.add(new SingleItem() {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
+                    TextView textView = holder.tv(R.id.text_view);
+                    textView.setText(getString(R.string.del_friend));
+                    ResUtil.setBgDrawable(textView, SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
+                    textView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            add(RRetrofit.create(ContactService.class)
+                                    .delFriend(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                    .compose(Rx.transformer(String.class))
+                                    .subscribe(new BaseSingleSubscriber<String>() {
 
-                UserDetailUIView2.initCommandView(holder.tv(R.id.text_view), mUserInfoBean, mILayout, mSubscriptions);
-            }
-        });
+                                        @Override
+                                        public void onSucceed(String bean) {
+                                            mUserInfoBean.setIs_attention(0);
+                                            mUserInfoBean.setIs_contact(0);
+                                            T_.show(bean);
+                                            finishIView();
+                                        }
+                                    }));
+                        }
+                    });
+                    //UserDetailUIView2.initCommandView(holder.tv(R.id.text_view), mUserInfoBean, mILayout, mSubscriptions);
+                }
+            });
+        }
     }
 
     boolean isInBlackList() {

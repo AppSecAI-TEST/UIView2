@@ -124,7 +124,7 @@ public class EditGroupAnnounceUIView extends BaseUIView {
     private InputUIView.InputConfigCallback inputConfigCallback = new InputUIView.InputConfigCallback() {
         @Override
         public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
-            return super.initTitleBar(titleBarPattern).setTitleString("编辑群公告")
+            return super.initTitleBar(titleBarPattern).setTitleString(mActivity.getString(R.string.text_edit_group_announce))
                     .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.finish),
                             new View.OnClickListener() {
                                 @Override
@@ -204,7 +204,7 @@ public class EditGroupAnnounceUIView extends BaseUIView {
 
                     @Override
                     public void onSucceed(String beans) {
-                        T_.show("删除成功");
+                        T_.show(mActivity.getString(R.string.text_delete_success));
                         finishIView();
                     }
                 }));

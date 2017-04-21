@@ -5,16 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
-import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
@@ -26,15 +25,23 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.PublishControl;
+import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
-import com.hn.d.valley.main.home.recommend.RecommendUIView2;
+import com.hn.d.valley.main.home.recommend.RecommendUIViewEx;
+import com.hn.d.valley.main.home.recommend.TagFilterUIDialog2;
 import com.hn.d.valley.main.home.recommend.TagLoadStatusCallback;
+import com.hn.d.valley.main.me.SkinManagerUIView;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.lzy.imagepicker.ImagePickerHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import rx.functions.Action0;
+import rx.functions.Action1;
 import rx.functions.Action3;
 
 /**
@@ -58,20 +65,21 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     UILayoutImpl mHomeLayout;
     SegmentTabLayout mHomeNavLayout;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
-    private RecommendUIView2 mRecommendUIView2;
+    private RecommendUIViewEx mRecommendUIView3;
     private Tag currentTag;
     private NearbyUIView mNearbyUIView;
     private CircleUIView mCircleUIView;
     private int lastPosition = -1;
     private EmptyView mEmptyView;
+    private boolean isFirst = true;
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.ui_layout);
-        mEmptyView = new EmptyView(mActivity);
-        int offset = getDimensionPixelOffset(R.dimen.base_xhdpi);
-        mEmptyView.setPadding(offset, offset, offset, offset);
-        baseContentLayout.addView(mEmptyView, new ViewGroup.LayoutParams(-1, -1));
+        //mEmptyView = new EmptyView(mActivity);
+        //int offset = getDimensionPixelOffset(R.dimen.base_xhdpi);
+        //mEmptyView.setPadding(offset, offset, offset, offset);
+        //baseContentLayout.addView(mEmptyView, new ViewGroup.LayoutParams(-1, -1));
     }
 
     @Override
@@ -89,20 +97,35 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         /**默认显示第二页*/
 //        mViewPager.setCurrentItem(1);
 //        mHomeNavLayout.setCurrentTab(1, false);
+
+        initTags();
+    }
+
+    private void initTags() {
+        TagsControl.getTags(new Action1<List<Tag>>() {
+            @Override
+            public void call(List<Tag> tags) {
+                if (!tags.isEmpty()) {
+                    List<Tag> mAllTags = new ArrayList<>();
+                    mAllTags.addAll(tags);
+                    TagsControl.initAllTags(mAllTags);
+                }
+            }
+        });
     }
 
 
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        if (mRecommendUIView2 == null) {
-            mRecommendUIView2 = new RecommendUIView2(this);
-            mRecommendUIView2.bindOtherILayout(mOtherILayout);
-            mHomeLayout.startIView(mRecommendUIView2, new UIParam(false));
-        } else {
-            mHomeLayout.showIView(mRecommendUIView2, false);
-        }
-        lastPosition = 1;
+//        if (mRecommendUIView3 == null) {
+//            mRecommendUIView3 = new RecommendUIViewEx(this);
+//            mRecommendUIView3.bindOtherILayout(mOtherILayout);
+//            mHomeLayout.startIView(mRecommendUIView3, new UIParam(false));
+//        } else {
+//            mHomeLayout.showIView(mRecommendUIView3, false);
+//        }
+//        lastPosition = 1;
     }
 
     private void initViewPager() {
@@ -112,10 +135,10 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 //            @Override
 //            protected IView getIView(int position) {
 //                if (position == 1) {
-//                    if (mRecommendUIView2 == null) {
-//                        mRecommendUIView2 = new RecommendUIView();
+//                    if (mRecommendUIView3 == null) {
+//                        mRecommendUIView3 = new RecommendUIView();
 //                    }
-//                    return mRecommendUIView2.bindOtherILayout(mOtherILayout);
+//                    return mRecommendUIView3.bindOtherILayout(mOtherILayout);
 //                }
 //                if (position == 2) {
 //                    if (mNearbyUIView == null) {
@@ -165,28 +188,114 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 ////                        @Override
 ////                        public void call(Tag tag) {
 ////                            currentTag = tag;
-////                            mRecommendUIView2.setFilterTag(tag);
-////                            mRecommendUIView2.loadData();
+////                            mRecommendUIView3.setFilterTag(tag);
+////                            mRecommendUIView3.loadData();
 ////                        }
-////                    }, currentTag == null ? TagsControl.allTag : currentTag).showDialog(mOtherILayout);
+////                    }, currentTag == null ? TagsControl.recommendTag : currentTag).showDialog(mOtherILayout);
 ////                }
 //            }
 //        });
 
-        mHomeNavLayout.setTabData(new String[]{getString(R.string.circle_title), getString(R.string.square_title)});
-        mHomeNavLayout.setCurrentTab(1);
-        mHomeNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
+        mHomeNavLayout.setOnTabSelectListener(new SegmentTabLayout.OnTabSelectListenerEx() {
+            @Override
+            public void onTabAdd(int position, View tabView) {
+                //updateTabStyle(position);
+            }
+
+            @Override
+            public void onUpdateTabStyles(int position, boolean isSelector, View tabView) {
+                updateTabStyle(position);
+            }
+
             @Override
             public void onTabSelect(int position) {
                 changeViewPager(position);
+                //updateTabStyle(position);
             }
 
             @Override
-            public void onTabReselect(int position) {
-
+            public void onTabReselect(int position, View tabView) {
+                if (position == 1) {
+                    mOtherILayout.startIView(new TagFilterUIDialog2(tabView,
+                            TagsControl.getMyTags(),
+                            new Action1<Tag>() {
+                                @Override
+                                public void call(Tag tag) {
+                                    //当标签选择之后
+                                    updateTagContent(tag);
+                                }
+                            },
+                            mRecommendUIView3.getFilterTag(),
+                            new Action1<List<Tag>>() {
+                                @Override
+                                public void call(List<Tag> tags) {
+                                    if (tags.contains(mRecommendUIView3.getFilterTag())) {
+                                        //包含当前的标签
+                                    } else {
+                                        //不包含当前的标签, 则使用推荐的标签
+                                        updateTagContent(TagsControl.recommendTag);
+                                    }
+                                }
+                            }
+                    ));
+                }
             }
+
         });
+        mHomeNavLayout.setTabData(new String[]{getString(R.string.circle_title), getString(R.string.tag_recommend)});
+        mHomeNavLayout.setCurrentTab(1, true);
+
         updateSkin();
+    }
+
+    private void updateTagContent(Tag tag) {
+        mRecommendUIView3.setFilterTag(tag, true);
+        updateTabStyle(1);
+    }
+
+    private void updateTabStyle(int position) {
+        if (position == 1) {
+            updateTabStyle(position,
+                    mHomeNavLayout.getTabView(position),
+                    mHomeNavLayout.getCurrentTab() == position);
+        }
+    }
+
+    private void updateTabStyle(int position, View tabView, boolean isSelector) {
+        if (tabView == null) {
+            return;
+        }
+        View viewById = tabView.findViewById(R.id.tv_tab_title);
+        if (viewById == null) {
+            return;
+        }
+
+        if (position == 1) {
+            TextView textView = (TextView) viewById;
+            textView.setCompoundDrawablePadding(getDimensionPixelOffset(R.dimen.base_hdpi));
+            if (isSelector) {
+                switch (SkinUtils.getSkin()) {
+                    case SkinManagerUIView.SKIN_BLUE:
+                        textView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,
+                                R.drawable.icon_list_s_blue, 0);
+                        break;
+                    case SkinManagerUIView.SKIN_GREEN:
+                        textView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,
+                                R.drawable.icon_list_s_green, 0);
+                        break;
+                    default:
+                        textView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,
+                                R.drawable.icon_list_s_grey, 0);
+                        break;
+                }
+            } else {
+                textView.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0,
+                        R.drawable.icon_list_n, 0);
+            }
+            if (mRecommendUIView3 != null) {
+                textView.setText(mRecommendUIView3.getFilterTag().getName());
+            }
+        }
     }
 
     private void changeViewPager(int position) {
@@ -200,33 +309,34 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 mCircleUIView = new CircleUIView(this);
                 mCircleUIView.bindOtherILayout(mOtherILayout);
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.startIView(mCircleUIView);
+                mHomeLayout.startIView(mCircleUIView, new UIParam(!isFirst));
             } else {
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
                 mHomeLayout.showIView(mCircleUIView);
             }
         } else if (position == 1) {
-            if (mRecommendUIView2 == null) {
-                mRecommendUIView2 = new RecommendUIView2(this);
-                mRecommendUIView2.bindOtherILayout(mOtherILayout);
-                mRecommendUIView2.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.startIView(mRecommendUIView2);
+            if (mRecommendUIView3 == null) {
+                mRecommendUIView3 = new RecommendUIViewEx(this);
+                mRecommendUIView3.bindOtherILayout(mOtherILayout);
+                mRecommendUIView3.setIsRightJumpLeft(isRightToLeft);
+                mHomeLayout.startIView(mRecommendUIView3, new UIParam(!isFirst));
             } else {
-                mRecommendUIView2.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.showIView(mRecommendUIView2);
+                mRecommendUIView3.setIsRightJumpLeft(isRightToLeft);
+                mHomeLayout.showIView(mRecommendUIView3);
             }
         } else if (position == 2) {
             if (mNearbyUIView == null) {
                 mNearbyUIView = new NearbyUIView();
                 mNearbyUIView.bindOtherILayout(mOtherILayout);
                 mNearbyUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.startIView(mNearbyUIView);
+                mHomeLayout.startIView(mNearbyUIView, new UIParam(!isFirst));
             } else {
                 mNearbyUIView.setIsRightJumpLeft(isRightToLeft);
                 mHomeLayout.showIView(mNearbyUIView);
             }
         }
         lastPosition = position;
+        isFirst = false;
     }
 
     /**
@@ -237,8 +347,8 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         int currentItem = mHomeNavLayout.getCurrentTab();
         if (currentItem == 0 && mCircleUIView != null) {
             mCircleUIView.scrollToTop();
-        } else if (currentItem == 1 && mRecommendUIView2 != null) {
-            mRecommendUIView2.scrollToTop();
+        } else if (currentItem == 1 && mRecommendUIView3 != null) {
+            mRecommendUIView3.scrollToTop();
         } else if (currentItem == 2 && mNearbyUIView != null) {
             mNearbyUIView.scrollToTop();
         }
@@ -336,7 +446,10 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     @Override
     public void onSkinChanged(ISkin skin) {
         super.onSkinChanged(skin);
-        mHomeNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeColor());
+        if (mHomeNavLayout != null) {
+            mHomeNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeColor());
+            updateTabStyle(1);
+        }
     }
 
 }

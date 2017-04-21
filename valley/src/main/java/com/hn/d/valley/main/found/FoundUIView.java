@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
@@ -32,6 +33,12 @@ public class FoundUIView extends BaseItemUIView {
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.nav_found_text)).setShowBackImageView(false);
+    }
+
+    @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+        mBaseOffsetSize = getDimensionPixelOffset(R.dimen.base_xhdpi);
     }
 
     @Override

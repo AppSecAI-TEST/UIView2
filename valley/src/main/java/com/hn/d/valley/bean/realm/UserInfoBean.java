@@ -8,6 +8,7 @@ import com.angcyo.uiview.github.pickerview.view.WheelTime;
 import com.angcyo.uiview.utils.file.FileUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.Date;
 
@@ -27,8 +28,12 @@ import io.realm.RealmObject;
  */
 public class UserInfoBean extends RealmObject {
 
+    public static final String KEY_NEW_VISITOR = "key_new_visitor";
+    public static final String KEY_NEW_NOTIFICATION = "key_new_notification";
     public int is_login_protect;
     public String test;
+    boolean new_visitor;//是否有新的访客
+    boolean new_notification;//是否有新的动态通知
     /**
      * is_attention : 1
      * is_contact : 0
@@ -132,6 +137,27 @@ public class UserInfoBean extends RealmObject {
 
     private String website;
     private String cover;
+
+    /**
+     * 是否有新的访客
+     */
+    public boolean isNew_visitor() {
+        return new_visitor || Hawk.get(KEY_NEW_VISITOR, false);
+    }
+
+    public void setNew_visitor(boolean new_visitor) {
+        this.new_visitor = new_visitor;
+        Hawk.put(KEY_NEW_VISITOR, new_visitor);
+    }
+
+    public boolean isNew_notification() {
+        return new_notification || Hawk.get(KEY_NEW_NOTIFICATION, false);
+    }
+
+    public void setNew_notification(boolean new_notification) {
+        this.new_notification = new_notification;
+        Hawk.put(KEY_NEW_NOTIFICATION, new_notification);
+    }
 
     public int getIs_attention() {
         return is_attention;

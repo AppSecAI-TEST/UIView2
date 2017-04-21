@@ -300,7 +300,6 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         }
     }
 
-    @CallSuper
     public void loadData() {
         //mRExBaseAdapter.setNoMore();
         loadTime = System.currentTimeMillis();
@@ -373,7 +372,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     }
 
     /**
-     * 接口返回数据后,请调用此方法设置数据
+     * 接口返回数据后,请调用此方法设置数据,
+     * 请使用{@link #onUILoadDataEnd(List)}方法代替
+     *
+     * @param data_count 已经取消采用此字段判断是否加载更多了.
      */
     @Deprecated
     public void onUILoadDataEnd(List<T> datas, int data_count) {
@@ -413,6 +415,8 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
                 mRExBaseAdapter.appendAllData(datas);
             }
         }
+
+        onUILoadDataFinish();
 
         onEmptyData(isEmptyData);
     }

@@ -87,6 +87,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     private UserInfoBean mUserInfoBean;
 
     private AudioPlayHelper mAudioPlayHelper;
+    private Action0 mOnFinishAction;
 
     public UserDetailUIView2(String to_uid) {
         this.to_uid = to_uid;
@@ -211,6 +212,13 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {
+        mOnFinishAction = new Action0() {
+            @Override
+            public void call() {
+                setTitleString(UserCache.instance().getUserInfoBean().getUsername());
+            }
+        };
+
         TitleBarPattern titleBarPattern = super.getTitleBar()
                 .setShowBackImageView(true)
                 .setTitleString("")
@@ -229,12 +237,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             @Override
             public void onClick(View v) {
 //                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), null));
-                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), new Action0() {
-                    @Override
-                    public void call() {
-                        setTitleString(UserCache.instance().getUserInfoBean().getUsername());
-                    }
-                }));
+                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), mOnFinishAction));
             }
         }).setVisibility(View.GONE));
 
@@ -357,7 +360,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             @Override
             protected IView getIView(int position) {
                 if (position == 0) {
-                    UserInfoSubUIView userInfoSubUIView = new UserInfoSubUIView(mUserInfoBean);
+                    UserInfoSubUIView userInfoSubUIView = new UserInfoSubUIView(mUserInfoBean, mOnFinishAction);
                     userInfoSubUIView.bindOtherILayout(mOtherILayout);
                     return userInfoSubUIView;
                 } else if (position == 1) {
@@ -412,7 +415,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
     private void initView(UserInfoBean bean) {
         mUserInfoBean = bean;
-        String is_auth = bean.getIs_auth();
+        final String is_auth = bean.getIs_auth();
 
         HnGlideImageView hnGlideImageView = mViewHolder.v(R.id.user_ico_view);
         hnGlideImageView.setImageThumbUrl(bean.getAvatar());
@@ -433,6 +436,25 @@ public class UserDetailUIView2 extends BaseContentUIView {
             authTextView.setText(R.string.not_auth);
             authTextView.setBackground(SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
             authTextView.setTextColor(Color.WHITE);
+        }
+
+        if (isMe(to_uid)) {
+            authTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer integer = Integer.valueOf(is_auth);
+                    switch (integer) {
+                        case 1:
+                        case 2:
+                        case 3:
+                            mOtherILayout.startIView(new MyAuthStatusUIView(integer));
+                            break;
+                        default:
+                            mOtherILayout.startIView(new MyAuthUIView());
+                            break;
+                    }
+                }
+            });
         }
 
         initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions);
@@ -510,6 +532,14 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
     private void showMoreUIView() {
         startIView(new UserDetailMoreUIView(mUserInfoBean));
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        if (mUserInfoBean != null) {
+            initView(mUserInfoBean);
+        }
     }
 
     /**

@@ -112,6 +112,12 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
 //        refreshLayout.setNotifyListener(false);
 
         mViewHolder.v(R.id.title_bar_layout).setBackgroundColor(SkinHelper.getSkin().getThemeColor());
+        mViewHolder.v(R.id.cancel_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishIView();
+            }
+        });
 
         mSearchUserAdapter = new GlobalSearchAdapter2(mActivity,mOtherILayout,option);
 //        mRecyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mSearchUserAdapter)));

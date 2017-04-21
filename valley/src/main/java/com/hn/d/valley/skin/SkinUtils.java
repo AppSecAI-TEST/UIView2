@@ -1,7 +1,10 @@
 package com.hn.d.valley.skin;
 
 import android.content.Context;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
 
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.R;
@@ -62,5 +65,155 @@ public class SkinUtils {
                 break;
         }
         return style;
+    }
+
+    /**
+     * 根据主题设置,笑脸View的ico
+     */
+    public static void setExpressView(ImageView imageView) {
+        int skin = getSkin();
+        switch (skin) {
+            case SkinManagerUIView.SKIN_BLACK:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_expression_n_black, R.drawable.message_expression_s_black)
+                );
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_expression_n_blue, R.drawable.message_expression_s_blue)
+                );
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_expression_n, R.drawable.message_expression_s)
+                );
+                break;
+        }
+    }
+
+    public static void setVoiceView(ImageView imageView) {
+        int skin = getSkin();
+        switch (skin) {
+            case SkinManagerUIView.SKIN_BLACK:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_voice_n_black, R.drawable.message_voice_s_black)
+                );
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_voice_n_blue, R.drawable.message_voice_s_blue)
+                );
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_voice_n, R.drawable.message_voice_s)
+                );
+                break;
+        }
+    }
+
+    public static void setKeyboardView(ImageView imageView) {
+        int skin = getSkin();
+        switch (skin) {
+            case SkinManagerUIView.SKIN_BLACK:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_keyboard_n_black, R.drawable.message_keyboard_s_black)
+                );
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_keyboard_n_blue, R.drawable.message_keyboard_s_blue)
+                );
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                imageView.setImageDrawable(
+                        ResUtil.generateClickDrawable(imageView.getContext(), R.drawable.message_keyboard_n, R.drawable.message_keyboard_s)
+                );
+                break;
+        }
+    }
+
+    public static void setExpressView(CompoundButton compoundButton) {
+        int skin = getSkin();
+        switch (skin) {
+            case SkinManagerUIView.SKIN_BLACK:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_expression_n_black, R.drawable.message_expression_s_black)
+                );
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_expression_n_blue, R.drawable.message_expression_s_blue)
+                );
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_expression_n, R.drawable.message_expression_s)
+                );
+                break;
+        }
+    }
+
+    public static void setVoiceView(CompoundButton compoundButton) {
+        int skin = getSkin();
+        switch (skin) {
+            case SkinManagerUIView.SKIN_BLACK:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_voice_n_black, R.drawable.message_voice_s_black)
+                );
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_voice_n_blue, R.drawable.message_voice_s_blue)
+                );
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_voice_n, R.drawable.message_voice_s)
+                );
+                break;
+        }
+    }
+
+    public static void setKeyboardView(CompoundButton compoundButton) {
+        int skin = getSkin();
+        switch (skin) {
+            case SkinManagerUIView.SKIN_BLACK:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_keyboard_n_black, R.drawable.message_keyboard_s_black)
+                );
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_keyboard_n_blue, R.drawable.message_keyboard_s_blue)
+                );
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_keyboard_n, R.drawable.message_keyboard_s)
+                );
+                break;
+        }
+    }
+
+    public static void setAddView(CompoundButton compoundButton) {
+        int skin = getSkin();
+        switch (skin) {
+            case SkinManagerUIView.SKIN_BLACK:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_add_n_black, R.drawable.message_add_s_black)
+                );
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_add_n_blue, R.drawable.message_add_s_blue)
+                );
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                compoundButton.setButtonDrawable(
+                        ResUtil.generateClickDrawable(compoundButton.getContext(), R.drawable.message_add_n, R.drawable.message_add_s)
+                );
+                break;
+        }
     }
 }

@@ -8,19 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="BlackTheme" parent="AppTheme">
+    <style name="BlackTheme" parent="SplashTheme">
         <item name="colorPrimary">@color/colorPrimaryBlack</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkBlack</item>
         <item name="colorAccent">@color/colorAccentBlack</item>
     </style>
 
-    <style name="BlueTheme" parent="AppTheme">
+    <style name="BlueTheme" parent="SplashTheme">
         <item name="colorPrimary">@color/colorPrimaryBlue</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkBlue</item>
         <item name="colorAccent">@color/colorAccentBlue</item>
     </style>
 
-    <style name="GreenTheme" parent="AppTheme">
+    <style name="GreenTheme" parent="SplashTheme">
         <item name="colorPrimary">@color/colorPrimaryGreen</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkGreen</item>
         <item name="colorAccent">@color/colorAccentGreen</item>
@@ -36,7 +36,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <!--启动页样式-->
-    <style name="SplashTheme" parent="AppTheme">
+    <style name="SplashTheme" parent="BaseAppTheme">
         <item name="android:windowBackground">@drawable/default_720</item>
     </style>
 

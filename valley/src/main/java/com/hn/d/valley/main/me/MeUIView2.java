@@ -21,6 +21,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
@@ -34,6 +35,8 @@ import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -69,12 +72,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         if (userInfoBean != null) {
             List<String> stringList = RUtils.split(userInfoBean.getPhotos());
             if (stringList.isEmpty()) {
-                list.add(UserCache.instance().getAvatar());
+                //list.add(UserCache.instance().getAvatar());
             } else {
                 list.addAll(stringList);
             }
         } else {
-            list.add(UserCache.instance().getAvatar());
+            //list.add(UserCache.instance().getAvatar());
         }
         return list;
     }
@@ -219,7 +222,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 ImageView imageView = itemInfoLayout.getImageView();
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
                 resize(imageView, offset, offset * 3);
-                imageView.setBackgroundResource(R.drawable.base_red_circle_shape);
+
+                if (userInfoBean.isNew_notification()) {
+                    imageView.setBackgroundResource(R.drawable.base_red_circle_shape);
+                } else {
+                    imageView.setBackground(null);
+                }
 
                 itemInfoLayout.setLeftDrawableRes(R.drawable.icon_notice);
                 itemInfoLayout.setLeftDrawPadding(drawPadding);
@@ -228,6 +236,13 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new SeeStateUserUIView());
+
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                userInfoBean.setNew_notification(false);
+                            }
+                        });
                     }
                 });
             }
@@ -242,7 +257,11 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 ImageView imageView = itemInfoLayout.getImageView();
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
                 resize(imageView, offset, offset * 3);
-                imageView.setBackgroundResource(R.drawable.base_red_circle_shape);
+                if (userInfoBean.isNew_visitor()) {
+                    imageView.setBackgroundResource(R.drawable.base_red_circle_shape);
+                } else {
+                    imageView.setBackground(null);
+                }
 
                 itemInfoLayout.setLeftDrawableRes(R.drawable.icon_vistor);
                 itemInfoLayout.setLeftDrawPadding(drawPadding);
@@ -251,6 +270,13 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new MyVisitorUserUIView2());
+
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                userInfoBean.setNew_visitor(false);
+                            }
+                        });
                     }
                 });
             }

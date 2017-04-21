@@ -148,7 +148,8 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
     }
 
     @Override
-    protected void onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
+    protected boolean onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
         dataBean.setIs_contact(value ? 1 : 0);
+        return true;
     }
 }

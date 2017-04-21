@@ -43,6 +43,7 @@ import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
@@ -143,6 +144,8 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                 getColor(R.color.colorDisable),
                 SkinHelper.getSkin().getThemeSubColor()
         ));
+
+        SkinUtils.setExpressView(mEmojiControlLayout);
     }
 
     @Override
@@ -183,6 +186,8 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                 final View likeUserControlLayout = holder.v(R.id.like_users_layout);
                 final View clickView = holder.v(R.id.click_view);
                 likeUserControlLayout.setVisibility(View.GONE);
+
+                //点赞人数列表
                 clickView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

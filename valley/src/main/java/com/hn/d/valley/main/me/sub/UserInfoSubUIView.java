@@ -21,12 +21,16 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
+import com.hn.d.valley.main.me.MeUIView2;
+import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.adapter.ImageAdapter;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
+
+import rx.functions.Action0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -43,9 +47,11 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
     RBaseItemDecoration mDecor;
     UserInfoBean mUserInfoBean;
+    Action0 mAction0;
 
-    public UserInfoSubUIView(UserInfoBean userInfoBean) {
+    public UserInfoSubUIView(UserInfoBean userInfoBean, Action0 action0) {
         mUserInfoBean = userInfoBean;
+        mAction0 = action0;
     }
 
     @Override
@@ -85,9 +91,8 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 }
                 recyclerView.addItemDecoration(mDecor);
                 final List<String> stringList = RUtils.split(mUserInfoBean.getPhotos());
-                if (!mUserInfoBean.isMe()) {
-                    stringList.add("");
-                }
+                stringList.add("");
+
                 recyclerView.setAdapter(new ImageAdapter(mActivity, new ImageAdapter.ImageAdapterConfig() {
                     @Override
                     public List<String> getDatas() {
@@ -101,24 +106,34 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
                     @Override
                     public boolean onBindView(final RBaseViewHolder holder, final int position, final String bean) {
-                        if (!mUserInfoBean.isMe() && RUtils.isLast(stringList, position)) {
-                            holder.imgV(R.id.image_view).setImageResource(R.drawable.yaoqingshangchuan_zhaopianqiang);
-                            holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    add(RRetrofit.create(UserInfoService.class)
-                                            .inviteUploadPhotos(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
-                                            .compose(Rx.transformer(String.class))
-                                            .subscribe(new BaseSingleSubscriber<String>() {
-                                                @Override
-                                                public void onSucceed(String bean) {
-                                                    super.onSucceed(bean);
-                                                    T_.show(bean);
-                                                }
-                                            })
-                                    );
-                                }
-                            });
+                        if (RUtils.isLast(stringList, position)) {
+                            if (mUserInfoBean.isMe()) {
+                                holder.imgV(R.id.image_view).setImageResource(R.drawable.shangchuanzhaopian_zhaopianqiang);
+                                holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mOtherILayout.startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), mAction0));
+                                    }
+                                });
+                            } else {
+                                holder.imgV(R.id.image_view).setImageResource(R.drawable.yaoqingshangchuan_zhaopianqiang);
+                                holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        add(RRetrofit.create(UserInfoService.class)
+                                                .inviteUploadPhotos(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                                .compose(Rx.transformer(String.class))
+                                                .subscribe(new BaseSingleSubscriber<String>() {
+                                                    @Override
+                                                    public void onSucceed(String bean) {
+                                                        super.onSucceed(bean);
+                                                        T_.show(bean);
+                                                    }
+                                                })
+                                        );
+                                    }
+                                });
+                            }
                             return true;
                         }
                         return false;

@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -278,7 +279,17 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                     }
                 })
                 .compose(Rx.<String>transformer())
-                .subscribe();
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
+                });
 
 
 //        for (final LikeUserInfoBean info : userInfos) {

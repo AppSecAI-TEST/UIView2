@@ -46,14 +46,61 @@ import rx.functions.Action2;
  */
 public class TagsControl {
 
-    public static Tag allTag;
-
     public static List<Tag> cacheTags;
+    /**
+     * 推荐标签
+     */
+    public static Tag recommendTag;
+    private static List<Tag> sAllTags;
+    private static List<Tag> sMyTags;
 
     static {
-        allTag = new Tag();
-        allTag.setId("0");
-        allTag.setName(ValleyApp.getApp().getResources().getString(R.string.tag_recommend));
+        recommendTag = new Tag();
+        recommendTag.setId("0");
+        recommendTag.setName(ValleyApp.getApp().getResources().getString(R.string.tag_recommend));
+    }
+
+    /**
+     * 缓存包括 推荐在内的所有标签, 并且返回过滤后的自己的标签
+     */
+    public static List<Tag> initAllTags(List<Tag> allTags) {
+        sAllTags = allTags;
+        if (!allTags.contains(recommendTag)) {
+            sAllTags.add(0, recommendTag);
+        }
+        sMyTags = new ArrayList<>();
+        Boolean first = Hawk.get(Constant.MY_TAGS_FIRST, true);
+        Hawk.put(Constant.MY_TAGS_FIRST, false);
+        if (first) {
+            sMyTags.addAll(allTags);
+            setMyTagString(sMyTags);
+        } else {
+            initMyTags(allTags, sMyTags);
+        }
+        return sMyTags;
+    }
+
+    public static boolean hasMyTags() {
+        return sMyTags != null && !sMyTags.isEmpty();
+    }
+
+    public static List<Tag> getAllTags() {
+        return sAllTags;
+    }
+
+    public static List<Tag> getMyTags() {
+        return sMyTags;
+    }
+
+    public static void setMyTags(List<Tag> myTags) {
+        sMyTags = myTags;
+    }
+
+    /**
+     * 保存排好序的标签
+     */
+    public static void setMyTagString(String tags) {
+        Hawk.put(Constant.MY_TAGS, tags);
     }
 
     /**
@@ -134,7 +181,7 @@ public class TagsControl {
                 }
 
                 if (showAll) {
-                    tags.add(0, allTag);
+                    tags.add(0, recommendTag);
                 }
 
                 ViewGroupUtils.addViews(rootLayout, new BaseCacheAdapter<Tag>(activity, tags) {
@@ -166,41 +213,38 @@ public class TagsControl {
     /**
      * 获取排好序的标签列表(标签id列表)
      */
-    public static List<String> getMyTags() {
+    public static List<String> getMyTagString() {
         String tags = Hawk.get(Constant.MY_TAGS, "");
-        return RUtils.split(tags);
+        List<String> split = RUtils.split(tags);
+        if (!split.contains(recommendTag.getId())) {
+            split.add(0, recommendTag.getId());
+        }
+        return split;
     }
 
     /**
      * 保存排好序的标签
      */
-    public static void setMyTags(String tags) {
-        Hawk.put(Constant.MY_TAGS, tags);
-    }
-
-    /**
-     * 保存排好序的标签
-     */
-    public static void setMyTags(List<Tag> tags) {
+    public static void setMyTagString(List<Tag> tags) {
         StringBuilder build = new StringBuilder();
         for (Tag g : tags) {
             build.append(g.getId());
             build.append(",");
         }
 
-        setMyTags(RUtils.safe(build));
+        setMyTagString(RUtils.safe(build));
     }
 
     public static void initMyTags(@NonNull List<Tag> inAllTag, List<Tag> outMyTag, List<Tag> outOtherTag) {
         Boolean first = Hawk.get(Constant.MY_TAGS_FIRST, true);
         Hawk.put(Constant.MY_TAGS_FIRST, false);
         if (first) {
-            setMyTags(inAllTag);
+            setMyTagString(inAllTag);
             if (outMyTag != null) {
                 outMyTag.addAll(inAllTag);
             }
         } else {
-            List<String> myTags = getMyTags();
+            List<String> myTags = getMyTagString();
             initMyTags(inAllTag, outMyTag);
             //其他标签
             for (Tag g : inAllTag) {
@@ -214,7 +258,7 @@ public class TagsControl {
     }
 
     public static void initMyTags(@NonNull List<Tag> inAllTag, List<Tag> outMyTag) {
-        List<String> myTags = getMyTags();
+        List<String> myTags = getMyTagString();
         if (myTags.isEmpty()) {
             outMyTag.addAll(inAllTag);
             return;

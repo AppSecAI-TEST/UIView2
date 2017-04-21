@@ -92,7 +92,7 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     @Override
                     public void onFinish(String ids) {
                         isChanged = true;
-                        TagsControl.setMyTags(ids);
+                        TagsControl.setMyTagString(ids);
                     }
                 });
                 ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

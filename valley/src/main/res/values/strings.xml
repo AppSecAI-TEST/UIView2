@@ -396,4 +396,16 @@
     <string name="text_search_chat_record">查找聊天记录</string>
     <string name="text_me_in_group_nickname">我在本群的昵称</string>
     <string name="text_message_notity_no">消息免打扰</string>
+    <string name="text_group_qrcode">群二维码</string>
+    <string name="text_edit_group_announce">编辑群公告</string>
+    <string name="text_delete_success">删除成功</string>
+    <string name="text_top_chat">置顶聊天</string>
+    <string name="text_desolve_success">解散成功</string>
+    <string name="text_group_name">群聊名称</string>
+    <string name="text_quit_success">退出成功</string>
+    <string name="view_cnt_format">%1$s阅</string>
+    <string name="edit_tag_tip">编辑标签</string>
+    <string name="my_tag_tip">我关注的标签</string>
+    <string name="drag_tip">拖动</string>
+    <string name="more_tag_tip">更多标签</string>
 </resources>

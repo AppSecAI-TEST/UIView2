@@ -247,7 +247,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("群二维码");
+                infoLayout.setItemText(mActivity.getString(R.string.text_group_qrcode));
                 infoLayout.setDarkDrawableRes(R.drawable.qr_code);
 
                 infoLayout.setOnClickListener(new View.OnClickListener() {
@@ -264,8 +264,8 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("群公告");
-                infoLayout.setItemDarkText("群公告");
+                infoLayout.setItemText(mActivity.getString(R.string.text_group_announcement));
+                infoLayout.setItemDarkText(mActivity.getString(R.string.text_group_announcement));
 
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -285,7 +285,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 SwitchCompat switchCompat = holder.v(R.id.switch_view);
-                itemInfoLayout.setItemText("置顶聊天");
+                itemInfoLayout.setItemText(mActivity.getString(R.string.text_top_chat));
                 switchCompat.setChecked(SessionSettingDelegate.getInstance().checkTop(mSessionId));
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -326,9 +326,20 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                final ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_me_in_group_nickname));
-                infoLayout.setItemDarkText("".equals(mGroupDescBean.getNick()) ? mGroupDescBean.getDefaultName() : mGroupDescBean.getNick());
+                infoLayout.setItemDarkText(mGroupDescBean.getNick());
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startInputView(infoLayout, mGroupDescBean.getNick(), new Action1<String>() {
+                            @Override
+                            public void call(String s) {
+                                editNickName(UserCache.getUserAccount(),s);
+                            }
+                        });
+                    }
+                });
             }
         }));
 
@@ -450,7 +461,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
                         finishIView();
-                        T_.info("退出成功");
+                        T_.info(mActivity.getString(R.string.text_quit_success));
                     }
 
                     @Override
@@ -505,7 +516,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
                         finishIView();
-                        T_.info("解散成功");
+                        T_.info(mActivity.getString(R.string.text_desolve_success));
                     }
 
                     @Override
@@ -521,7 +532,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
     private void bindGroupName(RBaseViewHolder holder) {
         final ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-        infoLayout.setItemText("群聊名称");
+        infoLayout.setItemText(mActivity.getString(R.string.text_group_name));
         if (mGroupDescBean == null) {
             return;
         }
@@ -532,38 +543,14 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         infoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(InputUIView.build(new InputUIView.InputConfigCallback() {
+                startInputView(infoLayout, currentName, new Action1<String>() {
                     @Override
-                    public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
-                        return super.initTitleBar(titleBarPattern)
-                                .setTitleString(mActivity.getString(R.string.modify_name_title))
-                                .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.save)
-                                        , new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                if (mExEditText.isEmpty()) {
-                                                    Anim.band(mExEditText);
-                                                    return;
-                                                }
-                                                final String name = mExEditText.string();
-                                                infoLayout.setItemDarkText(name);
-                                                editGroupName(name);
-                                                finishIView(mIView);
-                                            }
-                                        }));
+                    public void call(String s) {
+                        editGroupName(s);
                     }
-
-                    @Override
-                    public void initInputView(RBaseViewHolder holder, ExEditText editText, ViewItemInfo bean) {
-                        super.initInputView(holder, editText, bean);
-                        editText.setMaxLength(mActivity.getResources().getInteger(R.integer.name_count));
-                        editText.setHint(R.string.input_name_hint);
-                        if (mGroupDescBean != null) {
-                            setInputText(currentName);
-                        }
-                    }
-                }));
+                });
             }
+
         });
 
     }
@@ -587,6 +574,61 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         super.onNoNetwork();
                     }
                 }));
+    }
+
+    private void editNickName(String to_uid,String name) {
+        if (mGroupDescBean == null) {
+            return;
+        }
+        add(RRetrofit.create(GroupChatService.class)
+                .updateNick(Param.buildMap("to_uid:" + UserCache.getUserAccount()
+                        , "gid:" + mGroupDescBean.getGid(), "nick:" + name))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String bean) {
+                        super.onSucceed(bean);
+                    }
+
+                    @Override
+                    public void onNoNetwork() {
+                        super.onNoNetwork();
+                    }
+                }));
+    }
+
+    private void startInputView(final ItemInfoLayout infoLayout, final String content, final Action1<String> action) {
+        startIView(InputUIView.build(new InputUIView.InputConfigCallback() {
+            @Override
+            public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
+                return super.initTitleBar(titleBarPattern)
+                        .setTitleString(mActivity.getString(R.string.modify_name_title))
+                        .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.save)
+                                , new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (mExEditText.isEmpty()) {
+                                            Anim.band(mExEditText);
+                                            return;
+                                        }
+                                        final String name = mExEditText.string();
+                                        infoLayout.setItemDarkText(name);
+                                        action.call(name);
+                                        finishIView(mIView);
+                                    }
+                                }));
+            }
+
+            @Override
+            public void initInputView(RBaseViewHolder holder, ExEditText editText, ViewItemInfo bean) {
+                super.initInputView(holder, editText, bean);
+                editText.setMaxLength(mActivity.getResources().getInteger(R.integer.name_count));
+                editText.setHint(R.string.input_name_hint);
+                if (mGroupDescBean != null) {
+                    setInputText(content);
+                }
+            }
+        }));
     }
 
     @Override

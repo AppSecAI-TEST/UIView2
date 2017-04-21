@@ -6,9 +6,9 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.widget.RFlowLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 
@@ -25,7 +25,7 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HnTagsNameTextView extends RFlowLayout {
+public class HnTagsNameTextView extends LinearLayout {
     public HnTagsNameTextView(Context context) {
         super(context);
     }
@@ -57,7 +57,7 @@ public class HnTagsNameTextView extends RFlowLayout {
         RTextView textView = new RTextView(getContext());
         textView.setTextColor(ContextCompat.getColor(getContext(), R.color.line_color));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelOffset(R.dimen.default_text_size10));
-        textView.setBackgroundResource(R.drawable.base_line_border_selector);
+        textView.setBackgroundResource(R.drawable.base_line_border_round_selector);
         int offset = getResources().getDimensionPixelOffset(R.dimen.base_ldpi);
         textView.setPadding(2 * offset, offset, 2 * offset, offset);
         return textView;

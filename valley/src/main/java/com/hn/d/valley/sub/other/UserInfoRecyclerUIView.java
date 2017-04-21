@@ -14,6 +14,8 @@ import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
 
 public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
 
+    protected UserInfoAdapter mUserInfoAdapter;
+
     @Override
     protected boolean hasDecoration() {
         return true;
@@ -21,7 +23,7 @@ public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUs
 
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
-        UserInfoAdapter userInfoAdapter = new UserInfoClickAdapter(mActivity, mOtherILayout, mSubscriptions) {
+        mUserInfoAdapter = new UserInfoClickAdapter(mActivity, mOtherILayout, mSubscriptions) {
 
             @Override
             protected boolean isContact(LikeUserInfoBean dataBean) {
@@ -34,27 +36,29 @@ public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUs
             }
 
             @Override
-            protected void onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
-                UserInfoRecyclerUIView.this.onSetDataBean(dataBean, value);
+            protected boolean onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
+                return UserInfoRecyclerUIView.this.onSetDataBean(dataBean, value);
             }
 
         };
-        return userInfoAdapter;
+        return mUserInfoAdapter;
     }
 
     //是否是联系人
     protected boolean isContact(final LikeUserInfoBean dataBean) {
-        return false;
+        return dataBean.getIs_contact() == 1;
     }
 
     //是否已关注
     protected boolean isAttention(final LikeUserInfoBean dataBean) {
-        return false;
+        return dataBean.getIs_attention() == 1;
     }
 
-    //改变数据
-    protected void onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {
-
+    /**
+     * 改变数据, 返回false , 采用默认处理方式
+     */
+    protected boolean onSetDataBean(final LikeUserInfoBean dataBean, boolean value) {
+        return false;
     }
 
     @Override

@@ -47,23 +47,28 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
     List<Tag> mAllTag, mMyTag, mOtherTag;
     boolean isChanged = false;
-    Action1<List<Tag>> mTagsAction1;
+    Action1<List<Tag>> mTagsAction;
     private RGroupAdapter<String, RGroupData, String> mGroupAdapter;
     private RGroupData<Tag> mMyGroup;
     private RGroupData<Tag> mOtherGroup;
     private RExItemDecoration mRExItemDecoration;
 
-    public TagsManageUIView2(List<Tag> allTag, Action1<List<Tag>> tagsAction1) {
-        mAllTag = allTag;
+    public TagsManageUIView2(Action1<List<Tag>> tagsAction) {
+        mAllTag = new ArrayList<>();
+        mAllTag.addAll(TagsControl.getAllTags());
+
         mMyTag = new ArrayList<>();
         mOtherTag = new ArrayList<>();
-        mTagsAction1 = tagsAction1;
+
+        mTagsAction = tagsAction;
+
+        TagsControl.initMyTags(mAllTag, mMyTag, mOtherTag);
     }
 
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        TagsControl.initMyTags(mAllTag, mMyTag, mOtherTag);
+        //TagsControl.initMyTags(mAllTag, mMyTag, mOtherTag);
     }
 
     @Override
@@ -77,12 +82,15 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                     builder.append(",");
                 }
 
-                TagsControl.setMyTags(RUtils.safe(builder));
+                TagsControl.setMyTagString(RUtils.safe(builder));
 
-                if (mTagsAction1 != null) {
-                    List<Tag> tags = new ArrayList<>();
-                    TagsControl.initMyTags(mAllTag, tags);
-                    mTagsAction1.call(tags);
+                List<Tag> tags = new ArrayList<>();
+                TagsControl.initMyTags(mAllTag, tags);
+
+                TagsControl.setMyTags(tags);
+
+                if (mTagsAction != null) {
+                    mTagsAction.call(tags);
                 }
 
                 finishIView();
@@ -178,7 +186,7 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 //                    @Override
 //                    public void onFinish(String ids) {
 //                        isChanged = true;
-//                        TagsControl.setMyTags(ids);
+//                        TagsControl.setMyTagString(ids);
 //                    }
 //                });
 //                ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -232,8 +240,8 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
                     @Override
                     protected void onBindGroupView(RBaseViewHolder holder, int position, int indexInGroup) {
-                        holder.tv(R.id.text_view).setText("我关注的标签");
-                        holder.tv(R.id.right_text_view).setText("拖动");
+                        holder.tv(R.id.text_view).setText(R.string.my_tag_tip);
+                        holder.tv(R.id.right_text_view).setText(R.string.drag_tip);
                     }
                 };
 
@@ -246,10 +254,10 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                                 holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon_blue);
                                 break;
                             case SkinManagerUIView.SKIN_GREEN:
-                                holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon_black);
+                                holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon);
                                 break;
                             default:
-                                holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon);
+                                holder.imgV(R.id.image_view).setImageResource(R.drawable.tianjia_biaoqian_icon_black);
                                 break;
                         }
 
@@ -271,7 +279,7 @@ public class TagsManageUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
                     @Override
                     protected void onBindGroupView(RBaseViewHolder holder, int position, int indexInGroup) {
-                        holder.tv(R.id.text_view).setText("更多标签");
+                        holder.tv(R.id.text_view).setText(R.string.more_tag_tip);
                         holder.tv(R.id.right_text_view).setText("");
                     }
                 };

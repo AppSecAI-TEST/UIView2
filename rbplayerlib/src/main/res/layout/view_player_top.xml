@@ -48,6 +48,7 @@
         android:layout_toLeftOf="@+id/view_jky_player_top_right"
         android:layout_toRightOf="@+id/app_video_finish"
         android:ellipsize="marquee"
+        android:maxLines="1"
         android:padding="10dp"
         android:singleLine="true"
         android:text="这是个标题"

@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.home;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -33,7 +34,15 @@ public abstract class NoTitleBaseRecyclerUIView<T> extends BaseRecyclerUIView<St
         return true;
     }
 
-//    @Override
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        if (!isLoadInViewPager()) {
+            loadData();
+        }
+    }
+
+    //    @Override
 //    public void onViewShow(Bundle bundle) {
 //        super.onViewShow(bundle);
 //        onShowInPager(null);

@@ -134,6 +134,7 @@ public class X5WebUIView extends BaseContentUIView {
 
     protected void onLoadUrl() {
         mWebView.loadUrl(mTargetUrl);
+        mProgressBarView.setProgress(10);
     }
 
     protected void onPageFinished(WebView webView, String url) {

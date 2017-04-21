@@ -8,11 +8,11 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.resources.ResUtil;
-import com.angcyo.uiview.widget.RFlowLayout;
 import com.angcyo.uiview.widget.RTextCheckView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.Tag;
@@ -32,9 +32,10 @@ import rx.functions.Action2;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class TagFilterUIDialog extends UIIDialogImpl {
 
-    private RFlowLayout mFlowLayout;
+    private LinearLayout mFlowLayout;
     private RelativeLayout mRootLayout;
 
     private Action1<Tag> selectorAction;
@@ -54,7 +55,7 @@ public class TagFilterUIDialog extends UIIDialogImpl {
         mDialogRootLayout.fixInsertsTop();
         mRootLayout = new RelativeLayout(mActivity);
 
-        mFlowLayout = new RFlowLayout(mActivity);
+        mFlowLayout = new LinearLayout(mActivity);
         mFlowLayout.setBackgroundColor(Color.WHITE);
 
         int padding = (int) ResUtil.dpToPx(mActivity, 10);

@@ -11,9 +11,6 @@ import com.hn.d.valley.service.ContactService;
 
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-
 
 public class FriendsRecommendUIView extends UserInfoRecyclerUIView {
 
@@ -76,10 +73,11 @@ public class FriendsRecommendUIView extends UserInfoRecyclerUIView {
     }
 
     @Override
-    protected void onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
+    protected boolean onSetDataBean(LikeUserInfoBean dataBean, boolean value) {
         if (!value) {
             dataBean.setIs_contact(0);
         }
         dataBean.setIs_attention(value ? 1 : 0);
+        return true;
     }
 }
