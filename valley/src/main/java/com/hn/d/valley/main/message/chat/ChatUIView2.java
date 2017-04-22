@@ -515,7 +515,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
                 } else {
                     //显示键盘
-                    mRefreshLayout.setRefreshEnd();
+                    mRefreshLayout.setRefreshEnd(false);
                     if (mInputView.getVisibility() == View.VISIBLE) {
                         mChatRootLayout.showSoftInput(mInputView);
                     }
