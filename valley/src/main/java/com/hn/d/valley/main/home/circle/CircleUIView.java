@@ -101,9 +101,17 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     @Override
     protected int getEmptyTipStringId() {
         if (isInSubUIView) {
-            return R.string.status_empty__tip;
+            if (isMe()) {
+                return R.string.status_empty__tip;
+            } else {
+                return R.string.status_empty_his_tip;
+            }
         }
         return R.string.default_empty_circle_tip;
+    }
+
+    private boolean isMe() {
+        return TextUtils.equals(to_uid, UserCache.getUserAccount());
     }
 
     @Override

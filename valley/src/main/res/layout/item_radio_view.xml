@@ -8,7 +8,7 @@
     app:item_right_res="@null"
     tools:item_text="测试">
 
-    <RadioButton
+    <com.hn.d.valley.widget.HnRadioButton
         android:id="@+id/radio_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

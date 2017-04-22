@@ -360,7 +360,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         if (!BuildConfig.DEBUG) {
             return;
         }
-        
+
 //        startIView(UIDialog.build()
 //                .setDialogContent(mActivity.getString(R.string.account_exception))
 //                .setGravity(Gravity.CENTER_VERTICAL));
