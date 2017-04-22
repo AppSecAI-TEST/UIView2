@@ -340,6 +340,10 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.weixin_view)
     public void onWeixinClick() {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+
         AmapBean amapBean = new AmapBean();
         amapBean.address = "测试位置";
         amapBean.latitude = 39.90923;
@@ -353,6 +357,10 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     @OnClick(R.id.qq_view)
     public void onQqClick() {
+        if (!BuildConfig.DEBUG) {
+            return;
+        }
+        
 //        startIView(UIDialog.build()
 //                .setDialogContent(mActivity.getString(R.string.account_exception))
 //                .setGravity(Gravity.CENTER_VERTICAL));
