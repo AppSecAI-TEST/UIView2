@@ -80,7 +80,7 @@ public class FuncItem<T> extends AbsContactItem {
             //进入群聊
             layout.startIView(new MyGroupUIView(new BaseContactSelectAdapter.Options()));
         }
-    },R.drawable.new_friend);
+    },R.drawable.group_chat_n);
 
 
     public static List<AbsContactItem> provide() {

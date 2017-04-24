@@ -324,7 +324,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      * 忘记密码按钮
      */
     @OnClick(R.id.forget_view)
-    public void onForgetClick() {
+    public void onForgetClick(View view) {
         //HnChatActivity.launcher(mActivity, "50033");
         //HnUIMainActivity.launcher(mActivity);
         //com.hn.d.valley.main.HnMainActivity.launcher(mActivity);

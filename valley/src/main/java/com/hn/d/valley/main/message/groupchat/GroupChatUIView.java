@@ -1,21 +1,31 @@
 package com.hn.d.valley.main.message.groupchat;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -36,7 +46,6 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.MemberPushOption;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.team.model.Team;
-import com.netease.nimlib.sdk.team.model.TeamMember;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +64,8 @@ public class GroupChatUIView extends ChatUIView2 {
 
     private Map<String, GroupMemberBean> selectedMembers;
 
+    private CheckBox cb_show;
+    private TextView tv_title;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -72,7 +83,22 @@ public class GroupChatUIView extends ChatUIView2 {
             }
         }));
 
-        return super.getTitleBar().setRightItems(rightItems);
+        return super.getTitleBar()
+                .setShowBackImageView(true)
+                .setTitleString("")
+                .setRightItems(rightItems)
+                .setOnInitTitleLayout(new TitleBarPattern.SingleTitleInit() {
+                    @Override
+                    public void onInitLayout(RTitleCenterLayout parent) {
+                        L.e("GroupChatUIView","getTitlebar");
+                        LinearLayout layout = (LinearLayout) LayoutInflater.from(mActivity)
+                                .inflate(R.layout.item_switch_annoncement, parent)
+                                .findViewById(R.id.ll_titlebar);
+                        parent.setTitleView(layout);
+                        cb_show = (CheckBox) parent.findViewById(R.id.cb_show);
+                        tv_title = (TextView) parent.findViewById(R.id.tv_title);
+                    }
+                });
     }
 
 
@@ -83,6 +109,36 @@ public class GroupChatUIView extends ChatUIView2 {
         if(!checkInGroup()){
             showNotice();
         }
+
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+//        setTitleString(TeamDataCache.getInstance().getTeamName(mSessionId));
+        tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId));
+        cb_show.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                animAnnounce(isChecked);
+            }
+        });
+    }
+
+    private void animAnnounce(boolean show) {
+
+        final View layout = mViewHolder.v(R.id.rl_group_announcement);
+
+        if (layout.getVisibility() == View.GONE) {
+            layout.setVisibility(View.VISIBLE);
+        }
+
+        float start = show? ScreenUtil.dip2px(- 40):0;
+        float end = show?0:ScreenUtil.dip2px(- 40);
+        ObjectAnimator animator = new ObjectAnimator().ofFloat(layout,"translationY",start,end);
+        animator.setDuration(1000);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
 
     }
 

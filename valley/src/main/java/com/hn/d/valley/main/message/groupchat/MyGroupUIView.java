@@ -269,7 +269,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
 
     @Override
     protected RBaseItemDecoration initItemDecoration() {
-        return new RBaseItemDecoration(getItemDecorationHeight()).setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
+        return new RBaseItemDecoration(getItemDecorationHeight()).setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_item_size));
     }
 
 

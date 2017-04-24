@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -30,6 +31,7 @@ import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.MessageService;
 import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
@@ -40,12 +42,15 @@ import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by hewking on 2017/3/22.
  */
-public class FriendNewUIView2 extends SingleRecyclerUIView<CustomMessageBean> {
+public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
 
     public FriendNewUIView2() {
 
@@ -82,7 +87,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<CustomMessageBean> {
                             for (CustomMessageBean message : bean.getData_list()) {
                                 message.setBodyBean(Json.from(message.getBody(), CustomMessageBean.BodyBean.class));
                             }
-                            onUILoadDataEnd(bean.getData_list());
+                            onUILoadDataEnd(CustomMessage2LikeUserInfo(bean.getData_list()));
                         }
                     }
 
@@ -93,18 +98,29 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<CustomMessageBean> {
                 }));
     }
 
-    public List<CustomMessageBean> onPreProvider() {
-        List<CustomMessageBean> preBeans = new ArrayList<>();
+    public List<LikeUserInfoBean> onPreProvider() {
+        List<LikeUserInfoBean> preBeans = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            preBeans.add(new CustomMessageBean());
+            preBeans.add(new LikeUserInfoBean());
         }
         return preBeans;
+    }
+
+    private List<LikeUserInfoBean> CustomMessage2LikeUserInfo(List<CustomMessageBean> datas) {
+
+        List<LikeUserInfoBean> list = new ArrayList<>();
+
+        for(CustomMessageBean bean : datas) {
+            list.add(bean.convert());
+        }
+        return list;
+
     }
 
 
     @Override
     protected RExBaseAdapter initRExBaseAdapter() {
-        return new AddFriendAdpater(mActivity);
+        return new AddFriendAdpater(mActivity,mILayout,mSubscriptions);
     }
 
     @Override
@@ -152,179 +168,14 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<CustomMessageBean> {
 
     }
 
-    private class FriendsNewAdapter extends RExBaseAdapter<String,CustomMessageBean,String> {
 
-        private HnGlideImageView imageView;
-
-        public FriendsNewAdapter(Context context) {
-            super(context);
-            setModel(MODEL_MULTI);
-        }
-
-        @Override
-        protected int getItemLayoutId(int viewType) {
-            return R.layout.item_user_info_new;
-        }
-
-        @Override
-        protected void onBindDataView(RBaseViewHolder holder, final int posInData, final CustomMessageBean dataBean) {
-            super.onBindDataView(holder, posInData, dataBean);
-
-            TextView userName = holder.tv(R.id.username);
-            userName.setText(dataBean.getBodyBean().getUsername());
-
-            //用户个人详情
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mOtherILayout.startIView(new UserDetailUIView2(dataBean.getBodyBean().getUid()));
-                }
-            });
-
-            //头像
-            HnGlideImageView userIcoView = holder.v(R.id.image_view);
-            userIcoView.setImageThumbUrl(dataBean.getBodyBean().getAvatar());
-
-            //等级性别
-            HnGenderView hnGenderView = holder.v(R.id.grade);
-            hnGenderView.setGender(dataBean.getBodyBean().getSex(), dataBean.getBodyBean().getGrade());
-
-            if (dataBean.getIs_contact() == 1) {
-
-            } else {
-
-            }
-
-            //认证
-            TextView signatureView = holder.v(R.id.signature);
-            if ("1".equalsIgnoreCase(dataBean.getBodyBean().getIs_auth())) {
-                holder.v(R.id.auth_iview).setVisibility(View.VISIBLE);
-                signatureView.setText(dataBean.getBodyBean().getCompany() + dataBean.getBodyBean().getJob());
-            } else {
-                holder.v(R.id.auth_iview).setVisibility(View.GONE);
-                String signature = dataBean.getBodyBean().getSignature();
-                if (TextUtils.isEmpty(signature)) {
-                    signatureView.setText(R.string.signature_empty_tip);
-                } else {
-                    signatureView.setText(signature);
-                }
-            }
-
-            //关注
-            final ImageView followView = holder.v(R.id.follow_image_view);
-            final String to_uid = dataBean.getBodyBean().getUid();
-
-            followView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSelectorPosition(posInData);
-                    add(RRetrofit.create(UserInfoService.class)
-                            .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
-                            .compose(Rx.transformer(String.class))
-                            .subscribe(new BaseSingleSubscriber<String>() {
-
-                                @Override
-                                public void onSucceed(String bean) {
-                                    dataBean.setIs_attention(1);
-                                    setSelectorPosition(posInData);
-                                }
-
-                                @Override
-                                public void onError(int code, String msg) {
-                                    super.onError(code, msg);
-                                    setSelectorPosition(posInData);
-                                }
-                            }));
-                }
-            });
-
-            if (isContact(dataBean) || isAttention(dataBean)) {
-                final String finalTitleString = getTitleString();
-                View.OnClickListener clickListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //取消关注
-                        UIBottomItemDialog.build()
-                                .setTitleString(finalTitleString)
-                                .addItem(new UIItemDialog.ItemInfo(mActivity.getResources().getString(R.string.base_ok), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        setSelectorPosition(posInData);
-                                        add(RRetrofit.create(UserInfoService.class)
-                                                .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
-                                                .compose(Rx.transformer(String.class))
-                                                .subscribe(new BaseSingleSubscriber<String>() {
-
-                                                    @Override
-                                                    public void onSucceed(String bean) {
-                                                        //dataBean.setIs_attention(0);
-                                                        onSetDataBean(dataBean, false);
-                                                        setSelectorPosition(posInData);
-                                                    }
-
-                                                    @Override
-                                                    public void onError(int code, String msg) {
-                                                        super.onError(code, msg);
-                                                        setSelectorPosition(posInData);
-                                                    }
-                                                }));
-                                    }
-                                })).showDialog(mOtherILayout);
-                    }
-                };
-                followView.setOnClickListener(clickListener);
-            }
-
-
-        }
-
-        @Override
-        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, CustomMessageBean bean) {
-            super.onBindModelView(model, isSelector, holder, position, bean);
-            final HnFollowImageView followView = holder.v(R.id.follow_image_view);
-            followView.setLoadingModel(isSelector);
-            if (isSelector) {
-                followView.setOnClickListener(null);
-            } else {
-                //关注
-                if (isContact(bean)) {
-                    followView.setImageResource(R.drawable.huxiangguanzhu);
-                } else {
-                    if (isAttention(bean)) {
-                        followView.setImageResource(R.drawable.focus_on);
-                    } else {
-                        followView.setImageResource(R.drawable.follow);
-                    }
-                }
-            }
-        }
-
-
-        protected boolean isContact(CustomMessageBean dataBean) {
-            return dataBean.getIs_contact() == 1;
-        }
-
-        protected boolean isAttention(CustomMessageBean dataBean) {
-            return dataBean.getIs_attention() == 1;
-        }
-
-        protected void onSetDataBean(CustomMessageBean dataBean, boolean value) {
-            if (!value) {
-                dataBean.setIs_contact(0);
-            }
-            dataBean.setIs_attention(value ? 1 : 0);
-        }
-    }
-
-
-
-    class AddFriendAdpater extends FriendsNewAdapter {
+    class AddFriendAdpater extends UserInfoClickAdapter {
 
         static final int FUNC = 10001;
         static final int ADDRESSBOOK = 10002;
 
-        public AddFriendAdpater(Context context) {
-            super(context);
+        public AddFriendAdpater(Context context, ILayout ILayout, CompositeSubscription subscription) {
+            super(context, ILayout, subscription);
         }
 
 
@@ -351,7 +202,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<CustomMessageBean> {
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, final int posInData, final CustomMessageBean dataBean) {
+        protected void onBindDataView(RBaseViewHolder holder, final int posInData, final LikeUserInfoBean dataBean) {
 
             if (FUNC == getDataItemType(posInData)) {
                 TextView searchview = holder.tv(R.id.search_view);
@@ -389,14 +240,14 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<CustomMessageBean> {
 
 
         @Override
-        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, CustomMessageBean bean) {
+        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, LikeUserInfoBean bean) {
             if (getItemType(position) == super.getDataItemType(position)) {
                 super.onBindModelView(model, isSelector, holder, position, bean);
             }
         }
 
         @Override
-        public void resetData(List<CustomMessageBean> datas) {
+        public void resetData(List<LikeUserInfoBean> datas) {
             mAllDatas.clear();
             mAllDatas.addAll(onPreProvider());
             if (datas == null) {

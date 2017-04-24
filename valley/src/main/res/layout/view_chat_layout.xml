@@ -169,6 +169,29 @@
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/rl_group_announcement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/base_xhdpi"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            android:background="@color/white"
+            android:minHeight="@dimen/base_40dpi"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_announcement"
+                style="@style/SingleMainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/base_40dpi"
+                android:layout_centerInParent="true"
+                android:gravity="center_vertical"
+                android:padding="@dimen/base_ldpi"
+                android:textColor="@color/colorPrimary"
+                tools:text="angcyo:angcyo" />
+        </RelativeLayout>
+
+
         <!--录音时间覆盖-->
         <FrameLayout
             android:id="@+id/over_layout"

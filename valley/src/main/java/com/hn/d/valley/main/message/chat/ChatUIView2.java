@@ -367,7 +367,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                                 IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, friendBean.getIntroduce(), attachment);
                                 sendMessage(message);
 
-
                             }
                         });
             }

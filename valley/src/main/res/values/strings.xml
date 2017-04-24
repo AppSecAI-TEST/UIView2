@@ -393,7 +393,7 @@
     <string name="text_disolve_group">解散该群</string>
     <string name="text_quit_group">退出该群</string>
     <string name="text_sure_empty">确定清空吗?</string>
-    <string name="cancel">text_cancel</string>
+    <string name="cancel">取消</string>
     <string name="text_search_chat_record">查找聊天记录</string>
     <string name="text_me_in_group_nickname">我在本群的昵称</string>
     <string name="text_message_notity_no">消息免打扰</string>
@@ -404,6 +404,11 @@
     <string name="text_desolve_success">解散成功</string>
     <string name="text_group_name">群聊名称</string>
     <string name="text_quit_success">退出成功</string>
+    <string name="search_contact">搜索手机号/姓名</string>
+    <string name="text_is_kict_group">确定踢出群聊吗?</string>
+    <string name="text_is_empty">确定清空吗?</string>
+    <string name="text_photo_wall">照片墙</string>
+    <string name="text_upload_photo">上传照片</string>
     <string name="view_cnt_format">%1$s阅</string>
     <string name="edit_tag_tip">编辑标签</string>
     <string name="my_tag_tip">我关注的标签</string>

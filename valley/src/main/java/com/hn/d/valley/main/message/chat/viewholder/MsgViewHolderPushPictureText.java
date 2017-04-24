@@ -54,7 +54,7 @@ public class MsgViewHolderPushPictureText extends MsgViewHolderBase {
 
         contentView.setText(title);
         if (isReceivedMessage(message)) {
-            RFresco.mask(context, draweeView, R.drawable.bubble_box_left, thumb, false);
+            RFresco.mask(context, draweeView, R.drawable.bubble_box_left_s, thumb, false);
         } else {
             RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, thumb, false);
         }

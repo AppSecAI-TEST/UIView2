@@ -14,13 +14,19 @@ import android.widget.TextView;
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.skin.BlackSkin;
+import com.hn.d.valley.skin.BlueSkin;
+import com.hn.d.valley.skin.GreenSkin;
+import com.hn.d.valley.skin.SkinUtils;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
@@ -143,7 +149,9 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
             if (isReceivedMessage()) {
                 //收到的消息
                 itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+
                 contentContainer.setBackgroundResource(R.drawable.bubble_box_left_selector);
+
                 if (userInfoCache != null) {
                     NimUserInfo userInfo = userInfoCache.getUserInfo(message.getFromAccount());
                     if (userInfo != null) {
@@ -153,7 +161,17 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
             } else {
                 //发出去的消息
                 itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                contentContainer.setBackgroundResource(R.drawable.bubble_box_right_selector);
+                switch (SkinUtils.getSkin()) {
+                    case SkinManagerUIView.SKIN_BLACK:
+                        contentContainer.setBackgroundResource(R.drawable.bubble_box_right_black_selector);
+                        break;
+                    case SkinManagerUIView.SKIN_GREEN:
+                        contentContainer.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
+                        break;
+                    case SkinManagerUIView.SKIN_BLUE:
+                        contentContainer.setBackgroundResource(R.drawable.bubble_box_right_blue_selector);
+                        break;
+                }
                 avatar = UserCache.instance().getAvatar();
             }
 

@@ -14,6 +14,7 @@
         android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_marginTop="@dimen/base_xhdpi"
         android:gravity="center_vertical">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,17 +35,24 @@
 
     <include layout="@layout/item_divider_line" />
 
-    <TextView
-        android:id="@+id/tv_add_group"
-        style="@style/DarkTextStyle"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/layout_container_add"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="@dimen/base_xhdpi"
-        android:layout_marginLeft="@dimen/base_xhdpi"
-        android:layout_marginTop="@dimen/base_xhdpi"
-        android:text="+ 发起群聊"
-        android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/default_text_size" />
+        android:background="@drawable/base_bg_selector">
+
+        <TextView
+            android:id="@+id/tv_add_group"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/base_xhdpi"
+            android:layout_marginLeft="@dimen/base_xhdpi"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:text="+ 发起群聊"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/default_text_size" />
+    </FrameLayout>
 
 </LinearLayout>

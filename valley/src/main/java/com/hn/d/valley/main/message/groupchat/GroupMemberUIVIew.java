@@ -1,7 +1,6 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.content.Context;
-import android.icu.text.DateFormat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,14 +17,11 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupMemberBean;
-import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
-import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 
 import rx.functions.Action1;
@@ -147,9 +143,9 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                     }
 
                     UIDialog.build()
-                            .setDialogContent("确定踢出群聊吗?")
-                            .setOkText("确定")
-                            .setCancelText("取消")
+                            .setDialogContent(mContext.getString(R.string.text_is_kict_group))
+                            .setOkText(mActivity.getString(R.string.ok))
+                            .setCancelText(mActivity.getString(R.string.cancel))
                             .setOkListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

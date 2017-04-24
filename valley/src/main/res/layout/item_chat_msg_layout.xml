@@ -49,7 +49,7 @@
                 android:id="@+id/msg_content_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:background="@drawable/bubble_box_right_selector">
+                tools:background="@drawable/bubble_box_right_green_selector">
 
                 <!--文本消息-->
                 <include

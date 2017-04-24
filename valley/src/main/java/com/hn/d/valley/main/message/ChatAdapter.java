@@ -217,7 +217,7 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
         } else {
             //发出去的消息
             itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            contentRootLayout.setBackgroundResource(R.drawable.bubble_box_right_selector);
+            contentRootLayout.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
             avatar = UserCache.instance().getAvatar();
         }
 
@@ -416,7 +416,7 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
 
         if (isReceivedMessage(bean)) {
             clickView.setBackgroundResource(R.drawable.bubble_box_left_selector2);
-            RFresco.mask(mContext, draweeView, R.drawable.bubble_box_left, thumb, isFile);
+            RFresco.mask(mContext, draweeView, R.drawable.bubble_box_left_s, thumb, isFile);
         } else {
             clickView.setBackgroundResource(R.drawable.bubble_box_right_selector2);
             RFresco.mask(mContext, draweeView, R.drawable.bubble_box_right_n2, thumb, isFile);
@@ -458,7 +458,7 @@ public class ChatAdapter extends RBaseAdapter<IMMessage> {
 
         if (isReceivedMessage(bean)) {
             clickView.setBackgroundResource(R.drawable.bubble_box_left_selector2);
-            RFresco.mask(mContext, draweeView, R.drawable.bubble_box_left, fileUri, isFile);
+            RFresco.mask(mContext, draweeView, R.drawable.bubble_box_left_s, fileUri, isFile);
         } else {
             clickView.setBackgroundResource(R.drawable.bubble_box_right_selector2);
             RFresco.mask(mContext, draweeView, R.drawable.bubble_box_right_n2, fileUri, isFile);

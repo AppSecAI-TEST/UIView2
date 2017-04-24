@@ -90,6 +90,32 @@ public class CustomMessageBean {
         this.is_contact = is_contact;
     }
 
+
+
+    public LikeUserInfoBean convert() {
+
+
+        LikeUserInfoBean userInfo = new LikeUserInfoBean();
+
+        userInfo.setAvatar(getBodyBean().getAvatar());
+        userInfo.setUid(getBodyBean().getUid());
+        userInfo.setUsername(getBodyBean().getUsername());
+        userInfo.setAuth_type(getBodyBean().getAuth_type());
+        userInfo.setIs_auth(getBodyBean().getIs_auth());
+        userInfo.setCreated(created);
+        userInfo.setSex(getBodyBean().getSex());
+        userInfo.setGrade(getBodyBean().getGrade());
+        userInfo.setIs_contact(is_contact);
+        userInfo.setIs_attention(is_attention);
+        userInfo.setSignature(getBodyBean().getSignature());
+
+
+        return userInfo;
+
+
+    }
+
+
     public static class BodyBean {
         /**
          * msg : 我是重中之重重中之重重中之重重中之重

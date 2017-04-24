@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -194,9 +195,9 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                     @Override
                     public void onClick(View v) {
                         UIDialog.build()
-                                .setDialogContent("确定清空吗?")
-                                .setOkText("确定")
-                                .setCancelText("取消")
+                                .setDialogContent(mActivity.getString(R.string.text_is_empty))
+                                .setOkText(mActivity.getString(R.string.ok))
+                                .setCancelText(mActivity.getString(R.string.cancel))
                                 .setOkListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -234,6 +235,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
         TextView tv = holder.tv(R.id.tv_username);
         HnGlideImageView imageView = holder.v(R.id.image_view);
         TextView tv_add_group = holder.tv(R.id.tv_add_group);
+        FrameLayout layout_container_add = holder.v(R.id.layout_container_add);
         ImageView iv_user_detail = holder.imgV(R.id.iv_user_detail);
 
         tv.setText(mUserInfo.getName());
@@ -244,7 +246,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 mILayout.startIView(new UserDetailUIView2(mUserInfo.getAccount()));
             }
         });
-        tv_add_group.setOnClickListener(new View.OnClickListener() {
+        layout_container_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ContactSelectUIVIew targetView = new ContactSelectUIVIew(new BaseContactSelectAdapter.Options());

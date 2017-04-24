@@ -138,7 +138,7 @@ public class MessageUIView extends BaseUIView {
         ArrayList<TitleBarPattern.TitleBarItem> leftItems = new ArrayList<>();
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
 
-        leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_add_friends).setListener(new View.OnClickListener() {
+        leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_friends_2).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOtherILayout.startIView(new FriendUIView());

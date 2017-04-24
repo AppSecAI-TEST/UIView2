@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/base_bg_selector"
     android:padding="@dimen/base_hdpi">
+
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/image_view"
         android:layout_width="@dimen/avatar_image_size_little"

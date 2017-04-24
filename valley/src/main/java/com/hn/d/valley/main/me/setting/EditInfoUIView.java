@@ -943,7 +943,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
      */
     protected void bindPhoneWallItem(RBaseViewHolder holder, final int size) {
         final RDragRecyclerView dragRecyclerView = holder.v(R.id.drag_recycler_view);
-        TextView tv_add_photos = holder.tv(R.id.tv_add_photos);
+        RelativeLayout rl_add_photo = holder.v(R.id.rl_add_photo);
         ViewGroup.LayoutParams layoutParams = dragRecyclerView.getLayoutParams();
         layoutParams.width = ScreenUtil.screenWidth;
 
@@ -951,7 +951,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         layoutParams.height = itemHeight * 2 + ScreenUtil.dip2px(20);
         dragRecyclerView.setLayoutParams(layoutParams);
 
-        tv_add_photos.setOnClickListener(new View.OnClickListener() {
+        rl_add_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ImagePickerHelper.startImagePicker(mActivity, true, false, false, true, getMaxSelectorCount());

@@ -325,6 +325,9 @@ public class RecentContactsControl {
         return Constant.comment.equalsIgnoreCase(recent.getContactId());
     }
 
+
+
+
     private int getTopItemCount() {
         return 1;
     }

@@ -2,34 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/base_xhdpi"
     android:background="@drawable/base_white_bg_selector"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="@dimen/base_xhdpi">
 
     <TextView
         android:id="@+id/tv_group_member_num"
         style="@style/DarkTextStyle"
-        android:layout_alignParentStart="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_marginLeft="@dimen/base_xhdpi"
-        android:textColor="@color/base_text_color"
         android:text="@string/group_member_num"
+        android:textColor="@color/base_text_color"
         android:textSize="@dimen/default_text_size" />
 
     <LinearLayout
+        android:id="@+id/layout_wrap_member_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xhdpi"
-        android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
         android:gravity="center_vertical">
 
         <com.angcyo.uiview.recycler.RRecyclerView
             android:id="@+id/rv_headimg_name_icon"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
         <ImageView
             android:id="@+id/iv_group_members"
@@ -37,25 +38,32 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/base_xhdpi"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/base_xhdpi"
             android:src="@drawable/base_next" />
     </LinearLayout>
 
-    <include
-        layout="@layout/item_divider_line"/>
+    <include layout="@layout/item_divider_line" />
 
-    <TextView
-        android:id="@+id/tv_add_groupmembers"
-        style="@style/DarkTextStyle"
-        android:layout_marginLeft="@dimen/base_xhdpi"
-        android:layout_marginTop="@dimen/base_xhdpi"
-        android:layout_marginBottom="@dimen/base_xhdpi"
-        android:layout_alignParentStart="true"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/layout_container_add"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
-        android:text="+ 添加群成员"
-        android:textSize="@dimen/default_text_size" />
+        android:background="@drawable/base_bg_selector">
+
+        <TextView
+            android:id="@+id/tv_add_groupmembers"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/base_xhdpi"
+            android:layout_marginLeft="@dimen/base_xhdpi"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:text="+ 添加群成员"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/default_text_size" />
+    </FrameLayout>
+
 
 </LinearLayout>

@@ -1,19 +1,24 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
@@ -23,6 +28,7 @@ import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.HnGlideImageView;
 
@@ -68,9 +74,17 @@ public class GroupMemberModel {
         icoRecyclerView = holder.v(R.id.rv_headimg_name_icon);
         tv_group_member_num = holder.v(R.id.tv_group_member_num);
         TextView tv_add_groupmembers = holder.tv(R.id.tv_add_groupmembers);
+        LinearLayout layout_wrap_member_head = holder.v(R.id.layout_wrap_member_head);
+        FrameLayout layout_container_add = holder.v(R.id.layout_container_add);
         ImageView iv_group_members = holder.imageView(R.id.iv_group_members);
 
         icoRecyclerView.setLayoutManager(new LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false));
+        icoRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                outRect.left = ScreenUtil.dip2px(10);
+            }
+        });
         mAdapter = new ChatInfoAdapter(ctx);
 
         icoRecyclerView.setAdapter(mAdapter);
@@ -78,7 +92,7 @@ public class GroupMemberModel {
         tv_group_member_num.setText(holder.itemView.getContext().getResources().getString(R.string.group_member_num)
                 + "(" + bean.getMemberCount() + "/" + bean.getMemberLimit() + ")");
 
-        iv_group_members.setOnClickListener(new View.OnClickListener() {
+        layout_wrap_member_head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
@@ -98,7 +112,7 @@ public class GroupMemberModel {
             }
         });
 
-        tv_add_groupmembers.setOnClickListener(new View.OnClickListener() {
+        layout_container_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 List<GroupMemberBean> mAdapterAllDatas = mAdapter.getAllDatas();
@@ -139,12 +153,19 @@ public class GroupMemberModel {
         }
 
         @Override
-        protected void onBindView(RBaseViewHolder holder, int position, GroupMemberBean bean) {
+        protected void onBindView(RBaseViewHolder holder, int position, final GroupMemberBean bean) {
             HnGlideImageView image_view = holder.v(R.id.image_view);
-            TextView username = holder.tv(R.id.tv_username);
+            final TextView username = holder.tv(R.id.tv_username);
 
             image_view.setImageUrl(bean.getUserAvatar());
             username.setText(bean.getDefaultNick());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    contentUIView.startIView(new UserDetailUIView2(bean.getUserId()));
+
+                }
+            });
         }
 
         @Override

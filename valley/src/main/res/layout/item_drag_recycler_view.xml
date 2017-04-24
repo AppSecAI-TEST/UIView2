@@ -7,6 +7,7 @@
     android:paddingTop="@dimen/base_mdpi">
 
     <RelativeLayout
+        android:id="@+id/rl_add_photo"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@drawable/base_bg_selector"
@@ -19,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/base_text_color"
-            android:text="照片墙"
+            android:text="@string/text_photo_wall"
             android:textSize="@dimen/default_text_size" />
 
         <TextView
@@ -28,8 +29,9 @@
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/base_bg_selector"
             android:textColor="@color/nav_text_color_press"
-            android:text="上传照片"
+            android:text="@string/text_upload_photo"
             android:textSize="@dimen/default_text_size" />
 
     </RelativeLayout>

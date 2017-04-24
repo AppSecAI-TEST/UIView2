@@ -27,6 +27,6 @@ public interface CustomAttachmentType {
 
     String PersonalCard_ = "user";
 
-    String SystemPush = "system_push";
+    String ManagerPush = "system_push";
 
 }
