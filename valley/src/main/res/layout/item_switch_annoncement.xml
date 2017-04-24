@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_titlebar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/base_bg_selector"
+    android:orientation="vertical"
+    >
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/base_ldpi"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLength="@integer/title_text_count"
+        android:maxLines="1"
+        android:tag="title"
+        android:textColor="@color/default_base_white"
+        android:textSize="@dimen/base_title_size"
+        tools:text="标题"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_show"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:button="@drawable/message_announcement_selector"
+        android:gravity="center" />
+
+</LinearLayout>
