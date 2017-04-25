@@ -28,7 +28,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/msg_time_view"
-        android:gravity="bottom"
         android:layoutDirection="rtl"
         android:orientation="horizontal"
         android:paddingStart="@dimen/base_xhdpi">
@@ -37,74 +36,40 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/msg_ico_view"
             style="@style/MsgUserLittleIcoStyle"
-            android:layout_marginBottom="@dimen/base_xhdpi"/>
+            />
 
-        <FrameLayout
-            android:id="@+id/msg_content_layout"
+        <LinearLayout
+            android:id="@+id/msg_name_layout"
+            android:orientation="vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/base_80dpi">
-
-            <!--&lt;!&ndash;内容&ndash;&gt;-->
-            <!--<FrameLayout-->
-                <!--android:id="@+id/msg_content_layout"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--tools:background="@drawable/bubble_box_right_selector">-->
-
-                <!--&lt;!&ndash;文本消息&ndash;&gt;-->
-                <!--<include-->
-                    <!--android:id="@+id/msg_text_layout"-->
-                    <!--layout="@layout/msg_text_layout"/>-->
-
-                <!--&lt;!&ndash;地理位置消息&ndash;&gt;-->
-                <!--<include-->
-                    <!--android:id="@+id/msg_location_layout"-->
-                    <!--layout="@layout/msg_location_layout"-->
-                    <!--android:visibility="gone"/>-->
-
-                <!--&lt;!&ndash;&lt;!&ndash;图片消息&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;<include&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/msg_image_layout"&ndash;&gt;-->
-                <!--&lt;!&ndash;layout="@layout/msg_image_layout"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:visibility="gone"/>&ndash;&gt;-->
-
-                <!--&lt;!&ndash;音频消息&ndash;&gt;-->
-                <!--<include-->
-                    <!--android:id="@+id/msg_audio_layout"-->
-                    <!--layout="@layout/msg_audio_layout"-->
-                    <!--android:visibility="gone"/>-->
-
-                <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
-                <!--&lt;!&ndash;android:id="@+id/msg_image_view"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--&lt;!&ndash;tools:src="@drawable/login_logo"/>&ndash;&gt;-->
-            <!--</FrameLayout>-->
-
-            <!--&lt;!&ndash;图片消息&ndash;&gt;-->
-            <!--<include-->
-                <!--android:id="@+id/msg_image_layout"-->
-                <!--layout="@layout/msg_image_layout"-->
-                <!--android:visibility="gone"/>-->
-
-            <!--&lt;!&ndash;个人名片&ndash;&gt;-->
-            <!--<include-->
-                <!--android:id="@+id/msg_pc_layout"-->
-                <!--layout="@layout/msg_personalcard_layout"-->
-                <!--android:visibility="gone"-->
-                <!--/>-->
+            android:layout_height="wrap_content">
 
 
-        </FrameLayout>
+            <TextView
+                android:id="@+id/msg_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/base_hdpi"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/main_text_color"
+                android:text="hewking"/>
+
+            <FrameLayout
+                android:id="@+id/msg_content_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/base_80dpi">
+
+            </FrameLayout>
+        </LinearLayout>
 
         <!--状态-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/base_xxhdpi"
             android:layout_marginStart="@dimen/base_80dpi_"
             android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
             android:minHeight="@dimen/base_xxhdpi"
             android:orientation="horizontal">
 

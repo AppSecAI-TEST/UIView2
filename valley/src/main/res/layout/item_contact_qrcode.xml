@@ -7,13 +7,13 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:background="@drawable/base_bg_selector"
-    android:layout_marginTop="@dimen/base_hdpi"
-    android:padding="@dimen/base_hdpi">
+    android:padding="@dimen/base_xhdpi">
 
         <TextView
             android:id="@+id/tv_qrcode_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/default_text_size"
             android:text="我的id : 32176"
             />
 

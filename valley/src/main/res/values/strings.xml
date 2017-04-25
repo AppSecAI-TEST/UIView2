@@ -414,4 +414,9 @@
     <string name="my_tag_tip">我关注的标签</string>
     <string name="drag_tip">拖动</string>
     <string name="more_tag_tip">更多标签</string>
+    <string name="text_send_redpacket">发红包</string>
+    <string name="text_amount">金额</string>
+    <string name="text_redpacket_notice">继续即表示同意《恐龙谷红包用户协议》\n 24小时未领取的红包，将于2天内退款至你的恐龙谷钱包</string>
+    <string name="text_unit">元</string>
+    <string name="text_insert_money">塞钱</string>
 </resources>

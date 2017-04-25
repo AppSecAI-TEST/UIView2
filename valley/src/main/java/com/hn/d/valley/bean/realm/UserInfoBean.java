@@ -32,8 +32,11 @@ public class UserInfoBean extends RealmObject {
     public static final String KEY_NEW_NOTIFICATION = "key_new_notification";
     public int is_login_protect;
     public String test;
+
     boolean new_visitor;//是否有新的访客
     boolean new_notification;//是否有新的动态通知
+
+
     /**
      * is_attention : 1
      * is_contact : 0

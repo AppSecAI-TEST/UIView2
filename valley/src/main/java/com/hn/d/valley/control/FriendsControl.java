@@ -331,7 +331,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         private RBaseAdapter<AbsContactItem> mAdapter;
 
         public GroupItemCallBack(Context ctx,RBaseAdapter adapter) {
-            textPaint.setTextSize(ctx.getResources().getDisplayMetrics().scaledDensity * 20);
+            textPaint.setTextSize(ctx.getResources().getDisplayMetrics().scaledDensity * 14);
             this.mContext = ctx;
             this.mAdapter = adapter;
         }
@@ -353,7 +353,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
             rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
             canvas.drawRect(rectF,textPaint);
-            textPaint.setColor(Color.WHITE);
+            textPaint.setColor(mContext.getResources().getColor(R.color.main_text_color_dark));
 
             final String letter = mAdapter.getAllDatas().get(position).getGroupText();
             textPaint.getTextBounds(letter, 0, letter.length(), rect);
@@ -368,7 +368,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
             rectF.set(view.getLeft(), -offset, view.getRight(), getGroupHeight(position) - offset);
             canvas.drawRect(rectF, textPaint);
-            textPaint.setColor(Color.WHITE);
+            textPaint.setColor(mContext.getResources().getColor(R.color.main_text_color_dark));
 
             final String letter = mAdapter.getAllDatas().get(position).getGroupText();
             textPaint.getTextBounds(letter, 0, letter.length(), rect);
@@ -387,7 +387,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         public void onItemDraw(Canvas canvas, View view, int position) {
             super.onItemDraw(canvas, view, position);
             ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(mContext,R.color.chat_bg_color));
-            int left = ScreenUtil.dip2px(70);
+            int left = ScreenUtil.dip2px(55);
             colorDrawable.setBounds(view.getLeft() + left,view.getBottom(),view.getRight() - ScreenUtil.dip2px(10),view.getBottom() + ScreenUtil.dip2px(1));
             colorDrawable.draw(canvas);
 

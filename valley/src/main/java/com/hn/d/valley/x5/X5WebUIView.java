@@ -133,6 +133,7 @@ public class X5WebUIView extends BaseContentUIView {
     }
 
     protected void onLoadUrl() {
+        L.i("call: onLoadUrl([])-> 加载网页:" + mTargetUrl);
         mWebView.loadUrl(mTargetUrl);
         mProgressBarView.setProgress(10);
     }
@@ -141,14 +142,14 @@ public class X5WebUIView extends BaseContentUIView {
         if (mWebCallback != null) {
             mWebCallback.onPageFinished(webView, url);
         }
-        L.e("call: onPageFinished([webView, url])-> ");
+        //L.e("call: onPageFinished([webView, url])-> ");
     }
 
     protected void onProgressChanged(WebView webView, int progress) {
         mProgressBarView.setProgress(progress);
         if (progress >= 90) {
             mEmptyView.setVisibility(View.GONE);
-            L.e("call: onProgressChanged([webView, progress])-> " + progress);
+            //L.e("call: onProgressChanged([webView, progress])-> " + progress);
         }
         if (mWebCallback != null) {
             mWebCallback.onProgressChanged(webView, progress);

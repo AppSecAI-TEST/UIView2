@@ -198,4 +198,15 @@ public interface UserInfoService {
      */
     @POST("user/getToken")
     Observable<ResponseBody> getToken(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	否	int	具体获取哪个人的【可以为自己】
+     * type	否	int	0-全部 1-图文 2-原创 3-视频
+     * limit	否	int	每页显示的数量 默认20
+     * page	否	int	第几页 【默认1】
+     */
+    @POST("discuss/myDiscuss")
+    Observable<ResponseBody> myDiscuss(@QueryMap Map<String, String> map);
 }

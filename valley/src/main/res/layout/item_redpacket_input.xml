@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_white_round_bg_5x"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_margin="@dimen/base_xhdpi">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/text_view"
+        style="@style/DarkTextStyle"
+        android:padding="@dimen/base_xhdpi"
+        android:textColor="@color/main_text_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_amount" />
+
+    <EditText
+        style="@style/EditStyle"
+        android:background="@color/white"
+        android:imeOptions="actionDone"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|end"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:textColor="@color/main_text_color"
+        android:textColorHint="@color/main_text_color_dark"
+        android:hint="0.01"
+        />
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/text_unit"
+        style="@style/DarkTextStyle"
+        android:textColor="@color/main_text_color"
+        android:padding="@dimen/base_xhdpi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_unit"/>
+
+
+</LinearLayout>

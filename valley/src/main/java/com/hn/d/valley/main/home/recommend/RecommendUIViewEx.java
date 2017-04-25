@@ -60,6 +60,7 @@ public class RecommendUIViewEx extends NoTitleBaseRecyclerUIView<UserDiscussList
     public void setFilterTag(Tag filterTag, boolean refresh) {
         this.filterTag = filterTag;
         if (refresh) {
+            onCancel();//取消之前的请求
             mRecyclerView.scrollTo(0, false);
             mRefreshLayout.setRefreshState(RefreshLayout.TOP);
         }

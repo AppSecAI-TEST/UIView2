@@ -38,7 +38,8 @@ public class FoundUIView extends BaseItemUIView {
     @Override
     public void onViewCreate(View rootView, UIParam param) {
         super.onViewCreate(rootView, param);
-        mBaseOffsetSize = getDimensionPixelOffset(R.dimen.base_xhdpi);
+//        mBaseOffsetSize = getDimensionPixelOffset(R.dimen.base_item_size);
+
     }
 
     @Override

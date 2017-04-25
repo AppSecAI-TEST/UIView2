@@ -45,7 +45,6 @@ import com.hn.d.valley.start.mvp.LoginPresenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.widget.HnLoading;
-import com.hn.d.valley.x5.VipWebUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.AbortableFuture;
@@ -381,7 +380,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //        startIView(new UserDetailUIView2(UserCache.getUserAccount()));
         //startIView(new X5WebUIView("http://wap.klgwl.com/user/rank"));
 
-        startIView(new VipWebUIView());
+        //startIView(new VipWebUIView());
     }
 
     @Override

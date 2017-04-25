@@ -26,17 +26,18 @@ public class X5RefreshLayout extends EmptyRefreshLayout {
         super(context, attrs);
     }
 
-    @Override
-    protected boolean innerCanChildScrollVertically(View view, int direction, float rawX, float rawY) {
-        if (view instanceof X5WebView) {
-            if (direction > 0) {
-                //手指向上滑动
-                return true;
-            } else {
-                return ((X5WebView) view).canTopScroll();
-            }
-        } else {
-            return super.innerCanChildScrollVertically(view, direction, rawX, rawY);
-        }
-    }
+//    @Override
+//    protected boolean innerCanChildScrollVertically(View view, int direction, float rawX, float rawY) {
+//        if (view instanceof X5WebView) {
+//            if (direction > 0) {
+//                //手指向上滑动
+//                return true;
+//            } else {
+//                return ((X5WebView) view).canTopScroll();
+//            }
+//        } else {
+//            return super.innerCanChildScrollVertically(view, direction, rawX, rawY);
+//        }
+//    }
+
 }

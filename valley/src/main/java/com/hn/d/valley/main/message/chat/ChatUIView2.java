@@ -293,7 +293,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         updateSkin();//更新皮肤资源
     }
 
-    private List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
+    protected List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
         List<CommandLayoutControl.CommandItemInfo> items = new ArrayList<>();
         items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_photo_normal, "图片", new View.OnClickListener() {
             @Override

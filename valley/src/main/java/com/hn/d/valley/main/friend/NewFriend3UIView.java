@@ -32,7 +32,7 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     @Override
     protected void createItems(List<ViewItemInfo> items) {
 
-        final int line = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xxhdpi);
+        final int line = mActivity.getResources().getDimensionPixelSize(R.dimen.default_text_size);
         final int left = mActivity.getResources().getDimensionPixelSize(R.dimen.base_70dpi);
 
         items.add(ViewItemInfo.build(new ItemCallback() {

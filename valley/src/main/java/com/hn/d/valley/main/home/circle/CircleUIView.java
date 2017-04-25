@@ -129,43 +129,84 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
         if (mLoadStatusCallback != null) {
             mLoadStatusCallback.onLoadStart();
         }
-        add(RRetrofit.create(UserInfoService.class)
-                .discussList(buildParam(page))
-                .compose(Rx.transformer(UserDiscussListBean.class))
-                .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
-                    @Override
-                    public void onSucceed(UserDiscussListBean userDiscussListBean) {
-                        if (userDiscussListBean == null) {
-                            onUILoadDataEnd(null, 0);
-                        } else {
-                            List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
-                            initConfigId(userDiscussListBean);
-                            List<UserDiscussListBean.DataListBean> newDatas = insertPublishTask();
-                            newDatas.addAll(data_list);
-                            onUILoadDataEnd(newDatas, userDiscussListBean.getData_count());
-                        }
-                    }
+        if (isInSubUIView) {
+            add(RRetrofit.create(UserInfoService.class)
+                    .myDiscuss(Param.buildMap("to_uid:" + to_uid, "type:1", "page:" + page))
+                    .compose(Rx.transformer(UserDiscussListBean.class))
+                    .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
-                    @Override
-                    public void onEnd() {
-                        onUILoadDataFinish();
-                        if (mLoadStatusCallback != null) {
-                            mLoadStatusCallback.onLoadEnd();
-                        }
-                    }
-
-                    @Override
-                    public void onNoNetwork() {
-                        super.onNoNetwork();
-                        showNonetLayout(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadData();
+                        @Override
+                        public void onSucceed(UserDiscussListBean userDiscussListBean) {
+                            if (userDiscussListBean == null) {
+                                onUILoadDataEnd(null, 0);
+                            } else {
+                                List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
+                                initConfigId(userDiscussListBean);
+                                List<UserDiscussListBean.DataListBean> newDatas = insertPublishTask();
+                                newDatas.addAll(data_list);
+                                onUILoadDataEnd(newDatas, userDiscussListBean.getData_count());
                             }
-                        });
-                    }
-                }));
+                        }
+
+                        @Override
+                        public void onEnd() {
+                            onUILoadDataFinish();
+                            if (mLoadStatusCallback != null) {
+                                mLoadStatusCallback.onLoadEnd();
+                            }
+                        }
+
+                        @Override
+                        public void onNoNetwork() {
+                            super.onNoNetwork();
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loadData();
+                                }
+                            });
+                        }
+                    }));
+        } else {
+            add(RRetrofit.create(UserInfoService.class)
+                    .discussList(buildParam(page))
+                    .compose(Rx.transformer(UserDiscussListBean.class))
+                    .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
+
+                        @Override
+                        public void onSucceed(UserDiscussListBean userDiscussListBean) {
+                            if (userDiscussListBean == null) {
+                                onUILoadDataEnd(null, 0);
+                            } else {
+                                List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
+                                initConfigId(userDiscussListBean);
+                                List<UserDiscussListBean.DataListBean> newDatas = insertPublishTask();
+                                newDatas.addAll(data_list);
+                                onUILoadDataEnd(newDatas, userDiscussListBean.getData_count());
+                            }
+                        }
+
+                        @Override
+                        public void onEnd() {
+                            onUILoadDataFinish();
+                            if (mLoadStatusCallback != null) {
+                                mLoadStatusCallback.onLoadEnd();
+                            }
+                        }
+
+                        @Override
+                        public void onNoNetwork() {
+                            super.onNoNetwork();
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loadData();
+                                }
+                            });
+                        }
+                    }));
+        }
     }
 
     private Map<String, String> buildParam(String page) {

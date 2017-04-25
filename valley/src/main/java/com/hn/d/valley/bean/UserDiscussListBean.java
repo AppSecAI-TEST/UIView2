@@ -143,6 +143,11 @@ public class UserDiscussListBean {
         private String original_url;
         private String publish_time;
         private String author;
+        /**
+         * allow_download : 1
+         */
+
+        private String allow_download;
 //        private Object original_info;
 
 
@@ -444,6 +449,14 @@ public class UserDiscussListBean {
 
         public void setAuthor(String author) {
             this.author = author;
+        }
+
+        public String getAllow_download() {
+            return allow_download;
+        }
+
+        public void setAllow_download(String allow_download) {
+            this.allow_download = allow_download;
         }
 
 

@@ -344,6 +344,9 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
      */
     public void scrollToTop() {
 //        int currentItem = mViewPager.getCurrentItem();
+        if (mHomeNavLayout == null) {
+            return;
+        }
         int currentItem = mHomeNavLayout.getCurrentTab();
         if (currentItem == 0 && mCircleUIView != null) {
             mCircleUIView.scrollToTop();
@@ -447,7 +450,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     public void onSkinChanged(ISkin skin) {
         super.onSkinChanged(skin);
         if (mHomeNavLayout != null) {
-            mHomeNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeColor());
+            mHomeNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
             updateTabStyle(1);
         }
     }

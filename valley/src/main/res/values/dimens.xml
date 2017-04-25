@@ -8,9 +8,11 @@
     <dimen name="nav_text_size">12sp</dimen>
 
     <dimen name="main_text_size2">16sp</dimen>
+    <dimen name="main_text_size3">15sp</dimen>
 
     <!--头像大小-->
     <dimen name="avatar_image_size">60dp</dimen>
     <dimen name="avatar_image_size_little">50dp</dimen>
+    <dimen name="avatar_image_size_x_little">35dp</dimen>
 
 </resources>

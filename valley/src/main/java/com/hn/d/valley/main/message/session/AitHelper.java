@@ -61,7 +61,7 @@ public class AitHelper {
     }
 
     public static boolean isAitMessage(IMMessage message) {
-        if (message == null || message.getSessionType() != SessionTypeEnum.Team) {
+        if (message == null || message.getSessionType() != SessionTypeEnum.Team || UserCache.instance().getUserInfoBean() == null) {
             return false;
         }
         MemberPushOption option = message.getMemberPushOption();

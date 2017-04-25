@@ -14,24 +14,22 @@ import android.widget.TextView;
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
-import com.hn.d.valley.skin.BlackSkin;
-import com.hn.d.valley.skin.BlueSkin;
-import com.hn.d.valley.skin.GreenSkin;
 import com.hn.d.valley.skin.SkinUtils;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
@@ -56,6 +54,8 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
     protected LinearLayout itemRootLayout;
     protected RelativeLayout itemMsgChatRootLayout;
     protected FrameLayout contentContainer;
+
+    protected TextView nameTextView;
 
     protected RBaseViewHolder mViewHolder;
     protected UIBaseView mUIBaseView;
@@ -110,6 +110,7 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
 
         msgTimeView = findViewById(R.id.msg_time_view);
         msgIcoView = findViewById(R.id.msg_ico_view);
+        nameTextView = findViewById(R.id.msg_nickname);
         messageItemAudioUnreadIndicator = findViewById(R.id.message_item_audio_unread_indicator);
         statusFailView = findViewById(R.id.status_fail_view);
         statusSendingView = findViewById(R.id.status_sending_view);
@@ -139,6 +140,14 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
 
         NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
         String avatar = "";
+
+        if (message.getSessionType() == SessionTypeEnum.Team && isReceivedMessage() && !isMiddleItem()) {
+            nameTextView.setVisibility(View.VISIBLE);
+            nameTextView.setText(TeamDataCache.getInstance().getTeamMemberDisplayName(message.getSessionId(), message
+                    .getFromAccount()));
+        } else {
+            nameTextView.setVisibility(View.GONE);
+        }
 
 
         if (isMiddleItem()) {

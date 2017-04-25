@@ -8,8 +8,10 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
+import com.hn.d.valley.main.message.CommandLayoutControl;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
+import com.hn.d.valley.main.message.redpacket.NewRedPacketUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -60,6 +62,23 @@ public class P2PChatUIView extends ChatUIView2 {
         }));
 
         return super.getTitleBar().setRightItems(rightItems);
+    }
+
+    @Override
+    protected List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
+
+        List<CommandLayoutControl.CommandItemInfo> items = super.createCommandItems();
+
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_rts_normal, "红包", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //红包
+                mOtherILayout.startIView(new NewRedPacketUIView());
+            }
+        }));
+
+        return items;
+
     }
 
     @Subscribe

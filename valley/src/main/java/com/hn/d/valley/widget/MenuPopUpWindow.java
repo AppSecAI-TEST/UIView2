@@ -90,7 +90,7 @@ public class MenuPopUpWindow extends PopupWindow implements View.OnClickListener
 
         List<MenuItem> items = new ArrayList<>();
 
-        items.add(new MenuItem("添加群聊",R.drawable.tianjiahaoyou, new Action1<String>() {
+        items.add(new MenuItem("添加群聊",R.drawable.qunliao, new Action1<String>() {
             @Override
             public void call(String s) {
                 ContactSelectUIVIew targetView = new ContactSelectUIVIew(new BaseContactSelectAdapter.Options());
@@ -190,12 +190,12 @@ public class MenuPopUpWindow extends PopupWindow implements View.OnClickListener
 
     public static class MenuItem {
 
-        String item;
+        public String item;
 
-        Action1<String> action ;
+        public Action1<String> action ;
 
         @DrawableRes
-        int drawableRes;
+        public int drawableRes;
 
         public MenuItem(String item,int drawableRes ,Action1<String> action) {
             this.item = item;

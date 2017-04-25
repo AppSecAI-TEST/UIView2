@@ -136,7 +136,7 @@ public class GroupChatUIView extends ChatUIView2 {
         float start = show? ScreenUtil.dip2px(- 40):0;
         float end = show?0:ScreenUtil.dip2px(- 40);
         ObjectAnimator animator = new ObjectAnimator().ofFloat(layout,"translationY",start,end);
-        animator.setDuration(1000);
+        animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
 

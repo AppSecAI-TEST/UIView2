@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.swipe.RBaseMenuAdapter;
 import com.angcyo.uiview.github.swipe.recyclerview.Closeable;
 import com.angcyo.uiview.github.swipe.recyclerview.OnSwipeMenuItemClickListener;
@@ -26,6 +27,7 @@ import com.angcyo.uiview.utils.TimeUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.RecentContactsCache;
@@ -40,6 +42,7 @@ import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.realm.RRealm;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -62,6 +65,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.realm.Realm;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -70,6 +74,8 @@ import rx.functions.Action1;
  */
 
 public class RecentContactsControl {
+
+    private static final String TAG = RecentContactsControl.class.getSimpleName();
 
     public static final int ITEM_TYPE_NORMAL = 0x0001;
     public static final int ITEM_TYPE_TOP = ITEM_TYPE_NORMAL << 1;
@@ -517,9 +523,21 @@ public class RecentContactsControl {
             if (attachment instanceof NoticeAttachment) {
                 CustomBean bean = ((NoticeAttachment) attachment).getBean();
                 if (bean != null) {
+
+                    // 设置新的动态通知
+                    final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+                    RRealm.exe(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            L.i(TAG,"setNew_notification true");
+                            userInfoBean.setNew_notification(true);
+                        }
+                    });
+
                     return bean.getMsg();
                 }
             }
+
         } else if (attachment instanceof PersonalCardAttachment) {
             PersonalCard card = ((PersonalCardAttachment) attachment).getPersonalCard();
             if (card != null) {

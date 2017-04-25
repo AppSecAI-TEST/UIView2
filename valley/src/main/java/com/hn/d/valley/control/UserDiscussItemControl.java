@@ -3,7 +3,6 @@ package com.hn.d.valley.control;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,12 +11,13 @@ import android.widget.TextView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.RExTextView;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RNineImageLayout;
 import com.bumptech.glide.GifRequestBuilder;
@@ -43,18 +43,22 @@ import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.ReadListUserUIView;
+import com.hn.d.valley.sub.user.DynamicDetailUIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
+import com.hn.d.valley.widget.HnExTextView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnItemTextView;
 import com.hn.d.valley.widget.HnTagsNameTextView;
+import com.hn.d.valley.x5.X5WebUIView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImageUtils;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import rx.functions.Action0;
@@ -115,6 +119,20 @@ public class UserDiscussItemControl {
         } else {
             genderView.setVisibility(View.GONE);
         }
+
+        //内容
+        HnExTextView hnExTextView = holder.v(R.id.content_ex_view);
+        //需要先设置监听, 再设置内容.
+        hnExTextView.setOnImageSpanClick(createSpanClick(iLayout));
+        hnExTextView.setText(dataListBean.getContent());
+        //hnExTextView.setTextIsSelectable(true);
+        hnExTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardUtils.copyText(dataListBean.getContent());
+                return true;
+            }
+        });
 
         //阅读人数
         holder.v(R.id.view_cnt).setOnClickListener(new View.OnClickListener() {
@@ -189,23 +207,27 @@ public class UserDiscussItemControl {
             forwardView.setClickable(false);
         }
 
-        TextView infoView = holder.v(R.id.copy_info_view);
-        infoView.setVisibility(View.GONE);
+        //转发动态
+//        TextView infoView = holder.v(R.id.copy_info_view);
+//        infoView.setVisibility(View.GONE);
         UserDiscussListBean.DataListBean.OriginalInfo originalInfo = dataListBean.getOriginal_info();
         if (!"0".equalsIgnoreCase(dataListBean.getShare_original_item_id()) && originalInfo != null) {
-            infoView.setVisibility(View.VISIBLE);
-            String content = originalInfo.getContent();
-            SpannableStringUtils.Builder builder = SpannableStringUtils.getBuilder(originalInfo.getUsername() + ": ")
-                    .setForegroundColor(infoView.getResources().getColor(R.color.colorAccent));
-            SpannableStringBuilder stringBuilder;
-            if (TextUtils.isEmpty(content)) {
-                stringBuilder = builder.create();
-            } else {
-                stringBuilder = builder.append(content)
-                        .setForegroundColor(infoView.getResources().getColor(R.color.main_text_color_dark))
-                        .create();
-            }
-            infoView.setText(stringBuilder);
+//            infoView.setVisibility(View.VISIBLE);
+//            String content = originalInfo.getContent();
+//            SpannableStringUtils.Builder builder = SpannableStringUtils.getBuilder(originalInfo.getUsername() + ": ")
+//                    .setForegroundColor(infoView.getResources().getColor(R.color.colorAccent));
+//            SpannableStringBuilder stringBuilder;
+//            if (TextUtils.isEmpty(content)) {
+//                stringBuilder = builder.create();
+//            } else {
+//                stringBuilder = builder.append(content)
+//                        .setForegroundColor(infoView.getResources().getColor(R.color.main_text_color_dark))
+//                        .create();
+//            }
+//            infoView.setText(stringBuilder);
+            initForwardLayout(holder, originalInfo, iLayout);
+        } else {
+            holder.v(R.id.forward_control_layout).setVisibility(View.GONE);
         }
 
         View rootLayout = holder.v(R.id.item_root_layout);
@@ -245,6 +267,50 @@ public class UserDiscussItemControl {
     }
 
     /**
+     * 转发动态布局处理
+     */
+    private static void initForwardLayout(RBaseViewHolder holder, final UserDiscussListBean.DataListBean.OriginalInfo original_info, final ILayout iLayout) {
+        holder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
+        HnExTextView exTextView = holder.v(R.id.forward_content_ex_view);
+        exTextView.setOnImageSpanClick(createSpanClick(iLayout));
+        exTextView.setText(createMention(original_info.getUid(), original_info.getUsername())
+                + original_info.getContent());
+
+        holder.v(R.id.forward_click_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iLayout.startIView(new DynamicDetailUIView(original_info.getDiscuss_id()));
+            }
+        });
+
+        final List<String> medias = RUtils.split(original_info.getMedia());
+        initMediaLayout(original_info.getMedia_type(), medias,
+                holder.v(R.id.forward_media_control_layout),
+                ((RNineImageLayout) holder.v(R.id.forward_media_image_view)),
+                (TextView) holder.v(R.id.forward_video_time_view),
+                holder.v(R.id.forward_video_play_view),
+                iLayout);
+    }
+
+    private static String createMention(String id, String name) {
+        return String.format(Locale.CHINA, "<m id='%s'>@%s</m>", id, name);
+    }
+
+    private static RExTextView.ImageTextSpan.OnImageSpanClick createSpanClick(final ILayout iLayout) {
+        return new RExTextView.ImageTextSpan.OnImageSpanClick() {
+            @Override
+            public void onUrlClick(TextView view, String url) {
+                iLayout.startIView(new X5WebUIView(url));
+            }
+
+            @Override
+            public void onMentionClick(TextView view, String mention) {
+                iLayout.startIView(new UserDetailUIView2(mention));
+            }
+        };
+    }
+
+    /**
      * 动态是否置顶
      */
     private static void showTopView(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
@@ -260,6 +326,17 @@ public class UserDiscussItemControl {
         final TextView videoTimeView = holder.v(R.id.video_time_view);
 
         final List<String> medias = RUtils.split(dataListBean.getMedia());
+        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, mediaImageTypeView,
+                videoTimeView, videoPlayView, iLayout);
+    }
+
+    /**
+     * 设置媒体信息
+     */
+    private static void initMediaLayout(String mediaType, final List<String> medias,
+                                        View mediaControlLayout, RNineImageLayout mediaImageTypeView,
+                                        TextView videoTimeView, View videoPlayView,
+                                        final ILayout iLayout) {
         if (medias.isEmpty()) {
             if (mediaControlLayout != null) {
                 mediaControlLayout.setVisibility(View.GONE);
@@ -268,12 +345,10 @@ public class UserDiscussItemControl {
             if (mediaControlLayout != null) {
                 mediaControlLayout.setVisibility(View.VISIBLE);
             }
-            if (mediaCountView != null) {
-                mediaCountView.setText("" + medias.size());
-            }
+
             final String url = medias.get(0);
 
-            if ("3".equalsIgnoreCase(dataListBean.getMedia_type())) {
+            if ("3".equalsIgnoreCase(mediaType)) {
                 //图片类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);
                 videoTimeView.setVisibility(View.INVISIBLE);
@@ -306,7 +381,7 @@ public class UserDiscussItemControl {
                 });
                 mediaImageTypeView.setImagesList(medias);
 //                }
-            } else if ("2".equalsIgnoreCase(dataListBean.getMedia_type())) {
+            } else if ("2".equalsIgnoreCase(mediaType)) {
                 //视频类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);
                 videoTimeView.setVisibility(View.VISIBLE);

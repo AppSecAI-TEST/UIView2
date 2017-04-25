@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 public class MoonUtil {
     private static final float DEF_SCALE = 0.6f;
-    private static final float SMALL_SCALE = 0.45F;
+    public static final float SMALL_SCALE = 0.45F;
     private static Pattern mATagPattern = Pattern.compile("<a.*?>.*?</a>");
 
     public static void identifyFaceExpression(Context context,
@@ -169,7 +169,7 @@ public class MoonUtil {
         }
     }
 
-    private static Drawable getEmotDrawable(Context context, String text, float scale) {
+    public static Drawable getEmotDrawable(Context context, String text, float scale) {
         Drawable drawable = EmojiManager.getDrawable(context, text);
 
         // scale

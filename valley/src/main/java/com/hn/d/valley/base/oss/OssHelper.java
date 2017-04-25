@@ -269,21 +269,40 @@ public class OssHelper {
 
     public static int[] getThumbDisplaySize2(float srcWidth, float srcHeight) {
         int[] size = new int[2];
-        final float TARGET_WIDTH = 3f / 4 * ScreenUtil.screenWidth;
-        final float TARGET_HEIGHT = 3f / 4 * ScreenUtil.screenHeight;
+        final float TARGET_WIDTH = 124 * ScreenUtil.density;//3f / 4 * ScreenUtil.screenWidth;
+        final float TARGET_HEIGHT = 180 * ScreenUtil.density;//3f / 4 * ScreenUtil.screenHeight;
 
         //float srcScale = srcWidth / srcHeight;//原始宽高的比例
+
         float wScale = TARGET_WIDTH / srcWidth;
         float hScale = TARGET_HEIGHT / srcHeight;
 
-        float tScale;
-        if (TARGET_WIDTH > srcWidth && TARGET_HEIGHT > srcHeight) {
-            //放大图片
-            tScale = Math.min(wScale, hScale);
-        } else {
-            //缩小图片
-            tScale = Math.min(wScale, hScale);
+        if (srcHeight < srcWidth) {
+            wScale = TARGET_WIDTH / srcHeight;
+            hScale = TARGET_HEIGHT / srcWidth;
         }
+
+        float tScale;
+        if (srcWidth > TARGET_WIDTH) {
+            if (srcHeight > TARGET_HEIGHT) {
+                tScale = Math.max(wScale, hScale);
+            } else {
+                tScale = wScale;
+            }
+        } else {
+            if (srcHeight > TARGET_HEIGHT) {
+                tScale = hScale;
+            } else {
+                tScale = 1;
+            }
+        }
+//        if (TARGET_WIDTH > srcWidth && TARGET_HEIGHT > srcHeight) {
+//            //放大图片
+//            tScale = Math.min(wScale, hScale);
+//        } else {
+//            //缩小图片
+//            tScale = Math.min(wScale, hScale);
+//        }
 
         size[0] = (int) (tScale * srcWidth);
         size[1] = (int) (tScale * srcHeight);

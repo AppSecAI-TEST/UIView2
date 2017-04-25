@@ -5,6 +5,7 @@ import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.message.notify.SystemNotifyManager;
 import com.hn.d.valley.nim.RNim;
 
 /**
@@ -21,6 +22,10 @@ import com.hn.d.valley.nim.RNim;
 public class MainControl {
     public static void onMainCreate() {
         DataCacheManager.buildDataCacheAsync();
+
+        // 系统消息监听
+        SystemNotifyManager.getInstance().registerSystemObserver(true);
+
         UserCache.instance()
                 .fetchUserInfo()
                 .subscribe(new RSubscriber<UserInfoBean>() {
@@ -36,6 +41,8 @@ public class MainControl {
 
     public static void onMainUnload() {
         onMainUnload(BuildConfig.DEBUG);
+
+        SystemNotifyManager.getInstance().registerSystemObserver(false);
     }
 
     public static void onMainUnload(boolean quit) {

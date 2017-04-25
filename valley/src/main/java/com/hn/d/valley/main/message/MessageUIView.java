@@ -15,6 +15,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
+import com.hn.d.valley.main.friend.FriendMenuUIDialog;
 import com.hn.d.valley.main.friend.FriendNewUIView2;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.friend.ItemTypes;
@@ -150,8 +151,11 @@ public class MessageUIView extends BaseUIView {
             public void onClick(View v) {
 //                mOtherILayout.startIView(new FriendUIView());
 
-                MenuPopUpWindow popUpWindow = new MenuPopUpWindow(mActivity,mOtherILayout);
-                popUpWindow.showAsDropDown(v, Gravity.BOTTOM,0,0);
+//                MenuPopUpWindow popUpWindow = new MenuPopUpWindow(mActivity,mOtherILayout);
+//                popUpWindow.showAsDropDown(v, Gravity.BOTTOM,0,0);
+
+                mOtherILayout.startIView(new FriendMenuUIDialog(v,mOtherILayout));
+
 
             }
         }));
