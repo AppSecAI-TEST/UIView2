@@ -159,4 +159,27 @@ public interface SocialService {
     @POST("social/readList")
     Observable<ResponseBody> readList(@QueryMap Map<String, String> map);
 
+    /**
+     * 转发列表
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * discuss_id	是	int	动态id
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	页面显示的数量 默认20
+     */
+    @POST("social/forwardList")
+    Observable<ResponseBody> forwardList(@QueryMap Map<String, String> map);
+
+    /**
+     * 回复列表
+     * <p>
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * comment_id	是	int	评论id
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	页面显示的数量 默认20
+     */
+    @POST("social/replyList")
+    Observable<ResponseBody> replyList(@QueryMap Map<String, String> map);
+
 }

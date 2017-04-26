@@ -141,6 +141,9 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     RelativeLayout mCommandControlLayout;
     @BindView(R.id.message_voice_box)
     CheckBox mMessageVoiceBox;
+    @BindView(R.id.ll_warp_add_view)
+    LinearLayout wrap_add_view;
+
     QueryDirectionEnum direction;
     boolean firstLoad = true;
     private String mLastInputText = "";
@@ -295,6 +298,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     protected List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
         List<CommandLayoutControl.CommandItemInfo> items = new ArrayList<>();
+
         items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_photo_normal, "图片", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -302,6 +306,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 ImagePickerHelper.startImagePicker(mActivity, false, false, 9);
             }
         }));
+
         items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_video_normal, "视频", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -793,9 +798,11 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         if (!isEmpty) {
             mSendView.setVisibility(View.VISIBLE);
             mMessageAddView.setVisibility(View.GONE);
+            wrap_add_view.setVisibility(View.GONE);
         } else {
             mMessageAddView.setVisibility(View.VISIBLE);
             mSendView.setVisibility(View.GONE);
+            wrap_add_view.setVisibility(View.VISIBLE);
         }
     }
 

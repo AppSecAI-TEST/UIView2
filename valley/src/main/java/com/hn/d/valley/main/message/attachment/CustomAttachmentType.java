@@ -19,6 +19,8 @@ public interface CustomAttachmentType {
 
     int SYSTEMP_PUSH = 3;
 
+    int REDPACKET = 4;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
@@ -28,5 +30,7 @@ public interface CustomAttachmentType {
     String PersonalCard_ = "user";
 
     String ManagerPush = "system_push";
+
+    String NEWBAG = "newredbag";
 
 }

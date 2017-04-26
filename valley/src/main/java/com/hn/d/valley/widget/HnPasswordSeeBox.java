@@ -27,6 +27,6 @@ public class HnPasswordSeeBox extends AppCompatCheckBox {
         ColorStateList stateList = new ColorStateList(
                 new int[][]{{android.R.attr.state_checked}, {}},
                 new int[]{SkinHelper.getSkin().getThemeSubColor(), Color.WHITE});
-        setButtonTintList(stateList);
+        setSupportButtonTintList(stateList);
     }
 }

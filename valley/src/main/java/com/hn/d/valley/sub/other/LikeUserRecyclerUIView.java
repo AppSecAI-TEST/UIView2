@@ -10,8 +10,6 @@ import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.LikeUserModel;
 import com.hn.d.valley.service.SocialService;
 
-import java.util.Locale;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -36,17 +34,17 @@ public class LikeUserRecyclerUIView extends UserInfoRecyclerUIView {
         return mActivity.getString(R.string.like_title);
     }
 
-    @Override
-    protected void onEmptyData(boolean isEmpty) {
-        super.onEmptyData(isEmpty);
-        if (isEmpty) {
-            setTitleString(getTitleString());
-        } else {
-            setTitleString(String.format(Locale.CHINA,
-                    mActivity.getString(R.string.like_title_formater),
-                    mRExBaseAdapter.getRawItemCount()));
-        }
-    }
+//    @Override
+//    protected void onEmptyData(boolean isEmpty) {
+//        super.onEmptyData(isEmpty);
+//        if (isEmpty) {
+//            setTitleString(getTitleString());
+//        } else {
+//            setTitleString(String.format(Locale.CHINA,
+//                    mActivity.getString(R.string.like_title_formater),
+//                    mRExBaseAdapter.getRawItemCount()));
+//        }
+//    }
 
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {

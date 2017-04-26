@@ -102,6 +102,13 @@ public class LikeUserInfoBean {
 
     private String voice_introduce;
     private int fans_count;
+    /**
+     * content : 转发动态
+     * discuss_id : 206
+     */
+
+    private String content;
+    private String discuss_id;
 
 
     public String getAvatar() {
@@ -378,4 +385,19 @@ public class LikeUserInfoBean {
         }
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getDiscuss_id() {
+        return discuss_id;
+    }
+
+    public void setDiscuss_id(String discuss_id) {
+        this.discuss_id = discuss_id;
+    }
 }

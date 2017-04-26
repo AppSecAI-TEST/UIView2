@@ -265,7 +265,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_group_announcement));
-                infoLayout.setItemDarkText(mActivity.getString(R.string.text_group_announcement));
+                infoLayout.setItemDarkText(mGroupDescBean.getAnnouncement() + "");
 
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override

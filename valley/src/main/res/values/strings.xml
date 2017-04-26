@@ -128,6 +128,8 @@
     <string name="like_title_formater">点赞(%1$d)</string>
     <string name="publish_dynamic">发布动态</string>
     <string name="forward_dynamic">转发动态</string>
+    <string name="forward">转发</string>
+    <string name="forward_format">转发 %1$s</string>
     <string name="fans_title">粉丝</string>
     <string name="followers_title">关注</string>
     <string name="cancel_followers">取消关注</string>
@@ -419,4 +421,9 @@
     <string name="text_redpacket_notice">继续即表示同意《恐龙谷红包用户协议》\n 24小时未领取的红包，将于2天内退款至你的恐龙谷钱包</string>
     <string name="text_unit">元</string>
     <string name="text_insert_money">塞钱</string>
+    <string name="text_groupannounce_update">群公告更新</string>
+    <string name="text_group_dissolove">群后台解散</string>
+    <string name="add_comment_hint">添加你的评论</string>
+    <string name="comment">评论</string>
+    <string name="comment_format">评论 %1$s</string>
 </resources>

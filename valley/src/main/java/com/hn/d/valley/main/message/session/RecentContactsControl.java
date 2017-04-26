@@ -114,6 +114,9 @@ public class RecentContactsControl {
     Observer<IMMessage> statusObserver = new Observer<IMMessage>() {
         @Override
         public void onEvent(IMMessage imMessage) {
+
+            L.i(TAG,"statusObserver " + imMessage.getContent());
+
             //消息状态发生了改变
             List<RecentContact> allDatas = mRecentContactsAdapter.getAllDatas();
             for (int i = 0; i < allDatas.size(); i++) {
@@ -207,6 +210,7 @@ public class RecentContactsControl {
     Observer<List<RecentContact>> messageObserver = new Observer<List<RecentContact>>() {
         @Override
         public void onEvent(List<RecentContact> recentContacts) {
+            L.i(TAG,"messageObserver recentContacts " + recentContacts.get(0).getContent());
             onRecentContactChanged(recentContacts);
         }
     };
@@ -215,6 +219,9 @@ public class RecentContactsControl {
     private Observer<List<IMMessage>> messageReceiverObserver = new Observer<List<IMMessage>>() {
         @Override
         public void onEvent(List<IMMessage> imMessages) {
+
+            L.i(TAG,"messageReceiverObserver onEvent " + imMessages.get(0).getContent());
+
             if (imMessages != null) {
                 for (IMMessage imMessage : imMessages) {
                     if (!AitHelper.isAitMessage(imMessage)) {

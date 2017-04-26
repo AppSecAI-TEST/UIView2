@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--底部-->
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/base_ldpi"
+        android:paddingStart="@dimen/base_ldpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/base_ldpi"
+            android:layout_weight="1"
+            android:background="@drawable/base_dark_solid_round_shape"
+            android:gravity="center|left"
+            android:padding="@dimen/base_xhdpi"
+            android:text="@string/add_comment_hint"/>
+
+        <ImageView
+            android:id="@+id/bottom_forward_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base_ldpi"
+            android:background="@drawable/base_bg2_selector"
+            android:padding="@dimen/base_xhdpi"
+            android:src="@drawable/forwarding_icon"/>
+
+        <ImageView
+            android:id="@+id/like_cnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/base_bg2_selector"
+            android:padding="@dimen/base_xhdpi"
+            android:src="@drawable/love_icon_2_n"/>
+    </LinearLayout>
+
+    <com.angcyo.uiview.design.StickLayout2
+        android:id="@+id/stick_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_layout">
+
+        <!--用户详情, 头部-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/item_search_user_item_layout"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_ldpi"/>
+
+            <RelativeLayout
+                android:id="@+id/like_users_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_50dpi"
+                android:background="@drawable/base_bg_selector"
+                android:clickable="true"
+                android:visibility="gone">
+
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base_ldpi"
+                    android:background="@color/chat_bg_color"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/base_50dpi"
+                    android:layout_below="@id/line1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingEnd="@dimen/base_xhdpi"
+                    android:paddingStart="@dimen/base_xhdpi">
+
+                    <com.hn.d.valley.widget.HnIcoRecyclerView
+                        android:id="@+id/like_user_recycler_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:tag="H"/>
+
+                    <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/like_user_count_view"
+                        style="@style/DarkTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/base_ldpi"
+                        android:drawableRight="@drawable/next"
+                        android:tag="@string/link_count_tip"
+                        tools:text="109个人赞过"/>
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/click_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/base_bg_selector"
+                    android:clickable="true"/>
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_ldpi"
+                android:background="@color/chat_bg_color"/>
+
+        </LinearLayout>
+
+        <!--内容部分-->
+        <com.angcyo.uiview.widget.viewpager.UIViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!--悬浮Tab-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.angcyo.uiview.github.tablayout.SlidingTabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_title_bar_item_size"
+                android:layout_marginStart="@dimen/base_xhdpi"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                app:tl_indicator_color="@color/colorPrimary"
+                app:tl_indicator_corner_radius="3dp"
+                app:tl_indicator_height="4dp"
+                app:tl_indicator_margin_left="@dimen/base_xhdpi"
+                app:tl_indicator_margin_right="@dimen/base_xhdpi"
+                app:tl_tab_padding="@dimen/base_hdpi"
+                app:tl_textBold="BOTH"
+                app:tl_textSelectColor="@color/base_text_color"
+                app:tl_textUnselectColor="@color/base_text_color_dark"
+                app:tl_textsize="@dimen/default_text_size"
+                app:tl_underline_height="0dp"/>
+
+            <View
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_line"
+                android:layout_marginTop="@dimen/base_ldpi"
+                android:background="@color/chat_bg_color"/>
+        </LinearLayout>
+
+    </com.angcyo.uiview.design.StickLayout2>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_toast_shadow_height"
+        android:layout_above="@id/bottom_layout"
+        android:background="@drawable/base_shadow_shape_top"/>
+
+</RelativeLayout>

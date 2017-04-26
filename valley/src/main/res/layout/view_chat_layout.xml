@@ -89,22 +89,42 @@
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/base_mdpi">
 
-                        <RadioButton
-                            android:id="@+id/message_expression_view"
+                        <LinearLayout
                             android:layout_width="@dimen/base_40dpi"
                             android:layout_height="match_parent"
                             android:layout_marginStart="@dimen/base_ldpi"
-                            android:button="@drawable/message_expression_selector"
-                            android:gravity="center" />
+                            android:gravity="center">
 
-                        <RadioButton
-                            android:id="@+id/message_add_view"
+                            <RadioButton
+                                android:id="@+id/message_expression_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginStart="@dimen/base_ldpi"
+                                android:button="@drawable/message_expression_selector"
+                                android:drawablePadding="@dimen/base_xhdpi"
+                                android:gravity="center" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/ll_warp_add_view"
                             android:layout_width="@dimen/base_40dpi"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="@dimen/base_ldpi"
                             android:layout_marginRight="@dimen/base_ldpi"
-                            android:button="@drawable/message_add_selector"
-                            android:gravity="center" />
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:id="@+id/message_add_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="@dimen/base_ldpi"
+                                android:layout_marginRight="@dimen/base_ldpi"
+                                android:button="@drawable/message_add_selector"
+                                android:drawablePadding="@dimen/base_xhdpi"
+                                android:gravity="center" />
+                        </LinearLayout>
+
 
                         <!--发送按钮-->
                         <TextView
@@ -187,7 +207,7 @@
                 android:layout_centerInParent="true"
                 android:gravity="center_vertical"
                 android:padding="@dimen/base_ldpi"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/main_text_color"
                 tools:text="angcyo:angcyo" />
         </RelativeLayout>
 

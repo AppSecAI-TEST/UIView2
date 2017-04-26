@@ -24,7 +24,7 @@ public class MainControl {
         DataCacheManager.buildDataCacheAsync();
 
         // 系统消息监听
-        SystemNotifyManager.getInstance().registerSystemObserver(true);
+        SystemNotifyManager.getInstance().registerCustomNotificationObserver(true);
 
         UserCache.instance()
                 .fetchUserInfo()
@@ -42,7 +42,7 @@ public class MainControl {
     public static void onMainUnload() {
         onMainUnload(BuildConfig.DEBUG);
 
-        SystemNotifyManager.getInstance().registerSystemObserver(false);
+        SystemNotifyManager.getInstance().registerCustomNotificationObserver(false);
     }
 
     public static void onMainUnload(boolean quit) {

@@ -2,6 +2,7 @@ package com.hn.d.valley.emoji;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -121,7 +122,7 @@ public class EmojiRecyclerView extends RRecyclerView {
             });
 
             if (position == EMOJI_PER_PAGE || index == count) {
-                emojiThumb.setImageDrawable(getContext().getDrawable(R.drawable.nim_emoji_del));
+                emojiThumb.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.nim_emoji_del));
 
             } else if (index < count) {
                 emojiThumb.setImageDrawable(EmojiManager.getDisplayDrawable(mContext, index));

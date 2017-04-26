@@ -1,17 +1,26 @@
 package com.hn.d.valley.main.message.notify;
 
+import android.text.TextUtils;
+
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.utils.Json;
+import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.event.AnnounceUpdateEvent;
+import com.hn.d.valley.bean.event.GroupDissolveEvent;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
+import com.hn.d.valley.bean.realm.UserInfoBean;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.friend.model.AddFriendNotify;
-import com.netease.nimlib.sdk.msg.SystemMessageObserver;
-import com.netease.nimlib.sdk.msg.constant.SystemMessageType;
-import com.netease.nimlib.sdk.msg.model.SystemMessage;
+import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.model.CustomNotification;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import io.realm.Realm;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -28,9 +37,6 @@ public class SystemNotifyManager {
 
     private static String TAG = SystemNotifyManager.class.getSimpleName();
 
-    private static final boolean MERGE_ADD_FRIEND_VERIFY = false; // 是否要合并好友申请，同一个用户仅保留最近一条申请内容（默认不合并）
-
-
     private SystemNotifyManager(){}
 
     private static class Holder {
@@ -41,95 +47,71 @@ public class SystemNotifyManager {
         return Holder.sInstance;
     }
 
-    private List<SystemMessage> items = new ArrayList<>();
+    private List<CustomNotification> items = new ArrayList<>();
 
-    private Set<String> addFriendVerifyRequestAccounts = new HashSet<>(); // 发送过好友申请的账号（好友申请合并用）
-
-
-    public void registerSystemObserver(boolean register) {
-        L.i(TAG,"registerSystemObserver " + register);
-        NIMClient.getService(SystemMessageObserver.class).observeReceiveSystemMsg(systemMessageObserver, register);
-
-//        NIMClient.getService(SystemMessageService.class).querySystemMessages(0,1000).setCallback(new RequestCallback<List<SystemMessage>>() {
-//            @Override
-//            public void onSuccess(List<SystemMessage> param) {
-//                L.i(TAG,"querySystemMessages onSuccess" + param.toString());
-//
-//            }
-//
-//            @Override
-//            public void onFailed(int code) {
-//                L.i(TAG,"querySystemMessages onFailed" );
-//
-//            }
-//
-//            @Override
-//            public void onException(Throwable exception) {
-//                L.i(TAG,"querySystemMessages onException" );
-//
-//            }
-//        });
-
+    public void registerCustomNotificationObserver(boolean register) {
+        NIMClient.getService(MsgServiceObserve.class).observeCustomNotification(customNotificationObserver, register);
     }
 
-    Observer<SystemMessage> systemMessageObserver = new Observer<SystemMessage>() {
+    Observer<CustomNotification> customNotificationObserver = new Observer<CustomNotification>() {
         @Override
-        public void onEvent(SystemMessage systemMessage) {
-            L.i(TAG,"systemMessageObserver : " + systemMessage.getContent());
-            onIncomingMessage(systemMessage);
+        public void onEvent(CustomNotification customNotification) {
+            L.i(TAG,"customNotificationObserver " + customNotification.getContent());
+
+//            if (!items.contains(customNotification) && customNotification.getContent() != null) {
+//                items.add(0, customNotification);
+//            }
+            parseNotification(customNotification);
         }
     };
 
-    /**
-     * 新消息到来
-     */
-    private void onIncomingMessage(final SystemMessage message) {
-        // 同一个账号的好友申请仅保留最近一条
-        if (addFriendVerifyFilter(message)) {
-            SystemMessage del = null;
-            for (SystemMessage m : items) {
-                if (m.getFromAccount().equals(message.getFromAccount()) && m.getType() == SystemMessageType.AddFriend) {
-                    AddFriendNotify attachData = (AddFriendNotify) m.getAttachObject();
-                    if (attachData != null && attachData.getEvent() == AddFriendNotify.Event.RECV_ADD_FRIEND_VERIFY_REQUEST) {
-                        del = m;
-                        break;
-                    }
-                }
-            }
-
-            if (del != null) {
-                items.remove(del);
-            }
+    private void parseNotification(CustomNotification customNotification) {
+        String content = customNotification.getContent();
+        if(TextUtils.isEmpty(content)) {
+            return;
         }
 
-        items.add(0,message);
+        BaseNotification baseNotification = Json.from(content,BaseNotification.class);
+        switch (baseNotification.getExtend_type()) {
+            case "group_announcement":
+
+                notifyAnnouncementUpdate(customNotification, content);
+
+                break;
+            case "new_discuss":
+
+                RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
+
+                break;
+            case "new_visitor":
+                notifyNewVisitor();
+                break;
+            case "group_dismiss":
+                notifyGroupDisslove(customNotification, content);
+                break;
+        }
+
     }
 
-    // 同一个账号的好友申请仅保留最近一条
-    private boolean addFriendVerifyFilter(final SystemMessage msg) {
-        if (!MERGE_ADD_FRIEND_VERIFY) {
-            return false; // 不需要MERGE，不过滤
-        }
-
-        if (msg.getType() != SystemMessageType.AddFriend) {
-            return false; // 不过滤
-        }
-
-        AddFriendNotify attachData = (AddFriendNotify) msg.getAttachObject();
-        if (attachData == null) {
-            return true; // 过滤
-        }
-
-        if (attachData.getEvent() != AddFriendNotify.Event.RECV_ADD_FRIEND_VERIFY_REQUEST) {
-            return false; // 不过滤
-        }
-
-        if (addFriendVerifyRequestAccounts.contains(msg.getFromAccount())) {
-            return true; // 过滤
-        }
-
-        addFriendVerifyRequestAccounts.add(msg.getFromAccount());
-        return false; // 不过滤
+    private void notifyGroupDisslove(CustomNotification customNotification, String content) {
+        RBus.post(new GroupDissolveEvent(customNotification.getSessionId(), Json.from(content,GroupDissolve.class)));
     }
+
+    private void notifyAnnouncementUpdate(CustomNotification customNotification, String content) {
+        RBus.post(new AnnounceUpdateEvent(customNotification.getSessionId(), Json.from(content,GroupAnnounceNotification.class)));
+    }
+
+    private void notifyNewVisitor() {
+        // 设置新的访客通知
+        final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                L.i(TAG,"setNew_notification true");
+                userInfoBean.setNew_visitor(true);
+            }
+        });
+    }
+
 
 }

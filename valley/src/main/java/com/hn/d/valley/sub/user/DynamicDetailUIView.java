@@ -71,6 +71,7 @@ import rx.functions.Func2;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.DataListBean,
         CommentListBean.DataListBean, String> implements UIIDialogImpl.OnDismissListener {
 
@@ -396,7 +397,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                                     mRExBaseAdapter.resetHeaderData(headList);
                                 }
                                 if (dataListBean2 != null) {
-                                    onUILoadDataEnd(dataListBean2.getData_list(), dataListBean2.getData_count());
+                                    onUILoadDataEnd(dataListBean2.getData_list());
                                 } else {
                                     onUILoadDataEnd();
                                 }

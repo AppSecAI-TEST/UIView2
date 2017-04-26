@@ -182,7 +182,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new DynamicDetailUIView(customBean.getItem_id()));
+                    startIView(new DynamicDetailUIView2(customBean.getItem_id()));
                 }
             });
         }

@@ -61,7 +61,11 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
 
             if ("1".equalsIgnoreCase(dataBean.getIs_auth())) {
                 //holder.v(R.id.auth).setVisibility(View.VISIBLE);
-                signatureView.setText(dataBean.getAuth_desc());
+                if (TextUtils.isEmpty(dataBean.getAuth_desc())) {
+                    signatureView.setText(dataBean.getCompany() + " " + dataBean.getJob());
+                } else {
+                    signatureView.setText(dataBean.getAuth_desc());
+                }
             } else {
                 //holder.v(R.id.auth).setVisibility(View.GONE);
                 String signature = dataBean.getSignature();

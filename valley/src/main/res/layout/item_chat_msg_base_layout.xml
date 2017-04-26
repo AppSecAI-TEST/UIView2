@@ -41,6 +41,7 @@
         <LinearLayout
             android:id="@+id/msg_name_layout"
             android:orientation="vertical"
+            android:layout_marginStart="@dimen/base_ldpi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

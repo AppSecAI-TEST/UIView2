@@ -54,7 +54,7 @@ public class UserDiscussListBean {
         this.type = type;
     }
 
-    public static class DataListBean implements RExBaseAdapter.ObjectEmpty {
+    public static class DataListBean implements RExBaseAdapter.ObjectEmpty, ILikeData {
         public String uuid;
         boolean isEmpty = false;
         /**
@@ -457,6 +457,31 @@ public class UserDiscussListBean {
 
         public void setAllow_download(String allow_download) {
             this.allow_download = allow_download;
+        }
+
+        @Override
+        public String getLikeCount() {
+            return getLike_cnt();
+        }
+
+        @Override
+        public void setLikeCount(String like_cnt) {
+            setLike_cnt(like_cnt);
+        }
+
+        @Override
+        public int getIsLike() {
+            return getIs_like();
+        }
+
+        @Override
+        public void setIsLike(int is_like) {
+            setIs_like(is_like);
+        }
+
+        @Override
+        public String getDiscussId() {
+            return getDiscuss_id();
         }
 
 

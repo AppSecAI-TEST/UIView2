@@ -74,14 +74,15 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
 
             }
+
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseLineSize) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
@@ -94,7 +95,12 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
 
-
+                holder.itemView.findViewById(R.id.text_view).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new PayUIDialog());
+                    }
+                });
 
             }
         }));

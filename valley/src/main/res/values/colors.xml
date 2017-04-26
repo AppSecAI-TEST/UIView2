@@ -39,5 +39,7 @@
     <color name="nav_text_color_press">#0BD1A0</color>
     <!--聊天背景颜色-->
     <color name="chat_bg_color">#F0F0F5</color>
+    <!--转发动态背景色-->
+    <color name="forward_bg_color">#F4F4F4</color>
 
 </resources>

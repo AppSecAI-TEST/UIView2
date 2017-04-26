@@ -323,7 +323,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             }, new Action0() {
                 @Override
                 public void call() {
-                    mOtherILayout.startIView(new DynamicDetailUIView(dataBean.getDiscuss_id()));
+                    mOtherILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
                 }
             }, mOtherILayout);
         }

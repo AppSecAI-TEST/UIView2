@@ -29,9 +29,12 @@ import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.GroupAnnouncementBean;
 import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.bean.GroupMemberBean;
+import com.hn.d.valley.bean.event.AnnounceUpdateEvent;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
+import com.hn.d.valley.bean.event.GroupDissolveEvent;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
@@ -55,6 +58,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import butterknife.BindView;
 import rx.functions.Action3;
 
 /**
@@ -62,10 +66,23 @@ import rx.functions.Action3;
  */
 public class GroupChatUIView extends ChatUIView2 {
 
+    public static final String TAG = GroupChatUIView.class.getSimpleName();
+
+
+    @BindView(R.id.rl_group_announcement)
+    View layout;
+    @BindView(R.id.tv_announcement)
+    TextView tv_announce;
+
     private Map<String, GroupMemberBean> selectedMembers;
+
+    private GroupDescBean mGroupDesc;
 
     private CheckBox cb_show;
     private TextView tv_title;
+    private LinearLayout ll_switch;
+
+    private boolean showAnnounce;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -95,6 +112,7 @@ public class GroupChatUIView extends ChatUIView2 {
                                 .inflate(R.layout.item_switch_annoncement, parent)
                                 .findViewById(R.id.ll_titlebar);
                         parent.setTitleView(layout);
+                        ll_switch = layout;
                         cb_show = (CheckBox) parent.findViewById(R.id.cb_show);
                         tv_title = (TextView) parent.findViewById(R.id.tv_title);
                     }
@@ -116,18 +134,25 @@ public class GroupChatUIView extends ChatUIView2 {
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
 //        setTitleString(TeamDataCache.getInstance().getTeamName(mSessionId));
-        tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId));
-        cb_show.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        if (mGroupDesc != null) {
+            tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId)
+                    + "(" + mGroupDesc.getMemberCount() + ")");
+        } else {
+            tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId));
+        }
+
+        ll_switch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                animAnnounce(isChecked);
+            public void onClick(View v) {
+                showAnnounce = !showAnnounce;
+                animAnnounce(showAnnounce);
+                cb_show.setChecked(showAnnounce);
             }
         });
     }
 
     private void animAnnounce(boolean show) {
-
-        final View layout = mViewHolder.v(R.id.rl_group_announcement);
 
         if (layout.getVisibility() == View.GONE) {
             layout.setVisibility(View.VISIBLE);
@@ -148,6 +173,30 @@ public class GroupChatUIView extends ChatUIView2 {
             return false;
         }
         return true;
+    }
+
+    private void loadAnnounce(final GroupDescBean bean) {
+
+
+        add(RRetrofit.create(GroupChatService.class)
+                .announcementList(Param.buildMap("gid:" + bean.getGid()))
+                .compose(Rx.transformerList(GroupAnnouncementBean.class))
+                .subscribe(new BaseSingleSubscriber<List<GroupAnnouncementBean>>() {
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                    }
+
+                    @Override
+                    public void onSucceed(List<GroupAnnouncementBean> beans) {
+                        if (beans == null || beans.size() == 0) {
+
+                        } else {
+                            tv_announce.setText(beans.get(0).getContent());
+                        }
+                    }
+                }));
+
     }
 
     private void showNotice() {
@@ -196,6 +245,8 @@ public class GroupChatUIView extends ChatUIView2 {
                         @Override
                         public void onSucceed(GroupDescBean bean) {
                             if (bean != null) {
+                                mGroupDesc = bean;
+                                loadAnnounce(bean);
                                 initMentionListener(bean);
                             }
                         }
@@ -296,6 +347,29 @@ public class GroupChatUIView extends ChatUIView2 {
         memberPushOption.setForcePushContent(message.getContent());
         memberPushOption.setForcePushList(pushList);
         return memberPushOption;
+    }
+
+    @Subscribe
+    public void onAnnounceUpdate(AnnounceUpdateEvent event) {
+        if (!mSessionId.equals(event.sessionId)) {
+            return;
+        }
+
+        mOtherILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
+
+        L.i(TAG,event.notification.getContent());
+
+    }
+
+    @Subscribe
+    public void onGroupDissolve(GroupDissolveEvent event) {
+        if (!mSessionId.equals(event.sessionId)) {
+            return;
+        }
+
+        mOtherILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_group_dissolove),event.notification.getMsg()));
+
+        L.i(TAG,event.notification.getMsg());
     }
 
 

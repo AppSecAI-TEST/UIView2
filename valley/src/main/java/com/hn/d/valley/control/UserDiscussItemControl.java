@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
-import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -33,6 +32,7 @@ import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.ILikeData;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
@@ -43,7 +43,7 @@ import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.ReadListUserUIView;
-import com.hn.d.valley.sub.user.DynamicDetailUIView;
+import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
@@ -126,13 +126,13 @@ public class UserDiscussItemControl {
         hnExTextView.setOnImageSpanClick(createSpanClick(iLayout));
         hnExTextView.setText(dataListBean.getContent());
         //hnExTextView.setTextIsSelectable(true);
-        hnExTextView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipboardUtils.copyText(dataListBean.getContent());
-                return true;
-            }
-        });
+//        hnExTextView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                ClipboardUtils.copyText(dataListBean.getContent());
+//                return true;
+//            }
+//        });
 
         //阅读人数
         holder.v(R.id.view_cnt).setOnClickListener(new View.OnClickListener() {
@@ -152,7 +152,7 @@ public class UserDiscussItemControl {
         updateMediaLayout(dataListBean, iLayout, holder);
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
-        HnItemTextView like_cnt = holder.v(R.id.like_cnt);
+        View like_cnt = holder.v(R.id.like_cnt);
 
         if (dataListBean.getIs_collection() == 1) {
             //是否收藏
@@ -161,11 +161,13 @@ public class UserDiscussItemControl {
             fav_cnt.setLeftIco(R.drawable.collection_icon_n);
         }
 
-        if (dataListBean.getIs_like() == 1) {
-            //是否点赞
-            like_cnt.setLeftIco(R.drawable.thumb_up_icon_s);
-        } else {
-            like_cnt.setLeftIco(R.drawable.thumb_up_icon_n);
+        if (like_cnt instanceof HnItemTextView) {
+            if (dataListBean.getIs_like() == 1) {
+                //是否点赞
+                ((HnItemTextView) like_cnt).setLeftIco(R.drawable.thumb_up_icon_s);
+            } else {
+                ((HnItemTextView) like_cnt).setLeftIco(R.drawable.thumb_up_icon_n);
+            }
         }
 
         View commandItemView = holder.v(R.id.command_item_view);
@@ -279,7 +281,7 @@ public class UserDiscussItemControl {
         holder.v(R.id.forward_click_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iLayout.startIView(new DynamicDetailUIView(original_info.getDiscuss_id()));
+                iLayout.startIView(new DynamicDetailUIView2(original_info.getDiscuss_id()));
             }
         });
 
@@ -296,7 +298,7 @@ public class UserDiscussItemControl {
         return String.format(Locale.CHINA, "<m id='%s'>@%s</m>", id, name);
     }
 
-    private static RExTextView.ImageTextSpan.OnImageSpanClick createSpanClick(final ILayout iLayout) {
+    public static RExTextView.ImageTextSpan.OnImageSpanClick createSpanClick(final ILayout iLayout) {
         return new RExTextView.ImageTextSpan.OnImageSpanClick() {
             @Override
             public void onUrlClick(TextView view, String url) {
@@ -928,13 +930,19 @@ public class UserDiscussItemControl {
     /**
      * 点赞
      */
-    private static void initLikeView(final HnItemTextView itemTextView,
-                                     final UserDiscussListBean.DataListBean tBean,
-                                     final CompositeSubscription subscription, final Action1<Boolean> likeAction) {
+    private static void initLikeView(final View itemTextView,
+                                     final ILikeData tBean,
+                                     final CompositeSubscription subscription,
+                                     final String type,
+                                     final Action1<Boolean> likeAction) {
         final String uid = UserCache.getUserAccount();
 
-        itemTextView.setLeftIco(R.drawable.love_icon_s);
-        itemTextView.setText(tBean.getLike_cnt());
+        if (itemTextView instanceof HnItemTextView) {
+            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_2_s);
+            ((HnItemTextView) itemTextView).setText(tBean.getLikeCount());
+        } else if (itemTextView instanceof ImageView) {
+            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_2_s);
+        }
 
 //        RxView.clicks(itemTextView)
 //                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
@@ -960,9 +968,11 @@ public class UserDiscussItemControl {
         itemTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!TextUtils.isEmpty(tBean.uuid)) {
-                    T_.show(itemTextView.getResources().getString(R.string.publishing_tip));
-                    return;
+                if (tBean instanceof UserDiscussListBean.DataListBean) {
+                    if (!TextUtils.isEmpty(((UserDiscussListBean.DataListBean) tBean).uuid)) {
+                        T_.show(itemTextView.getResources().getString(R.string.publishing_tip));
+                        return;
+                    }
                 }
 
 
@@ -971,12 +981,12 @@ public class UserDiscussItemControl {
                     likeAction.call(false);
                 }
 
-                tBean.setIs_like(0);
-                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) - 1));
-                initUnLikeView(itemTextView, tBean, subscription, likeAction);
+                tBean.setIsLike(0);
+                tBean.setLikeCount(String.valueOf(Integer.valueOf(tBean.getLikeCount()) - 1));
+                initUnLikeView(itemTextView, tBean, subscription, type, likeAction);
 
                 subscription.add(RRetrofit.create(SocialService.class)
-                        .dislike(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .dislike(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId()))
                         .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -993,13 +1003,19 @@ public class UserDiscussItemControl {
     /**
      * 取消点赞
      */
-    private static void initUnLikeView(final HnItemTextView itemTextView,
-                                       final UserDiscussListBean.DataListBean tBean,
-                                       final CompositeSubscription subscription, final Action1<Boolean> likeAction) {
+    private static void initUnLikeView(final View itemTextView,
+                                       final ILikeData tBean,
+                                       final CompositeSubscription subscription,
+                                       final String type,
+                                       final Action1<Boolean> likeAction) {
         final String uid = UserCache.getUserAccount();
 
-        itemTextView.setLeftIco(R.drawable.love_icon_n);
-        itemTextView.setText(tBean.getLike_cnt());
+        if (itemTextView instanceof HnItemTextView) {
+            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_2_n);
+            ((HnItemTextView) itemTextView).setText(tBean.getLikeCount());
+        } else if (itemTextView instanceof ImageView) {
+            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_2_n);
+        }
 
 //        RxView.clicks(itemTextView)
 //                .debounce(Constant.DEBOUNCE_TIME_300, TimeUnit.MILLISECONDS)
@@ -1027,9 +1043,11 @@ public class UserDiscussItemControl {
             @Override
             public void onClick(View v) {
 
-                if (!TextUtils.isEmpty(tBean.uuid)) {
-                    T_.show(itemTextView.getResources().getString(R.string.publishing_tip));
-                    return;
+                if (tBean instanceof UserDiscussListBean.DataListBean) {
+                    if (!TextUtils.isEmpty(((UserDiscussListBean.DataListBean) tBean).uuid)) {
+                        T_.show(itemTextView.getResources().getString(R.string.publishing_tip));
+                        return;
+                    }
                 }
 
                 if (likeAction != null) {
@@ -1038,12 +1056,12 @@ public class UserDiscussItemControl {
                 }
 
                 GoodView.build(itemTextView);
-                tBean.setIs_like(1);
-                tBean.setLike_cnt(String.valueOf(Integer.valueOf(tBean.getLike_cnt()) + 1));
-                initLikeView(itemTextView, tBean, subscription, likeAction);
+                tBean.setIsLike(1);
+                tBean.setLikeCount(String.valueOf(Integer.valueOf(tBean.getLikeCount()) + 1));
+                initLikeView(itemTextView, tBean, subscription, type, likeAction);
 
                 subscription.add(RRetrofit.create(SocialService.class)
-                        .like(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
+                        .like(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId()))
                         .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -1061,15 +1079,25 @@ public class UserDiscussItemControl {
      */
     public static void bindLikeItemView(final CompositeSubscription subscription,
                                         RBaseViewHolder holder,
-                                        UserDiscussListBean.DataListBean tBean, Action1<Boolean> likeAction) {
+                                        ILikeData tBean,
+                                        Action1<Boolean> likeAction) {
 
-        HnItemTextView like_cnt = holder.v(R.id.like_cnt);
+        bindLikeItemView(subscription, holder, tBean, "discuss", likeAction);
+    }
 
-        if (tBean.getIs_like() == 1) {
+    public static void bindLikeItemView(final CompositeSubscription subscription,
+                                        RBaseViewHolder holder,
+                                        ILikeData tBean,
+                                        String type,
+                                        Action1<Boolean> likeAction) {
+
+        View like_cnt = holder.v(R.id.like_cnt);
+
+        if (tBean.getIsLike() == 1) {
             //是否点赞
-            initLikeView(like_cnt, tBean, subscription, likeAction);
+            initLikeView(like_cnt, tBean, subscription, type, likeAction);
         } else {
-            initUnLikeView(like_cnt, tBean, subscription, likeAction);
+            initUnLikeView(like_cnt, tBean, subscription, type, likeAction);
         }
     }
 

@@ -5,6 +5,7 @@ import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachmentParser;
@@ -31,6 +32,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     SystemPushAttachment pushAttachment = new SystemPushAttachment(json);
                     String subType = pushAttachment.getSubType();
                     attachment = pushAttachment.newInstance(subType);
+                    break;
+                case CustomAttachmentType.NEWBAG:
+                    attachment = new RedPacketAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

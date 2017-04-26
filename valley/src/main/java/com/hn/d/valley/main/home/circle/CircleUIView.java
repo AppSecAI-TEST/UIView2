@@ -24,7 +24,7 @@ import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.service.UserInfoService;
-import com.hn.d.valley.sub.user.DynamicDetailUIView;
+import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
@@ -78,7 +78,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
                 }, new Action0() {
                     @Override
                     public void call() {
-                        mOtherILayout.startIView(new DynamicDetailUIView(dataBean.getDiscuss_id()));
+                        mOtherILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
                     }
                 }, getILayout());
             }

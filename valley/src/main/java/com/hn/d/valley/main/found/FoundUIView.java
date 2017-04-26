@@ -66,12 +66,12 @@ public class FoundUIView extends BaseItemUIView {
                 });
             }
         });
-        items.add(new SingleItem(SingleItem.Type.LINE) {
+        items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
 
             @Override
             public void setItemOffsets(Rect rect) {
                 super.setItemOffsets(rect);
-
+                super.leftOffset = getDimensionPixelOffset(R.dimen.base_45dpi);
             }
 
             @Override
