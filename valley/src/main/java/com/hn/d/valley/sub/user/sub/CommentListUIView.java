@@ -8,6 +8,9 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.CommentListBean;
 import com.hn.d.valley.service.SocialService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -43,12 +46,26 @@ public class CommentListUIView extends BaseDynamicListUIView {
                     @Override
                     public void onSucceed(CommentListBean bean) {
                         super.onSucceed(bean);
-                        if (bean != null && bean.getData_list() != null) {
-                            for (CommentListBean.DataListBean b : bean.getData_list()) {
+                        if (bean != null && bean.getHot_list() != null && !bean.getHot_list().isEmpty()) {
+                            List<CommentListBean.DataListBean> datas = new ArrayList<>();
+                            for (CommentListBean.DataListBean b : bean.getHot_list()) {
                                 b.setDiscuss_id(discuss_id);
+                                b.setHot(true);
                             }
+                            datas.addAll(bean.getHot_list());
+
+                            if (bean.getData_list() != null) {
+                                for (CommentListBean.DataListBean b : bean.getData_list()) {
+                                    b.setDiscuss_id(discuss_id);
+                                    if (!bean.getHot_list().contains(b)) {
+                                        datas.add(b);
+                                    }
+                                }
+                            }
+                            onUILoadDataEnd(datas);
+                        } else {
+                            onUILoadDataEnd(bean.getData_list());
                         }
-                        onUILoadDataEnd(bean.getData_list());
                     }
 
                     @Override

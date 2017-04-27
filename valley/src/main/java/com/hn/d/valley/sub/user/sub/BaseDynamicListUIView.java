@@ -12,6 +12,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
@@ -28,6 +29,8 @@ import com.hn.d.valley.widget.HnExTextView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnItemTextView;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -103,6 +106,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                 holder.tv(R.id.user_name_view).setText(dataBean.getUsername());
                 HnGenderView genderView = holder.v(R.id.gender_view);
                 genderView.setGender(dataBean.getSex(), dataBean.getGrade());
+                holder.v(R.id.hot_view).setVisibility(dataBean.isHot() ? View.VISIBLE : View.GONE);
 
                 //时间, 删除
                 if (mListType == ListType.COMMENT_TYPE) {
@@ -162,6 +166,69 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                     );
                 } else {
                     mediaControlLayout.setVisibility(View.GONE);
+                }
+
+                //回复列表
+                initReplyLayout(holder, dataBean);
+            }
+
+            /**回复列表布局*/
+            private void initReplyLayout(RBaseViewHolder holder, CommentListBean.DataListBean dataBean) {
+                View replyControlLayout = holder.v(R.id.reply_control_layout);
+                if (mListType == ListType.FORWARD_TYPE) {
+                    replyControlLayout.setVisibility(View.GONE);
+                } else {
+                    int reply_cnt = Integer.parseInt(dataBean.getReply_cnt());
+                    List<CommentListBean.DataListBean.ReplyListBean> reply_list = dataBean.getReply_list();
+                    if (reply_cnt < 1 || reply_list == null || reply_list.isEmpty()) {
+                        replyControlLayout.setVisibility(View.GONE);
+                    } else {
+                        replyControlLayout.setVisibility(View.VISIBLE);
+
+                        HnExTextView tv1 = holder.v(R.id.reply_text_view1);
+                        if (reply_cnt > 0) {
+                            tv1.setVisibility(View.VISIBLE);
+                            CommentListBean.DataListBean.ReplyListBean replyListBean = reply_list.get(0);
+                            tv1.setImageSpanTextColor(SkinHelper.getSkin().getThemeSubColor());
+                            tv1.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mOtherILayout));
+                            tv1.setImage(replyListBean.getImages());
+                            tv1.setText(
+                                    UserDiscussItemControl.createMention(replyListBean.getUid(), replyListBean.getUsername()) +
+                                            ":" + replyListBean.getContent()
+                            );
+                        } else {
+                            tv1.setVisibility(View.GONE);
+                        }
+
+                        HnExTextView tv2 = holder.v(R.id.reply_text_view2);
+                        if (reply_cnt > 1) {
+                            tv2.setVisibility(View.VISIBLE);
+                            CommentListBean.DataListBean.ReplyListBean replyListBean = reply_list.get(1);
+                            tv2.setImageSpanTextColor(SkinHelper.getSkin().getThemeSubColor());
+                            tv2.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mOtherILayout));
+                            tv2.setImage(replyListBean.getImages());
+                            tv2.setText(UserDiscussItemControl.createMention(replyListBean.getUid(), replyListBean.getUsername()) +
+                                    ":" + replyListBean.getContent());
+                        } else {
+                            tv2.setVisibility(View.GONE);
+                        }
+
+                        holder.tv(R.id.reply_count_view).setTextColor(SkinHelper.getSkin().getThemeSubColor());
+                        holder.tv(R.id.reply_count_view).setText(reply_cnt + "");
+                        holder.tv(R.id.reply_count_view).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+
+                        replyControlLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+                    }
                 }
             }
         };

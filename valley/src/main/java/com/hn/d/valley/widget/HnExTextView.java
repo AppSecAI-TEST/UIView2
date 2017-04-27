@@ -4,12 +4,17 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.RExTextView;
+import com.hn.d.valley.R;
 import com.hn.d.valley.emoji.EmojiManager;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.me.SkinManagerUIView;
+import com.hn.d.valley.skin.SkinUtils;
 
 import java.util.regex.Matcher;
 
@@ -25,6 +30,9 @@ import java.util.regex.Matcher;
  * Version: 1.0.0
  */
 public class HnExTextView extends RExTextView {
+
+    String mImageUrl;
+
     public HnExTextView(Context context) {
         super(context);
     }
@@ -35,6 +43,23 @@ public class HnExTextView extends RExTextView {
 
     public HnExTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setImage(String image) {
+        mImageUrl = image;
+    }
+
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        if (haveImage()) {
+            super.setText(text + "`", type);
+        } else {
+            super.setText(text, type);
+        }
+    }
+
+    protected boolean haveImage() {
+        return !TextUtils.isEmpty(mImageUrl);
     }
 
     @Override
@@ -52,6 +77,28 @@ public class HnExTextView extends RExTextView {
                 ImageSpan span = new ImageSpan(d, ImageSpan.ALIGN_BASELINE);
                 spanBuilder.setSpan(span, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
+        }
+
+        if (haveImage()) {
+            int drawableRes;
+            switch (SkinUtils.getSkin()) {
+                case SkinManagerUIView.SKIN_BLUE:
+                    drawableRes = R.drawable.icon_picture_blue;
+                    break;
+                case SkinManagerUIView.SKIN_GREEN:
+                    drawableRes = R.drawable.icon_picture_green;
+                    break;
+                default:
+                    drawableRes = R.drawable.icon_picture_grey;
+                    break;
+            }
+
+            spanBuilder.setSpan(new ImageTextSpan(getContext(), ImageTextSpan.initDrawable(getContext(), drawableRes, getTextSize()),
+                            getContext().getString(R.string.picture_comment),
+                            mImageUrl)
+                            .setOnImageSpanClick(mOnImageSpanClick)
+                            .setTextColor(SkinHelper.getSkin().getThemeSubColor()),
+                    text.length() - 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 }

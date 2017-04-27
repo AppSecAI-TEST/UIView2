@@ -122,6 +122,8 @@ public class UserDiscussItemControl {
 
         //内容
         HnExTextView hnExTextView = holder.v(R.id.content_ex_view);
+        hnExTextView.setMaxShowLine(100);
+        hnExTextView.setFoldString(holder.getContext().getString(R.string.see_all2));
         //需要先设置监听, 再设置内容.
         hnExTextView.setOnImageSpanClick(createSpanClick(iLayout));
         hnExTextView.setText(dataListBean.getContent());
@@ -275,10 +277,10 @@ public class UserDiscussItemControl {
         holder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
         HnExTextView exTextView = holder.v(R.id.forward_content_ex_view);
         exTextView.setOnImageSpanClick(createSpanClick(iLayout));
-        exTextView.setText(createMention(original_info.getUid(), original_info.getUsername())
+        exTextView.setText(createMention(original_info.getUid(), "@" + original_info.getUsername())
                 + original_info.getContent());
 
-        holder.v(R.id.forward_click_layout).setOnClickListener(new View.OnClickListener() {
+        holder.v(R.id.forward_control_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 iLayout.startIView(new DynamicDetailUIView2(original_info.getDiscuss_id()));
@@ -294,8 +296,11 @@ public class UserDiscussItemControl {
                 iLayout);
     }
 
-    private static String createMention(String id, String name) {
-        return String.format(Locale.CHINA, "<m id='%s'>@%s</m>", id, name);
+    /**
+     * 创建@功能的Span文本
+     */
+    public static String createMention(String id, String name) {
+        return String.format(Locale.CHINA, "<m id='%s'>%s</m>", id, name);
     }
 
     public static RExTextView.ImageTextSpan.OnImageSpanClick createSpanClick(final ILayout iLayout) {
@@ -336,9 +341,9 @@ public class UserDiscussItemControl {
      * 设置媒体信息
      */
     public static void initMediaLayout(String mediaType, final List<String> medias,
-                                        View mediaControlLayout, RNineImageLayout mediaImageTypeView,
-                                        TextView videoTimeView, View videoPlayView,
-                                        final ILayout iLayout) {
+                                       View mediaControlLayout, RNineImageLayout mediaImageTypeView,
+                                       TextView videoTimeView, View videoPlayView,
+                                       final ILayout iLayout) {
         if (medias.isEmpty()) {
             if (mediaControlLayout != null) {
                 mediaControlLayout.setVisibility(View.GONE);

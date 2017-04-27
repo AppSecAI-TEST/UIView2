@@ -19,6 +19,7 @@ public class CommentListBean {
 
 
     private List<DataListBean> data_list;
+    private List<DataListBean> hot_list;
 
     public List<DataListBean> getData_list() {
         return data_list;
@@ -26,6 +27,14 @@ public class CommentListBean {
 
     public void setData_list(List<DataListBean> data_list) {
         this.data_list = data_list;
+    }
+
+    public List<DataListBean> getHot_list() {
+        return hot_list;
+    }
+
+    public void setHot_list(List<DataListBean> hot_list) {
+        this.hot_list = hot_list;
     }
 
     public static class DataListBean implements ILikeData {
@@ -69,6 +78,16 @@ public class CommentListBean {
         private String discuss_id;
         private String is_auth;
         private String signature;
+
+        private boolean isHot = false;
+
+        public boolean isHot() {
+            return isHot;
+        }
+
+        public void setHot(boolean hot) {
+            isHot = hot;
+        }
 
         public String getComment_id() {
             return comment_id;
@@ -242,7 +261,16 @@ public class CommentListBean {
             private String reply_id;
             private String username;
             private String to_uid;
+            private String images;
             private String to_username;
+
+            public String getImages() {
+                return images;
+            }
+
+            public void setImages(String images) {
+                this.images = images;
+            }
 
             /**
              * uid : 50505

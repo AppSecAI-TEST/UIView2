@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_root_layout"
     android:layout_width="match_parent"
@@ -111,66 +112,61 @@
             android:paddingStart="@dimen/base_xhdpi">
 
             <!--转发动态-->
-            <FrameLayout
+
+            <com.angcyo.uiview.viewgroup.RLinearLayout
                 android:id="@+id/forward_control_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/forward_bg_color">
+                android:background="@drawable/base_bg_selector"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/base_ldpi"
+                android:paddingStart="@dimen/base_ldpi"
+                android:paddingTop="@dimen/base_hdpi"
+                app:r_background="@color/forward_bg_color">
 
-                <LinearLayout
-                    android:id="@+id/forward_click_layout"
-                    android:layout_width="match_parent"
+                <com.hn.d.valley.widget.HnExTextView
+                    android:id="@+id/forward_content_ex_view"
+                    style="@style/MainTextStyle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/base_bg_selector"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/base_ldpi"
-                    android:paddingStart="@dimen/base_ldpi"
-                    android:paddingTop="@dimen/base_hdpi">
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:lineSpacingExtra="4dp"
+                    android:maxLength="150"
+                    tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
 
-                    <com.hn.d.valley.widget.HnExTextView
-                        android:id="@+id/forward_content_ex_view"
-                        style="@style/MainTextStyle"
+                <FrameLayout
+                    android:id="@+id/forward_media_control_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingEnd="@dimen/base_xxxhdpi"
+                    android:paddingTop="@dimen/base_ldpi">
+
+                    <com.angcyo.uiview.widget.RNineImageLayout
+                        android:id="@+id/forward_media_image_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageView
+                        android:id="@+id/forward_video_play_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="center_vertical"
-                        android:lineSpacingExtra="4dp"
-                        android:maxLength="150"
-                        tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
+                        android:layout_gravity="center"
+                        android:src="@drawable/play_redianzixun"
+                        android:visibility="invisible"/>
 
-                    <FrameLayout
-                        android:id="@+id/forward_media_control_layout"
+                    <TextView
+                        android:id="@+id/forward_video_time_view"
+                        style="@style/WhiteColorTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/base_xxxhdpi"
-                        android:paddingTop="@dimen/base_ldpi">
+                        android:layout_gravity="right|bottom"
+                        android:layout_marginEnd="@dimen/base_ldpi"
+                        android:visibility="invisible"
+                        tools:text="00:07"/>
+                </FrameLayout>
 
-                        <com.angcyo.uiview.widget.RNineImageLayout
-                            android:id="@+id/forward_media_image_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
-                        <ImageView
-                            android:id="@+id/forward_video_play_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:src="@drawable/play_redianzixun"
-                            android:visibility="invisible"/>
-
-                        <TextView
-                            android:id="@+id/forward_video_time_view"
-                            style="@style/WhiteColorTextStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right|bottom"
-                            android:layout_marginEnd="@dimen/base_ldpi"
-                            android:visibility="invisible"
-                            tools:text="00:07"/>
-                    </FrameLayout>
-
-                </LinearLayout>
-            </FrameLayout>
+            </com.angcyo.uiview.viewgroup.RLinearLayout>
 
             <!--<com.angcyo.uiview.widget.RTextView-->
             <!--android:id="@+id/copy_info_view"-->
