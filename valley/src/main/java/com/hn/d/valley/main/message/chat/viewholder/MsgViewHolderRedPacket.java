@@ -3,11 +3,13 @@ package com.hn.d.valley.main.message.chat.viewholder;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
@@ -18,6 +20,7 @@ import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.ChatControl2;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
+import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
 import com.hn.d.valley.widget.MsgThumbImageView;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
@@ -53,6 +56,7 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
     protected void bindContentView() {
 
         TextView tv_content = (TextView) findViewById(R.id.tv_red_content);
+        RelativeLayout rl_container = (RelativeLayout) findViewById(R.id.rl_red_packet);
 
         CustomAttachment attachment = (CustomAttachment) message.getAttachment();
         if (attachment == null) {
@@ -62,18 +66,20 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 
             case CustomAttachmentType.REDPACKET:
                 RedPacketAttachment pcAttachment = (RedPacketAttachment) attachment;
-                RedPacket redPacket = pcAttachment.getRedPacket();
+                final RedPacket redPacket = pcAttachment.getRedPacket();
 
                 tv_content.setText(redPacket.getMsg());
-//                tv_pc_name.setText(from.getUsername());
-//                imageView.setImageUrl(from.getAvatar());
-//
-//                pc_layout.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        mUIBaseView.startIView(new UserDetailUIView2(from.getUid()));
-//                    }
-//                });
+
+                if (message.getFromAccount().equals(UserCache.getUserAccount())) {
+                    return;
+                }
+
+                rl_container.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mUIBaseView.startIView(new OpenRedPacketUIDialog(redPacket.getRid()));
+                    }
+                });
 
                 break;
             default:

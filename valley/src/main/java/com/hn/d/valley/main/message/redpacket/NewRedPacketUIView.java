@@ -1,13 +1,19 @@
 package com.hn.d.valley.main.message.redpacket;
+
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -21,6 +27,12 @@ import java.util.List;
  * Version: 1.0.0
  */
 public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
+
+    private String to_uid;
+
+    public NewRedPacketUIView(String to_uid) {
+       this.to_uid = to_uid;
+    }
 
 
     @Override
@@ -40,76 +52,34 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
     @Override
     protected int getItemLayoutId(int viewType) {
-
-        if (viewType == 0) {
-            return R.layout.item_redpacket_input;
-        }
-
-        if (viewType == 1) {
-            return R.layout.item_red_input_note;
-        }
-
-        if (viewType == 2) {
-            return R.layout.item_single_text_view;
-        }
-
-        if (viewType == 3 ) {
-            return R.layout.item_redpacket_button_view;
-        }
-
-        return R.layout.item_redpacket_button_view;
+        return R.layout.item_new_redpacket;
 
     }
 
     @Override
     protected void createItems(List<ViewItemInfo> items) {
 
-        final int size = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi_15);
-        int line = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
+//        final int left = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi_5);
+//        int line = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
+        items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
 
-            }
-        }));
+                final EditText etMoney = holder.v(R.id.et_money);
+                final EditText etContent = holder.v(R.id.et_content);
+                Button btn_send = holder.v(R.id.btn_send);
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseLineSize) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-
-            }
-
-        }));
-
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(mBaseLineSize) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                TextView textView = holder.v(R.id.text_view);
-                textView.setText(R.string.text_redpacket_notice);
-            }
-        }));
-
-
-        items.add(ViewItemInfo.build(new ItemOffsetCallback( 3 * mBaseLineSize) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-
-                holder.itemView.findViewById(R.id.text_view).setOnClickListener(new View.OnClickListener() {
+                btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new PayUIDialog());
+                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf(etMoney.getText().toString()),etContent.getText().toString(),to_uid);
+                        mOtherILayout.startIView(new PayUIDialog(params));
                     }
                 });
-
             }
         }));
-
-
-
-
     }
-
 
 
 }

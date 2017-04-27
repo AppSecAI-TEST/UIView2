@@ -13,6 +13,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -51,10 +52,16 @@ public class PayUIDialog extends UIIDialogImpl {
     View lineLayout;
     @BindView(R.id.base_item_info_layout)
     ItemInfoLayout baseItemInfoLayout;
-    @BindView(R.id.text_view)
-    Button textView;
+    @BindView(R.id.btn_send)
+    Button btn_send;
     @BindView(R.id.base_dialog_root_layout)
     LinearLayout baseDialogRootLayout;
+
+    private Params params;
+
+    public PayUIDialog(Params params) {
+        this.params = params;
+    }
 
     @Override
     protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
@@ -73,7 +80,7 @@ public class PayUIDialog extends UIIDialogImpl {
             }
         });
 
-        textView.setText("立即支付");
+        btn_send.setText("立即支付");
 
         baseDialogTitleView.setText("收银台");
         baseDialogContentView.setText("￥ 200");
@@ -86,7 +93,7 @@ public class PayUIDialog extends UIIDialogImpl {
             }
         });
 
-        textView.setOnClickListener(new View.OnClickListener() {
+        btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendRedPacket();
@@ -97,20 +104,39 @@ public class PayUIDialog extends UIIDialogImpl {
     private void sendRedPacket() {
 
         RRetrofit.create(RedPacketService.class)
-                .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"num:" + 1,"money:" + 100,"content:" + "day day up","to_uid:" + 50035))
+                .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"num:" + params.num,"money:" + params.money,"content:" + params.content,"to_uid:" + params.to_uid))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
+                        finishDialog();
+                        T_.show("发送失败！");
                     }
 
                     @Override
                     public void onSucceed(String beans) {
+                        replaceIView(new NextSendRPUIView());
+                        finishDialog();
                         L.i(TAG,beans);
                     }
                 });
 
+    }
+
+    public static class Params {
+
+        int num;
+        int money;
+        String content;
+        String to_uid;
+
+        public Params(int num, int money, String content, String to_uid) {
+            this.num = num;
+            this.money = money;
+            this.content = content;
+            this.to_uid = to_uid;
+        }
     }
 
 

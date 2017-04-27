@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
 import com.angcyo.uiview.github.tablayout.TabLayoutUtil;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
@@ -104,6 +105,9 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
         userCountView = mViewHolder.tv(R.id.like_user_count_view);
         mIcoRecyclerView = mViewHolder.v(R.id.like_user_recycler_view);
         likeUserControlLayout = mViewHolder.v(R.id.like_users_layout);
+
+        StickLayout2 stickLayout2 = mViewHolder.v(R.id.stick_layout);
+        stickLayout2.setEdgeScroll(true);
 
         updateSkin();
     }

@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/base_xhdpi">
+    android:padding="@dimen/base_xhdpi_15">
 
     <EditText
-        android:id="@+id/text_view"
+        android:id="@+id/et_content"
         style="@style/WhiteColorTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

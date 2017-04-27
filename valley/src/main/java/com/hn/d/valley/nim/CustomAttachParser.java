@@ -3,6 +3,7 @@ package com.hn.d.valley.nim;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
+import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
@@ -35,6 +36,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.NEWBAG:
                     attachment = new RedPacketAttachment(json);
+                    break;
+                case CustomAttachmentType.GRABREDBAG:
+                    attachment = new GrabedMsgAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

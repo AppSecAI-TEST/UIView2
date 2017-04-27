@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_base_white"
+    android:gravity="center_horizontal"
+    >
+
+    <ImageView
+        android:id="@+id/iv_edge"
+        android:src="@drawable/image_hongbao_edge"
+        android:layout_width="match_parent"
+        android:scaleType="fitXY"
+        android:layout_height="wrap_content"/>
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/iv_icon_head"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_40dpi"
+        android:layout_width="@dimen/base_65dpi"
+        android:layout_height="@dimen/base_65dpi"
+        android:contentDescription="@string/is_circle"
+        android:src="@drawable/default_avatar" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_below="@id/iv_icon_head"
+        android:textSize="@dimen/default_text_size18"
+        android:textColor="@color/main_text_color"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_xhdpi_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eric 的红包"
+        />
+
+    <TextView
+        android:id="@+id/tv_tip"
+        android:layout_below="@id/tv_username"
+        android:textSize="@dimen/default_text_little_size"
+        android:textColor="@color/main_text_color_dark"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="恭喜发财，大吉大利"
+        />
+
+    <TextView
+        android:layout_below="@id/tv_tip"
+        android:textSize="@dimen/default_text_size50"
+        android:textColor="@color/main_text_color"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_40dpi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="50.00元"
+        />
+
+    <TextView
+        android:textSize="@dimen/default_text_little_size"
+        android:textColor="@color/main_text_color_dark"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base_xxhdpi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/text_view"
+        android:text="红包已发给“eric”，等待对方领取"
+        />
+
+    <Button
+        android:id="@+id/text_view"
+        style="@style/WhiteColorTextStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/base_160dpi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/main_color_red_round_selector"
+        android:gravity="center"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:minHeight="@dimen/base_item_size"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/text_insert_money"/>
+
+
+</RelativeLayout>

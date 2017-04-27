@@ -73,7 +73,7 @@ public class P2PChatUIView extends ChatUIView2 {
             @Override
             public void onClick(View v) {
                 //红包
-                mOtherILayout.startIView(new NewRedPacketUIView());
+                mOtherILayout.startIView(new NewRedPacketUIView(mSessionId));
             }
         }));
 

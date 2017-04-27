@@ -1,9 +1,11 @@
 package com.hn.d.valley.main.message.chat;
 
+import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderAudio;
+import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderGrabedMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderLocation;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderNotification;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderPersonCard;
@@ -47,6 +49,7 @@ public class MsgViewHolderFactory {
         register(NotificationAttachment.class, MsgViewHolderNotification.class);
         register(PersonalCardAttachment.class, MsgViewHolderPersonCard.class);
         register(RedPacketAttachment.class, MsgViewHolderRedPacket.class);
+        register(GrabedMsgAttachment.class, MsgViewHolderGrabedMsg.class);
         register(SystemPushAttachment.SingleTextSPAttachment.class, MsgViewHolderPushText.class);
         register(SystemPushAttachment.TextAndPictureSPAttachment.class, MsgViewHolderPushPictureText.class);
         register(SystemPushAttachment.MultiPictureSPAttachment.class, MsgViewHolderPushMultiPicture.class);

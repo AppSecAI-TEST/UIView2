@@ -11,4 +11,14 @@
 
     </declare-styleable>
 
+    <declare-styleable name="PasscodeView">
+        <attr name="numDigits" format="integer"/>
+        <attr name="digitElevation" format="dimension"/>
+        <attr name="digitRadius" format="dimension"/>
+        <attr name="controlColor" format="color"/>
+        <attr name="controlColorActivated" format="color"/>
+        <attr name="digitColorFilled" format="color"/>
+        <attr name="digitColorBorder" format="color"/>
+    </declare-styleable>
+
 </resources>

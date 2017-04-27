@@ -335,7 +335,7 @@ public class UserDiscussItemControl {
     /**
      * 设置媒体信息
      */
-    private static void initMediaLayout(String mediaType, final List<String> medias,
+    public static void initMediaLayout(String mediaType, final List<String> medias,
                                         View mediaControlLayout, RNineImageLayout mediaImageTypeView,
                                         TextView videoTimeView, View videoPlayView,
                                         final ILayout iLayout) {

@@ -21,6 +21,8 @@ public interface CustomAttachmentType {
 
     int REDPACKET = 4;
 
+    int GRABEDMSG = 5;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
@@ -32,5 +34,7 @@ public interface CustomAttachmentType {
     String ManagerPush = "system_push";
 
     String NEWBAG = "newredbag";
+
+    String GRABREDBAG = "grabredbag";
 
 }
