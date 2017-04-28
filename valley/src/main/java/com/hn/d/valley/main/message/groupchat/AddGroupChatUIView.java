@@ -68,7 +68,7 @@ public class AddGroupChatUIView extends BaseUIView {
 //    @BindView(R.id.rv_groupchat_icon)
 //    HnIcoRecyclerView iconSelectedRv;
 
-    private AddGroupAdapter mGroupAdapter;
+    private ContactSelectAdapter mGroupAdapter;
 
     private AddGroupDatatProvider datatProvider;
 
@@ -141,7 +141,7 @@ public class AddGroupChatUIView extends BaseUIView {
             }
         });
 
-        mGroupAdapter = new AddGroupAdapter(mActivity,new BaseContactSelectAdapter.Options());
+        mGroupAdapter = new ContactSelectAdapter(mActivity,new BaseContactSelectAdapter.Options(),recyclerView);
         datatProvider = new AddGroupDatatProvider();
 //        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));

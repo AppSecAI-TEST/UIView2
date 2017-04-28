@@ -21,10 +21,11 @@
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/iv_item_head"
         android:layout_toRightOf="@id/cb_friend_addfirend"
-        android:layout_width="@dimen/avatar_image_size_little"
-        android:layout_height="@dimen/avatar_image_size_little"
+        android:layout_width="@dimen/avatar_image_size_x_little"
+        android:layout_height="@dimen/avatar_image_size_x_little"
         android:src="@drawable/default_avatar"
         android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_centerVertical="true"
         android:contentDescription="@string/is_circle"
         android:scaleType="centerCrop" />
 

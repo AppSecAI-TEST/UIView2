@@ -14,9 +14,11 @@ import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.viewpager.FadeInOutPageTransformer;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
@@ -30,7 +32,9 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.service.DiscussService;
+import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
+import com.hn.d.valley.sub.user.sub.CommentInputDialog;
 import com.hn.d.valley.sub.user.sub.CommentListUIView;
 import com.hn.d.valley.sub.user.sub.ForwardListUIView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
@@ -67,6 +71,8 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     private SlidingTabLayout mTabLayout;
     private TextView userCountView;
     private View likeUserControlLayout;
+    private CommentListUIView mCommentListUIView;
+    private ForwardListUIView mForwardListUIView;
 
     public DynamicDetailUIView2(String discuss_id) {
         this.discuss_id = discuss_id;
@@ -168,6 +174,32 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             initViewPager();
             //Tab
             initTabLayout();
+
+            //点击打开评论对话框
+            mViewHolder.v(R.id.input_tip_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new CommentInputDialog(new CommentInputDialog.InputConfig() {
+                        @Override
+                        public void onInitDialogLayout(RBaseViewHolder viewHolder) {
+
+                        }
+
+                        @Override
+                        public void onSendClick(String imagePath, String content) {
+                            comment(imagePath, content);
+                        }
+                    }));
+                }
+            });
+
+            //转发按钮
+            mViewHolder.v(R.id.bottom_forward_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 
@@ -191,12 +223,19 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             @Override
             protected IView getIView(int position) {
                 if (position == 0) {
-                    return new CommentListUIView(mDataListBean.getDiscuss_id())
-                            .bindOtherILayout(mOtherILayout);
+                    if (mCommentListUIView == null) {
+                        mCommentListUIView = new CommentListUIView(mDataListBean.getDiscuss_id());
+                        mCommentListUIView.bindOtherILayout(mOtherILayout);
+                    }
+                    return mCommentListUIView;
                 }
-                return new ForwardListUIView(mDataListBean.getDiscuss_id())
-                        .bindOtherILayout(mOtherILayout);
+                if (mForwardListUIView == null) {
+                    mForwardListUIView = new ForwardListUIView(mDataListBean.getDiscuss_id());
+                    mForwardListUIView.bindOtherILayout(mOtherILayout);
+                }
+                return mForwardListUIView;
             }
+
 
             @Override
             public int getCount() {
@@ -270,5 +309,37 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
         if (mTabLayout != null) {
             mTabLayout.setIndicatorColor(SkinHelper.getSkin().getThemeSubColor());
         }
+    }
+
+    /**
+     * 发布评论
+     */
+    private void comment(String imagePath, String content) {
+        add(RRetrofit.create(SocialService.class)
+                .comment(Param.buildMap("type:discuss", "item_id:" + discuss_id, "content:" + content, "images:" + imagePath))
+                .compose(Rx.transformer(String.class))
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        showLoadView();
+                    }
+                })
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        T_.show(bean);
+                        if (mCommentListUIView != null) {
+                            mCommentListUIView.loadData();
+                            mCommentListUIView.scrollToTop();
+                        }
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        hideLoadView();
+                    }
+                }));
     }
 }

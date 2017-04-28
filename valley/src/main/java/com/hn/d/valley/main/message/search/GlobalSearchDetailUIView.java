@@ -171,7 +171,7 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
                 final String sessionId = imMessage.getSessionId();
 
                 recent_name_view.setText(msgItem.getDisplayName());
-                iv_icon.setBackgroundResource(R.drawable.default_avatar);
+                iv_icon.setImageResource(R.drawable.default_avatar);
 
                 if (msgItem.isQuerySession()) {
                     msg_time_view.setVisibility(View.VISIBLE);

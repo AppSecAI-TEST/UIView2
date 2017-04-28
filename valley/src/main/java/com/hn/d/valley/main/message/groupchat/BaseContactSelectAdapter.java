@@ -86,12 +86,30 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     public static class Options {
 
-        static final int DEFALUT_LIMIT = 5;
 
+        public static final int DEFALUT_LIMIT = 5;
+
+        /**
+         * 单选/多选
+         */
         int mode;
+        /**
+         * 最多选择多少个联系人
+         */
         int selectCountLimit = DEFALUT_LIMIT;
+
+        /**
+         * 显示自己
+         */
         boolean showMe = false;
+        /**
+         * 显示checkBox
+         */
         boolean showCheckBox = false;
+        /**
+         * 是否默认选中
+         */
+        boolean isSelectUids = true;
 
         public Options() {
             this(MODEL_MULTI);
@@ -101,14 +119,19 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
             this(mode, DEFALUT_LIMIT);
         }
 
-        public Options(int mode,int limit) {
-            this(mode, limit,false);
+        public Options(int mode, int limit) {
+            this(mode, limit, false);
         }
 
-        public Options(int mode, int limit,boolean showCheckBox) {
+        public Options(int mode, int limit, boolean showCheckBox) {
+            this(mode,limit,showCheckBox,true);
+        }
+
+        public Options(int mode, int limit,boolean showCheckBox,boolean isSelectUids) {
             this.mode = mode;
             this.selectCountLimit = limit;
             this.showCheckBox = showCheckBox;
+            this.isSelectUids = isSelectUids;
         }
 
     }

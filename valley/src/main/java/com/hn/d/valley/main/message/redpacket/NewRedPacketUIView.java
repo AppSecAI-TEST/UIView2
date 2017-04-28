@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.redpacket;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +15,7 @@ import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
+import static com.hn.d.valley.R.id.et_count;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -68,12 +70,31 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
                 final EditText etMoney = holder.v(R.id.et_money);
                 final EditText etContent = holder.v(R.id.et_content);
-                Button btn_send = holder.v(R.id.btn_send);
+                final Button btn_send = holder.v(R.id.btn_send);
+
+                TextWatcher textWatcher = new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        btn_send.setEnabled(etMoney.getText().toString().length() > 0);
+                    }
+                };
+
+                etMoney.addTextChangedListener(textWatcher);
 
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf(etMoney.getText().toString()),etContent.getText().toString(),to_uid);
+                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf(etMoney.getText().toString()),etContent.getText().toString(),to_uid,null);
                         mOtherILayout.startIView(new PayUIDialog(params));
                     }
                 });

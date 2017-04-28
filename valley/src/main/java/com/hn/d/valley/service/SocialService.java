@@ -182,4 +182,25 @@ public interface SocialService {
     @POST("social/replyList")
     Observable<ResponseBody> replyList(@QueryMap Map<String, String> map);
 
+    /**
+     * 回复
+     * 说明：
+     *
+     * @ 规范 例子：传给服务器
+     * <m>50500</m>
+     * 例子：服务器返回
+     * <p>
+     * <m id='50500'>@会费的蜗牛</m>
+     * <p>
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	点赞类型【discuss-动态 news-资讯】
+     * comment_id	否	int	评论id【直接回复评论的，必须填写】
+     * reply_id	否	int	回复id【直接回复评论的，不用填写】
+     * content	否	string	回复内容
+     * images	否	string	评论的图片【多张图片以英文,隔开】【内容和图片最少存在一个】
+     */
+    @POST("social/reply")
+    Observable<ResponseBody> reply(@QueryMap Map<String, String> map);
+
 }

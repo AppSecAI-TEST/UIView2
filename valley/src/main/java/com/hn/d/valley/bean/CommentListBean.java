@@ -20,6 +20,15 @@ public class CommentListBean {
 
     private List<DataListBean> data_list;
     private List<DataListBean> hot_list;
+    /**
+     * data_count : 5
+     * like_users : [{"uid":"50001","avatar":"http://static.bzsns.cn/pic/M00/00/2B/CixiMlbVVumAIJEGAAAetFQEzXc84.JPEG"}]
+     * images :
+     */
+
+    private int data_count;
+    private String images;
+    private List<DataListBean> like_users;
 
     public List<DataListBean> getData_list() {
         return data_list;
@@ -35,6 +44,30 @@ public class CommentListBean {
 
     public void setHot_list(List<DataListBean> hot_list) {
         this.hot_list = hot_list;
+    }
+
+    public int getData_count() {
+        return data_count;
+    }
+
+    public void setData_count(int data_count) {
+        this.data_count = data_count;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public List<DataListBean> getLike_users() {
+        return like_users;
+    }
+
+    public void setLike_users(List<DataListBean> like_users) {
+        this.like_users = like_users;
     }
 
     public static class DataListBean implements ILikeData {
@@ -80,6 +113,17 @@ public class CommentListBean {
         private String signature;
 
         private boolean isHot = false;
+        /**
+         * reply_id : 125
+         * to_user_id : 50001
+         * is_first_level : 1
+         * to_user_username : 幽灵
+         */
+
+        private String reply_id;
+        private String to_user_id;
+        private String is_first_level;
+        private String to_user_username;
 
         public boolean isHot() {
             return isHot;
@@ -251,8 +295,46 @@ public class CommentListBean {
         }
 
         @Override
-        public String getDiscussId() {
+        public String getDiscussId(String type) {
+            if ("comment".equalsIgnoreCase(type)) {
+                return getComment_id();
+            }
+            if ("reply".equalsIgnoreCase(type)) {
+                return getReply_id();
+            }
             return getDiscuss_id();
+        }
+
+        public String getReply_id() {
+            return reply_id;
+        }
+
+        public void setReply_id(String reply_id) {
+            this.reply_id = reply_id;
+        }
+
+        public String getTo_user_id() {
+            return to_user_id;
+        }
+
+        public void setTo_user_id(String to_user_id) {
+            this.to_user_id = to_user_id;
+        }
+
+        public String getIs_first_level() {
+            return is_first_level;
+        }
+
+        public void setIs_first_level(String is_first_level) {
+            this.is_first_level = is_first_level;
+        }
+
+        public String getTo_user_username() {
+            return to_user_username;
+        }
+
+        public void setTo_user_username(String to_user_username) {
+            this.to_user_username = to_user_username;
         }
 
         public static class ReplyListBean {

@@ -120,7 +120,9 @@ public class GroupMemberModel {
                 for (GroupMemberBean bean : mAdapterAllDatas) {
                     uids.add(bean.getUserId());
                 }
-                ContactSelectUIVIew.start(contentUIView.getILayout(),new BaseContactSelectAdapter.Options(),uids,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                BaseContactSelectAdapter.Options option = new BaseContactSelectAdapter.Options();
+                option.isSelectUids = false;
+                ContactSelectUIVIew.start(contentUIView.getILayout(),option,uids,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
                         TeamCreateHelper.invite(uiBaseDataView, absContactItems,requestCallback,bean.getGid(), new Action1<Boolean>() {

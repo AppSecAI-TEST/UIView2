@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +16,6 @@ import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
-import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -38,7 +36,9 @@ import com.hn.d.valley.bean.event.GroupDissolveEvent;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.message.CommandLayoutControl;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
+import com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView;
 import com.hn.d.valley.main.message.session.AitHelper;
 import com.hn.d.valley.service.GroupChatService;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -117,6 +117,23 @@ public class GroupChatUIView extends ChatUIView2 {
                         tv_title = (TextView) parent.findViewById(R.id.tv_title);
                     }
                 });
+    }
+
+    @Override
+    protected List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
+
+        List<CommandLayoutControl.CommandItemInfo> items = super.createCommandItems();
+
+        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_rts_normal, "红包", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //红包
+                mOtherILayout.startIView(new NewGroupRedPacketUIView(mSessionId));
+            }
+        }));
+
+        return items;
+
     }
 
 
@@ -302,6 +319,11 @@ public class GroupChatUIView extends ChatUIView2 {
                         mInputView.addMention(item.getMemberBean().getDefaultNick());
                     }
                 });
+            }
+
+            @Override
+            public void onMentionTextChanged(List<String> allMention) {
+
             }
         });
     }

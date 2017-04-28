@@ -2,11 +2,13 @@ package com.hn.d.valley.main.message.groupchat;
 
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
@@ -18,14 +20,18 @@ import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Created by hewking on 2017/3/9.
  */
-public class AddGroupAdapter extends BaseContactSelectAdapter {
+public class ContactSelectAdapter extends BaseContactSelectAdapter {
 
-    public AddGroupAdapter(Context context, Options options) {
+    private RecyclerView mRecyclerView;
+
+    public ContactSelectAdapter(Context context, Options options,RecyclerView recyclerView) {
         super(context,options);
+        this.mRecyclerView = recyclerView;
     }
 
     @Override
@@ -77,7 +83,7 @@ public class AddGroupAdapter extends BaseContactSelectAdapter {
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
             checkBox.setTag(position);
 
-            if (mSelectedUsers != null && mSelectedUsers.size() != 0) {
+            if (!options.isSelectUids && mSelectedUsers != null && mSelectedUsers.size() != 0) {
                 FriendBean friendBean = ((ContactItem)bean).getFriendBean();
                 if (mSelectedUsers.contains(friendBean.getUid()) ){
                     mCheckStats.put(position,true);
@@ -95,7 +101,7 @@ public class AddGroupAdapter extends BaseContactSelectAdapter {
 
                     if (getAllSelectorList().size() >= options.selectCountLimit) {
                         if (!isPositionSelector(position)) {
-                            T_.show("已达到选中限制");
+                            T_.show(mContext.getString(R.string.text_selected_limit));
                             return;
                         }
                     }
@@ -133,9 +139,30 @@ public class AddGroupAdapter extends BaseContactSelectAdapter {
 //        } else {
 //            this.mAllDatas = datas;
 //        }
+
         mAllDatas.clear();
         mAllDatas.addAll(datas);
-        notifyDataSetChanged();
+
+        if (options.isSelectUids && mSelectedUsers != null && mSelectedUsers.size() != 0) {
+            List<Integer> indexList = new ArrayList<>();
+            // j == 0 为 搜索项 不参与查找
+            for (int j = 1 ; j < mAllDatas.size() ; j ++) {
+                FriendBean friendBean = ((ContactItem)mAllDatas.get(j)).getFriendBean();
+                for (int k = 0 ; k < mSelectedUsers.size() ; k ++) {
+                    if (friendBean.getUid().equals(mSelectedUsers.get(k))) {
+                        indexList.add(j);
+                        break;
+                    }
+                }
+            }
+            for (int i = 0 ; i < indexList.size() ; i ++) {
+                mCheckStats.put(indexList.get(i),true);
+            }
+            setSelectIndexs((RRecyclerView) mRecyclerView,R.id.cb_friend_addfirend,indexList);
+
+        } else {
+            notifyDataSetChanged();
+        }
         //notifyItemRangeChanged(1,datas.size() - 1);
     }
 

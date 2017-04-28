@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_white_bg_selector"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/base_xhdpi"
+    android:paddingTop="@dimen/base_xhdpi">
+
+    <TextView
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/text_account_balance"
+        android:textColor="@color/base_text_color"
+        android:textSize="@dimen/default_text_size" />
+
+
+    <TextView
+        style="@style/DarkTextStyle"
+        android:id="@+id/tv_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:text="$49999856.14"
+        android:textColor="@color/base_text_color"
+        android:textSize="@dimen/textSize_sidebar_padding" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.hn.d.valley.widget.HnButton
+            android:id="@+id/btn_recharge"
+            android:gravity="center"
+            style="@style/MainColorRoundButtonStyle"
+            android:text="@string/text_recharge"
+            android:layout_width="@dimen/base_90dpi"
+            android:layout_height="@dimen/base_35dpi" />
+
+        <com.hn.d.valley.widget.HnButton
+            android:id="@+id/btn_crashout"
+            android:gravity="center"
+            android:layout_marginLeft="@dimen/base_xxhdpi"
+            android:text="@string/text_crashout"
+            style="@style/MainColorRoundButtonStyle"
+            android:layout_width="@dimen/base_90dpi"
+            android:layout_height="@dimen/base_35dpi" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

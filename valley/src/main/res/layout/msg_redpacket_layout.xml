@@ -22,9 +22,12 @@
 
     <TextView
         android:id="@+id/tv_red_content"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:layout_marginEnd="@dimen/base_xhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:textColor="@color/yellow_ffe2b1"
         android:text="day day "
         android:visibility="visible" />
 

@@ -340,7 +340,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
             final String sessionId = imMessage.getSessionId();
 
             recentNameView.setText(msgItem.getDisplayName());
-            icoView.setBackgroundResource(R.drawable.default_avatar);
+            icoView.setImageResource(R.drawable.default_avatar);
 
             if (msgItem.isQuerySession()) {
                 msgTimeView.setVisibility(View.VISIBLE);

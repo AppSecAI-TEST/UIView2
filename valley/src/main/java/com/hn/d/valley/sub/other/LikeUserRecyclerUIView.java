@@ -13,7 +13,7 @@ import com.hn.d.valley.service.SocialService;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：点赞用户列表界面
+ * 类的描述：点赞用户列表界面, 动态点赞人数/评论点赞人数
  * 创建人员：Robi
  * 创建时间：2017/01/14 18:10
  * 修改人员：Robi
@@ -23,10 +23,16 @@ import com.hn.d.valley.service.SocialService;
  */
 public class LikeUserRecyclerUIView extends UserInfoRecyclerUIView {
 
-    private String discuss_id;
+    LikeType mLikeType = LikeType.TYPE_DISCUSS;
+    private String id;
 
-    public LikeUserRecyclerUIView(String discuss_id) {
-        this.discuss_id = discuss_id;
+    public LikeUserRecyclerUIView(String id) {
+        this.id = id;
+    }
+
+    public LikeUserRecyclerUIView(String id, LikeType likeType) {
+        this.id = id;
+        mLikeType = likeType;
     }
 
     @Override
@@ -56,7 +62,8 @@ public class LikeUserRecyclerUIView extends UserInfoRecyclerUIView {
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(SocialService.class)
-                .likeList(Param.buildMap("type:discuss", "item_id:" + discuss_id, "page:" + page))
+                .likeList(Param.buildMap("type:" + (mLikeType == LikeType.TYPE_DISCUSS ? "discuss" : "comment"),
+                        "item_id:" + id, "page:" + page))
                 .compose(Rx.transformer(LikeUserModel.class))
                 .subscribe(new BaseSingleSubscriber<LikeUserModel>() {
 
@@ -85,7 +92,7 @@ public class LikeUserRecyclerUIView extends UserInfoRecyclerUIView {
                 }));
 
 //        add(RRetrofit.create(SocialService.class)
-//                .likeList(Param.buildMap("type:discuss", "item_id:" + discuss_id, "page:" + page))
+//                .likeList(Param.buildMap("type:discuss", "item_id:" + id, "page:" + page))
 //                .compose(Rx.transformer(LikeUserModel.class))
 //                .subscribe(new SingleRSubscriber<LikeUserModel>(this) {
 //                    @Override
@@ -97,5 +104,10 @@ public class LikeUserRecyclerUIView extends UserInfoRecyclerUIView {
 //                        }
 //                    }
 //                }));
+    }
+
+    public enum LikeType {
+        TYPE_DISCUSS,//动态点赞
+        TYPE_COMMENT//评论点赞
     }
 }

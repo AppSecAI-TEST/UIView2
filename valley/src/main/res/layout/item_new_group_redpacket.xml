@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/base_chat_bg_color"
+    android:gravity="center_horizontal">
+
+
+    <LinearLayout
+        android:id="@+id/item_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/base_xhdpi_15"
+        android:layout_marginStart="@dimen/base_xhdpi_15"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:background="@drawable/base_white_round_bg_5x"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/text_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_xhdpi"
+            android:text="@string/text_amount"
+            android:textColor="@color/main_text_color" />
+
+        <EditText
+            android:id="@+id/et_money"
+            style="@style/EditStyle"
+            android:inputType="number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center_vertical|end"
+            android:hint="0.01"
+
+            android:imeOptions="actionDone"
+            android:paddingEnd="@dimen/base_xhdpi"
+            android:paddingStart="@dimen/base_xhdpi"
+            android:textColor="@color/main_text_color"
+            android:textColorHint="@color/main_text_color_dark" />
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/text_unit"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_xhdpi"
+            android:text="@string/text_unit"
+            android:textColor="@color/main_text_color" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_switch"
+        android:layout_below="@id/item_input"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/base_xhdpi_15"
+        android:layout_marginRight="@dimen/base_xhdpi_15"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_width="match_parent"
+        android:layout_height="42dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/nav_text_size"
+            android:textColor="@color/main_text_color"
+            android:text="@string/text_redpacket_switch_desc"/>
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_input_count"
+        android:layout_below="@id/item_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/base_xhdpi_15"
+        android:layout_marginStart="@dimen/base_xhdpi_15"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:background="@drawable/base_white_round_bg_5x"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_xhdpi"
+            android:text="红包个数"
+            android:textColor="@color/main_text_color" />
+
+        <EditText
+            android:id="@+id/et_count"
+            style="@style/EditStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center_vertical|end"
+            android:hint="填写个数"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:paddingEnd="@dimen/base_xhdpi"
+            android:paddingStart="@dimen/base_xhdpi"
+            android:textColor="@color/main_text_color"
+            android:textColorHint="@color/main_text_color_dark" />
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_xhdpi"
+            android:text="个"
+            android:textColor="@color/main_text_color" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_group_member_num"
+        android:layout_below="@id/item_input_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/base_xhdpi_15"
+        android:layout_marginRight="@dimen/base_xhdpi_15"
+        android:textSize="@dimen/nav_text_size"
+        android:textColor="@color/main_text_color"
+        android:text="本群共9人"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_below="@id/tv_group_member_num"
+        android:id="@+id/item_input_note"
+        android:layout_height="@dimen/base_70dpi"
+        android:padding="@dimen/base_xhdpi_15">
+
+        <EditText
+            android:id="@+id/et_content"
+            style="@style/WhiteColorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/base_white_round_bg_5x"
+            android:minHeight="@dimen/base_item_size"
+            android:textColor="@color/main_text_color"
+            android:padding="@dimen/base_xhdpi"
+            android:hint="恭喜发财，大吉大利！"
+            />
+
+    </RelativeLayout>
+
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/item_notice"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_input_note"
+        android:layout_marginLeft="@dimen/base_xhdpi_15"
+        android:layout_marginRight="@dimen/base_xhdpi_15"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:maxLines="2"
+        android:text="@string/text_redpacket_notice"
+        tools:text="@string/text_redpacket_notice" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_notice"
+        android:layout_marginTop="@dimen/base_90dpi"
+        android:padding="@dimen/base_xhdpi_15">
+
+        <Button
+            android:id="@+id/btn_send"
+            style="@style/WhiteColorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_color_red_round_selector"
+            android:gravity="center"
+            android:enabled="false"
+            android:minHeight="@dimen/base_item_size"
+            android:padding="@dimen/base_xhdpi"
+            android:text="@string/text_insert_money" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

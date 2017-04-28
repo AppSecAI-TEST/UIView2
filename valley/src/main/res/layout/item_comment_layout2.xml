@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/base_bg_selector"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:paddingBottom="@dimen/base_xhdpi">
-
 
     <!--顶部 用户信息-->
     <RelativeLayout
@@ -29,8 +29,10 @@
 
         <!--昵称 时间-->
         <RelativeLayout
+            android:id="@+id/name_time_control_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_toEndOf="@id/glide_image_view"
             android:paddingEnd="@dimen/base_xhdpi"
             android:paddingStart="@dimen/base_xhdpi">
@@ -71,6 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/layout1"
+                android:layout_marginTop="@dimen/base_ldpi"
                 android:orientation="horizontal">
 
                 <com.angcyo.uiview.widget.RTextView
@@ -85,7 +88,7 @@
                     style="@style/DarkTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_xxhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg_selector"
                     android:clickable="true"
                     android:text="@string/delete_text"
@@ -170,7 +173,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_ldpi"
-            android:background="@drawable/base_bg_selector"
             android:orientation="vertical"
             android:padding="@dimen/base_ldpi"
             android:visibility="gone"

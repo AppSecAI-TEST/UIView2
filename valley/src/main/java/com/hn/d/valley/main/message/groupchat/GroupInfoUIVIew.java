@@ -177,6 +177,19 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
                 .compose(Rx.transformer(GroupDescBean.class))
                 .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        showLoadView();
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        hideLoadView();
+                    }
+
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);

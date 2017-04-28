@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--底部-->
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/base_ldpi"
+        android:paddingStart="@dimen/base_ldpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tip_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/base_ldpi"
+            android:layout_weight="1"
+            android:background="@drawable/base_dark_solid_round_shape"
+            android:gravity="center|left"
+            android:padding="@dimen/base_xhdpi"
+            android:text="@string/add_comment_hint"/>
+
+    </LinearLayout>
+
+    <com.hn.d.valley.widget.HnRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_layout">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
+    </com.hn.d.valley.widget.HnRefreshLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_toast_shadow_height"
+        android:layout_above="@id/bottom_layout"
+        android:background="@drawable/base_shadow_shape_top"/>
+
+</RelativeLayout>

@@ -35,7 +35,9 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         super(options);
     }
 
-    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options, List<String> uids, Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
+    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
+                             List<String> uids/**默认选中*/,
+                             Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
 
@@ -57,10 +59,17 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         super.datatProvider = new AddGroupDatatProvider();
     }
 
+    /**
+     * 允许在对话框上显示
+     */
+    @Override
+    public boolean showOnDialog() {
+        return true;
+    }
 
     @Override
     protected void buildAdapter() {
-        mGroupAdapter = new AddGroupAdapter(mActivity, options);
+        mGroupAdapter = new ContactSelectAdapter(mActivity, options, recyclerView);
     }
 
     @Override
@@ -79,29 +88,26 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 //
 //        } else {
 
-            datatProvider.provide(mSubscriptions, new RequestCallback<List<FriendBean>>() {
-                @Override
-                public void onStart() {
-                    showLoadView();
-                }
+        datatProvider.provide(mSubscriptions, new RequestCallback<List<FriendBean>>() {
+            @Override
+            public void onStart() {
+                showLoadView();
+            }
 
-                @Override
-                public void onSuccess(List<FriendBean> beanList) {
-                    hideLoadView();
-                    processResult(beanList);
+            @Override
+            public void onSuccess(List<FriendBean> beanList) {
+                hideLoadView();
+                processResult(beanList);
 
-                }
+            }
 
-                @Override
-                public void onError(String msg) {
-                    hideLoadView();
-                }
-            });
+            @Override
+            public void onError(String msg) {
+                hideLoadView();
+            }
+        });
 
 //        }
-
-
-
     }
 
     private void processResult(List<FriendBean> beanList) {

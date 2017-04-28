@@ -480,7 +480,13 @@ public class UserDiscussListBean {
         }
 
         @Override
-        public String getDiscussId() {
+        public String getDiscussId(String type) {
+//            if ("comment".equalsIgnoreCase(type)) {
+//                return getComment_id();
+//            }
+//            if ("reply".equalsIgnoreCase(type)) {
+//                return getReply_id();
+//            }
             return getDiscuss_id();
         }
 

@@ -1,5 +1,6 @@
 package com.hn.d.valley.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -120,6 +121,9 @@ public class HnGlideImageView extends AppCompatImageView {
             post(new Runnable() {
                 @Override
                 public void run() {
+                    if (isActivityDestroy()) {
+                        return;
+                    }
                     BitmapTypeRequest<String> builder = Glide.with(getContext())
                             .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
                             .asBitmap();
@@ -138,6 +142,9 @@ public class HnGlideImageView extends AppCompatImageView {
             post(new Runnable() {
                 @Override
                 public void run() {
+                    if (isActivityDestroy()) {
+                        return;
+                    }
                     DrawableRequestBuilder<String> builder = Glide.with(getContext())
                             .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
                             .transform(new GlideCircleTransform(getContext()));
@@ -152,6 +159,9 @@ public class HnGlideImageView extends AppCompatImageView {
             post(new Runnable() {
                 @Override
                 public void run() {
+                    if (isActivityDestroy()) {
+                        return;
+                    }
                     DrawableRequestBuilder<String> builder = Glide.with(getContext())
                             .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()));
                     if (getDrawable() != null) {
@@ -173,6 +183,9 @@ public class HnGlideImageView extends AppCompatImageView {
             post(new Runnable() {
                 @Override
                 public void run() {
+                    if (isActivityDestroy()) {
+                        return;
+                    }
                     DrawableRequestBuilder<String> builder = Glide.with(getContext())
                             .load(url)
                             .transform(new GlideCircleTransform(getContext()));
@@ -186,6 +199,9 @@ public class HnGlideImageView extends AppCompatImageView {
             post(new Runnable() {
                 @Override
                 public void run() {
+                    if (isActivityDestroy()) {
+                        return;
+                    }
                     DrawableRequestBuilder<String> builder = Glide.with(getContext())
                             .load(url);
                     if (getDrawable() != null) {
@@ -195,5 +211,13 @@ public class HnGlideImageView extends AppCompatImageView {
                 }
             });
         }
+    }
+
+    private boolean isActivityDestroy() {
+        Context context = getContext();
+        if (context instanceof Activity) {
+            return ((Activity) context).isDestroyed();
+        }
+        return false;
     }
 }

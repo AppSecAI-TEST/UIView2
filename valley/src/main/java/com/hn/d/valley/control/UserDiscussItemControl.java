@@ -991,7 +991,7 @@ public class UserDiscussItemControl {
                 initUnLikeView(itemTextView, tBean, subscription, type, likeAction);
 
                 subscription.add(RRetrofit.create(SocialService.class)
-                        .dislike(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId()))
+                        .dislike(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId(type)))
                         .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -1066,7 +1066,7 @@ public class UserDiscussItemControl {
                 initLikeView(itemTextView, tBean, subscription, type, likeAction);
 
                 subscription.add(RRetrofit.create(SocialService.class)
-                        .like(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId()))
+                        .like(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId(type)))
                         .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -1093,16 +1093,16 @@ public class UserDiscussItemControl {
     public static void bindLikeItemView(final CompositeSubscription subscription,
                                         RBaseViewHolder holder,
                                         ILikeData tBean,
-                                        String type,
+                                        String likeType,
                                         Action1<Boolean> likeAction) {
 
         View like_cnt = holder.v(R.id.like_cnt);
 
         if (tBean.getIsLike() == 1) {
             //是否点赞
-            initLikeView(like_cnt, tBean, subscription, type, likeAction);
+            initLikeView(like_cnt, tBean, subscription, likeType, likeAction);
         } else {
-            initUnLikeView(like_cnt, tBean, subscription, type, likeAction);
+            initUnLikeView(like_cnt, tBean, subscription, likeType, likeAction);
         }
     }
 

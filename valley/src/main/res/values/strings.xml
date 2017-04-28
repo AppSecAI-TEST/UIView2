@@ -123,8 +123,10 @@
     <string name="see_all">查看全部</string>
     <string name="sex">性别</string>
     <string name="reply_cnt_tip">%1$s条回复</string>
+    <string name="reply">回复</string>
     <string name="dynamic_input_hint">说点什么吧</string>
     <string name="dynamic_detail">动态详情</string>
+    <string name="detail">详情</string>
     <string name="like_title">点赞</string>
     <string name="like_title_formater">点赞(%1$d)</string>
     <string name="publish_dynamic">发布动态</string>
@@ -418,6 +420,7 @@
     <string name="drag_tip">拖动</string>
     <string name="more_tag_tip">更多标签</string>
     <string name="text_send_redpacket">发红包</string>
+    <string name="text_my_wallet">我的钱包</string>
     <string name="text_amount">金额</string>
     <string name="text_redpacket_notice">继续即表示同意《恐龙谷红包用户协议》\n 24小时未领取的红包，将于2天内退款至你的恐龙谷钱包</string>
     <string name="text_unit">元</string>
@@ -427,5 +430,21 @@
     <string name="add_comment_hint">添加你的评论</string>
     <string name="comment">评论</string>
     <string name="comment_format">评论 %1$s</string>
-    <string name="picture_comment">图片评论</string>
+    <string name="text_redpacket_switch_desc">当前为拼手气群红包，改为普通红包</string>
+    <string name="text_bill">账单</string>
+    <string name="picture_comment">查看图片</string>
+    <string name="all_comment_tip">全部评论</string>
+    <string name="text_account_balance">账户余额(元)</string>
+    <string name="text_recharge">充值</string>
+    <string name="text_crashout">提现</string>
+    <string name="text_pay_passwd">支付密码</string>
+    <string name="text_pay_passwd_notice">为了你的资金安全，请设置支付密码</string>
+    <string name="text_bind_alipay">绑定支付宝</string>
+    <string name="text_not_set">未设置</string>
+    <string name="text_bind_alipay_notice">请确定绑定的账号为本人所有</string>
+    <string name="text_fingerprient_notice">开启后，支付时可适用Touch ID 验证指纹快速完成付款</string>
+    <string name="text_finger_pay">指纹支付</string>
+    <string name="text_suaixuan">筛选</string>
+    <string name="text_klg_redpacket">恐龙谷红包</string>
+    <string name="text_selected_limit">已达到选中限制</string>
 </resources>

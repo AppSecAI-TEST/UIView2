@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：红包发放结果
  * 创建人员：hewking
  * 创建时间：2017/04/24 19:48
  * 修改人员：hewking
@@ -44,6 +44,8 @@ public class NextSendRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
         baseContentLayout.setBackgroundResource(R.color.base_red_d85940);
         super.inflateRecyclerRootLayout(baseContentLayout,inflater);
     }
+
+
 
     @Override
     protected void createItems(List<ViewItemInfo> items) {

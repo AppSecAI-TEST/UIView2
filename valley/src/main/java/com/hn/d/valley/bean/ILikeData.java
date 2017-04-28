@@ -20,5 +20,5 @@ public interface ILikeData {
 
     void setIsLike(int is_like);
 
-    String getDiscussId();
+    String getDiscussId(String type);
 }

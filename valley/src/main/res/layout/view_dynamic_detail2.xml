@@ -18,12 +18,13 @@
         android:paddingStart="@dimen/base_ldpi">
 
         <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/input_tip_view"
             style="@style/DarkTextStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/base_ldpi"
             android:layout_weight="1"
-            android:background="@drawable/base_dark_solid_round_shape"
+            android:background="@drawable/base_dark_round_selector"
             android:gravity="center|left"
             android:padding="@dimen/base_xhdpi"
             android:text="@string/add_comment_hint"/>

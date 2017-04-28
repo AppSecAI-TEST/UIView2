@@ -108,7 +108,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                 });
     }
 
-    public class GroupMemberAdapter extends RExBaseAdapter<String,GroupMemberBean,String> {
+    private class GroupMemberAdapter extends RExBaseAdapter<String,GroupMemberBean,String> {
 
         public GroupMemberAdapter(Context context) {
             super(context);

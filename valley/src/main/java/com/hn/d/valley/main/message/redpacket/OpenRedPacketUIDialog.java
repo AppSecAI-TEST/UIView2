@@ -1,6 +1,5 @@
 package com.hn.d.valley.main.message.redpacket;
 
-import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +10,6 @@ import android.widget.TextView;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
-import com.google.gson.JsonObject;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -20,11 +17,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
 import com.hn.d.valley.widget.HnGlideImageView;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import okhttp3.ResponseBody;
@@ -96,7 +89,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                 .map(new Func1<ResponseBody, Integer>() {
                     @Override
                     public Integer call(ResponseBody responseBody) {
-                        return parseResult(responseBody);
+                        return GrabPacketHelper.parseResult(responseBody);
                     }
                 })
                 .flatMap(new Func1<Integer, Observable<Integer>>() {
@@ -111,11 +104,13 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                                             return responseBodyObservable.map(new Func1<ResponseBody, Integer>() {
                                                 @Override
                                                 public Integer call(ResponseBody responseBody) {
-                                                    return parseResult(responseBody);
+                                                    return GrabPacketHelper.parseResult(responseBody);
                                                 }
                                             }).subscribeOn(Schedulers.io());
                                         }
                                     });
+                        } else if (Constants.ALREADY_GRAB == code) {
+
                         }
                         return Observable.empty();
                     }
@@ -139,7 +134,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                                                     return responseBodyObservable.map(new Func1<ResponseBody, Integer>() {
                                                         @Override
                                                         public Integer call(ResponseBody responseBody) {
-                                                            return parseResult(responseBody);
+                                                            return GrabPacketHelper.parseResult(responseBody);
                                                         }
                                                     }).subscribeOn(Schedulers.io());
                                                 }
@@ -174,24 +169,11 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     @Override
                     public void onSucceed(Integer beans) {
                         L.i(TAG, beans);
+                        replaceIView(new GrabedRDResultUIView(redId));
                         finishDialog();
                     }
                 });
 
-    }
-
-    @NonNull
-    private Integer parseResult(ResponseBody responseBody) {
-        int code = -1;
-        try {
-            String body = responseBody.string();
-            L.i(TAG,"parsebody" + body);
-            JSONObject jsonObject = new JSONObject(body);
-            code = jsonObject.optInt("code");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return code;
     }
 
 
