@@ -99,6 +99,11 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     }
 
     @Override
+    protected int getItemDecorationColor() {
+        return getColor(R.color.base_main_color_bg_color);
+    }
+
+    @Override
     protected int getEmptyTipStringId() {
         if (isInSubUIView) {
             if (isMe()) {

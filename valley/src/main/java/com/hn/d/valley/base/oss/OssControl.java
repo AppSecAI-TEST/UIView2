@@ -72,10 +72,11 @@ public class OssControl {
     }
 
     public void uploadCircleImg(String file) {
+        List<String> files = new ArrayList<>();
         if (TextUtils.isEmpty(file)) {
+            mUploadListener.onUploadSucceed(files);
             return;
         }
-        List<String> files = new ArrayList<>();
         files.add(file);
         uploadCircleImg(files);
     }

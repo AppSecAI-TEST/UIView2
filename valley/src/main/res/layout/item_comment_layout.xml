@@ -45,9 +45,9 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <com.angcyo.uiview.widget.RTextView
                         android:id="@+id/username"
-                        style="@style/MainTextStyle"
+                        style="@style/NameTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="我试试胡思"/>

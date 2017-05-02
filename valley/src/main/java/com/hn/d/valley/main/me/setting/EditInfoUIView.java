@@ -1204,7 +1204,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                                                     return;
                                                 }
 
-                                                final String name = mExEditText.string();
+                                                final String name = RUtils.fixName(mExEditText.string());
                                                 RRealm.exe(new Realm.Transaction() {
                                                     @Override
                                                     public void execute(Realm realm) {

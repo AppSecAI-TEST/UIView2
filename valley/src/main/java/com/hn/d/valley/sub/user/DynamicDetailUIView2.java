@@ -34,6 +34,7 @@ import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
+import com.hn.d.valley.sub.user.dialog.DynamicShareDialog;
 import com.hn.d.valley.sub.user.sub.CommentInputDialog;
 import com.hn.d.valley.sub.user.sub.CommentListUIView;
 import com.hn.d.valley.sub.user.sub.ForwardListUIView;
@@ -83,13 +84,18 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
         return super.getTitleBar()
                 .setTitleString(mActivity, R.string.dynamic_detail)
                 .setShowBackImageView(true)
-                .addRightItem(TitleBarPattern.buildImage(R.drawable.more, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                }))
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.more,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                showShareDialog();
+                            }
+                        }).setVisibility(View.GONE))
                 ;
+    }
+
+    private void showShareDialog() {
+        startIView(new DynamicShareDialog(mDataListBean, mSubscriptions));
     }
 
     @NonNull
@@ -279,6 +285,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                             showEmptyLayout();
                         } else {
                             mDataListBean = bean;
+                            getUITitleBarContainer().showRightItem(0);
                             showContentLayout();
                         }
                     }

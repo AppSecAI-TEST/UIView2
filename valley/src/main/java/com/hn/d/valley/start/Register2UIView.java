@@ -17,6 +17,7 @@ import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
@@ -192,7 +193,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                     })
             );
         } else {
-            mPresenter.register(mNameView.string(), mPasswordView.string(),
+            mPresenter.register(RUtils.fixName(mNameView.string()), mPasswordView.string(),
                     phone, mIcoFilePathUrl, String.valueOf(sex), code);
         }
     }

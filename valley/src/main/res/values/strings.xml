@@ -89,6 +89,7 @@
     <string name="fav">收藏</string>
     <string name="cancel_fav">取消收藏</string>
     <string name="share_gps">公开地理位置</string>
+    <string name="share">分享</string>
     <string name="add_tags_text">添加标签</string>
     <string name="ok">确定</string>
     <string name="save">保存</string>
@@ -254,6 +255,7 @@
     <string name="set_mark_tip">设置好友备注信息</string>
     <string name="how_count_status_format">%1$d条动态更新</string>
     <string name="my_collect">我的收藏</string>
+    <string name="collect">收藏</string>
     <string name="audio_introduce">语音介绍</string>
     <string name="record_dynamic_tip">按住我给大家打个招呼吧</string>
     <string name="audio_introduce_desc">语音介绍</string>
@@ -385,6 +387,7 @@
     <string name="share_to_tip">分享到</string>
     <string name="weixin_friend_tip">微信好友</string>
     <string name="weixin_circle_tip">微信朋友圈</string>
+    <string name="weixin_circle">朋友圈</string>
     <string name="qq_friend_tip">QQ好友</string>
     <string name="qq_qzone_tip">QQ空间</string>
     <string name="set_remark_tip">设置备注名</string>
@@ -448,4 +451,6 @@
     <string name="text_klg_redpacket">恐龙谷红包</string>
     <string name="text_selected_limit">已达到选中限制</string>
     <string name="send_input_tip">说点什么吧</string>
+    <string name="copy">复制</string>
+    <string name="copy_tip">内容已复制至剪切板</string>
 </resources>

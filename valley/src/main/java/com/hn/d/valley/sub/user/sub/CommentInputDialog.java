@@ -59,7 +59,7 @@ import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Op
 public class CommentInputDialog extends UIIDialogImpl {
     InputConfig mInputConfig;
     private EmojiLayoutControl mEmojiLayoutControl;
-    private String mImagePath = "", mImageUrl;//选择的图片, 上传之后的地址
+    private String mImagePath = "", mImageUrl = "";//选择的图片, 上传之后的地址
     private List<String> atUsers = new ArrayList<>();//@的用户
     private List<FriendBean> mFriendList = new ArrayList<>();
     private RSoftInputLayout mSoftInputLayout;
@@ -227,7 +227,9 @@ public class CommentInputDialog extends UIIDialogImpl {
             @Override
             public void onUploadSucceed(List<String> list) {
                 HnLoading.hide();
-                mImageUrl = list.get(0);
+                if (!list.isEmpty()) {
+                    mImageUrl = list.get(0);
+                }
                 finishDialog();
                 if (mInputConfig != null) {
                     mInputConfig.onSendClick(mImageUrl, fixMentionString());

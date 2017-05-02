@@ -7,45 +7,45 @@
 
     <TextView
         android:id="@+id/share_wx"
-        style="@style/DarkTextButtonPaddingStyle"
+        style="@style/DarkTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:drawablePadding="@dimen/base_ldpi"
-        android:drawableTop="@drawable/wechat_n"
+        android:drawableTop="@drawable/wechat_selector"
         android:gravity="center"
         android:text="@string/weixin_friend_tip"/>
 
     <TextView
         android:id="@+id/share_wxc"
-        style="@style/DarkTextButtonPaddingStyle"
+        style="@style/DarkTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:drawablePadding="@dimen/base_ldpi"
-        android:drawableTop="@drawable/friendscircle_n"
+        android:drawableTop="@drawable/friendscircle_selector"
         android:gravity="center"
         android:text="@string/weixin_circle_tip"/>
 
     <TextView
         android:id="@+id/share_qq"
-        style="@style/DarkTextButtonPaddingStyle"
+        style="@style/DarkTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:drawablePadding="@dimen/base_ldpi"
-        android:drawableTop="@drawable/qq_n"
+        android:drawableTop="@drawable/qq_selector2"
         android:gravity="center"
         android:text="@string/qq_friend_tip"/>
 
     <TextView
         android:id="@+id/share_qqz"
-        style="@style/DarkTextButtonPaddingStyle"
+        style="@style/DarkTextStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:drawablePadding="@dimen/base_ldpi"
-        android:drawableTop="@drawable/share_qzone_n"
+        android:drawableTop="@drawable/share_qzone_selector"
         android:gravity="center"
         android:text="@string/qq_qzone_tip"/>
 
