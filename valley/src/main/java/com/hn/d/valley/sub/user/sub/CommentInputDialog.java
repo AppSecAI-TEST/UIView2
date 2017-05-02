@@ -24,6 +24,7 @@ import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
@@ -58,11 +59,12 @@ import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Op
 public class CommentInputDialog extends UIIDialogImpl {
     InputConfig mInputConfig;
     private EmojiLayoutControl mEmojiLayoutControl;
-    private String mImagePath = "";//选择的图片
+    private String mImagePath = "", mImageUrl;//选择的图片, 上传之后的地址
     private List<String> atUsers = new ArrayList<>();//@的用户
     private List<FriendBean> mFriendList = new ArrayList<>();
     private RSoftInputLayout mSoftInputLayout;
     private ExEditText mInputView;
+    private OssControl mOssControl;
 
     public CommentInputDialog(InputConfig inputConfig) {
         mInputConfig = inputConfig;
@@ -84,6 +86,14 @@ public class CommentInputDialog extends UIIDialogImpl {
     }
 
     @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        if (mOssControl != null) {
+            mOssControl.setCancel(true);
+        }
+    }
+
+    @Override
     protected void initDialogContentView() {
         super.initDialogContentView();
         mSoftInputLayout = mViewHolder.v(R.id.root_layout);
@@ -99,7 +109,7 @@ public class CommentInputDialog extends UIIDialogImpl {
 
         //输入框
         ExEditText exEditText = mViewHolder.v(R.id.input_view);
-        exEditText.setHint("说点什么吧");
+        exEditText.setHint(R.string.send_input_tip);
 
         //控制按钮
         initControlLayout();
@@ -166,6 +176,8 @@ public class CommentInputDialog extends UIIDialogImpl {
             @Override
             public void afterTextChanged(Editable s) {
                 sendView.setEnabled(s.length() > 0);
+
+                checkAtUser();
             }
         });
         //输入@字符, 自动弹出选择联系人
@@ -194,12 +206,54 @@ public class CommentInputDialog extends UIIDialogImpl {
         sendView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finishDialog();
-                if (mInputConfig != null) {
-                    mInputConfig.onSendClick(mImagePath, fixMentionString());
-                }
+                onSendClick();
             }
         });
+    }
+
+    private void onSendClick() {
+        HnLoading.show(mOtherILayout).addDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                onViewUnload();
+            }
+        });
+        mOssControl = new OssControl(new OssControl.OnUploadListener() {
+            @Override
+            public void onUploadStart() {
+
+            }
+
+            @Override
+            public void onUploadSucceed(List<String> list) {
+                HnLoading.hide();
+                mImageUrl = list.get(0);
+                finishDialog();
+                if (mInputConfig != null) {
+                    mInputConfig.onSendClick(mImageUrl, fixMentionString());
+                }
+            }
+
+            @Override
+            public void onUploadFailed(int code, String msg) {
+                HnLoading.hide();
+            }
+        });
+        mOssControl.uploadCircleImg(mImagePath);
+    }
+
+    /**
+     * 文本输入框删除@用户之后
+     */
+    private void checkAtUser() {
+        String string = mInputView.string();
+        for (int i = mFriendList.size() - 1; i >= 0; i--) {
+            FriendBean friendBean = mFriendList.get(i);
+            if (!string.contains(friendBean.getDefaultMark())) {
+                mFriendList.remove(i);
+                atUsers.remove(friendBean.getUid());
+            }
+        }
     }
 
     /**
@@ -209,7 +263,8 @@ public class CommentInputDialog extends UIIDialogImpl {
         String string = mInputView.string();
         List<String> allMention = mInputView.getAllMention();
         for (String s : allMention) {
-            string = string.replaceAll("@" + s, createStringWithUserName(s));
+            string = string.replaceAll("@" + s.replaceAll("\\(", "\\\\(").replaceAll("\\)", "\\\\)"),
+                    createStringWithUserName(s));
         }
         return string;
     }

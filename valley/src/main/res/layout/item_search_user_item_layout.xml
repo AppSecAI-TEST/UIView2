@@ -238,7 +238,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/base_bg2_selector"
-                android:padding="@dimen/base_ldpi"
                 android:src="@drawable/more_dongtai"/>
 
         </LinearLayout>

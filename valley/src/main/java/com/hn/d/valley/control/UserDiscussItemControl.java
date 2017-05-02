@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.net.RRetrofit;
@@ -76,6 +77,8 @@ import rx.subscriptions.CompositeSubscription;
  * 修改备注：
  * Version: 1.0.0
  */
+
+
 public class UserDiscussItemControl {
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
                                 UserDiscussListBean.DataListBean dataListBean,
@@ -88,6 +91,9 @@ public class UserDiscussItemControl {
         bindLikeItemView(subscription, holder, dataListBean, null);
     }
 
+    /**
+     * @see com.hn.d.valley.main.home.UserDiscussAdapter
+     */
     public static void initItem(final RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
                                 final Action0 itemRootAction, final ILayout iLayout) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
@@ -768,7 +774,7 @@ public class UserDiscussItemControl {
             listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    iLayout.startIView(UIItemDialog.build()
+                    iLayout.startIView(UIBottomItemDialog.build()
                             .addItem(topItem)
                             .addItem(favItem)
                             .addItem(deleteItem));
@@ -779,7 +785,7 @@ public class UserDiscussItemControl {
             listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    iLayout.startIView(UIItemDialog.build()
+                    iLayout.startIView(UIBottomItemDialog.build()
                             .addItem(followItem)
                             .addItem(favItem)
                             .addItem(notSeeItem)
@@ -943,10 +949,10 @@ public class UserDiscussItemControl {
         final String uid = UserCache.getUserAccount();
 
         if (itemTextView instanceof HnItemTextView) {
-            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_2_s);
+            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_s);
             ((HnItemTextView) itemTextView).setText(tBean.getLikeCount());
         } else if (itemTextView instanceof ImageView) {
-            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_2_s);
+            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_s);
         }
 
 //        RxView.clicks(itemTextView)
@@ -1016,10 +1022,10 @@ public class UserDiscussItemControl {
         final String uid = UserCache.getUserAccount();
 
         if (itemTextView instanceof HnItemTextView) {
-            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_2_n);
+            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_n);
             ((HnItemTextView) itemTextView).setText(tBean.getLikeCount());
         } else if (itemTextView instanceof ImageView) {
-            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_2_n);
+            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_n);
         }
 
 //        RxView.clicks(itemTextView)

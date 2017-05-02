@@ -196,9 +196,9 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         itemTextView.setBackgroundResource(R.drawable.base_bg2_selector);
         itemTextView.setText(dataBean.getLike_cnt());
         if (dataBean.getIs_like() == 1) {
-            itemTextView.setLeftIco(R.drawable.love_icon_2_s);
+            itemTextView.setLeftIco(R.drawable.love_icon_s);
         } else {
-            itemTextView.setLeftIco(R.drawable.love_icon_2_n);
+            itemTextView.setLeftIco(R.drawable.love_icon_n);
         }
         itemTextView.setVisibility(mListType == ListType.FORWARD_TYPE ? View.GONE : View.VISIBLE);
         UserDiscussItemControl.bindLikeItemView(mSubscriptions, holder, dataBean, likeType, null);

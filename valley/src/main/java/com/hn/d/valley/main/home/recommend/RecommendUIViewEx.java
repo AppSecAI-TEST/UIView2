@@ -8,6 +8,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
@@ -74,6 +75,11 @@ public class RecommendUIViewEx extends NoTitleBaseRecyclerUIView<UserDiscussList
     @Override
     public void loadData() {
         super.loadData();
+    }
+
+    @Override
+    protected int getItemDecorationColor() {
+        return getColor(R.color.base_main_color_bg_color);
     }
 
     @Override

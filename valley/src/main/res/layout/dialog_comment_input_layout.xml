@@ -55,42 +55,38 @@
 
                 <ImageView
                     android:id="@+id/ico_pic"
-                    android:layout_width="@dimen/ico_size"
-                    android:layout_height="@dimen/ico_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
-                    android:scaleType="fitXY"
                     android:src="@drawable/icon_addpicture"/>
 
                 <ImageView
                     android:id="@+id/ico_at"
-                    android:layout_width="@dimen/ico_size"
-                    android:layout_height="@dimen/ico_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
-                    android:scaleType="fitXY"
                     android:src="@drawable/abudongtai_n"/>
 
                 <ImageView
                     android:id="@+id/ico_exp"
-                    android:layout_width="@dimen/ico_size"
-                    android:layout_height="@dimen/ico_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
-                    android:scaleType="fitXY"
                     android:src="@drawable/expression_comments_n"/>
 
                 <ImageView
                     android:id="@+id/ico_gif"
-                    android:layout_width="@dimen/ico_size"
-                    android:layout_height="@dimen/ico_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
-                    android:scaleType="fitXY"
                     android:src="@drawable/icon_addgif"/>
 
             </LinearLayout>

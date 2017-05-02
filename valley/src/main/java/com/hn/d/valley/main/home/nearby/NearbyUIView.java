@@ -181,12 +181,12 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                         onFilter(R.id.all_check_view);
                     }
                 })
-                .addItem(getString(R.string.base_cancel), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
+//                .addItem(getString(R.string.base_cancel), new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                    }
+//                })
                 .showDialog(this);
     }
 
