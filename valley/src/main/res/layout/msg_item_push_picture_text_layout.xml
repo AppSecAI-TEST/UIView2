@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_layout"
-    android:layout_width="210dp"
-    android:layout_height="130dp"
+    android:layout_width="205dp"
+    android:layout_height="120dp"
+    android:gravity="center"
     android:background="@drawable/base_bg_selector"
     android:paddingBottom="@dimen/base_xhdpi">
 
@@ -16,11 +17,11 @@
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/tv_desc"
         style="@style/MainTextStyle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:background="#C000"
+        android:background="#60000000"
         android:layout_marginTop="@dimen/base_xhdpi"
         android:ellipsize="end"
         android:maxLines="1"

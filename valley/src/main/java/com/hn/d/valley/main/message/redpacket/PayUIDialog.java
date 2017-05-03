@@ -19,14 +19,10 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.GroupAnnouncementBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
 import com.hn.d.valley.main.wallet.WalletService;
-import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.PasscodeView;
-
-import java.util.List;
 
 import butterknife.BindView;
 
@@ -55,8 +51,8 @@ public class PayUIDialog extends UIIDialogImpl {
     View lineLayout;
     @BindView(R.id.base_item_info_layout)
     ItemInfoLayout baseItemInfoLayout;
-    @BindView(R.id.btn_send)
-    Button btn_send;
+//    @BindView(R.id.btn_send)
+//    Button btn_send;
     @BindView(R.id.base_dialog_root_layout)
     LinearLayout baseDialogRootLayout;
     @BindView(R.id.passcode_view)
@@ -91,16 +87,17 @@ public class PayUIDialog extends UIIDialogImpl {
             }
         });
 
-        btn_send.setText("立即支付");
+//        btn_send.setText(R.string.text_immediately_pay);
 
-        baseDialogTitleView.setText("收银台");
+        baseDialogTitleView.setText(R.string.text_cashier_desk);
         baseDialogContentView.setText("￥ " + params.money);
-        baseItemInfoLayout.setItemText("余额");
+        baseItemInfoLayout.setItemText(mActivity.getString(R.string.text_balance));
         baseItemInfoLayout.setLeftDrawableRes(R.drawable.icon_chai);
         baseItemInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new ChoosePayWayUIDialog());
+                mOtherILayout.startIView(new ChoosePayWayUIDialog(params));
+                finishDialog();
             }
         });
 
@@ -111,12 +108,12 @@ public class PayUIDialog extends UIIDialogImpl {
             }
         });
 
-        btn_send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendRedPacket();
-            }
-        });
+//        btn_send.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                sendRedPacket();
+//            }
+//        });
     }
 
     private void passwdConfirm(String passcode) {
@@ -171,7 +168,7 @@ public class PayUIDialog extends UIIDialogImpl {
 
                     @Override
                     public void onSucceed(String beans) {
-                        replaceIView(new NextSendRPUIView());
+//                        replaceIView(new NextSendRPUIView());
                         finishDialog();
                         L.i(TAG,beans);
                     }

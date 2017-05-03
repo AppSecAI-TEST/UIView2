@@ -7,6 +7,8 @@ import android.view.View;
 import com.amap.api.services.core.PoiItem;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.R;
 
 /**
@@ -62,6 +64,7 @@ public class PoiItemAdapter extends RModelAdapter<PoiItem> {
 
     @Override
     protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, PoiItem bean) {
+        ResUtil.setBgDrawable(holder.v(R.id.root_layout), SkinHelper.getSkin().getThemeTranMaskBackgroundSelector());
         holder.v(R.id.root_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,10 +83,8 @@ public class PoiItemAdapter extends RModelAdapter<PoiItem> {
     protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
         super.onSelectorPosition(viewHolder, position, isSelector);
         viewHolder.v(R.id.select_image_view).setVisibility(View.VISIBLE);
-        int mainColor = R.color.colorAccent;
-        int darkColor = R.color.colorAccent;
-        viewHolder.tv(R.id.title_view).setTextColor(mContext.getResources().getColor(mainColor));
-        viewHolder.tv(R.id.address_view).setTextColor(mContext.getResources().getColor(darkColor));
+        viewHolder.tv(R.id.title_view).setTextColor(SkinHelper.getSkin().getThemeSubColor());
+        viewHolder.tv(R.id.address_view).setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
         if (mPoiItemListener != null) {
             mPoiItemListener.onPoiItemSelector(getAllDatas().get(position));

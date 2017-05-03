@@ -25,7 +25,6 @@ import okhttp3.ResponseBody;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static com.hn.d.valley.main.message.ChatAdapter.setImageSize;
 import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.parseResult;
 
 /**
@@ -50,7 +49,7 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 
     @Override
     protected void bindContentView() {
-
+        contentContainer.setBackground(null);
         TextView tv_content = (TextView) findViewById(R.id.tv_red_content);
         RelativeLayout rl_container = (RelativeLayout) findViewById(R.id.rl_red_packet);
 
@@ -99,6 +98,11 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                                 } else {
                                     T_.show("很抱歉，不能抢了");
                                 }
+                            }
+
+                            @Override
+                            public void onError(int code, String msg) {
+                                super.onError(code, msg);
                             }
                         });
 

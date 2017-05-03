@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.widget.RSoftInputLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/soft_input_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!--输入框-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.angcyo.uiview.widget.ExEditText
+                        android:id="@+id/input_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="top"
+                        android:hint="@string/publish_dynamic_hint"
+                        android:maxHeight="200dp"
+                        android:maxLength="@integer/dynamic_status_text_count"
+                        android:minHeight="100dp"
+                        android:padding="@dimen/base_round_radius"/>
+
+                    <com.angcyo.uiview.widget.viewpager.TextIndicator
+                        android:id="@+id/single_text_indicator_view"
+                        style="@style/DarkTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="false"
+                        android:padding="@dimen/base_xhdpi"
+                        android:textSize="@dimen/default_text_little_size"
+                        android:visibility="visible"
+                        tools:text="100/2000"/>
+                </RelativeLayout>
+
+                <!--发布动态-->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/base_xhdpi">
+
+                    <!--显示图片-->
+                    <com.angcyo.uiview.recycler.RRecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:tag="GV3"/>
+
+                    <!--显示视频-->
+                    <FrameLayout
+                        android:id="@+id/video_control_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <com.angcyo.uiview.widget.RNineImageLayout
+                            android:id="@+id/video_thumb_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                        <ImageView
+                            android:id="@+id/video_play_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:src="@drawable/play_redianzixun"/>
+
+                        <TextView
+                            android:id="@+id/video_time_view"
+                            style="@style/WhiteColorTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|bottom"
+                            android:layout_marginEnd="@dimen/base_ldpi"
+                            tools:text="00:07"/>
+                    </FrameLayout>
+                </FrameLayout>
+
+
+                <!--转发动态控制-->
+                <RelativeLayout
+                    android:id="@+id/forward_control_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/base_xhdpi"
+                    android:visibility="gone">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/avatar"
+                        style="@style/UserMidIcoStyle"
+                        android:visibility="visible"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/avatar"
+                        android:orientation="vertical"
+                        android:paddingLeft="@dimen/base_xhdpi">
+
+                        <com.angcyo.uiview.widget.RTextView
+                            android:id="@+id/username"
+                            style="@style/MainColorTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            tools:text="爱宠物的默默"/>
+
+                        <TextView
+                            android:id="@+id/content"
+                            style="@style/DarkTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/base_xhdpi"
+                            tools:text="爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默"/>
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <!--控制按钮-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/tag_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/base_50dpi"
+                    android:layout_marginStart="@dimen/base_xxhdpi"
+                    android:background="@drawable/base_tag_selector"
+                    android:paddingBottom="@dimen/base_ldpi"
+                    android:paddingEnd="@dimen/base_hdpi"
+                    android:paddingStart="@dimen/base_hdpi"
+                    android:paddingTop="@dimen/base_ldpi"
+                    android:tag="# %1$s"
+                    android:textColor="@color/base_mention_color"
+                    android:textSize="@dimen/default_text_size10"
+                    tools:text="生活"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/address_view"
+                    style="@style/DarkTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xxhdpi"
+                    android:background="@drawable/base_tag_selector"
+                    android:drawableLeft="@drawable/address_fabudongtai"
+                    android:drawablePadding="@dimen/base_ldpi"
+                    android:paddingBottom="@dimen/base_ldpi"
+                    android:paddingEnd="@dimen/base_hdpi"
+                    android:paddingStart="@dimen/base_hdpi"
+                    android:paddingTop="@dimen/base_ldpi"
+                    android:tag="%1$s"
+                    android:textSize="@dimen/default_text_size10"
+                    tools:text="生活"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/visible_view"
+                    style="@style/DarkTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="@dimen/base_xhdpi"
+                    android:layout_marginEnd="@dimen/base_xxhdpi"
+                    android:layout_marginStart="@dimen/base_xxhdpi"
+                    android:background="@drawable/base_tag_selector"
+                    android:drawableLeft="@drawable/partiallyvisible_fabudongtai"
+                    android:drawablePadding="@dimen/base_ldpi"
+                    android:paddingBottom="@dimen/base_ldpi"
+                    android:paddingEnd="@dimen/base_hdpi"
+                    android:paddingStart="@dimen/base_hdpi"
+                    android:paddingTop="@dimen/base_ldpi"
+                    android:tag="%1$s"
+                    android:textColor="@color/base_mention_color"
+                    android:textSize="@dimen/default_text_size10"
+                    tools:text="生活"/>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@color/base_chat_bg_color"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ico_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:background="@drawable/base_bg2_selector"
+                    android:src="@drawable/tianjiatupian_fabudongtai_n"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/ico_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:background="@drawable/base_bg2_selector"
+                    android:src="@drawable/abudongtai_n"/>
+
+                <ImageView
+                    android:id="@+id/ico_exp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:background="@drawable/base_bg2_selector"
+                    android:src="@drawable/expression_comments_n"/>
+
+                <ImageView
+                    android:id="@+id/ico_gif"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:background="@drawable/base_bg2_selector"
+                    android:src="@drawable/icon_addgif"/>
+
+                <com.hn.d.valley.widget.HnTopImageView
+                    android:id="@+id/ico_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:background="@drawable/base_bg2_selector"
+                    android:src="@drawable/zhiding_fabudongtai_n"/>
+
+                <View
+                    android:layout_width="@dimen/base_0dpi"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"/>
+
+                <CheckBox
+                    android:id="@+id/allow_box_view"
+                    style="@style/DarkTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/check_fabudongtai_selector"
+                    android:paddingEnd="@dimen/base_xhdpi"
+                    android:paddingStart="@dimen/base_ldpi"
+                    android:text="@string/allow_download"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!--表情布局-->
+    <RelativeLayout
+        android:id="@+id/emoji_control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/layout_scr_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_title_bar_item_size"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            android:orientation="horizontal"/>
+
+        <com.angcyo.uiview.widget.viewpager.UIViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/layout_scr_bottom"/>
+    </RelativeLayout>
+
+
+</com.angcyo.uiview.widget.RSoftInputLayout>

@@ -5,9 +5,11 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -66,6 +68,10 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                 final EditText etContent = holder.v(R.id.et_content);
                 final Button btn_send = holder.v(R.id.btn_send);
                 final EditText et_count = holder.v(R.id.et_count);
+                final TextView tv_cursor = holder.v(R.id.tv_cursor);
+
+                UI.setViewHeight(etContent, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
+
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -79,8 +85,9 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        btn_send.setEnabled(etMoney.getText().toString().length() > 0
-                                && et_count.getText().toString().length() > 0);
+                        boolean enable = etMoney.getText().toString().length() > 0;
+                        tv_cursor.setVisibility(!enable ? View.VISIBLE : View.GONE);
+                        btn_send.setEnabled(enable && et_count.getText().toString().length() > 0);
                     }
                 };
 
@@ -90,8 +97,12 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        String content = etContent.getText().toString();
+                        if ("".equals(content)) {
+                            content = etContent.getHint().toString();
+                        }
                         PayUIDialog.Params params = new PayUIDialog.Params(Integer.valueOf(et_count.getText().toString())
-                                ,Integer.valueOf(etMoney.getText().toString()),etContent.getText().toString(),null,to_gid);
+                                ,Integer.valueOf(etMoney.getText().toString()),content,null,to_gid);
                         mOtherILayout.startIView(new PayUIDialog(params));
                     }
                 });

@@ -69,7 +69,8 @@
 
             <TextView
                 android:id="@+id/msg_time_view"
-                style="@style/DarkTextStyle"/>
+                style="@style/DarkTextStyle"
+                android:textSize="@dimen/default_text_size10"/>
 
             <com.angcyo.uiview.github.tablayout.MsgView
                 android:id="@+id/msg_num_view"
@@ -80,7 +81,7 @@
                 android:minHeight="16dp"
                 android:minWidth="16dp"
                 android:textColor="#ffffff"
-                android:textSize="11.5sp"
+                android:textSize="@dimen/default_text_size8"
                 android:visibility="invisible"
                 app:mv_backgroundColor="#FD481F"
                 app:mv_isRadiusHalfHeight="true"

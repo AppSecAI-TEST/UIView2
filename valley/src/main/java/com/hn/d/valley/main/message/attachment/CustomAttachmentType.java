@@ -23,6 +23,10 @@ public interface CustomAttachmentType {
 
     int GRABEDMSG = 5;
 
+    int RECEIPTSNOTICE = 6;
+
+    int REFOUNDMSG = 7;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
@@ -36,5 +40,9 @@ public interface CustomAttachmentType {
     String NEWBAG = "newredbag";
 
     String GRABREDBAG = "grabredbag";
+
+    String RECEIPTES = "collection";
+
+    String REFUND = "refund";
 
 }

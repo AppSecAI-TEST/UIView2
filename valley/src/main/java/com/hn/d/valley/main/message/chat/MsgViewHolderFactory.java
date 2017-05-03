@@ -2,8 +2,14 @@ package com.hn.d.valley.main.message.chat;
 
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.attachment.ReceiptsNotice;
+import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
+import com.hn.d.valley.main.message.attachment.RefundMsg;
+import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHReceiptsNoticeMsg;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHRefundMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderAudio;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderGrabedMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderLocation;
@@ -50,6 +56,8 @@ public class MsgViewHolderFactory {
         register(PersonalCardAttachment.class, MsgViewHolderPersonCard.class);
         register(RedPacketAttachment.class, MsgViewHolderRedPacket.class);
         register(GrabedMsgAttachment.class, MsgViewHolderGrabedMsg.class);
+        register(ReceiptsNoticeAttachment.class,MsgVHReceiptsNoticeMsg.class);
+        register(RefundMsgAttachment.class, MsgVHRefundMsg.class);
         register(SystemPushAttachment.SingleTextSPAttachment.class, MsgViewHolderPushText.class);
         register(SystemPushAttachment.TextAndPictureSPAttachment.class, MsgViewHolderPushPictureText.class);
         register(SystemPushAttachment.MultiPictureSPAttachment.class, MsgViewHolderPushMultiPicture.class);

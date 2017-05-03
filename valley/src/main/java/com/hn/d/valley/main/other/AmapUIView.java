@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.other;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.ViewDragHelper;
 import android.view.LayoutInflater;
@@ -26,7 +27,9 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.SwipeBackLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.EmptyView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -122,6 +125,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
                 LatLonPoint latLonPoint = item.getLatLonPoint();
                 lockCameraChangedListener = true;
 
+                amapBean.title = item.getTitle();
                 amapBean.latitude = latLonPoint.getLatitude();
                 amapBean.longitude = latLonPoint.getLongitude();
                 amapBean.address = PoiItemAdapter.getAddress(item);
@@ -143,13 +147,14 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
 
         mRecyclerView.setItemAnim(false);
         mRecyclerView.setAdapter(mPoiItemAdapter);
+        UI.setVerticalThumbDrawable(mRecyclerView, new ColorDrawable(SkinHelper.getSkin().getThemeSubColor()));
     }
 
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> items = new ArrayList<>();
         if (mSend) {
-            items.add(TitleBarPattern.TitleBarItem.build().setText("发送").setListener(new View.OnClickListener() {
+            items.add(TitleBarPattern.TitleBarItem.build().setText(getString(R.string.send)).setListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTargetBean == null) {
@@ -166,7 +171,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
                 }
             }));
         }
-        return super.getTitleBar().setTitleString("我的位置").setShowBackImageView(true).setRightItems(items);
+        return super.getTitleBar().setTitleString(getString(R.string.my_location)).setShowBackImageView(true).setRightItems(items);
     }
 
     @Override

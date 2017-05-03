@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import okhttp3.ResponseBody;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -150,7 +151,8 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                 }
                 return Observable.empty();
             }
-        })
+        }).subscribeOn(Schedulers.io())
+                . observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSingleSubscriber<Integer>() {
 
                     @Override

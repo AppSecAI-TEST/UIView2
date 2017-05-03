@@ -32,10 +32,20 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
     ImageView ivCancel;
     @BindView(R.id.base_dialog_title_view)
     TextView baseDialogTitleView;
-    @BindView(R.id.base_item_info_layout)
-    ItemInfoLayout baseItemInfoLayout;
     @BindView(R.id.base_dialog_root_layout)
     LinearLayout baseDialogRootLayout;
+    @BindView(R.id.info_alipay)
+    ItemInfoLayout infoAlipay;
+    @BindView(R.id.info_wechat)
+    ItemInfoLayout infoWechat;
+    @BindView(R.id.info_balance)
+    ItemInfoLayout infoBalance;
+
+    private PayUIDialog.Params params;
+
+    public ChoosePayWayUIDialog(PayUIDialog.Params params) {
+        this.params = params;
+    }
 
     @Override
     protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
@@ -46,6 +56,39 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
+
+        infoBalance.setItemText(mActivity.getString(R.string.text_balance));
+        infoBalance.setLeftDrawableRes(R.drawable.icon_chai);
+
+        infoAlipay.setLeftDrawableRes(R.drawable.icon_alipay_wallet);
+        infoAlipay.setItemText(mActivity.getString(R.string.text_alipay));
+
+        infoWechat.setLeftDrawableRes(R.drawable.icon_wechat_wallet);
+        infoWechat.setItemText(mActivity.getString(R.string.text_wechat));
+
+        infoBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new PayUIDialog(params));
+                finishDialog();
+            }
+        });
+
+        infoAlipay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new ThirdPayUIDialog(params,ThirdPayUIDialog.ALIPAY));
+                finishDialog();
+            }
+        });
+
+        infoWechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new ThirdPayUIDialog(params,ThirdPayUIDialog.WECHAT));
+                finishDialog();
+            }
+        });
 
 
     }

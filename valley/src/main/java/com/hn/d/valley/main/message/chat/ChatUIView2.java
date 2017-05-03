@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -36,9 +37,11 @@ import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.ISkin;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.string.MD5;
 import com.angcyo.uiview.view.UIIViewImpl;
@@ -971,5 +974,11 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         SkinUtils.setExpressView(mMessageExpressionView);
         SkinUtils.setAddView(mMessageAddView);
         SkinUtils.setVoiceView(mMessageVoiceBox);
+
+        ResUtil.setBgDrawable(mSendView, ResUtil.generateRippleRoundMaskDrawable(density() * 3,
+                Color.WHITE,
+                SkinHelper.getSkin().getThemeDarkColor(),
+                getColor(R.color.colorDisable),
+                SkinHelper.getSkin().getThemeSubColor()));
     }
 }

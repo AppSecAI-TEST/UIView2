@@ -336,7 +336,7 @@ public class RAmap {
                             bean.address = address.getFormatAddress();
                             bean.latitude = latlng.latitude;
                             bean.longitude = latlng.longitude;
-
+                            bean.title = address.getTownship();
                             action1.call(bean);
                         } else {
                             action1.call(null);

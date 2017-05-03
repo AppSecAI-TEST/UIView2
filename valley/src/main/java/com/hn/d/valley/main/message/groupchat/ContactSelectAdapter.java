@@ -158,8 +158,10 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
             for (int i = 0 ; i < indexList.size() ; i ++) {
                 mCheckStats.put(indexList.get(i),true);
             }
+            // 选中 indexlist 标记的item
             setSelectIndexs((RRecyclerView) mRecyclerView,R.id.cb_friend_addfirend,indexList);
-
+            // post 选中数量显示
+            RBus.post(new SelectedUserNumEvent(getSelectorData().size()));
         } else {
             notifyDataSetChanged();
         }

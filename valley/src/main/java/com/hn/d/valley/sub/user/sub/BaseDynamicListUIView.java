@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -151,22 +152,43 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         } else {
             holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(Long.valueOf(dataBean.getCreated()) * 1000l, true));
         }
-        holder.v(R.id.delete_view).setVisibility(mListType == ListType.COMMENT_TYPE && isMe(dataBean.getUid()) ? View.VISIBLE : View.GONE);
-        holder.v(R.id.delete_view).setOnClickListener(new View.OnClickListener() {
+        View deleteView = holder.v(R.id.delete_view);
+        deleteView.setVisibility(View.GONE);
+        if (mListType == ListType.REPLY_TYPE) {
+            if (position != 0 && isMe(dataBean.getUid())) {
+                deleteView.setVisibility(View.VISIBLE);
+            }
+        } else if (mListType == ListType.COMMENT_TYPE) {
+            if (isMe(dataBean.getUid())) {
+                deleteView.setVisibility(View.VISIBLE);
+            }
+        }
+
+        deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRExBaseAdapter.deleteItem(dataBean);
-                add(RRetrofit.create(SocialService.class)
-                        .removeComment(Param.buildMap("type:" + (mListType == ListType.REPLY_TYPE ? "reply" : "comment"),
-                                "item_id:" + dataBean.getComment_id()))
-                        .compose(Rx.transformer(String.class))
-                        .subscribe(new RSubscriber<String>() {
+                UIDialog.build()
+                        .setDialogContent(mListType == ListType.REPLY_TYPE ?
+                                getString(R.string.delete_reply_tip) :
+                                getString(R.string.delete_commend_tip))
+                        .setOkListener(new View.OnClickListener() {
                             @Override
-                            public void onError(int code, String msg) {
-                                super.onError(code, msg);
-                                T_.error(msg);
+                            public void onClick(View v) {
+                                mRExBaseAdapter.deleteItem(dataBean);
+                                add(RRetrofit.create(SocialService.class)
+                                        .removeComment(Param.buildMap("type:" + (mListType == ListType.REPLY_TYPE ? "reply" : "comment"),
+                                                "item_id:" + (mListType == ListType.REPLY_TYPE ? dataBean.getReply_id() : dataBean.getComment_id())))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new RSubscriber<String>() {
+                                            @Override
+                                            public void onError(int code, String msg) {
+                                                super.onError(code, msg);
+                                                T_.error(msg);
+                                            }
+                                        }));
                             }
-                        }));
+                        })
+                        .showDialog(mOtherILayout);
             }
         });
 

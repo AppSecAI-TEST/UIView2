@@ -80,6 +80,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class PublishDynamicUIView extends BaseContentUIView implements OssControl.OnUploadListener, UIIDialogImpl.OnDismissListener {
     /**
      * 是否显示过提示

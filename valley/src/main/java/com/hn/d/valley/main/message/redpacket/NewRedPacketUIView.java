@@ -5,17 +5,16 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.widget.RTextView;
+import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.hn.d.valley.R.id.et_count;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -71,6 +70,9 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 final EditText etMoney = holder.v(R.id.et_money);
                 final EditText etContent = holder.v(R.id.et_content);
                 final Button btn_send = holder.v(R.id.btn_send);
+                final TextView tv_cursor = holder.v(R.id.tv_cursor);
+
+                UI.setViewHeight(etContent, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
 
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
@@ -85,7 +87,9 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        btn_send.setEnabled(etMoney.getText().toString().length() > 0);
+                        boolean enable = etMoney.getText().toString().length() > 0;
+                        btn_send.setEnabled(enable);
+                        tv_cursor.setVisibility(!enable ? View.VISIBLE : View.GONE);
                     }
                 };
 
@@ -94,7 +98,11 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf(etMoney.getText().toString()),etContent.getText().toString(),to_uid,null);
+                        String content = etContent.getText().toString();
+                        if ("".equals(content)) {
+                            content = etContent.getHint().toString();
+                        }
+                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf(etMoney.getText().toString()),content,to_uid,null);
                         mOtherILayout.startIView(new PayUIDialog(params));
                     }
                 });

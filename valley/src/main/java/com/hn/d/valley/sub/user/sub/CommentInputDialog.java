@@ -18,6 +18,7 @@ import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
@@ -94,6 +95,11 @@ public class CommentInputDialog extends UIIDialogImpl {
     }
 
     @Override
+    public boolean canDoubleCancel() {
+        return true;
+    }
+
+    @Override
     protected void initDialogContentView() {
         super.initDialogContentView();
         mSoftInputLayout = mViewHolder.v(R.id.root_layout);
@@ -104,6 +110,15 @@ public class CommentInputDialog extends UIIDialogImpl {
             public void onClick(View v) {
                 //finishDialog();
                 mSoftInputLayout.requestBackPressed();
+            }
+        });
+
+        RGestureDetector.onDoubleTap(mViewHolder.v(R.id.content_layout), new RGestureDetector.OnDoubleTapListener() {
+            @Override
+            public void onDoubleTap() {
+                if (mSoftInputLayout.requestBackPressed()) {
+                    finishDialog();
+                }
             }
         });
 

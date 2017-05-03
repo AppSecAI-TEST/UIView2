@@ -6,7 +6,9 @@ import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
+import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachmentParser;
@@ -39,6 +41,12 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.GRABREDBAG:
                     attachment = new GrabedMsgAttachment(json);
+                    break;
+                case CustomAttachmentType.RECEIPTES:
+                    attachment = new ReceiptsNoticeAttachment(json);
+                    break;
+                case CustomAttachmentType.REFUND:
+                    attachment = new RefundMsgAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

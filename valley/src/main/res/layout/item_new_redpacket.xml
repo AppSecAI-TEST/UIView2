@@ -34,21 +34,39 @@
             android:text="@string/text_amount"
             android:textColor="@color/main_text_color" />
 
-        <EditText
-            android:id="@+id/et_money"
-            style="@style/EditStyle"
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:gravity="center_vertical|end"
-            android:hint="0.01"
-            android:inputType="number"
-            android:imeOptions="actionDone"
-            android:paddingEnd="@dimen/base_xhdpi"
-            android:paddingStart="@dimen/base_xhdpi"
-            android:textColor="@color/main_text_color"
-            android:textColorHint="@color/main_text_color_dark" />
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/et_money"
+                style="@style/EditStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:gravity="center_vertical|right|end"
+                android:textDirection="ltr"
+                android:inputType="number"
+                android:imeOptions="actionDone"
+                android:paddingEnd="@dimen/base_xhdpi"
+                android:paddingStart="@dimen/base_xhdpi"
+                android:textColor="@color/main_text_color"
+                android:textColorHint="@color/main_text_color_dark" />
+
+            <TextView
+                android:id="@+id/tv_cursor"
+                android:hint="0.01"
+                android:gravity="center_vertical|right|end"
+                android:paddingEnd="@dimen/base_xhdpi"
+                android:paddingStart="@dimen/base_xhdpi"
+                android:textColorHint="@color/main_text_color_dark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </FrameLayout>
+
+
 
         <com.angcyo.uiview.widget.RTextView
             android:id="@+id/text_unit"
@@ -95,6 +113,7 @@
             style="@style/WhiteColorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:background="@drawable/main_color_red_round_selector"
             android:gravity="center"
             android:minHeight="@dimen/base_item_size"

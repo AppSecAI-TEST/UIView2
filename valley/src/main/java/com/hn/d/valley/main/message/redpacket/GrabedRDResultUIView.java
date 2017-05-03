@@ -3,13 +3,10 @@ package com.hn.d.valley.main.message.redpacket;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -21,13 +18,7 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.bean.CustomMessageBean;
-import com.hn.d.valley.bean.LikeUserInfoBean;
-import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.friend.AddressBookUI2View;
-import com.hn.d.valley.main.friend.SearchUserUIView;
 import com.hn.d.valley.main.message.service.RedPacketService;
-import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnEmptyRefreshLayout;
@@ -35,8 +26,6 @@ import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -177,7 +166,7 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 iv_icon_head.setImageUrl(grabedRDDetail.getAvatar());
                 tv_username.setText(grabedRDDetail.getUsername());
                 tv_tip.setText(grabedRDDetail.getContent());
-                tv_money.setText(grabedRDDetail.getMoney() + " 元");
+                tv_money.setText(grabedRDDetail.getMoney() / 100f + " 元");
 
             }
             else if (ITEM_SECTION == getDataItemType(posInData)) {

@@ -26,6 +26,8 @@ public class AmapBean extends RealmObject {
     public String district;//区
     public String address;//地址
 
+    public String title;
+
     @Ignore
     public boolean result = true;
 

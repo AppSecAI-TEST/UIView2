@@ -12,22 +12,17 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.container.ILayout;
-import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RLoopRecyclerView;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
-import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.view.UIIViewImpl;
-import com.angcyo.uiview.view.UIView;
 import com.angcyo.uiview.widget.RecordButton;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.oss.OssHelper;
-import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.m3b.rbrecoderlib.GPUImage;
 import com.m3b.rbrecoderlib.GPUImageFilter;
@@ -44,7 +39,6 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Action3;
 import rx.functions.Func1;
@@ -71,7 +65,7 @@ public class VideoRecordUIView extends UIIViewImpl {
     RecordButton mRecordView;
     @BindView(R.id.loop_recycler_view)
     RLoopRecyclerView mLoopRecyclerView;
-    Action3<UIIViewImpl,String,String> publishAction;
+    Action3<UIIViewImpl, String, String> publishAction;
     /**
      * 默认录像level
      */
@@ -85,7 +79,7 @@ public class VideoRecordUIView extends UIIViewImpl {
     private File mRecordFile;
     private RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean> mLoopAdapter;
 
-    public VideoRecordUIView(Action3<UIIViewImpl,String,String> publishAction) {
+    public VideoRecordUIView(Action3<UIIViewImpl, String, String> publishAction) {
         this.publishAction = publishAction;
     }
 
@@ -228,7 +222,7 @@ public class VideoRecordUIView extends UIIViewImpl {
                                     //startIView(new VideoPlayUIView(thumbPath, s));
                                     HnLoading.hide();
 //                                    replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(thumbPath, s), publishAction));
-                                    publishAction.call(VideoRecordUIView.this,thumbPath,s);
+                                    publishAction.call(VideoRecordUIView.this, thumbPath, s);
                                 }
                             });
 

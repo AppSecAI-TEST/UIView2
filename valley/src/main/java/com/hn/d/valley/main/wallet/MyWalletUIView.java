@@ -3,21 +3,25 @@ package com.hn.d.valley.main.wallet;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.uiview.RApplication;
-import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.ArrayList;
@@ -65,13 +69,10 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
         if (viewType == 2
                 || viewType == 4
-                || viewType == 6) {
+                ) {
             return R.layout.item_single_main_text_view;
         }
 
-        if (viewType == 5) {
-            return R.layout.item_switch_view;
-        }
 
         return R.layout.item_info_layout;
     }
@@ -115,6 +116,11 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 }));
     }
 
+    private boolean isBindPhone(){
+        LoginBean loginBean = UserCache.instance().getLoginBean();
+        return TextUtils.isEmpty(loginBean.getPhone());
+    }
+
     @Override
     protected void createItems(List<ViewItemInfo> items) {
 
@@ -133,7 +139,35 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_pay_passwd));
-
+                infoLayout.setItemDarkText(mAccount.hasPin() ? "" : mActivity.getString(R.string.text_not_set));
+                if (mAccount.hasPin()) {
+                    infoLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startIView(new PayPwdSettingUIView());
+                        }
+                    });
+                } else {
+                    if (!isBindPhone()) {
+                        startIView(new SetPayPwdUIView());
+                    } else {
+                        UIDialog.build()
+                                .setDialogContent(mActivity.getString(R.string.edit_info_quit_tip))
+                                .setOkText(mActivity.getString(R.string.save))
+                                .setCancelText(mActivity.getString(R.string.not_save))
+                                .setCancelListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                    }
+                                })
+                                .setOkListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                    }
+                                })
+                                .showDialog(mOtherILayout);
+                    }
+                }
             }
         }));
 
@@ -143,8 +177,6 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
                 TextView text = parseTextView(holder, 12);
                 text.setText(R.string.text_pay_passwd_notice);
-
-
             }
         }));
 
@@ -153,7 +185,22 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_bind_alipay));
-                infoLayout.setItemDarkText(mActivity.getString(R.string.text_not_set));
+
+                if (mAccount.hasMoney()) {
+
+                } else {
+                    infoLayout.setItemDarkText(mActivity.getString(R.string.text_not_set));
+                    infoLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!isBindPhone()) {
+                                startIView(new BindAliPayTipUIView());
+                            } else {
+                                T_.show(mActivity.getString(R.string.text_bind_phonenum));
+                            }
+                        }
+                    });
+                }
             }
         }));
 
@@ -162,24 +209,6 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView text = parseTextView(holder, 12);
                 text.setText(R.string.text_bind_alipay_notice);
-            }
-        }));
-
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
-                itemInfoLayout.setItemText(mActivity.getString(R.string.text_finger_pay));
-                switchCompat.setChecked(mAccount.getFingerprint() == 1);
-            }
-        }));
-
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                TextView text = parseTextView(holder, 12);
-                text.setText(R.string.text_fingerprient_notice);
             }
         }));
 
@@ -194,8 +223,19 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         final TextView tv_balance = holder.tv(R.id.tv_balance);
         TextView btn_recharge = holder.v(R.id.btn_recharge);
         TextView btn_crashout = holder.v(R.id.btn_crashout);
+        if (mAccount.hasMoney()) {
+            btn_crashout.setEnabled(true);
+        } else {
+            btn_crashout.setEnabled(false);
+        }
 
         tv_balance.setText("￥ " + mAccount.getMoney() / 100f);
+        btn_recharge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new RechargeUIView());
+            }
+        });
 
     }
 

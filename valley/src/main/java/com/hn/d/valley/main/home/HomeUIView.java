@@ -17,6 +17,7 @@ import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
@@ -34,7 +35,7 @@ import com.hn.d.valley.main.home.recommend.TagLoadStatusCallback;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
-import com.lzy.imagepicker.ImagePickerHelper;
+import com.hn.d.valley.sub.user.PublishDynamicUIView2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -399,6 +400,52 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_image_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mOtherILayout.startIView(new PublishDynamicUIView2(PublishDynamicUIView2.DynamicType.IMAGE));
+                    }
+                })
+                .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
+                            @Override
+                            public void call(UIIViewImpl iView, String path, String s) {
+
+                                iView.replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(path, s), new Action0() {
+                                    @Override
+                                    public void call() {
+                                        //开始发布任务.
+                                        PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
+                                            @Override
+                                            public void onPublishStart() {
+                                                HomeUIView.this.onPublishStart();
+                                            }
+
+                                            @Override
+                                            public void onPublishEnd() {
+                                            }
+                                        });
+                                    }
+                                }));
+                            }
+                        }));
+                    }
+                })
+                .addItem(getString(R.string.publish_voice), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        T_.show("开发中...");
+                    }
+                })
+                .showDialog(mOtherILayout);
+    }
+
+/*
+    public void onClick() {
+        //发布动态
+        UIItemDialog.build()
+                .addItem(getString(R.string.publish_image_tip), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
                         ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
                     }
                 })
@@ -428,8 +475,16 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                             }
                         }));
                     }
-                }).showDialog(mOtherILayout);
+                })
+                .addItem(getString(R.string.publish_voice), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        T_.show("开发中...");
+                    }
+                })
+                .showDialog(mOtherILayout);
     }
+*/
 
     @Override
     public void onLoadStart() {

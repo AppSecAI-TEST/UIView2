@@ -27,6 +27,7 @@ import com.hwangjr.rxbus.annotation.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import rx.functions.Action3;
@@ -69,13 +70,13 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText("确定").setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.ok)).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onSelected();
             }
         }));
-        return super.getTitleBar().setShowBackImageView(true).setTitleString("选择好友").setRightItems(rightItems);
+        return super.getTitleBar().setShowBackImageView(true).setTitleString(mActivity.getString(R.string.text_select_friend)).setRightItems(rightItems);
     }
 
     @Override
@@ -180,9 +181,9 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     public void onEvent(SelectedUserNumEvent event) {
         TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
         if (event.getNum() != 0) {
-            selectNum.setText("确定(" + event.getNum() + ")");
+            selectNum.setText(String.format(Locale.CHINA,mActivity.getString(R.string.text_contact_ok),event.getNum()));
         } else {
-            selectNum.setText("确定");
+            selectNum.setText(mActivity.getString(R.string.ok));
         }
     }
 

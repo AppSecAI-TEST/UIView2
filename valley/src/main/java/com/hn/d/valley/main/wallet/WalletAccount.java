@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.wallet;
 
+import android.text.TextUtils;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -33,6 +35,19 @@ public class WalletAccount {
     private int has_pin;
     private int fingerprint;
     private String device;
+
+    public boolean hasPin() {
+        // 1 已设置 0 未设置
+        return has_pin == 1;
+    }
+
+    public boolean hasAlipay() {
+        return TextUtils.isEmpty(alipay);
+    }
+
+    public boolean hasMoney() {
+        return money == 0;
+    }
 
     public int getUid() {
         return uid;

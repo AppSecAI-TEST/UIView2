@@ -38,21 +38,18 @@
         style="@style/BaseHLine"
         />
 
-    <include
+    <com.angcyo.uiview.widget.ItemInfoLayout
         android:id="@+id/info_balance"
-        layout="@layout/base_item_info_layout"
-        />
-
+        style="@style/BaseItemInfoStyle"/>
     <View
         style="@style/BaseHLine"
         android:layout_marginStart="@dimen/base_xhdpi"
         android:layout_marginEnd="@dimen/base_xhdpi"
         />
 
-    <include
+    <com.angcyo.uiview.widget.ItemInfoLayout
         android:id="@+id/info_alipay"
-        layout="@layout/base_item_info_layout"
-        />
+        style="@style/BaseItemInfoStyle"/>
 
     <View
         style="@style/BaseHLine"
@@ -60,10 +57,10 @@
         android:layout_marginEnd="@dimen/base_xhdpi"
         />
 
-    <include
+    <com.angcyo.uiview.widget.ItemInfoLayout
         android:id="@+id/info_wechat"
-        layout="@layout/base_item_info_layout"
-        />
+        style="@style/BaseItemInfoStyle"/>
+
 
 
 </LinearLayout>

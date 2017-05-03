@@ -1,6 +1,7 @@
 package com.hn.d.valley.control;
 
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.angcyo.uiview.github.all.base.adapter.adapter.cache.BaseCacheAdapter;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RTextCheckView;
@@ -189,9 +191,17 @@ public class TagsControl {
                     @Override
                     public View getView(ViewGroup parent, int pos, Tag data) {
                         RTextCheckView checkView = new RTextCheckView(activity);
-                        checkView.setBackgroundResource(R.drawable.base_dark_color_border_check_selector);
+                        //checkView.setBackgroundResource(R.drawable.base_dark_color_border_check_selector);
+                        checkView.setBackground(ResUtil.generateRoundBorderDrawable(activity.getResources().getDimensionPixelOffset(R.dimen.little_round_radius),
+                                activity.getResources().getDimensionPixelOffset(R.dimen.base_line),
+                                SkinHelper.getSkin().getThemeSubColor(),
+                                ContextCompat.getColor(activity, R.color.base_text_color_dark)));
                         checkView.setText(data.getName());
-                        checkView.setTextColor(activity.getResources().getColorStateList(R.color.base_dark_to_main_color_selector));
+                        //checkView.setTextColor(activity.getResources().getColorStateList(R.color.base_dark_to_main_color_selector));
+                        checkView.setTextColor(ResUtil.generateTextColor(SkinHelper.getSkin().getThemeSubColor(),
+                                SkinHelper.getSkin().getThemeSubColor(),
+                                ContextCompat.getColor(activity, R.color.base_text_color_dark),
+                                ContextCompat.getColor(activity, R.color.base_text_color_dark)));
                         checkView.setTag(data);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -2);
                         int px = (int) ResUtil.dpToPx(activity, 20);
