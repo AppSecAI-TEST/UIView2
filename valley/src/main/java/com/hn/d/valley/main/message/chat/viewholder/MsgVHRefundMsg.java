@@ -1,0 +1,72 @@
+package com.hn.d.valley.main.message.chat.viewholder;
+
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.hn.d.valley.R;
+import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.main.message.attachment.ReceiptsNotice;
+import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
+import com.hn.d.valley.main.message.attachment.RefundMsg;
+import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
+import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
+import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
+import com.hn.d.valley.main.wallet.BillUIView;
+import com.hn.d.valley.widget.HnGlideImageView;
+
+import java.util.Locale;
+
+/**
+ * Created by hewking on 2017/4/9.
+ */
+
+public class MsgVHRefundMsg extends MsgViewHolderBase {
+
+    public MsgVHRefundMsg(BaseMultiAdapter adapter) {
+        super(adapter);
+    }
+
+    @Override
+    protected int getContentResId() {
+        return R.layout.msg_wallet_layout;
+    }
+
+    @Override
+    protected void inflateContentView() {
+
+    }
+
+    @Override
+    protected void bindContentView() {
+
+        ImageView imageView = (ImageView) findViewById(R.id.iv_item_head);
+        TextView tv_pc_name = (TextView) findViewById(R.id.tv_pc_name);
+        TextView msgPcLayout = (TextView) findViewById(R.id.tv_pc_desc);
+        LinearLayout pc_layout = (LinearLayout) findViewById(R.id.msg_card_layout);
+
+        RefundMsgAttachment attachment = (RefundMsgAttachment) message.getAttachment();
+        if (attachment == null) {
+            return;
+        }
+
+        RefundMsgAttachment refundMsgAttachment = attachment;
+        RefundMsg refundMsg = refundMsgAttachment.getRefundMsg();
+
+        imageView.setImageResource(R.drawable.hongbao_xiao_konglongjun);
+        NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+
+        tv_pc_name.setText(String.format(Locale.CHINA,"由于 %s 您发给 %s 的红包 # %f 已退回给你的恐龙谷钱包",refundMsg.getReason()
+                ,userInfoCache.getUserDisplayNameEx(refundMsg.getExtend().getTo_uid() + ""),refundMsg.getMoney() / 100f));
+
+        contentContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUIBaseView.startIView(new BillUIView());
+            }
+        });
+
+    }
+
+}

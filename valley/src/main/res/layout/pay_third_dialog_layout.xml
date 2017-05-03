@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.widget.RSoftInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:id="@+id/base_dialog_root_layout"
+            android:layout_width="252dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base_xxxhdpi"
+            android:layout_marginRight="@dimen/base_xxxhdpi"
+            android:background="@drawable/base_white_round_bg"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/base_xhdpi">
+
+                <ImageView
+                    android:id="@+id/iv_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:src="@drawable/icon_cancel_wallet" />
+
+
+                <TextView
+                    android:id="@+id/base_dialog_title_view"
+                    style="@style/BaseDialogTextStyle"
+                    android:layout_centerInParent="true"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/base_title_size"
+                    android:textStyle="bold"
+                    tools:text="对话框标题" />
+
+            </RelativeLayout>
+
+            <View style="@style/BaseHLine" />
+
+
+            <TextView
+                android:id="@+id/base_dialog_content_view"
+                style="@style/BaseDialogTextStyle"
+                android:layout_height="60dp"
+                android:text="$ 200"
+                android:textColor="@color/main_text_color"
+                android:textSize="26sp" />
+
+            <View
+                android:id="@+id/line_layout"
+                style="@style/BaseHLine"
+                android:layout_marginEnd="@dimen/base_xhdpi"
+                android:layout_marginStart="@dimen/base_xhdpi" />
+
+            <include layout="@layout/base_item_info_layout" />
+
+
+            <include layout="@layout/item_redpacket_button_view" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</com.angcyo.uiview.widget.RSoftInputLayout>

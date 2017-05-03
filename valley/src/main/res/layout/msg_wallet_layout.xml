@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/msg_card_layout"
+    android:layout_width="220dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:layoutDirection="ltr"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/iv_item_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            android:contentDescription="@string/is_circle"
+            android:scaleType="centerCrop"
+            android:src="@drawable/default_avatar" />
+
+        <TextView
+            android:id="@+id/tv_pc_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            android:gravity="center_vertical"
+            android:text="@string/about_me" />
+
+    </LinearLayout>
+
+
+    <include layout="@layout/item_divider_line" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_pc_desc"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            android:padding="@dimen/base_ldpi"
+            android:text="@string/text_chakan_detail" />
+
+        <ImageView
+            android:src="@drawable/back_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

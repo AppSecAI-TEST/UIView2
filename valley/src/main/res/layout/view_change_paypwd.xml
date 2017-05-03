@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.widget.RSoftInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/chat_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/base_60dpi">
+
+        <TextView
+            android:id="@+id/tv_change_pwd_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="@string/text_inputpwd_auth_id" />
+
+        <com.hn.d.valley.widget.PasscodeView
+            android:id="@+id/passcode_view"
+            android:layout_below="@id/tv_change_pwd_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/default_base_white"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:layout_centerHorizontal="true"
+            passcodeView:controlColor="#666666"
+            passcodeView:digitColorFilled="#666666"
+            passcodeView:numDigits="6" />
+    </RelativeLayout>
+
+</com.angcyo.uiview.widget.RSoftInputLayout>

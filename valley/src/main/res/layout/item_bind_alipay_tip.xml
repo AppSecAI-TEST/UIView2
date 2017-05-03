@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_centerInParent="true"
+    android:layout_width="wrap_content"
+    android:gravity="center"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/image_view"
+        android:layout_gravity="center"
+        android:layout_width="@dimen/base_80dpi"
+        android:layout_height="@dimen/base_80dpi"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
+        android:contentDescription="@string/is_circle2"
+        android:src="@drawable/bangding_zhifubao" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:maxEms="5"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:paddingTop="@dimen/base_xhdpi"
+        android:text="@string/text_use_phonenumber" />
+
+    <FrameLayout
+        android:layout_marginTop="@dimen/base_xxxhdpi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/item_redpacket_button_view" />
+
+    </FrameLayout>
+
+</LinearLayout>
