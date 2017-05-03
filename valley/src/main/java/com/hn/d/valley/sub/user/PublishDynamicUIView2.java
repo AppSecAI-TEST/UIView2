@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
@@ -31,12 +33,15 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter2;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
@@ -45,6 +50,7 @@ import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.utils.HnGlide;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnLoading;
@@ -55,6 +61,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Action3;
 
@@ -74,6 +81,7 @@ import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Op
 public class PublishDynamicUIView2 extends BaseContentUIView {
 
     private static boolean isShowTip = false;
+    Action0 mPublishAction;
     private HnAddImageAdapter2 mAddImageAdapter2;
     private ArrayList<Luban.ImageItem> photos;
     private List<Tag> mSelectorTags = new ArrayList<>();
@@ -84,9 +92,23 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private EmojiLayoutControl mEmojiLayoutControl;
     private List<String> atUsers = new ArrayList<>();//@的用户
     private List<FriendBean> mFriendList = new ArrayList<>();
+    private PublishDynamicUIView.VideoStatusInfo mVideoStatusInfo;
 
     public PublishDynamicUIView2(DynamicType dynamicType) {
         mDynamicType = dynamicType;
+    }
+
+    /**
+     * 发布视频
+     */
+    public PublishDynamicUIView2(PublishDynamicUIView.VideoStatusInfo videoStatusInfo) {
+        mVideoStatusInfo = videoStatusInfo;
+        mDynamicType = DynamicType.VIDEO;
+    }
+
+    public PublishDynamicUIView2 setPublishAction(Action0 publishAction) {
+        mPublishAction = publishAction;
+        return this;
     }
 
     @Override
@@ -107,6 +129,16 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.send_forward_dynamic_n, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (mInputView.isEmpty()) {
+                            mInputView.error();
+                            return;
+                        }
+
+                        if (mDynamicType == DynamicType.IMAGE && mAddImageAdapter2.getAllDatas().size() == 0) {
+                            T_.error(getString(R.string.image_empty_tip));
+                            return;
+                        }
+
                         onPublish();
                     }
                 }));
@@ -252,6 +284,24 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         });
 
         //视频
+        View videoControlLayout = mViewHolder.v(R.id.video_control_layout);
+        if (mDynamicType == DynamicType.VIDEO) {
+            recyclerView.setVisibility(View.GONE);
+            videoControlLayout.setVisibility(View.VISIBLE);
+
+            ImageView videoThumbView = mViewHolder.v(R.id.video_thumb_view);
+            HnGlide.displayFile(videoThumbView, mVideoStatusInfo.videoThumbPath);
+
+            TextView videoTimeView = mViewHolder.v(R.id.video_time_view);
+            UserDiscussItemControl.initVideoTimeView(videoTimeView, mVideoStatusInfo.videoPath);
+
+            videoThumbView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new VideoPlayUIView(mVideoStatusInfo.videoThumbPath, mVideoStatusInfo.videoPath));
+                }
+            });
+        }
 
         //转发
     }
@@ -453,7 +503,67 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
      * 点击发布动态
      */
     private void onPublish() {
+        //创建发布任务, 在后台进行发布
+        HnTopImageView hnTopImageView = mViewHolder.v(R.id.ico_top);
+        CheckBox allowDownloadView = mViewHolder.v(R.id.allow_box_view);
 
+        if (mDynamicType.getType() < 6) {
+            //小于6,表示是发布动态
+            PublishControl.PublishTask publishTask = null;
+            if (mDynamicType == DynamicType.IMAGE) {
+                publishTask = new PublishControl.PublishTask(photos);
+            } else if (mDynamicType == DynamicType.VIDEO) {
+                publishTask = new PublishControl.PublishTask(mVideoStatusInfo);
+            }
+            publishTask.setSelectorTags(mSelectorTags)
+                    .setTop(hnTopImageView.isTop())
+                    .setShareLocation(mTargetLocation != null)
+                    .setAddress(getAddress())
+                    .setLat(getLatitude())
+                    .setLng(getLongitude())
+                    .setAllow_download(allowDownloadView.isChecked() ? 1 : 0)
+                    .setContent(mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
+                        @Override
+                        public String userId(String userName) {
+                            for (FriendBean bean : mFriendList) {
+                                if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                                    return bean.getUid();
+                                }
+                            }
+                            return "";
+                        }
+                    }))
+            ;
+            PublishControl.instance().addTask(publishTask);
+
+            finishIView();
+            if (mPublishAction != null) {
+                mPublishAction.call();
+            }
+        } else {
+            //转发动态, 不需要再后台进行
+        }
+    }
+
+    private String getAddress() {
+        if (mTargetLocation == null) {
+            return "";
+        }
+        return mTargetLocation.address;
+    }
+
+    private String getLatitude() {
+        if (mTargetLocation == null) {
+            return "";
+        }
+        return String.valueOf(mTargetLocation.latitude);
+    }
+
+    private String getLongitude() {
+        if (mTargetLocation == null) {
+            return "";
+        }
+        return String.valueOf(mTargetLocation.longitude);
     }
 
     /**
@@ -524,7 +634,18 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
      * 发布动态的类型
      */
     public enum DynamicType {
-        IMAGE/*图文*/, VIDEO/*视频*/, VOICE/*语音*/
+        TEXT(1)/*纯文本*/, VIDEO(2)/*视频*/, IMAGE(3)/*图文*/, VOICE(4)/*语音*/, PACKET(5)/*红包*/,
+        FORWARD_TEXT(6)/*转发纯文本*/, FORWARD_VIDEO(7)/*转发视频*/, FORWARD_IMAGE(8)/*转发图文*/, FORWARD_VOICE(9)/*转发语音*/, FORWARD_PACKET(10)/*转发红包*/;
+
+        int type;
+
+        DynamicType(int type) {
+            this.type = type;
+        }
+
+        public int getType() {
+            return type;
+        }
     }
 
 }

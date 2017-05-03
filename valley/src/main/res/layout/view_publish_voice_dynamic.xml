@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--波形图-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <com.hn.d.valley.widget.HnRecTextView
+            android:id="@+id/rec_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/base_xxhdpi"
+            tools:text="REC"/>
+    </RelativeLayout>
+
+    <!--添加配乐-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.angcyo.uiview.viewgroup.RLinearLayout
+            android:id="@+id/add_bgm_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_height"
+            android:background="@drawable/base_bg_selector"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:r_background="@color/line_color">
+
+            <com.angcyo.uiview.widget.RTextView
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/base_xhdpi"
+                android:drawableStart="@drawable/icon_addbgm_disable"
+                android:text="@string/add_bgm_tip"
+                android:textSize="@dimen/default_text_size16"/>
+
+        </com.angcyo.uiview.viewgroup.RLinearLayout>
+
+    </RelativeLayout>
+
+
+    <!--录制/播放按钮-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_0dpi"
+        android:layout_weight="1">
+
+        <com.angcyo.uiview.github.ripple.RippleBackground
+            android:id="@+id/ripple_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            app:rb_color="@color/base_dark_red_tran"
+            app:rb_radius="@dimen/base_50dpi"
+            app:rb_rippleAmount="10"
+            app:rb_scale="3">
+
+            <ImageView
+                android:id="@+id/mic_view"
+                android:layout_width="@dimen/base_100dpi"
+                android:layout_height="@dimen/base_100dpi"
+                android:layout_centerInParent="true"
+                android:background="@drawable/base_red_circle_selector"
+                android:scaleType="center"
+                android:src="@drawable/icon_mic"/>
+
+            <com.hn.d.valley.widget.HnRecordTimeView
+                android:id="@+id/record_time_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/mic_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/base_xxhdpi"
+                tools:text="00:00"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mic_view"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/base_xxhdpi"
+                android:text="@string/max_record_time_tip"/>
+
+        </com.angcyo.uiview.github.ripple.RippleBackground>
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,11 +1,9 @@
 package com.hn.d.valley.widget;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import com.angcyo.uiview.utils.TimeUtil;
 
@@ -20,7 +18,7 @@ import com.angcyo.uiview.utils.TimeUtil;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HnTimeTextView extends TextView {
+public class HnTimeTextView extends AppCompatTextView {
     public HnTimeTextView(Context context) {
         super(context);
     }
@@ -31,11 +29,6 @@ public class HnTimeTextView extends TextView {
 
     public HnTimeTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public HnTimeTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override

@@ -257,7 +257,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 重写此方法, 获取自定义布局中的RefreshLayout
      */
     public RefreshLayout getRefreshLayout() {
-        if (mRefreshLayout == null) {
+        if (mRefreshLayout == null && mViewHolder != null) {
             return mViewHolder.v(R.id.refresh_layout);
         }
         return mRefreshLayout;
@@ -267,7 +267,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 重写此方法, 获取自定义布局中的RRecyclerView
      */
     public RRecyclerView getRecyclerView() {
-        if (mRecyclerView == null) {
+        if (mRecyclerView == null && mViewHolder != null) {
             return mViewHolder.v(R.id.recycler_view);
         }
         return mRecyclerView;

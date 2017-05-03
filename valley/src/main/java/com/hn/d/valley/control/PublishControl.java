@@ -79,6 +79,9 @@ public class PublishControl {
      * 添加一个后台任务
      */
     public void addTask(final PublishTask task) {
+        if (task == null) {
+            return;
+        }
         mPublishTasks.add(task);
         mDataListBeen.add(createBean(task));
     }
@@ -253,6 +256,9 @@ public class PublishControl {
                         "content:" + task.content,
                         "address:" + task.address,
                         "lng:" + task.lng,
+                        "allow_download:" + task.allow_download,
+                        "scan_type:" + task.scan_type,
+                        "scan_user:" + task.scan_user,
                         "lat:" + task.lat))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -328,6 +334,18 @@ public class PublishControl {
          */
         public String type;
         public PublishDynamicUIView.VideoStatusInfo mVideoStatusInfo;
+        /**
+         * 是否允许下载【0-不允许 1-允许】
+         */
+        public int allow_download = 1;
+        /**
+         * 查看类型【1-公开 2-私密 3-部分好友可见 4-不给谁看,5-仅好友可见】
+         */
+        public int scan_type = 1;
+        /**
+         * 部分好友可见/不给谁看的用户id 多个以英文，分割
+         */
+        public String scan_user;
         private String uuid;
 
         /**
@@ -344,6 +362,12 @@ public class PublishControl {
             this.address = address;
             this.lng = lng;
             this.lat = lat;
+            type = "3";
+        }
+
+        public PublishTask(List<Luban.ImageItem> photos) {
+            uuid = UUID.randomUUID().toString();
+            this.photos = photos;
             type = "3";
         }
 
@@ -364,6 +388,71 @@ public class PublishControl {
             type = "2";
         }
 
+        public PublishTask(PublishDynamicUIView.VideoStatusInfo videoStatusInfo) {
+            uuid = UUID.randomUUID().toString();
+            mVideoStatusInfo = videoStatusInfo;
+            type = "2";
+        }
+
+        public PublishTask setPhotos(List<Luban.ImageItem> photos) {
+            this.photos = photos;
+            return this;
+        }
+
+        public PublishTask setSelectorTags(List<Tag> selectorTags) {
+            mSelectorTags = selectorTags;
+            return this;
+        }
+
+        public PublishTask setTop(boolean top) {
+            isTop = top;
+            return this;
+        }
+
+        public PublishTask setShareLocation(boolean shareLocation) {
+            this.shareLocation = shareLocation;
+            return this;
+        }
+
+        public PublishTask setContent(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public PublishTask setAddress(String address) {
+            this.address = address;
+            return this;
+        }
+
+        public PublishTask setLng(String lng) {
+            this.lng = lng;
+            return this;
+        }
+
+        public PublishTask setLat(String lat) {
+            this.lat = lat;
+            return this;
+        }
+
+        public PublishTask setType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public PublishTask setAllow_download(int allow_download) {
+            this.allow_download = allow_download;
+            return this;
+        }
+
+        public PublishTask setScan_type(int scan_type) {
+            this.scan_type = scan_type;
+            return this;
+        }
+
+        public PublishTask setScan_user(String scan_user) {
+            this.scan_user = scan_user;
+            return this;
+        }
 
         @Override
         public boolean equals(Object obj) {

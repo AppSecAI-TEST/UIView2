@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/search_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_xhdpi"
+        android:background="@drawable/base_white_round_little_selector">
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="@dimen/base_xhdpi"
+            android:drawableStart="@drawable/search_xuanzhelianxiren"
+            android:gravity="center"
+            android:padding="@dimen/base_xhdpi"
+            android:text="@string/search_music_tip"/>
+    </RelativeLayout>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/downed_music_tip"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/empty_tip_view"
+        style="@style/DarkTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center"
+        android:minHeight="@dimen/base_40dpi"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/empty_music_tip"/>
+</LinearLayout>

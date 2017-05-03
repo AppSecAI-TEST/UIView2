@@ -15,6 +15,7 @@ import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RExTextView;
@@ -101,9 +102,14 @@ public class UserDiscussItemControl {
         holder.fillView(dataListBean, true);
         holder.fillView(user_info, true);
 
+        //时间
         TextView showTimeView = holder.v(R.id.show_time);
         showTimeView.setVisibility(View.VISIBLE);
-        showTimeView.setText(dataListBean.getShow_time());
+        if (TextUtils.isEmpty(dataListBean.uuid)) {
+            showTimeView.setText(dataListBean.getShow_time());
+        } else {
+            showTimeView.setText(R.string.sending);
+        }
 
         /**头像*/
         final HnGlideImageView avatarView = holder.v(R.id.avatar);
@@ -125,6 +131,7 @@ public class UserDiscussItemControl {
         } else {
             genderView.setVisibility(View.GONE);
         }
+
 
         //内容
         HnExTextView hnExTextView = holder.v(R.id.content_ex_view);
@@ -245,7 +252,7 @@ public class UserDiscussItemControl {
             if (TextUtils.isEmpty(dataListBean.uuid)) {
                 rootLayout.setBackgroundResource(R.drawable.base_white_bg_selector);
             } else {
-                rootLayout.setBackgroundColor(rootLayout.getContext().getResources().getColor(R.color.theme_color_primary_dark_tran2));
+                rootLayout.setBackgroundColor(SkinHelper.getSkin().getThemeTranColor(0x20));
             }
 
             rootLayout.setOnClickListener(new View.OnClickListener() {
@@ -434,6 +441,23 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setImage(thumbUrl);
             } else {
                 mediaImageTypeView.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public static void initVideoTimeView(TextView videoTimeView, String url) {
+        if (new File(url).exists()) {
+            videoTimeView.setText(getVideoTime(url));
+        } else {
+            String[] split = url.split("\\?");
+            final String thumbUrl = split[0];
+            String videoUrl = "";
+            try {
+                videoUrl = split[1];
+                videoTimeView.setText(getVideoTime(videoUrl));
+            } catch (Exception e) {
+                videoTimeView.setTextColor(Color.RED);
+                videoTimeView.setText("video time format error");
             }
         }
     }

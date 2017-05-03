@@ -55,9 +55,9 @@ public class HnTagsNameTextView extends LinearLayout {
 
     private View createTagView() {
         RTextView textView = new RTextView(getContext());
-        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.line_color));
+        textView.setTextColor(ContextCompat.getColor(getContext(), R.color.main_text_color_dark));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelOffset(R.dimen.default_text_size10));
-        textView.setBackgroundResource(R.drawable.base_line_border_round_selector);
+        textView.setBackgroundResource(R.drawable.base_round_border_shape);
         int offset = getResources().getDimensionPixelOffset(R.dimen.base_ldpi);
         textView.setPadding(2 * offset, offset, 2 * offset, offset);
         return textView;

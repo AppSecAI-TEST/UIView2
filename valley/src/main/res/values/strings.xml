@@ -488,4 +488,11 @@
     <string name="allow_download">允许下载</string>
     <string name="delete_commend_tip">删除评论后, 评论下的所有回复都会被删除, 确定删除该评论吗?</string>
     <string name="delete_reply_tip">确定删除该回复吗?</string>
+    <string name="image_empty_tip">请选择图片</string>
+    <string name="sending">正在发送中...</string>
+    <string name="add_bgm_tip">添加配乐</string>
+    <string name="max_record_time_tip">最长[5分钟]录制哦</string>
+    <string name="search_music_tip">搜索音乐</string>
+    <string name="downed_music_tip">已下载的音乐</string>
+    <string name="empty_music_tip">暂无音乐, 你可以搜索添加音乐</string>
 </resources>

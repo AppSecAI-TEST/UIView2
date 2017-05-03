@@ -17,7 +17,6 @@ import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
@@ -36,6 +35,7 @@ import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView2;
+import com.hn.d.valley.sub.user.PublishVoiceDynamicUIView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -400,7 +400,8 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_image_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new PublishDynamicUIView2(PublishDynamicUIView2.DynamicType.IMAGE));
+                        mOtherILayout.startIView(new PublishDynamicUIView2(PublishDynamicUIView2.DynamicType.IMAGE)
+                                .setPublishAction(getPublishAction()));
                     }
                 })
                 .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
@@ -409,23 +410,9 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                         mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
                             @Override
                             public void call(UIIViewImpl iView, String path, String s) {
-
-                                iView.replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(path, s), new Action0() {
-                                    @Override
-                                    public void call() {
-                                        //开始发布任务.
-                                        PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
-                                            @Override
-                                            public void onPublishStart() {
-                                                HomeUIView.this.onPublishStart();
-                                            }
-
-                                            @Override
-                                            public void onPublishEnd() {
-                                            }
-                                        });
-                                    }
-                                }));
+                                iView.replaceIView(new PublishDynamicUIView2(new PublishDynamicUIView.VideoStatusInfo(path, s))
+                                        .setPublishAction(getPublishAction())
+                                );
                             }
                         }));
                     }
@@ -433,10 +420,30 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_voice), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        T_.show("开发中...");
+                        mOtherILayout.startIView(new PublishVoiceDynamicUIView());
                     }
                 })
                 .showDialog(mOtherILayout);
+    }
+
+    @NonNull
+    protected Action0 getPublishAction() {
+        return new Action0() {
+            @Override
+            public void call() {
+                //开始发布任务.
+                PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
+                    @Override
+                    public void onPublishStart() {
+                        HomeUIView.this.onPublishStart();
+                    }
+
+                    @Override
+                    public void onPublishEnd() {
+                    }
+                });
+            }
+        };
     }
 
 /*

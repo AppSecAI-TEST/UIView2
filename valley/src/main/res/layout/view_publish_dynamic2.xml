@@ -68,14 +68,16 @@
                     <!--显示视频-->
                     <FrameLayout
                         android:id="@+id/video_control_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="180dp"
                         android:visibility="gone">
 
-                        <com.angcyo.uiview.widget.RNineImageLayout
-                            android:id="@+id/video_thumb_layout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                        <com.angcyo.uiview.widget.RImageView
+                            android:id="@+id/video_thumb_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/zhanweitu_1"/>
 
                         <ImageView
                             android:id="@+id/video_play_view"
@@ -232,7 +234,7 @@
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
-                    android:src="@drawable/abudongtai_n"/>
+                    android:src="@drawable/fabudongtai_n"/>
 
                 <ImageView
                     android:id="@+id/ico_exp"
@@ -272,6 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:button="@drawable/check_fabudongtai_selector"
+                    android:checked="true"
                     android:paddingEnd="@dimen/base_xhdpi"
                     android:paddingStart="@dimen/base_ldpi"
                     android:text="@string/allow_download"/>
