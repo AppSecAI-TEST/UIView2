@@ -10,6 +10,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
+import com.liulishuo.FDown;
 import com.lzy.imagepicker.ImagePickerHelper;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.Bugly;
@@ -83,5 +84,7 @@ public class ValleyApp extends RApplication {
 
         //腾讯TBS X5内核浏览器初始化
         QbSdk.initX5Environment(getApplicationContext(), null);
+
+        FDown.init(this);
     }
 }

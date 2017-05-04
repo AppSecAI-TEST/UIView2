@@ -63,6 +63,7 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
     protected void initRefreshLayout() {
         super.initRefreshLayout();
         mRefreshLayout.setTopView(new PlaceholderView(mActivity));
+        mRefreshLayout.setBottomView(new PlaceholderView(mActivity));
         mRefreshLayout.setNotifyListener(false);
     }
 
@@ -93,7 +94,7 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
                     holder.v(R.id.search_layout).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            startIView(new SearchBgmUIView());
                         }
                     });
                 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.widget.RTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/empty_tip_view"
+    style="@style/DarkTextStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/base_xxhdpi"
+    android:background="@color/white"
+    android:gravity="center"
+    android:minHeight="@dimen/base_40dpi"
+    android:padding="@dimen/base_xxxhdpi"
+    android:text="@string/empty_search_tip"/>

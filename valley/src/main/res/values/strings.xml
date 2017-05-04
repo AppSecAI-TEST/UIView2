@@ -495,4 +495,5 @@
     <string name="search_music_tip">搜索音乐</string>
     <string name="downed_music_tip">已下载的音乐</string>
     <string name="empty_music_tip">暂无音乐, 你可以搜索添加音乐</string>
+    <string name="empty_search_tip">暂无搜索结果</string>
 </resources>

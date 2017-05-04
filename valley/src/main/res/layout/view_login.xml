@@ -82,16 +82,16 @@
                 android:textColor="@drawable/main_color_text_selector"/>
 
             <!--<com.angcyo.uiview.widget.RTextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:drawablePadding="@dimen/base_xhdpi"-->
-                <!--android:paddingLeft="@dimen/base_ldpi"-->
-                <!--android:text="测试文本"-->
-                <!--android:textColor="@color/white"-->
-                <!--app:r_has_underline="true"-->
-                <!--app:r_left_color="@color/theme_color_primary"-->
-                <!--app:r_left_width="2dp"/>-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:drawablePadding="@dimen/base_xhdpi"-->
+            <!--android:paddingLeft="@dimen/base_ldpi"-->
+            <!--android:text="测试文本"-->
+            <!--android:textColor="@color/white"-->
+            <!--app:r_has_underline="true"-->
+            <!--app:r_left_color="@color/theme_color_primary"-->
+            <!--app:r_left_width="2dp"/>-->
 
             <TextView
                 android:id="@+id/forget_view"
@@ -124,6 +124,19 @@
                 android:layout_centerInParent="true"
                 android:text="@string/other_login"/>
         </RelativeLayout>
+
+        <!--<com.angcyo.uiview.widget.RTextView-->
+        <!--android:id="@+id/test_view"-->
+        <!--style="@style/WhiteColorTextStyle"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:text="周杰伦-周杰伦的故事"/>-->
+
+        <!--<com.angcyo.uiview.widget.RDownloadView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/base_xxhdpi"-->
+            <!--android:background="@drawable/base_bg2_selector"-->
+            <!--android:padding="@dimen/base_xxhdpi"/>-->
 
         <LinearLayout
             android:layout_width="wrap_content"

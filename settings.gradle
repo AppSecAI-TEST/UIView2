@@ -1,2 +1,3 @@
 include ':valley', ':rbrecoderlib', ':rbplayerlib'
 include ':RLibrary:uiview', ':RLibrary:library', ':RLibrary:imagepicker'/*, ':RLibrary:fragmentation'*/, ':RLibrary:qrcodecore', ':RLibrary:zxing', ':RLibrary:rcode'
+include ':RLibrary:filedownloader'
