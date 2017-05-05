@@ -7,6 +7,8 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.github.ripple.RippleBackground;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.widget.RSeekBar;
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.bean.realm.MusicRealm;
@@ -33,6 +35,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     private HnRecordTimeView mHnRecordTimeView;
     private HnRecTextView mHnRecTextView;
     private MusicRealm mMusicRealm;
+    private RSeekBar mSeekBar;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -68,6 +71,9 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                 selectorMusic();
             }
         });
+
+        mViewHolder.v(R.id.music_control_layout).setVisibility(View.GONE);
+        mViewHolder.v(R.id.add_bgm_layout).setVisibility(View.VISIBLE);
 
         mRippleBackground = mViewHolder.v(R.id.ripple_layout);
         mHnRecordTimeView = mViewHolder.v(R.id.record_time_view);
@@ -120,6 +126,15 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
             @Override
             public void onClick(View v) {
                 selectorMusic();
+            }
+        });
+
+        mSeekBar = mViewHolder.v(R.id.seek_bar);
+        final RTextView volumeView = mViewHolder.v(R.id.volume_view);
+        mSeekBar.addOnProgressChangeListener(new RSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgress(int progress) {
+                volumeView.setText(progress + "");
             }
         });
     }

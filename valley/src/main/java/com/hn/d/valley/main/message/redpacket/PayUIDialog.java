@@ -168,7 +168,7 @@ public class PayUIDialog extends UIIDialogImpl {
 
                     @Override
                     public void onSucceed(String beans) {
-//                        replaceIView(new NextSendRPUIView());
+//                        replaceIView(new P2PStatusRPUIView());
                         finishDialog();
                         L.i(TAG,beans);
                     }

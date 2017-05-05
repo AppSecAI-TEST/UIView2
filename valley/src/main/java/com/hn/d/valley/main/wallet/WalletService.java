@@ -318,7 +318,7 @@ public interface WalletService {
      * @param map
      * @return
      */
-    @POST("wallet/balance/recharge/alipay/prepar")
+    @POST("wallet/balance/recharge/alipay/prepare")
     Observable<ResponseBody> alipayPrepar(@QueryMap Map<String, String> map);
 
     /**

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.List;
@@ -57,7 +58,7 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView text = holder.tv(R.id.text_view);
                 text.setTextColor(ContextCompat.getColor(mActivity,R.color.main_text_color_dark));
-                text.setText(String.format(Locale.CHINA,mActivity.getString(R.string.text_aut_phonenum),1888888888));
+                text.setText(String.format(Locale.CHINA,mActivity.getString(R.string.text_aut_phonenum), UserCache.instance().getLoginBean().getPhone()));
             }
         }));
 

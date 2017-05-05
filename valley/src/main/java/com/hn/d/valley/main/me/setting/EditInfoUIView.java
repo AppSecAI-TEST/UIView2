@@ -1369,8 +1369,17 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     @Override
-    public void onRecordReachedMaxTime(int maxTime) {
-
+    public void onRecordReachedMaxTime(final int maxTime) {
+        stopAudioRecordAnim();
+        startIView(UIDialog.build()
+                .setDialogContent(mActivity.getString(R.string.recording_max_time))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        audioMessageHelper.handleEndRecord(true, maxTime);
+                    }
+                })
+                .setGravity(Gravity.CENTER));
     }
 
     /**

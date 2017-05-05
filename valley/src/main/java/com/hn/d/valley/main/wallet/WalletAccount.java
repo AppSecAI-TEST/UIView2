@@ -46,7 +46,7 @@ public class WalletAccount {
     }
 
     public boolean hasMoney() {
-        return money == 0;
+        return !(money == 0);
     }
 
     public int getUid() {

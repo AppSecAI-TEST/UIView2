@@ -57,9 +57,17 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     ImageView ivOpen;
 
     private long redId;
+    private String mSessionId;
 
-    public OpenRedPacketUIDialog(long redId) {
+    private int redpacketStatus;
+
+    public OpenRedPacketUIDialog(String sessionId,long redId) {
         this.redId = redId;
+        this.mSessionId = sessionId;
+    }
+
+    public OpenRedPacketUIDialog(int redpacketStatus) {
+        this.redpacketStatus = redpacketStatus;
     }
 
     @Override
@@ -72,6 +80,12 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
 
+        if (redpacketStatus == Constants.CAN_NOTE_GRAB) {
+            ivOpen.setVisibility(View.GONE);
+            tvRedContent.setVisibility(View.GONE);
+            return;
+        }
+
         ivOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +96,6 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     }
 
     private void grabRedpacket() {
-
 
         RRetrofit.create(RedPacketService.class)
                 .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
@@ -171,7 +184,12 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     @Override
                     public void onSucceed(Integer beans) {
                         L.i(TAG, beans);
-                        replaceIView(new GrabedRDResultUIView(redId));
+
+                        if (mSessionId.equals(UserCache.getUserAccount())) {
+                            replaceIView(new P2PStatusRPUIView(mSessionId,redId,true));
+                        } else {
+                            replaceIView(new GrabedRDResultUIView(redId));
+                        }
                         finishDialog();
                     }
                 });

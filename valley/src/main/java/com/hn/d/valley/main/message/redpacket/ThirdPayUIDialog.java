@@ -1,5 +1,9 @@
 package com.hn.d.valley.main.message.redpacket;
 
+import android.annotation.SuppressLint;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,11 +12,37 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alipay.sdk.app.PayTask;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.main.message.service.RedPacketService;
+import com.hn.d.valley.main.wallet.WalletService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Map;
 
 import butterknife.BindView;
+import io.github.mayubao.pay_library.AliPayReq2;
+import io.github.mayubao.pay_library.PayAPI;
+import io.github.mayubao.pay_library.alipay.AlipayConstants;
+import okhttp3.ResponseBody;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
+
+import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.parseResult;
+import static com.hn.d.valley.main.message.redpacket.OrderInfoUtil2_0.biz_content;
+import static io.github.mayubao.pay_library.alipay.AlipayConstants.APPID;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -27,8 +57,13 @@ import butterknife.BindView;
  */
 public class ThirdPayUIDialog extends UIIDialogImpl {
 
+    public static final String TAG = ThirdPayUIDialog.class.getSimpleName();
+
     public static final String ALIPAY = "alipay";
     public static final String WECHAT = "wechat";
+
+    private static final int SDK_PAY_FLAG = 1;
+    private static final int SDK_AUTH_FLAG = 2;
 
     @BindView(R.id.iv_cancel)
     ImageView ivCancel;
@@ -74,6 +109,9 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
 //                sendRedPacket();
+
+                pay();
+
             }
         });
 
@@ -101,5 +139,105 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
 
     }
 
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    @SuppressWarnings("unchecked")
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    /**
+                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        T_.show("支付成功");
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        T_.show("支付失败");
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    };
+
+    private void pay() {
+
+
+        JSONObject object = new JSONObject();
+        try {
+            object.put("uid",62176);
+            object.put("money",100);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        String missionPara = object.toString();
+
+        RRetrofit.create(WalletService.class)
+                .alipayPrepar(Param.buildInfoMap("missiontype:" + "0","missionparam:" + missionPara))
+                .compose(Rx.transformer(String.class))
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(String s) {
+                        return RRetrofit.create(WalletService.class)
+                                .rechargeAlipay(Param.buildInfoMap("app_id:" + APPID,"biz_content:" + biz_content
+                                ,"charset:" + "utf-8","method:" + "alipay.trade.app.pay","sign_type:" + "RSA2"
+                                ,"version:" + "1.0"))
+                                .compose(Rx.transformer(String.class));
+                    }
+                })
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String code) {
+                        L.i(TAG,code);
+                        alipay(code);
+
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                    }
+                });
+    }
+
+    private void alipay(String code) {
+        String encodedSign = code;
+
+        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, true);
+        String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
+
+        String sign = "sign=" + encodedSign;
+
+        final String orderInfo = orderParam + "&" + sign;
+
+        Runnable payRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(mActivity);
+                Map<String, String> result = alipay.payV2(orderInfo, true);
+                L.i("msp", result.toString());
+
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = result;
+                mHandler.sendMessage(msg);
+            }
+        };
+
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
+    }
 
 }

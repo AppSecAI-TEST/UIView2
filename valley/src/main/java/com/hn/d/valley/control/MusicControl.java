@@ -4,7 +4,6 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.Root;
 import com.angcyo.uiview.widget.RDownloadView;
 import com.hn.d.valley.bean.realm.MusicRealm;
@@ -93,7 +92,7 @@ public class MusicControl {
             downView.setOnClickListener(null);
         } else {
             int status = FDown.getStatusIgnoreCompleted(music.getMp3(), generateFilePath(music.getName()));
-            L.e("call: initDownView([music, downViewWeak])-> " + music.getName() + " " + status);
+            //L.e("call: initDownView([music, downViewWeak])-> " + music.getName() + " " + status);
             if (status == FileDownloadStatus.progress) {
                 downView.setDownloadState(RDownloadView.DownloadState.DOWNING);
                 downView.setOnClickListener(null);

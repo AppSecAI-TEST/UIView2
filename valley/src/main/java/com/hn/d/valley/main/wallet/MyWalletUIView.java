@@ -21,6 +21,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -151,21 +152,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     if (!isBindPhone()) {
                         startIView(new SetPayPwdUIView());
                     } else {
-                        UIDialog.build()
-                                .setDialogContent(mActivity.getString(R.string.edit_info_quit_tip))
-                                .setOkText(mActivity.getString(R.string.save))
-                                .setCancelText(mActivity.getString(R.string.not_save))
-                                .setCancelListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                    }
-                                })
-                                .setOkListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                    }
-                                })
-                                .showDialog(mOtherILayout);
+                        toBindPhone();
                     }
                 }
             }
@@ -196,7 +183,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                             if (!isBindPhone()) {
                                 startIView(new BindAliPayTipUIView());
                             } else {
-                                T_.show(mActivity.getString(R.string.text_bind_phonenum));
+                                toBindPhone();
                             }
                         }
                     });
@@ -212,6 +199,25 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
+    }
+
+    private void toBindPhone() {
+        UIDialog.build()
+                .setDialogContent(mActivity.getString(R.string.text_please_bind_phone))
+                .setOkText(mActivity.getString(R.string.text_bind_phone))
+                .setCancelText(mActivity.getString(R.string.cancel))
+                .setCancelListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                })
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new BindPhoneUIView());
+                    }
+                })
+                .showDialog(mOtherILayout);
     }
 
     private void bindBalance(RBaseViewHolder holder) {
@@ -237,7 +243,19 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         });
 
+        btn_crashout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isBindPhone()) {
+                    startIView(new RefundUIView());
+                } else {
+                    toBindPhone();
+                }
+            }
+        });
+
     }
+
 
     @NonNull
     @Override

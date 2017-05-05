@@ -21,7 +21,7 @@
     </RelativeLayout>
 
     <!--添加配乐-->
-    <RelativeLayout
+    <com.angcyo.uiview.viewgroup.RRelativeLayout
         android:id="@+id/music_root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="@dimen/base_xhdpi"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <com.angcyo.uiview.widget.RTextView
                 style="@style/DarkTextStyle"
@@ -54,38 +54,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
             android:padding="@dimen/base_xhdpi"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_bgm"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/base_xhdpi"
-                    android:src="@drawable/icon_volume"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/base_xhdpi"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
                 <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:layout_weight="1">
 
                     <com.angcyo.uiview.widget.RTextView
                         android:id="@+id/name_view"
@@ -104,41 +94,50 @@
                         android:text="@string/record_voice_tip"
                         android:textSize="@dimen/default_text_size9"/>
 
-
                 </RelativeLayout>
-
-                <SeekBar
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/base_xhdpi"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/modify_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/base_bg2_selector"
+                    android:padding="@dimen/base_ldpi"
                     android:src="@drawable/icon_editbgm_n"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_xhdpi"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_volume"/>
+
+                <com.angcyo.uiview.widget.RSeekBar
+                    android:id="@+id/seek_bar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xhdpi"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:layout_weight="1"
+                    app:r_cur_progress="50"/>
 
                 <com.angcyo.uiview.widget.RTextView
                     android:id="@+id/volume_view"
+                    style="@style/DarkTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/base_xhdpi"
                     android:text="50"/>
-
             </LinearLayout>
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </com.angcyo.uiview.viewgroup.RRelativeLayout>
 
 
     <!--录制/播放按钮-->
