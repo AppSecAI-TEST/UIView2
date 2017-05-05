@@ -1,5 +1,12 @@
 package com.hn.d.valley.bean.realm;
 
+import android.text.TextUtils;
+
+import com.angcyo.library.utils.L;
+import com.hn.d.valley.cache.UserCache;
+
+import java.io.File;
+
 import io.realm.RealmObject;
 
 public class MusicRealm extends RealmObject {
@@ -25,6 +32,38 @@ public class MusicRealm extends RealmObject {
      * 本地路径
      */
     private String filePath;
+
+    private String uid;
+    /**
+     * lyric : http://music.163.com/api/song/lyric?os=pc&id=167705&lv=-1&kv=-1&tv=-1
+     */
+
+    private String lyric;
+
+    public MusicRealm() {
+        setUid(UserCache.getUserAccount());
+    }
+
+    public MusicRealm(MusicRealm origin) {
+        setUid(origin.getUid());
+        setAlbum(origin.getAlbum());
+        setFilePath(origin.getFilePath());
+        setLyric(origin.getLyric());
+        setMp3(origin.getMp3());
+        setSigner(origin.getSigner());
+        setSong_id(origin.getSong_id());
+        setThumb(origin.getThumb());
+        setTime(origin.getTime());
+        setName(origin.getName());
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public String getSong_id() {
         return song_id;
@@ -88,5 +127,26 @@ public class MusicRealm extends RealmObject {
 
     public void setFilePath(String filePath) {
         this.filePath = filePath;
+    }
+
+    public String getLyric() {
+        return lyric;
+    }
+
+    public void setLyric(String lyric) {
+        this.lyric = lyric;
+    }
+
+    public void deleteFile() {
+        File file = new File(getFilePath());
+        if (file.exists()) {
+            boolean delete = file.delete();
+            L.e("删除文件 -> " + getFilePath() + " " + delete);
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return TextUtils.equals(((MusicRealm) obj).getSong_id(), getSong_id());
     }
 }

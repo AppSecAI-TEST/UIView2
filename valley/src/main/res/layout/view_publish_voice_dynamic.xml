@@ -22,8 +22,10 @@
 
     <!--添加配乐-->
     <RelativeLayout
+        android:id="@+id/music_root_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/base_white">
 
         <com.angcyo.uiview.viewgroup.RLinearLayout
             android:id="@+id/add_bgm_layout"
@@ -32,7 +34,8 @@
             android:background="@drawable/base_bg_selector"
             android:gravity="center"
             android:orientation="horizontal"
-            app:r_background="@color/line_color">
+            android:padding="@dimen/base_xhdpi"
+            tools:visibility="visible">
 
             <com.angcyo.uiview.widget.RTextView
                 style="@style/DarkTextStyle"
@@ -44,6 +47,96 @@
                 android:textSize="@dimen/default_text_size16"/>
 
         </com.angcyo.uiview.viewgroup.RLinearLayout>
+
+        <!--选中音乐后视图-->
+        <LinearLayout
+            android:id="@+id/music_control_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/base_xhdpi"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_bgm"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_xhdpi"
+                    android:src="@drawable/icon_volume"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/base_xhdpi"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/name_view"
+                        style="@style/MainTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="告白气球"/>
+
+                    <com.angcyo.uiview.widget.RTextView
+                        style="@style/DarkTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/base_mdpi"
+                        android:layout_marginTop="@dimen/base_xhdpi"
+                        android:layout_toEndOf="@id/name_view"
+                        android:text="@string/record_voice_tip"
+                        android:textSize="@dimen/default_text_size9"/>
+
+
+                </RelativeLayout>
+
+                <SeekBar
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_xhdpi"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/modify_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/base_bg2_selector"
+                    android:src="@drawable/icon_editbgm_n"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/volume_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_xhdpi"
+                    android:text="50"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </RelativeLayout>
 

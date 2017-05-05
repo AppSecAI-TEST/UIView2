@@ -2,7 +2,6 @@ package com.hn.d.valley.control;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -151,7 +150,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         });
 
         mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
-        mRefreshLayout.addRefreshListener(this);
+        mRefreshLayout.addOnRefreshListener(this);
         rRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         rRecyclerView.setAdapter(mFriendsAdapter);
 

@@ -132,7 +132,7 @@ public class AddGroupChatUIView extends BaseUIView {
     private void init() {
 
         refreshLayout.setRefreshDirection(HnRefreshLayout.TOP);
-        refreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
+        refreshLayout.addOnRefreshListener(new RefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
                 if (direction == RefreshLayout.TOP) {

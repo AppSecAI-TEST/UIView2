@@ -484,7 +484,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
      */
     private void initRefreshLayout() {
         mRefreshLayout.setBottomView(new PlaceholderView(mActivity));
-        mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
+        mRefreshLayout.addOnRefreshListener(new RefreshLayout.OnRefreshListener() {
                 @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
                 if (direction == RefreshLayout.TOP) {

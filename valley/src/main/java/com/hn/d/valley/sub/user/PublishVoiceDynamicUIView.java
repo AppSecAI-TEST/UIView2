@@ -9,9 +9,12 @@ import com.angcyo.uiview.github.ripple.RippleBackground;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.bean.realm.MusicRealm;
 import com.hn.d.valley.sub.user.sub.AddBgmUIView;
 import com.hn.d.valley.widget.HnRecTextView;
 import com.hn.d.valley.widget.HnRecordTimeView;
+
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -29,6 +32,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     private RippleBackground mRippleBackground;
     private HnRecordTimeView mHnRecordTimeView;
     private HnRecTextView mHnRecTextView;
+    private MusicRealm mMusicRealm;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -40,6 +44,11 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_publish_voice_dynamic);
+    }
+
+    @Override
+    public int getDefaultBackgroundColor() {
+        return getColor(R.color.base_chat_bg_color);
     }
 
     @Override
@@ -56,7 +65,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
         mViewHolder.v(R.id.add_bgm_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new AddBgmUIView());
+                selectorMusic();
             }
         });
 
@@ -68,6 +77,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        mViewHolder.v(R.id.music_root_layout).setEnabled(false);
                         mHnRecTextView.setRec(true);
                         mRippleBackground.startRippleAnimation();
                         mHnRecordTimeView.startRecord(new HnRecordTimeView.OnMaxTimeListener() {
@@ -79,12 +89,37 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
+                        mViewHolder.v(R.id.music_root_layout).setEnabled(true);
                         mHnRecTextView.setRec(false);
                         mRippleBackground.stopRippleAnimation();
                         mHnRecordTimeView.stopRecord();
                         break;
                 }
                 return true;
+            }
+        });
+    }
+
+    protected void selectorMusic() {
+        startIView(new AddBgmUIView(new Action1<MusicRealm>() {
+            @Override
+            public void call(MusicRealm musicRealm) {
+                //选中后
+                initMusicLayout(musicRealm);
+            }
+        }));
+    }
+
+    private void initMusicLayout(MusicRealm musicRealm) {
+        mMusicRealm = musicRealm;
+        mViewHolder.v(R.id.music_control_layout).setVisibility(View.VISIBLE);
+        mViewHolder.v(R.id.add_bgm_layout).setVisibility(View.GONE);
+
+        mViewHolder.tv(R.id.name_view).setText(musicRealm.getName());
+        mViewHolder.v(R.id.modify_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectorMusic();
             }
         });
     }

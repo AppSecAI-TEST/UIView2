@@ -496,4 +496,8 @@
     <string name="downed_music_tip">已下载的音乐</string>
     <string name="empty_music_tip">暂无音乐, 你可以搜索添加音乐</string>
     <string name="empty_search_tip">暂无搜索结果</string>
+    <string name="audition">试听</string>
+    <string name="pause">暂停</string>
+    <string name="delete_music_format">从本地目录中删除 %1$s 吗?</string>
+    <string name="record_voice_tip">(录音时, 将会自动播放配乐)</string>
 </resources>

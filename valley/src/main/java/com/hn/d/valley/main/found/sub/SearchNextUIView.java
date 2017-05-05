@@ -36,6 +36,7 @@ import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.SearchResultBean;
 import com.hn.d.valley.bean.realm.SearchHistoryRealm;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
@@ -107,7 +108,8 @@ public class SearchNextUIView extends BaseContentUIView {
             public void execute(Realm realm) {
                 mHistoryRealmList = new ArrayList<>();
                 mHistoryRealmList.add(new SearchHistoryRealm());//空的占位数据bean
-                RealmResults<SearchHistoryRealm> results = realm.where(SearchHistoryRealm.class).findAll();
+                RealmResults<SearchHistoryRealm> results = realm.where(SearchHistoryRealm.class)
+                        .equalTo("uid", UserCache.getUserAccount()).findAll();
 
                 for (int i = results.size() - 1; i >= 0; i--) {
                     if (IsMax()) {
@@ -190,13 +192,19 @@ public class SearchNextUIView extends BaseContentUIView {
     private void searchText(String text, boolean add) {
         if (add) {
             SearchHistoryRealm searchHistoryRealm = new SearchHistoryRealm(text, System.currentTimeMillis());
-            RRealm.save(searchHistoryRealm);
-            if (IsMax()) {
-                mHistoryRealmList.remove(mHistoryRealmList.size() - 1);
+
+            if (!mHistoryRealmList.contains(searchHistoryRealm)) {
+                RRealm.save(searchHistoryRealm);
+
+                if (IsMax()) {
+                    mHistoryRealmList.remove(mHistoryRealmList.size() - 1);
+                }
+
+                mHistoryRealmList.add(1, searchHistoryRealm);
+                mNormalAdapter.resetHeaderData(mHistoryRealmList);
+                mNormalAdapter.notifyDataSetChanged();
             }
-            mHistoryRealmList.add(1, searchHistoryRealm);
-            mNormalAdapter.resetHeaderData(mHistoryRealmList);
-            mNormalAdapter.notifyDataSetChanged();
+
         }
         mEditText.setText(text);
         mEditText.setSelection(text.length());
@@ -300,7 +308,9 @@ public class SearchNextUIView extends BaseContentUIView {
                             RRealm.exe(new Realm.Transaction() {
                                 @Override
                                 public void execute(Realm realm) {
-                                    realm.where(SearchHistoryRealm.class).findAll().deleteAllFromRealm();
+                                    realm.where(SearchHistoryRealm.class)
+                                            .equalTo("uid", UserCache.getUserAccount())
+                                            .findAll().deleteAllFromRealm();
                                     mHistoryRealmList = new ArrayList<>();
                                     mHistoryRealmList.add(new SearchHistoryRealm());//空的占位数据bean
                                     mNormalAdapter.resetHeaderData(mHistoryRealmList);

@@ -85,6 +85,6 @@ public class ValleyApp extends RApplication {
         //腾讯TBS X5内核浏览器初始化
         QbSdk.initX5Environment(getApplicationContext(), null);
 
-        FDown.init(this);
+        FDown.init(this, false/*BuildConfig.DEBUG*/);
     }
 }

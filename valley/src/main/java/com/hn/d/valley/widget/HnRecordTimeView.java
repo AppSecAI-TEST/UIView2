@@ -97,6 +97,7 @@ public class HnRecordTimeView extends RTextView {
             return;
         }
         isRecording = true;
+        setTime(0);
         postDelayed(record, 1000);
     }
 

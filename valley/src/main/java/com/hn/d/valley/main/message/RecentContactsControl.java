@@ -279,7 +279,7 @@ public class RecentContactsControl {
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
 
         mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
-        mRefreshLayout.addRefreshListener(new RefreshLayout.OnRefreshListener() {
+        mRefreshLayout.addOnRefreshListener(new RefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
                 if (direction == RefreshLayout.TOP) {

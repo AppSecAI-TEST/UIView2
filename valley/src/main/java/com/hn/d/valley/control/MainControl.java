@@ -7,6 +7,7 @@ import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.notify.SystemNotifyManager;
 import com.hn.d.valley.nim.RNim;
+import com.liulishuo.FDown;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -43,6 +44,8 @@ public class MainControl {
         onMainUnload(BuildConfig.DEBUG);
 
         SystemNotifyManager.getInstance().registerCustomNotificationObserver(false);
+
+        FDown.unInit();
     }
 
     public static void onMainUnload(boolean quit) {

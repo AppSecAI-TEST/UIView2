@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/default_base_white"
     android:padding="@dimen/base_xhdpi">
 
     <!--左边-->
@@ -13,12 +14,14 @@
         android:orientation="vertical">
 
         <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/name_view"
             style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="告白气球"/>
 
         <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/album_view"
             style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,9 +39,21 @@
         android:orientation="horizontal">
 
         <com.hn.d.valley.widget.HnPlayView
+            android:id="@+id/play_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/base_bg2_selector"
+            android:padding="@dimen/base_xhdpi"
+            android:visibility="visible"
             tools:src="@drawable/icon_pause"/>
+
+        <com.angcyo.uiview.widget.RDownloadView
+            android:id="@+id/download_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/base_bg2_selector"
+            android:padding="@dimen/base_xhdpi"
+            tools:src="@drawable/base_icon_yixiazai"/>
     </LinearLayout>
 
 </FrameLayout>

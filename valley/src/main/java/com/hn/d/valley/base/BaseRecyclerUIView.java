@@ -113,7 +113,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         if (mRExBaseAdapter != null) {
             mRExBaseAdapter.setEnableLoadMore(false);
             //mRExBaseAdapter.setNoMore();//默认没有更多
-            mRExBaseAdapter.setLoadMoreListener(this);
+            mRExBaseAdapter.setOnLoadMoreListener(this);
         }
 
         if (hasDecoration()) {
@@ -180,7 +180,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         mRefreshLayout = getRefreshLayout();
 
         mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
-        mRefreshLayout.addRefreshListener(this);
+        mRefreshLayout.addOnRefreshListener(this);
     }
 
     /**

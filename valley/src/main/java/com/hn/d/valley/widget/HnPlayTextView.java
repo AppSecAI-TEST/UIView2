@@ -1,9 +1,9 @@
 package com.hn.d.valley.widget;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 
 /**
@@ -17,19 +17,19 @@ import com.hn.d.valley.R;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HnPlayView extends AppCompatImageView {
+public class HnPlayTextView extends RTextView {
 
     boolean playing;
 
-    public HnPlayView(Context context) {
+    public HnPlayTextView(Context context) {
         super(context);
     }
 
-    public HnPlayView(Context context, AttributeSet attrs) {
+    public HnPlayTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public HnPlayView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public HnPlayTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -42,9 +42,11 @@ public class HnPlayView extends AppCompatImageView {
     public void setPlaying(boolean play) {
         playing = play;
         if (playing) {
-            setImageResource(R.drawable.icon_pause);
+            setTopIco(R.drawable.icon_pause);
+            setText(R.string.pause);
         } else {
-            setImageResource(R.drawable.icon_play);
+            setTopIco(R.drawable.icon_play);
+            setText(R.string.audition);
         }
     }
 

@@ -101,7 +101,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     private void initView() {
 
         refreshLayout.setRefreshDirection(RefreshLayout.TOP);
-        refreshLayout.addRefreshListener(this);
+        refreshLayout.addOnRefreshListener(this);
 
         intiSearchView();
         initRExBaseAdapter();

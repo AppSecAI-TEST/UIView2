@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.viewgroup.RLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_bg_selector"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/base_xhdpi"
+    app:r_background="@color/base_white">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/text_view"
+        style="@style/MainTextStyle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="测试文本"/>
+
+    <ImageView
+        android:id="@+id/delete_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_bg2_selector"
+        android:padding="@dimen/base_ldpi"
+        android:src="@drawable/icon_deleteone"/>
+
+</com.angcyo.uiview.viewgroup.RLinearLayout>

@@ -17,7 +17,7 @@ import io.realm.RealmObject;
  * 修改备注：
  * Version: 1.0.0
  */
-public class SearchHistoryRealm extends RealmObject {
+public class SearchMusicHistoryRealm extends RealmObject {
 
     /**
      * 搜索的文本
@@ -31,11 +31,11 @@ public class SearchHistoryRealm extends RealmObject {
 
     private String uid;
 
-    public SearchHistoryRealm() {
+    public SearchMusicHistoryRealm() {
         setUid(UserCache.getUserAccount());
     }
 
-    public SearchHistoryRealm(String text, long time) {
+    public SearchMusicHistoryRealm(String text, long time) {
         this.text = text;
         this.time = time;
         setUid(UserCache.getUserAccount());
@@ -67,6 +67,6 @@ public class SearchHistoryRealm extends RealmObject {
 
     @Override
     public boolean equals(Object obj) {
-        return TextUtils.equals(((SearchHistoryRealm) obj).getText(), getText());
+        return TextUtils.equals(((SearchMusicHistoryRealm) obj).getText(), getText());
     }
 }

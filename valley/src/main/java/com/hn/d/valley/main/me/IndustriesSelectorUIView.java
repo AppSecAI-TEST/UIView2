@@ -108,8 +108,8 @@ public class IndustriesSelectorUIView extends UIIDialogImpl implements RefreshLa
             }
         });
         mAdapter.setModel(RModelAdapter.MODEL_SINGLE);
-        mHnRefreshLayout.addRefreshListener(this);
-        mAdapter.setLoadMoreListener(this);
+        mHnRefreshLayout.addOnRefreshListener(this);
+        mAdapter.setOnLoadMoreListener(this);
     }
 
     @Override
