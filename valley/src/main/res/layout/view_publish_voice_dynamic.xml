@@ -82,6 +82,9 @@
                         style="@style/MainTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLength="@integer/max_music_name_show_count"
+                        android:maxLines="1"
                         tools:text="告白气球"/>
 
                     <com.angcyo.uiview.widget.RTextView
@@ -121,7 +124,7 @@
                 <com.angcyo.uiview.widget.RSeekBar
                     android:id="@+id/seek_bar"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/base_xxhdpi"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:layout_weight="1"
@@ -132,6 +135,8 @@
                     style="@style/DarkTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:minWidth="@dimen/base_xxxhdpi"
                     android:text="50"/>
             </LinearLayout>
 
