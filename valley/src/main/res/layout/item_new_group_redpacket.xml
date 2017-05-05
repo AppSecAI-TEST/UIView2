@@ -18,6 +18,12 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <!--<ImageView-->
+            <!--android:padding="@dimen/base_xhdpi"-->
+            <!--android:src="@drawable/tixian_konglongjun"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
 
         <com.angcyo.uiview.widget.RTextView
             android:id="@+id/text_view"
@@ -25,7 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="@dimen/base_xhdpi"
-            android:text="@string/text_amount"
+            android:drawablePadding="@dimen/base_ldpi"
+            android:drawableLeft="@drawable/ping_hongbao"
+            android:text="@string/text_amout_money"
             android:textColor="@color/main_text_color" />
 
         <FrameLayout
@@ -82,16 +90,14 @@
         android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_width="match_parent"
         android:layout_height="42dp">
-
-        <TextView
+        <CheckBox
+            android:id="@+id/cb_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/nav_text_size"
+            android:button="@null"
             android:textColor="@color/main_text_color"
             android:text="@string/text_redpacket_switch_desc"/>
-
-
-
     </LinearLayout>
 
     <LinearLayout

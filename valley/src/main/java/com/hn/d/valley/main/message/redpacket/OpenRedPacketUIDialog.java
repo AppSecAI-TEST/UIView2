@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.redpacket;
 
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -25,6 +27,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static com.hn.d.valley.main.message.redpacket.Constants.EXPORE;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -60,6 +64,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     private String mSessionId;
 
     private int redpacketStatus;
+    private GrabedRDDetail grabedRDDetail;
 
     public OpenRedPacketUIDialog(String sessionId,long redId) {
         this.redId = redId;
@@ -77,12 +82,44 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     }
 
     @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+
+        RRetrofit.create(RedPacketService.class)
+                .detail(Param.buildInfoMap("redid:" + redId))
+                .compose(Rx.transformRedPacket(GrabedRDDetail.class))
+                .subscribe(new BaseSingleSubscriber<GrabedRDDetail>() {
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onSucceed(GrabedRDDetail bean) {
+                        if (bean == null) {
+
+                        } else {
+                            grabedRDDetail = bean;
+                            tvRedContent.setText(bean.getContent());
+                            ivIconHead.setImageUrl(bean.getAvatar());
+                            tvUsername.setText(bean.getUsername());
+                            tvTip.setText(R.string.text_send_you_a_packet);
+                        }
+                    }
+                });
+
+    }
+
+    @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
 
-        if (redpacketStatus == Constants.CAN_NOTE_GRAB) {
+        if (redpacketStatus == Constants.CAN_NOTE_GRAB || redpacketStatus == EXPORE) {
             ivOpen.setVisibility(View.GONE);
             tvRedContent.setVisibility(View.GONE);
+            if (redpacketStatus == EXPORE) {
+                tvTip.setText(R.string.text_red_packet_expore);
+            }
             return;
         }
 
@@ -90,6 +127,13 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
                 grabRedpacket();
+            }
+        });
+
+        ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishDialog();
             }
         });
 

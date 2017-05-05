@@ -13,6 +13,7 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 
 import butterknife.BindView;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -69,7 +70,12 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
         infoBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new PayUIDialog(params));
+                startIView(new PayUIDialog(new Action1() {
+                    @Override
+                    public void call(Object o) {
+
+                    }
+                }, params));
                 finishDialog();
             }
         });

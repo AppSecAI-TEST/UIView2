@@ -17,6 +17,20 @@
         android:src="@drawable/bangding_zhifubao" />
 
     <TextView
+        android:id="@+id/tv_isbind"
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:maxEms="5"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:visibility="gone"
+        android:paddingTop="@dimen/base_xhdpi"
+        android:text="@string/text_use_phonenumber" />
+
+    <TextView
         android:id="@+id/tv_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

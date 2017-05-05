@@ -98,7 +98,7 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     @Override
                     public void onClick(View v) {
                         // TODO: 2017/5/2 recharge use alipay
-                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf("0"),"","0",null);
+                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf("0"),"","0",null,0);
                         startIView(new ThirdPayUIDialog(params,ThirdPayUIDialog.ALIPAY));
                     }
                 });

@@ -22,26 +22,25 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.main.message.service.RedPacketService;
 import com.hn.d.valley.main.wallet.WalletService;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
-import io.github.mayubao.pay_library.AliPayReq2;
-import io.github.mayubao.pay_library.PayAPI;
 import io.github.mayubao.pay_library.alipay.AlipayConstants;
-import okhttp3.ResponseBody;
+import io.github.mayubao.pay_library.alipay.OrderInfoUtil2_0;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
-import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.parseResult;
-import static com.hn.d.valley.main.message.redpacket.OrderInfoUtil2_0.biz_content;
+import static io.github.mayubao.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
 import static io.github.mayubao.pay_library.alipay.AlipayConstants.APPID;
 
 /**
@@ -103,13 +102,12 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         });
 
         baseDialogTitleView.setText(R.string.text_cashier_desk);
-        baseDialogContentView.setText("￥ " + params.money);
+        baseDialogContentView.setText("￥ " + params.money / 100f);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 //                sendRedPacket();
-
                 pay();
 
             }
@@ -153,13 +151,18 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                      */
                     String resultInfo = payResult.getResult();// 同步返回需要验证的信息
                     String resultStatus = payResult.getResultStatus();
+
+                    L.i("msp", resultInfo + ":::" + resultStatus);
+
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         T_.show("支付成功");
+                        finishDialog();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                         T_.show("支付失败");
+                        finishDialog();
                     }
                     break;
                 }
@@ -170,17 +173,13 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     };
 
     private void pay() {
-
-
         JSONObject object = new JSONObject();
         try {
             object.put("uid",62176);
-            object.put("money",100);
+            object.put("money",1);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
         String missionPara = object.toString();
 
         RRetrofit.create(WalletService.class)
@@ -189,10 +188,18 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override
                     public Observable<String> call(String s) {
+                        long time = System.currentTimeMillis();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" +
+                                "", Locale.getDefault());
+                        String format = formatter.format(new Date(time));
+                        timestamp = format;
+                        long time_stamp = time / 1000;
+                        tradeNo = s;
+
                         return RRetrofit.create(WalletService.class)
-                                .rechargeAlipay(Param.buildInfoMap("app_id:" + APPID,"biz_content:" + biz_content
+                                .rechargeAlipay(Param.buildPayMap("app_id:" + APPID,"biz_content:" + biz_content_Json(s)
                                 ,"charset:" + "utf-8","method:" + "alipay.trade.app.pay","sign_type:" + "RSA2"
-                                ,"version:" + "1.0"))
+                                ,"version:" + "1.0","notify_url:" + AlipayConstants.CALLBACKURL,"timestamp:" + time_stamp))
                                 .compose(Rx.transformer(String.class));
                     }
                 })
@@ -211,12 +218,20 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 });
     }
 
+    private String timestamp;
+    private String tradeNo;
+
     private void alipay(String code) {
         String encodedSign = code;
 
-        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, true);
+        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, true,timestamp,tradeNo);
         String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 
+        try {
+            encodedSign = URLEncoder.encode(encodedSign, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         String sign = "sign=" + encodedSign;
 
         final String orderInfo = orderParam + "&" + sign;

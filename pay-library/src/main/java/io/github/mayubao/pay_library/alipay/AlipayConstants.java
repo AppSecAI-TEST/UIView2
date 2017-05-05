@@ -15,4 +15,6 @@ public interface AlipayConstants {
 
     String APPID = "2017032106319102";
 
+    String CALLBACKURL = "api.klgwl.com/wallet/alipay/callback";
+
 }

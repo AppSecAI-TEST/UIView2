@@ -82,7 +82,8 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
             @Override
             public void onClick(View v) {
                 if (!isChatGroup()) {
-                    mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
+//                    mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
+                    checkRedPacketStatus(redPacket);
                 } else {
                     checkRedPacketStatus(redPacket);
                 }
@@ -111,6 +112,8 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                                     mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),true));
                                     return;
                                 }
+                                mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
+                                return;
                             }
                             mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
                         } else if (Constants.CAN_BE_GRAB == code) {

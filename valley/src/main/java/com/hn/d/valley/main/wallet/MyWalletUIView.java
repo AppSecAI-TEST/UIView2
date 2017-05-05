@@ -85,6 +85,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     private void loadAccount() {
+        WalletHelper.getInstance().fetchWallet();
         add(RRetrofit.create(WalletService.class)
                 .account(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"device:" + RApplication.getIMEI()))
                 .compose(Rx.transformer(WalletAccount.class))
@@ -150,7 +151,12 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     });
                 } else {
                     if (!isBindPhone()) {
-                        startIView(new SetPayPwdUIView());
+                        infoLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
+                            }
+                        });
                     } else {
                         toBindPhone();
                     }
@@ -173,15 +179,20 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_bind_alipay));
 
-                if (mAccount.hasMoney()) {
-
+                if (mAccount.hasAlipay()) {
+                    infoLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startIView(new BindAliPayTipUIView(true));
+                        }
+                    });
                 } else {
-                    infoLayout.setItemDarkText(mActivity.getString(R.string.text_not_set));
+                    infoLayout.setItemDarkText(mActivity.getString(R.string.text_not_bind));
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (!isBindPhone()) {
-                                startIView(new BindAliPayTipUIView());
+                                startIView(new BindAliPayTipUIView(false));
                             } else {
                                 toBindPhone();
                             }

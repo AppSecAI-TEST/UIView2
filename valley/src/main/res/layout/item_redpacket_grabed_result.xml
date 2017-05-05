@@ -18,7 +18,7 @@
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/iv_icon_head"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_40dpi"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
         android:layout_width="@dimen/base_65dpi"
         android:layout_height="@dimen/base_65dpi"
         android:contentDescription="@string/is_circle"

@@ -42,7 +42,7 @@ public class WalletAccount {
     }
 
     public boolean hasAlipay() {
-        return TextUtils.isEmpty(alipay);
+        return !TextUtils.isEmpty(alipay);
     }
 
     public boolean hasMoney() {

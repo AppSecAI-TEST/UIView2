@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
+        <com.hn.d.valley.widget.HnButton
             android:id="@+id/btn_recharge"
             android:gravity="center"
             style="@style/MainColorRoundButtonStyle"

@@ -15,9 +15,11 @@ import com.orhanobut.hawk.Hawk;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -82,7 +84,7 @@ public class Param {
 
     public static Map<String, String> map(Map<String, String> map, boolean isInfo) {
         Map<String, String> result = new HashMap<>();
-        ArrayList<String> signList = new ArrayList<>();
+        List<String> signList = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String value = entry.getValue();
@@ -180,6 +182,44 @@ public class Param {
     public static Map<String, String> buildInfoMap(String... args) {
         return map(build(false, args), true);
     }
+
+    public static Map<String, String> buildPayMap(String... args) {
+        return mapPay(build(false, args));
+    }
+
+    public static Map<String, String> mapPay(Map<String, String> map) {
+        Map<String, String> result = new HashMap<>();
+        List<String> signList = new ArrayList<>();
+
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String value = entry.getValue();
+            String key = entry.getKey();
+            if (!TextUtils.isEmpty(value)) {
+                result.put(key, value);
+                signList.add(key + "=" + value);
+            }
+        }
+            /*资讯API支持*/
+            signList.add("e_type=RSA");
+            result.put("e_type", "RSA");
+        Collections.sort(signList);
+
+        StringBuilder builder = new StringBuilder();
+        for (String s : signList) {
+            builder.append(s);
+            builder.append("&");
+        }
+
+        String signString;
+
+            signString = RSA.encodeInfo(safe(builder)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
+
+        result.put("sign", signString);
+
+        return result;
+    }
+
+
 
     /**
      * 组装参数

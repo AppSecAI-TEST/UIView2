@@ -128,7 +128,7 @@ public class GroupChatUIView extends ChatUIView2 {
             @Override
             public void onClick(View v) {
                 //红包
-                mOtherILayout.startIView(new NewGroupRedPacketUIView(mSessionId));
+                mOtherILayout.startIView(new NewGroupRedPacketUIView(mSessionId,mGroupDesc == null ? 0 :mGroupDesc.getMemberCount()));
             }
         }));
 

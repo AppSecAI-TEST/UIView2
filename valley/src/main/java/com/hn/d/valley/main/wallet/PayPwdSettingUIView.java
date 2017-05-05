@@ -61,7 +61,7 @@ public class PayPwdSettingUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new SetPayPwdUIView());
+                        startIView(new SetPayPwdUIView(SetPayPwdUIView.FINDPAYPWD));
                     }
                 });
             }

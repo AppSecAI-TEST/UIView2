@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_white_bg_selector"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/base_xhdpi">
+
+    <TextView
+        android:id="@+id/tv_tip"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:text="@string/group_member_num"
+        android:textColor="@color/base_text_color"
+        android:textSize="@dimen/default_text_size" />
+
+    <LinearLayout
+        android:id="@+id/layout_wrap_member_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_xhdpi"
+            android:text="￥"
+            android:textColor="@color/main_text_color" />
+
+        <com.angcyo.uiview.widget.ExEditText
+            android:id="@+id/et_count"
+            style="@style/EditStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:textSize="@dimen/main_text_size2"
+            android:hint="填写提现金额"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:paddingEnd="@dimen/base_xhdpi"
+            android:paddingStart="@dimen/base_xhdpi"
+            android:textColor="@color/main_text_color"
+            android:textColorHint="@color/main_text_color_dark" />
+
+    </LinearLayout>
+
+    <include layout="@layout/item_divider_line" />
+
+    <FrameLayout
+        android:id="@+id/layout_container_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_bg_selector">
+
+        <TextView
+            android:id="@+id/tv_note"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="@dimen/base_xhdpi"
+            android:layout_marginLeft="@dimen/base_xhdpi"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:textColor="@color/main_text_color_6666666"
+            android:textSize="@dimen/default_text_size" />
+    </FrameLayout>
+
+
+</LinearLayout>

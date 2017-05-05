@@ -2,6 +2,7 @@ package com.hn.d.valley.main.wallet;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -23,6 +24,12 @@ import java.util.List;
  */
 public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
+    private boolean isBind;
+
+    public BindAliPayTipUIView(boolean isBind) {
+        this.isBind = isBind;
+    }
+
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_bind_alipay));
@@ -39,14 +46,33 @@ public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 Button btn_bind = holder.v(R.id.btn_send);
-                btn_bind.setText(R.string.text_immediately_bind);
-                btn_bind.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mOtherILayout.startIView(new VerifyAlipayUIView());
-                    }
-                });
+                TextView tv_tip = holder.v(R.id.tv_isbind);
+                TextView tv_note = holder.v(R.id.tv_username);
 
+                if (isBind) {
+                    tv_tip.setVisibility(View.VISIBLE);
+                    tv_tip.setText(R.string.text_have_bind);
+                    tv_note.setText(String.format("支付宝账号: %s",WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0]));
+                    btn_bind.setText(R.string.text_not_immedately_bind);
+                    btn_bind.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (WalletHelper.getInstance().getWalletAccount().getMoney() > 0) {
+                                mOtherILayout.startIView(new UnableUnBindUIView());
+                            } else {
+                                mOtherILayout.startIView(new VerifyAlipayUIView(false));
+                            }
+                        }
+                    });
+                } else {
+                    btn_bind.setText(R.string.text_immediately_bind);
+                    btn_bind.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mOtherILayout.startIView(new VerifyAlipayUIView(true));
+                        }
+                    });
+                }
 
             }
         }));
