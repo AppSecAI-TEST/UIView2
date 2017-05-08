@@ -128,7 +128,8 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     protected void OnShowContentLayout() {
         super.OnShowContentLayout();
         if (mDataListBean != null) {
-            UserDiscussItemControl.initItem(mSubscriptions, mViewHolder, mDataListBean, null, null, mILayout);
+            UserDiscussItemControl.initItem(mSubscriptions, mViewHolder, mDataListBean,
+                    null, null, mILayout, true);
             //转发, 点赞, 评论按钮布局隐藏
             mViewHolder.v(R.id.function_control_layout).setVisibility(View.GONE);
 

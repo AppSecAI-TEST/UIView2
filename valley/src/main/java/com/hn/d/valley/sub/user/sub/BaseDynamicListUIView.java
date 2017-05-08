@@ -3,7 +3,6 @@ package com.hn.d.valley.sub.user.sub;
 import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
 
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.net.RRetrofit;
@@ -18,7 +17,6 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.UI;
-import com.angcyo.uiview.widget.RNineImageLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.CommentListBean;
@@ -232,10 +230,8 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
             UserDiscussItemControl.initMediaLayout("3",
                     RUtils.split(dataBean.getImages()),
                     mediaControlLayout,
-                    ((RNineImageLayout) holder.v(R.id.media_image_view)),
-                    (TextView) holder.v(R.id.video_time_view),
-                    holder.v(R.id.video_play_view),
-                    mOtherILayout
+                    mOtherILayout,
+                    false
             );
         } else {
             mediaControlLayout.setVisibility(View.GONE);

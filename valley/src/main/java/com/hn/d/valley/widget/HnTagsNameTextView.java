@@ -51,6 +51,8 @@ public class HnTagsNameTextView extends LinearLayout {
         for (int i = 0; i < size; i++) {
             ((RTextView) getChildAt(i)).setText(split.get(i));
         }
+
+        setVisibility(size <= 0 ? GONE : VISIBLE);
     }
 
     private View createTagView() {

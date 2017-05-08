@@ -21,8 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MoonUtil {
-    private static final float DEF_SCALE = 0.6f;
     public static final float SMALL_SCALE = 0.45F;
+    private static final float DEF_SCALE = 0.6f;
     private static Pattern mATagPattern = Pattern.compile("<a.*?>.*?</a>");
 
     public static void identifyFaceExpression(Context context,
@@ -174,9 +174,18 @@ public class MoonUtil {
 
         // scale
         if (drawable != null) {
-            int width = (int) (drawable.getIntrinsicWidth() * scale);
-            int height = (int) (drawable.getIntrinsicHeight() * scale);
+            int intrinsicWidth = drawable.getIntrinsicWidth();
+            int intrinsicHeight = drawable.getIntrinsicHeight();
+
+            int width = (int) (intrinsicWidth * scale);
+            int height = (int) (intrinsicHeight * scale);
+
+//            int insetLeft = (intrinsicWidth - width) / 2;
+//            int insetTop = (intrinsicHeight - height) / 2;
+//            InsetDrawable insetDrawable = new InsetDrawable(drawable, insetLeft, insetTop, insetLeft, insetTop);
             drawable.setBounds(0, 0, width, height);
+
+//            return insetDrawable;
         }
 
         return drawable;

@@ -4,10 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.library.glide.GlideBlurTransformation;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -21,6 +24,7 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RExTextView;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RNineImageLayout;
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -53,7 +57,9 @@ import com.hn.d.valley.widget.HnExTextView;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnItemTextView;
+import com.hn.d.valley.widget.HnPlayTimeView;
 import com.hn.d.valley.widget.HnTagsNameTextView;
+import com.hn.d.valley.widget.HnVideoPlayView;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImageUtils;
@@ -85,7 +91,14 @@ public class UserDiscussItemControl {
                                 UserDiscussListBean.DataListBean dataListBean,
                                 final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
                                 final ILayout iLayout) {
-        initItem(holder, dataListBean, itemRootAction, iLayout);
+        initItem(subscription, holder, dataListBean, commandAction, itemRootAction, iLayout, false);
+    }
+
+    public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
+                                UserDiscussListBean.DataListBean dataListBean,
+                                final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
+                                final ILayout iLayout, boolean isInDetail) {
+        initItem(holder, dataListBean, itemRootAction, iLayout, isInDetail);
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
         bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout);
         bindFavItemView(subscription, holder, dataListBean);
@@ -96,7 +109,7 @@ public class UserDiscussItemControl {
      * @see com.hn.d.valley.main.home.UserDiscussAdapter
      */
     public static void initItem(final RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
-                                final Action0 itemRootAction, final ILayout iLayout) {
+                                final Action0 itemRootAction, final ILayout iLayout, boolean isInDetail) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
 
         holder.fillView(dataListBean, true);
@@ -140,6 +153,7 @@ public class UserDiscussItemControl {
         //需要先设置监听, 再设置内容.
         hnExTextView.setOnImageSpanClick(createSpanClick(iLayout));
         hnExTextView.setText(dataListBean.getContent());
+        hnExTextView.setVisibility(TextUtils.isEmpty(dataListBean.getContent()) ? View.GONE : View.VISIBLE);
         //hnExTextView.setTextIsSelectable(true);
 //        hnExTextView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
@@ -164,7 +178,7 @@ public class UserDiscussItemControl {
         tagsNameTextView.setTags(dataListBean.getTags_name());
 
         //图片视频处理
-        updateMediaLayout(dataListBean, iLayout, holder);
+        updateMediaLayout(dataListBean, iLayout, holder, isInDetail);
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
         View like_cnt = holder.v(R.id.like_cnt);
@@ -242,7 +256,7 @@ public class UserDiscussItemControl {
 //                        .create();
 //            }
 //            infoView.setText(stringBuilder);
-            initForwardLayout(holder, originalInfo, iLayout);
+            initForwardLayout(holder, originalInfo, iLayout, isInDetail);
         } else {
             holder.v(R.id.forward_control_layout).setVisibility(View.GONE);
         }
@@ -286,7 +300,9 @@ public class UserDiscussItemControl {
     /**
      * 转发动态布局处理
      */
-    private static void initForwardLayout(RBaseViewHolder holder, final UserDiscussListBean.DataListBean.OriginalInfo original_info, final ILayout iLayout) {
+    private static void initForwardLayout(RBaseViewHolder holder,
+                                          final UserDiscussListBean.DataListBean.OriginalInfo original_info,
+                                          final ILayout iLayout, boolean isInDetail) {
         holder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
         HnExTextView exTextView = holder.v(R.id.forward_content_ex_view);
         exTextView.setOnImageSpanClick(createSpanClick(iLayout));
@@ -302,11 +318,8 @@ public class UserDiscussItemControl {
 
         final List<String> medias = RUtils.split(original_info.getMedia());
         initMediaLayout(original_info.getMedia_type(), medias,
-                holder.v(R.id.forward_media_control_layout),
-                ((RNineImageLayout) holder.v(R.id.forward_media_image_view)),
-                (TextView) holder.v(R.id.forward_video_time_view),
-                holder.v(R.id.forward_video_play_view),
-                iLayout);
+                holder.v(R.id.forward_control_layout),
+                iLayout, isInDetail);
     }
 
     /**
@@ -337,26 +350,29 @@ public class UserDiscussItemControl {
         holder.v(R.id.top_image_view).setVisibility("1".equalsIgnoreCase(dataListBean.getIs_top()) ? View.VISIBLE : View.GONE);
     }
 
-    private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout, RBaseViewHolder holder) {
+    private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean,
+                                          final ILayout iLayout, RBaseViewHolder holder, boolean isInDetail) {
         final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
 //        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
-        final RNineImageLayout mediaImageTypeView = holder.v(R.id.media_image_view);//
-        final View videoPlayView = holder.v(R.id.video_play_view);
-        final TextView videoTimeView = holder.v(R.id.video_time_view);
 
         final List<String> medias = RUtils.split(dataListBean.getMedia());
-        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, mediaImageTypeView,
-                videoTimeView, videoPlayView, iLayout);
+        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, iLayout, isInDetail);
     }
 
     /**
      * 设置媒体信息
      */
     public static void initMediaLayout(String mediaType, final List<String> medias,
-                                       View mediaControlLayout, RNineImageLayout mediaImageTypeView,
-                                       TextView videoTimeView, View videoPlayView,
-                                       final ILayout iLayout) {
+                                       View mediaControlLayout,
+                                       final ILayout iLayout,
+                                       final boolean isInDetail) {
+
+        RNineImageLayout mediaImageTypeView = (RNineImageLayout) mediaControlLayout.findViewById(R.id.media_image_view);
+        TextView videoTimeView = (TextView) mediaControlLayout.findViewById(R.id.video_time_view);
+        View voiceTipView = mediaControlLayout.findViewById(R.id.voice_tip_view);
+        final View videoPlayView = mediaControlLayout.findViewById(R.id.video_play_view);
+
         if (medias.isEmpty()) {
             if (mediaControlLayout != null) {
                 mediaControlLayout.setVisibility(View.GONE);
@@ -373,6 +389,8 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setVisibility(View.VISIBLE);
                 videoTimeView.setVisibility(View.INVISIBLE);
                 videoPlayView.setVisibility(View.INVISIBLE);
+                voiceTipView.setVisibility(View.INVISIBLE);
+                mediaImageTypeView.setDrawMask(false);
 //                Object tag = mediaImageTypeView.getTag();
 
 //                if (tag == null || !tag.toString().equalsIgnoreCase(url)) {
@@ -406,6 +424,9 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setVisibility(View.VISIBLE);
                 videoTimeView.setVisibility(View.VISIBLE);
                 videoPlayView.setVisibility(View.VISIBLE);
+                voiceTipView.setVisibility(View.INVISIBLE);
+                ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VIDEO);
+                mediaImageTypeView.setDrawMask(false);
                 //DraweeViewUtil.setDraweeViewRes(mediaImageTypeView, R.drawable.video_release);
 
                 String[] split = url.split("\\?");
@@ -415,8 +436,7 @@ public class UserDiscussItemControl {
                     videoUrl = split[1];
                     videoTimeView.setText(getVideoTime(videoUrl));
                 } catch (Exception e) {
-                    videoTimeView.setTextColor(Color.RED);
-                    videoTimeView.setText("video time format error");
+                    videoTimeView.setText("error");
                 }
                 final String finalUrl = videoUrl;
                 mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
@@ -441,7 +461,68 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setImage(thumbUrl);
             } else if ("4".equalsIgnoreCase(mediaType)) {
                 //语音类型
+                videoPlayView.setVisibility(View.VISIBLE);
+                videoTimeView.setVisibility(View.VISIBLE);
+                voiceTipView.setVisibility(View.VISIBLE);
+                mediaImageTypeView.setDrawMask(true);
 
+                String[] split = url.split("\\?");
+                String thumbUrl = "";
+                String videoUrl = "";
+                try {
+                    thumbUrl = split[0];
+                    videoUrl = split[1];
+                    videoTimeView.setText(getVideoTime(videoUrl));
+                } catch (Exception e) {
+                    videoTimeView.setText("error");
+                }
+
+                //语音播放时长的展示
+                if (isInDetail) {
+                    ((HnPlayTimeView) videoTimeView).setPlayTime(0);
+                } else {
+                    ((HnPlayTimeView) videoTimeView).setPlayTime(-1);
+                }
+
+                //详情里面, 左下角显示播放按钮
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) videoPlayView.getLayoutParams();
+                if (isInDetail) {
+                    params.gravity = Gravity.START | Gravity.BOTTOM;
+                    if (MusicControl.isPlaying(videoUrl)) {
+                        ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VOICE_PAUSE);
+                    } else {
+                        ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VOICE);
+                    }
+                } else {
+                    //其他界面居中显示
+                    params.gravity = Gravity.CENTER;
+                    ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VOICE_HOME);
+                }
+                videoPlayView.setLayoutParams(params);
+
+                final String finalUrl = videoUrl;
+                mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
+                    @Override
+                    public int[] getWidthHeight(int imageSize) {
+                        float density = videoPlayView.getContext().getResources().getDisplayMetrics().density;
+                        int size = (int) (density * 150);
+                        return new int[]{size, size};
+                    }
+
+                    @Override
+                    public void displayImage(ImageView imageView, String url, int width, int height) {
+                        UserDiscussItemControl.displayVoiceImage(imageView, url, width, height, !isInDetail);
+                    }
+
+                    @Override
+                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                        //T_.info(videoUrl);
+                        if (!TextUtils.isEmpty(finalUrl)) {
+
+                        }
+                    }
+                });
+                mediaImageTypeView.setImage(thumbUrl);
             } else {
                 mediaImageTypeView.setVisibility(View.GONE);
             }
@@ -1203,6 +1284,42 @@ public class UserDiscussItemControl {
                             imageView.setImageResource(R.drawable.zhanweitu_1);
                         }
                     });
+        }
+    }
+
+    public static void displayVoiceImage(final ImageView imageView, String url, int width, int height, boolean blur) {
+        File file = new File(url);
+        if (file.exists()) {
+            if ("GIF".equalsIgnoreCase(ImageUtils.getImageType(file))) {
+                GifRequestBuilder<File> gifRequestBuilder = Glide.with(imageView.getContext())                             //配置上下文
+                        .load(file)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                        //.error(R.mipmap.default_image)           //设置错误图片
+                        //.fitCenter()
+                        .asGif()
+                        //.centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE);
+
+                gifRequestBuilder.into(imageView);
+            } else {
+                Glide.with(imageView.getContext())                             //配置上下文
+                        .load(file)
+                        .placeholder(R.drawable.default_vociecover)
+                        .bitmapTransform(new GlideBlurTransformation(imageView.getContext()))
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(imageView);
+            }
+        } else {
+            DrawableRequestBuilder<String> builder = Glide.with(imageView.getContext())
+                    .load(OssHelper.getImageThumb(url, width, height))
+                    .placeholder(R.drawable.default_vociecover)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+
+            if (blur) {
+                builder.bitmapTransform(new GlideBlurTransformation(imageView.getContext()))
+                        .into(imageView);
+            } else {
+                builder.into(imageView);
+            }
         }
     }
 }
