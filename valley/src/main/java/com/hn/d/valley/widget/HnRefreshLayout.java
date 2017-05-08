@@ -24,17 +24,15 @@ import com.hn.d.valley.R;
 public class HnRefreshLayout extends RefreshLayout {
     public HnRefreshLayout(Context context) {
         super(context);
-        initView();
     }
 
     public HnRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initView();
     }
 
-    private void initView() {
-//        setRefreshDirection(BOTH);
-
+    @Override
+    protected void initRefreshView() {
+        super.initRefreshView();
         if (!isInEditMode()) {
             setTopView(new HnTopView(getContext()));
         }

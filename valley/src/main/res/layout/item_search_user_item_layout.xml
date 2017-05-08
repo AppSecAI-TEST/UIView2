@@ -89,7 +89,7 @@
                     tools:text="00:07"/>
             </FrameLayout>
 
-            <!--媒体文件(图片), 的数量-->
+            <!--媒体文件(图片), 的数量 废弃-->
             <TextView
                 android:id="@+id/media_count_view"
                 style="@style/WhiteColorTextStyle"

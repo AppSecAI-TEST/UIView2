@@ -439,6 +439,9 @@ public class UserDiscussItemControl {
                     }
                 });
                 mediaImageTypeView.setImage(thumbUrl);
+            } else if ("4".equalsIgnoreCase(mediaType)) {
+                //语音类型
+
             } else {
                 mediaImageTypeView.setVisibility(View.GONE);
             }

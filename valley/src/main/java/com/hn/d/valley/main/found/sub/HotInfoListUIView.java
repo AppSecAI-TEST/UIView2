@@ -97,31 +97,6 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
         });
 
-        RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
-        textImageLayout.setConfigCallback(new RTextImageLayout.ConfigCallback() {
-            @Override
-            public int[] getImageSize(int position) {
-                return null;
-            }
-
-            @Override
-            public void onCreateImageView(ImageView imageView) {
-                imageView.setImageResource(R.drawable.zhanweitu_1);
-            }
-
-            @Override
-            public void onCreateTextView(TextView textView) {
-                textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
-            }
-
-            @Override
-            public void displayImage(ImageView imageView, String url) {
-                HotInfoListUIView.displayImage(imageView, url);
-            }
-        });
-
         initTextImageLayout(holder, dataBean.getTitle(), RUtils.split(dataBean.getImgs(), ";"));
     }
 
@@ -129,7 +104,6 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         Glide.with(imageView.getContext())
                 .load(url)
                 .placeholder(R.drawable.zhanweitu_1)
-                .centerCrop()
                 .into(imageView);
     }
 
