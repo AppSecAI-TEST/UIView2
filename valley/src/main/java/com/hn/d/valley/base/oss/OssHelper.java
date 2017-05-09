@@ -332,6 +332,10 @@ public class OssHelper {
         return "_t_" + time + ".mp4";
     }
 
+    public static String createVoiceFileName(int time) {
+        return "_t_" + time + ".aac";
+    }
+
     /**
      * 检查是否已经上传过
      */

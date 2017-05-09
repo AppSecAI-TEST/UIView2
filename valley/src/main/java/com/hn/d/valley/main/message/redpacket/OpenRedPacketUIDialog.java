@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.redpacket;
 
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorSet;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindInt;
 import butterknife.BindView;
 import okhttp3.ResponseBody;
 import rx.Observable;
@@ -28,7 +31,9 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+import static com.hn.d.valley.main.message.redpacket.Constants.CAN_BE_GRAB;
 import static com.hn.d.valley.main.message.redpacket.Constants.EXPORE;
+import static com.hn.d.valley.main.message.redpacket.Constants.LOOT_OUT;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -59,6 +64,8 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     RelativeLayout baseDialogRootLayout;
     @BindView(R.id.iv_open)
     ImageView ivOpen;
+    @BindView(R.id.tv_red_to_detail)
+    TextView tvRedToDetail;
 
     private long redId;
     private String mSessionId;
@@ -66,13 +73,17 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     private int redpacketStatus;
     private GrabedRDDetail grabedRDDetail;
 
-    public OpenRedPacketUIDialog(String sessionId,long redId) {
+    private AnimatorSet mFrontAnimator;
+    private AnimatorSet mBackAnimator;
+
+    public OpenRedPacketUIDialog(int redpacketStatus, String sessionId, long redId) {
         this.redId = redId;
         this.mSessionId = sessionId;
+        this.redpacketStatus = redpacketStatus;
     }
 
-    public OpenRedPacketUIDialog(int redpacketStatus) {
-        this.redpacketStatus = redpacketStatus;
+    public OpenRedPacketUIDialog(int redpacketStatus, long redId) {
+        this(redpacketStatus, null, redId);
     }
 
     @Override
@@ -100,10 +111,12 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
 
                         } else {
                             grabedRDDetail = bean;
-                            tvRedContent.setText(bean.getContent());
                             ivIconHead.setImageUrl(bean.getAvatar());
                             tvUsername.setText(bean.getUsername());
                             tvTip.setText(R.string.text_send_you_a_packet);
+                            if (redpacketStatus == CAN_BE_GRAB) {
+                                tvRedContent.setText(bean.getContent());
+                            }
                         }
                     }
                 });
@@ -114,22 +127,6 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
 
-        if (redpacketStatus == Constants.CAN_NOTE_GRAB || redpacketStatus == EXPORE) {
-            ivOpen.setVisibility(View.GONE);
-            tvRedContent.setVisibility(View.GONE);
-            if (redpacketStatus == EXPORE) {
-                tvTip.setText(R.string.text_red_packet_expore);
-            }
-            return;
-        }
-
-        ivOpen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                grabRedpacket();
-            }
-        });
-
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,10 +134,62 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
             }
         });
 
+        initAnimator();
+
+        if (redpacketStatus == Constants.CAN_NOTE_GRAB
+                || redpacketStatus == EXPORE
+                || redpacketStatus == LOOT_OUT) {
+            ivOpen.setVisibility(View.INVISIBLE);
+//            tvRedContent.setVisibility(View.GONE);
+            if (redpacketStatus == EXPORE) {
+                tvRedContent.setText(R.string.text_red_packet_expore);
+            }
+            if (redpacketStatus == LOOT_OUT) {
+                tvRedContent.setText(R.string.text_rp_already_grabed);
+                tvRedToDetail.setVisibility(View.VISIBLE);
+                tvRedToDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new GrabedRDResultUIView(redId));
+                        finishDialog();
+                    }
+                });
+            }
+            return;
+        }
+        ivOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAnimation(v);
+                grabRedpacket();
+            }
+        });
+    }
+
+
+    /**
+     * 1.初始化动画
+     */
+    private void initAnimator() {
+        mFrontAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(mActivity,
+                R.animator.anim_in);
+        mBackAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(mActivity,
+                R.animator.anim_out);
+    }
+
+    /**
+     * 4.开启动画
+     *
+     * @param view
+     */
+    public void startAnimation(View view) {
+        mFrontAnimator.setTarget(ivOpen);
+//        mBackAnimator.setTarget(ivOpen);
+        mFrontAnimator.start();
+//        mBackAnimator.start();
     }
 
     private void grabRedpacket() {
-
         RRetrofit.create(RedPacketService.class)
                 .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
                 .subscribeOn(Schedulers.io())
@@ -176,14 +225,12 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
             @Override
             public Observable<Integer> call(Integer code) {
                 if (Constants.IN_QUEUE == code) {
-
                     return Observable.interval(500, TimeUnit.MILLISECONDS)
                             .take(5)
                             .observeOn(Schedulers.io())
                             .flatMap(new Func1<Long, Observable<Integer>>() {
                                 @Override
                                 public Observable<Integer> call(Long aLong) {
-
                                     return RRetrofit.create(RedPacketService.class)
                                             .result(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
                                             .compose(new Observable.Transformer<ResponseBody, Integer>() {
@@ -201,15 +248,15 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                             }).takeUntil(new Func1<Integer, Boolean>() {
                                 @Override
                                 public Boolean call(Integer code) {
-                                    L.i(TAG,"takeUntil " + code);
-                                    return Constants.SUCCESS == code;
+                                    L.i(TAG, "takeUntil " + code);
+                                    return Constants.IN_QUEUE != code;
                                 }
                             });
                 }
                 return Observable.empty();
             }
         }).subscribeOn(Schedulers.io())
-                . observeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSingleSubscriber<Integer>() {
 
                     @Override
@@ -228,11 +275,10 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     @Override
                     public void onSucceed(Integer beans) {
                         L.i(TAG, beans);
-
                         if (mSessionId.equals(UserCache.getUserAccount())) {
-                            replaceIView(new P2PStatusRPUIView(mSessionId,redId,true));
+                            startIView(new P2PStatusRPUIView(mSessionId, redId, true));
                         } else {
-                            replaceIView(new GrabedRDResultUIView(redId));
+                            startIView(new GrabedRDResultUIView(redId));
                         }
                         finishDialog();
                     }

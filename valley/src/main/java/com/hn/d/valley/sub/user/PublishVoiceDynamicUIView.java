@@ -1,20 +1,30 @@
 package com.hn.d.valley.sub.user;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.ripple.RippleBackground;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.RSeekBar;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.realm.MusicRealm;
 import com.hn.d.valley.sub.user.sub.AddBgmUIView;
 import com.hn.d.valley.widget.HnRecTextView;
 import com.hn.d.valley.widget.HnRecordTimeView;
+import com.m3b.rbaudiomixlibrary.Record;
+import com.m3b.rbaudiomixlibrary.WaveCanvas;
+import com.m3b.rbaudiomixlibrary.view.WaveSurfaceView;
 
 import rx.functions.Action1;
 
@@ -31,11 +41,21 @@ import rx.functions.Action1;
  */
 public class PublishVoiceDynamicUIView extends BaseContentUIView {
 
+    private static int progress = 50;
     private RippleBackground mRippleBackground;
     private HnRecordTimeView mHnRecordTimeView;
     private HnRecTextView mHnRecTextView;
     private MusicRealm mMusicRealm;
     private RSeekBar mSeekBar;
+    private WaveCanvas mwaveCanvas;
+    private MusicIntentReceiver mMusicIntentReceiver;
+
+    public PublishVoiceDynamicUIView() {
+    }
+
+    public PublishVoiceDynamicUIView(MusicRealm musicRealm) {
+        mMusicRealm = musicRealm;
+    }
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -59,6 +79,8 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
         super.onViewUnload();
         mRippleBackground.stopRippleAnimation();
         mHnRecordTimeView.stopRecord();
+
+        mActivity.unregisterReceiver(mMusicIntentReceiver);
     }
 
     @Override
@@ -83,27 +105,106 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        mViewHolder.v(R.id.music_root_layout).setEnabled(false);
-                        mHnRecTextView.setRec(true);
-                        mRippleBackground.startRippleAnimation();
-                        mHnRecordTimeView.startRecord(new HnRecordTimeView.OnMaxTimeListener() {
-                            @Override
-                            public void onMaxTime(long maxTime) {
-
-                            }
-                        });
+                        recordStart();
                         break;
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
-                        mViewHolder.v(R.id.music_root_layout).setEnabled(true);
-                        mHnRecTextView.setRec(false);
-                        mRippleBackground.stopRippleAnimation();
-                        mHnRecordTimeView.stopRecord();
+                        recordStop();
                         break;
                 }
                 return true;
             }
         });
+
+        mSeekBar = mViewHolder.v(R.id.seek_bar);
+
+        if (mMusicRealm != null) {
+            initMusicLayout(mMusicRealm);
+        }
+    }
+
+    protected void recordStop() {
+        mViewHolder.v(R.id.music_root_layout).setEnabled(true);
+        mHnRecTextView.setRec(false);
+        mRippleBackground.stopRippleAnimation();
+        mHnRecordTimeView.stopRecord();
+        mViewHolder.v(R.id.surfaceView).postInvalidate();
+        Record.instance().stopRecord();
+    }
+
+    protected void recordStart() {
+        mViewHolder.v(R.id.music_root_layout).setEnabled(false);
+        mHnRecTextView.setRec(true);
+        mRippleBackground.startRippleAnimation();
+        mHnRecordTimeView.startRecord(new HnRecordTimeView.OnMaxTimeListener() {
+            @Override
+            public void onMaxTime(long maxTime) {
+                recordStop();
+            }
+        });
+        String bgmPath = "";
+        if (mMusicRealm != null) {
+            bgmPath = mMusicRealm.getFilePath();
+        }
+        Record.instance()
+                .setMusicVol(mSeekBar.getCurProgress() / 100f)
+                .startRecord(bgmPath,
+                        VideoRecordUIView.getOutputMediaFile(VideoRecordUIView.MEDIA_TYPE_VOICE).getAbsolutePath(),
+                        new Record.RecordListener() {
+                            @Override
+                            public void onRecordStart(String bgmPath, String filePath) {
+
+                            }
+
+                            @Override
+                            public void onRecordStop(String bgmPath, String filePath, long time) {
+                                L.e("call: onRecordStop([bgmPath, filePath, time])-> " + filePath + " " + Math.ceil(time / 1000f));
+                                //Record.playFile(filePath);
+                                replaceIView(new PublishVoiceNextDynamicUIView(filePath, time, mMusicRealm));
+                            }
+
+                            @Override
+                            public void onRecordError(Exception error) {
+
+                            }
+
+                            @Override
+                            public void onRecordTimeChanged(long millis) {
+
+                            }
+
+                            @Override
+                            public void onAmplitudeChanged(int amplitude) {
+
+                            }
+
+                            @Override
+                            public void onAudioDataChanged(short[] buffer, int readsize, boolean mformRight) {
+                                mwaveCanvas.updateAudioData(buffer, readsize, mformRight);
+                            }
+                        });
+    }
+
+    private void WaveCanvasInit() {
+        mwaveCanvas = new WaveCanvas();
+        WaveSurfaceView surfaceView = mViewHolder.v(R.id.surfaceView);
+        mwaveCanvas.baseLine = surfaceView.getHeight() / 2;
+        mwaveCanvas.init(surfaceView);
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        WaveCanvasInit();
+        mMusicIntentReceiver = new MusicIntentReceiver();
+        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        mActivity.registerReceiver(mMusicIntentReceiver, filter);
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        recordStop();
     }
 
     protected void selectorMusic() {
@@ -129,14 +230,38 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
             }
         });
 
-        mSeekBar = mViewHolder.v(R.id.seek_bar);
         final RTextView volumeView = mViewHolder.v(R.id.volume_view);
+
         mSeekBar.addOnProgressChangeListener(new RSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgress(int progress) {
+                PublishVoiceDynamicUIView.progress = progress;
                 volumeView.setText(progress + "");
             }
         });
+
+        mSeekBar.setCurProgress(progress);
     }
 
+    private class MusicIntentReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                int state = intent.getIntExtra("state", -1);
+                switch (state) {
+                    case 0:
+                        //耳机拔出
+                        Log.d("####", "Headset is unplugged");
+                        Record.instance().setMixBgm(false);
+                        break;
+                    case 1:
+                        Log.d("####", "Headset is plugged");
+                        Record.instance().setMixBgm(true);
+                        break;
+                    default:
+                        Log.d("####", "I have no idea what the headset state is");
+                }
+            }
+        }
+    }
 }

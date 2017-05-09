@@ -14,6 +14,7 @@
         android:id="@+id/iv_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="@dimen/base_xhdpi_15"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/base_xhdpi"
         android:layout_marginTop="@dimen/base_xhdpi"
@@ -21,59 +22,66 @@
 
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/iv_icon_head"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_25dpi"
         android:layout_width="@dimen/base_50dpi"
         android:layout_height="@dimen/base_50dpi"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_25dpi"
         android:contentDescription="@string/is_circle"
         android:src="@drawable/default_avatar" />
 
     <TextView
         android:id="@+id/tv_username"
-        android:layout_below="@id/iv_icon_head"
-        android:textSize="@dimen/default_text_size18"
-        android:textColor="@color/yellow_ffe2b1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_xhdpi_15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="婷婷"
-        />
+        android:layout_below="@id/iv_icon_head"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_xhdpi_15"
+        android:textColor="@color/yellow_ffe2b1"
+        android:textSize="@dimen/default_text_size18"
+        tools:text="婷婷" />
 
     <TextView
         android:id="@+id/tv_tip"
-        android:layout_below="@id/tv_username"
-        android:textSize="@dimen/default_text_little_size"
-        android:textColor="@color/yellow_fccd82"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="给你发了一个红包"
-        />
+        android:layout_below="@id/tv_username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:textColor="@color/yellow_fccd82"
+        android:textSize="@dimen/default_text_little_size"
+        tools:text="给你发了一个红包" />
 
     <TextView
         android:id="@+id/tv_red_content"
-        android:layout_below="@id/tv_tip"
-        android:textSize="@dimen/default_text_size18"
-        android:textColor="@color/yellow_ffe2b1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_35dpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="恭喜发财，大吉大利"
-        />
+        android:layout_below="@id/tv_tip"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_35dpi"
+        android:textColor="@color/yellow_ffe2b1"
+        android:textSize="@dimen/default_text_size18"
+        tools:text="恭喜发财，大吉大利" />
 
     <ImageView
         android:id="@+id/iv_open"
-        android:layout_below="@id/tv_red_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_35dpi"
         android:layout_width="@dimen/base_85dpi"
         android:layout_height="@dimen/base_85dpi"
+        android:layout_below="@id/tv_red_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"
+        android:layout_marginTop="@dimen/base_35dpi"
         android:src="@drawable/icon_open_hongbao" />
 
-
-
+    <TextView
+        android:id="@+id/tv_red_to_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_open"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_25dpi"
+        android:textColor="@color/blue_4777af"
+        android:textSize="@dimen/default_text_little_size"
+        android:visibility="gone"
+        android:text="查看详情" />
 
 </RelativeLayout>

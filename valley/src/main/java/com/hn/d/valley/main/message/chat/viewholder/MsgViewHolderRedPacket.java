@@ -45,6 +45,7 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
     }
 
     @Override
+
     protected void inflateContentView() {
 
     }
@@ -103,7 +104,6 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                     }
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSingleSubscriber<Integer>() {
-
                     @Override
                     public void onSucceed(Integer code) {
                         if (Constants.ALREADY_GRAB == code) {
@@ -117,10 +117,14 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                             }
                             mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
                         } else if (Constants.CAN_BE_GRAB == code) {
-                            mUIBaseView.startIView(new OpenRedPacketUIDialog(message.getSessionId(),redPacket.getRid()));
+                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redPacket.getRid()));
                         } else if (Constants.CAN_NOTE_GRAB == code) {
-                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB));
-                        } else{
+                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB,redPacket.getRid()));
+                        } else if (Constants.EXPORE == code){
+                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.EXPORE,redPacket.getRid()));
+                        } else if (Constants.LOOT_OUT == code){
+                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.LOOT_OUT,redPacket.getRid()));
+                        } else {
                             T_.show("很抱歉，不能抢了");
                         }
                     }

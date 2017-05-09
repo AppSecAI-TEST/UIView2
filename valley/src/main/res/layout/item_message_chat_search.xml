@@ -9,8 +9,8 @@
 
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/ico_view"
-        android:contentDescription="@string/is_circle"
-        style="@style/UserLittleIcoStyle" />
+        style="@style/UserLittleIcoStyle"
+        android:contentDescription="@string/is_circle" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -43,9 +43,23 @@
     </LinearLayout>
 
     <!--消息时间, 未读数量-->
-    <TextView
-        android:id="@+id/msg_time_view"
-        style="@style/DarkTextStyle"
-        android:gravity="right" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/msg_time_view"
+            style="@style/DarkTextStyle"
+            android:gravity="right" />
+
+        <TextView
+            android:id="@+id/tv_rp_desc"
+            android:visibility="gone"
+            style="@style/DarkTextStyle"
+            android:textColor="@color/yellow_ffe2b1"
+            android:gravity="right" />
+    </LinearLayout>
+
 
 </LinearLayout>

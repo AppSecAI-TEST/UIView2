@@ -116,7 +116,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         refreshLayout.setRefreshEnd();
 
         List<AbsContactItem> datas = new ArrayList();
-        datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
+        datas.add(new FuncItem<>(mActivity.getString(R.string.search), new Action1<ILayout>() {
             @Override
             public void call(ILayout o) {
                 mOtherILayout.startIView(new SearchUserUIView());
@@ -137,9 +137,9 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
     public void onEvent(SelectedUserNumEvent event) {
         TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
         if (event.getNum() != 0) {
-            selectNum.setText("确定(" + event.getNum() + ")");
+            selectNum.setText(String.format(mActivity.getString(R.string.text_sure_d),+ event.getNum()));
         } else {
-            selectNum.setText("确定");
+            selectNum.setText(mActivity.getString(R.string.ok));
         }
     }
 

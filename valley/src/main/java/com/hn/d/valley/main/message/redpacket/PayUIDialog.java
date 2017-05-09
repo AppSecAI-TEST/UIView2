@@ -33,6 +33,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import rx.functions.Action1;
 
+import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.balanceCheck;
 import static com.hn.d.valley.main.wallet.WalletHelper.getTransformer;
 
 /**
@@ -84,7 +85,12 @@ public class PayUIDialog extends UIIDialogImpl {
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        balanceCheck();
+        balanceCheck(new Action1<Integer>() {
+            @Override
+            public void call(Integer money) {
+                baseItemInfoLayout.setItemDarkText("￥" + money / 100f);
+            }
+        });
     }
 
     @Override
@@ -107,7 +113,7 @@ public class PayUIDialog extends UIIDialogImpl {
         baseItemInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new ChoosePayWayUIDialog(params));
+                mOtherILayout.startIView(new ChoosePayWayUIDialog(action,params));
                 finishDialog();
             }
         });
@@ -179,29 +185,12 @@ public class PayUIDialog extends UIIDialogImpl {
         }
     }
 
-    private void balanceCheck() {
-        RRetrofit.create(WalletService.class)
-                .balanceCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount()))
-                .compose(Rx.transformer(Integer.class))
-                .subscribe(new BaseSingleSubscriber<Integer>() {
-                    @Override
-                    public void onCompleted() {
-                        super.onCompleted();
-                    }
 
-                    @Override
-                    public void onSucceed(Integer bean) {
-                        super.onSucceed(bean);
-                        baseItemInfoLayout.setItemDarkText("￥" + bean / 100f);
-                    }
-                });
-    }
 
     private void sendRedPacket() {
         String type = checkType();
-
         RRetrofit.create(RedPacketService.class)
-                .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num, "money:" + params.money, "content:" + params.content, type, "random:" + params.random))
+                .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num, "money:" + (int)params.money, "content:" + params.content, type, "random:" + params.random))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
@@ -227,19 +216,21 @@ public class PayUIDialog extends UIIDialogImpl {
         try {
             JSONObject jsonObject = new JSONObject(beans);
             code = jsonObject.optInt("code");
-            data = jsonObject.optInt("data");
+
+            if (Constants.SUCCESS == code) {
+                data = jsonObject.optInt("data");
+                T_.show(mActivity.getString(R.string.text_send_success));
+                if (action != null) {
+                    action.call(code);
+                }
+            } else if (Constants.FAIL == code){
+//                T_.show(mActivity.getString(R.string.text_send_fail));
+                T_.show(jsonObject.optString("data"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        if (Constants.SUCCESS == code) {
-            T_.show(mActivity.getString(R.string.text_send_success));
-            if (action != null) {
-                action.call(code);
-            }
-        } else {
-            T_.show(mActivity.getString(R.string.text_send_fail));
-        }
         finishDialog();
 
     }
@@ -256,13 +247,22 @@ public class PayUIDialog extends UIIDialogImpl {
     public static class Params {
 
         int num;
-        int money;
+        float money;
         int random = 0;
+        int balance = -1;
         String to_gid;
         String content;
         String to_uid;
 
-        public Params(int num, int money, String content, String to_uid, String to_gid, int random) {
+        public int getBalance() {
+            return balance;
+        }
+
+        public void setBalance(int balance) {
+            this.balance = balance;
+        }
+
+        public Params(int num, float money, String content, String to_uid, String to_gid, int random) {
             this.num = num;
             this.money = money;
             this.content = content;

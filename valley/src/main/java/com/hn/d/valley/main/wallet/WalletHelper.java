@@ -6,6 +6,7 @@ import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 
 import java.io.IOException;
 
@@ -49,6 +50,10 @@ public class WalletHelper {
     }
 
     public void fetchWallet(){
+       fetchWallet(null);
+    }
+
+    public void fetchWallet(final RequestCallback<WalletAccount> callback) {
         RRetrofit.create(WalletService.class)
                 .account(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"device:" + RApplication.getIMEI()))
                 .compose(Rx.transformer(WalletAccount.class))
@@ -57,6 +62,9 @@ public class WalletHelper {
                     @Override
                     public void onStart() {
                         super.onStart();
+                        if (callback != null) {
+                            callback.onStart();
+                        }
                     }
 
                     @Override
@@ -67,15 +75,20 @@ public class WalletHelper {
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
+                        if (callback != null) {
+                            callback.onError(msg);
+                        }
                     }
 
                     @Override
                     public void onSucceed(WalletAccount bean) {
                         super.onSucceed(bean);
                         mWalletAccount = bean;
+                        if (callback != null) {
+                            callback.onSuccess(bean);
+                        }
                     }
                 });
-
     }
 
     public static Observable.Transformer<ResponseBody, String> getTransformer() {

@@ -95,6 +95,7 @@ dependencies {
     compile project(':RLibrary:rcode')
     compile project(':RLibrary:filedownloader')
     compile project(':pay-library')
+    compile project(':rbaudiomixlibrary')
 
     compile 'org.jsoup:jsoup:1.10.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -116,4 +117,6 @@ dependencies {
     compile "com.netease.nimlib:rts:${nim_ver}"
     // 全文检索服务需要
     compile "com.netease.nimlib:lucene:${nim_ver}"
+
+
 }

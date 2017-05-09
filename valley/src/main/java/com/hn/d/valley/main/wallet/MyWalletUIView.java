@@ -8,22 +8,25 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.uiview.RApplication;
-import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
-import com.hn.d.valley.main.me.setting.EditInfoUIView;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hwangjr.rxbus.annotation.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,37 +88,25 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     private void loadAccount() {
-        WalletHelper.getInstance().fetchWallet();
-        add(RRetrofit.create(WalletService.class)
-                .account(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"device:" + RApplication.getIMEI()))
-                .compose(Rx.transformer(WalletAccount.class))
-                .subscribe(new BaseSingleSubscriber<WalletAccount>() {
+        WalletHelper.getInstance().fetchWallet(new RequestCallback<WalletAccount>() {
+            @Override
+            public void onStart() {
+                showLoadView();
+            }
 
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        showLoadView();
-                    }
+            @Override
+            public void onSuccess(WalletAccount walletAccount) {
+                hideLoadView();
+                showContentLayout();
+                mAccount = walletAccount;
+            }
 
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                        hideLoadView();
-                    }
-
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        showEmptyLayout();
-                    }
-
-                    @Override
-                    public void onSucceed(WalletAccount bean) {
-                        super.onSucceed(bean);
-                        showContentLayout();
-                        mAccount = bean;
-                    }
-                }));
+            @Override
+            public void onError(String msg) {
+                hideLoadView();
+                showEmptyLayout();
+            }
+        });
     }
 
     private boolean isBindPhone(){
@@ -191,6 +182,9 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if (! mAccount.hasPin()) {
+                                T_.show(mActivity.getString(R.string.text_no_setting_pwd));
+                            }
                             if (!isBindPhone()) {
                                 startIView(new BindAliPayTipUIView(false));
                             } else {
@@ -240,6 +234,12 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         final TextView tv_balance = holder.tv(R.id.tv_balance);
         TextView btn_recharge = holder.v(R.id.btn_recharge);
         TextView btn_crashout = holder.v(R.id.btn_crashout);
+
+        btn_crashout.setBackground(ResUtil.generateRoundBorderDrawable(mActivity.getResources().getDimensionPixelOffset(R.dimen.little_round_radius),
+                mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line),
+                SkinHelper.getSkin().getThemeSubColor(),
+                ContextCompat.getColor(mActivity, R.color.base_text_color_dark)));
+
         if (mAccount.hasMoney()) {
             btn_crashout.setEnabled(true);
         } else {
@@ -280,5 +280,10 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         text.setTextColor(ContextCompat.getColor(mActivity,R.color.main_text_color_dark));
         text.setTextSize(top);
         return text;
+    }
+
+    @Subscribe
+    public void onEvent(WalletAccountUpdateEvent event) {
+        loadAccount();
     }
 }

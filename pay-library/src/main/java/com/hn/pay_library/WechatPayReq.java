@@ -1,4 +1,4 @@
-package io.github.mayubao.pay_library;
+package com.hn.pay_library;
 
 import android.app.Activity;
 import android.util.Log;

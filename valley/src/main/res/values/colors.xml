@@ -42,4 +42,9 @@
     <!--转发动态背景色-->
     <color name="forward_bg_color">#F4F4F4</color>
 
+    <color name="yellow_ffe2b1">#FFE2B1</color>
+    <color name="yellow_fccd82">#FCCD82</color>
+
+    <color name="blue_4777af">#4777AF</color>
+
 </resources>

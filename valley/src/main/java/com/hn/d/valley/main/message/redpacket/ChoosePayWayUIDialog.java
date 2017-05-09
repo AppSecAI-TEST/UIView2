@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 
@@ -43,9 +44,11 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
     ItemInfoLayout infoBalance;
 
     private PayUIDialog.Params params;
+    private Action1 action;
 
-    public ChoosePayWayUIDialog(PayUIDialog.Params params) {
+    public ChoosePayWayUIDialog(Action1 action,PayUIDialog.Params params) {
         this.params = params;
+        this.action = action;
     }
 
     @Override
@@ -57,9 +60,11 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
-
         infoBalance.setItemText(mActivity.getString(R.string.text_balance));
         infoBalance.setLeftDrawableRes(R.drawable.icon_chai);
+        if (params.getBalance() != -1) {
+            infoBalance.setItemDarkText("￥" + params.getBalance() / 100f);
+        }
 
         infoAlipay.setLeftDrawableRes(R.drawable.icon_alipay_wallet);
         infoAlipay.setItemText(mActivity.getString(R.string.text_alipay));
@@ -70,20 +75,19 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
         infoBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new PayUIDialog(new Action1() {
-                    @Override
-                    public void call(Object o) {
-
-                    }
-                }, params));
-                finishDialog();
+                if (params.getBalance() >= params.money) {
+                    startIView(new PayUIDialog(action, params));
+                    finishDialog();
+                } else {
+                    T_.show(mActivity.getString(R.string.text_balance_not_enough));
+                }
             }
         });
 
         infoAlipay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new ThirdPayUIDialog(params,ThirdPayUIDialog.ALIPAY));
+                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.ALIPAY,1));
                 finishDialog();
             }
         });
@@ -91,7 +95,7 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
         infoWechat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new ThirdPayUIDialog(params,ThirdPayUIDialog.WECHAT));
+                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.WECHAT,1));
                 finishDialog();
             }
         });

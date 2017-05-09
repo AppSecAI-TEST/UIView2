@@ -37,8 +37,11 @@ import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
+import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
+import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
@@ -550,6 +553,12 @@ public class RecentContactsControl {
             if (card != null) {
                 return card.getMsg();
             }
+        } else if (attachment instanceof RedPacketAttachment) {
+            return "红包消息";
+        } else if (attachment instanceof GrabedMsgAttachment) {
+            GrabedMsgAttachment msgAttachment = (GrabedMsgAttachment) attachment;
+            RedPacketGrabedMsg grabedMsg = msgAttachment.getGrabedMsg();
+            return grabedMsg.getMsg();
         }
         return "[自定义消息]";
     }

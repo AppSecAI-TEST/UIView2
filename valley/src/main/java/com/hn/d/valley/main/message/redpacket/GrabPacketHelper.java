@@ -3,10 +3,18 @@ package com.hn.d.valley.main.message.redpacket;
 import android.support.annotation.NonNull;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.wallet.WalletService;
 
 import org.json.JSONObject;
 
 import okhttp3.ResponseBody;
+import rx.functions.Action;
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -34,6 +42,24 @@ public class GrabPacketHelper {
             e.printStackTrace();
         }
         return code;
+    }
+
+    public static void balanceCheck(final Action1<Integer> action) {
+        RRetrofit.create(WalletService.class)
+                .balanceCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount()))
+                .compose(Rx.transformer(Integer.class))
+                .subscribe(new BaseSingleSubscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+                        super.onCompleted();
+                    }
+
+                    @Override
+                    public void onSucceed(Integer bean) {
+                        super.onSucceed(bean);
+                        action.call(bean);
+                    }
+                });
     }
 
 

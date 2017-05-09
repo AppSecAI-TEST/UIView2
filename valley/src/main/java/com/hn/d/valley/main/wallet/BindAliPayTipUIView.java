@@ -60,7 +60,7 @@ public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                             if (WalletHelper.getInstance().getWalletAccount().getMoney() > 0) {
                                 mOtherILayout.startIView(new UnableUnBindUIView());
                             } else {
-                                mOtherILayout.startIView(new VerifyAlipayUIView(false));
+                                replaceIView(new VerifyAlipayUIView(false));
                             }
                         }
                     });
@@ -69,7 +69,7 @@ public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                     btn_bind.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mOtherILayout.startIView(new VerifyAlipayUIView(true));
+                            replaceIView(new VerifyAlipayUIView(true));
                         }
                     });
                 }

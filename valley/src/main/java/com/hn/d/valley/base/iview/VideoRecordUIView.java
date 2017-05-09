@@ -59,6 +59,7 @@ public class VideoRecordUIView extends UIIViewImpl {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    public static final int MEDIA_TYPE_VOICE = 3;
     public boolean mIsRecording = false;
     int rotationRecord = 0;
     @BindView(R.id.record_view)
@@ -83,7 +84,7 @@ public class VideoRecordUIView extends UIIViewImpl {
         this.publishAction = publishAction;
     }
 
-    private static File getOutputMediaFile(final int type) {
+    public static File getOutputMediaFile(final int type) {
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
 
@@ -92,7 +93,7 @@ public class VideoRecordUIView extends UIIViewImpl {
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
-        File mediaStorageDir = new File(ValleyApp.getApp().getCacheDir(), "record_video");
+        File mediaStorageDir = new File(ValleyApp.getApp().getCacheDir(), "record");
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
@@ -111,6 +112,9 @@ public class VideoRecordUIView extends UIIViewImpl {
         } else if (type == MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "VID_" + timeStamp + ".mp4");
+        } else if (type == MEDIA_TYPE_VOICE) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                    "AAC_" + timeStamp + ".aac");
         } else {
             return null;
         }

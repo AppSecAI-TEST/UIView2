@@ -1,4 +1,4 @@
-package io.github.mayubao.pay_library.alipay;
+package com.hn.pay_library.alipay;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -15,6 +15,6 @@ public interface AlipayConstants {
 
     String APPID = "2017032106319102";
 
-    String CALLBACKURL = "api.klgwl.com/wallet/alipay/callback";
+    String CALLBACKURL = "http://api.klgwl.com/wallet/alipay/callback";
 
 }

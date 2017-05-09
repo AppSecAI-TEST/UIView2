@@ -1,6 +1,5 @@
 package com.hn.d.valley.main.wallet;
 
-import android.support.annotation.NonNull;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
@@ -22,16 +21,10 @@ import com.hn.d.valley.widget.PasscodeView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 import static com.hn.d.valley.main.wallet.WalletHelper.getTransformer;
 
@@ -156,6 +149,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                         parseResult(mOtherILayout,beans, new Action1() {
                             @Override
                             public void call(Object o) {
+                                finishIView();
                                 T_.show("修改成功！");
                             }
                         });

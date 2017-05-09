@@ -56,7 +56,6 @@ public class HnRecordTimeView extends RTextView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setTextSize(25);
         setTime(0);
     }
 
@@ -70,7 +69,7 @@ public class HnRecordTimeView extends RTextView {
     /**
      * 设置时间
      */
-    private void setTime(long time) {
+    public void setTime(long time) {
         mTime = time;
 
         long s = mTime % 60;

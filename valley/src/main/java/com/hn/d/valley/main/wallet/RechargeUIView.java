@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.wallet;
 
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +20,8 @@ import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.List;
 
+import rx.functions.Action1;
+
 import static android.R.attr.button;
 
 /**
@@ -35,6 +38,7 @@ import static android.R.attr.button;
 public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
     private Button button;
+    EditText edit_text_view;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -64,7 +68,7 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 holder.tv(R.id.input_tip_view).setText(R.string.text_jine_yuan);
-                final EditText edit_text_view = holder.v(R.id.edit_text_view);
+                edit_text_view = holder.v(R.id.edit_text_view);
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,8 +102,17 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     @Override
                     public void onClick(View v) {
                         // TODO: 2017/5/2 recharge use alipay
-                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf("0"),"","0",null,0);
-                        startIView(new ThirdPayUIDialog(params,ThirdPayUIDialog.ALIPAY));
+                        String money = edit_text_view.getText().toString();
+                        if (TextUtils.isEmpty(money)) {
+                            return;
+                        }
+                        PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(money),"","0",null,0);
+                        startIView(new ThirdPayUIDialog(new Action1() {
+                            @Override
+                            public void call(Object o) {
+
+                            }
+                        },params, ThirdPayUIDialog.ALIPAY,0));
                     }
                 });
             }

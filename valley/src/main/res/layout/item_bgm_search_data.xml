@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLength="@integer/max_music_name_show_count"
+            android:maxLength="18"
             android:maxLines="1"
             tools:text="告白气球"/>
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_ldpi"
             android:ellipsize="end"
-            android:maxLength="@integer/max_music_name_show_count"
+            android:maxLength="18"
             android:maxLines="1"
             android:textSize="@dimen/default_text_size10"
             tools:text="周杰伦 - 周杰伦的床边故事"/>

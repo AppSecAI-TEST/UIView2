@@ -16,11 +16,15 @@ import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.uiview.utils.BmpUtil;
 import com.bumptech.glide.BitmapTypeRequest;
 import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.oss.OssHelper;
+
+import java.io.File;
+import java.io.Serializable;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -186,8 +190,9 @@ public class HnGlideImageView extends AppCompatImageView {
                     if (isActivityDestroy()) {
                         return;
                     }
-                    DrawableRequestBuilder<String> builder = Glide.with(getContext())
-                            .load(url)
+                    File file = new File(url);
+                    DrawableRequestBuilder<? extends Serializable> builder = Glide.with(getContext())
+                            .load(file.exists() ? file : url)
                             .transform(new GlideCircleTransform(getContext()));
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
@@ -202,8 +207,9 @@ public class HnGlideImageView extends AppCompatImageView {
                     if (isActivityDestroy()) {
                         return;
                     }
-                    DrawableRequestBuilder<String> builder = Glide.with(getContext())
-                            .load(url);
+                    File file = new File(url);
+                    DrawableTypeRequest<? extends Serializable> builder = Glide.with(getContext())
+                            .load(file.exists() ? file : url);
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }

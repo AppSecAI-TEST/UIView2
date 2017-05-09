@@ -49,7 +49,7 @@
                 android:background="@color/white"
                 android:gravity="center_vertical|right|end"
                 android:textDirection="ltr"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
                 android:paddingEnd="@dimen/base_xhdpi"
                 android:paddingStart="@dimen/base_xhdpi"

@@ -1,11 +1,8 @@
 package com.hn.d.valley.main.message.redpacket;
 
-import android.graphics.Color;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -13,8 +10,6 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -24,13 +19,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.RApplication;
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +62,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
         rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_rp_rule)).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new X5WebUIView(Constants.REDPACKET_PROTOCOL));
             }
         }));
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_send_redpacket)).setRightItems(rightItems);
@@ -129,29 +124,30 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                         ,preStr.length(),preStr.length() + 11 , new Action1() {
                     @Override
                     public void call(Object o) {
-                        T_.show("呵呵");
+                        startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
                     }
                 });
                 tv_notice.setText(spannableStr);
                 tv_notice.setMovementMethod(LinkMovementMethod.getInstance());
 
                 wrapSpan(cb_switch,"当前为拼手气群红包,", "改为普通红包",R.color.base_red, 10, 16,null);
+                cb_switch.setChecked(true);
 
                 cb_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked) {
-                            tv_image.setText(R.string.text_single_money);
-                            tv_image.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-//                            cb_switch.setText(R.string.text_redpacket_switch_desc);
-                            wrapSpan(cb_switch,"当前为拼手气群红包,", "改为普通红包",R.color.base_red, 10, 16,null);
-                            rp_type = 0;
-                        } else {
                             tv_image.setText(R.string.text_amout_money);
                             tv_image.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ping_hongbao, 0, 0, 0);
+//                            cb_switch.setText(R.string.text_redpacket_switch_desc);
+                            wrapSpan(cb_switch,"当前为拼手气群红包,", "改为普通红包",R.color.base_red, 10, 16,null);
+                            rp_type = 1;
+                        } else {
+                            tv_image.setText(R.string.text_single_money);
+                            tv_image.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 //                            cb_switch.setText(R.string.text_random_redpacket);
                             wrapSpan(cb_switch,"当前为普通红包,", "改为拼手气红包",R.color.base_red, 8, 15,null);
-                            rp_type = 1;
+                            rp_type = 0;
                         }
                     }
                 });
@@ -188,10 +184,10 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                         if (TextUtils.isEmpty(value) || TextUtils.isEmpty(et_count.getText().toString())) {
                             return;
                         }
-                        int money = Integer.valueOf(value);
+                        float money = Float.valueOf(value);
                         if (money > 200) {
+                            enable = false;
                             T_.show(mActivity.getString(R.string.text_hongbao_lower_200));
-                            return;
                         }
 
                         btn_send.setEnabled(enable && et_count.getText().toString().length() > 0);
@@ -208,14 +204,42 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                         if ("".equals(content)) {
                             content = etContent.getHint().toString();
                         }
-                        PayUIDialog.Params params = new PayUIDialog.Params(Integer.valueOf(et_count.getText().toString())
-                                ,Integer.valueOf(etMoney.getText().toString()) * 100,content,null,to_gid,rp_type);
-                        mOtherILayout.startIView(new PayUIDialog(new Action1() {
+                        Integer count = Integer.valueOf(et_count.getText().toString());
+                        Float money = Float.valueOf(etMoney.getText().toString()) * 100;
+                        if (rp_type == 0) {
+                            money = count * money;
+
+                        }
+
+                        if (money < 0.01 * count) {
+                            T_.show(mActivity.getString(R.string.text_grabed_redpacket_cant_lower));
+                            return;
+                        }
+
+                        final PayUIDialog.Params params = new PayUIDialog.Params(count
+                                ,money,content,null,to_gid,rp_type);
+
+                        // 红包发送成功回调
+                        final Action1 action = new Action1() {
                             @Override
                             public void call(Object o) {
                                 finishIView();
                             }
-                        },params));
+                        };
+
+                        //检查余额是否足够
+                        GrabPacketHelper.balanceCheck(new Action1<Integer>() {
+                            @Override
+                            public void call(Integer money) {
+                                //参数设置余额
+                                params.setBalance(money);
+                                if (money >= params.money) {
+                                    mOtherILayout.startIView(new PayUIDialog(action,params));
+                                } else {
+                                    mOtherILayout.startIView(new ChoosePayWayUIDialog(action,params));
+                                }
+                            }
+                        });
                     }
                 });
             }

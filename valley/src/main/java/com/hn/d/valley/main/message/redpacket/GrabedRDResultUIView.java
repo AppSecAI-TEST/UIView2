@@ -1,8 +1,13 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -10,6 +15,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
@@ -175,7 +181,7 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 RTextView tv_right = holder.v(R.id.right_text_view);
 
                 tv_left.setText(String.format("已领取 %d / %d个",grabedRDDetail.getResult().size(),grabedRDDetail.getNum()));
-                tv_right.setText(String.format("总金额 %f 元",grabedRDDetail.getMoney() / 100f));
+                tv_right.setText(String.format("总金额 %.2f 元",grabedRDDetail.getMoney() / 100f));
 
             } else {
                 holder.itemView.setBackgroundResource(R.color.default_base_white);
@@ -183,11 +189,18 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 TextView recent_name_view = holder.tv(R.id.recent_name_view);
                 TextView msg_content_view = holder.tv(R.id.msg_content_view);
                 TextView msg_time_view = holder.tv(R.id.msg_time_view);
+                TextView tv_rp_desc = holder.tv(R.id.tv_rp_desc);
 
                 iv_icon.setImageUrl(dataBean.getAvatar());
                 recent_name_view.setText(dataBean.getUsername());
                 msg_content_view.setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000l,true));
                 msg_time_view.setText(dataBean.getMoney() / 100f + "元");
+
+                if (dataBean.getBest() == 1) {
+                    tv_rp_desc.setText("手气最佳");
+                    tv_rp_desc.setVisibility(View.VISIBLE);
+                    tv_rp_desc.setCompoundDrawablesWithIntrinsicBounds(R.drawable.shouqizuijia_hongbao,0,0,0);
+                }
 
             }
 
@@ -214,5 +227,43 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
             }
             notifyItemRangeChanged(2, datas.size());
         }
+    }
+
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        RBaseItemDecoration itemDecoration = new RBaseItemDecoration() {
+            @Override
+            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                final RecyclerView.LayoutManager manager = parent.getLayoutManager();
+                //线性布局
+                final LinearLayoutManager layoutManager = (LinearLayoutManager) manager;
+                final int firstItem = layoutManager.findFirstVisibleItemPosition();
+                for (int i = 0; i < layoutManager.getChildCount(); i++) {
+                    final View view = layoutManager.findViewByPosition(firstItem + i);
+                    if (view != null) {
+                        if (layoutManager.getOrientation() == LinearLayoutManager.VERTICAL) {
+                            //水平
+                            if (i > 1) {
+                                drawDrawableH(c, view);
+                            }
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                final RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();//布局管理器
+                final RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) view.getLayoutParams();
+                final int viewLayoutPosition = layoutParams.getViewLayoutPosition();//布局时当前View的位置
+                //线性布局 就简单了
+                LinearLayoutManager linearLayoutManager = ((LinearLayoutManager) layoutManager);
+                if (linearLayoutManager.getOrientation() == LinearLayoutManager.VERTICAL) {
+                    //垂直方向
+                    outRect.set(0, 0, 0, (int) mDividerSize);
+                }
+            }
+        };
+        return itemDecoration.setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
     }
 }

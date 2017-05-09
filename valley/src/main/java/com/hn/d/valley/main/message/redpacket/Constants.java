@@ -35,4 +35,10 @@ public interface Constants {
     int LOOT_OUT =          7;
     int CAN_NOTE_GRAB =     8;
 
+    String REDPACKET_PROTOCOL = "http://wap.klgwl.com/agreement/rule/package.html";
+    String WALLET_PROTOCOL = "http://wap.klgwl.com/agreement/rule/w.html";
+    String USERLOGIN_PROTOCOL = "http://wap.klgwl.com/agreement/rule/user.html";
+    String PAYFAIL_PROTOCOL = "http://wap.klgwl.com/article/detail/MaT2Qx5nMdz2gw4-MjE5OA--";
+    String PAYQUESTION_PROTOCOL = "http://wap.klgwl.com/article/detail/MaT2Qx5nMdz2gw4-MzE2OQ--";
+
 }

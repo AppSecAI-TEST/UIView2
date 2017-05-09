@@ -1,27 +1,34 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.text.Editable;
-import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
+import com.hn.d.valley.bean.realm.LoginBean;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.BindPhoneUIView;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.wallet.BindAliPayTipUIView;
+import com.hn.d.valley.main.wallet.WalletAccount;
+import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
 
-import static com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView.buildClickSpan;
 import static com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView.wrapSpan;
 
 /**
@@ -52,10 +59,9 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_rp_rule)).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startIView(new X5WebUIView(Constants.REDPACKET_PROTOCOL));
             }
         }));
-
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_send_redpacket)).setRightItems(rightItems);
     }
 
@@ -88,7 +94,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 wrapSpan(tv_notice,preStr,targetStr,R.color.main_text_color,preStr.length(),preStr.length() + 11 , new Action1() {
                     @Override
                     public void call(Object o) {
-                        T_.show("呵呵");
+                        startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
                     }
                 });
 
@@ -108,14 +114,18 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        int money = Integer.valueOf(etMoney.getText().toString());
-                        if (money > 200) {
-                            T_.show(mActivity.getString(R.string.text_hongbao_lower_200));
+                        boolean enable = etMoney.getText().toString().length() > 0;
+                        if (!enable) {
+                            btn_send.setEnabled(false);
                             return;
                         }
-                        boolean enable = etMoney.getText().toString().length() > 0;
-                        btn_send.setEnabled(enable);
+                        float money = Float.valueOf(etMoney.getText().toString());
                         tv_cursor.setVisibility(!enable ? View.VISIBLE : View.GONE);
+                        if (money > 200) {
+                            enable = false;
+                            T_.show(mActivity.getString(R.string.text_hongbao_lower_200));
+                        }
+                        btn_send.setEnabled(enable);
                     }
                 };
 
@@ -124,21 +134,69 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 btn_send.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String content = etContent.getText().toString();
-                        if ("".equals(content)) {
-                            content = etContent.getHint().toString();
+                        if (WalletHelper.getInstance().getWalletAccount() == null) {
+                            WalletHelper.getInstance().fetchWallet(new RequestCallback<WalletAccount>() {
+                                @Override
+                                public void onStart() {
+
+                                }
+
+                                @Override
+                                public void onSuccess(WalletAccount o) {
+                                    if (o.hasPin()) {
+                                        performClick(etContent, etMoney);
+                                    } else {
+                                        UIDialog.build()
+                                                .setDialogContent(mActivity.getString(R.string.text_no_set_pwd_please_set_pwd))
+                                                .setOkText(mActivity.getString(R.string.ok))
+                                                .setOkListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        // 先判断是否绑定手机
+                                                        LoginBean loginBean = UserCache.instance().getLoginBean();
+                                                        if (TextUtils.isEmpty(loginBean.getPhone())) {
+                                                            startIView(new BindPhoneUIView());
+                                                        } else {
+                                                            startIView(new BindAliPayTipUIView(false));
+                                                        }
+                                                    }
+                                                })
+                                                .setCancelText(mActivity.getString(R.string.text_set_pay_pwd))
+                                                .showDialog(mOtherILayout);
+                                    }
+                                }
+
+                                @Override
+                                public void onError(String msg) {
+
+                                }
+                            });
+                            return;
                         }
-                        PayUIDialog.Params params = new PayUIDialog.Params(1,Integer.valueOf(etMoney.getText().toString()) * 100,content,to_uid,null,0);
-                        mOtherILayout.startIView(new PayUIDialog(new Action1() {
-                            @Override
-                            public void call(Object o) {
-                                finishIView();
-                            }
-                        },params));
+
+                        if (!WalletHelper.getInstance().getWalletAccount().hasPin()) {
+
+                        } else {
+                            performClick(etContent,etMoney);
+                        }
                     }
                 });
             }
         }));
+    }
+
+    private void performClick(EditText etContent, EditText etMoney) {
+        String content = etContent.getText().toString();
+        if ("".equals(content)) {
+            content = etContent.getHint().toString();
+        }
+        PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(etMoney.getText().toString()) * 100,content,to_uid,null,0);
+        mOtherILayout.startIView(new PayUIDialog(new Action1() {
+            @Override
+            public void call(Object o) {
+                finishIView();
+            }
+        },params));
     }
 
 

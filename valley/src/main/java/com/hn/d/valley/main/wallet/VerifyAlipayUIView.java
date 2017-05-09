@@ -14,10 +14,15 @@ import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
 
-import java.security.PublicKey;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -128,17 +133,16 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         }
         RRetrofit.create(WalletService.class)
                 .cashaccountRemove(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "type:" + 0))
-                .compose(Rx.transformer(String.class))
+                .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
-                        T_.show(mActivity.getString(R.string.text_unbind_success));
                     }
 
                     @Override
                     public void onSucceed(String beans) {
-
+                        parseResult(beans,false);
                     }
                 });
     }
@@ -155,19 +159,62 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         // 支付宝 type 账户类型【0支付宝、1微信，没有默认值，必填】
         RRetrofit.create(WalletService.class)
                 .cashaccountSet(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "type:" + 0, "account:" + account, "realname:" + realname))
-                .compose(Rx.transformer(String.class))
+                .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
-                        T_.show(mActivity.getString(R.string.text_bind_success));
                     }
 
                     @Override
                     public void onSucceed(String beans) {
-
+                        parseResult(beans,true);
                     }
                 });
+    }
 
+    /**
+     * 400 参数缺失
+     405 未绑定手机
+     406 支付宝已经被其他用户绑定
+     500 服务器错误
+     701 当日操作次数已达上限
+     601 账户还有余额，不允许删除提现账户
+     * @param beans
+     */
+    private void parseResult(String beans,boolean isBind) {
+        int code = -1;
+        int data = 0;
+        try {
+            JSONObject jsonObject = new JSONObject(beans);
+            code = jsonObject.optInt("code");
+            data = jsonObject.optInt("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (200 == code) {
+            if (true) {
+                T_.show(mActivity.getString(R.string.text_bind_success));
+            } else {
+                T_.show(mActivity.getString(R.string.text_unbind_success));
+            }
+
+            RBus.post(new WalletAccountUpdateEvent());
+
+        } else if (400 == code) {
+            T_.show("参数缺失");
+        } else if (405 == code) {
+            T_.show("未绑定手机");
+        } else if (406 == code) {
+            T_.show("支付宝已经被其他用户绑定");
+        } else if (500 == code) {
+            T_.show("服务器错误");
+        } else if (701 == code) {
+            T_.show("当日操作次数已达上限");
+        } else if (601 == code) {
+            T_.show("账户还有余额，不允许删除提现账户");
+        }
+        finishIView();
     }
 }

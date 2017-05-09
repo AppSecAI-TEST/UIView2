@@ -1,4 +1,4 @@
-package io.github.mayubao.pay_library.alipay;
+package com.hn.pay_library.alipay;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

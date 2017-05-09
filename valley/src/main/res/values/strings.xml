@@ -531,4 +531,14 @@
     <string name="pause">暂停</string>
     <string name="delete_music_format">从本地目录中删除 %1$s 吗?</string>
     <string name="record_voice_tip">(录音时, 将会自动播放配乐)</string>
+    <string name="text_no_setting_pwd">未设置支付密码！</string>
+    <string name="text_no_set_pwd_please_set_pwd">未设置支付密码,请设置支付密码！</string>
+    <string name="text_balance_not_enough">余额不足！</string>
+    <string name="text_bind_fail">绑定失败</string>
+    <string name="text_sure_d">确定( %d )</string>
+    <string name="text_grabed_redpacket_cant_lower">每个人所抢红包不能小于0.01元！</string>
+    <string name="text_rp_already_grabed">红包已经被抢光</string>
+    <string name="add_picture">添加图片</string>
+    <string name="play_tip">点击播放</string>
+    <string name="re_record">重录</string>
 </resources>

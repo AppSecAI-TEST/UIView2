@@ -22,6 +22,7 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.wallet.WalletService;
 
 import org.json.JSONException;
@@ -35,13 +36,16 @@ import java.util.Locale;
 import java.util.Map;
 
 import butterknife.BindView;
-import io.github.mayubao.pay_library.alipay.AlipayConstants;
-import io.github.mayubao.pay_library.alipay.OrderInfoUtil2_0;
+
+import com.hn.pay_library.alipay.AlipayConstants;
+import com.hn.pay_library.alipay.OrderInfoUtil2_0;
+
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
-import static io.github.mayubao.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
-import static io.github.mayubao.pay_library.alipay.AlipayConstants.APPID;
+import static com.hn.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
+import static com.hn.pay_library.alipay.AlipayConstants.APPID;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -76,12 +80,16 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     Button btnSend;
 
     private PayUIDialog.Params params;
+    private Action1 action;
 
     private String type;
+    private int missionType;
 
-    public ThirdPayUIDialog(PayUIDialog.Params params, String thirdType) {
+    public ThirdPayUIDialog(Action1 action, PayUIDialog.Params params, String thirdType,int missionType) {
         this.params = params;
         this.type = thirdType;
+        this.action = action;
+        this.missionType = missionType;
     }
 
     @Override
@@ -118,7 +126,12 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         baseItemInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new ChoosePayWayUIDialog(params));
+                mOtherILayout.startIView(new ChoosePayWayUIDialog(new Action1() {
+                    @Override
+                    public void call(Object o) {
+
+                    }
+                },params));
                 finishDialog();
             }
         });
@@ -158,6 +171,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                         T_.show("支付成功");
+                        action.call(resultInfo);
                         finishDialog();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
@@ -173,17 +187,9 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     };
 
     private void pay() {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("uid",62176);
-            object.put("money",1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String missionPara = object.toString();
-
+        String missionParam = generateParam(missionType);
         RRetrofit.create(WalletService.class)
-                .alipayPrepar(Param.buildInfoMap("missiontype:" + "0","missionparam:" + missionPara))
+                .alipayPrepar(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
                 .compose(Rx.transformer(String.class))
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override
@@ -197,16 +203,16 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                         tradeNo = s;
 
                         return RRetrofit.create(WalletService.class)
-                                .rechargeAlipay(Param.buildPayMap("app_id:" + APPID,"biz_content:" + biz_content_Json(s)
-                                ,"charset:" + "utf-8","method:" + "alipay.trade.app.pay","sign_type:" + "RSA2"
-                                ,"version:" + "1.0","notify_url:" + AlipayConstants.CALLBACKURL,"timestamp:" + time_stamp))
+                                .rechargeAlipay(Param.buildPayMap("app_id:" + APPID, "biz_content:" + biz_content_Json(s)
+                                        , "charset:" + "utf-8", "method:" + "alipay.trade.app.pay", "sign_type:" + "RSA2"
+                                        , "version:" + "1.0", "notify_url:" + AlipayConstants.CALLBACKURL,"timestamp:" + time_stamp))
                                 .compose(Rx.transformer(String.class));
                     }
                 })
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onSucceed(String code) {
-                        L.i(TAG,code);
+                        L.i(TAG, code);
                         alipay(code);
 
                     }
@@ -218,13 +224,52 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 });
     }
 
+    /**
+     * {
+     * "uid":60006,          // 红包发起者id
+     * "num":1,              // 红包个数，个人红包固定为1
+     * "random":0,           // 是否随机【1随机、0平均】
+     * "money":20000,        // 金额，单位为分
+     * "to_uid":60001,       // 红包接收方
+     * "to_gid":0,           // 红包接收群，to_uid和to_gid必有一个为0
+     * "content":"恭喜发财"   // 红包祝福语
+     * }
+     *
+     * @param type
+     * @return
+     */
+    private String generateParam(int type) {
+        JSONObject object = new JSONObject();
+        try {
+            object.put("uid", Integer.valueOf(UserCache.getUserAccount()));
+            object.put("money", 1);
+            if (type == 0) {
+                //充值
+
+            } else if (type == 1) {
+                // 发红包
+                object.put("num", params.num);
+                object.put("random", params.random);
+                object.put("to_uid", TextUtils.isEmpty(params.to_uid) ? 0 : Integer.valueOf(params.to_uid));
+                object.put("to_gid", TextUtils.isEmpty(params.to_gid) ? 0 : Integer.valueOf(params.to_gid));
+                object.put("content", params.content);
+            } else if (type == 2) {
+                // 转账
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object.toString();
+
+    }
+
     private String timestamp;
     private String tradeNo;
 
     private void alipay(String code) {
         String encodedSign = code;
 
-        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, true,timestamp,tradeNo);
+        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, true, timestamp, tradeNo);
         String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 
         try {

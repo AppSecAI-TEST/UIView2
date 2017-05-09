@@ -58,7 +58,7 @@ public class MsgVHReceiptsNoticeMsg extends MsgViewHolderBase {
         imageView.setImageResource(R.drawable.hongbao_xiao_konglongjun);
         NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
 
-        tv_pc_name.setText(String.format(Locale.CHINA,"发送红包 $ %f 元给  %s ",redPacket.getMoney() / 100f
+        tv_pc_name.setText(String.format(Locale.CHINA,"发送红包 ￥ %.2f 元给  %s ",redPacket.getMoney() / 100f
                 ,userInfoCache.getUserDisplayNameEx(redPacket.getTo_uid() + "")));
 
         contentContainer.setOnClickListener(new View.OnClickListener() {
