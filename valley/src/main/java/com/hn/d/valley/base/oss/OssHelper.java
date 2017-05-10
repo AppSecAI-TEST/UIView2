@@ -293,7 +293,7 @@ public class OssHelper {
             if (srcHeight > TARGET_HEIGHT) {
                 tScale = hScale;
             } else {
-                tScale = 1;
+                tScale = Math.min(wScale, hScale);
             }
         }
 //        if (TARGET_WIDTH > srcWidth && TARGET_HEIGHT > srcHeight) {
@@ -306,6 +306,14 @@ public class OssHelper {
 
         size[0] = (int) (tScale * srcWidth);
         size[1] = (int) (tScale * srcHeight);
+
+//        if (size[0] < TARGET_WIDTH && size[1] < TARGET_HEIGHT) {
+//            //一张很小的图片
+//            L.e("call: getThumbDisplaySize2([srcWidth, srcHeight])-> " + size[0] + ":" + size[1] +
+//                    " " + TARGET_WIDTH + ":" + TARGET_HEIGHT);
+//            size[0] = (int) TARGET_WIDTH;
+//            size[1] = (int) TARGET_HEIGHT;
+//        }
 
         return size;
     }

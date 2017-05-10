@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.library.glide.GlideBlurTransformation;
+import com.angcyo.library.okhttp.Ok;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -28,6 +30,7 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
@@ -368,19 +371,19 @@ public class UserDiscussItemControl {
                                        final ILayout iLayout,
                                        final boolean isInDetail) {
 
+        if (mediaControlLayout == null) {
+            return;
+        }
+
         RNineImageLayout mediaImageTypeView = (RNineImageLayout) mediaControlLayout.findViewById(R.id.media_image_view);
         TextView videoTimeView = (TextView) mediaControlLayout.findViewById(R.id.video_time_view);
         View voiceTipView = mediaControlLayout.findViewById(R.id.voice_tip_view);
         final View videoPlayView = mediaControlLayout.findViewById(R.id.video_play_view);
 
         if (medias.isEmpty()) {
-            if (mediaControlLayout != null) {
-                mediaControlLayout.setVisibility(View.GONE);
-            }
+            mediaControlLayout.setVisibility(View.GONE);
         } else {
-            if (mediaControlLayout != null) {
-                mediaControlLayout.setVisibility(View.VISIBLE);
-            }
+            mediaControlLayout.setVisibility(View.VISIBLE);
 
             final String url = medias.get(0);
 
@@ -407,7 +410,7 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(final ImageView imageView, String url, int width, int height) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height);
+                        UserDiscussItemControl.displayImage(imageView, url, width, height, !isInDetail);
                     }
 
                     @Override
@@ -447,7 +450,7 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(ImageView imageView, String url, int width, int height) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height);
+                        UserDiscussItemControl.displayImage(imageView, url, width, height, !isInDetail);
                     }
 
                     @Override
@@ -1237,13 +1240,19 @@ public class UserDiscussItemControl {
         return getVideoTime(Integer.parseInt(url.substring(0, url.lastIndexOf('.')).split("t_")[1]));
     }
 
-    public static void displayImage(final ImageView imageView, String url, int width, int height) {
+    public static void displayImage(final ImageView imageView, final String url,
+                                    final int width, final int height) {
+        displayImage(imageView, url, width, height, true);
+    }
+
+    public static void displayImage(final ImageView imageView, final String url,
+                                    final int width, final int height, final boolean noGif) {
 //        ImagePicker.getInstance().getImageLoader().displayImage((Activity) imageView.getContext(),
 //                "", "", OssHelper.getImageThumb(url, width, height), imageView, 0, 0);
 
         File file = new File(url);
         if (file.exists()) {
-            if ("GIF".equalsIgnoreCase(ImageUtils.getImageType(file))) {
+            if (!noGif && "GIF".equalsIgnoreCase(ImageUtils.getImageType(file))) {
                 GifRequestBuilder<File> gifRequestBuilder = Glide.with(imageView.getContext())                             //配置上下文
                         .load(file)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                         //.error(R.mipmap.default_image)           //设置错误图片
@@ -1261,30 +1270,92 @@ public class UserDiscussItemControl {
                         .into(imageView);
             }
         } else {
-            Glide.with(imageView.getContext())
-                    .load(OssHelper.getImageThumb(url, width, height))
-                    .asBitmap()
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                            if (imageView == null) {
-                                return;
-                            }
-                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                            if (imageView instanceof RImageView) {
-                                ((RImageView) imageView).setImageBitmap(imageView.getDrawable(), resource);
+//            if (noGif) {
+//                displayJpeg(imageView, url, width, height);
+//            } else
+            {
+                Ok.instance().type(url, new Ok.OnImageTypeListener() {
+                    @Override
+                    public void onImageType(Ok.ImageType imageType) {
+                        L.e("call: onImageType([imageType])-> " + url + " : " + imageType);
+
+                        if (imageType != Ok.ImageType.UNKNOWN) {
+                            if (!noGif && imageType == Ok.ImageType.GIF) {
+                                Glide.with(imageView.getContext())
+                                        .load(url)
+                                        .asGif()
+                                        .placeholder(R.drawable.zhanweitu_1)
+                                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                                        .into(new SimpleTarget<GifDrawable>() {
+                                            @Override
+                                            public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
+                                                if (imageView == null || resource == null) {
+                                                    return;
+                                                }
+                                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                                imageView.setImageDrawable(resource);
+                                                resource.start();
+                                            }
+                                        });
                             } else {
-                                imageView.setImageBitmap(resource);
+                                if (imageView instanceof RImageView) {
+                                    ((RImageView) imageView).setShowGifTip(imageType == Ok.ImageType.GIF);
+                                }
+                                displayJpeg(imageView, url, width, height);
                             }
+                        }
+                    }
+
+                    @Override
+                    public void onLoadStart() {
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        imageView.setImageResource(R.drawable.zhanweitu_1);
+                    }
+                });
+            }
+        }
+    }
+
+    public static void displayJpeg(final ImageView imageView, final String url, int width, int height) {
+        Glide.with(imageView.getContext())
+                .load(OssHelper.getImageThumb(url, width, height))
+                .asBitmap()
+                .placeholder(R.drawable.zhanweitu_1)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        if (imageView == null || resource == null) {
+                            return;
                         }
 
-                        @Override
-                        public void onLoadStarted(Drawable placeholder) {
+                        int w = resource.getWidth();
+                        int h = resource.getHeight();
+                        L.e("call: onResourceReady([resource, glideAnimation])-> " + url + " w:" +
+                                w + " H:" + h);
+
+                        int abs = Math.abs(w - h);
+
+                        //自动根据图片的长宽差, 选择缩放类型
+                        if (abs < Math.min(w / 2, h / 2)) {
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        } else {
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            imageView.setImageResource(R.drawable.zhanweitu_1);
                         }
-                    });
-        }
+
+                        if (imageView instanceof RImageView) {
+                            ((RImageView) imageView).setImageBitmap(imageView.getDrawable(), resource);
+                        } else {
+                            imageView.setImageBitmap(resource);
+                        }
+                    }
+
+                    @Override
+                    public void onLoadStarted(Drawable placeholder) {
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        imageView.setImageResource(R.drawable.zhanweitu_1);
+                    }
+                });
     }
 
     public static void displayVoiceImage(final ImageView imageView, String url, int width, int height, boolean blur) {
