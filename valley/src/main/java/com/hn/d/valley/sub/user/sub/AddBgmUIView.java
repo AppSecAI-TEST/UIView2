@@ -5,20 +5,27 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.text.TextPaint;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
-import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
+import com.angcyo.uiview.recycler.RSwipeRecycleView;
+import com.angcyo.uiview.recycler.adapter.RBaseSwipeAdapter;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.recycler.widget.MenuBuilder;
 import com.angcyo.uiview.rsen.PlaceholderView;
+import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.RecordTimeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.MusicRealm;
 import com.hn.d.valley.control.MusicControl;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnPlayTextView;
+import com.hn.d.valley.widget.HnRefreshLayout;
 
 import java.util.List;
 
@@ -99,6 +106,16 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
     }
 
     @Override
+    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        mRootSoftInputLayout = new RSoftInputLayout(mActivity);
+        mRefreshLayout = new HnRefreshLayout(mActivity);
+        mRecyclerView = new RSwipeRecycleView(mActivity);
+        mRefreshLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-1, -1));
+
+        baseContentLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
+    }
+
+    @Override
     protected void initRefreshLayout() {
         super.initRefreshLayout();
         mRefreshLayout.setTopView(new PlaceholderView(mActivity));
@@ -108,7 +125,7 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
 
     @Override
     protected RExBaseAdapter<String, MusicRealm, String> initRExBaseAdapter() {
-        return new RExBaseAdapter<String, MusicRealm, String>(mActivity) {
+        return new RBaseSwipeAdapter<String, MusicRealm, String>(mActivity) {
             @Override
             protected int getDataItemType(int posInData) {
                 if (posInData == 0) {
@@ -126,6 +143,40 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
             }
 
             @Override
+            protected void onBindMenuView(MenuBuilder menuBuilder, int viewType, final int position) {
+                if (viewType == TYPE_DATA - 1) {
+                    return;
+                }
+                final MusicRealm dataBean = getAllDatas().get(position);
+                menuBuilder.addMenu(getString(R.string.delete_text),
+                        getColor(R.color.base_dark_red),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dataBean.deleteFile();
+                                deleteItem(position);
+
+                                if (getItemCount() <= 1) {
+                                    isMusicEmpty = true;
+                                    notifyItemChanged(0);
+                                }
+
+                                MusicControl.loadMusic(null);
+
+//                                UIBottomItemDialog
+//                                        .build()
+//                                        .setTitleString(getString(R.string.delete_music_format, dataBean.getName()))
+//                                        .addItem(getString(R.string.delete_text), new View.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(View v) {
+//                                            }
+//                                        })
+//                                        .showDialog(AddBgmUIView.this);
+                            }
+                        });
+            }
+
+            @Override
             protected void onBindDataView(RBaseViewHolder holder, final int posInData, final MusicRealm dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
                 if (posInData == 0) {
@@ -139,32 +190,6 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
                 } else {
                     holder.tv(R.id.name_view).setText(dataBean.getName());
                     holder.tv(R.id.time_view).setText(RecordTimeView.formatMMSS(Long.parseLong(dataBean.getTime())));
-
-                    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            UIBottomItemDialog
-                                    .build()
-                                    .setTitleString(getString(R.string.delete_music_format, dataBean.getName()))
-                                    .addItem(getString(R.string.delete_text), new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-
-                                            dataBean.deleteFile();
-                                            deleteItem(posInData);
-
-                                            if (getItemCount() <= 1) {
-                                                isMusicEmpty = true;
-                                                notifyItemChanged(0);
-                                            }
-
-                                            MusicControl.loadMusic(null);
-                                        }
-                                    })
-                                    .showDialog(AddBgmUIView.this);
-                            return true;
-                        }
-                    });
 
                     /**添加*/
                     holder.v(R.id.add_music_view).setOnClickListener(new View.OnClickListener() {
