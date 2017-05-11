@@ -61,6 +61,10 @@ public class PublishControl {
      * 失败后的下一个
      */
     int index = 0;
+    /**
+     * 语音封面图片
+     */
+    private String voiceImagePath = PublishDynamicUIView.VoiceStatusInfo.NOPIC;
 
     private PublishControl() {
         mDataListBeen = new ArrayList<>();
@@ -125,54 +129,15 @@ public class PublishControl {
 
         if ("2".equalsIgnoreCase(publishTask.type)) {
             //发布视频
-            new OssControl2(new OssControl2.OnUploadListener() {
-                @Override
-                public void onUploadStart() {
-
-                }
-
-                @Override
-                public void onUploadSucceed(List<String> list) {
-                    if (list == null || list.isEmpty()) {
-                        onPublishStart(false);
-                    } else {
-                        //视频上传成功后, 再上传图片
-                        final String videoUrl = list.get(0);
-                        L.e("视频上传成功:" + videoUrl);
-
-                        List<String> files = new ArrayList<>();
-                        files.add(publishTask.mVideoStatusInfo.videoThumbPath);
-
-                        new OssControl(new OssControl.OnUploadListener() {
-                            @Override
-                            public void onUploadStart() {
-
-                            }
-
-                            @Override
-                            public void onUploadSucceed(List<String> list) {
-                                List<String> media = new ArrayList<>();
-                                String videoThumbUrl = list.get(0);
-                                media.add(videoThumbUrl + "?" + videoUrl);
-
-                                L.e("视频缩略图上传成功:" + videoThumbUrl);
-                                publish(publishTask, media);
-                            }
-
-                            @Override
-                            public void onUploadFailed(int code, String msg) {
-                                onPublishStart(true);
-                            }
-                        }).uploadCircleImg(files);
-                    }
-                }
-
-                @Override
-                public void onUploadFailed(int code, String msg) {
-                    onPublishStart(true);
-                }
-            }).uploadVideo(publishTask.mVideoStatusInfo.videoPath);
+            publishVideo(publishTask);
+        } else if ("1".equalsIgnoreCase(publishTask.type)) {
+            //发布纯文字
+            publish(publishTask, null);
+        } else if ("4".equalsIgnoreCase(publishTask.type)) {
+            //发布语音
+            publishVoice(publishTask);
         } else {
+            //发布图文
             List<String> files = new ArrayList<>();
             for (Luban.ImageItem item : publishTask.photos) {
                 files.add(item.thumbPath);
@@ -199,6 +164,117 @@ public class PublishControl {
         mPublishListener.onPublishStart();
     }
 
+    /**
+     * 上传语音资源
+     */
+    private void publishVoice(final PublishTask publishTask) {
+        new OssControl2(new OssControl2.OnUploadListener() {
+            @Override
+            public void onUploadStart() {
+
+            }
+
+            @Override
+            public void onUploadSucceed(List<String> list) {
+                if (list == null || list.isEmpty()) {
+                    onPublishStart(false);
+                } else {
+                    //音频上传成功后, 再上传图片
+                    final String voiceUrl = list.get(0);
+                    L.e("音频上传成功:" + voiceUrl);
+
+                    if (publishTask.mVoiceStatusInfo.isNoPic()) {
+                        publishVoiceNext(publishTask, voiceImagePath, voiceUrl);
+                    } else {
+                        new OssControl(new OssControl.OnUploadListener() {
+                            @Override
+                            public void onUploadStart() {
+
+                            }
+
+                            @Override
+                            public void onUploadSucceed(List<String> list) {
+                                voiceImagePath = list.get(0);
+                                L.e("音频封面上传成功:" + voiceImagePath);
+                                publishVoiceNext(publishTask, voiceImagePath, voiceUrl);
+                            }
+
+                            @Override
+                            public void onUploadFailed(int code, String msg) {
+                                onPublishStart(true);
+                            }
+                        }).uploadCircleImg(publishTask.mVoiceStatusInfo.voiceImagePath);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onUploadFailed(int code, String msg) {
+                onPublishStart(true);
+            }
+        }).uploadAudio(publishTask.mVoiceStatusInfo.voicePath);
+    }
+
+    private void publishVoiceNext(PublishTask task, String image, String voice) {
+        List<String> media = new ArrayList<>();
+        media.add(image + "?" + voice);
+        publish(task, media);
+    }
+
+    /**
+     * 上传视频资源
+     */
+    private void publishVideo(final PublishTask publishTask) {
+        new OssControl2(new OssControl2.OnUploadListener() {
+            @Override
+            public void onUploadStart() {
+
+            }
+
+            @Override
+            public void onUploadSucceed(List<String> list) {
+                if (list == null || list.isEmpty()) {
+                    onPublishStart(false);
+                } else {
+                    //视频上传成功后, 再上传图片
+                    final String videoUrl = list.get(0);
+                    L.e("视频上传成功:" + videoUrl);
+
+                    List<String> files = new ArrayList<>();
+                    files.add(publishTask.mVideoStatusInfo.videoThumbPath);
+
+                    new OssControl(new OssControl.OnUploadListener() {
+                        @Override
+                        public void onUploadStart() {
+
+                        }
+
+                        @Override
+                        public void onUploadSucceed(List<String> list) {
+                            List<String> media = new ArrayList<>();
+                            String videoThumbUrl = list.get(0);
+                            media.add(videoThumbUrl + "?" + videoUrl);
+
+                            L.e("视频缩略图上传成功:" + videoThumbUrl);
+                            publish(publishTask, media);
+                        }
+
+                        @Override
+                        public void onUploadFailed(int code, String msg) {
+                            onPublishStart(true);
+                        }
+                    }).uploadCircleImg(files);
+                }
+            }
+
+            @Override
+            public void onUploadFailed(int code, String msg) {
+                onPublishStart(true);
+            }
+        }).uploadVideo(publishTask.mVideoStatusInfo.videoPath);
+    }
+
     UserDiscussListBean.DataListBean createBean(final PublishTask task) {
         UserDiscussListBean.DataListBean bean = new UserDiscussListBean.DataListBean();
         bean.uuid = task.uuid;
@@ -222,6 +298,9 @@ public class PublishControl {
         if ("2".equalsIgnoreCase(task.type)) {
             //视频
             bean.setMedia(task.mVideoStatusInfo.videoThumbPath + "?" + task.mVideoStatusInfo.videoPath);
+        } else if ("4".equalsIgnoreCase(task.type)) {
+            //音频
+            bean.setMedia(task.mVoiceStatusInfo.voiceImagePath + "?" + task.mVoiceStatusInfo.voicePath);
         } else {
             //媒体图片
             List<String> photos = new ArrayList<>();
@@ -303,11 +382,11 @@ public class PublishControl {
         /**
          * 需要上传的图片
          */
-        public List<Luban.ImageItem> photos;
+        public List<Luban.ImageItem> photos = new ArrayList<>();
         /**
          * 选中的tags
          */
-        public List<Tag> mSelectorTags;
+        public List<Tag> mSelectorTags = new ArrayList<>();
 
         /**
          * 是否置顶
@@ -334,6 +413,7 @@ public class PublishControl {
          */
         public String type;
         public PublishDynamicUIView.VideoStatusInfo mVideoStatusInfo;
+        public PublishDynamicUIView.VoiceStatusInfo mVoiceStatusInfo;
         /**
          * 是否允许下载【0-不允许 1-允许】
          */
@@ -369,6 +449,20 @@ public class PublishControl {
             uuid = UUID.randomUUID().toString();
             this.photos = photos;
             type = "3";
+        }
+
+        public PublishTask() {
+            uuid = UUID.randomUUID().toString();
+            type = "1";
+        }
+
+        /**
+         * 语音动态
+         */
+        public PublishTask(PublishDynamicUIView.VoiceStatusInfo voiceStatusInfo) {
+            uuid = UUID.randomUUID().toString();
+            type = "4";
+            mVoiceStatusInfo = voiceStatusInfo;
         }
 
         /**

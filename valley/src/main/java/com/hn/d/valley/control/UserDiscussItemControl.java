@@ -322,8 +322,15 @@ public class UserDiscussItemControl {
         holder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
         HnExTextView exTextView = holder.v(R.id.forward_content_ex_view);
         exTextView.setOnImageSpanClick(createSpanClick(iLayout));
-        exTextView.setText(createMention(original_info.getUid(), "@" + original_info.getUsername())
-                + original_info.getContent());
+        exTextView.setText(createMention(original_info.getUid(),
+                "@" + original_info.getUsername()) +
+                original_info.getContent());
+
+        if (isInDetail) {
+            exTextView.setMaxShowLine(-1);
+        } else {
+            exTextView.setMaxShowLine(6);
+        }
 
         holder.v(R.id.forward_control_layout).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,7 +341,7 @@ public class UserDiscussItemControl {
 
         final List<String> medias = RUtils.split(original_info.getMedia());
         initMediaLayout(original_info.getMedia_type(), medias,
-                holder.v(R.id.forward_control_layout),
+                holder.v(R.id.forward_media_control_layout),
                 iLayout, isInDetail);
     }
 

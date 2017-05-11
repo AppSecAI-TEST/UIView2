@@ -173,8 +173,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         }
 
                         if (mDynamicType == DynamicType.IMAGE && mAddImageAdapter2.getAllDatas().size() == 0) {
-                            T_.error(getString(R.string.image_empty_tip));
-                            return;
+                            mDynamicType = DynamicType.TEXT;
                         }
 
                         onPublish();
@@ -597,6 +596,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 publishTask = new PublishControl.PublishTask(photos);
             } else if (mDynamicType == DynamicType.VIDEO) {
                 publishTask = new PublishControl.PublishTask(mVideoStatusInfo);
+            } else if (mDynamicType == DynamicType.TEXT) {
+                publishTask = new PublishControl.PublishTask();
             }
             publishTask.setSelectorTags(mSelectorTags)
                     .setTop(hnTopImageView.isTop())
@@ -626,10 +627,16 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         } else {
             //转发动态, 不需要再后台进行
             HnLoading.show(mOtherILayout);
+            String item_id;
+            if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
+                item_id = mDataListBean.getDiscuss_id();
+            } else {
+                item_id = mDataListBean.getOriginal_info().getDiscuss_id();
+            }
             add(RRetrofit.create(SocialService.class)
                     .forward(Param.buildMap(
                             "type:discuss",
-                            "item_id:" + mDataListBean.getOriginal_info().getDiscuss_id(),
+                            "item_id:" + item_id,
                             "is_top:" + hnTopImageView.isTop(),
                             "content:" + mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
                                 @Override
@@ -649,7 +656,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                     .subscribe(new BaseSingleSubscriber<String>() {
                         @Override
                         public void onSucceed(String s) {
-                            T_.show(s);
+                            T_.show(getString(R.string.forward_succeed));
                             finishIView();
                             RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
                         }

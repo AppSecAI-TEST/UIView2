@@ -537,12 +537,37 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     public void onDismiss() {
     }
 
+    /**
+     * 视频动态
+     */
     public static class VideoStatusInfo {
         public String videoThumbPath, videoPath;
 
         public VideoStatusInfo(String videoThumbPath, String videoPath) {
             this.videoThumbPath = videoThumbPath;
             this.videoPath = videoPath;
+        }
+    }
+
+    /**
+     * 语音动态
+     */
+    public static class VoiceStatusInfo {
+        public static final String NOPIC = "nopic";
+        public String voiceImagePath, voicePath;
+
+        public VoiceStatusInfo(String voiceImagePath, String voicePath) {
+            this.voiceImagePath = voiceImagePath;
+            this.voicePath = voicePath;
+        }
+
+        public VoiceStatusInfo(String voicePath) {
+            this.voiceImagePath = NOPIC;
+            this.voicePath = voicePath;
+        }
+
+        public boolean isNoPic() {
+            return NOPIC.equals(voiceImagePath);
         }
     }
 

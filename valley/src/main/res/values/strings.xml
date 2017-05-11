@@ -567,4 +567,5 @@
     <string name="text_pay_fail">支付失败</string>
     <string name="text_pay_success">支付成功</string>
     <string name="call">呼叫</string>
+    <string name="forward_succeed">转发成功</string>
 </resources>

@@ -88,7 +88,6 @@
             android:paddingStart="@dimen/base_xhdpi">
 
             <!--转发动态-->
-
             <com.angcyo.uiview.viewgroup.RLinearLayout
                 android:id="@+id/forward_control_layout"
                 android:layout_width="match_parent"
@@ -108,11 +107,11 @@
                     android:ellipsize="end"
                     android:gravity="center_vertical"
                     android:lineSpacingExtra="4dp"
-                    android:maxLength="150"
                     android:minHeight="@dimen/base_25dpi"
                     tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
 
                 <include
+                    android:id="@+id/forward_media_control_layout"
                     layout="@layout/item_media_layout"
                     android:paddingEnd="@dimen/base_xxxhdpi"
                     android:paddingTop="@dimen/base_ldpi"/>
