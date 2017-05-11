@@ -17,14 +17,18 @@ import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RExTextView;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.SoftRelativeLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
@@ -32,10 +36,14 @@ import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter2;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
@@ -51,9 +59,12 @@ import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.utils.HnGlide;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.PhotoPager;
+import com.hn.d.valley.utils.RBus;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnTopImageView;
 import com.lzy.imagepicker.ImagePickerHelper;
@@ -83,6 +94,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
     private static boolean isShowTip = false;
     Action0 mPublishAction;
+    UserDiscussListBean.DataListBean mDataListBean;
     private HnAddImageAdapter2 mAddImageAdapter2;
     private ArrayList<Luban.ImageItem> photos;
     private List<Tag> mSelectorTags = new ArrayList<>();
@@ -95,8 +107,33 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private List<FriendBean> mFriendList = new ArrayList<>();
     private PublishDynamicUIView.VideoStatusInfo mVideoStatusInfo;
 
+    /**
+     * 发布动态
+     */
     public PublishDynamicUIView2(DynamicType dynamicType) {
         mDynamicType = dynamicType;
+    }
+
+    /**
+     * 转发动态
+     */
+    public PublishDynamicUIView2(UserDiscussListBean.DataListBean dataListBean) {
+        mDataListBean = dataListBean;
+        String mediaType = mDataListBean.getMedia_type();
+        if ("3".equalsIgnoreCase(mediaType)) {
+            mDynamicType = DynamicType.FORWARD_IMAGE;
+            if (dataListBean.getMediaList().isEmpty()) {
+                mDynamicType = DynamicType.FORWARD_TEXT;
+            }
+        } else if ("2".equalsIgnoreCase(mediaType)) {
+            mDynamicType = DynamicType.FORWARD_VIDEO;
+        } else if ("4".equalsIgnoreCase(mediaType)) {
+            mDynamicType = DynamicType.FORWARD_VOICE;//不允许转发语音
+        } else if ("1".equalsIgnoreCase(mediaType)) {
+            mDynamicType = DynamicType.FORWARD_TEXT;
+        } else {
+            mDynamicType = DynamicType.FORWARD_PACKET;
+        }
     }
 
     /**
@@ -125,7 +162,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
-                .setTitleString(null == null ? mActivity.getString(R.string.publish_dynamic) : mActivity.getString(R.string.forward_dynamic))
+                .setTitleString(isForward() ? mActivity.getString(R.string.forward_dynamic) : mActivity.getString(R.string.publish_dynamic))
                 .setShowBackImageView(true)
                 .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.send_forward_dynamic_n, new View.OnClickListener() {
                     @Override
@@ -304,7 +341,48 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             });
         }
 
-        //转发
+        //转发动态
+        if (isForward()) {
+            recyclerView.setVisibility(View.GONE);
+            mViewHolder.v(R.id.selector_control_layout).setVisibility(View.GONE);
+            mViewHolder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
+
+            HnGlideImageView imageView = mViewHolder.v(R.id.avatar);
+            mViewHolder.tv(R.id.username).setTextColor(SkinHelper.getSkin().getThemeSubColor());
+            RExTextView contentView = mViewHolder.v(R.id.content);
+            contentView.setFoldString("");
+            contentView.setMaxShowLine(3);
+
+            if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
+                //不是转发的动态
+                if (mDynamicType == DynamicType.FORWARD_TEXT) {
+                    imageView.setContentDescription(getString(R.string.is_circle));
+                    imageView.setImageThumbUrl(mDataListBean.getUser_info().getAvatar());
+                } else {
+                    imageView.setImageUrl(mDataListBean.getMediaList().get(0));
+                }
+
+                mViewHolder.tv(R.id.username).setText(mDataListBean.getUser_info().getUsername());
+                contentView.setText(mDataListBean.getContent());
+            } else {
+                if (mDynamicType == DynamicType.FORWARD_TEXT) {
+                    imageView.setContentDescription(getString(R.string.is_circle));
+                    imageView.setImageThumbUrl(mDataListBean.getOriginal_info().getAvatar());
+                } else {
+                    imageView.setImageUrl(mDataListBean.getOriginal_info().getMediaList().get(0));
+                }
+
+                mViewHolder.tv(R.id.username).setText(mDataListBean.getOriginal_info().getUsername());
+                contentView.setText(mDataListBean.getOriginal_info().getContent());
+            }
+        }
+    }
+
+    /**
+     * 是否是转发的动态
+     */
+    private boolean isForward() {
+        return mDynamicType.getType() >= 6;
     }
 
     private void initVisibleView() {
@@ -504,7 +582,6 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 });
     }
 
-
     /**
      * 点击发布动态
      */
@@ -548,6 +625,41 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             }
         } else {
             //转发动态, 不需要再后台进行
+            HnLoading.show(mOtherILayout);
+            add(RRetrofit.create(SocialService.class)
+                    .forward(Param.buildMap(
+                            "type:discuss",
+                            "item_id:" + mDataListBean.getOriginal_info().getDiscuss_id(),
+                            "is_top:" + hnTopImageView.isTop(),
+                            "content:" + mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
+                                @Override
+                                public String userId(String userName) {
+                                    for (FriendBean bean : mFriendList) {
+                                        if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                                            return bean.getUid();
+                                        }
+                                    }
+                                    return "";
+                                }
+                            }),
+                            "scan_type:1",
+                            "scan_user:")
+                    )
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+                        @Override
+                        public void onSucceed(String s) {
+                            T_.show(s);
+                            finishIView();
+                            RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
+                        }
+
+                        @Override
+                        public void onEnd() {
+                            super.onEnd();
+                            HnLoading.hide();
+                        }
+                    }));
         }
     }
 

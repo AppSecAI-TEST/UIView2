@@ -209,7 +209,8 @@ public class HnGlideImageView extends AppCompatImageView {
                     }
                     File file = new File(url);
                     DrawableTypeRequest<? extends Serializable> builder = Glide.with(getContext())
-                            .load(file.exists() ? file : url);
+                            .load(file.exists() ? file :
+                                    OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()));
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }

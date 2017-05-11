@@ -103,35 +103,39 @@
                     android:id="@+id/forward_control_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/forward_bg_color"
                     android:padding="@dimen/base_xhdpi"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    tools:visibility="visible">
 
-                    <com.facebook.drawee.view.SimpleDraweeView
+                    <com.hn.d.valley.widget.HnGlideImageView
                         android:id="@+id/avatar"
-                        style="@style/UserMidIcoStyle"
-                        android:visibility="visible"/>
+                        android:layout_width="@dimen/base_60dpi"
+                        android:layout_height="@dimen/base_60dpi"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_avatar"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/avatar"
+                        android:layout_toEndOf="@id/avatar"
                         android:orientation="vertical"
-                        android:paddingLeft="@dimen/base_xhdpi">
+                        android:paddingStart="@dimen/base_xhdpi">
 
-                        <com.angcyo.uiview.widget.RTextView
+                        <com.angcyo.uiview.widget.RExTextView
                             android:id="@+id/username"
                             style="@style/MainColorTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             tools:text="爱宠物的默默"/>
 
-                        <TextView
+                        <com.angcyo.uiview.widget.RExTextView
                             android:id="@+id/content"
                             style="@style/DarkTextStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/base_xhdpi"
+                            android:layout_marginTop="@dimen/base_ldpi"
                             tools:text="爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默爱宠物的默默"/>
 
                     </LinearLayout>
@@ -150,6 +154,7 @@
             android:orientation="vertical">
 
             <FrameLayout
+                android:id="@+id/selector_control_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -285,27 +290,9 @@
     </RelativeLayout>
 
     <!--表情布局-->
-    <RelativeLayout
-        android:id="@+id/emoji_control_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/layout_scr_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/base_title_bar_item_size"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="4dp"
-            android:gravity="center"
-            android:orientation="horizontal"/>
-
-        <com.angcyo.uiview.widget.viewpager.UIViewPager
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/layout_scr_bottom"/>
-    </RelativeLayout>
+    <include
+        layout="@layout/default_emoji_layout"
+        android:visibility="gone"/>
 
 
 </com.angcyo.uiview.widget.RSoftInputLayout>

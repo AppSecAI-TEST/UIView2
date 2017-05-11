@@ -1,5 +1,6 @@
 package com.hn.d.valley.control;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,8 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
+import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
+import com.angcyo.uiview.github.utilcode.utils.PhoneUtils;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -53,7 +56,7 @@ import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.ReadListUserUIView;
 import com.hn.d.valley.sub.user.DynamicDetailUIView2;
-import com.hn.d.valley.sub.user.PublishDynamicUIView;
+import com.hn.d.valley.sub.user.PublishDynamicUIView2;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnExTextView;
@@ -151,7 +154,11 @@ public class UserDiscussItemControl {
 
         //内容
         HnExTextView hnExTextView = holder.v(R.id.content_ex_view);
-        hnExTextView.setMaxShowLine(100);
+        if (isInDetail) {
+            hnExTextView.setMaxShowLine(-1);
+        } else {
+            hnExTextView.setMaxShowLine(10);
+        }
         hnExTextView.setFoldString(holder.getContext().getString(R.string.see_all2));
         //需要先设置监听, 再设置内容.
         hnExTextView.setOnImageSpanClick(createSpanClick(iLayout));
@@ -202,8 +209,11 @@ public class UserDiscussItemControl {
             }
         }
 
+        //更多按钮
         View commandItemView = holder.v(R.id.command_item_view);
         commandItemView.setVisibility(View.VISIBLE);
+
+        //转发按钮
         final View forwardView = holder.v(R.id.forward_cnt);
         if (user_info != null) {
 //            if (user_info.getIs_attention() == 1) {
@@ -218,6 +228,9 @@ public class UserDiscussItemControl {
 //                        getColorStateList(R.color.base_main_color_border_selector_color));
 //            }
 //
+            //语音动态不允许转发
+            forwardView.setVisibility("4".equalsIgnoreCase(dataListBean.getMedia_type()) ? View.GONE : View.VISIBLE);
+
             if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
                 //自己的动态不允许转发
                 forwardView.setClickable(false);
@@ -229,7 +242,7 @@ public class UserDiscussItemControl {
                     @Override
                     public void onClick(View v) {
                         if (TextUtils.isEmpty(dataListBean.uuid)) {
-                            iLayout.startIView(new PublishDynamicUIView(dataListBean));
+                            iLayout.startIView(new PublishDynamicUIView2(dataListBean));
                         } else {
                             T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
                         }
@@ -241,7 +254,7 @@ public class UserDiscussItemControl {
             forwardView.setClickable(false);
         }
 
-        //转发动态
+        //转发的动态处理
 //        TextView infoView = holder.v(R.id.copy_info_view);
 //        infoView.setVisibility(View.GONE);
         UserDiscussListBean.DataListBean.OriginalInfo originalInfo = dataListBean.getOriginal_info();
@@ -337,6 +350,33 @@ public class UserDiscussItemControl {
             @Override
             public void onUrlClick(TextView view, String url) {
                 iLayout.startIView(new X5WebUIView(url));
+            }
+
+            @Override
+            public void onPhoneClick(final TextView view, final String phone) {
+                final Resources resources = view.getContext().getResources();
+                UIBottomItemDialog.build()
+                        .setTitleString(resources.getString(R.string.phone_title_tip, phone))
+                        .addItem(resources.getString(R.string.call), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                PhoneUtils.dial(phone);
+                            }
+                        })
+                        .addItem(resources.getString(R.string.copy), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ClipboardUtils.copyText(phone);
+                                T_.show(resources.getString(R.string.copy_tip));
+                            }
+                        })
+                        .addItem(resources.getString(R.string.add_friend), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                iLayout.startIView(new UserDetailUIView2(phone));
+                            }
+                        })
+                        .showDialog(iLayout);
             }
 
             @Override

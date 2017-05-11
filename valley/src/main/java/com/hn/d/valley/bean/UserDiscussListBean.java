@@ -1,6 +1,7 @@
 package com.hn.d.valley.bean;
 
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.utils.RUtils;
 
 import java.util.List;
 
@@ -196,6 +197,10 @@ public class UserDiscussListBean {
 
         public void setMedia(String media) {
             this.media = media;
+        }
+
+        public List<String> getMediaList() {
+            return RUtils.split(getMedia());
         }
 
         public String getMedia_type() {
@@ -543,6 +548,10 @@ public class UserDiscussListBean {
 
             public void setMedia(String media) {
                 this.media = media;
+            }
+
+            public List<String> getMediaList() {
+                return RUtils.split(getMedia());
             }
 
             public String getMedia_type() {
