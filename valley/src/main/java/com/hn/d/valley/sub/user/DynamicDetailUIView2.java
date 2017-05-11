@@ -204,7 +204,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             mViewHolder.v(R.id.bottom_forward_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    startIView(new PublishDynamicUIView2(mDataListBean));
                 }
             });
         }

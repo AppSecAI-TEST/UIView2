@@ -231,11 +231,11 @@ public class UserDiscussItemControl {
             //语音动态不允许转发
             forwardView.setVisibility("4".equalsIgnoreCase(dataListBean.getMedia_type()) ? View.GONE : View.VISIBLE);
 
-            if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
-                //自己的动态不允许转发
-                forwardView.setClickable(false);
-                forwardView.setEnabled(false);
-            } else {
+//            if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
+//                //自己的动态不允许转发
+//                forwardView.setClickable(false);
+//                forwardView.setEnabled(false);
+//            } else {
                 forwardView.setEnabled(true);
                 forwardView.setClickable(true);
                 forwardView.setOnClickListener(new View.OnClickListener() {
@@ -248,7 +248,7 @@ public class UserDiscussItemControl {
                         }
                     }
                 });
-            }
+//            }
         } else {
             commandItemView.setVisibility(View.GONE);
             forwardView.setClickable(false);
