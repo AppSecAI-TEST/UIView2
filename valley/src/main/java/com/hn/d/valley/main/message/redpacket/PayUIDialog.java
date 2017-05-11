@@ -172,13 +172,13 @@ public class PayUIDialog extends UIIDialogImpl {
 
         } else if (code == 401) {
             UIDialog.build()
-                    .setDialogContent(String.format("密码错误，剩余可尝试次数 %d", data))
+                    .setDialogContent(String.format(getString(R.string.text_pwd_error_reaming), data))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);
         } else if (code == 403) {
             UIDialog.build()
-                    .setDialogContent(String.format("密码输错过错次，已冻结，离解冻还剩 %d 秒", data))
+                    .setDialogContent(String.format(getString(R.string.text_pwd_error_freeze), data))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);

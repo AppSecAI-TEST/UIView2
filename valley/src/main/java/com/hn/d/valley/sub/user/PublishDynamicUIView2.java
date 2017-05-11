@@ -42,6 +42,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
@@ -372,9 +373,9 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             }
         });
 
-        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
+        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new IEmoticonSelectedListener() {
             @Override
-            public void onEmojiText(String emoji) {
+            public void onEmojiSelected(String emoji) {
                 if (emoji.equals("/DEL")) {
                     mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
                 } else {
@@ -384,6 +385,11 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                     mInputView.setSelection(selectionStart + emoji.length());
                     mInputView.requestFocus();
                 }
+            }
+
+            @Override
+            public void onStickerSelected(String categoryName, String stickerName) {
+
             }
         });
     }

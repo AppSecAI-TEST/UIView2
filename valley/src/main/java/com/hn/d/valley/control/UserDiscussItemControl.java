@@ -450,7 +450,7 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(ImageView imageView, String url, int width, int height) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height, !isInDetail);
+                        UserDiscussItemControl.displayImage(imageView, url, width, height, true);
                     }
 
                     @Override
@@ -1252,7 +1252,11 @@ public class UserDiscussItemControl {
 
         File file = new File(url);
         if (file.exists()) {
-            if (!noGif && "GIF".equalsIgnoreCase(ImageUtils.getImageType(file))) {
+            boolean isGif = "GIF".equalsIgnoreCase(ImageUtils.getImageType(file));
+            if (noGif && imageView instanceof RImageView) {
+                ((RImageView) imageView).setShowGifTip(isGif);
+            }
+            if (!noGif && isGif) {
                 GifRequestBuilder<File> gifRequestBuilder = Glide.with(imageView.getContext())                             //配置上下文
                         .load(file)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
                         //.error(R.mipmap.default_image)           //设置错误图片
@@ -1269,6 +1273,7 @@ public class UserDiscussItemControl {
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             }
+
         } else {
 //            if (noGif) {
 //                displayJpeg(imageView, url, width, height);
@@ -1359,26 +1364,17 @@ public class UserDiscussItemControl {
     }
 
     public static void displayVoiceImage(final ImageView imageView, String url, int width, int height, boolean blur) {
+        if (imageView instanceof RImageView) {
+            ((RImageView) imageView).setShowGifTip(false);
+        }
         File file = new File(url);
         if (file.exists()) {
-            if ("GIF".equalsIgnoreCase(ImageUtils.getImageType(file))) {
-                GifRequestBuilder<File> gifRequestBuilder = Glide.with(imageView.getContext())                             //配置上下文
-                        .load(file)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                        //.error(R.mipmap.default_image)           //设置错误图片
-                        //.fitCenter()
-                        .asGif()
-                        //.centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.SOURCE);
-
-                gifRequestBuilder.into(imageView);
-            } else {
-                Glide.with(imageView.getContext())                             //配置上下文
-                        .load(file)
-                        .placeholder(R.drawable.default_vociecover)
-                        .bitmapTransform(new GlideBlurTransformation(imageView.getContext()))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(imageView);
-            }
+            Glide.with(imageView.getContext())                             //配置上下文
+                    .load(file)
+                    .placeholder(R.drawable.default_vociecover)
+                    .bitmapTransform(new GlideBlurTransformation(imageView.getContext()))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imageView);
         } else {
             DrawableRequestBuilder<String> builder = Glide.with(imageView.getContext())
                     .load(OssHelper.getImageThumb(url, width, height))

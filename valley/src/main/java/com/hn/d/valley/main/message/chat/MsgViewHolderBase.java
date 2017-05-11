@@ -186,8 +186,6 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
 
         }
 
-
-
         itemRootLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -336,8 +334,12 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
      * 下载附件/缩略图
      */
     protected void downloadAttachment(IMMessage message) {
+        downloadAttachment(message,true);
+    }
+
+    protected void downloadAttachment(IMMessage message , boolean thumb) {
         if (message.getAttachment() != null && message.getAttachment() instanceof FileAttachment) {
-            NIMClient.getService(MsgService.class).downloadAttachment(message, true);
+            NIMClient.getService(MsgService.class).downloadAttachment(message, thumb);
         }
     }
 

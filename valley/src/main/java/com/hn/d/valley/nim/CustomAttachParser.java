@@ -3,6 +3,7 @@ package com.hn.d.valley.nim;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
+import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
@@ -10,6 +11,7 @@ import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
+import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachmentParser;
 
@@ -42,11 +44,20 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.GRABREDBAG:
                     attachment = new GrabedMsgAttachment(json);
                     break;
+                case CustomAttachmentType.COLLECTION_CONFIRM:
+                    attachment = new ReceiptsNoticeAttachment(json);
+                    break;
                 case CustomAttachmentType.RECEIPTES:
                     attachment = new ReceiptsNoticeAttachment(json);
                     break;
                 case CustomAttachmentType.REFUND:
                     attachment = new RefundMsgAttachment(json);
+                    break;
+                case CustomAttachmentType.WITHDRAWAL_MSG:
+                    attachment = new WithDrawalAttachment(json);
+                    break;
+                case CustomAttachmentType.KLGGIF_MSG:
+                    attachment = new CustomExpressionAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

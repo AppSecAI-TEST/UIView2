@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.redpacket;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -19,12 +20,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.widget.HnButton;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
@@ -50,6 +54,9 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
 
     private int rp_type = 1; // 默认拼手气
 
+    TextView tv_image;
+    CheckBox cb_switch;
+
     public NewGroupRedPacketUIView(String to_gid,int groupNum) {
        this.to_gid = to_gid;
         this.groupNum = groupNum;
@@ -73,29 +80,29 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
         return R.layout.item_new_group_redpacket;
     }
 
-    public static SpannableString buildClickSpan(String prestr, String targetStr, final int color, int start, int end, final Action1 action) {
-        String str = prestr;
-        String txt = str + targetStr;
-        SpannableString spannableString = new SpannableString(txt);
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                //Do something.
-                if (action != null) {
-                    action.call(widget);
-                }
-            }
-            @Override
-            public void updateDrawState(@NonNull TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setColor(color);
-                ds.setUnderlineText(false);
-                ds.clearShadowLayer();
-            }
-        };
-        spannableString.setSpan(clickableSpan,start,end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        return spannableString;
-    }
+//    public static SpannableString buildClickSpan(String prestr, String targetStr, final int color, int start, int end, final Action1 action) {
+//        String str = prestr;
+//        String txt = str + targetStr;
+//        SpannableString spannableString = new SpannableString(txt);
+//        ClickableSpan clickableSpan = new ClickableSpan() {
+//            @Override
+//            public void onClick(View widget) {
+//                //Do something.
+//                if (action != null) {
+//                    action.call(widget);
+//                }
+//            }
+//            @Override
+//            public void updateDrawState(@NonNull TextPaint ds) {
+//                super.updateDrawState(ds);
+//                ds.setColor(color);
+//                ds.setUnderlineText(false);
+//                ds.clearShadowLayer();
+//            }
+//        };
+//        spannableString.setSpan(clickableSpan,start,end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        return spannableString;
+//    }
 
     @Override
     protected void createItems(List<ViewItemInfo> items) {
@@ -106,51 +113,49 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
 
                 final EditText etMoney = holder.v(R.id.et_money);
                 final EditText etContent = holder.v(R.id.et_content);
-                final Button btn_send = holder.v(R.id.btn_send);
+                final HnButton btn_send = holder.v(R.id.btn_send);
                 final EditText et_count = holder.v(R.id.et_count);
                 final TextView tv_cursor = holder.v(R.id.tv_cursor);
-                final TextView tv_image = holder.v(R.id.text_view);
-                final CheckBox cb_switch = holder.v(R.id.cb_switch);
+                tv_image = holder.v(R.id.text_view);
+                cb_switch = holder.v(R.id.cb_switch);
                 TextView tv_groupNum = holder.v(R.id.tv_group_member_num);
                 RelativeLayout item_input_note = holder.v(R.id.item_input_note);
                 LinearLayout layout_switch = holder.v(R.id.item_switch);
                 final LinearLayout layout_input = holder.v(R.id.item_input);
                 TextView tv_notice = holder.v(R.id.item_notice);
 
-                String preStr = "继续即表示同意";
-                String targetStr = "《恐龙谷红包用户协议》 \n 24小时未领取的红包，将于2天内退款至你的恐龙谷钱包";
-                // \n 24小时未领取的红包，将于2天内退款至你的恐龙谷钱包
-                SpannableString spannableStr = buildClickSpan(preStr,targetStr,RApplication.getApp().getResources().getColor(R.color.main_text_color)
-                        ,preStr.length(),preStr.length() + 11 , new Action1() {
-                    @Override
-                    public void call(Object o) {
-                        startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
-                    }
-                });
-                tv_notice.setText(spannableStr);
+                ResUtil.setBgDrawable(btn_send,ResUtil.generateRippleRoundMaskDrawable(RApplication.getApp()
+                                .getResources()
+                                .getDimensionPixelOffset(com.angcyo.uiview.R.dimen.base_round_little_radius),
+                        Color.WHITE, mActivity.getResources().getColor(R.color.base_red_d85940), mActivity.getResources().getColor(R.color.base_red_c8381f)));
+                btn_send.setEnabled(false);
+
                 tv_notice.setMovementMethod(LinkMovementMethod.getInstance());
+                tv_notice.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_next_show_agree_klg_protocl))
+                        .append(mActivity.getString(R.string.text__klg_protocl))
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void onClick(View widget) {
+                                startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
+                            }
 
-                wrapSpan(cb_switch,"当前为拼手气群红包,", "改为普通红包",R.color.base_red, 10, 16,null);
-                cb_switch.setChecked(true);
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+                                ds.setColor(mActivity.getResources().getColor(R.color.main_text_color));
+                                ds.setUnderlineText(false);
+                                ds.clearShadowLayer();
+                            }
+                        }).append("\n").append(mActivity.getString(R.string.text_refound_to_wallet_24hour))
+                        .create());
 
-                cb_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if(isChecked) {
-                            tv_image.setText(R.string.text_amout_money);
-                            tv_image.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ping_hongbao, 0, 0, 0);
-//                            cb_switch.setText(R.string.text_redpacket_switch_desc);
-                            wrapSpan(cb_switch,"当前为拼手气群红包,", "改为普通红包",R.color.base_red, 10, 16,null);
-                            rp_type = 1;
-                        } else {
-                            tv_image.setText(R.string.text_single_money);
-                            tv_image.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
-//                            cb_switch.setText(R.string.text_random_redpacket);
-                            wrapSpan(cb_switch,"当前为普通红包,", "改为拼手气红包",R.color.base_red, 8, 15,null);
-                            rp_type = 0;
-                        }
-                    }
-                });
+//                wrapSpan(cb_switch,mActivity.getString(R.string.text_pinshouqi_rp), mActivity.getString(R.string.text_redpacket_switch_desc),R.color.base_red, 10, 16,null);
+                cb_switch.setMovementMethod(LinkMovementMethod.getInstance());
+                cb_switch.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_pinshouqi_rp))
+                        .append(mActivity.getString(R.string.text_redpacket_switch_desc))
+                        .setClickSpan(switchRPType)
+                        .create());
+
 
 //                layout_switch.setOnClickListener(new View.OnClickListener() {
 //                    @Override
@@ -182,6 +187,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                         boolean enable = value.length() > 0;
                         tv_cursor.setVisibility(!enable ? View.VISIBLE : View.GONE);
                         if (TextUtils.isEmpty(value) || TextUtils.isEmpty(et_count.getText().toString())) {
+                            btn_send.setEnabled(false);
                             return;
                         }
                         float money = Float.valueOf(value);
@@ -246,11 +252,36 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
         }));
     }
 
-    public static void wrapSpan(TextView cb_switch,String prestr, String targetStr,int color, int start,int end, final Action1 action) {
-        SpannableString clickSpan = buildClickSpan(prestr,targetStr, RApplication.getApp().getResources().getColor(color),start,end,action);
-        cb_switch.setText(clickSpan);
-        cb_switch.setMovementMethod(LinkMovementMethod.getInstance());
-    }
+    private ClickableSpan switchRPType = new ClickableSpan() {
+        @Override
+        public void onClick(View widget) {
+            if (rp_type == 1) {
+                rp_type = 0;
+                tv_image.setText(R.string.text_single_money);
+                tv_image.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+                cb_switch.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_current_normal_rp))
+                        .append(mActivity.getString(R.string.text_random_redpacket))
+                        .setClickSpan(switchRPType)
+                        .create());
+
+            } else if (rp_type == 0) {
+                rp_type = 1;
+                tv_image.setText(R.string.text_amout_money);
+                tv_image.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ping_hongbao, 0, 0, 0);
+                cb_switch.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_pinshouqi_rp))
+                        .append(mActivity.getString(R.string.text_redpacket_switch_desc))
+                        .setClickSpan(switchRPType)
+                        .create());
+
+            }
+        }
+    };
+
+//    public static void wrapSpan(TextView cb_switch,String prestr, String targetStr,int color, int start,int end, final Action1 action) {
+//        SpannableString clickSpan = buildClickSpan(prestr,targetStr, RApplication.getApp().getResources().getColor(color),start,end,action);
+//        cb_switch.setText(clickSpan);
+//        cb_switch.setMovementMethod(LinkMovementMethod.getInstance());
+//    }
 
 
 }

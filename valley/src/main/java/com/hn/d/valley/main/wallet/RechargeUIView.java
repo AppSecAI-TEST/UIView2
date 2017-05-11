@@ -1,8 +1,11 @@
 package com.hn.d.valley.main.wallet;
 
 import android.text.Editable;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +14,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.main.message.redpacket.PayUIDialog;
 import com.hn.d.valley.main.message.redpacket.ThirdPayUIDialog;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
 
@@ -130,7 +136,24 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
                 tv_tip.setTextColor(getResources().getColor(R.color.default_base_bg_dark));
                 tv_tip.setGravity(Gravity.CENTER);
-                tv_tip.setText(R.string.text_next_show_agree_klg_protocl);
+                tv_tip.setMovementMethod(LinkMovementMethod.getInstance());
+                tv_tip.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_next_show_agree_klg_protocl))
+                        .append(mActivity.getString(R.string.text__klg_protocl))
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void onClick(View widget) {
+                                startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
+                            }
+
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+//                                ds.setColor(mActivity.getResources().getColor(R.color.main_text_color));
+                                ds.setUnderlineText(false);
+                                ds.clearShadowLayer();
+                            }
+                        })
+                        .create());
             }
         }));
 

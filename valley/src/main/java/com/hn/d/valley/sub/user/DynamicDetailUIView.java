@@ -38,6 +38,7 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.emoji.EmojiRecyclerView;
+import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
@@ -111,14 +112,19 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        mEmojiRecyclerView.setOnEmojiSelectListener(new EmojiLayoutControl.OnEmojiSelectListener() {
+        mEmojiRecyclerView.setOnEmojiSelectListener(new IEmoticonSelectedListener() {
             @Override
-            public void onEmojiText(String emoji) {
+            public void onEmojiSelected(String emoji) {
                 final int selectionStart = mInputView.getSelectionStart();
                 mInputView.getText().insert(selectionStart, emoji);
                 MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
                 mInputView.setSelection(selectionStart + emoji.length());
                 mInputView.requestFocus();
+            }
+
+            @Override
+            public void onStickerSelected(String categoryName, String stickerName) {
+
             }
         });
         mDynamicRootLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {

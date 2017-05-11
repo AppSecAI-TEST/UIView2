@@ -1,7 +1,10 @@
 package com.hn.d.valley.main.wallet;
 
+import android.graphics.Color;
 import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +13,20 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
 
 import rx.functions.Action1;
-
-import static com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView.buildClickSpan;
-import static com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView.wrapSpan;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -100,17 +102,25 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 TextView tv_note = holder.v(R.id.tv_note);
                 final ExEditText et_money = holder.v(R.id.et_count);
 
-                tv_tip.setText("填写提现金额");
-                String prestr = "可提现金额 " + WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + " ,";
-                SpannableString clickSpan = buildClickSpan(prestr,
-                        "全额提现", SkinHelper.getSkin().getThemeSubColor(), prestr.length(), prestr.length() + 4, new Action1() {
+                tv_tip.setText(R.string.text_write_refund_money);
+                String prestr = mActivity.getString(R.string.text_can_refund_money) + WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + " ,";
+                tv_note.setMovementMethod(LinkMovementMethod.getInstance());
+                tv_note.setText(SpannableStringUtils.getBuilder(prestr)
+                        .append(mActivity.getString(R.string.text_can_refund_money))
+                        .setClickSpan(new ClickableSpan() {
                             @Override
-                            public void call(Object o) {
+                            public void onClick(View widget) {
                                 et_money.setText(WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + "");
                             }
-                        });
-                tv_note.setText(clickSpan);
-                tv_note.setMovementMethod(LinkMovementMethod.getInstance());
+
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+                                ds.setUnderlineText(false);
+                                ds.setColor(SkinHelper.getSkin().getThemeSubColor());
+                            }
+                        })
+                        .create());
             }
         }));
 
@@ -141,8 +151,29 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 tv_tip.setTextColor(getResources().getColor(R.color.default_base_bg_dark));
                 tv_tip.setGravity(Gravity.CENTER_HORIZONTAL);
                 tv_tip.setText(R.string.text_next_show_agree_klg_protocl);
+
+                tv_tip.setMovementMethod(LinkMovementMethod.getInstance());
+                tv_tip.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_next_show_agree_klg_protocl))
+                        .append(mActivity.getString(R.string.text__klg_protocl))
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void onClick(View widget) {
+                                startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
+                            }
+
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+//                                ds.setColor(mActivity.getResources().getColor(R.color.main_text_color));
+                                ds.setUnderlineText(false);
+                                ds.clearShadowLayer();
+                            }
+                        })
+                        .create());
             }
         }));
 
     }
+
+
 }

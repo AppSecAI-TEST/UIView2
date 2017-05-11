@@ -119,7 +119,6 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
         final int top = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
 
-
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -158,7 +157,6 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-
                 TextView text = parseTextView(holder, 12);
                 text.setText(R.string.text_pay_passwd_notice);
             }
@@ -184,6 +182,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         public void onClick(View v) {
                             if (! mAccount.hasPin()) {
                                 T_.show(mActivity.getString(R.string.text_no_setting_pwd));
+                                return;
                             }
                             if (!isBindPhone()) {
                                 startIView(new BindAliPayTipUIView(false));
@@ -235,12 +234,12 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         TextView btn_recharge = holder.v(R.id.btn_recharge);
         TextView btn_crashout = holder.v(R.id.btn_crashout);
 
-        btn_crashout.setBackground(ResUtil.generateRoundBorderDrawable(mActivity.getResources().getDimensionPixelOffset(R.dimen.little_round_radius),
-                mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line),
-                SkinHelper.getSkin().getThemeSubColor(),
-                ContextCompat.getColor(mActivity, R.color.base_text_color_dark)));
+//        btn_crashout.setBackground(ResUtil.generateRoundBorderDrawable(mActivity.getResources().getDimensionPixelOffset(R.dimen.little_round_radius),
+//                mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line),
+//                SkinHelper.getSkin().getThemeSubColor(),
+//                ContextCompat.getColor(mActivity, R.color.base_text_color_dark)));
 
-        if (mAccount.hasMoney()) {
+        if (mAccount.hasMoney() && mAccount.hasPin()) {
             btn_crashout.setEnabled(true);
         } else {
             btn_crashout.setEnabled(false);

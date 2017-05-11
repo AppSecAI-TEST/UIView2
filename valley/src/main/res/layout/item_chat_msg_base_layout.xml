@@ -52,8 +52,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/base_hdpi"
                 android:layout_centerHorizontal="true"
-                android:textColor="@color/main_text_color"
-                android:text="hewking"/>
+                android:textColor="@color/main_text_color_6666666"
+                tools:text="hewking"/>
 
             <FrameLayout
                 android:id="@+id/msg_content_layout"

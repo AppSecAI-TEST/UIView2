@@ -197,21 +197,21 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 
         mChatControl = new ChatControl(mActivity, mViewHolder, this);
 
-        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
-            @Override
-            public void onEmojiText(String emoji) {
-                if (emoji.equals("/DEL")) {
-                    mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                } else {
-                    final int selectionStart = mInputView.getSelectionStart();
-                    mInputView.getText().insert(selectionStart, emoji);
-                    MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
-                    mInputView.setSelection(selectionStart + emoji.length());
-                    mInputView.requestFocus();
-                }
-
-            }
-        });
+//        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
+//            @Override
+//            public void onEmojiText(String emoji) {
+//                if (emoji.equals("/DEL")) {
+//                    mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+//                } else {
+//                    final int selectionStart = mInputView.getSelectionStart();
+//                    mInputView.getText().insert(selectionStart, emoji);
+//                    MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
+//                    mInputView.setSelection(selectionStart + emoji.length());
+//                    mInputView.requestFocus();
+//                }
+//
+//            }
+//        });
 
         mCommandLayoutControl = new CommandLayoutControl(mActivity, mViewHolder, createCommandItems());
 

@@ -33,7 +33,7 @@
         android:layout_marginTop="@dimen/base_xhdpi_15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eric 的红包"
+        tools:text="Eric 的红包"
         />
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="恭喜发财，大吉大利"
+        tools:text="恭喜发财，大吉大利"
         />
 
     <TextView
@@ -57,7 +57,7 @@
         android:layout_marginTop="@dimen/base_40dpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="50.00元"
+        tools:text="50.00元"
         />
 
     <TextView
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/text_view"
-        android:text="红包已发给“eric”，等待对方领取"
+        tools:text="红包已发给“eric”，等待对方领取"
         />
 
     <!--<Button-->

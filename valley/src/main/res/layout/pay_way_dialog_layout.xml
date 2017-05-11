@@ -1,66 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.angcyo.uiview.widget.RSoftInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/base_dialog_root_layout"
-    android:layout_width="252dp"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/base_xxxhdpi"
-    android:layout_marginRight="@dimen/base_xxxhdpi"
-    android:background="@drawable/base_white_round_bg"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:id="@+id/chat_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <RelativeLayout
-        android:padding="@dimen/base_xhdpi"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_cancel"
-            android:src="@drawable/icon_last_step"
-            android:layout_width="wrap_content"
-            android:layout_height="44dp" />
-
-
-        <TextView
-            android:id="@+id/base_dialog_title_view"
-            style="@style/BaseDialogTextStyle"
-            android:textSize="@dimen/base_title_size"
-            android:textColor="@color/main_text_color"
+        <LinearLayout
+            android:id="@+id/base_dialog_root_layout"
+            android:layout_width="252dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base_xxxhdpi"
+            android:layout_marginRight="@dimen/base_xxxhdpi"
             android:layout_centerInParent="true"
-            android:textStyle="bold"
-            android:text="请选择支付方式"/>
+            android:background="@drawable/base_white_round_bg"
+            android:gravity="center"
+            android:orientation="vertical">
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/base_xhdpi">
+
+                <ImageView
+                    android:id="@+id/iv_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:src="@drawable/icon_last_step" />
+
+
+                <TextView
+                    android:id="@+id/base_dialog_title_view"
+                    style="@style/BaseDialogTextStyle"
+                    android:layout_centerInParent="true"
+                    android:text="请选择支付方式"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="@dimen/base_title_size"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <View style="@style/BaseHLine" />
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/info_balance"
+                style="@style/BaseItemInfoStyle" />
+
+            <View
+                style="@style/BaseHLine"
+                android:layout_marginEnd="@dimen/base_xhdpi"
+                android:layout_marginStart="@dimen/base_xhdpi" />
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/info_alipay"
+                style="@style/BaseItemInfoStyle" />
+
+            <View
+                style="@style/BaseHLine"
+                android:layout_marginEnd="@dimen/base_xhdpi"
+                android:layout_marginStart="@dimen/base_xhdpi" />
+
+            <com.angcyo.uiview.widget.ItemInfoLayout
+                android:id="@+id/info_wechat"
+                style="@style/BaseItemInfoStyle" />
+
+            <View
+                android:padding="@dimen/base_xhdpi_15"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_xhdpi"/>
+
+        </LinearLayout>
     </RelativeLayout>
-
-    <View
-        style="@style/BaseHLine"
-        />
-
-    <com.angcyo.uiview.widget.ItemInfoLayout
-        android:id="@+id/info_balance"
-        style="@style/BaseItemInfoStyle"/>
-    <View
-        style="@style/BaseHLine"
-        android:layout_marginStart="@dimen/base_xhdpi"
-        android:layout_marginEnd="@dimen/base_xhdpi"
-        />
-
-    <com.angcyo.uiview.widget.ItemInfoLayout
-        android:id="@+id/info_alipay"
-        style="@style/BaseItemInfoStyle"/>
-
-    <View
-        style="@style/BaseHLine"
-        android:layout_marginStart="@dimen/base_xhdpi"
-        android:layout_marginEnd="@dimen/base_xhdpi"
-        />
-
-    <com.angcyo.uiview.widget.ItemInfoLayout
-        android:id="@+id/info_wechat"
-        style="@style/BaseItemInfoStyle"/>
-
-
-
-</LinearLayout>
+</com.angcyo.uiview.widget.RSoftInputLayout>

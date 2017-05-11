@@ -158,7 +158,7 @@
         android:layout_marginRight="@dimen/base_xhdpi_15"
         android:textSize="@dimen/nav_text_size"
         android:textColor="@color/main_text_color"
-        android:text="本群共9人"/>
+        tools:text="本群共9人"/>
 
 
     <RelativeLayout
@@ -204,7 +204,7 @@
         android:layout_marginTop="@dimen/base_90dpi"
         android:padding="@dimen/base_xhdpi_15">
 
-        <Button
+        <com.hn.d.valley.widget.HnButton
             android:id="@+id/btn_send"
             style="@style/WhiteColorTextStyle"
             android:layout_width="match_parent"

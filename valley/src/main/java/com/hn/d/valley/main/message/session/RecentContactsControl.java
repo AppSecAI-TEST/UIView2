@@ -795,6 +795,7 @@ public class RecentContactsControl {
                 case location:
                     return "[位置]";
                 case file:
+                    // gif图文件方式获取
                     return "[文件]";
                 case tip:
                     message = getMessageFromUuid(recent.getRecentMessageId());

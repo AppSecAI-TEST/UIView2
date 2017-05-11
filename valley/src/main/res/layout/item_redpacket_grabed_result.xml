@@ -33,7 +33,7 @@
         android:layout_marginTop="@dimen/base_xhdpi_15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Eric 的红包"
+        tools:text="Eric 的红包"
         />
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="恭喜发财，大吉大利"
+        tools:text="恭喜发财，大吉大利"
         />
 
     <TextView
@@ -54,11 +54,24 @@
         android:textSize="@dimen/default_text_size50"
         android:textColor="@color/main_text_color"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_40dpi"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="50.00元"
+        tools:text="50.00元"
         />
+
+    <TextView
+        android:id="@+id/tv_red_to_wallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_money"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_marginBottom="@dimen/base_xhdpi"
+        android:textColor="@color/blue_4777af"
+        android:textSize="@dimen/default_text_little_size"
+        android:visibility="gone"
+        tools:text="已存入恐龙谷钱包" />
 
 
 

@@ -46,6 +46,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="right"
         android:orientation="vertical">
 
         <TextView
@@ -57,6 +58,7 @@
             android:id="@+id/tv_rp_desc"
             android:visibility="gone"
             style="@style/DarkTextStyle"
+            android:drawablePadding="@dimen/base_ldpi"
             android:textColor="@color/yellow_ffe2b1"
             android:gravity="right" />
     </LinearLayout>

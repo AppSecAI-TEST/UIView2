@@ -119,7 +119,8 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                         } else if (Constants.CAN_BE_GRAB == code) {
                             mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redPacket.getRid()));
                         } else if (Constants.CAN_NOTE_GRAB == code) {
-                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB,redPacket.getRid()));
+//                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB,redPacket.getRid()));
+                            mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
                         } else if (Constants.EXPORE == code){
                             mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.EXPORE,redPacket.getRid()));
                         } else if (Constants.LOOT_OUT == code){

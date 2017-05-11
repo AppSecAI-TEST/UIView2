@@ -9,7 +9,7 @@
     android:layout_gravity="center_vertical"
     android:layoutDirection="ltr"
     android:orientation="vertical"
-    android:background="@drawable/base_rect_solid_shape"
+    android:background="@drawable/base_white_round_bg"
     tools:background="@drawable/base_rect_solid_shape">
 
     <LinearLayout

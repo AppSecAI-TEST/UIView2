@@ -32,6 +32,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static com.hn.d.valley.main.message.redpacket.Constants.CAN_BE_GRAB;
+import static com.hn.d.valley.main.message.redpacket.Constants.CAN_NOTE_GRAB;
 import static com.hn.d.valley.main.message.redpacket.Constants.EXPORE;
 import static com.hn.d.valley.main.message.redpacket.Constants.LOOT_OUT;
 
@@ -116,6 +117,8 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                             tvTip.setText(R.string.text_send_you_a_packet);
                             if (redpacketStatus == CAN_BE_GRAB) {
                                 tvRedContent.setText(bean.getContent());
+                            } else if (redpacketStatus == CAN_NOTE_GRAB) {
+                                tvTip.setText("");
                             }
                         }
                     }

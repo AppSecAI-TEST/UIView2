@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.amap.api.maps.model.Text;
 import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -68,7 +69,7 @@ public class P2PStatusRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setTitleBarBGColor(ContextCompat.getColor(mActivity, R.color.base_red_d85940))
-                .setTitleString("恐龙谷红包");
+                .setTitleString(mActivity.getString(R.string.text_klg_rp));
     }
 
     @Override
@@ -139,13 +140,15 @@ public class P2PStatusRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
                 tv_username.setText(grabedRDDetail.getUsername() + " 的红包");
                 tv_tip.setText(grabedRDDetail.getContent());
-                tv_money.setText(grabedRDDetail.getMoney() / 100f + " 元");
+                tv_money.setText(SpannableStringUtils.getBuilder(grabedRDDetail.getMoney() / 100f + " ")
+                        .append("元").setProportion(0.5f)
+                        .create());
 
                 NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
 
                 if (Constants.ALREADY_GRAB == statuCode) {
                     if (isReceiver) {
-                        tv_status.setText("已存入恐龙谷钱包");
+                        tv_status.setText(R.string.text_have_save_klg_wallet);
                         tv_status.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -153,11 +156,11 @@ public class P2PStatusRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                             }
                         });
                     } else {
-                        tv_status.setText(String.format("红包已发给 %s，对方已领取",userInfoCache.getUserDisplayName(mSessionId)));
+                        tv_status.setText(String.format(mActivity.getString(R.string.text_rp_haven_send_you),userInfoCache.getUserDisplayName(mSessionId)));
                     }
 
                 } else if (Constants.CAN_BE_GRAB == statuCode) {
-                    tv_status.setText(String.format("红包已发给 %s，等待对方领取",userInfoCache.getUserDisplayName(mSessionId)));
+                    tv_status.setText(String.format(mActivity.getString(R.string.tv_send_waite_receive),userInfoCache.getUserDisplayName(mSessionId)));
                 } else if (Constants.EXPORE == statuCode) {
                     tv_status.setText(R.string.text_rp_expore);
                 }

@@ -27,6 +27,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.okhttp.Ok;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
@@ -43,7 +44,10 @@ import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.file.FileUtil;
+import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.utils.string.MD5;
+import com.angcyo.uiview.utils.string.StringUtil;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
@@ -56,11 +60,14 @@ import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
+import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.CommandLayoutControl;
 import com.hn.d.valley.main.message.EmojiLayoutControl;
+import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
@@ -86,8 +93,14 @@ import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
@@ -223,9 +236,9 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
         mChatControl = new ChatControl2(mActivity, mViewHolder, this);
 
-        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
+        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new IEmoticonSelectedListener() {
             @Override
-            public void onEmojiText(String emoji) {
+            public void onEmojiSelected(String emoji) {
                 if (emoji.equals("/DEL")) {
                     mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
                 } else {
@@ -235,6 +248,15 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     mInputView.setSelection(selectionStart + emoji.length());
                     mInputView.requestFocus();
                 }
+            }
+
+            @Override
+            public void onStickerSelected(String categoryName, String stickerName) {
+//                T_.show(categoryName + ": " + stickerName);
+                CustomExpressionMsg expressionMsg = new CustomExpressionMsg(FileUtil.getFileNameNoEx(stickerName));
+                CustomExpressionAttachment attachment = new CustomExpressionAttachment(expressionMsg);
+                IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "贴图表情",attachment );
+                sendMessage(message);
             }
         });
 
@@ -351,8 +373,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                         }
                         IMMessage locationMessage = MessageBuilder.createLocationMessage(mSessionId, sessionType, bean.latitude, bean.longitude, bean.address);
                         sendMessage(locationMessage);
-//                        final IMMessage message = MessageBuilder.createTextMessage(mSessionId, sessionType, "测试");
-//                        sendMessage(message);
                     }
                 }, null, null, true));
             }
@@ -887,9 +907,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 .subscribe(new Action1<ArrayList<String>>() {
                     @Override
                     public void call(ArrayList<String> strings) {
-                        final IMMessage imageMessage =
-                                MessageBuilder.createImageMessage(mSessionId, sessionType, new File(strings.get(0)));
-                        sendMessage(imageMessage);
+                        sendPictureAndGif(strings);
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -902,6 +920,47 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                         HnLoading.hide();
                     }
                 });
+    }
+
+    private void sendPictureAndGif(ArrayList<String> strings) {
+        //发送图片和gif图
+        boolean isGif = false;
+        String path = strings.get(0);
+        File file = new File(path);
+
+        try {
+            InputStream is = new FileInputStream(file);
+            String imageType = Ok.ImageTypeUtil.getImageType(is);
+            Ok.ImageType type = Ok.ImageType.of(imageType);
+            if (type == Ok.ImageType.GIF) {
+                isGif = true;
+            }
+            is.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        if (isGif) {
+            IMMessage gifMessage =
+                    MessageBuilder.createFileMessage(mSessionId, sessionType, file, FileUtil.getFileNameNoEx(path));
+            Map<String,Object> remoteExtension =  new HashMap<>();
+            String size = null;
+            int[] bounds = null;
+            bounds = BitmapDecoder.decodeBound(new File(path));
+            if (bounds != null) {
+                size = "{" + bounds[0] + "," + bounds[1] + "}";
+            }
+
+            remoteExtension.put("size",size);
+            remoteExtension.put("extend_type","gifTypeImage");
+            gifMessage.setRemoteExtension(remoteExtension);
+            sendMessage(gifMessage);
+
+        } else {
+            IMMessage imageMessage =
+                    MessageBuilder.createImageMessage(mSessionId, sessionType, new File(strings.get(0)));
+            sendMessage(imageMessage);
+        }
     }
 
 //    @Subscribe

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/msg_card_layout"
-    android:layout_width="220dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:layoutDirection="ltr"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/base_xhdpi"
             android:gravity="center_vertical"
-            android:text="@string/about_me" />
+            tools:text="@string/about_me" />
 
     </LinearLayout>
 
@@ -50,11 +50,13 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/base_xhdpi"
+            android:textColor="@color/blue_4777af"
             android:padding="@dimen/base_ldpi"
             android:text="@string/text_chakan_detail" />
 
         <ImageView
-            android:src="@drawable/back_2"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icon_next_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

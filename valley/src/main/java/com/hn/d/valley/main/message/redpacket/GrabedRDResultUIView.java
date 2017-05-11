@@ -6,12 +6,16 @@ import android.graphics.Rect;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -24,7 +28,9 @@ import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
+import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnEmptyRefreshLayout;
@@ -49,6 +55,9 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
     private GrabedRDDetail grabedRDDetail;
 
     private long red_id;
+
+    private TextView tv_money;
+    private TextView tv_red_to_wallet;
 
     public GrabedRDResultUIView(long redId) {
         this.red_id = redId;
@@ -94,7 +103,10 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                     @Override
                     protected void onResult(GrabedRDDetail bean) {
                         if (bean == null || bean.getResult().size() == 0) {
-                            onUILoadDataEnd();
+                            grabedRDDetail = bean;
+                            onUILoadDataFinish();
+                            mRExBaseAdapter.resetData(null);
+                            mRExBaseAdapter.notifyDataSetChanged();
                         } else {
                             grabedRDDetail = bean;
                             onUILoadDataEnd(bean.getResult());
@@ -158,12 +170,15 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
 
         @Override
         protected void onBindDataView(RBaseViewHolder holder, final int posInData, final GrabedRDDetail.ResultBean dataBean) {
-
+            if (grabedRDDetail == null) {
+                return;
+            }
             if (RPDETAIL == getDataItemType(posInData)) {
                 HnGlideImageView iv_icon_head = holder.v(R.id.iv_icon_head);
                 TextView tv_username = holder.v(R.id.tv_username);
                 TextView tv_tip = holder.v(R.id.tv_tip);
-                TextView tv_money = holder.v(R.id.tv_money);
+                tv_money = holder.v(R.id.tv_money);
+                tv_red_to_wallet = holder.tv(R.id.tv_red_to_wallet);
 
                 if (grabedRDDetail == null) {
                     return;
@@ -172,7 +187,6 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 iv_icon_head.setImageUrl(grabedRDDetail.getAvatar());
                 tv_username.setText(grabedRDDetail.getUsername());
                 tv_tip.setText(grabedRDDetail.getContent());
-                tv_money.setText(grabedRDDetail.getMoney() / 100f + " 元");
 
             }
             else if (ITEM_SECTION == getDataItemType(posInData)) {
@@ -180,8 +194,8 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 RTextView tv_left = holder.v(R.id.text_view);
                 RTextView tv_right = holder.v(R.id.right_text_view);
 
-                tv_left.setText(String.format("已领取 %d / %d个",grabedRDDetail.getResult().size(),grabedRDDetail.getNum()));
-                tv_right.setText(String.format("总金额 %.2f 元",grabedRDDetail.getMoney() / 100f));
+                tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count_per_all),grabedRDDetail.getResult().size(),grabedRDDetail.getNum()));
+                tv_right.setText(String.format(mContext.getString(R.string.text_all_amout),grabedRDDetail.getMoney() / 100f));
 
             } else {
                 holder.itemView.setBackgroundResource(R.color.default_base_white);
@@ -196,14 +210,35 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 msg_content_view.setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000l,true));
                 msg_time_view.setText(dataBean.getMoney() / 100f + "元");
 
+                if (dataBean.getUid() == Integer.valueOf(UserCache.getUserAccount())) {
+                    tv_red_to_wallet.setVisibility(View.VISIBLE);
+                    tv_red_to_wallet.setMovementMethod(LinkMovementMethod.getInstance());
+                    tv_red_to_wallet.setText(SpannableStringUtils.getBuilder(getString(R.string.text_already_save))
+                            .append(getString(R.string.text_klg_rp)).setClickSpan(new ClickableSpan() {
+                                @Override
+                                public void onClick(View widget) {
+                                    startIView(new MyWalletUIView());
+                                }
+
+                                @Override
+                                public void updateDrawState(TextPaint ds) {
+                                    super.updateDrawState(ds);
+                                    ds.setColor(mActivity.getResources().getColor(R.color.blue_4777af));
+                                    ds.clearShadowLayer();
+                                }
+                            })
+                            .create());
+                    tv_money.setText(SpannableStringUtils.getBuilder(dataBean.getMoney() / 100f + " ")
+                            .append("元").setProportion(0.5f)
+                            .create());
+                }
+
                 if (dataBean.getBest() == 1) {
-                    tv_rp_desc.setText("手气最佳");
+                    tv_rp_desc.setText(R.string.text_lucky_best);
                     tv_rp_desc.setVisibility(View.VISIBLE);
                     tv_rp_desc.setCompoundDrawablesWithIntrinsicBounds(R.drawable.shouqizuijia_hongbao,0,0,0);
                 }
-
             }
-
         }
 
 

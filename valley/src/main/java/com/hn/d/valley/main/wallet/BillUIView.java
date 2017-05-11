@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -34,13 +36,15 @@ import java.util.List;
  */
 public class BillUIView extends SingleRecyclerUIView<BillRecord>{
 
+    private int type = 0 ;//默认 全部
+
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
         rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_suaixuan)).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showMoreDialog();
             }
         }));
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_bill)).setRightItems(rightItems);
@@ -49,6 +53,33 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
     @Override
     protected RExBaseAdapter<String, BillRecord, String> initRExBaseAdapter() {
         return new BillRecordAdapter(mActivity);
+    }
+
+    private void showMoreDialog() {
+        UIBottomItemDialog.build()
+                .setUseWxStyle(true)
+                .addItem(getString(R.string.text_all), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        type = 0;
+                        loadData();
+                    }
+                })
+                .addItem(getString(R.string.text_income), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        type = 1;
+                        loadData();
+                    }
+                })
+                .addItem(getString(R.string.text_outcome), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        type = 2;
+                        loadData();
+                    }
+                })
+                .showDialog(this);
     }
 
     @Override
@@ -61,7 +92,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
         super.onUILoadData(page);
 
         add(RRetrofit.create(WalletService.class)
-                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount()))
+                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"type:" + type))
                 .compose(Rx.transformerList(BillRecord.class))
                 .subscribe(new BaseSingleSubscriber<List<BillRecord>>() {
 
@@ -116,9 +147,11 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
             tv_bill_type.setText(dataBean.getDescription());
             tv_time.setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000l,true));
             if (dataBean.getType() == 0) {
-                tv_bill_moncy.setText("+" + dataBean.getMoney());
+                tv_bill_moncy.setText(SpannableStringUtils.getBuilder("+" + dataBean.getMoney() / 100f)
+                        .setForegroundColor(mActivity.getResources().getColor(R.color.base_red))
+                        .create());
             } else if(dataBean.getType() == 1) {
-                tv_bill_moncy.setText("-" + dataBean.getMoney());
+                tv_bill_moncy.setText("-" + dataBean.getMoney() / 100f);
 
             }
 

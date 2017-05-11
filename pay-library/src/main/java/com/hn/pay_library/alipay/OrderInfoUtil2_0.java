@@ -17,6 +17,12 @@ import java.util.Random;
 
 public class OrderInfoUtil2_0 {
 
+    public  Builder builder;
+
+    public OrderInfoUtil2_0(Builder builder){
+        this.builder = builder;
+    }
+
     /**
      * 构造授权参数列表
      *
@@ -63,7 +69,7 @@ public class OrderInfoUtil2_0 {
 
     public static String biz_content = "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"0.01\",\"subject\":\"1\",\"body\":\"我是测试数据\",\"out_trade_no\":\"" + getOutTradeNo() + "\"}";
 
-    public static String biz_content_Json(String tradeNo) {
+    public static String biz_content_Json(Builder builder) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("timeout_express", "30m");
@@ -71,33 +77,95 @@ public class OrderInfoUtil2_0 {
             jsonObject.put("total_amount", "0.01");
             jsonObject.put("subject", "1");
             jsonObject.put("body", "我是测试数据");
-            jsonObject.put("out_trade_no", tradeNo);
+            jsonObject.put("out_trade_no", builder.out_trade_no);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return jsonObject.toString();
     }
+    public static class Builder {
+
+        private String timeout_express;
+        private String product_code;
+        private String total_amount;
+        private String subject;
+        private String body;
+        private String out_trade_no;
+        private String app_id;
+        private String timestamp;
+        private boolean isRSA2;
+
+        public Builder setTimeout(String timeout) {
+            this.timeout_express = timeout;
+            return this;
+        }
+
+        public Builder setProductCode(String product_code) {
+            this.product_code = product_code;
+            return this;
+        }
+
+        public Builder setTotalAmount(String total_amount) {
+            this.total_amount = total_amount;
+            return this;
+        }
+
+        public Builder setSubject(String subject) {
+            this.subject = subject;
+            return this;
+        }
+
+        public Builder setBody(String body) {
+            this.body = body;
+            return this;
+        }
+
+        public Builder setOutTradeNo(String out_trade_no) {
+            this.out_trade_no = out_trade_no;
+            return this;
+        }
+
+        public Builder setAppId(String app_id) {
+            this.app_id = app_id;
+            return this;
+        }
+
+        public Builder setTimestamp(String timestamp) {
+            this.timestamp = timestamp;
+            return  this;
+        }
+
+        public Builder setRSA2(boolean isRSA2) {
+            this.isRSA2 = isRSA2;
+            return this;
+        }
+
+        public OrderInfoUtil2_0 create(Builder builder) {
+            return new OrderInfoUtil2_0(builder);
+        }
+    }
+
 
     /**
      * 构造支付订单参数列表
      *
      * @return
      */
-    public static Map<String, String> buildOrderParamMap(String app_id, boolean rsa2, String timestamp,String tradeNo) {
+    public static Map<String, String> buildOrderParamMap(Builder builder) {
         Map<String, String> keyValues = new HashMap<String, String>();
 
-        keyValues.put("app_id", app_id);
+        keyValues.put("app_id", builder.app_id);
 
-        keyValues.put("biz_content", biz_content_Json(tradeNo));
+        keyValues.put("biz_content", biz_content_Json(builder));
 
         keyValues.put("charset", "utf-8");
 
         keyValues.put("method", "alipay.trade.app.pay");
 
-        keyValues.put("sign_type", rsa2 ? "RSA2" : "RSA");
+        keyValues.put("sign_type", builder.isRSA2 ? "RSA2" : "RSA");
 
-        keyValues.put("timestamp", timestamp);
+        keyValues.put("timestamp", builder.timestamp);
 
         keyValues.put("notify_url",AlipayConstants.CALLBACKURL);
 

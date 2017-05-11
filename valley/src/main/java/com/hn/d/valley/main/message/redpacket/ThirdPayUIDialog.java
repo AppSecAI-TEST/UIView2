@@ -84,6 +84,8 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
 
     private String type;
     private int missionType;
+    private OrderInfoUtil2_0.Builder builder;
+
 
     public ThirdPayUIDialog(Action1 action, PayUIDialog.Params params, String thirdType,int missionType) {
         this.params = params;
@@ -170,12 +172,12 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        T_.show("支付成功");
+                        T_.show(mActivity.getString(R.string.text_pay_success));
                         action.call(resultInfo);
                         finishDialog();
                     } else {
                         // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                        T_.show("支付失败");
+                        T_.show(mActivity.getString(R.string.text_pay_fail));
                         finishDialog();
                     }
                     break;
@@ -188,6 +190,21 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
 
     private void pay() {
         String missionParam = generateParam(missionType);
+
+        if (missionType == 0) {
+            //充值
+        } else if(missionType == 1) {
+            //发红包
+        }
+
+         builder = new OrderInfoUtil2_0.Builder()
+         .setAppId(APPID)
+         .setTimeout("30m")
+         .setProductCode("QUICK_MSECURITY_PAY")
+         .setTotalAmount("0.01")
+         .setSubject("1").setRSA2(true)
+         .setBody("我是测试数据");
+
         RRetrofit.create(WalletService.class)
                 .alipayPrepar(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
                 .compose(Rx.transformer(String.class))
@@ -198,12 +215,11 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" +
                                 "", Locale.getDefault());
                         String format = formatter.format(new Date(time));
-                        timestamp = format;
                         long time_stamp = time / 1000;
-                        tradeNo = s;
-
+                        builder.setOutTradeNo(s);
+                        builder.setTimestamp(format);
                         return RRetrofit.create(WalletService.class)
-                                .rechargeAlipay(Param.buildPayMap("app_id:" + APPID, "biz_content:" + biz_content_Json(s)
+                                .rechargeAlipay(Param.buildPayMap("app_id:" + APPID, "biz_content:" + biz_content_Json(builder)
                                         , "charset:" + "utf-8", "method:" + "alipay.trade.app.pay", "sign_type:" + "RSA2"
                                         , "version:" + "1.0", "notify_url:" + AlipayConstants.CALLBACKURL,"timestamp:" + time_stamp))
                                 .compose(Rx.transformer(String.class));
@@ -263,13 +279,10 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
 
     }
 
-    private String timestamp;
-    private String tradeNo;
-
     private void alipay(String code) {
         String encodedSign = code;
 
-        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(APPID, true, timestamp, tradeNo);
+        Map<String, String> params = OrderInfoUtil2_0.buildOrderParamMap(builder);
         String orderParam = OrderInfoUtil2_0.buildOrderParam(params);
 
         try {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <ImageView
+        android:id="@+id/msg_image_view"
+        android:layout_width="@dimen/base_90dpi"
+        android:layout_height="@dimen/base_90dpi"
+        android:contentDescription="@string/empty"
+        tools:src="@drawable/image_hongbao_small"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:padding="0dip"
+        android:scaleType="centerCrop" />
+
+</merge>

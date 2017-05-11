@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/base_white_bg_selector"
@@ -24,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/base_xxhdpi"
-        android:text="$49999856.14"
+        tools:text="$49999856.14"
         android:textColor="@color/base_text_color"
         android:textSize="@dimen/textSize_sidebar_padding" />
 

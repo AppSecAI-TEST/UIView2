@@ -23,9 +23,14 @@ public interface CustomAttachmentType {
 
     int GRABEDMSG = 5;
 
+
     int RECEIPTSNOTICE = 6;
 
     int REFOUNDMSG = 7;
+
+    int WITHDRAWAL = 8;
+
+    int EXPRESSIONMSG = 9;
 
     int SP_SINGLE_TEXT = 31;
 
@@ -41,8 +46,14 @@ public interface CustomAttachmentType {
 
     String GRABREDBAG = "grabredbag";
 
+    String COLLECTION_CONFIRM = "collection_confirm";
+
     String RECEIPTES = "collection";
 
     String REFUND = "refund";
+
+    String WITHDRAWAL_MSG = "cashout";
+
+    String KLGGIF_MSG = "system_klgGif";
 
 }

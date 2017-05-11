@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
@@ -168,9 +169,9 @@ public class CommentInputDialog extends UIIDialogImpl {
             }
         });
 
-        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new EmojiLayoutControl.OnEmojiSelectListener() {
+        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new IEmoticonSelectedListener() {
             @Override
-            public void onEmojiText(String emoji) {
+            public void onEmojiSelected(String emoji) {
                 if (emoji.equals("/DEL")) {
                     mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
                 } else {
@@ -180,6 +181,11 @@ public class CommentInputDialog extends UIIDialogImpl {
                     mInputView.setSelection(selectionStart + emoji.length());
                     mInputView.requestFocus();
                 }
+            }
+
+            @Override
+            public void onStickerSelected(String categoryName, String stickerName) {
+
             }
         });
     }

@@ -33,7 +33,7 @@
             android:maxEms="5"
             android:maxLines="2"
             android:ellipsize="end"
-            android:text="day dayvvvvvvvvvvvvvvvvvvvvvvvvvvvvv "
+            tools:text="day dayvvvvvvvvvvvvvvvvvvvvvvvvvvvvv "
             android:layout_marginTop="@dimen/base_50dpi"
             android:visibility="visible"
             android:layout_centerHorizontal="true"

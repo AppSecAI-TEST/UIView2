@@ -1,14 +1,18 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.text.Editable;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.angcyo.uiview.dialog.UIDialog;
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
@@ -28,9 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
-
-import static com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView.wrapSpan;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -87,16 +88,24 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 final TextView tv_cursor = holder.v(R.id.tv_cursor);
 
                 TextView tv_notice = holder.v(R.id.item_notice);
+                tv_notice.setMovementMethod(LinkMovementMethod.getInstance());
+                tv_notice.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_next_show_agree_klg_protocl))
+                        .append(mActivity.getString(R.string.text__klg_protocl))
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void onClick(View widget) {
+                                startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
+                            }
 
-                String preStr = "继续即表示同意";
-                String targetStr = "《恐龙谷红包用户协议》 \n 24小时未领取的红包，将于2天内退款至你的恐龙谷钱包";
-                // \n 24小时未领取的红包，将于2天内退款至你的恐龙谷钱包
-                wrapSpan(tv_notice,preStr,targetStr,R.color.main_text_color,preStr.length(),preStr.length() + 11 , new Action1() {
-                    @Override
-                    public void call(Object o) {
-                        startIView(new X5WebUIView(Constants.WALLET_PROTOCOL));
-                    }
-                });
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+                                ds.setColor(mActivity.getResources().getColor(R.color.main_text_color));
+                                ds.setUnderlineText(false);
+                                ds.clearShadowLayer();
+                            }
+                        }).append("\n").append(mActivity.getString(R.string.text_refound_to_wallet_24hour))
+                        .create());
 
 
                 UI.setViewHeight(etContent, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
@@ -144,25 +153,9 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                                 @Override
                                 public void onSuccess(WalletAccount o) {
                                     if (o.hasPin()) {
-                                        performClick(etContent, etMoney);
+                                        performClick(etContent, etMoney,o);
                                     } else {
-                                        UIDialog.build()
-                                                .setDialogContent(mActivity.getString(R.string.text_no_set_pwd_please_set_pwd))
-                                                .setOkText(mActivity.getString(R.string.ok))
-                                                .setOkListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        // 先判断是否绑定手机
-                                                        LoginBean loginBean = UserCache.instance().getLoginBean();
-                                                        if (TextUtils.isEmpty(loginBean.getPhone())) {
-                                                            startIView(new BindPhoneUIView());
-                                                        } else {
-                                                            startIView(new BindAliPayTipUIView(false));
-                                                        }
-                                                    }
-                                                })
-                                                .setCancelText(mActivity.getString(R.string.text_set_pay_pwd))
-                                                .showDialog(mOtherILayout);
+                                        showPinDialog();
                                     }
                                 }
 
@@ -175,9 +168,9 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                         }
 
                         if (!WalletHelper.getInstance().getWalletAccount().hasPin()) {
-
+                            showPinDialog();
                         } else {
-                            performClick(etContent,etMoney);
+                            performClick(etContent,etMoney,WalletHelper.getInstance().getWalletAccount());
                         }
                     }
                 });
@@ -185,12 +178,33 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         }));
     }
 
-    private void performClick(EditText etContent, EditText etMoney) {
+    private void showPinDialog() {
+        UIDialog.build()
+                .setDialogContent(mActivity.getString(R.string.text_no_set_pwd_please_set_pwd))
+                .setOkText(mActivity.getString(R.string.ok))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 先判断是否绑定手机
+                        LoginBean loginBean = UserCache.instance().getLoginBean();
+                        if (TextUtils.isEmpty(loginBean.getPhone())) {
+                            startIView(new BindPhoneUIView());
+                        } else {
+                            startIView(new BindAliPayTipUIView(false));
+                        }
+                    }
+                })
+                .setCancelText(mActivity.getString(R.string.text_set_pay_pwd))
+                .showDialog(mOtherILayout);
+    }
+
+    private void performClick(EditText etContent, EditText etMoney,WalletAccount account) {
         String content = etContent.getText().toString();
         if ("".equals(content)) {
             content = etContent.getHint().toString();
         }
         PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(etMoney.getText().toString()) * 100,content,to_uid,null,0);
+        params.setBalance(account.getMoney());
         mOtherILayout.startIView(new PayUIDialog(new Action1() {
             @Override
             public void call(Object o) {

@@ -14,9 +14,8 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.hn.d.valley.R;
-import com.hn.d.valley.main.message.EmojiLayoutControl;
 
-import static com.hn.d.valley.main.message.EmojiLayoutControl.EMOJI_PER_PAGE;
+import static com.hn.d.valley.emoji.EmoticonView.EMOJI_PER_PAGE;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -31,7 +30,7 @@ import static com.hn.d.valley.main.message.EmojiLayoutControl.EMOJI_PER_PAGE;
  */
 public class EmojiRecyclerView extends RRecyclerView {
 
-    EmojiLayoutControl.OnEmojiSelectListener mOnEmojiSelectListener;
+    IEmoticonSelectedListener mOnEmojiSelectListener;
 
     private int startIndex;
 
@@ -44,7 +43,7 @@ public class EmojiRecyclerView extends RRecyclerView {
     public EmojiRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         setItemAnim(false);
-        setTag("GV7");
+        setTag("GV9");
     }
 
     @Override
@@ -53,7 +52,7 @@ public class EmojiRecyclerView extends RRecyclerView {
         setAdapter(new EmojiAdapter(getContext()));
     }
 
-    public void setOnEmojiSelectListener(EmojiLayoutControl.OnEmojiSelectListener onEmojiSelectListener) {
+    public void setOnEmojiSelectListener(IEmoticonSelectedListener onEmojiSelectListener) {
         mOnEmojiSelectListener = onEmojiSelectListener;
     }
 
@@ -110,11 +109,11 @@ public class EmojiRecyclerView extends RRecyclerView {
                 public void onClick(View v) {
                     if (mOnEmojiSelectListener != null) {
                         if (position == EMOJI_PER_PAGE || index >= count) {
-                            mOnEmojiSelectListener.onEmojiText("/DEL");
+                            mOnEmojiSelectListener.onEmojiSelected("/DEL");
                         } else {
                             String text = EmojiManager.getDisplayText(index);
                             if (!TextUtils.isEmpty(text)) {
-                                mOnEmojiSelectListener.onEmojiText(text);
+                                mOnEmojiSelectListener.onEmojiSelected(text);
                             }
                         }
                     }

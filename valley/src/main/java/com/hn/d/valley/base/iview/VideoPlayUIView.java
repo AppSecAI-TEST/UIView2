@@ -150,6 +150,7 @@ public class VideoPlayUIView extends UIIViewImpl {
     public void onViewLoad() {
         super.onViewLoad();
         fullscreen(true, true);
+        mRootView.setKeepScreenOn(true);
     }
 
     @Override
@@ -159,6 +160,7 @@ public class VideoPlayUIView extends UIIViewImpl {
             mMediaController.onDestroy();
         }
         fullscreen(false, true);
+        mRootView.setKeepScreenOn(false);
     }
 
     @Override

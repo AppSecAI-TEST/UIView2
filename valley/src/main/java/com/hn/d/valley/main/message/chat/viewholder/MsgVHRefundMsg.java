@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.main.message.attachment.ReceiptsNotice;
 import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
 import com.hn.d.valley.main.message.attachment.RefundMsg;
@@ -15,6 +16,7 @@ import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.main.wallet.BillUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.Locale;
 
@@ -56,9 +58,13 @@ public class MsgVHRefundMsg extends MsgViewHolderBase {
 
         imageView.setImageResource(R.drawable.hongbao_xiao_konglongjun);
         NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-
-        tv_pc_name.setText(String.format(Locale.CHINA,"由于 %s 您发给 %s 的红包 # %f 已退回给你的恐龙谷钱包",refundMsg.getReason()
-                ,userInfoCache.getUserDisplayNameEx(refundMsg.getExtend().getTo_uid() + ""),refundMsg.getMoney() / 100f));
+        if (refundMsg.getExtend().getTo_uid() == 0) {
+            tv_pc_name.setText(String.format(Locale.CHINA,context.getString(R.string.text_msg_notice_refund),refundMsg.getReason()
+                    , TeamDataCache.getInstance().getTeamName(refundMsg.getExtend().getTo_gid() + ""),refundMsg.getMoney() / 100f));
+        }else {
+            tv_pc_name.setText(String.format(Locale.CHINA,context.getString(R.string.text_msg_notice_refund),refundMsg.getReason()
+                    ,userInfoCache.getUserDisplayNameEx(refundMsg.getExtend().getTo_uid() + ""),refundMsg.getMoney() / 100f));
+        }
 
         contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
