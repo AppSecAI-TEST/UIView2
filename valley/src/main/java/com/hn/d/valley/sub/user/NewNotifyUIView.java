@@ -9,6 +9,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
@@ -65,7 +66,9 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        mRefreshLayout.setRefreshDirection(RefreshLayout.NONE);
+        mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);
+        mRefreshLayout.setTopView(new PlaceholderView(mActivity));
+        mRefreshLayout.setNotifyListener(false);
         mRExBaseAdapter.setEnableLoadMore(false);
     }
 

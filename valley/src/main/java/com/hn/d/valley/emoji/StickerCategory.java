@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 
 import com.angcyo.uiview.RApplication;
+import com.hn.d.valley.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -101,12 +102,14 @@ public class StickerCategory implements Serializable {
     }
 
     public List<StickerItem> loadStickerData() {
+        String[] meanArray = RApplication.getApp().getResources().getStringArray(R.array.gifsticker);
         List<StickerItem> stickers = new ArrayList<>();
         AssetManager assetManager = RApplication.getApp().getResources().getAssets();
         try {
+            int index = 0;
             String[] files = assetManager.list("sticker/" + name);
             for (String file : files) {
-                stickers.add(new StickerItem(name, file));
+                stickers.add(new StickerItem(name, file,meanArray[index++]));
             }
         } catch (IOException e) {
             e.printStackTrace();

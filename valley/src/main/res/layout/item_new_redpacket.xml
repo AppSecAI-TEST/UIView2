@@ -105,7 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_notice"
-        android:layout_marginTop="@dimen/base_120dpi"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
         android:padding="@dimen/base_xhdpi_15">
 
         <Button

@@ -1,10 +1,14 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
+import android.support.v4.content.ContextCompat;
+import android.widget.TextView;
+
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
-import com.hn.d.valley.main.message.attachment.GrabredPacket;
 import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
@@ -21,7 +25,7 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
 
     @Override
     protected int getContentResId() {
-        return 0;
+        return R.layout.item_redpacket_grabedmsg;
     }
 
     @Override
@@ -31,6 +35,9 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
 
     @Override
     protected void bindContentView() {
+
+        TextView tv_hongbao_notice = (TextView) findViewById(R.id.tv_hongbao_notice);
+
         CustomAttachment attachment = (CustomAttachment) message.getAttachment();
         if (attachment == null) {
             return;
@@ -40,11 +47,23 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
         RedPacketGrabedMsg redPacket = pcAttachment.getGrabedMsg();
 
         NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-        if (UserCache.getUserAccount().equals(redPacket.getOwner() + "")) {
-            msgTimeView.setText(String.format("%s 领取了你的红包",userInfoCache.getUserDisplayName(redPacket.getGraber() + "")));
+        if (redPacket.getOwner() == (redPacket.getGraber())) {
+            //自己抢到了红包
+            tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(String.format(context.getString(R.string.text_get_your),userInfoCache.getUserDisplayName(redPacket.getGraber() + "")))
+                    .append(context.getString(R.string.text_redpacket))
+                    .setForegroundColor(ContextCompat.getColor(context,R.color.base_red))
+                    .create());
+            return;
+        } else if (UserCache.getUserAccount().equals(redPacket.getOwner() + "")) {
+            tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(String.format(context.getString(R.string.text_get_your),userInfoCache.getUserDisplayName(redPacket.getGraber() + "")))
+                    .append(context.getString(R.string.text_redpacket))
+                    .setForegroundColor(ContextCompat.getColor(context,R.color.base_red))
+                    .create());
             return;
         }
-        msgTimeView.setText(String.format("你已经领取了 %s 的红包",userInfoCache.getUserDisplayName(redPacket.getOwner() + "")));
+        tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(String.format(context.getString(R.string.text_you_already_get),userInfoCache.getUserDisplayName(redPacket.getOwner() + "")))
+                .append(context.getString(R.string.text_redpacket)).setForegroundColor(ContextCompat.getColor(context,R.color.base_red))
+                .create());
 
     }
 

@@ -24,7 +24,7 @@
             android:visibility="gone"
             app:roundAsCircle="false"/>
 
-        <TextView
+        <com.hn.d.valley.widget.HnExTextView
             android:id="@+id/content"
             style="@style/SingleDarkTextStyle"
             android:layout_width="@dimen/base_50dpi"
@@ -57,7 +57,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <com.hn.d.valley.widget.HnExTextView
                 android:id="@+id/msg"
                 style="@style/SingleMainTextStyle"
                 android:layout_width="wrap_content"

@@ -45,7 +45,6 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
     }
 
     @Override
-
     protected void inflateContentView() {
 
     }

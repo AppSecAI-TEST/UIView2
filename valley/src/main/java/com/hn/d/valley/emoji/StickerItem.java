@@ -3,10 +3,16 @@ package com.hn.d.valley.emoji;
 public class StickerItem {
     private String category;//类别名
     private String name;
+    private String meaning;
 
-    public StickerItem(String category, String name) {
+    public StickerItem(String category, String name,String meaning) {
         this.category = category;
         this.name = name;
+        this.meaning = meaning;
+    }
+
+    public String getMeaning() {
+        return meaning;
     }
 
     public String getIdentifier() {

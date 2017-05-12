@@ -533,6 +533,7 @@
     <string name="pause">暂停</string>
     <string name="delete_music_format">从本地目录中删除 %1$s 吗?</string>
     <string name="record_voice_tip">(录音时, 将会自动播放配乐)</string>
+    <string name="recording_voice_tip">(配乐播放中...)</string>
     <string name="text_no_setting_pwd">未设置支付密码！</string>
     <string name="text_no_set_pwd_please_set_pwd">未设置支付密码,请设置支付密码！</string>
     <string name="text_balance_not_enough">余额不足！</string>
@@ -555,6 +556,7 @@
     <string name="tv_send_waite_receive">红包已发给 %s，等待对方领取</string>
     <string name="text_have_save_klg_wallet">已存入恐龙谷钱包</string>
     <string name="text_klg_rp">恐龙谷红包</string>
+    <string name="text_klg_wallet">恐龙谷钱包</string>
     <string name="text_withdrawal_msg">提现金额: ￥%1$.2f元已到帐至支付宝(%2$s)</string>
     <string name="text_pwd_error_freeze">密码输错过错次，已冻结，离解冻还剩 %1$d 秒</string>
     <string name="text_pwd_error_reaming">密码错误，剩余可尝试次数 %d</string>
@@ -562,10 +564,16 @@
     <string name="play_tip">点击播放</string>
     <string name="re_record">重录</string>
     <string name="text_grabed_count_per_all">已领取 %1$d / %2$d个</string>
-    <string name="text_all_amout">总金额 %.2f 元</string>
+    <string name="text_all_amout">总金额 %1$.2f 元</string>
     <string name="text_already_save">已存入</string>
     <string name="text_pay_fail">支付失败</string>
     <string name="text_pay_success">支付成功</string>
+    <string name="text_alipay_account">支付宝账号: %1$s</string>
+    <string name="text_add">添加</string>
+    <string name="text_publish_group_annonce">发布群公告</string>
+    <string name="text_get_your">%1$s 领取了你的</string>
+    <string name="text_redpacket">红包</string>
+    <string name="text_you_already_get">你已经领取了 %1$s 的</string>
     <string name="call">呼叫</string>
     <string name="forward_succeed">转发成功</string>
 </resources>

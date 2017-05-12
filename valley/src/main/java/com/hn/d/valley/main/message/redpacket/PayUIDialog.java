@@ -190,7 +190,8 @@ public class PayUIDialog extends UIIDialogImpl {
     private void sendRedPacket() {
         String type = checkType();
         RRetrofit.create(RedPacketService.class)
-                .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num, "money:" + (int)params.money, "content:" + params.content, type, "random:" + params.random))
+                .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num,
+                        "money:" + (int)params.money, "content:" + params.content, type, "random:" + params.random))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override

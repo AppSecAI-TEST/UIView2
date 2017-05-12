@@ -72,7 +72,7 @@ public class PasscodeView extends ViewGroup {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         mDigitRadius = array.getDimensionPixelSize(R.styleable.PasscodeView_digitRadius,
                 (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16, metrics));
-        mOuterStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, metrics);
+        mOuterStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, metrics);
         mInnerStrokeWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, metrics);
         mDigitInnerRadius = mDigitRadius - ((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, metrics));
         mDigitWidth = (mDigitRadius + mOuterStrokeWidth) * 2;

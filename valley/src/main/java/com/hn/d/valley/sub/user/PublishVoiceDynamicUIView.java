@@ -126,6 +126,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     protected void recordStop() {
         mViewHolder.v(R.id.music_root_layout).setEnabled(true);
         mHnRecTextView.setRec(false);
+        mViewHolder.tv(R.id.voice_tip_view).setText(R.string.record_voice_tip);
         mRippleBackground.stopRippleAnimation();
         mHnRecordTimeView.stopRecord();
         mViewHolder.v(R.id.surfaceView).postInvalidate();
@@ -135,6 +136,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     protected void recordStart() {
         mViewHolder.v(R.id.music_root_layout).setEnabled(false);
         mHnRecTextView.setRec(true);
+        mViewHolder.tv(R.id.voice_tip_view).setText(R.string.recording_voice_tip);
         mRippleBackground.startRippleAnimation();
         mHnRecordTimeView.startRecord(new HnRecordTimeView.OnMaxTimeListener() {
             @Override

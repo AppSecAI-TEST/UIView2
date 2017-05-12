@@ -66,4 +66,32 @@
         <item>Z</item>
     </string-array>
 
+    <string-array name="gifsticker">
+        <item>萌萌哒</item>
+        <item>鄙视</item>
+        <item>呵呵</item>
+        <item>心水</item>
+        <item>叹气</item>
+        <item>怒火</item>
+        <item>发呆</item>
+        <item>奋斗</item>
+        <item>可怜</item>
+        <item>再见</item>
+        <item>吃饭</item>
+        <item>坏笑</item>
+        <item>晕</item>
+        <item>害羞</item>
+        <item>闭嘴</item>
+        <item>疑问</item>
+        <item>烧香</item>
+        <item>色</item>
+        <item>酷</item>
+        <item>拍你一脸</item>
+        <item>泪流满面</item>
+        <item>流汗</item>
+        <item>惊恐</item>
+        <item>委屈</item>
+    </string-array>
+
+
 </resources>

@@ -102,7 +102,7 @@ public class StickerRecyclerView extends RRecyclerView {
                 }
             });
 
-            descLabel.setText(sticker.getName());
+            descLabel.setText(sticker.getMeaning());
 
 //            String path = "file:///android_asset/assetName";
 //            Glide.with(mContext).load(R.drawable.default_avatar).into(thumb_image);

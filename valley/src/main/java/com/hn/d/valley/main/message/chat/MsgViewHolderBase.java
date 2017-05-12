@@ -54,6 +54,7 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
     protected LinearLayout itemRootLayout;
     protected RelativeLayout itemMsgChatRootLayout;
     protected FrameLayout contentContainer;
+    protected LinearLayout msgNameLayout;
 
     protected TextView nameTextView;
 
@@ -117,6 +118,7 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
         itemRootLayout = findViewById(R.id.item_root_layout);
         itemMsgChatRootLayout = findViewById(R.id.item_msg_chat_root_layout);
         contentContainer = findViewById(R.id.msg_content_layout);
+        msgNameLayout = findViewById(R.id.msg_name_layout);
 
         // 这里只要inflate出来后加入一次即可
         if(contentContainer.getChildCount() == 0) {
@@ -149,12 +151,12 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
             nameTextView.setVisibility(View.GONE);
         }
 
-
         if (isMiddleItem()) {
-            itemRootLayout.setVisibility(View.GONE);
-            setGravity(contentContainer, Gravity.CENTER);
+            nameTextView.setVisibility(View.GONE);
+            msgIcoView.setVisibility(View.GONE);
+            itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            itemRootLayout.setGravity(Gravity.CENTER_HORIZONTAL);
         } else {
-
             if (isReceivedMessage()) {
                 //收到的消息
                 itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
@@ -183,7 +185,6 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
                 }
                 avatar = UserCache.instance().getAvatar();
             }
-
         }
 
         itemRootLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -203,8 +204,7 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
         if (position == 0) {
             msgTimeView.setVisibility(View.VISIBLE);
         } else {
-//            final IMMessage preMessage = mAllDatas.get(position - 1);
-            IMMessage preMessage = message;
+            final IMMessage preMessage = getMsgAdapter().getAllDatas().get(position - 1);
             msgTimeView.setVisibility(isMiddleItem() || needShowTime(preMessage.getTime(), message.getTime()) ? View.VISIBLE : View.GONE);
         }
 
@@ -219,24 +219,19 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
             }
         });
 
-
         bindContentView();
-
     }
 
     protected void setLongClickListener() {
-
         contentContainer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-
                 if (!onItemLongClick()) {
                     if (getMsgAdapter().getEventListener() != null) {
                         getMsgAdapter().getEventListener().onViewHolderLongClick(contentContainer, view, message);
                         return true;
                     }
                 }
-
                 return false;
             }
         });

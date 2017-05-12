@@ -46,7 +46,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
     protected TitleBarPattern getTitleBar() {
 
         ArrayList<TitleBarPattern.TitleBarItem> titleBarItems = new ArrayList<>();
-        titleBarItems.add(TitleBarPattern.TitleBarItem.build().setText("添加").setVisibility(View.GONE).setListener(new View.OnClickListener() {
+        titleBarItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_add)).setVisibility(View.GONE).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startIView(InputUIView.build(inputConfigCallback));
@@ -159,7 +159,7 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
     private InputUIView.InputConfigCallback inputConfigCallback = new InputUIView.InputConfigCallback() {
         @Override
         public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
-            return super.initTitleBar(titleBarPattern).setTitleString("发布群公告")
+            return super.initTitleBar(titleBarPattern).setTitleString(mActivity.getString(R.string.text_publish_group_annonce))
                     .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.finish),
                             new View.OnClickListener() {
                                 @Override

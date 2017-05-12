@@ -77,7 +77,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 infoLayout.setItemText(mActivity.getString(R.string.text_receive_account));
 
                 if (WalletHelper.getInstance().getWalletAccount().hasAlipay()) {
-                    infoLayout.setItemDarkText(String.format("支付宝账号: %s",WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0]));
+                    infoLayout.setItemDarkText(String.format(mActivity.getString(R.string.text_alipay_account),WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0]));
                 } else {
                     infoLayout.setItemDarkText(mActivity.getString(R.string.text_please_bind_alipay));
                 }

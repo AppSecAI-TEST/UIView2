@@ -55,7 +55,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
     private int rp_type = 1; // 默认拼手气
 
     TextView tv_image;
-    CheckBox cb_switch;
+    TextView cb_switch;
 
     public NewGroupRedPacketUIView(String to_gid,int groupNum) {
        this.to_gid = to_gid;

@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message.session;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
@@ -46,6 +47,7 @@ import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.widget.HnExTextView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -102,8 +104,6 @@ public class RecentContactsControl {
     RecentContactsAdapter mRecentContactsAdapter;
     Context mContext;
     Action1<RecentContact> itemChatAction;
-    Action1<RecentContact> itemAddContactsAction;
-    Action1<RecentContact> itemCommentAction;
     Action0 searchAction;
 
     // data
@@ -118,7 +118,7 @@ public class RecentContactsControl {
         @Override
         public void onEvent(IMMessage imMessage) {
 
-            L.i(TAG,"statusObserver " + imMessage.getContent());
+            L.i(TAG, "statusObserver " + imMessage.getContent());
 
             //消息状态发生了改变
             List<RecentContact> allDatas = mRecentContactsAdapter.getAllDatas();
@@ -213,7 +213,7 @@ public class RecentContactsControl {
     Observer<List<RecentContact>> messageObserver = new Observer<List<RecentContact>>() {
         @Override
         public void onEvent(List<RecentContact> recentContacts) {
-            L.i(TAG,"messageObserver recentContacts " + recentContacts.get(0).getContent());
+            L.i(TAG, "messageObserver recentContacts " + recentContacts.get(0).getContent());
             onRecentContactChanged(recentContacts);
         }
     };
@@ -223,7 +223,7 @@ public class RecentContactsControl {
         @Override
         public void onEvent(List<IMMessage> imMessages) {
 
-            L.i(TAG,"messageReceiverObserver onEvent " + imMessages.get(0).getContent());
+            L.i(TAG, "messageReceiverObserver onEvent " + imMessages.get(0).getContent());
 
             if (imMessages != null) {
                 for (IMMessage imMessage : imMessages) {
@@ -341,7 +341,9 @@ public class RecentContactsControl {
         return Constant.comment.equalsIgnoreCase(recent.getContactId());
     }
 
-
+    private static boolean isKLJ(RecentContact recent) {
+        return Constant.klj.equalsIgnoreCase(recent.getContactId());
+    }
 
 
     private int getTopItemCount() {
@@ -355,14 +357,6 @@ public class RecentContactsControl {
 
     public void setItemChatAction(Action1<RecentContact> itemChatAction) {
         this.itemChatAction = itemChatAction;
-    }
-
-    public void setItemAddContactsAction(Action1<RecentContact> itemAddContactsAction) {
-        this.itemAddContactsAction = itemAddContactsAction;
-    }
-
-    public void setItemCommentAction(Action1<RecentContact> itemCommentAction) {
-        this.itemCommentAction = itemCommentAction;
     }
 
     /**
@@ -451,12 +445,12 @@ public class RecentContactsControl {
                             if (tag == MENU_ADD_TOP) {
                                 RNim.addRecentContactTag(recentContact, IS_TOP);
 
-                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(),recentContact.getSessionType(),1);
+                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(), recentContact.getSessionType(), 1);
 
                             } else if (tag == MENU_RM_TOP) {
                                 RNim.removeRecentContactTag(recentContact, IS_TOP);
 
-                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(),recentContact.getSessionType(),0);
+                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(), recentContact.getSessionType(), 0);
 
                             }
 
@@ -480,18 +474,18 @@ public class RecentContactsControl {
                 public int compare(RecentContact o1, RecentContact o2) {
 
                     if (SessionSettingDelegate.getInstance().checkTop(o1.getContactId())) {
-                        RNim.addRecentContactTag(o1,IS_TOP);
+                        RNim.addRecentContactTag(o1, IS_TOP);
                     } else {
-                        if(RNim.isRecentContactTag(o1,IS_TOP)) {
-                            RNim.removeRecentContactTag(o1,IS_TOP);
+                        if (RNim.isRecentContactTag(o1, IS_TOP)) {
+                            RNim.removeRecentContactTag(o1, IS_TOP);
                         }
                     }
 
                     if (SessionSettingDelegate.getInstance().checkTop(o2.getContactId())) {
-                        RNim.addRecentContactTag(o2,IS_TOP);
+                        RNim.addRecentContactTag(o2, IS_TOP);
                     } else {
-                        if (RNim.isRecentContactTag(o2,IS_TOP)) {
-                            RNim.removeRecentContactTag(o2,IS_TOP);
+                        if (RNim.isRecentContactTag(o2, IS_TOP)) {
+                            RNim.removeRecentContactTag(o2, IS_TOP);
                         }
                     }
 
@@ -539,7 +533,7 @@ public class RecentContactsControl {
                     RRealm.exe(new Realm.Transaction() {
                         @Override
                         public void execute(Realm realm) {
-                            L.i(TAG,"setNew_notification true");
+                            L.i(TAG, "setNew_notification true");
                             userInfoBean.setNew_notification(true);
                         }
                     });
@@ -658,8 +652,10 @@ public class RecentContactsControl {
 //            }
 
             String fromId = bean.getFromAccount();
+            HnExTextView msgContentView = holder.v(R.id.msg_content_view);
+            msgContentView.setImageSpanTextColor(ContextCompat.getColor(mContext, R.color.main_text_color_dark));
             if (SessionTypeEnum.Team == bean.getSessionType()
-                    &&!TextUtils.isEmpty(fromId)
+                    && !TextUtils.isEmpty(fromId)
                     && !fromId.equals(UserCache.getUserAccount())
                     && !(bean.getAttachment() instanceof NotificationAttachment)) {
                 String tid = bean.getContactId();
@@ -675,12 +671,12 @@ public class RecentContactsControl {
                     }
                 }
 //                MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), content);
-                MoonUtil.identifyRecentVHFaceExpressionAndTags(mContext, holder.tv(R.id.msg_content_view)
+                MoonUtil.identifyRecentVHFaceExpressionAndTags(mContext, msgContentView
                         , content, ImageSpan.ALIGN_BOTTOM, 0.45f);
 
             } else {
                 //最后一条消息内容
-                MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), getShowContent(bean));
+                MoonUtil.show(mContext, msgContentView, getShowContent(bean));
             }
 
             //消息发送状态
@@ -711,18 +707,9 @@ public class RecentContactsControl {
                     NIMClient.getService(MsgService.class).clearUnreadCount(bean.getContactId(),
                             bean.getSessionType());
                     notifyItemChanged(position);
-                    if (isAddContact(bean)) {
-                        if (itemAddContactsAction != null) {
-                            itemAddContactsAction.call(bean);
-                        }
-                    } else if (isComment(bean)) {
-                        if (itemCommentAction != null) {
-                            itemCommentAction.call(bean);
-                        }
-                    } else {
-                        if (itemChatAction != null) {
-                            itemChatAction.call(bean);
-                        }
+
+                    if (itemChatAction != null) {
+                        itemChatAction.call(bean);
                     }
                 }
             });

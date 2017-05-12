@@ -52,7 +52,7 @@
                 android:id="@+id/base_dialog_content_view"
                 style="@style/BaseDialogTextStyle"
                 android:layout_height="60dp"
-                android:text="$ 200"
+                tools:text="$ 200"
                 android:textColor="@color/main_text_color"
                 android:textSize="26sp" />
 

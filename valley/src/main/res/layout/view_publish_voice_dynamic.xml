@@ -93,6 +93,7 @@
                         tools:text="告白气球"/>
 
                     <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/voice_tip_view"
                         style="@style/DarkTextStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -142,6 +143,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:minWidth="@dimen/base_xxxhdpi"
+                    android:padding="@dimen/base_ldpi"
                     android:text="50"/>
             </LinearLayout>
 

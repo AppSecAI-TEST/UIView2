@@ -214,7 +214,7 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                     tv_red_to_wallet.setVisibility(View.VISIBLE);
                     tv_red_to_wallet.setMovementMethod(LinkMovementMethod.getInstance());
                     tv_red_to_wallet.setText(SpannableStringUtils.getBuilder(getString(R.string.text_already_save))
-                            .append(getString(R.string.text_klg_rp)).setClickSpan(new ClickableSpan() {
+                            .append(getString(R.string.text_klg_wallet)).setClickSpan(new ClickableSpan() {
                                 @Override
                                 public void onClick(View widget) {
                                     startIView(new MyWalletUIView());

@@ -83,6 +83,7 @@
     <LinearLayout
         android:id="@+id/item_switch"
         android:layout_below="@id/item_input"
+        android:background="@drawable/base_bg2_selector"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_marginLeft="@dimen/base_xhdpi_15"
@@ -90,14 +91,13 @@
         android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_width="match_parent"
         android:layout_height="42dp">
-        <CheckBox
+        <TextView
             android:id="@+id/cb_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/nav_text_size"
-            android:button="@null"
             android:textColor="@color/main_text_color"
-            android:text="@string/text_redpacket_switch_desc"/>
+            tools:text="@string/text_redpacket_switch_desc"/>
     </LinearLayout>
 
     <LinearLayout
@@ -201,7 +201,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_notice"
-        android:layout_marginTop="@dimen/base_90dpi"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
         android:padding="@dimen/base_xhdpi_15">
 
         <com.hn.d.valley.widget.HnButton

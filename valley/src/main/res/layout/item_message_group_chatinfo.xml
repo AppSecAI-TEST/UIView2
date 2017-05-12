@@ -21,6 +21,7 @@
         android:id="@+id/layout_wrap_member_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/base_bg_selector"
         android:layout_marginBottom="@dimen/base_xhdpi"
         android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_marginTop="@dimen/base_xhdpi"

@@ -51,7 +51,7 @@
                     android:layout_marginEnd="@dimen/base_ldpi"
                     android:scaleType="centerInside"/>
 
-                <TextView
+                <com.hn.d.valley.widget.HnExTextView
                     android:id="@+id/msg_content_view"
                     style="@style/SingleDarkTextStyle"/>
 

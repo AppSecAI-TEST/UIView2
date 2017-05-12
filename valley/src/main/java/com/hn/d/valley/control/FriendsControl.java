@@ -41,6 +41,7 @@ import com.hn.d.valley.main.friend.SystemPushItem;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
+import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.ContactService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -122,7 +123,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 SystemPushItem item = new SystemPushItem(bean, new Action1<FriendBean>() {
                     @Override
                     public void call(FriendBean o) {
-                        ChatUIView2.start(getOtherLayout(),o.getUid(),SessionTypeEnum.P2P);
+                        SessionHelper.startSession(getOtherLayout(),o.getUid(),SessionTypeEnum.P2P);
                     }
                 });
                 List<AbsContactItem> items = FuncItem.provide();
@@ -379,7 +380,8 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         @Override
         public void onItemOffsets(Rect outRect, int position) {
             super.onItemOffsets(outRect, position);
-            outRect.bottom = ScreenUtil.px2dip(1);
+//            outRect.bottom = ScreenUtil.px2dip(1);
+            outRect.bottom = mContext.getResources().getDimensionPixelSize(R.dimen.base_line);
         }
 
         @Override
@@ -387,7 +389,8 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             super.onItemDraw(canvas, view, position);
             ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(mContext,R.color.chat_bg_color));
             int left = ScreenUtil.dip2px(55);
-            colorDrawable.setBounds(view.getLeft() + left,view.getBottom(),view.getRight() - ScreenUtil.dip2px(10),view.getBottom() + ScreenUtil.dip2px(1));
+            int dividerSize = mContext.getResources().getDimensionPixelSize(R.dimen.base_line);
+            colorDrawable.setBounds(view.getLeft() + left,view.getBottom(),view.getRight() - ScreenUtil.dip2px(10),view.getBottom() + dividerSize /*ScreenUtil.dip2px(1)*/);
             colorDrawable.draw(canvas);
 
         }

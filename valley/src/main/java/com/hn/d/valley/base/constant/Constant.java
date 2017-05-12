@@ -11,106 +11,121 @@ package com.hn.d.valley.base.constant;
  * 修改备注：
  * Version: 1.0.0
  */
-public class Constant {
+public interface Constant {
 
     /**
      * 保存默认的语言设置
      */
-    public static final String LANG = "lang";
+    String LANG = "lang";
 
     /**
      * 登录界面信息
      */
-    public static final String LOGIN_INFO = "login_info";
+    String LOGIN_INFO = "login_info";
 
     /**
      * 最后一次用户登录的手机号码
      */
-    public static final String USER_LOGIN_PHONE = "user_phone";
+    String USER_LOGIN_PHONE = "user_phone";
 
     /**
      * 用户登录信息
      */
-    public static final String USER_ACCOUNT = "user_account";
-    public static final String USER_TOKEN = "user_token";
-    public static final String USER_AVATAR = "user_avatar";
+    String USER_ACCOUNT = "user_account";
+    String USER_TOKEN = "user_token";
+    String USER_AVATAR = "user_avatar";
 
     /**
      * 抖动时间, 多虑时间之内的事件
      */
-    public static final long DEBOUNCE_TIME = 100;
-    public static final long DEBOUNCE_TIME_300 = 300;
-    public static final long DEBOUNCE_TIME_700 = 700;
+    long DEBOUNCE_TIME = 100;
+    long DEBOUNCE_TIME_300 = 300;
+    long DEBOUNCE_TIME_700 = 700;
 
     /**
      * 极光注册返回的id
      */
-    public static final String JPUSH_ID = "jpush_id";
+    String JPUSH_ID = "jpush_id";
 
     /**
      * 需要更新联系人列表
      */
-    public static final String TAG_UPDATE_RECENT_CONTACTS = "tag_update_recent_contacts";
+    String TAG_UPDATE_RECENT_CONTACTS = "tag_update_recent_contacts";
 
     /**
      * 需要更新圈子
      */
-    public static final String TAG_UPDATE_CIRCLE = "tag_update_circle";
+    String TAG_UPDATE_CIRCLE = "tag_update_circle";
     /**
      * 需要更新未读消息数量
      */
-    public static final String TAG_NO_READ_NUM = "tag_no_read_num";
-    public static final int POS_HOME = 1;//恐龙谷
-    public static final int POS_FOUND = 2;//发现
-    public static final int POS_CONNECT = 4;//联系人
-    public static final int POS_MESSAGE = 0;//消息
-    public static final int POS_ME = 3;//我
+    String TAG_NO_READ_NUM = "tag_no_read_num";
+    int POS_HOME = 1;//恐龙谷
+    int POS_FOUND = 2;//发现
+    int POS_CONNECT = 4;//联系人
+    int POS_MESSAGE = 0;//消息
+    int POS_ME = 3;//我
 
     /**
      * Amap
      */
-    public static final int DEFAULT_ZOOM_LEVEL = 15;
+    int DEFAULT_ZOOM_LEVEL = 15;
 
     /**
      * 接口默认一页返回多少条数据
      */
-    public static final int DEFAULT_PAGE_DATA_COUNT = 20;
+    int DEFAULT_PAGE_DATA_COUNT = 20;
 
     /**
      * 保存排序的标签
      */
-    public static final String MY_TAGS = "my_tags";
+    String MY_TAGS = "my_tags";
     /**
      * 第一次设置标签, 返回所有的标签都是自己的
      */
-    public static final String MY_TAGS_FIRST = "my_tags_first";
+    String MY_TAGS_FIRST = "my_tags_first";
     /**
      * 键盘的高度
      */
-    public static String KEYBOARD_HEIGHT = "keyboard_height";
+     String KEYBOARD_HEIGHT = "keyboard_height";
 
     /**
      * 关注了对方且不是好友，发送添加为联系人请求给对方
      */
-    public static String add_contact = "15";
+     String add_contact = "15";
     /**
      * 单方面关注时 发送给对方消息
      */
-    public static String attenion = "15";
+     String attenion = "15";
     /**
      * 点赞【动态/评论、回复】
      */
-    public static String like = "14";
+     String like = "14";
     /**
      * 评论
      */
-    public static String comment = "14";
+     String comment = "14";
     /**
      * 回复
      */
-    public static String reply = "14";
+     String reply = "14";
     /**
      * 转发
      */
-    public static String forward = "14";
+     String forward = "14";
+
+    /**
+     * 恐龙君消息
+     */
+     String klj = "13";
+
+    /**
+     * 钱包消息
+     */
+    String wallet = "16";
+
+    /**
+     * 热点资讯
+     */
+    String hot_news = "17";
 }

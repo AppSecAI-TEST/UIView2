@@ -1,7 +1,6 @@
 package com.hn.d.valley.main.message;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -22,9 +21,7 @@ import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
-import com.hn.d.valley.sub.user.NewFriend2UIView;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
-import com.hn.d.valley.widget.MenuPopUpWindow;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 import com.netease.nimlib.sdk.NIMClient;
@@ -75,6 +72,27 @@ public class MessageUIView extends BaseUIView {
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
+
+                        switch (recentContact.getContactId()) {
+                            case Constant.add_contact:
+                                //打开新朋友界面
+                                mOtherILayout.startIView(new FriendNewUIView2());
+                                return;
+                            case Constant.comment:
+                                //打开动态通知页面
+                                mOtherILayout.startIView(new NewNotifyUIView(recentContact.getContactId(), recentContact.getSessionType()));
+                                return;
+                            case Constant.klj:
+                                SessionHelper.startSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                                return;
+                            case Constant.wallet:
+                                SessionHelper.startSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                                return;
+                            case Constant.hot_news:
+                                SessionHelper.startSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                                return;
+                        }
+
                         if (recentContact.getSessionType() == SessionTypeEnum.Team) {
                             SessionHelper.startTeamSession(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
                             return;
@@ -90,23 +108,6 @@ public class MessageUIView extends BaseUIView {
                         startSearch();
                     }
                 });
-
-        mRecentContactsControl.setItemAddContactsAction(new Action1<RecentContact>() {
-            @Override
-            public void call(RecentContact contact) {
-                //打开新朋友界面
-                mOtherILayout.startIView(new FriendNewUIView2());
-            }
-        });
-
-        mRecentContactsControl.setItemCommentAction(new Action1<RecentContact>() {
-            @Override
-            public void call(RecentContact contact) {
-                //打开动态通知页面
-                mOtherILayout.startIView(new NewNotifyUIView(contact.getContactId(), contact.getSessionType()));
-            }
-        });
-
     }
 
     @Override

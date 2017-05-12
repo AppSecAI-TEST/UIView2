@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/msg_item_forward_audio_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+
+    tools:background="@android:color/darker_gray">
+
+    <TextView
+        android:id="@+id/tv_msg_forward_audio"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/base_ldpi"
+        android:paddingStart="@dimen/base_ldpi"
+        tools:text="@string/about_me"
+        />
+
+    <include
+        layout="@layout/msg_audio_layout"
+        />
+
+
+</LinearLayout>
