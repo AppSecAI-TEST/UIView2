@@ -162,7 +162,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
 
                             @Override
                             public void onRecordStop(String bgmPath, String filePath, long time) {
-                                L.e("call: onRecordStop([bgmPath, filePath, time])-> " + filePath + " " + Math.ceil(time / 1000f));
+                                L.e("call: onRecordStop([bgmPath, filePath, time])-> " + filePath + " " + Math.floor(time / 1000f));
                                 //Record.playFile(filePath);
                                 replaceIView(new PublishVoiceNextDynamicUIView(filePath, time, mMusicRealm).setPublishAction(mPublishAction));
                             }
