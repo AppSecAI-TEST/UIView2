@@ -23,20 +23,25 @@ public class HnPlayView extends AppCompatImageView {
 
     public HnPlayView(Context context) {
         super(context);
+        initView();
     }
 
     public HnPlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView();
     }
 
     public HnPlayView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView();
     }
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    private void initView() {
         setPlaying(false);
+    }
+
+    public boolean isPlaying() {
+        return playing;
     }
 
     public void setPlaying(boolean play) {
@@ -46,9 +51,5 @@ public class HnPlayView extends AppCompatImageView {
         } else {
             setImageResource(R.drawable.icon_play);
         }
-    }
-
-    public boolean isPlaying() {
-        return playing;
     }
 }

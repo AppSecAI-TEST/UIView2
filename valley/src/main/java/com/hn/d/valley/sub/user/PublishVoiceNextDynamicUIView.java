@@ -9,16 +9,21 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.RecordTimeView;
+import com.example.m3b.Audio;
+import com.example.m3b.audiocachedemo.Player;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.oss.OssControl;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.bean.realm.MusicRealm;
 import com.hn.d.valley.control.MusicControl;
+import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.widget.HnBigPlayView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,14 +45,17 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
 
     String filePath;
     long recordTime;
-
-    private String mImagePath = "", mImageUrl = "";//选择的图片, 上传之后的地址
-
+    Action0 mPublishAction;
+    private String mImagePath = ""/*, mImageUrl = ""*/;//选择的图片, 上传之后的地址
     private MusicRealm mMusicRealm;
     private OssControl mOssControl;
+    private RecordTimeView mTimeView;
+    private Player.OnPlayListener mOnPlayListener;
 
     public PublishVoiceNextDynamicUIView(String filePath, long recordTime, MusicRealm musicRealm) {
-        this.filePath = filePath;
+        final String newName = filePath + OssHelper.createVoiceFileName((int) (recordTime / 1000));
+        new File(filePath).renameTo(new File(newName));
+        this.filePath = newName;
         this.recordTime = recordTime;
         mMusicRealm = musicRealm;
     }
@@ -56,7 +64,30 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
                 .setTitleString(mActivity, R.string.publish_voice)
-                .setShowBackImageView(true);
+                .setShowBackImageView(true)
+                .addRightItem(TitleBarPattern.buildText(getString(R.string.publish), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onPublish();
+                    }
+                }));
+    }
+
+    public PublishVoiceNextDynamicUIView setPublishAction(Action0 publishAction) {
+        mPublishAction = publishAction;
+        return this;
+    }
+
+    private void onPublish() {
+        PublishControl.PublishTask publishTask = new PublishControl.PublishTask(
+                new PublishDynamicUIView.VoiceStatusInfo(mImagePath, filePath));
+        ;
+        PublishControl.instance().addTask(publishTask);
+
+        finishIView();
+        if (mPublishAction != null) {
+            mPublishAction.call();
+        }
     }
 
     @Override
@@ -72,13 +103,15 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     @Override
     public void onViewUnload() {
         super.onViewUnload();
+        Audio.instance().removeOnPlayListener(mOnPlayListener);
+        Audio.instance().stop();
     }
 
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        final RecordTimeView timeView = mViewHolder.v(R.id.time_view);
-        timeView.setSumTime((long) Math.ceil(recordTime / 1000f));
+        mTimeView = mViewHolder.v(R.id.time_view);
+        mTimeView.setSumTime((long) Math.ceil(recordTime / 1000f));
 
         final HnBigPlayView playView = mViewHolder.v(R.id.play_view);
         playView.setOnClickListener(new View.OnClickListener() {
@@ -87,18 +120,34 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                 if (playView.isPlaying()) {
                     playView.setPlaying(false);
                     MusicControl.pausePlay(filePath);
+                    mTimeView.stopRecord(false);
                 } else {
                     playView.setPlaying(true);
                     MusicControl.play(filePath);
-                    timeView.setTime(100);
+                    mTimeView.setTime(0);
+                    mTimeView.startRecord(null);
                 }
             }
         });
 
+
+        mOnPlayListener = new Player.OnPlayListener() {
+            @Override
+            public void onPlay(String url, boolean isPause) {
+            }
+
+            @Override
+            public void onPlayEnd(String url) {
+                playView.setPlaying(false);
+                mTimeView.stopRecord(false);
+            }
+        };
+        Audio.instance().addOnPlayListener(mOnPlayListener);
+
         mViewHolder.v(R.id.re_record_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceIView(new PublishVoiceDynamicUIView(mMusicRealm));
+                replaceIView(new PublishVoiceDynamicUIView(mMusicRealm).setPublishAction(mPublishAction));
             }
         });
 
@@ -124,7 +173,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
             public void onUploadSucceed(List<String> list) {
                 HnLoading.hide();
                 if (!list.isEmpty()) {
-                    mImageUrl = list.get(0);
+                    /*mImageUrl = list.get(0);*/
                 }
             }
 

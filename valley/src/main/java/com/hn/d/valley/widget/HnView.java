@@ -2,8 +2,7 @@ package com.hn.d.valley.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -20,6 +19,8 @@ import android.view.View;
  * Version: 1.0.0
  */
 public class HnView extends View {
+    private Rect mRect = new Rect();
+
     public HnView(Context context) {
         super(context);
     }
@@ -35,14 +36,10 @@ public class HnView extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        Drawable background = getBackground();
-        if (background instanceof ColorDrawable) {
-            background.setBounds(getPaddingLeft(), getPaddingTop(),
-                    getMeasuredWidth() - getPaddingRight(), getMeasuredHeight() - getPaddingBottom());
-            background.draw(canvas);
-        } else {
-            super.onDraw(canvas);
-        }
+    public void draw(Canvas canvas) {
+        mRect.set(getPaddingLeft(), getPaddingTop(),
+                getMeasuredWidth() - getPaddingRight(), getMeasuredHeight() - getPaddingBottom());
+        canvas.clipRect(mRect);
+        super.draw(canvas);
     }
 }

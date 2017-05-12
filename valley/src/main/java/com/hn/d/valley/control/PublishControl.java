@@ -391,27 +391,27 @@ public class PublishControl {
         /**
          * 是否置顶
          */
-        public boolean isTop;
+        public boolean isTop = false;
 
         /**
          * 是否共享地址位置
          */
-        public boolean shareLocation;
+        public boolean shareLocation = false;
 
         /**
          * 发布的文本内容
          */
-        public String content;
+        public String content = "";
 
         /**
          * 地理坐标和位置信息
          */
-        public String address, lng, lat;
+        public String address = "", lng = "", lat = "";
 
         /**
          * 1-纯文本 2-视频 3-图片
          */
-        public String type;
+        public String type = "";
         public PublishDynamicUIView.VideoStatusInfo mVideoStatusInfo;
         public PublishDynamicUIView.VoiceStatusInfo mVoiceStatusInfo;
         /**
@@ -425,8 +425,8 @@ public class PublishControl {
         /**
          * 部分好友可见/不给谁看的用户id 多个以英文，分割
          */
-        public String scan_user;
-        private String uuid;
+        public String scan_user = "";
+        private String uuid = "";
 
         /**
          * 构建一个图文动态的任务

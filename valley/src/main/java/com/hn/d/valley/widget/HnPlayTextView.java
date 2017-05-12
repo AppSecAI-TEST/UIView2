@@ -34,9 +34,13 @@ public class HnPlayTextView extends RTextView {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    protected void initView() {
+        super.initView();
         setPlaying(false);
+    }
+
+    public boolean isPlaying() {
+        return playing;
     }
 
     public void setPlaying(boolean play) {
@@ -48,9 +52,5 @@ public class HnPlayTextView extends RTextView {
             setTopIco(R.drawable.icon_play);
             setText(R.string.audition);
         }
-    }
-
-    public boolean isPlaying() {
-        return playing;
     }
 }

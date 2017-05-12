@@ -33,7 +33,8 @@
 
                 <TextView
                     android:id="@+id/recent_name_view"
-                    style="@style/NameTextStyle"/>
+                    style="@style/NameTextStyle"
+                    android:minHeight="@dimen/base_25dpi"/>
 
             </LinearLayout>
 
@@ -53,7 +54,8 @@
 
                 <com.hn.d.valley.widget.HnExTextView
                     android:id="@+id/msg_content_view"
-                    style="@style/SingleDarkTextStyle"/>
+                    style="@style/SingleDarkTextStyle"
+                    android:minHeight="@dimen/base_25dpi"/>
 
             </LinearLayout>
 

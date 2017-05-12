@@ -22,14 +22,20 @@ public class HnVideoPlayView extends AppCompatImageView {
 
     public HnVideoPlayView(Context context) {
         super(context);
+        initView();
     }
 
     public HnVideoPlayView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initView();
     }
 
     public HnVideoPlayView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initView();
+    }
+
+    private void initView() {
     }
 
     @Override
@@ -47,8 +53,12 @@ public class HnVideoPlayView extends AppCompatImageView {
                 setImageResource(R.drawable.icon_pause_home_small);
                 break;
             case VOICE_HOME:
-                setImageResource(R.drawable.icon_play_home);
+                setImageResource(R.drawable.icon_play_home_small);
                 break;
+            case VOICE_HOME_PAUSE:
+                setImageResource(R.drawable.icon_pause_home_small);
+                break;
+            case VOICE:
             default:
                 setImageResource(R.drawable.icon_play_home_small);
                 break;
@@ -61,6 +71,7 @@ public class HnVideoPlayView extends AppCompatImageView {
     }
 
     public enum PlayType {
-        VIDEO /*视频播放按钮*/, VOICE/*音频播放按钮*/, VOICE_HOME/*主页音频播放按钮*/, VOICE_PAUSE/*音频暂停按钮*/
+        VIDEO /*视频播放按钮*/, VOICE/*音频播放按钮*/, VOICE_PAUSE/*音频暂停按钮*/,
+        VOICE_HOME/*主页音频播放按钮*/, VOICE_HOME_PAUSE/*主页音频暂停按钮*/
     }
 }

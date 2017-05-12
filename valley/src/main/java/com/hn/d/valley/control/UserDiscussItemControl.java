@@ -36,6 +36,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.example.m3b.Audio;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
@@ -236,18 +237,18 @@ public class UserDiscussItemControl {
 //                forwardView.setClickable(false);
 //                forwardView.setEnabled(false);
 //            } else {
-                forwardView.setEnabled(true);
-                forwardView.setClickable(true);
-                forwardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (TextUtils.isEmpty(dataListBean.uuid)) {
-                            iLayout.startIView(new PublishDynamicUIView2(dataListBean));
-                        } else {
-                            T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
-                        }
+            forwardView.setEnabled(true);
+            forwardView.setClickable(true);
+            forwardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (TextUtils.isEmpty(dataListBean.uuid)) {
+                        iLayout.startIView(new PublishDynamicUIView2(dataListBean));
+                    } else {
+                        T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
                     }
-                });
+                }
+            });
 //            }
         } else {
             commandItemView.setVisibility(View.GONE);
@@ -401,13 +402,21 @@ public class UserDiscussItemControl {
     }
 
     private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean,
-                                          final ILayout iLayout, RBaseViewHolder holder, boolean isInDetail) {
+                                          final ILayout iLayout, RBaseViewHolder holder,
+                                          boolean isInDetail) {
         final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
 //        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
 
         final List<String> medias = RUtils.split(dataListBean.getMedia());
-        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, iLayout, isInDetail);
+        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, iLayout, isInDetail, dataListBean.getDiscuss_id());
+    }
+
+    public static void initMediaLayout(String mediaType, final List<String> medias,
+                                       View mediaControlLayout,
+                                       final ILayout iLayout,
+                                       final boolean isInDetail) {
+        initMediaLayout(mediaType, medias, mediaControlLayout, iLayout, isInDetail, "");
     }
 
     /**
@@ -416,7 +425,8 @@ public class UserDiscussItemControl {
     public static void initMediaLayout(String mediaType, final List<String> medias,
                                        View mediaControlLayout,
                                        final ILayout iLayout,
-                                       final boolean isInDetail) {
+                                       final boolean isInDetail,
+                                       final String discuss_id) {
 
         if (mediaControlLayout == null) {
             return;
@@ -424,8 +434,13 @@ public class UserDiscussItemControl {
 
         RNineImageLayout mediaImageTypeView = (RNineImageLayout) mediaControlLayout.findViewById(R.id.media_image_view);
         TextView videoTimeView = (TextView) mediaControlLayout.findViewById(R.id.video_time_view);
+        TextView bottomVideoTimeView = (TextView) mediaControlLayout.findViewById(R.id.bottom_video_time_view);
+
         View voiceTipView = mediaControlLayout.findViewById(R.id.voice_tip_view);
-        final View videoPlayView = mediaControlLayout.findViewById(R.id.video_play_view);
+        View bottomVoiceTipView = mediaControlLayout.findViewById(R.id.bottom_voice_tip_view);
+        final HnVideoPlayView videoPlayView = (HnVideoPlayView) mediaControlLayout.findViewById(R.id.video_play_view);
+        bottomVoiceTipView.setVisibility(View.GONE);
+        bottomVideoTimeView.setVisibility(View.GONE);
 
         if (medias.isEmpty()) {
             mediaControlLayout.setVisibility(View.GONE);
@@ -475,7 +490,7 @@ public class UserDiscussItemControl {
                 videoTimeView.setVisibility(View.VISIBLE);
                 videoPlayView.setVisibility(View.VISIBLE);
                 voiceTipView.setVisibility(View.INVISIBLE);
-                ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VIDEO);
+                videoPlayView.setPlayType(HnVideoPlayView.PlayType.VIDEO);
                 mediaImageTypeView.setDrawMask(false);
                 //DraweeViewUtil.setDraweeViewRes(mediaImageTypeView, R.drawable.video_release);
 
@@ -529,7 +544,7 @@ public class UserDiscussItemControl {
 
                 //语音播放时长的展示
                 if (isInDetail) {
-                    ((HnPlayTimeView) videoTimeView).setPlayTime(0);
+                    ((HnPlayTimeView) videoTimeView).setPlayTime(Audio.instance().getCurrentPosition(videoUrl) / 1000);
                 } else {
                     ((HnPlayTimeView) videoTimeView).setPlayTime(-1);
                 }
@@ -539,14 +554,20 @@ public class UserDiscussItemControl {
                 if (isInDetail) {
                     params.gravity = Gravity.START | Gravity.BOTTOM;
                     if (MusicControl.isPlaying(videoUrl)) {
-                        ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VOICE_PAUSE);
+                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE_PAUSE);
                     } else {
-                        ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VOICE);
+                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE);
                     }
                 } else {
                     //其他界面居中显示
                     params.gravity = Gravity.CENTER;
-                    ((HnVideoPlayView) videoPlayView).setPlayType(HnVideoPlayView.PlayType.VOICE_HOME);
+                    videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE_HOME);
+
+                    videoTimeView.setVisibility(View.GONE);
+                    voiceTipView.setVisibility(View.GONE);
+                    bottomVoiceTipView.setVisibility(View.VISIBLE);
+                    bottomVideoTimeView.setVisibility(View.VISIBLE);
+                    bottomVideoTimeView.setText(videoTimeView.getText());
                 }
                 videoPlayView.setLayoutParams(params);
 
@@ -567,8 +588,29 @@ public class UserDiscussItemControl {
                     @Override
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //T_.info(videoUrl);
-                        if (!TextUtils.isEmpty(finalUrl)) {
 
+                        if (!TextUtils.isEmpty(finalUrl)) {
+                            if (isInDetail) {
+                                if (MusicControl.isPlaying(finalUrl)) {
+                                    if (isInDetail) {
+                                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE);
+                                    } else {
+                                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE_HOME);
+                                    }
+                                    Audio.instance().pause();
+                                } else {
+                                    if (isInDetail) {
+                                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE_PAUSE);
+                                    } else {
+                                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE_HOME_PAUSE);
+                                    }
+                                    Audio.instance().play(finalUrl);
+                                }
+                            } else {
+                                if (!TextUtils.isEmpty(discuss_id)) {
+                                    iLayout.startIView(new DynamicDetailUIView2(discuss_id));
+                                }
+                            }
                         }
                     }
                 });

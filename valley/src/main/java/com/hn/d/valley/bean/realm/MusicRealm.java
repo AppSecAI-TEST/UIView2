@@ -121,6 +121,13 @@ public class MusicRealm extends RealmObject {
         this.mp3 = mp3;
     }
 
+    public String getPlayPath() {
+        if (!TextUtils.isEmpty(getFilePath()) && new File(getFilePath()).exists()) {
+            return getFilePath();
+        }
+        return getMp3();
+    }
+
     public String getFilePath() {
         return filePath;
     }

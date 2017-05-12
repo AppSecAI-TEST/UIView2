@@ -420,7 +420,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_voice), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new PublishVoiceDynamicUIView());
+                        mOtherILayout.startIView(new PublishVoiceDynamicUIView().setPublishAction(getPublishAction()));
                     }
                 })
                 .showDialog(mOtherILayout);

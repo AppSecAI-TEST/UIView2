@@ -21,11 +21,13 @@ import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.recycler.widget.IShowState;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RDownloadView;
 import com.angcyo.uiview.widget.RTextView;
+import com.example.m3b.Audio;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
@@ -71,6 +73,7 @@ public class SearchBgmUIView extends BaseContentUIView {
     private String mSearchWord = "";
     private RExBaseAdapter<String, SearchMusicHistoryRealm, String> mHistoryAdapter;
     private ArrayList<SearchMusicHistoryRealm> mHistoryRealmList = new ArrayList<>();
+    private HnPlayView mLastPlayView;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -131,6 +134,12 @@ public class SearchBgmUIView extends BaseContentUIView {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        Audio.instance().stop();
     }
 
     /**
@@ -261,15 +270,22 @@ public class SearchBgmUIView extends BaseContentUIView {
                     MusicControl.initDownView(dataBean, new WeakReference<>(downloadView));
                     /**试听*/
                     final HnPlayView playView = holder.v(R.id.play_view);
-                    playView.setPlaying(MusicControl.isPlaying(dataBean.getMp3()));
+                    playView.setPlaying(MusicControl.isPlaying(dataBean.getPlayPath()));
+                    if (MusicControl.isPlaying(dataBean.getPlayPath())) {
+                        mLastPlayView = playView;
+                    }
                     playView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (playView.isPlaying()) {
-                                MusicControl.pausePlay(dataBean.getMp3());
+                                MusicControl.pausePlay(dataBean.getPlayPath());
                                 playView.setPlaying(false);
                             } else {
-                                MusicControl.play(dataBean.getMp3());
+                                if (mLastPlayView != null) {
+                                    mLastPlayView.setPlaying(false);
+                                }
+                                mLastPlayView = playView;
+                                MusicControl.play(dataBean.getPlayPath());
                                 playView.setPlaying(true);
                             }
                         }
@@ -314,6 +330,7 @@ public class SearchBgmUIView extends BaseContentUIView {
     private void searchText(String text) {
         if (mRecyclerView.getAdapter() != mSearchAdapter) {
             mRecyclerView.setAdapter(mSearchAdapter);
+            mSearchAdapter.setShowState(IShowState.LOADING);
         }
 
         SearchMusicHistoryRealm historyRealm = new SearchMusicHistoryRealm(text, System.currentTimeMillis());
@@ -331,15 +348,15 @@ public class SearchBgmUIView extends BaseContentUIView {
                     @Override
                     public void onSucceed(MusicBean bean) {
                         super.onSucceed(bean);
-                        if (bean.getData_list() == null) {
-
+                        if (bean.getData_list() == null || bean.getData_list().isEmpty()) {
+                            mSearchAdapter.setShowState(IShowState.EMPTY);
                         } else {
                             if (bean.getData_list().size() >= Constant.DEFAULT_PAGE_DATA_COUNT) {
                                 mSearchAdapter.setEnableLoadMore(true);
                             } else {
                                 mSearchAdapter.setEnableLoadMore(false);
                             }
-
+                            mSearchAdapter.setShowState(IShowState.NORMAL);
                             if (page == 1) {
                                 mMusicRealms.clear();
                                 mMusicRealms.addAll(bean.getData_list());

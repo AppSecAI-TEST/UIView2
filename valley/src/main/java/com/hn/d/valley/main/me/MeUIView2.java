@@ -33,7 +33,6 @@ import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
 import com.hn.d.valley.sub.other.SeeStateUserUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.VipWebUIView;
-import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +59,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         }
     };
     private List<String> mPhotos = new ArrayList<>();
+    private int mDrawPadding;
 
     static void resize(View view, int size, int margin) {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -147,7 +147,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 
         final int size = mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi);
         int line = mActivity.getResources().getDimensionPixelSize(R.dimen.base_line);
-        final int drawPadding = size;
+        mDrawPadding = size;
 
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
@@ -219,7 +219,6 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.dynamic_notification_text));
 
                 ImageView imageView = itemInfoLayout.getImageView();
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
@@ -231,10 +230,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     imageView.setBackground(null);
                 }
 
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_notice);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.dynamic_notification_text, R.drawable.icon_notice, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new SeeStateUserUIView());
@@ -254,7 +250,6 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.my_visitor_text));
 
                 ImageView imageView = itemInfoLayout.getImageView();
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
@@ -265,10 +260,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     imageView.setBackground(null);
                 }
 
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_vistor);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.my_visitor_text, R.drawable.icon_vistor, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new MyVisitorUserUIView2());
@@ -289,16 +281,12 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.my_code));
                 ImageView imageView = itemInfoLayout.getImageView();
                 imageView.setImageResource(R.drawable.qr_code);
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_xxxhdpi);
                 resize(imageView, offset, offset / 2);
 
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_mycard);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.my_code, R.drawable.icon_mycard, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new MyQrCodeUIView());
@@ -311,16 +299,27 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.my_collect_tip));
                 itemInfoLayout.setItemDarkText(userInfoBean.getCollect_count() + "");
 
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_collection);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.my_collect_tip, R.drawable.icon_collection, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new MyCollectUIView());
+                    }
+                });
+            }
+        }));
+        //我的草稿
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                itemInfoLayout.setItemDarkText(userInfoBean.getCollect_count() + "");
+
+                initItemLayout(itemInfoLayout, R.string.my_draft_tip, R.drawable.icon_draft, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mOtherILayout.startIView(new SkinManagerUIView());
                     }
                 });
             }
@@ -334,7 +333,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 itemInfoLayout.setItemText(getString(R.string.vip_tip));
 
                 itemInfoLayout.setLeftDrawableRes(R.drawable.icon_vipcenter);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
+                itemInfoLayout.setLeftDrawPadding(mDrawPadding);
 
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -349,12 +348,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.my_wallet_tip));
-
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_wallet);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.my_wallet_tip, R.drawable.icon_wallet, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new MyWalletUIView());
@@ -367,12 +361,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.personalized_dress));
-
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_skin);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.personalized_dress, R.drawable.icon_skin, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new SkinManagerUIView());
@@ -465,7 +454,6 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.invite_friends));
 
                 TextView textView = new TextView(mActivity);
                 textView.setText(R.string.prize_tip);
@@ -476,10 +464,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 textView.setPadding(margin / 2, margin / 4, margin / 2, margin / 4);
                 itemInfoLayout.addRightView(textView, -2, -2, 2 * margin);
 
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_invitation);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.invite_friends, R.drawable.icon_invitation, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new InviteFriendsUIDialog());
@@ -500,12 +485,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.friends_recommend_tip));
-
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_intrduction);
-                itemInfoLayout.setLeftDrawPadding(drawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                initItemLayout(itemInfoLayout, R.string.friends_recommend_tip, R.drawable.icon_intrduction, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new FriendsRecommendUIView(false));
@@ -514,6 +494,15 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
+    }
+
+    protected void initItemLayout(ItemInfoLayout itemInfoLayout, int titleId, int leftRes, View.OnClickListener listener) {
+        itemInfoLayout.setItemText(getString(titleId));
+
+        itemInfoLayout.setLeftDrawableRes(leftRes);
+        itemInfoLayout.setLeftDrawPadding(mDrawPadding);
+
+        itemInfoLayout.setOnClickListener(listener);
     }
 
     @Override

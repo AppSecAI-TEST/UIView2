@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -557,7 +558,11 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         public String voiceImagePath, voicePath;
 
         public VoiceStatusInfo(String voiceImagePath, String voicePath) {
-            this.voiceImagePath = voiceImagePath;
+            if (TextUtils.isEmpty(voiceImagePath)) {
+                this.voiceImagePath = NOPIC;
+            } else {
+                this.voiceImagePath = voiceImagePath;
+            }
             this.voicePath = voicePath;
         }
 

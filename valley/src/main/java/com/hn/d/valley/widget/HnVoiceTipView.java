@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
+import com.example.m3b.Audio;
 import com.hn.d.valley.R;
 
 /**
@@ -25,10 +26,16 @@ public class HnVoiceTipView extends AppCompatImageView {
     boolean isPlaying = false;
     int index = 0;
 
+    HnPlayTimeView mPlayTimeView;
+
     Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             setImageDrawable(mDrawables[index]);
+            if (mPlayTimeView != null) {
+                int currentPosition = Audio.instance().getCurrentPosition(String.valueOf(mPlayTimeView.getTag()));
+                mPlayTimeView.setPlayTime(currentPosition / 1000);
+            }
             index++;
             if (index >= 8) {
                 index = 0;
@@ -60,7 +67,7 @@ public class HnVoiceTipView extends AppCompatImageView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        removeCallbacks(mRunnable);
+        stopPlay();
     }
 
     /**
@@ -70,10 +77,19 @@ public class HnVoiceTipView extends AppCompatImageView {
         isPlaying = play;
         if (isPlaying) {
             ensureRes();
+            stopPlay();
             post(mRunnable);
         } else {
             removeCallbacks(mRunnable);
         }
+    }
+
+    private void stopPlay() {
+        removeCallbacks(mRunnable);
+    }
+
+    public void setPlayTimeView(HnPlayTimeView playTimeView) {
+        mPlayTimeView = playTimeView;
     }
 
     private void ensureRes() {

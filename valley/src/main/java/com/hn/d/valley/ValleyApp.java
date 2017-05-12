@@ -2,8 +2,10 @@ package com.hn.d.valley;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.Root;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.storage.StorageUtil;
+import com.example.m3b.Audio;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
@@ -45,6 +47,8 @@ public class ValleyApp extends RApplication {
 
     @Override
     protected void onInit() {
+        Root.APP_FOLDER = "DValley";
+
         L.init(BuildConfig.DEBUG, "dvalley");
 
         Fresco.initialize(this);
@@ -86,5 +90,7 @@ public class ValleyApp extends RApplication {
         QbSdk.initX5Environment(getApplicationContext(), null);
 
         FDown.init(this, false/*BuildConfig.DEBUG*/);
+
+        Audio.init(this);
     }
 }

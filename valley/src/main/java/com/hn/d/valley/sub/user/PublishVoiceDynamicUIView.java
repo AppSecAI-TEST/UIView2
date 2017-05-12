@@ -26,6 +26,7 @@ import com.m3b.rbaudiomixlibrary.Record;
 import com.m3b.rbaudiomixlibrary.WaveCanvas;
 import com.m3b.rbaudiomixlibrary.view.WaveSurfaceView;
 
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -42,6 +43,7 @@ import rx.functions.Action1;
 public class PublishVoiceDynamicUIView extends BaseContentUIView {
 
     private static int progress = 50;
+    Action0 mPublishAction;
     private RippleBackground mRippleBackground;
     private HnRecordTimeView mHnRecordTimeView;
     private HnRecTextView mHnRecTextView;
@@ -162,7 +164,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                             public void onRecordStop(String bgmPath, String filePath, long time) {
                                 L.e("call: onRecordStop([bgmPath, filePath, time])-> " + filePath + " " + Math.ceil(time / 1000f));
                                 //Record.playFile(filePath);
-                                replaceIView(new PublishVoiceNextDynamicUIView(filePath, time, mMusicRealm));
+                                replaceIView(new PublishVoiceNextDynamicUIView(filePath, time, mMusicRealm).setPublishAction(mPublishAction));
                             }
 
                             @Override
@@ -185,6 +187,11 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                                 mwaveCanvas.updateAudioData(buffer, readsize, mformRight);
                             }
                         });
+    }
+
+    public PublishVoiceDynamicUIView setPublishAction(Action0 publishAction) {
+        mPublishAction = publishAction;
+        return this;
     }
 
     private void WaveCanvasInit() {

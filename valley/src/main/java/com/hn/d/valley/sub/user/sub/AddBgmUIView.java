@@ -20,6 +20,7 @@ import com.angcyo.uiview.recycler.widget.MenuBuilder;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.RecordTimeView;
+import com.example.m3b.Audio;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.MusicRealm;
 import com.hn.d.valley.control.MusicControl;
@@ -46,6 +47,7 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
 
     boolean isMusicEmpty = true;
     Action1<MusicRealm> selectorAction;
+    private HnPlayTextView mLastPlayTextView;
 
     /**
      * @param selectorAction 选中音乐之后的回调
@@ -103,6 +105,12 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
                 return context.getResources().getDimensionPixelOffset(R.dimen.base_60dpi);
             }
         }));
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        Audio.instance().stop();
     }
 
     @Override
@@ -204,15 +212,22 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
 
                     /**试听*/
                     final HnPlayTextView playTextView = holder.v(R.id.play_text_view);
-                    playTextView.setPlaying(MusicControl.isPlaying(dataBean.getMp3()));
+                    playTextView.setPlaying(MusicControl.isPlaying(dataBean.getPlayPath()));
+                    if (MusicControl.isPlaying(dataBean.getPlayPath())) {
+                        mLastPlayTextView = playTextView;
+                    }
                     playTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (playTextView.isPlaying()) {
-                                MusicControl.pausePlay(dataBean.getMp3());
+                                MusicControl.pausePlay(dataBean.getPlayPath());
                                 playTextView.setPlaying(false);
                             } else {
-                                MusicControl.play(dataBean.getMp3());
+                                if (mLastPlayTextView != null) {
+                                    mLastPlayTextView.setPlaying(false);
+                                }
+                                mLastPlayTextView = playTextView;
+                                MusicControl.play(dataBean.getPlayPath());
                                 playTextView.setPlaying(true);
                             }
                         }

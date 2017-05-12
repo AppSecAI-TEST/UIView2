@@ -10,6 +10,7 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
+import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.LauncherUIView;
 import com.hn.d.valley.start.LoginUIView;
@@ -86,6 +87,8 @@ public class HnSplashActivity extends BaseActivity {
             } else {
                 startIView(new LoginUIView(), false);
             }
+
+            MainControl.checkCrash(mLayout);
         }
 
         onParseIntent();

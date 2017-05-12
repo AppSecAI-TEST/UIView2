@@ -131,6 +131,7 @@
     <string name="like_title">点赞</string>
     <string name="like_title_formater">点赞(%1$d)</string>
     <string name="publish_dynamic">发布动态</string>
+    <string name="publish">发布</string>
     <string name="forward_dynamic">转发动态</string>
     <string name="forward">转发</string>
     <string name="forward_format">转发 %1$s</string>
@@ -576,4 +577,5 @@
     <string name="text_you_already_get">你已经领取了 %1$s 的</string>
     <string name="call">呼叫</string>
     <string name="forward_succeed">转发成功</string>
+    <string name="my_draft_tip">我的草稿</string>
 </resources>

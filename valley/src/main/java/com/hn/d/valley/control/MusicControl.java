@@ -5,7 +5,9 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.angcyo.uiview.Root;
+import com.angcyo.uiview.utils.ThreadExecutor;
 import com.angcyo.uiview.widget.RDownloadView;
+import com.example.m3b.Audio;
 import com.hn.d.valley.bean.realm.MusicRealm;
 import com.hn.d.valley.realm.RRealm;
 import com.liulishuo.FDown;
@@ -73,9 +75,7 @@ public class MusicControl {
         });
     }
 
-    /**
-     * 判断是否已经下载
-     */
+    @Deprecated
     public static boolean isDowned(String id) {
         for (MusicRealm realm : sMusicRealmList) {
             if (TextUtils.equals(realm.getSong_id(), id)) {
@@ -85,9 +85,22 @@ public class MusicControl {
         return false;
     }
 
+    /**
+     * 判断是否已经下载
+     */
+    public static boolean isDowned(final MusicRealm music) {
+        for (MusicRealm realm : sMusicRealmList) {
+            if (TextUtils.equals(realm.getSong_id(), music.getSong_id())) {
+                music.setFilePath(realm.getFilePath());
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void initDownView(final MusicRealm music, final WeakReference<RDownloadView> downViewWeak) {
         RDownloadView downView = downViewWeak.get();
-        if (isDowned(music.getSong_id())) {
+        if (isDowned(music)) {
             downView.setDownloadState(RDownloadView.DownloadState.FINISH);
             downView.setOnClickListener(null);
         } else {
@@ -136,20 +149,25 @@ public class MusicControl {
      * @param mp3 是否正在播放指定的音乐
      */
     public static boolean isPlaying(String mp3) {
-        return false;
+        return Audio.instance().isPlaying(mp3);
     }
 
     /**
      * 暂停播放
      */
     public static void pausePlay(String mp3) {
-
+        Audio.instance().pause();
     }
 
     /**
      * 播放mp3
      */
-    public static void play(String mp3) {
-
+    public static void play(final String mp3) {
+        ThreadExecutor.instance().onThread(new Runnable() {
+            @Override
+            public void run() {
+                Audio.instance().play(mp3);
+            }
+        });
     }
 }

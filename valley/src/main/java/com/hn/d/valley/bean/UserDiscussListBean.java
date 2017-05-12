@@ -199,6 +199,22 @@ public class UserDiscussListBean {
             this.media = media;
         }
 
+        public String[] getMediaValue() {
+            String[] result = new String[]{"", ""};
+            if (getMediaList().isEmpty()) {
+                return result;
+            }
+            String[] split = getMediaList().get(0).split("\\?");
+            if (split.length > 0) {
+                result[0] = split[0];
+            }
+            if (split.length > 1) {
+                result[1] = split[1];
+            }
+
+            return split;
+        }
+
         public List<String> getMediaList() {
             return RUtils.split(getMedia());
         }

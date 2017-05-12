@@ -1,5 +1,7 @@
 package com.hn.d.valley.control;
 
+import com.angcyo.uiview.RCrashHandler;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RSubscriber;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.bean.realm.UserInfoBean;
@@ -51,6 +53,13 @@ public class MainControl {
     public static void onMainUnload(boolean quit) {
         if (quit) {
             RNim.logout();
+        }
+    }
+
+    public static void checkCrash(ILayout iLayout) {
+        if (BuildConfig.SHOW_DEBUG) {
+            RCrashHandler.QQ_GROUP_KEY = "oo8iBWHEAOxrj06LFKxcy2yDJTILXamC";
+            RCrashHandler.checkCrash(iLayout);
         }
     }
 }

@@ -11,18 +11,23 @@ import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
 import com.angcyo.uiview.github.tablayout.TabLayoutUtil;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
+import com.angcyo.uiview.github.utilcode.utils.NetworkUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.receiver.NetworkStateReceiver;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
+import com.angcyo.uiview.widget.RNineImageLayout;
 import com.angcyo.uiview.widget.viewpager.FadeInOutPageTransformer;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
+import com.example.m3b.Audio;
+import com.example.m3b.audiocachedemo.Player;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
@@ -39,6 +44,9 @@ import com.hn.d.valley.sub.user.sub.CommentInputDialog;
 import com.hn.d.valley.sub.user.sub.CommentListUIView;
 import com.hn.d.valley.sub.user.sub.ForwardListUIView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
+import com.hn.d.valley.widget.HnPlayTimeView;
+import com.hn.d.valley.widget.HnVideoPlayView;
+import com.hn.d.valley.widget.HnVoiceTipView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +82,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     private View likeUserControlLayout;
     private CommentListUIView mCommentListUIView;
     private ForwardListUIView mForwardListUIView;
+    private Player.OnPlayListener mOnPlayListener;
 
     public DynamicDetailUIView2(String discuss_id) {
         this.discuss_id = discuss_id;
@@ -125,11 +134,19 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     }
 
     @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        Audio.instance().stop();
+        Audio.instance().removeOnPlayListener(mOnPlayListener);
+    }
+
+    @Override
     protected void OnShowContentLayout() {
         super.OnShowContentLayout();
         if (mDataListBean != null) {
-            UserDiscussItemControl.initItem(mSubscriptions, mViewHolder, mDataListBean,
-                    null, null, mILayout, true);
+            //媒体内容
+            initMediaLayout();
+
             //转发, 点赞, 评论按钮布局隐藏
             mViewHolder.v(R.id.function_control_layout).setVisibility(View.GONE);
 
@@ -208,6 +225,51 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 }
             });
         }
+    }
+
+    private void initMediaLayout() {
+        if (isAudioType()) {
+            View mediaControlLayout = mViewHolder.v(R.id.media_control_layout);
+
+            RNineImageLayout mediaImageTypeView = (RNineImageLayout) mediaControlLayout.findViewById(R.id.media_image_view);
+            HnPlayTimeView videoTimeView = (HnPlayTimeView) mediaControlLayout.findViewById(R.id.video_time_view);
+            final HnVoiceTipView voiceTipView = (HnVoiceTipView) mediaControlLayout.findViewById(R.id.voice_tip_view);
+            final HnVideoPlayView videoPlayView = (HnVideoPlayView) mediaControlLayout.findViewById(R.id.video_play_view);
+
+            videoTimeView.setTag(mDataListBean.getMediaValue()[1]);
+            voiceTipView.setPlayTimeView(videoTimeView);
+            mOnPlayListener = new Player.OnPlayListener() {
+                @Override
+                public void onPlay(String url, boolean isPause) {
+                    if (isPause) {
+                        voiceTipView.startPlaying(false);
+                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE);
+                    } else {
+                        voiceTipView.startPlaying(true);
+                        videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE_PAUSE);
+                    }
+                }
+
+                @Override
+                public void onPlayEnd(String url) {
+                    videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE);
+                    voiceTipView.startPlaying(false);
+                }
+            };
+            Audio.instance().addOnPlayListener(mOnPlayListener);
+        }
+
+        UserDiscussItemControl.initItem(mSubscriptions, mViewHolder, mDataListBean,
+                null, null, mILayout, true);
+
+        //WIFI 下自动播放语音
+        if (isAudioType() && NetworkStateReceiver.getNetType() == NetworkUtils.NetworkType.NETWORK_WIFI) {
+            Audio.instance().play(mDataListBean.getMediaValue()[1]);
+        }
+    }
+
+    private boolean isAudioType() {
+        return "4".equalsIgnoreCase(mDataListBean.getMedia_type());
     }
 
     private void initTabLayout() {
