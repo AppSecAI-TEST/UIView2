@@ -217,7 +217,10 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 }
             });
 
-            //转发按钮
+            //转发按钮,语音不允许转发
+            if (mDataListBean.isVoiceMediaType()) {
+                mViewHolder.v(R.id.bottom_forward_item).setVisibility(View.GONE);
+            }
             mViewHolder.v(R.id.bottom_forward_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

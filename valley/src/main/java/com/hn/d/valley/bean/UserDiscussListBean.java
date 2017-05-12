@@ -227,6 +227,22 @@ public class UserDiscussListBean {
             this.media_type = media_type;
         }
 
+        public boolean isImageMediaType() {
+            return "3".equalsIgnoreCase(getMedia_type());
+        }
+
+        public boolean isVideoMediaType() {
+            return "2".equalsIgnoreCase(getMedia_type());
+        }
+
+        public boolean isVoiceMediaType() {
+            return "4".equalsIgnoreCase(getMedia_type());
+        }
+
+        public boolean isTextMediaType() {
+            return "1".equalsIgnoreCase(getMedia_type());
+        }
+
         public String getLike_cnt() {
             return like_cnt;
         }
