@@ -362,7 +362,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 }
 
                 mViewHolder.tv(R.id.username).setText(mDataListBean.getUser_info().getUsername());
-                contentView.setText(mDataListBean.getContent());
+
+                contentView.setText(getContent(mDataListBean.getContent()));
             } else {
                 if (mDynamicType == DynamicType.FORWARD_TEXT) {
                     imageView.setContentDescription(getString(R.string.is_circle));
@@ -372,9 +373,22 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 }
 
                 mViewHolder.tv(R.id.username).setText(mDataListBean.getOriginal_info().getUsername());
-                contentView.setText(mDataListBean.getOriginal_info().getContent());
+                contentView.setText(getContent(mDataListBean.getOriginal_info().getContent()));
             }
         }
+    }
+
+    private String getContent(String content) {
+        if (TextUtils.isEmpty(content)) {
+            if (mDynamicType == DynamicType.FORWARD_VIDEO) {
+                content = getString(R.string.forward_video_tip);
+            } else if (mDynamicType == DynamicType.FORWARD_VOICE) {
+                content = getString(R.string.forward_voice_tip);
+            } else {
+                content = getString(R.string.forward_tip);
+            }
+        }
+        return content;
     }
 
     /**

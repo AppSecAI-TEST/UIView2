@@ -578,4 +578,7 @@
     <string name="call">呼叫</string>
     <string name="forward_succeed">转发成功</string>
     <string name="my_draft_tip">我的草稿</string>
+    <string name="forward_video_tip">转发视频</string>
+    <string name="forward_voice_tip">转发语音</string>
+    <string name="forward_tip">转发动态</string>
 </resources>
