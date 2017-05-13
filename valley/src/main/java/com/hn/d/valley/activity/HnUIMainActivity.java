@@ -32,4 +32,8 @@ public class HnUIMainActivity extends BaseActivity {
         ((UILayoutImpl) mLayout).translationLastView(event.offsetX);
     }
 
+    @Override
+    protected void onUIBackPressed() {
+        moveTaskToBack(true);
+    }
 }

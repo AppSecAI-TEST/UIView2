@@ -26,7 +26,6 @@ import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
@@ -298,16 +297,16 @@ public class MainUIView extends BaseUIView {
 //        startIView(new PostStatusUIDialog());
 //    }
 
-    @Override
-    public boolean onBackPressed() {
-        long timeMillis = System.currentTimeMillis();
-        if (timeMillis - onBackTime < 1000) {
-            return true;
-        }
-        onBackTime = timeMillis;
-        T_.show(mActivity.getString(R.string.back_pressed_tip));
-        return false;
-    }
+//    @Override
+//    public boolean onBackPressed() {
+//        long timeMillis = System.currentTimeMillis();
+//        if (timeMillis - onBackTime < 1000) {
+//            return true;
+//        }
+//        onBackTime = timeMillis;
+//        T_.show(mActivity.getString(R.string.back_pressed_tip));
+//        return false;
+//    }
 
     @Override
     public void onViewShow(Bundle bundle) {
