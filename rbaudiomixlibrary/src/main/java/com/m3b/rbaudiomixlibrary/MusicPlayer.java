@@ -10,19 +10,16 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * 播放背景音乐
- *
  */
 
 public class MusicPlayer {
 
     private static final String TAG = "MusicPlayer";
-    private AudioDecoder mAudioDecoder;
-    private Queue<byte[]> backGroundBytes = new LinkedBlockingDeque<>();//new ArrayDeque<>();// ArrayDeque不是线程安全的
-
     private static final int mFrequence = 44100;
     private static final int mPlayChannelConfig = AudioFormat.CHANNEL_OUT_STEREO;
     private static final int mAudioEncoding = AudioFormat.ENCODING_PCM_16BIT;//一个采样点16比特-2个字节
-
+    private AudioDecoder mAudioDecoder;
+    private Queue<byte[]> backGroundBytes = new LinkedBlockingDeque<>();//new ArrayDeque<>();// ArrayDeque不是线程安全的
     private boolean mIsPlaying = false;
     private boolean mIsRecording = false;
     private boolean mNeedPause = false;
@@ -66,7 +63,7 @@ public class MusicPlayer {
         return mIsPlaying;
     }
 
-    public boolean isPCMDataEos(){
+    public boolean isPCMDataEos() {
         return mAudioDecoder.isPCMExtractorEOS();
     }
 
@@ -114,6 +111,14 @@ public class MusicPlayer {
         mAudioDecoder.startPcmExtractor();
     }
 
+    interface BackGroundFrameListener {
+        void onFrameArrive(byte[] bytes);
+    }
+
+    public void setVol(float vol) {
+        this.vol = vol;
+    }
+
     /**
      * 虽然可以新建多个 AsyncTask的子类的实例，但是AsyncTask的内部Handler和ThreadPoolExecutor都是static的，
      * 这么定义的变 量属于类的，是进程范围内共享的，所以AsyncTask控制着进程范围内所有的子类实例，
@@ -143,12 +148,12 @@ public class MusicPlayer {
 
                 while (mIsPlaying) {
 
-                    if(mNeedPause){
+                    if (mNeedPause) {
                         track.pause();
                         continue;
                     }
 
-                    track.setStereoVolume(vol,vol);
+                    track.setStereoVolume(vol, vol);
                     track.play();
                     byte[] temp = mAudioDecoder.getPCMData();
                     if (temp == null) {
@@ -171,9 +176,5 @@ public class MusicPlayer {
                 mIsPlaying = false;
             }
         }
-    }
-
-    interface BackGroundFrameListener {
-        void onFrameArrive(byte[] bytes);
     }
 }

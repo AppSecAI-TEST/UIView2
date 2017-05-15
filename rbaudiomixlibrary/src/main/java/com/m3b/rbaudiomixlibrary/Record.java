@@ -36,7 +36,7 @@ public class Record {
     /**
      * mix时背景音乐的音量
      */
-    private float fMusicGain = 1.0f;
+    private float fMusicGain = 0.5f;
     /**
      * mix时mic的音量
      */
@@ -116,6 +116,7 @@ public class Record {
                 public void run() {
                     if (!noMusic) {
                         mMusicPlayer = new MusicPlayer(bgmMusicPath);
+                        mMusicPlayer.setVol(fMusicGain);
                         mMusicPlayer.startPlayBackMusic();
                     }
                     StartMixThread();
@@ -182,6 +183,8 @@ public class Record {
         Thread MixEncodeThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_URGENT_AUDIO);
+
                 final int _iSampleRateDef = 16000;//44100;//do not modify,16000 is good for meizu phone
 
                 final int _iRecorderBufferSize = AudioRecord.getMinBufferSize(_iSampleRateDef,
