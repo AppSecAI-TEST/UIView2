@@ -44,7 +44,7 @@
     <string name="my_coin">龙币</string>
     <string name="my_favor">我的收藏</string>
     <string name="my_status">我的动态</string>
-    <string name="welcome">欢迎</string>
+    <string name="welcome">欢迎!</string>
     <string name="other_login">第三方登录</string>
 
     <string name="team_need_authentication">需要身份验证</string>
@@ -577,8 +577,17 @@
     <string name="text_you_already_get">你已经领取了 %1$s 的</string>
     <string name="call">呼叫</string>
     <string name="forward_succeed">转发成功</string>
+    <string name="text_msg_type_not_support_forward">该类型不支持转发</string>
+    <string name="text_edit">编辑</string>
+    <string name="text_audio_forward">语音转发自 </string>
     <string name="my_draft_tip">我的草稿</string>
     <string name="forward_video_tip">转发视频</string>
     <string name="forward_voice_tip">转发语音</string>
     <string name="forward_tip">转发动态</string>
+    <string name="qq_login">QQ帐号登录</string>
+    <string name="wx_login">微信帐号登录</string>
+    <string name="tel_register">手机注册</string>
+    <string name="have_account">已有帐号</string>
+    <string name="other_login_tip">第三方帐号登录</string>
+    <string name="network_exception">您的网络有问题, 请稍后重试!</string>
 </resources>

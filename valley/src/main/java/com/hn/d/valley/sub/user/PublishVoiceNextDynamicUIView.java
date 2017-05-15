@@ -44,7 +44,7 @@ import rx.functions.Action1;
 public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
 
     String filePath;
-    long recordTime;
+    int recordTime;//秒
     Action0 mPublishAction;
     private String mImagePath = ""/*, mImageUrl = ""*/;//选择的图片, 上传之后的地址
     private MusicRealm mMusicRealm;
@@ -53,10 +53,10 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     private Player.OnPlayListener mOnPlayListener;
 
     public PublishVoiceNextDynamicUIView(String filePath, long recordTime, MusicRealm musicRealm) {
-        final String newName = filePath + OssHelper.createVoiceFileName((int) (recordTime / 1000));
+        this.recordTime = (int) (Math.floor(recordTime / 1000f));
+        final String newName = filePath + OssHelper.createVoiceFileName(this.recordTime);
         new File(filePath).renameTo(new File(newName));
         this.filePath = newName;
-        this.recordTime = recordTime;
         mMusicRealm = musicRealm;
     }
 
@@ -111,7 +111,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
         mTimeView = mViewHolder.v(R.id.time_view);
-        mTimeView.setSumTime((long) Math.ceil(recordTime / 1000f));
+        mTimeView.setSumTime(recordTime);
 
         final HnBigPlayView playView = mViewHolder.v(R.id.play_view);
         playView.setOnClickListener(new View.OnClickListener() {

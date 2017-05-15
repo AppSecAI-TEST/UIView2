@@ -30,7 +30,7 @@ public class Record {
     private static MediaPlayer mPlayer;
     private final AudioRecorderNative _AudioMix;
     RecordListener mRecordListener;
-    long startRecordTime = 0l;//开始录制的时间, 用来计算总共录制时长
+    long startRecordTime = 0l, endRecordTime = 0l;//开始录制的时间, 用来计算总共录制时长
     private MusicPlayer mMusicPlayer;
     private boolean recording;
     /**
@@ -91,6 +91,7 @@ public class Record {
         if (recording) {
             return;
         }
+
         mRecordListener = recordListener;
         try {
             bgmMusicPath = bgmPath;
@@ -155,6 +156,7 @@ public class Record {
             return;
         }
         recording = false;
+        endRecordTime = System.currentTimeMillis();
         if (mMusicPlayer != null) {
             mMusicPlayer.release();
             mMusicPlayer = null;
@@ -180,18 +182,18 @@ public class Record {
         Thread MixEncodeThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                final int _iSampleRateDef = 44100;//44100;//do not modify,16000 is good for meizu phone
+                final int _iSampleRateDef = 16000;//44100;//do not modify,16000 is good for meizu phone
 
                 final int _iRecorderBufferSize = AudioRecord.getMinBufferSize(_iSampleRateDef,
                         AudioFormat.CHANNEL_CONFIGURATION_STEREO,
-                        AudioFormat.ENCODING_PCM_16BIT);
+                        AudioFormat.ENCODING_PCM_16BIT) * 8;
                 final AudioRecord _AudioRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                         _iSampleRateDef, AudioFormat.CHANNEL_CONFIGURATION_STEREO,
                         AudioFormat.ENCODING_PCM_16BIT, _iRecorderBufferSize);
 
                 final byte[] _RecorderBuffer = new byte[_iRecorderBufferSize];
 
-                while (recording) {
+                while (recording && !checkExit()) {
 
                     //开始录制mic声音
                     _AudioRecorder.startRecording();
@@ -235,6 +237,7 @@ public class Record {
                                 showAmplitude(bgm, bgm.length, fMusicGain);
 
                             if (bgm != null && isMixBgm != false) {
+                                Log.e("valley", "call: run([])-> 1");
                                 _AudioMix.VoiceMixEncode(_iSampleRateDef, 2, _RecorderBuffer, iMicLen);
                                 result = _AudioMix.MusicMixEncode(44100, 2, bgm, bgm.length);
                                 showAmplitude(_RecorderBuffer, iMicLen, fMicGain);
@@ -245,6 +248,7 @@ public class Record {
                                 mMusicPlayer.release();
                                 mMusicPlayer.startPlayBackMusic();
                             } else {
+                                Log.e("valley", "call: run([])-> 2");
                                 result = _AudioMix.VoiceEncode(_iSampleRateDef, 2, _RecorderBuffer, iMicLen);
                                 showAmplitude(_RecorderBuffer, iMicLen, fMicGain);
                                 drawWavefrom(_RecorderBuffer);
@@ -270,6 +274,7 @@ public class Record {
                         mRecordListener.onRecordTimeChanged(getTime());
                     }
                 }
+                //while end
 
                 _AudioRecorder.stop();
                 _AudioRecorder.release();
@@ -288,6 +293,14 @@ public class Record {
             }
         });
         MixEncodeThread.start();
+    }
+
+    private boolean checkExit() {
+        if (recording) {
+            return false;
+        } else {
+            return getTime() % 1000 > 800;
+        }
     }
 
     private long getTime() {

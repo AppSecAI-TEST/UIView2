@@ -74,6 +74,7 @@ import rx.functions.Func1;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements Start.ILoginView<LoginBean, Bean<LoginBean>> {
     @BindView(R.id.ico_view)
     SimpleDraweeView mIcoView;
@@ -410,7 +411,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                         if (code == ResponseCode.RES_SUCCESS) {
                             jumpToMain();
                         } else {
-                            T_.show("您的网络有问题, 请稍后重试!");
+                            T_.show(getString(R.string.network_exception));
                         }
                     }
                 });

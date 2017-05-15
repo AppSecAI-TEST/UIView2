@@ -45,7 +45,9 @@ import com.netease.nimlib.sdk.msg.model.AttachmentProgress;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.functions.Action2;
 import rx.functions.Action3;
@@ -271,9 +273,12 @@ public class ChatControl2 {
 
         IMMessage message = MessageBuilder.createForwardMessage(forwardMessage, uid, sessionType);
         if (message == null) {
-            T_.show("该类型不支持转发");
+            T_.show(mActivity.getString(R.string.text_msg_type_not_support_forward));
             return;
         }
+        Map<String, Object> extension = new HashMap<>();
+        extension.put("from",message.getSessionId());
+        message.setRemoteExtension(extension);
         NIMClient.getService(MsgService.class).sendMessage(message, false);
         if (mSessionId.equals(uid)) {
             onMsgSend(message);

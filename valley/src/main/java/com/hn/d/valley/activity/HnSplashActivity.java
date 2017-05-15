@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.R;
@@ -13,7 +14,7 @@ import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.LauncherUIView;
-import com.hn.d.valley.start.LoginUIView;
+import com.hn.d.valley.start.WelcomeUIView;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.auth.AuthService;
@@ -81,11 +82,11 @@ public class HnSplashActivity extends BaseActivity {
                     @Override
                     public void call() {
                         Hawk.put(versionName, false);
-                        mLayout.replaceIView(new LoginUIView());
+                        mLayout.replaceIView(new WelcomeUIView());
                     }
                 }));
             } else {
-                startIView(new LoginUIView(), false);
+                startIView(new WelcomeUIView().setEnableClipMode(UIBaseView.ClipMode.CLIP_START), false);
             }
 
             MainControl.checkCrash(mLayout);

@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -39,6 +40,7 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
     private TextView timeView;
     private TextView tv_msg_forward_audio;
     private LinearLayout msg_item_forward_audio_layout;
+    private RelativeLayout mRelativeLayout;
 
     public MsgViewHolderAudio(BaseMultiAdapter adapter) {
         super(adapter);
@@ -61,6 +63,7 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
         if(isForfardMsg()) {
             tv_msg_forward_audio = (TextView) findViewById(R.id.tv_msg_forward_audio);
             msg_item_forward_audio_layout = (LinearLayout) findViewById(R.id.msg_item_forward_audio_layout);
+            mRelativeLayout = (RelativeLayout) findViewById(R.id.fl_audio_container);
         }
     }
 
@@ -80,25 +83,30 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
         if(extension != null) {
             if (isReceivedMessage()) {
                 msg_item_forward_audio_layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                imageView.setBackgroundResource(R.drawable.nim_audio_animation_list_left);
+                imageView.setBackgroundResource(R.drawable.nim_audio_animation_list_right);
+                timeView.setTextColor(Color.WHITE);
                 switch (SkinUtils.getSkin()) {
                     case SkinManagerUIView.SKIN_BLACK:
-                        msgAudioLayout.setBackgroundResource(R.drawable.bubble_box_right_black_selector);
+                        mRelativeLayout.setBackgroundResource(R.drawable.bubble_box_right_black_selector);
                         break;
                     case SkinManagerUIView.SKIN_GREEN:
-                        msgAudioLayout.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
+                        mRelativeLayout.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
                         break;
                     case SkinManagerUIView.SKIN_BLUE:
-                        msgAudioLayout.setBackgroundResource(R.drawable.bubble_box_right_blue_selector);
+                        mRelativeLayout.setBackgroundResource(R.drawable.bubble_box_right_blue_selector);
                         break;
                 }
 
             } else {
                 msg_item_forward_audio_layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                msgAudioLayout.setBackgroundResource(R.drawable.bubble_box_left_selector);
+                mRelativeLayout.setBackgroundResource(R.drawable.base_white_round_bg_5x);
+                imageView.setBackgroundResource(R.drawable.nim_audio_animation_list_left);
+                timeView.setTextColor(Color.BLACK);
             }
             String from = (String) extension.get("from");
             String forwardUser = NimUserInfoCache.getInstance().getUserDisplayName(from);
-            tv_msg_forward_audio.setText(SpannableStringUtils.getBuilder("语音转发自 ")
+            tv_msg_forward_audio.setText(SpannableStringUtils.getBuilder(context.getString(R.string.text_audio_forward))
                     .append(forwardUser).setForegroundColor(ContextCompat.getColor(context,R.color.colorAccentBlue))
                     .create());
         }
@@ -117,7 +125,7 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
             }
         }, message);
 
-        msgAudioLayout.setOnClickListener(new View.OnClickListener() {
+        contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 audioViewControl.onItemClick();

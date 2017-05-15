@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_signup">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tip_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:text="@string/welcome"
+        android:textColor="@color/base_white"
+        android:textSize="32sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/base_120dpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/qq_view"
+            style="@style/WhiteColorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_50dpi"
+            android:layout_marginEnd="@dimen/base_xxxhdpi"
+            android:layout_marginStart="@dimen/base_xxxhdpi"
+            android:background="@drawable/base_white_bg_round_selector"
+            android:clickable="true"
+            android:drawableStart="@drawable/icon_qq"
+            android:gravity="center"
+            android:paddingEnd="@dimen/base_70dpi"
+            android:paddingStart="@dimen/base_70dpi"
+            android:text="@string/qq_login"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/weixin_view"
+            style="@style/WhiteColorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_50dpi"
+            android:layout_marginEnd="@dimen/base_xxxhdpi"
+            android:layout_marginStart="@dimen/base_xxxhdpi"
+            android:layout_marginTop="@dimen/base_xxxhdpi"
+            android:background="@drawable/base_white_bg_round_selector"
+            android:clickable="true"
+            android:drawableStart="@drawable/icon_wechat"
+            android:gravity="center"
+            android:paddingEnd="@dimen/base_70dpi"
+            android:paddingStart="@dimen/base_70dpi"
+            android:text="@string/wx_login"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xxxhdpi"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/register_view"
+                style="@style/WhiteColorTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/base_bg_selector"
+                android:clickable="true"
+                android:gravity="end"
+                android:text="@string/tel_register"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/base_xxhdpi"
+                android:layout_marginStart="@dimen/base_xxhdpi"
+                android:scaleType="center"
+                android:src="@drawable/gap"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/login_view"
+                style="@style/WhiteColorTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/base_bg_selector"
+                android:clickable="true"
+                android:text="@string/have_account"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

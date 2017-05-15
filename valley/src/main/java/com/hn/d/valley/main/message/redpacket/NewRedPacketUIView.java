@@ -23,6 +23,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.wallet.BindAliPayTipUIView;
+import com.hn.d.valley.main.wallet.SetPayPwdUIView;
 import com.hn.d.valley.main.wallet.WalletAccount;
 import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
@@ -181,7 +182,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
     private void showPinDialog() {
         UIDialog.build()
                 .setDialogContent(mActivity.getString(R.string.text_no_set_pwd_please_set_pwd))
-                .setOkText(mActivity.getString(R.string.ok))
+                .setOkText(mActivity.getString(R.string.text_set_pay_pwd))
                 .setOkListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -190,11 +191,11 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                         if (TextUtils.isEmpty(loginBean.getPhone())) {
                             startIView(new BindPhoneUIView());
                         } else {
-                            startIView(new BindAliPayTipUIView(false));
+                            startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
                         }
                     }
                 })
-                .setCancelText(mActivity.getString(R.string.text_set_pay_pwd))
+                .setCancelText(getString(R.string.cancel))
                 .showDialog(mOtherILayout);
     }
 

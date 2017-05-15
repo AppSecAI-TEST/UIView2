@@ -21,10 +21,18 @@
         android:paddingStart="@dimen/base_ldpi"
         tools:text="@string/about_me"
         />
-
-    <include
-        layout="@layout/msg_audio_layout"
-        />
-
+    <RelativeLayout
+        android:id="@+id/fl_audio_container"
+        android:layout_width="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_height="wrap_content">
+        <include
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/base_ldpi"
+            android:paddingStart="@dimen/base_ldpi"
+            layout="@layout/msg_audio_layout"
+            />
+    </RelativeLayout>
 
 </LinearLayout>

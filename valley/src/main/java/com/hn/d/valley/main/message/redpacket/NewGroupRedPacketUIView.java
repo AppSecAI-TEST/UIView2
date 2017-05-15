@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -27,6 +28,13 @@ import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
+import com.hn.d.valley.bean.realm.LoginBean;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.BindPhoneUIView;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.wallet.SetPayPwdUIView;
+import com.hn.d.valley.main.wallet.WalletAccount;
+import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnButton;
 import com.hn.d.valley.x5.X5WebUIView;
@@ -210,7 +218,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                         if ("".equals(content)) {
                             content = etContent.getHint().toString();
                         }
-                        Integer count = Integer.valueOf(et_count.getText().toString());
+                        final Integer count = Integer.valueOf(et_count.getText().toString());
                         Float money = Float.valueOf(etMoney.getText().toString()) * 100;
                         if (rp_type == 0) {
                             money = count * money;
@@ -222,34 +230,87 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                             return;
                         }
 
-                        final PayUIDialog.Params params = new PayUIDialog.Params(count
-                                ,money,content,null,to_gid,rp_type);
+                        if (WalletHelper.getInstance().getWalletAccount() == null) {
+                            final String finalContent = content;
+                            final Float finalMoney = money;
+                            WalletHelper.getInstance().fetchWallet(new RequestCallback<WalletAccount>() {
+                                @Override
+                                public void onStart() {
 
-                        // 红包发送成功回调
-                        final Action1 action = new Action1() {
-                            @Override
-                            public void call(Object o) {
-                                finishIView();
-                            }
-                        };
-
-                        //检查余额是否足够
-                        GrabPacketHelper.balanceCheck(new Action1<Integer>() {
-                            @Override
-                            public void call(Integer money) {
-                                //参数设置余额
-                                params.setBalance(money);
-                                if (money >= params.money) {
-                                    mOtherILayout.startIView(new PayUIDialog(action,params));
-                                } else {
-                                    mOtherILayout.startIView(new ChoosePayWayUIDialog(action,params));
                                 }
-                            }
-                        });
+
+                                @Override
+                                public void onSuccess(WalletAccount o) {
+                                    if (o.hasPin()) {
+                                        performClick(count, finalMoney, finalContent);
+                                    } else {
+                                        showPinDialog();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(String msg) {
+
+                                }
+                            });
+                            return;
+                        }
+                        if (!WalletHelper.getInstance().getWalletAccount().hasPin()) {
+                            showPinDialog();
+                        } else {
+                            performClick(count, money, content);
+                        }
                     }
                 });
             }
         }));
+    }
+
+    private void performClick(int count, float money, String content) {
+        final PayUIDialog.Params params = new PayUIDialog.Params(count
+                ,money,content,null,to_gid,rp_type);
+
+        // 红包发送成功回调
+        final Action1 action = new Action1() {
+            @Override
+            public void call(Object o) {
+                finishIView();
+            }
+        };
+
+        //检查余额是否足够
+        GrabPacketHelper.balanceCheck(new Action1<Integer>() {
+            @Override
+            public void call(Integer money) {
+                //参数设置余额
+                params.setBalance(money);
+                if (money >= params.money) {
+                    mOtherILayout.startIView(new PayUIDialog(action,params));
+                } else {
+                    mOtherILayout.startIView(new ChoosePayWayUIDialog(action,params));
+                }
+            }
+        });
+    }
+
+    private void showPinDialog() {
+        UIDialog.build()
+                .setDialogContent(mActivity.getString(R.string.text_no_set_pwd_please_set_pwd))
+                .setOkText(mActivity.getString(R.string.text_set_pay_pwd))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 先判断是否绑定手机
+                        LoginBean loginBean = UserCache.instance().getLoginBean();
+                        if (TextUtils.isEmpty(loginBean.getPhone())) {
+                            startIView(new BindPhoneUIView());
+                        } else {
+                            startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
+                        }
+                    }
+                })
+                .setCancelText(getString(R.string.cancel))
+                .showDialog(mOtherILayout);
     }
 
     private ClickableSpan switchRPType = new ClickableSpan() {

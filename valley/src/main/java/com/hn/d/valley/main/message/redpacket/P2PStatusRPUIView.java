@@ -163,6 +163,8 @@ public class P2PStatusRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
                     tv_status.setText(String.format(mActivity.getString(R.string.tv_send_waite_receive),userInfoCache.getUserDisplayName(mSessionId)));
                 } else if (Constants.EXPORE == statuCode) {
                     tv_status.setText(R.string.text_rp_expore);
+                } else if (Constants.LOOT_OUT == statuCode) {
+                    tv_status.setText(R.string.text_rp_already_grabed);
                 }
 
             }

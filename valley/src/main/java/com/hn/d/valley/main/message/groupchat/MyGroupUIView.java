@@ -219,7 +219,6 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                         mCheckStats.delete(tag);
                     }
 
-                    RBus.post(new SelectedUserNumEvent(getSelectorData().size()));
                     if(selectAction == null){
                         return;
                     }

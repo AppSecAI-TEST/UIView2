@@ -1,14 +1,18 @@
 package com.hn.d.valley.main.message.chat;
 
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
+import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHDynamicMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHExpression;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHLikeMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHReceiptsNoticeMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHRefundMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHWithDrawalMsg;
@@ -64,6 +68,8 @@ public class MsgViewHolderFactory {
         register(ReceiptsNoticeAttachment.class,MsgVHReceiptsNoticeMsg.class);
         register(RefundMsgAttachment.class, MsgVHRefundMsg.class);
         register(WithDrawalAttachment.class, MsgVHWithDrawalMsg.class);
+        register(LikeMsgAttachment.class, MsgVHLikeMsg.class);
+        register(DynamicMsgAttachment.class, MsgVHDynamicMsg.class);
         register(SystemPushAttachment.SingleTextSPAttachment.class, MsgViewHolderPushText.class);
         register(SystemPushAttachment.TextAndPictureSPAttachment.class, MsgViewHolderPushPictureText.class);
         register(SystemPushAttachment.MultiPictureSPAttachment.class, MsgViewHolderPushMultiPicture.class);

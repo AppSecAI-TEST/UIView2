@@ -4,7 +4,9 @@ import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
+import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
@@ -56,8 +58,11 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.WITHDRAWAL_MSG:
                     attachment = new WithDrawalAttachment(json);
                     break;
-                case CustomAttachmentType.KLGGIF_MSG:
-                    attachment = new CustomExpressionAttachment(json);
+                case CustomAttachmentType.LIKE_MSG:
+                    attachment = new LikeMsgAttachment(json);
+                    break;
+                case CustomAttachmentType.FORWARD_MSG:
+                    attachment = new DynamicMsgAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

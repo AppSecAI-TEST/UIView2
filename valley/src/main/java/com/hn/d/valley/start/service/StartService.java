@@ -49,6 +49,9 @@ public interface StartService {
     @POST("user/login")
     Observable<Bean<LoginBean>> userLogin(@QueryMap Map<String, String> map);
 
+    @POST("user/login")
+    Observable<ResponseBody> userLogin2(@QueryMap Map<String, String> map);
+
     /**
      * 注册时-感兴趣的人推荐
      *

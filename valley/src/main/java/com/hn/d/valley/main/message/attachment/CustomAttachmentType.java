@@ -32,6 +32,10 @@ public interface CustomAttachmentType {
 
     int EXPRESSIONMSG = 9;
 
+    int LIKEMSG = 10;
+
+    int DYNAMICMSG = 11;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
@@ -55,5 +59,9 @@ public interface CustomAttachmentType {
     String WITHDRAWAL_MSG = "cashout";
 
     String KLGGIF_MSG = "system_klgGif";
+
+    String LIKE_MSG = "like";
+
+    String FORWARD_MSG = "forward";
 
 }
