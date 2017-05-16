@@ -305,7 +305,7 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 if (isChecked) {
                     mRExBaseAdapter.setSelectorAll(getRecyclerView(), R.id.check_view);
                 } else {
-                    mRExBaseAdapter.unselectorAll(getRecyclerView(), R.id.check_view);
+                    mRExBaseAdapter.unSelectorAll(getRecyclerView(), R.id.check_view);
                 }
             }
         });
