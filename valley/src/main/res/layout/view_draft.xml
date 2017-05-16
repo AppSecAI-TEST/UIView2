@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.hn.d.valley.widget.HnRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </com.hn.d.valley.widget.HnRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_50dpi"
+        android:background="@color/chat_bg_color"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:visibility="gone">
+
+        <com.hn.d.valley.widget.HnRadioButton
+            android:id="@+id/selector_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:button="@drawable/check_selector"
+            android:paddingStart="@dimen/base_ldpi"
+            android:text="@string/selector_all"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/delete_view"
+            style="@style/WhiteColorTextButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/base_red_color_bg_selector"
+            android:button="@drawable/check_selector"
+            android:paddingEnd="@dimen/base_xxhdpi"
+            android:paddingStart="@dimen/base_xxhdpi"
+            android:text="@string/delete_text"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

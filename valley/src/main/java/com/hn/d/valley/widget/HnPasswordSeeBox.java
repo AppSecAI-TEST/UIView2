@@ -24,6 +24,9 @@ public class HnPasswordSeeBox extends AppCompatCheckBox {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        if (isInEditMode()) {
+            return;
+        }
         ColorStateList stateList = new ColorStateList(
                 new int[][]{{android.R.attr.state_checked}, {}},
                 new int[]{SkinHelper.getSkin().getThemeSubColor(), Color.WHITE});

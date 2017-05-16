@@ -26,6 +26,7 @@ import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.control.VideoStatusInfo;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.main.home.recommend.RecommendUIViewEx;
@@ -33,7 +34,7 @@ import com.hn.d.valley.main.home.recommend.TagFilterUIDialog2;
 import com.hn.d.valley.main.home.recommend.TagLoadStatusCallback;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.skin.SkinUtils;
-import com.hn.d.valley.sub.user.PublishDynamicUIView;
+import com.hn.d.valley.sub.user.DynamicType;
 import com.hn.d.valley.sub.user.PublishDynamicUIView2;
 import com.hn.d.valley.sub.user.PublishVoiceDynamicUIView;
 
@@ -394,13 +395,22 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         }
     }
 
+    /**
+     * 发布失败
+     */
+    public void onPublishError() {
+        if (mHomeNavLayout.getCurrentTab() == 0 && mCircleUIView != null) {
+            mCircleUIView.onPublishError();
+        }
+    }
+
     public void onClick() {
         //发布动态
         UIItemDialog.build()
                 .addItem(getString(R.string.publish_image_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new PublishDynamicUIView2(PublishDynamicUIView2.DynamicType.IMAGE)
+                        mOtherILayout.startIView(new PublishDynamicUIView2(DynamicType.IMAGE)
                                 .setPublishAction(getPublishAction()));
                     }
                 })
@@ -410,7 +420,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                         mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
                             @Override
                             public void call(UIIViewImpl iView, String path, String s) {
-                                iView.replaceIView(new PublishDynamicUIView2(new PublishDynamicUIView.VideoStatusInfo(path, s))
+                                iView.replaceIView(new PublishDynamicUIView2(new VideoStatusInfo(path, s))
                                         .setPublishAction(getPublishAction())
                                 );
                             }
@@ -440,6 +450,11 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 
                     @Override
                     public void onPublishEnd() {
+                    }
+
+                    @Override
+                    public void onPublishError(String msg) {
+                        HomeUIView.this.onPublishError();
                     }
                 });
             }

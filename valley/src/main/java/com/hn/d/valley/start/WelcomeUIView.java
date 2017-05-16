@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 
@@ -46,5 +47,7 @@ public class WelcomeUIView extends BaseContentUIView {
                 replaceIView(new LoginUIView2(), false);
             }
         });
+        mViewHolder.tv(R.id.register_view).setTextColor(SkinHelper.getThemeTextColorSelector());
+        mViewHolder.tv(R.id.login_view).setTextColor(SkinHelper.getThemeTextColorSelector());
     }
 }

@@ -19,6 +19,8 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.DraftControl;
+import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
 import com.hn.d.valley.main.me.sub.InviteFriendsUIDialog;
@@ -38,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -120,10 +123,16 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
     }
 
     @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        mRExBaseAdapter.notifyItemChanged(5);
+    }
+
+    @Override
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
         if (viewShowCount >= 1) {
-            mRExBaseAdapter.notifyItemChanged(6);
+            mRExBaseAdapter.notifyItemRangeChanged(0, 6);
         }
     }
 
@@ -313,13 +322,20 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemDarkText(userInfoBean.getCollect_count() + "");
+                final ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                itemInfoLayout.setItemDarkText("0");
 
                 initItemLayout(itemInfoLayout, R.string.my_draft_tip, R.drawable.icon_draft, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SkinManagerUIView());
+                        mOtherILayout.startIView(new DraftManagerUIView());
+                    }
+                });
+
+                DraftControl.getDraft(new DraftControl.OnDraftListener() {
+                    @Override
+                    protected void onDraft(RealmResults<PublishTaskRealm> taskRealms) {
+                        itemInfoLayout.setItemDarkText(taskRealms.size() + "");
                     }
                 });
             }

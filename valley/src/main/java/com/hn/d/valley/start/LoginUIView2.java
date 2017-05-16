@@ -18,6 +18,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.rsa.RSA;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
@@ -241,6 +242,10 @@ public class LoginUIView2 extends BaseContentUIView {
                 replaceIView(new WelcomeUIView(), false);
             }
         });
+
+        mViewHolder.tv(R.id.forget_view).setTextColor(SkinHelper.getThemeTextColorSelector());
+        mViewHolder.tv(R.id.register_view).setTextColor(SkinHelper.getThemeTextColorSelector());
+        mViewHolder.tv(R.id.other_login_view).setTextColor(SkinHelper.getThemeTextColorSelector());
 
         //登录
         //调试模式下, 长按直接登录

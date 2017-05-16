@@ -265,6 +265,15 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
         mRExBaseAdapter.resetAllData(newDatas);
     }
 
+    public void onPublishError() {
+        if (mRExBaseAdapter == null) {
+            return;
+        }
+
+        List<UserDiscussListBean.DataListBean> list = PublishControl.instance().getDataListBeen();
+        mRExBaseAdapter.notifyItemRangeChanged(0, list.size());
+    }
+
     List<UserDiscussListBean.DataListBean> insertPublishTask() {
         List<UserDiscussListBean.DataListBean> newDatas = new ArrayList<>();
         List<UserDiscussListBean.DataListBean> list = PublishControl.instance().getDataListBeen();

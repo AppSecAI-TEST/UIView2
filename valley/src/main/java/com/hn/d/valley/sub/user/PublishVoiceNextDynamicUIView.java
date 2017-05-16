@@ -18,6 +18,8 @@ import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.bean.realm.MusicRealm;
 import com.hn.d.valley.control.MusicControl;
 import com.hn.d.valley.control.PublishControl;
+import com.hn.d.valley.control.PublishTaskRealm;
+import com.hn.d.valley.control.VoiceStatusInfo;
 import com.hn.d.valley.widget.HnBigPlayView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
@@ -79,9 +81,8 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     }
 
     private void onPublish() {
-        PublishControl.PublishTask publishTask = new PublishControl.PublishTask(
-                new PublishDynamicUIView.VoiceStatusInfo(mImagePath, filePath));
-        ;
+        PublishTaskRealm publishTask = new PublishTaskRealm(
+                new VoiceStatusInfo(mImagePath, filePath));
         PublishControl.instance().addTask(publishTask);
 
         finishIView();

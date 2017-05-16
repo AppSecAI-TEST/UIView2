@@ -2,6 +2,7 @@ package com.hn.d.valley.bean;
 
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
+import com.hn.d.valley.control.PublishTaskRealm;
 
 import java.util.List;
 
@@ -150,6 +151,8 @@ public class UserDiscussListBean {
 
         private String allow_download;
 //        private Object original_info;
+
+        public int publishStatus = PublishTaskRealm.STATUS_NORMAL;
 
 
         public DataListBean() {

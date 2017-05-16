@@ -48,8 +48,10 @@ import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.PublishControl;
+import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.control.VideoStatusInfo;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
@@ -105,7 +107,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private EmojiLayoutControl mEmojiLayoutControl;
     private List<String> atUsers = new ArrayList<>();//@的用户
     private List<FriendBean> mFriendList = new ArrayList<>();
-    private PublishDynamicUIView.VideoStatusInfo mVideoStatusInfo;
+    private VideoStatusInfo mVideoStatusInfo;
 
     /**
      * 发布动态
@@ -139,7 +141,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     /**
      * 发布视频
      */
-    public PublishDynamicUIView2(PublishDynamicUIView.VideoStatusInfo videoStatusInfo) {
+    public PublishDynamicUIView2(VideoStatusInfo videoStatusInfo) {
         mVideoStatusInfo = videoStatusInfo;
         mDynamicType = DynamicType.VIDEO;
     }
@@ -327,15 +329,15 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             videoControlLayout.setVisibility(View.VISIBLE);
 
             ImageView videoThumbView = mViewHolder.v(R.id.video_thumb_view);
-            HnGlide.displayFile(videoThumbView, mVideoStatusInfo.videoThumbPath);
+            HnGlide.displayFile(videoThumbView, mVideoStatusInfo.getVideoThumbPath());
 
             TextView videoTimeView = mViewHolder.v(R.id.video_time_view);
-            UserDiscussItemControl.initVideoTimeView(videoTimeView, mVideoStatusInfo.videoPath);
+            UserDiscussItemControl.initVideoTimeView(videoTimeView, mVideoStatusInfo.getVideoPath());
 
             videoThumbView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new VideoPlayUIView(mVideoStatusInfo.videoThumbPath, mVideoStatusInfo.videoPath));
+                    startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoThumbPath(), mVideoStatusInfo.getVideoPath()));
                 }
             });
         }
@@ -395,7 +397,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
      * 是否是转发的动态
      */
     private boolean isForward() {
-        return mDynamicType.getType() >= 6;
+        return mDynamicType.getValue() >= 6;
     }
 
     private void initVisibleView() {
@@ -603,23 +605,34 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         HnTopImageView hnTopImageView = mViewHolder.v(R.id.ico_top);
         CheckBox allowDownloadView = mViewHolder.v(R.id.allow_box_view);
 
-        if (mDynamicType.getType() < 6) {
+        if (mDynamicType.getValue() < 6) {
             //小于6,表示是发布动态
-            PublishControl.PublishTask publishTask = null;
+            PublishTaskRealm publishTask = null;
             if (mDynamicType == DynamicType.IMAGE) {
-                publishTask = new PublishControl.PublishTask(photos);
+                publishTask = new PublishTaskRealm(photos);
             } else if (mDynamicType == DynamicType.VIDEO) {
-                publishTask = new PublishControl.PublishTask(mVideoStatusInfo);
+                publishTask = new PublishTaskRealm(mVideoStatusInfo);
             } else if (mDynamicType == DynamicType.TEXT) {
-                publishTask = new PublishControl.PublishTask();
+                publishTask = new PublishTaskRealm();
             }
-            publishTask.setSelectorTags(mSelectorTags)
+            publishTask.setSelectorTags2(mSelectorTags)
                     .setTop(hnTopImageView.isTop())
                     .setShareLocation(mTargetLocation != null)
                     .setAddress(getAddress())
                     .setLat(getLatitude())
                     .setLng(getLongitude())
                     .setAllow_download(allowDownloadView.isChecked() ? 1 : 0)
+                    .setShowContent(mInputView.fixShowMentionString(new ExEditText.getIdFromUserName() {
+                        @Override
+                        public String userId(String userName) {
+                            for (FriendBean bean : mFriendList) {
+                                if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                                    return bean.getUid();
+                                }
+                            }
+                            return "";
+                        }
+                    }))
                     .setContent(mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
                         @Override
                         public String userId(String userName) {
@@ -769,22 +782,6 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //        }
     }
 
-    /**
-     * 发布动态的类型
-     */
-    public enum DynamicType {
-        TEXT(1)/*纯文本*/, VIDEO(2)/*视频*/, IMAGE(3)/*图文*/, VOICE(4)/*语音*/, PACKET(5)/*红包*/,
-        FORWARD_TEXT(6)/*转发纯文本*/, FORWARD_VIDEO(7)/*转发视频*/, FORWARD_IMAGE(8)/*转发图文*/, FORWARD_VOICE(9)/*转发语音*/, FORWARD_PACKET(10)/*转发红包*/;
 
-        int type;
-
-        DynamicType(int type) {
-            this.type = type;
-        }
-
-        public int getType() {
-            return type;
-        }
-    }
 
 }

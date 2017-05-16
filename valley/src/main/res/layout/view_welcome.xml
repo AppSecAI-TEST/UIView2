@@ -63,7 +63,7 @@
 
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/register_view"
-                style="@style/WhiteColorTextStyle"
+                style="@style/WhiteColorTextButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -82,8 +82,9 @@
 
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/login_view"
-                style="@style/WhiteColorTextStyle"
+                style="@style/WhiteColorTextButtonStyle"
                 android:layout_width="0dp"
+                android:gravity="start"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/base_bg_selector"

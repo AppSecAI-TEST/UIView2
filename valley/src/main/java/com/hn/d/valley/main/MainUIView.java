@@ -408,6 +408,11 @@ public class MainUIView extends BaseUIView {
                                     public void onPublishEnd() {
                                         mViewHolder.v(R.id.publish_control_layout).setVisibility(View.GONE);
                                     }
+
+                                    @Override
+                                    public void onPublishError(String msg) {
+
+                                    }
                                 });
                             }
                         }));

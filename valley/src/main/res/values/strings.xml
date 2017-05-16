@@ -497,6 +497,7 @@
     <string name="delete_reply_tip">确定删除该回复吗?</string>
     <string name="image_empty_tip">请选择图片</string>
     <string name="sending">正在发送中...</string>
+    <string name="send_error">发送失败.</string>
     <string name="add_bgm_tip">添加配乐</string>
     <string name="max_record_time_tip">最长[5分钟]录制哦</string>
     <string name="search_music_tip">搜索音乐</string>
@@ -595,4 +596,5 @@
     <string name="network_exception">您的网络有问题, 请稍后重试!</string>
     <string name="sex_tip">性别:</string>
     <string name="selector_sex_tip">请选择性别</string>
+    <string name="selector_all">全选</string>
 </resources>

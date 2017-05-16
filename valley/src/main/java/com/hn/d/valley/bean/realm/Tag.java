@@ -3,7 +3,6 @@ package com.hn.d.valley.bean.realm;
 import android.text.TextUtils;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 public class Tag extends RealmObject {
 
@@ -12,7 +11,6 @@ public class Tag extends RealmObject {
      * name : 搞笑
      */
 
-    @PrimaryKey
     private String id;
     private String name;
 

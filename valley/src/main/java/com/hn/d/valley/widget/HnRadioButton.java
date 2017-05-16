@@ -29,6 +29,9 @@ public class HnRadioButton extends AppCompatRadioButton {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
+        if (isInEditMode()) {
+            return;
+        }
         ColorStateList stateList = new ColorStateList(
                 new int[][]{{android.R.attr.state_checked}, {}},
                 new int[]{SkinHelper.getSkin().getThemeSubColor(), ContextCompat.getColor(getContext(), R.color.default_base_bg_disable)});

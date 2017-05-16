@@ -57,6 +57,7 @@ import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.ReadListUserUIView;
 import com.hn.d.valley.sub.user.DynamicDetailUIView2;
+import com.hn.d.valley.sub.user.DynamicType;
 import com.hn.d.valley.sub.user.PublishDynamicUIView2;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.PhotoPager;
@@ -128,7 +129,11 @@ public class UserDiscussItemControl {
         if (TextUtils.isEmpty(dataListBean.uuid)) {
             showTimeView.setText(dataListBean.getShow_time());
         } else {
-            showTimeView.setText(R.string.sending);
+            if (PublishControl.instance().getTaskStatus(dataListBean.uuid) == PublishTaskRealm.STATUS_ERROR) {
+                showTimeView.setText(R.string.send_error);
+            } else {
+                showTimeView.setText(R.string.sending);
+            }
         }
 
         /**头像*/
@@ -449,7 +454,7 @@ public class UserDiscussItemControl {
 
             final String url = medias.get(0);
 
-            if ("3".equalsIgnoreCase(mediaType)) {
+            if (DynamicType.isImage(mediaType)) {
                 //图片类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);
                 videoTimeView.setVisibility(View.INVISIBLE);
@@ -484,7 +489,7 @@ public class UserDiscussItemControl {
                 });
                 mediaImageTypeView.setImagesList(medias);
 //                }
-            } else if ("2".equalsIgnoreCase(mediaType)) {
+            } else if (DynamicType.isVideo(mediaType)) {
                 //视频类型
                 mediaImageTypeView.setVisibility(View.VISIBLE);
                 videoTimeView.setVisibility(View.VISIBLE);
@@ -524,7 +529,7 @@ public class UserDiscussItemControl {
                     }
                 });
                 mediaImageTypeView.setImage(thumbUrl);
-            } else if ("4".equalsIgnoreCase(mediaType)) {
+            } else if (DynamicType.isVoice(mediaType)) {
                 //语音类型
                 videoPlayView.setVisibility(View.VISIBLE);
                 videoTimeView.setVisibility(View.VISIBLE);

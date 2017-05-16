@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.viewgroup.RRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_bg_selector">
+
+    <com.angcyo.uiview.widget.RImageCheckView
+        android:id="@+id/check_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_ldpi"
+        android:padding="@dimen/base_xhdpi"
+        android:src="@drawable/check_selector"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/check_view"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/time_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawablePadding="@dimen/base_ldpi"
+                android:drawableStart="@drawable/tuwen_chaogaoxiang"
+                android:paddingBottom="@dimen/base_xhdpi"
+                android:paddingTop="@dimen/base_xhdpi"
+                tools:text="02-30 00:45"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/retry_view"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/base_dark_border_line_little_selector"
+                android:paddingBottom="@dimen/base_ldpi"
+                android:paddingStart="@dimen/base_xhdpi"
+                android:paddingEnd="@dimen/base_xhdpi"
+                android:paddingTop="@dimen/base_ldpi"
+                android:text="@string/repeat_send_has_blank"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_line"
+            android:background="@color/line_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/base_ldpi"
+            android:paddingTop="@dimen/base_xhdpi">
+
+            <include
+                android:id="@+id/media_control_layout"
+                layout="@layout/item_media_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/base_xhdpi"/>
+
+            <com.hn.d.valley.widget.HnExTextView
+                android:id="@+id/content_view"
+                style="@style/MainTextStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="4dp"
+                android:minHeight="@dimen/base_25dpi"
+                tools:text="测试文本"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.angcyo.uiview.viewgroup.RRelativeLayout>
