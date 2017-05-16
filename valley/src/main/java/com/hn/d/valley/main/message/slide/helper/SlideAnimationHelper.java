@@ -27,10 +27,10 @@ public class SlideAnimationHelper {
   }
 
   public ValueAnimator getAnimation() {
-    if (mValueAnimator == null) {
+//    if (mValueAnimator == null) {
       mValueAnimator = new ValueAnimator();
       mValueAnimator.setFloatValues(0.0f, 1.0f);
-    }
+//    }
     return mValueAnimator;
   }
 

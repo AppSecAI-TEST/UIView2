@@ -6,6 +6,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.LastContactsEvent;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.utils.Preconditions;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -43,7 +44,11 @@ public class RecentContactsCache implements ICache {
             }
 
             mRecentContactList.clear();
-            mRecentContactList.addAll(RNim.service(MsgService.class).queryRecentContactsBlock());
+            List<RecentContact> blockContacts = RNim.service(MsgService.class).queryRecentContactsBlock();
+            if (blockContacts == null || blockContacts.isEmpty()) {
+                return;
+            }
+            mRecentContactList.addAll(blockContacts);
 //            mRecentContactList.addAll(recentContacts);
 
             List<String> users = new ArrayList<>();
@@ -93,6 +98,9 @@ public class RecentContactsCache implements ICache {
             @Override
             public void onResult(int code, List<RecentContact> result, Throwable exception) {
                 if (code == ResponseCode.RES_SUCCESS) {
+                    if (result == null || result.size() == 0) {
+                        return;
+                    }
                     mRecentContactList.clear();
                     mRecentContactList.addAll(result);
                     RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());

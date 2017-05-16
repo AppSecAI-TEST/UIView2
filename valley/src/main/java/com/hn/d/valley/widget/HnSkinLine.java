@@ -30,6 +30,6 @@ public class HnSkinLine extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        setBackgroundColor(SkinHelper.getSkin().getThemeColor());
+        setBackgroundColor(SkinHelper.getSkin().getThemeSubColor());
     }
 }

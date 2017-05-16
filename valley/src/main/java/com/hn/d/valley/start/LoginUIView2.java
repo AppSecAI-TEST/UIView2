@@ -1,5 +1,6 @@
 package com.hn.d.valley.start;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -49,6 +51,7 @@ import cn.jpush.android.api.JPushInterface;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -66,6 +69,105 @@ public class LoginUIView2 extends BaseContentUIView {
     private ExEditText mPhoneView;
     private ExEditText mPasswordView;
     private TextView mLoginView;
+
+    /**
+     * 跳转至主页
+     */
+    private static void jumpToMain(Activity activity) {
+        //replaceIView(new MainUIView(500));
+        HnUIMainActivity.launcher(activity);
+//        HnMainActivity.launcher(mActivity);
+        activity.finish();
+    }
+
+    public static void onLoginSuccess(final Activity activity, LoginBean loginBean) {
+        L.i("登录成功:" + loginBean.getUsername());
+
+        //showUserIco(loginBean.getAvatar());
+
+        //登录成功, 保存用户的头像
+        Hawk.put(loginBean.getPhone(), loginBean.getAvatar());
+        UserCache.instance().setLoginBean(loginBean);
+
+        //2: 登录云信
+        RNim.login(loginBean.getUid(), loginBean.getYx_token(),
+                new RequestCallbackWrapper<LoginInfo>() {
+                    @Override
+                    public void onResult(int code, LoginInfo result, Throwable exception) {
+                        HnLoading.hide();
+
+                        if (code == ResponseCode.RES_SUCCESS) {
+                            jumpToMain(activity);
+                        } else {
+                            T_.show(activity.getResources().getString(R.string.network_exception));
+                        }
+                    }
+                });
+    }
+
+    public static void login(final Activity activity, ILayout iLayout, CompositeSubscription sub,
+                             String phone, String pwd, String open_id, String open_type, String open_nick,
+                             String open_avatar, String open_sex) {
+
+        Map<String, String> map = new HashMap<>();
+        if (TextUtils.isEmpty(phone)) {
+            //第三方登录
+            map.put("open_id", open_id);
+            map.put("open_type", open_type);
+            map.put("open_nick", open_nick);
+            map.put("open_avatar", open_avatar);
+            map.put("open_sex", open_sex);
+        } else {
+            //手机号登录
+            map.put("phone", phone);
+            map.put("pwd", RSA.encode(pwd));
+        }
+
+        String jpushId;
+        if (TextUtils.isEmpty(JPushReceiver.mRegistrationId)) {
+            jpushId = JPushInterface.getRegistrationID(ValleyApp.getApp());
+        } else {
+            jpushId = JPushReceiver.mRegistrationId;
+        }
+        L.e("push_device_id-->" + jpushId);
+        map.put("push_device_id", jpushId);
+
+        map.put("os_version", Build.VERSION.RELEASE);
+        map.put("phone_model", Build.MODEL);
+        map.put("device_id", RApplication.getIMEI());
+
+//        UISubscriber<LoginBean, Bean<LoginBean>, Start.ILoginView> subscriber =
+//                new UISubscriber<LoginBean, Bean<LoginBean>, Start.ILoginView>(mBaseView) {
+//                    @Override
+//                    public void onSuccess(Bean<LoginBean> loginBeanBean) {
+//                        super.onSuccess(loginBeanBean);
+//                        mBaseView.onLoginSuccess(loginBeanBean);
+//                    }
+//                };
+//
+
+//
+//        add(RRetrofit.create(StartService.class)
+//                .userLogin2(Param.map(map))
+//                .compose(Rx.transformer(LoginBean.class))
+
+        HnLoading.show(iLayout);
+        sub.add(RRetrofit.create(StartService.class)
+                .userLogin2(Param.map(map))
+                .compose(Rx.transformer(LoginBean.class))
+                .subscribe(new BaseSingleSubscriber<LoginBean>() {
+                    @Override
+                    public void onSucceed(LoginBean bean) {
+                        onLoginSuccess(activity, bean);
+                    }
+
+                    @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        HnLoading.hide();
+                    }
+                }));
+    }
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -89,7 +191,6 @@ public class LoginUIView2 extends BaseContentUIView {
         }
 //        RAmap.startLocation();
     }
-
 
     @Override
     protected void initOnShowContentLayout() {
@@ -137,7 +238,7 @@ public class LoginUIView2 extends BaseContentUIView {
         mViewHolder.v(R.id.other_login_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceIView(new WelcomeUIView());
+                replaceIView(new WelcomeUIView(), false);
             }
         });
 
@@ -160,7 +261,7 @@ public class LoginUIView2 extends BaseContentUIView {
 //                                    }
                                 }
                             });
-                            jumpToMain();
+                            jumpToMain(mActivity);
                         }
                     });
 
@@ -199,7 +300,8 @@ public class LoginUIView2 extends BaseContentUIView {
                             return;
                         }
 
-                        login(mPhoneView.string(), mPasswordView.string(), "", "", "", "", "");
+                        login(mActivity, mOtherILayout, mSubscriptions,
+                                mPhoneView.string(), mPasswordView.string(), "", "", "", "", "");
                     }
                 });
 
@@ -224,106 +326,7 @@ public class LoginUIView2 extends BaseContentUIView {
 
     }
 
-
     protected void showOrHideTipView(boolean show) {
         mViewHolder.v(R.id.tip_view).setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-    }
-
-    /**
-     * 跳转至主页
-     */
-    private void jumpToMain() {
-        //replaceIView(new MainUIView(500));
-        HnUIMainActivity.launcher(mActivity);
-//        HnMainActivity.launcher(mActivity);
-        mActivity.finish();
-    }
-
-    public void onLoginSuccess(LoginBean loginBean) {
-        L.i("登录成功:" + loginBean.getUsername());
-
-        //showUserIco(loginBean.getAvatar());
-
-        //登录成功, 保存用户的头像
-        Hawk.put(loginBean.getPhone(), loginBean.getAvatar());
-        UserCache.instance().setLoginBean(loginBean);
-
-        //2: 登录云信
-        RNim.login(loginBean.getUid(), loginBean.getYx_token(),
-                new RequestCallbackWrapper<LoginInfo>() {
-                    @Override
-                    public void onResult(int code, LoginInfo result, Throwable exception) {
-                        HnLoading.hide();
-
-                        if (code == ResponseCode.RES_SUCCESS) {
-                            jumpToMain();
-                        } else {
-                            T_.show(getString(R.string.network_exception));
-                        }
-                    }
-                });
-    }
-
-    public void login(String phone, String pwd, String open_id, String open_type, String open_nick,
-                      String open_avatar, String open_sex) {
-
-        Map<String, String> map = new HashMap<>();
-        if (TextUtils.isEmpty(phone)) {
-            //第三方登录
-            map.put("open_id", open_id);
-            map.put("open_type", open_type);
-            map.put("open_nick", open_nick);
-            map.put("open_avatar", open_avatar);
-            map.put("open_sex", open_sex);
-        } else {
-            //手机号登录
-            map.put("phone", phone);
-            map.put("pwd", RSA.encode(pwd));
-        }
-
-        String jpushId;
-        if (TextUtils.isEmpty(JPushReceiver.mRegistrationId)) {
-            jpushId = JPushInterface.getRegistrationID(ValleyApp.getApp());
-        } else {
-            jpushId = JPushReceiver.mRegistrationId;
-        }
-        L.e("push_device_id-->" + jpushId);
-        map.put("push_device_id", jpushId);
-
-        map.put("os_version", Build.VERSION.RELEASE);
-        map.put("phone_model", Build.MODEL);
-        map.put("device_id", RApplication.getIMEI());
-
-//        UISubscriber<LoginBean, Bean<LoginBean>, Start.ILoginView> subscriber =
-//                new UISubscriber<LoginBean, Bean<LoginBean>, Start.ILoginView>(mBaseView) {
-//                    @Override
-//                    public void onSuccess(Bean<LoginBean> loginBeanBean) {
-//                        super.onSuccess(loginBeanBean);
-//                        mBaseView.onLoginSuccess(loginBeanBean);
-//                    }
-//                };
-//
-
-//
-//        add(RRetrofit.create(StartService.class)
-//                .userLogin2(Param.map(map))
-//                .compose(Rx.transformer(LoginBean.class))
-
-        HnLoading.show(mOtherILayout);
-        add(RRetrofit.create(StartService.class)
-                .userLogin2(Param.map(map))
-                .compose(Rx.transformer(LoginBean.class))
-                .subscribe(new BaseSingleSubscriber<LoginBean>() {
-                    @Override
-                    public void onSucceed(LoginBean bean) {
-                        onLoginSuccess(bean);
-                    }
-
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                        HnLoading.hide();
-                    }
-                }));
     }
 }

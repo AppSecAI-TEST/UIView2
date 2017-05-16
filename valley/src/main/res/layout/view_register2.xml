@@ -30,38 +30,23 @@
             android:text="@string/register_add_ico"/>
 
         <!--昵称-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/base_xxhdpi">
-
-            <TextView
-                style="@style/DarkTextStyle"
-                android:layout_marginLeft="@dimen/base_hdpi"
-                android:text="@string/register_name_tip"/>
-
-            <com.angcyo.uiview.widget.ExEditText
-                android:id="@+id/name_view"
-                style="@style/EditStyle"
-                android:background="@drawable/base_main_color_border_selector"
-                android:hint="@string/register_name_hint"
-                android:imeOptions="actionNext"
-                android:maxLength="@integer/name_count"
-                android:paddingLeft="@dimen/base_60dpi"
-                android:textColor="@color/main_text_color"/>
-
-        </RelativeLayout>
+        <com.angcyo.uiview.widget.ExEditText
+            android:id="@+id/name_view"
+            style="@style/EditStyle"
+            android:layout_marginTop="@dimen/base_xxhdpi"
+            android:background="@drawable/base_main_color_border_selector"
+            android:hint="@string/register_name_hint"
+            android:imeOptions="actionNext"
+            android:maxLength="@integer/name_count"
+            android:textColor="@color/main_text_color"
+            app:r_left_text="@string/register_name_tip"
+            app:r_left_text_color="@color/base_text_color_dark"/>
 
         <!--性别-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_xhdpi">
-
-            <TextView
-                style="@style/DarkTextStyle"
-                android:layout_marginLeft="@dimen/base_hdpi"
-                android:text="性别:"/>
 
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/sex_view"
@@ -72,11 +57,12 @@
                 android:drawablePadding="@dimen/base_40dpi"
                 android:editable="false"
                 android:gravity="center_vertical"
-                android:hint="请选择性别"
-                android:paddingLeft="@dimen/base_60dpi"
-                android:paddingRight="@dimen/base_40dpi"
+                android:hint="@string/selector_sex_tip"
+                android:paddingEnd="@dimen/base_40dpi"
                 android:textColor="@color/main_text_color"
-                android:textColorHint="@color/main_text_color_dark"/>
+                android:textColorHint="@color/main_text_color_dark"
+                app:r_left_text="@string/sex_tip"
+                app:r_left_text_color="@color/base_text_color_dark"/>
 
             <ImageView
                 style="@style/SingleImageButtonStyle"
@@ -94,11 +80,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_xhdpi">
 
-            <TextView
-                style="@style/DarkTextStyle"
-                android:layout_marginLeft="@dimen/base_hdpi"
-                android:text="@string/register_password_tip"/>
-
             <com.angcyo.uiview.widget.ExEditText
                 android:id="@+id/password_view"
                 style="@style/PasswordEditStyle"
@@ -106,8 +87,9 @@
                 android:hint="@string/register_password_hint"
                 android:imeOptions="actionDone"
                 android:paddingEnd="@dimen/base_40dpi"
-                android:paddingStart="@dimen/base_60dpi"
-                android:textColor="@color/main_text_color"/>
+                android:textColor="@color/main_text_color"
+                app:r_left_text="@string/register_password_tip"
+                app:r_left_text_color="@color/base_text_color_dark"/>
 
             <com.hn.d.valley.widget.HnPasswordSeeBox
                 android:id="@+id/show_password_checkbox"

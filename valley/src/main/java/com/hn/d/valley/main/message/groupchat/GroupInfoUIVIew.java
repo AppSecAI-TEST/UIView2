@@ -41,11 +41,13 @@ import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.team.TeamService;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
 
@@ -330,6 +332,22 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                       SessionSettingDelegate.getInstance().setMessageNotify(mSessionId,isChecked,switchCompat);
+                        NIMClient.getService(TeamService.class).muteTeam(mSessionId, true).setCallback(new com.netease.nimlib.sdk.RequestCallback<Void>() {
+                            @Override
+                            public void onSuccess(Void param) {
+
+                            }
+
+                            @Override
+                            public void onFailed(int code) {
+
+                            }
+
+                            @Override
+                            public void onException(Throwable exception) {
+
+                            }
+                        });
                     }
                 });
             }
@@ -422,7 +440,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mOtherILayout.startIView(new GroupReportUIView());
+                            mOtherILayout.startIView(new ReportUIView(mGroupDescBean));
                         }
                     });
 

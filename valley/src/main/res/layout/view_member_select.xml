@@ -30,10 +30,12 @@
         <TextView
             android:id="@+id/tv_selected"
             android:layout_width="0dp"
+            android:layout_marginStart="@dimen/base_xhdpi"
             style="@style/DarkTextStyle"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:text="已选中0人"
             tools:text="已选中5人" />
 
         <com.hn.d.valley.widget.HnButton

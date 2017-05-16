@@ -21,9 +21,11 @@ import com.angcyo.uiview.widget.RCheckGroup;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.bean.realm.UserInfoBean;
+import com.hn.d.valley.main.message.groupchat.ReportNextUIView;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnLoading;
 
@@ -52,12 +54,18 @@ public class ReportUIView extends BaseContentUIView {
 
     UserInfoBean mInfoBean;
 
+    private GroupDescBean mGroupDesc;
+
     public ReportUIView(UserInfoBean infoBean) {
         mInfoBean = infoBean;
     }
 
     public ReportUIView(UserDiscussListBean.DataListBean dataBean) {
         mDataBean = dataBean;
+    }
+
+    public ReportUIView(GroupDescBean groupDesc) {
+        this.mGroupDesc = groupDesc;
     }
 
     @NonNull
@@ -145,6 +153,8 @@ public class ReportUIView extends BaseContentUIView {
             return "group";
         } else if (mDataBean != null) {
             return "discuss";
+        }else if (mGroupDesc != null) {
+            return "group";
         }
         return "";
     }
@@ -163,6 +173,8 @@ public class ReportUIView extends BaseContentUIView {
                 reportUser(tag);
             } else if (mDataBean != null) {
                 reportDiscuss(tag);
+            } else if (mGroupDesc != null) {
+                startIView(new ReportNextUIView(tag,mGroupDesc.getGid()));
             }
         }
     }

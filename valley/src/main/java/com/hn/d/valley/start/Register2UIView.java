@@ -1,7 +1,6 @@
 package com.hn.d.valley.start;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
-import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.resources.ResUtil;
@@ -30,7 +28,6 @@ import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.EmptyAction;
-import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -282,10 +279,12 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
 
     @Override
     public void onRegisterSuccess(B bean) {
-        finishIView(mRegisterIView, false, true);
-        finishIView(this, false, true);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(Constant.LOGIN_INFO, new LoginUserInfo(phone, mPasswordView.string(), mIcoFilePathUrl));
-        showIView(((UILayoutImpl) mILayout).getViewPatternWithClass(LoginUIView.class).mView, false, bundle);
+//        finishIView(mRegisterIView, false, true);
+//        finishIView(this, false, true);
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelable(Constant.LOGIN_INFO, new LoginUserInfo(phone, mPasswordView.string(), mIcoFilePathUrl));
+//        showIView(((UILayoutImpl) mILayout).getViewPatternWithClass(LoginUIView.class).mView, false, bundle);
+        LoginUIView2.login(mActivity, mOtherILayout, mSubscriptions,
+                phone, mPasswordView.string(), "", "", "", "", "");
     }
 }

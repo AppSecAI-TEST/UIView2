@@ -53,11 +53,11 @@ public class MsgViewHolderPushPictureText extends MsgViewHolderBase {
         String thumb = (String) extension.get("thumb");
 
         contentView.setText(title);
-        if (isReceivedMessage(message)) {
-            RFresco.mask(context, draweeView, R.drawable.bubble_box_left_s, thumb, false);
-        } else {
-            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, thumb, false);
-        }
+//        if (isReceivedMessage(message)) {
+//            RFresco.mask(context, draweeView, R.drawable.bubble_box_left_s, thumb, false);
+//        } else {
+//            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, thumb, false);
+//        }
         contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

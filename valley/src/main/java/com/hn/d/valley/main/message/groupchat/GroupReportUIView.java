@@ -28,7 +28,6 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
     @Override
     protected int getItemLayoutId(int vType) {
-
         if (mRExBaseAdapter.isLast(vType)) {
             return R.layout.item_button_view;
         }
@@ -99,12 +98,15 @@ public class GroupReportUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * left) {
             @Override
             public void onBindView(final RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                TextView textView = holder.v(R.id.text_view);
+                final TextView textView = holder.v(R.id.text_view);
+                textView.setEnabled(false);
                 textView.setText("下一步");
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        textView.setEnabled(true);
                         holder.itemView.setSelected(true);
+//                        startIView(new ReportNextUIView());
                     }
                 });
             }

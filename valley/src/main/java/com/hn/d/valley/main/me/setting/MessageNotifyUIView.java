@@ -3,8 +3,10 @@ package com.hn.d.valley.main.me.setting;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextPaint;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -47,6 +49,14 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isEnableNoti());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().toggleNotification(isChecked);
+                    }
+                });
                 infoLayout.setItemText("接受新消息通知");
             }
 
@@ -67,6 +77,14 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isShowMsgNotiDetail());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().showMsgNotiDetail(isChecked);
+                    }
+                });
                 infoLayout.setItemText("通知显示消息详情");
             }
 
@@ -109,6 +127,14 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isRing());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().setRing(isChecked);
+                    }
+                });
                 infoLayout.setItemText("声音");
             }
 
@@ -121,6 +147,14 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isVirbrate());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().setVibrate(isChecked);
+                    }
+                });
                 infoLayout.setItemText("震动");
             }
 

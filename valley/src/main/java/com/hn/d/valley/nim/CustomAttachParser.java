@@ -6,6 +6,7 @@ import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
+import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
@@ -63,6 +64,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.FORWARD_MSG:
                     attachment = new DynamicMsgAttachment(json);
+                    break;
+                case CustomAttachmentType.HOTSPOTIFNO_MSG:
+                    attachment = new HotSpotInfoAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

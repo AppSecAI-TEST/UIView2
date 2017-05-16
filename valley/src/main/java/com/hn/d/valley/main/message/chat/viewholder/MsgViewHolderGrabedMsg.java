@@ -62,7 +62,7 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
             return;
         }
         tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(String.format(context.getString(R.string.text_you_already_get),userInfoCache.getUserDisplayName(redPacket.getOwner() + "")))
-                .append(context.getString(R.string.text_redpacket)).setForegroundColor(ContextCompat.getColor(context,R.color.base_red))
+                .append(context.getString(R.string.text_redpacket)).setForegroundColor(ContextCompat.getColor(context,R.color.yellow_fccd82))
                 .create());
 
     }

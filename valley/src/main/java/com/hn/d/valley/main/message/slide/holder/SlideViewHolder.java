@@ -1,7 +1,6 @@
 package com.hn.d.valley.main.message.slide.holder;
 
 import android.animation.ValueAnimator;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;

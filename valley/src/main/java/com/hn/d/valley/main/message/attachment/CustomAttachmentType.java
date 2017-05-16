@@ -36,6 +36,8 @@ public interface CustomAttachmentType {
 
     int DYNAMICMSG = 11;
 
+    int HOTSPOTINFO = 12;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
@@ -63,5 +65,7 @@ public interface CustomAttachmentType {
     String LIKE_MSG = "like";
 
     String FORWARD_MSG = "forward";
+
+    String HOTSPOTIFNO_MSG = "hot_news";
 
 }

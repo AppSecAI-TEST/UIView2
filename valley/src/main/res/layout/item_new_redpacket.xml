@@ -96,7 +96,6 @@
         android:layout_below="@id/item_input_note"
         android:layout_marginLeft="@dimen/base_xhdpi_15"
         android:layout_marginRight="@dimen/base_xhdpi_15"
-        android:layout_marginTop="@dimen/base_xhdpi"
         android:maxLines="2"
         android:text="@string/text_redpacket_notice"
         tools:text="@string/register_warning" />
@@ -105,7 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_notice"
-        android:layout_marginTop="@dimen/base_xxxhdpi"
+        android:layout_marginTop="@dimen/base_xxhdpi"
         android:padding="@dimen/base_xhdpi_15">
 
         <Button

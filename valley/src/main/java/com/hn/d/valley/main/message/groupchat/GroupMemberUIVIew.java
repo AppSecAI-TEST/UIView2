@@ -1,14 +1,13 @@
 package com.hn.d.valley.main.message.groupchat;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewCompat;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -26,6 +25,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -40,8 +40,7 @@ import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnButton;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.hn.d.valley.widget.HnLoading;
-import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,6 +155,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                 });
     }
 
+
     @Override
     protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         super.inflateRecyclerRootLayout(baseContentLayout,inflater);
@@ -184,48 +184,60 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         });
     }
 
+    private void animBottom(boolean show) {
+
+        if (ll_bottom.getVisibility() == View.GONE) {
+            ll_bottom.setVisibility(View.VISIBLE);
+        }
+
+        float start = show? ScreenUtil.dip2px(48):0;
+        float end = show?0:ScreenUtil.dip2px(48);
+        ObjectAnimator animator = new ObjectAnimator().ofFloat(ll_bottom,"translationY",start,end);
+        animator.setDuration(300);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
+
+    }
+
     private class GroupMemberAdapter extends RExBaseAdapter<String,GroupMemberBean,String> {
 
         private SparseBooleanArray mCheckStats = new SparseBooleanArray();
 
         private ISlideHelper mISlideHelper = new ISlideHelper();
 
-        private boolean isEditable = false;
+        private boolean isEditable = true;
 
         private GroupMemberAdapter(Context context) {
             super(context);
             setModel(RModelAdapter.MODEL_MULTI);
         }
+
         public void slideOpen() {
             isEditable = true;
             mISlideHelper.slideOpen();
-            notifyDataSetChanged();
-            ll_bottom.setVisibility(View.VISIBLE);
-//            Animation openAnim = AnimationUtils.loadAnimation(mContext, R.anim.base_tran_to_bottom_exit);
-//            openAnim.setAnimationListener(new Animation.AnimationListener() {
-//                @Override
-//                public void onAnimationStart(Animation animation) {
-//                }
-//
-//                @Override
-//                public void onAnimationEnd(Animation animation) {
-//
-//                }
-//
-//                @Override
-//                public void onAnimationRepeat(Animation animation) {
-//
-//                }
-//            });
-//            ll_bottom.setAnimation(openAnim);
+            animBottom(true);
+        }
+
+        @Override
+        public void resetAllData(List<GroupMemberBean> allDatas) {
+            //去除群成员中的群主 不会被踢出
+            List<GroupMemberBean> filterList = new ArrayList<>();
+            for (GroupMemberBean member : allDatas) {
+                if (member.getDefaultNick().equals(UserCache.instance().getUserInfoBean().getUsername())) {
+                    continue;
+                }
+                filterList.add(member);
+            }
+            super.resetAllData(filterList);
         }
 
         public void slideClose() {
+            tv_selected.setText(String.format("已选中 %d 人",0));
             mISlideHelper.slideClose();
-            notifyDataSetChanged();
-            isEditable = false;
-            ll_bottom.setVisibility(View.GONE);
+            isEditable = true;
+            animBottom(false);
             mCheckStats.clear();
+            unSelectorAll(true);
         }
 
         @NonNull
@@ -290,7 +302,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
             };
 
             checkBox.setOnClickListener(listener);
-            holder.itemView.setOnClickListener(listener);
+//            holder.itemView.setOnClickListener(listener);
             checkBox.setChecked(mCheckStats.get(position,false));
         }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hn.d.valley.widget.HnEmptyRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,36 +17,21 @@
         android:padding="@dimen/base_xxhdpi">
 
         <!--手机号码-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                style="@style/DarkTextStyle"
-                android:layout_marginLeft="@dimen/base_hdpi"
-                android:text="@string/phone_number"/>
-
-            <com.angcyo.uiview.widget.ExEditText
-                android:id="@+id/phone_view"
-                style="@style/PhoneEditStyle"
-                android:background="@drawable/base_main_color_border_selector"
-                android:hint="@string/input_phone_hint"
-                android:imeOptions="actionNext"
-                android:paddingLeft="@dimen/base_70dpi"
-                android:textColor="@color/main_text_color"/>
-
-        </RelativeLayout>
+        <com.angcyo.uiview.widget.ExEditText
+            android:id="@+id/phone_view"
+            style="@style/PhoneEditStyle"
+            android:background="@drawable/base_main_color_border_selector"
+            android:hint="@string/input_phone_hint"
+            android:imeOptions="actionNext"
+            android:textColor="@color/main_text_color"
+            app:r_left_text="@string/phone_number"
+            app:r_left_text_color="@color/base_text_color_dark"/>
 
         <!--验证码-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_xhdpi">
-
-            <TextView
-                style="@style/DarkTextStyle"
-                android:layout_marginLeft="@dimen/base_hdpi"
-                android:text="@string/code_text_tip"/>
 
             <com.angcyo.uiview.widget.ExEditText
                 android:id="@+id/code_view"
@@ -56,10 +42,11 @@
                 android:drawablePadding="@dimen/base_40dpi"
                 android:hint="@string/input_code_hint"
                 android:imeOptions="actionDone"
-                android:paddingLeft="@dimen/base_70dpi"
-                android:paddingRight="@dimen/base_100dpi"
+                android:paddingEnd="@dimen/base_100dpi"
                 android:textColor="@color/main_text_color"
-                android:textColorHint="@color/main_text_color_dark"/>
+                android:textColorHint="@color/main_text_color_dark"
+                app:r_left_text="@string/code_text_tip"
+                app:r_left_text_color="@color/base_text_color_dark"/>
 
             <com.hn.d.valley.widget.HnSkinLine
                 android:layout_width="@dimen/base_line"

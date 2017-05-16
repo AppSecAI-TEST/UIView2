@@ -47,6 +47,7 @@ public class OneSlideViewHolder extends SlideViewHolder {
     @Override
     public void slideClose() {
         super.slideClose();
+        cb_select.setChecked(false);
     }
 
     @Override

@@ -43,7 +43,7 @@ public class WelcomeUIView extends BaseContentUIView {
         mViewHolder.v(R.id.login_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceIView(new LoginUIView2());
+                replaceIView(new LoginUIView2(), false);
             }
         });
     }
