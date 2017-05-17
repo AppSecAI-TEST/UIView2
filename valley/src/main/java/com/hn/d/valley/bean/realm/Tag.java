@@ -26,7 +26,6 @@ public class Tag extends RealmObject {
      */
     private String attention_count;
 
-
     public Tag(String id, String name) {
         this.id = id;
         this.name = name;

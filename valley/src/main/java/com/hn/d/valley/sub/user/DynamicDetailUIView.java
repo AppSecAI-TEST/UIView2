@@ -434,7 +434,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     @OnClick({R.id.send_view})
     public void onSendClick(View view) {
         add(RRetrofit.create(SocialService.class)
-                .comment(Param.buildMap("type:discuss", "item_id:" + discuss_id, "content:" + mInputView.string()))
+                .comment(Param.buildMap("type:discuss", "item_id:" + discuss_id, "mContent:" + mInputView.string()))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new RSubscriber<String>() {
                     @Override

@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.control.PublishTaskRealm;
@@ -58,6 +60,7 @@ public class UserDiscussListBean {
 
     public static class DataListBean implements RExBaseAdapter.ObjectEmpty, ILikeData {
         public String uuid;
+        public int publishStatus = PublishTaskRealm.STATUS_NORMAL;
         boolean isEmpty = false;
         /**
          * discuss_id : 14
@@ -145,14 +148,12 @@ public class UserDiscussListBean {
         private String original_url;
         private String publish_time;
         private String author;
+//        private Object original_info;
         /**
          * allow_download : 1
          */
 
         private String allow_download;
-//        private Object original_info;
-
-        public int publishStatus = PublishTaskRealm.STATUS_NORMAL;
 
 
         public DataListBean() {
@@ -530,6 +531,18 @@ public class UserDiscussListBean {
             return getDiscuss_id();
         }
 
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return TextUtils.equals(uuid, ((DataListBean) obj).uuid);
+        }
 
         public static class OriginalInfo {
 

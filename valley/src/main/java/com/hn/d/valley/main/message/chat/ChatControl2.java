@@ -129,6 +129,28 @@ public class ChatControl2 {
         }
     }
 
+    public void scrollToTarget(int index) {
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            mRecyclerView.smoothScrollToPosition(index);
+        } else {
+            mRecyclerView.smoothScrollToPosition(index);
+        }
+    }
+
+    public int containTarget(IMMessage target) {
+        int index = 0;
+        List<IMMessage> datas = mChatAdapter.getAllDatas();
+        for (IMMessage msg : datas) {
+            if (target.isTheSame(msg)) {
+                return index;
+            }
+            index ++;
+        }
+        return -1;
+
+    }
+
     // 删除消息
     private void deleteItem(IMMessage messageItem, boolean isRelocateTime) {
         NIMClient.getService(MsgService.class).deleteChattingHistory(messageItem);

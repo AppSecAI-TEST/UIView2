@@ -10,6 +10,7 @@ import com.hn.d.valley.bean.event.GroupDissolveEvent;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.MsgNotifySetting;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
@@ -50,6 +51,7 @@ public class SystemNotifyManager {
     private List<CustomNotification> items = new ArrayList<>();
 
     public void registerCustomNotificationObserver(boolean register) {
+        L.i(TAG,"customNotificationObserver " + register);
         NIMClient.getService(MsgServiceObserve.class).observeCustomNotification(customNotificationObserver, register);
     }
 
@@ -79,8 +81,10 @@ public class SystemNotifyManager {
 
                 break;
             case "new_discuss":
-
-                RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
+                // 设置是否发送圈子提醒
+                if (MsgNotifySetting.instance().isCircleCNotify()) {
+                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
+                }
 
                 break;
             case "new_visitor":

@@ -22,16 +22,23 @@ import com.angcyo.uiview.widget.RNineImageLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.control.DraftControl;
+import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.control.VoiceStatusInfo;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.sub.user.DynamicType;
+import com.hn.d.valley.sub.user.PublishDynamicUIView2;
+import com.hn.d.valley.sub.user.PublishVoiceNextDynamicUIView;
 import com.hn.d.valley.widget.HnExTextView;
+import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnPlayTimeView;
 import com.hn.d.valley.widget.HnVideoPlayView;
 
 import java.util.List;
 
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 import static com.hn.d.valley.control.UserDiscussItemControl.getVideoTime;
@@ -59,7 +66,8 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
 
     @Override
     protected boolean isLoadInViewPager() {
-        return false;
+        //手动调用 loadData()
+        return true;
     }
 
     @Override
@@ -94,8 +102,16 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
     }
 
     private void changeEditMode() {
-        mRExBaseAdapter.notifyDataSetChanged();
+        if (mRExBaseAdapter == null) {
+            return;
+        }
+        if (isInEditMode) {
+            mRExBaseAdapter.setModel(RModelAdapter.MODEL_MULTI);
+        } else {
+            mRExBaseAdapter.setModel(RModelAdapter.MODEL_NORMAL);
+        }
         mViewHolder.v(R.id.control_layout).setVisibility(isInEditMode ? View.VISIBLE : View.GONE);
+        mRExBaseAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -116,19 +132,56 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
     @Override
     protected RExBaseAdapter<String, PublishTaskRealm, String> initRExBaseAdapter() {
         return new RExBaseAdapter<String, PublishTaskRealm, String>(mActivity) {
+
             @Override
             protected int getItemLayoutId(int viewType) {
                 return R.layout.item_draft;
             }
 
             @Override
-            protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, PublishTaskRealm bean) {
-                RImageCheckView checkView = holder.v(R.id.check_view);
+            protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, PublishTaskRealm bean) {
+                final RImageCheckView checkView = holder.v(R.id.check_view);
                 checkView.setChecked(isSelector);
+
+                checkView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (checkView.isChecked()) {
+                            mRExBaseAdapter.addSelectorPosition(position);
+                        } else {
+                            mRExBaseAdapter.removeSelectorPosition(position);
+                        }
+                    }
+                });
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mRExBaseAdapter.setSelectorPosition(position, R.id.check_view);
+                    }
+                });
             }
 
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, PublishTaskRealm dataBean) {
+            protected void onBindNormalView(RBaseViewHolder holder, int position, final PublishTaskRealm bean) {
+                //重新编辑
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!bean.isValid()) {
+                            return;
+                        }
+                        if (DynamicType.isVoice(bean.getType())) {
+                            startIView(new PublishVoiceNextDynamicUIView(bean));
+                        } else {
+                            startIView(new PublishDynamicUIView2(bean));
+                        }
+                    }
+                });
+            }
+
+            @Override
+            protected void onBindDataView(RBaseViewHolder holder, final int posInData, final PublishTaskRealm dataBean) {
                 holder.v(R.id.check_view).setVisibility(isInEditMode ? View.VISIBLE : View.GONE);
 
                 RTextView textView = holder.v(R.id.time_view);
@@ -157,18 +210,38 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 initMediaLayout(holder, dataBean);
 
                 //重发
-                holder.v(R.id.retry_view).setOnClickListener(new View.OnClickListener() {
+                TextView retryView = holder.tv(R.id.retry_view);
+                retryView.setText(PublishControl.instance().isInPublish(dataBean.getUuid()) ?
+                        R.string.sending2 : R.string.repeat_send_has_blank);
+                retryView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (PublishControl.instance().isInPublish(dataBean.getUuid())) {
+                            return;
+                        }
 
-                    }
-                });
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                PublishControl.instance().addTask(realm.copyFromRealm(dataBean), false);
+                                PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
+                                    @Override
+                                    public void onPublishStart() {
+                                        notifyItemChanged(posInData);
+                                    }
 
-                //重新编辑
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                                    @Override
+                                    public void onPublishEnd() {
+                                        loadData();
+                                    }
 
+                                    @Override
+                                    public void onPublishError(String msg) {
+                                        loadData();
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
@@ -192,9 +265,9 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
         int size = (int) (density() * 100);
         final int[] mediaSize = new int[]{size, size};
 
+        mediaImageTypeView.setVisibility(View.VISIBLE);
         if (DynamicType.isImage(mediaType)) {
             //图片类型
-            mediaImageTypeView.setVisibility(View.VISIBLE);
             videoTimeView.setVisibility(View.INVISIBLE);
             videoPlayView.setVisibility(View.INVISIBLE);
             voiceTipView.setVisibility(View.INVISIBLE);
@@ -218,7 +291,6 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
             mediaImageTypeView.setImage(dataBean.getPhotos2().get(0).thumbPath);
         } else if (DynamicType.isVideo(mediaType)) {
             //视频类型
-            mediaImageTypeView.setVisibility(View.VISIBLE);
             videoTimeView.setVisibility(View.VISIBLE);
             videoPlayView.setVisibility(View.VISIBLE);
             voiceTipView.setVisibility(View.INVISIBLE);
@@ -280,7 +352,11 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
 
                 @Override
                 public void displayImage(ImageView imageView, String url, int width, int height) {
-                    UserDiscussItemControl.displayVoiceImage(imageView, url, width, height, true);
+                    if (VoiceStatusInfo.NOPIC.equalsIgnoreCase(url)) {
+                        imageView.setImageResource(R.drawable.luyin_caogaoxiangi_morentu);
+                    } else {
+                        UserDiscussItemControl.displayVoiceImage(imageView, url, width, height, true);
+                    }
                 }
 
                 @Override
@@ -297,7 +373,6 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        mRExBaseAdapter.setModel(RModelAdapter.MODEL_MULTI);
 
         mViewHolder.cV(R.id.selector_all).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -309,6 +384,68 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
             }
         });
+
+        mRExBaseAdapter.addOnModelChangeListener(new RModelAdapter.SingleChangeListener() {
+            @Override
+            public void onSelectorChange(List<Integer> selectorList) {
+                int size = selectorList.size();
+                if (size == mRExBaseAdapter.getItemCount() && isInEditMode) {
+                    RModelAdapter.checkedButton(mViewHolder.cV(R.id.selector_all), true);
+                } else {
+                    RModelAdapter.checkedButton(mViewHolder.cV(R.id.selector_all), false);
+                }
+
+                if (size == 0) {
+                    mViewHolder.tv(R.id.delete_view).setText(getString(R.string.delete_text));
+                } else {
+                    mViewHolder.tv(R.id.delete_view).setText(getString(R.string.delete_text_format, size));
+                }
+            }
+        });
+
+        //删除
+        mViewHolder.v(R.id.delete_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final List<PublishTaskRealm> selectorData = mRExBaseAdapter.getSelectorData();
+                if (selectorData.isEmpty()) {
+                    return;
+                }
+                HnLoading.show(mOtherILayout);
+                RRealm.exe(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        for (int i = selectorData.size() - 1; i >= 0; i--) {
+                            selectorData.get(i).deleteFromRealm();
+                        }
+                        post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mRExBaseAdapter.notifyDataSetChanged();
+                                mRExBaseAdapter.unSelectorAll(true);
+                                HnLoading.hide();
+
+                                if (mRExBaseAdapter.getItemCount() == 0) {
+                                    showEmptyLayout();
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        showLoadView();
+    }
+
+    @Override
+    public void onViewShow(long viewShowCount) {
+        super.onViewShow(viewShowCount);
+        loadData();
     }
 
     @Override
@@ -328,5 +465,13 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
             }
         });
+    }
+
+    @Override
+    public void showEmptyLayout() {
+        super.showEmptyLayout();
+        isInEditMode = false;
+        changeEditMode();
+        getUITitleBarContainer().hideRightItem(0);
     }
 }

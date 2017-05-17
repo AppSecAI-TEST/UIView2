@@ -118,6 +118,8 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
     protected static final String KEY_ANCHOR = "anchor";
+    protected static final String KEY_AITMESSAGES = "aitMessages";
+
     @BindView(R.id.input_view)
     protected ExEditText mInputView;
     protected ChatControl2 mChatControl;
@@ -169,6 +171,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     private EmojiLayoutControl mEmojiLayoutControl;
     private CommandLayoutControl mCommandLayoutControl;
     private int mLastId = View.NO_ID;
+
     private RequestCallbackWrapper<List<IMMessage>> requestCallback = new RequestCallbackWrapper<List<IMMessage>>() {
         @Override
         public void onResult(int code, List<IMMessage> result, Throwable exception) {
@@ -561,6 +564,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             lastMessage = allDatas.get(0);
         }
 
+        fetchAnchorAndScrollTo(lastMessage);
+    }
+
+    protected void fetchAnchorAndScrollTo(IMMessage lastMessage) {
         msgService().queryMessageListEx(lastMessage,
                 QueryDirectionEnum.QUERY_OLD, mActivity.getResources().getInteger(R.integer.message_limit)
                 , true)
@@ -729,7 +736,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     }
 
-    private void parseBundle(Bundle bundle) {
+    protected void parseBundle(Bundle bundle) {
         mSessionId = bundle.getString(KEY_SESSION_ID);
         sessionType = SessionTypeEnum.typeOfValue(bundle.getInt(KEY_SESSION_TYPE));
         mAnchor = (IMMessage) bundle.getSerializable(KEY_ANCHOR);

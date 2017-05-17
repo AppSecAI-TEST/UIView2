@@ -1331,7 +1331,11 @@ public class UserDiscussItemControl {
     }
 
     public static String getVideoTime(String url) {
-        return getVideoTime(Integer.parseInt(url.substring(0, url.lastIndexOf('.')).split("t_")[1]));
+        return getVideoTime(getVideoTimeLong(url));
+    }
+
+    public static int getVideoTimeLong(String url) {
+        return Integer.parseInt(url.substring(0, url.lastIndexOf('.')).split("t_")[1]);
     }
 
     public static void displayImage(final ImageView imageView, final String url,

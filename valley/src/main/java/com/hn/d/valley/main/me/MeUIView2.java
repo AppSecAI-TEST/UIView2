@@ -132,7 +132,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
         if (viewShowCount >= 1) {
-            mRExBaseAdapter.notifyItemRangeChanged(0, 6);
+            mRExBaseAdapter.notifyItemRangeChanged(1, 5);
         }
     }
 

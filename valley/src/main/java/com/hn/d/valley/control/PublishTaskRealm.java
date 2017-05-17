@@ -30,7 +30,7 @@ public class PublishTaskRealm extends RealmObject {
     /**
      * 选中的tags
      */
-    private RealmList<Tag> mSelectorTags = new RealmList<>();
+    private RealmList<TagRealm> mSelectorTags = new RealmList<>();
     /**
      * 是否置顶
      */
@@ -47,6 +47,11 @@ public class PublishTaskRealm extends RealmObject {
      * 发布的文本显示的内容, 只用来做本地显示
      */
     private String showContent = "";
+
+    /**
+     * 重发时, 用来显示的内容
+     */
+    private String showContent2 = "";
     /**
      * 地理坐标和位置信息
      */
@@ -54,7 +59,7 @@ public class PublishTaskRealm extends RealmObject {
     /**
      * 1-纯文本 2-视频 3-图片
      */
-    private String type = "";
+    private String type = "0";
     private VideoStatusInfo mVideoStatusInfo;
     private VoiceStatusInfo mVoiceStatusInfo;
     /**
@@ -83,12 +88,8 @@ public class PublishTaskRealm extends RealmObject {
     public PublishTaskRealm(List<Luban.ImageItem> photos, List<Tag> selectorTags,
                             boolean isTop, boolean shareLocation, String content, String address, String lng, String lat) {
         uuid = UUID.randomUUID().toString();
-        for (Luban.ImageItem item : photos) {
-            this.photos.add(new ImageItemRealm(item));
-        }
-        for (Tag tag : selectorTags) {
-            this.mSelectorTags.add(new Tag(tag.getId(), tag.getName()));
-        }
+        setPhotos2(photos);
+        setSelectorTags2(selectorTags);
         this.isTop = isTop;
         this.shareLocation = shareLocation;
         this.content = content;
@@ -101,9 +102,7 @@ public class PublishTaskRealm extends RealmObject {
 
     public PublishTaskRealm(List<Luban.ImageItem> photos) {
         uuid = UUID.randomUUID().toString();
-        for (Luban.ImageItem item : photos) {
-            this.photos.add(new ImageItemRealm(item));
-        }
+        setPhotos2(photos);
         type = DynamicType.IMAGE.getValueString();
         createTime = System.currentTimeMillis();
     }
@@ -131,9 +130,7 @@ public class PublishTaskRealm extends RealmObject {
                             boolean isTop, boolean shareLocation, String content, String address, String lng, String lat) {
         uuid = UUID.randomUUID().toString();
         mVideoStatusInfo = videoStatusInfo;
-        for (Tag tag : selectorTags) {
-            this.mSelectorTags.add(new Tag(tag.getId(), tag.getName()));
-        }
+        setSelectorTags2(selectorTags);
         this.isTop = isTop;
         this.shareLocation = shareLocation;
         this.content = content;
@@ -163,35 +160,26 @@ public class PublishTaskRealm extends RealmObject {
      * 改变任务状态
      */
     public static void changeStatus(final String uuid, final int newStatus) {
-        RRealm.exe(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<PublishTaskRealm> results = realm.where(PublishTaskRealm.class).equalTo("uuid", uuid).findAll();
-                for (PublishTaskRealm task : results) {
-                    task.setPublishStatus(newStatus);
+        if (newStatus == STATUS_SUCCESS) {
+            RRealm.exe(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    RealmResults<PublishTaskRealm> results = realm.where(PublishTaskRealm.class).equalTo("uuid", uuid).findAll();
+                    results.deleteAllFromRealm();
+
                 }
-            }
-        });
-//
-//        if (newStatus == STATUS_SUCCESS) {
-//            RRealm.where(new Action1<Realm>() {
-//                @Override
-//                public void call(Realm realm) {
-//                    RealmResults<PublishTaskRealm> results = realm.where(PublishTaskRealm.class).equalTo("uuid", uuid).findAll();
-//                    results.deleteAllFromRealm();
-//                }
-//            });
-//        } else {
-//            RRealm.where(new Action1<Realm>() {
-//                @Override
-//                public void call(Realm realm) {
-//                    RealmResults<PublishTaskRealm> results = realm.where(PublishTaskRealm.class).equalTo("uuid", uuid).findAll();
-//                    for (PublishTaskRealm task : results) {
-//                        task.setPublishStatus(newStatus);
-//                    }
-//                }
-//            });
-//        }
+            });
+        } else {
+            RRealm.exe(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    RealmResults<PublishTaskRealm> results = realm.where(PublishTaskRealm.class).equalTo("uuid", uuid).findAll();
+                    for (PublishTaskRealm task : results) {
+                        task.setPublishStatus(newStatus);
+                    }
+                }
+            });
+        }
     }
 
     public List<Luban.ImageItem> getPhotos2() {
@@ -202,34 +190,51 @@ public class PublishTaskRealm extends RealmObject {
         return images;
     }
 
+    public PublishTaskRealm setPhotos2(final List<Luban.ImageItem> photos) {
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                for (Luban.ImageItem item : photos) {
+                    ImageItemRealm toRealm = realm.createObject(ImageItemRealm.class);
+                    toRealm.setPath(item.path);
+                    toRealm.setThumbPath(item.thumbPath);
+                    toRealm.setUrl(item.url);
+                    PublishTaskRealm.this.photos.add(toRealm);
+                }
+            }
+        });
+        return this;
+    }
+
     public void setPhotos2(RealmList<ImageItemRealm> photos) {
         this.photos = photos;
     }
 
-    public PublishTaskRealm setPhotos2(List<Luban.ImageItem> photos) {
-        for (Luban.ImageItem item : photos) {
-            this.photos.add(new ImageItemRealm(item));
-        }
-        return this;
-    }
-
     public List<Tag> getSelectorTags2() {
         List<Tag> tags = new ArrayList<>();
-        for (Tag t : mSelectorTags) {
+        for (TagRealm t : mSelectorTags) {
             tags.add(new Tag(t.getId(), t.getName()));
         }
         return tags;
     }
 
-    public void setSelectorTags2(RealmList<Tag> selectorTags) {
-        mSelectorTags = selectorTags;
+    public PublishTaskRealm setSelectorTags2(final List<Tag> selectorTags) {
+        RRealm.exe(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                for (Tag tag : selectorTags) {
+                    TagRealm toRealm = realm.createObject(TagRealm.class);
+                    toRealm.setName(tag.getName());
+                    toRealm.setId(tag.getId());
+                    PublishTaskRealm.this.mSelectorTags.add(toRealm);
+                }
+            }
+        });
+        return this;
     }
 
-    public PublishTaskRealm setSelectorTags2(List<Tag> selectorTags) {
-        for (Tag tag : selectorTags) {
-            this.mSelectorTags.add(new Tag(tag.getId(), tag.getName()));
-        }
-        return this;
+    public void setSelectorTags2(RealmList<TagRealm> selectorTags) {
+        mSelectorTags = selectorTags;
     }
 
     public RealmList<ImageItemRealm> getPhotos() {
@@ -240,11 +245,11 @@ public class PublishTaskRealm extends RealmObject {
         this.photos = photos;
     }
 
-    public RealmList<Tag> getSelectorTags() {
+    public RealmList<TagRealm> getSelectorTags() {
         return mSelectorTags;
     }
 
-    public void setSelectorTags(RealmList<Tag> selectorTags) {
+    public void setSelectorTags(RealmList<TagRealm> selectorTags) {
         mSelectorTags = selectorTags;
     }
 
@@ -381,6 +386,19 @@ public class PublishTaskRealm extends RealmObject {
 
     public long getCreateTime() {
         return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getShowContent2() {
+        return showContent2;
+    }
+
+    public PublishTaskRealm setShowContent2(String showContent2) {
+        this.showContent2 = showContent2;
+        return this;
     }
 
     public String getTimeString() {

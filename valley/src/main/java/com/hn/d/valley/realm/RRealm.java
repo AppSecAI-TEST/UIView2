@@ -3,6 +3,7 @@ package com.hn.d.valley.realm;
 import android.os.Looper;
 
 import com.angcyo.library.utils.L;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.ValleyApp;
 
 import io.realm.DynamicRealm;
@@ -92,7 +93,11 @@ public class RRealm {
     public static void exe(final Realm.Transaction transaction) {
         Realm realm = checkMainThread() ? realm() : getRealmInstance();
         try {
-            realm.executeTransaction(transaction);
+            if (realm.isInTransaction()) {
+                transaction.execute(realm);
+            } else {
+                realm.executeTransaction(transaction);
+            }
         } finally {
             if (!checkMainThread()) {
                 if (realm != null) {
@@ -108,7 +113,11 @@ public class RRealm {
     public static void async(final Realm.Transaction transaction) {
         Realm realm = checkMainThread() ? realm() : getRealmInstance();
         try {
-            realm.executeTransactionAsync(transaction);
+            if (realm.isInTransaction()) {
+                transaction.execute(realm);
+            } else {
+                realm.executeTransactionAsync(transaction);
+            }
         } finally {
             if (!checkMainThread()) {
                 if (realm != null) {
@@ -124,7 +133,12 @@ public class RRealm {
     public static void async(final Realm.Transaction transaction, final Realm.Transaction.OnSuccess onSuccess) {
         Realm realm = checkMainThread() ? realm() : getRealmInstance();
         try {
-            realm.executeTransactionAsync(transaction, onSuccess);
+            if (realm.isInTransaction()) {
+                transaction.execute(realm);
+                onSuccess.onSuccess();
+            } else {
+                realm.executeTransactionAsync(transaction, onSuccess);
+            }
         } finally {
             if (!checkMainThread()) {
                 if (realm != null) {
@@ -172,7 +186,7 @@ public class RRealm {
      */
     public static void init(final ValleyApp valleyApp) {
         Realm.init(valleyApp);
-        RealmConfiguration config = new RealmConfiguration.Builder()
+        RealmConfiguration.Builder builder = new RealmConfiguration.Builder()
                 .name("valley.realm")
                 .migration(new RealmMigration() {
                     @Override
@@ -202,9 +216,15 @@ public class RRealm {
 //                        }
                     }
                 })
-                .deleteRealmIfMigrationNeeded()
-                .schemaVersion(1)
-                .build();
+                .schemaVersion(1);
+
+        RealmConfiguration config;
+        if (BuildConfig.SHOW_DEBUG) {
+            config = builder.deleteRealmIfMigrationNeeded().build();
+        } else {
+            config = builder.build();
+        }
+
         Realm.setDefaultConfiguration(config);
     }
 

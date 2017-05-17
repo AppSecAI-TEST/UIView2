@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.angcyo.uiview.viewgroup.RRelativeLayout
+<com.angcyo.uiview.viewgroup.RLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/base_bg_selector">
+    android:background="@drawable/base_bg_selector"
+    android:orientation="horizontal">
 
     <com.angcyo.uiview.widget.RImageCheckView
         android:id="@+id/check_view"
@@ -15,9 +16,9 @@
         android:src="@drawable/check_selector"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/check_view"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:paddingEnd="@dimen/base_xhdpi"
         android:paddingStart="@dimen/base_xhdpi">
@@ -46,8 +47,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/base_dark_border_line_little_selector"
                 android:paddingBottom="@dimen/base_ldpi"
-                android:paddingStart="@dimen/base_xhdpi"
                 android:paddingEnd="@dimen/base_xhdpi"
+                android:paddingStart="@dimen/base_xhdpi"
                 android:paddingTop="@dimen/base_ldpi"
                 android:text="@string/repeat_send_has_blank"/>
 
@@ -70,7 +71,8 @@
                 layout="@layout/item_media_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/base_xhdpi"/>
+                android:layout_marginEnd="@dimen/base_xhdpi"
+                android:background="@color/base_red"/>
 
             <com.hn.d.valley.widget.HnExTextView
                 android:id="@+id/content_view"
@@ -87,4 +89,4 @@
 
     </LinearLayout>
 
-</com.angcyo.uiview.viewgroup.RRelativeLayout>
+</com.angcyo.uiview.viewgroup.RLinearLayout>

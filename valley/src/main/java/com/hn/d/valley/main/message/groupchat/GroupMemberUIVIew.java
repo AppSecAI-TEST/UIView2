@@ -192,7 +192,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
 
         float start = show? ScreenUtil.dip2px(48):0;
         float end = show?0:ScreenUtil.dip2px(48);
-        ObjectAnimator animator = new ObjectAnimator().ofFloat(ll_bottom,"translationY",start,end);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_bottom,"translationY",start,end);
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();

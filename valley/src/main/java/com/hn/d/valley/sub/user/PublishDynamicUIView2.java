@@ -2,6 +2,7 @@ package com.hn.d.valley.sub.user;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -14,7 +15,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
+import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -61,11 +64,13 @@ import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.utils.HnGlide;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.utils.RBus;
+import com.hn.d.valley.widget.HnExEditText;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnTopImageView;
@@ -74,6 +79,7 @@ import com.lzy.imagepicker.ImagePickerHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -97,17 +103,19 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private static boolean isShowTip = false;
     Action0 mPublishAction;
     UserDiscussListBean.DataListBean mDataListBean;
+    String mContent;
     private HnAddImageAdapter2 mAddImageAdapter2;
-    private ArrayList<Luban.ImageItem> photos;
+    private List<Luban.ImageItem> photos = new ArrayList<>();
     private List<Tag> mSelectorTags = new ArrayList<>();
     private DynamicType mDynamicType;
     private AmapBean mTargetLocation;
     private RSoftInputLayout mSoftInputLayout;
-    private ExEditText mInputView;
+    private HnExEditText mInputView;
     private EmojiLayoutControl mEmojiLayoutControl;
     private List<String> atUsers = new ArrayList<>();//@的用户
     private List<FriendBean> mFriendList = new ArrayList<>();
     private VideoStatusInfo mVideoStatusInfo;
+    private PublishTaskRealm mPublishTaskRealm;
 
     /**
      * 发布动态
@@ -146,6 +154,25 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         mDynamicType = DynamicType.VIDEO;
     }
 
+    public PublishDynamicUIView2(PublishTaskRealm taskRealm) {
+        mPublishTaskRealm = taskRealm;
+        mContent = taskRealm.getShowContent2();
+        mSelectorTags.addAll(taskRealm.getSelectorTags2());
+
+        if (DynamicType.isVideo(taskRealm.getType())) {
+            mDynamicType = DynamicType.VIDEO;
+            mVideoStatusInfo = new VideoStatusInfo(taskRealm.getVideoStatusInfo().getVideoThumbPath(),
+                    taskRealm.getVideoStatusInfo().getVideoPath());
+        } else if (DynamicType.isImage(taskRealm.getType())) {
+            mDynamicType = DynamicType.IMAGE;
+            photos = taskRealm.getPhotos2();
+        } else if (DynamicType.isText(taskRealm.getType())) {
+            mDynamicType = DynamicType.TEXT;
+        } else {
+            mDynamicType = DynamicType.TEXT;
+        }
+    }
+
     public PublishDynamicUIView2 setPublishAction(Action0 publishAction) {
         mPublishAction = publishAction;
         return this;
@@ -158,7 +185,36 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
     @Override
     public boolean onBackPressed() {
-        return mSoftInputLayout.requestBackPressed();
+        boolean backPressed = mSoftInputLayout.requestBackPressed();
+        if (backPressed) {
+            if (!mInputView.isEmpty() || mAddImageAdapter2.getAllDatas().size() > 0 || mVideoStatusInfo != null) {
+                UIItemDialog.build()
+                        .addItem(getString(R.string.save_draft), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                RRealm.exe(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        if (mPublishTaskRealm != null) {
+                                            mPublishTaskRealm.deleteFromRealm();
+                                        }
+                                        PublishTaskRealm.save(getPublishTaskRealm());
+                                        finishIView(PublishDynamicUIView2.this, new UIParam(true, true, false));
+                                    }
+                                });
+                            }
+                        })
+                        .addItem(getString(R.string.no_save), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                finishIView(PublishDynamicUIView2.this, new UIParam(true, true, false));
+                            }
+                        })
+                        .showDialog(mOtherILayout);
+                return false;
+            }
+        }
+        return backPressed;
     }
 
     @Override
@@ -174,13 +230,22 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                             return;
                         }
 
-                        if (mDynamicType == DynamicType.IMAGE && mAddImageAdapter2.getAllDatas().size() == 0) {
-                            mDynamicType = DynamicType.TEXT;
-                        }
+
+                        checkDynamicType();
 
                         onPublish();
                     }
                 }));
+    }
+
+    protected void checkDynamicType() {
+        if (mDynamicType == DynamicType.IMAGE && mAddImageAdapter2.getAllDatas().size() == 0) {
+            mDynamicType = DynamicType.TEXT;
+        } else if (mDynamicType == DynamicType.TEXT && mAddImageAdapter2.getAllDatas().size() > 1 /**加号要除掉*/) {
+            mDynamicType = DynamicType.IMAGE;
+        } else if (mVideoStatusInfo != null) {
+            mDynamicType = DynamicType.VIDEO;
+        }
     }
 
     @Override
@@ -211,6 +276,12 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 }
             });
         }
+    }
+
+    @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+        ImagePickerHelper.clearAllSelectedImages();
     }
 
     @Override
@@ -378,6 +449,19 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 contentView.setText(getContent(mDataListBean.getOriginal_info().getContent()));
             }
         }
+
+        //重新编辑的动态
+        if (mPublishTaskRealm != null) {
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    mInputView.setInputText(mContent);
+                    mInputView.showEmoji();
+                    mInputView.requestFocus();
+                    mAddImageAdapter2.resetData(photos);
+                }
+            });
+        }
     }
 
     private String getContent(String content) {
@@ -397,7 +481,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
      * 是否是转发的动态
      */
     private boolean isForward() {
-        return mDynamicType.getValue() >= 6;
+        return mPublishTaskRealm == null && mDynamicType.getValue() >= 6;
     }
 
     private void initVisibleView() {
@@ -424,6 +508,9 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     }
 
     private void initTags() {
+        if (mPublishTaskRealm != null) {
+            return;
+        }
         for (Tag t : TagsControl.getAllTags()) {
             if (mDynamicType == DynamicType.IMAGE) {
                 if (TextUtils.equals(t.getName(), getString(R.string.life))) {
@@ -606,50 +693,24 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         CheckBox allowDownloadView = mViewHolder.v(R.id.allow_box_view);
 
         if (mDynamicType.getValue() < 6) {
-            //小于6,表示是发布动态
-            PublishTaskRealm publishTask = null;
-            if (mDynamicType == DynamicType.IMAGE) {
-                publishTask = new PublishTaskRealm(photos);
-            } else if (mDynamicType == DynamicType.VIDEO) {
-                publishTask = new PublishTaskRealm(mVideoStatusInfo);
-            } else if (mDynamicType == DynamicType.TEXT) {
-                publishTask = new PublishTaskRealm();
+            if (mPublishTaskRealm != null) {
+                RRealm.exe(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        mPublishTaskRealm.deleteFromRealm();
+                    }
+                });
             }
-            publishTask.setSelectorTags2(mSelectorTags)
-                    .setTop(hnTopImageView.isTop())
-                    .setShareLocation(mTargetLocation != null)
-                    .setAddress(getAddress())
-                    .setLat(getLatitude())
-                    .setLng(getLongitude())
-                    .setAllow_download(allowDownloadView.isChecked() ? 1 : 0)
-                    .setShowContent(mInputView.fixShowMentionString(new ExEditText.getIdFromUserName() {
-                        @Override
-                        public String userId(String userName) {
-                            for (FriendBean bean : mFriendList) {
-                                if (TextUtils.equals(userName, bean.getDefaultMark())) {
-                                    return bean.getUid();
-                                }
-                            }
-                            return "";
-                        }
-                    }))
-                    .setContent(mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
-                        @Override
-                        public String userId(String userName) {
-                            for (FriendBean bean : mFriendList) {
-                                if (TextUtils.equals(userName, bean.getDefaultMark())) {
-                                    return bean.getUid();
-                                }
-                            }
-                            return "";
-                        }
-                    }))
-            ;
-            PublishControl.instance().addTask(publishTask);
+
+            //小于6,表示是发布动态
+            PublishTaskRealm publishTask = getPublishTaskRealm();
+            PublishControl.instance().addTask(publishTask, true);
 
             finishIView();
             if (mPublishAction != null) {
                 mPublishAction.call();
+            } else {
+                PublishControl.instance().startPublish();
             }
         } else {
             //转发动态, 不需要再后台进行
@@ -665,7 +726,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                             "type:discuss",
                             "item_id:" + item_id,
                             "is_top:" + hnTopImageView.isTop(),
-                            "content:" + mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
+                            "mContent:" + mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
                                 @Override
                                 public String userId(String userName) {
                                     for (FriendBean bean : mFriendList) {
@@ -695,6 +756,55 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         }
                     }));
         }
+    }
+
+    @NonNull
+    private PublishTaskRealm getPublishTaskRealm() {
+        checkDynamicType();
+
+        HnTopImageView hnTopImageView = mViewHolder.v(R.id.ico_top);
+        CheckBox allowDownloadView = mViewHolder.v(R.id.allow_box_view);
+
+        PublishTaskRealm publishTask = new PublishTaskRealm();
+        if (mDynamicType == DynamicType.IMAGE) {
+            publishTask = new PublishTaskRealm(photos);
+        } else if (mDynamicType == DynamicType.VIDEO) {
+            publishTask = new PublishTaskRealm(mVideoStatusInfo);
+        } else if (mDynamicType == DynamicType.TEXT) {
+            publishTask = new PublishTaskRealm();
+        }
+        publishTask.setSelectorTags2(mSelectorTags)
+                .setTop(hnTopImageView.isTop())
+                .setShareLocation(mTargetLocation != null)
+                .setAddress(getAddress())
+                .setLat(getLatitude())
+                .setLng(getLongitude())
+                .setAllow_download(allowDownloadView.isChecked() ? 1 : 0)
+                .setShowContent(mInputView.fixShowMentionString(new ExEditText.getIdFromUserName() {
+                    @Override
+                    public String userId(String userName) {
+                        for (FriendBean bean : mFriendList) {
+                            if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                                return bean.getUid();
+                            }
+                        }
+                        return "";
+                    }
+                }))
+                .setShowContent2(mInputView.string())
+                .setContent(mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
+                    @Override
+                    public String userId(String userName) {
+                        for (FriendBean bean : mFriendList) {
+                            if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                                return bean.getUid();
+                            }
+                        }
+                        return "";
+                    }
+                }))
+        ;
+        return publishTask;
     }
 
     private String getAddress() {
@@ -730,7 +840,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //                            "media:" + RUtils.connect(mUploadMedias),
 //                            "is_top:" + (mTopBox.isChecked() ? 1 : 0),
 //                            "open_location:" + (mShareBox.isChecked() ? 1 : 0),
-//                            "content:" + mInputView.string(),
+//                            "mContent:" + mInputView.string(),
 //                            "address:" + getAddress(),
 //                            "lng:" + getLongitude(),
 //                            "lat:" + getLatitude()))
@@ -759,7 +869,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //                            "item_id:" + forwardDataBean.getDiscuss_id(),
 //                            "is_top:" + (mTopBox.isChecked() ? 1 : 0),
 //                            "open_location:" + (mShareBox.isChecked() ? 1 : 0),
-//                            "content:" + mInputView.string(),
+//                            "mContent:" + mInputView.string(),
 //                            "address:" + getAddress(),
 //                            "lng:" + getLongitude(),
 //                            "lat:" + getLatitude()))
@@ -781,7 +891,6 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //            );
 //        }
     }
-
 
 
 }

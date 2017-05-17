@@ -4,6 +4,7 @@ import com.hn.d.valley.realm.RRealm;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 import rx.functions.Action1;
 
 /**
@@ -22,7 +23,8 @@ public class DraftControl {
         RRealm.where(new Action1<Realm>() {
             @Override
             public void call(Realm realm) {
-                RealmResults<PublishTaskRealm> taskRealms = realm.where(PublishTaskRealm.class).findAll();
+                RealmResults<PublishTaskRealm> taskRealms = realm.where(PublishTaskRealm.class)
+                        .findAllSorted("createTime", Sort.DESCENDING);
                 if (listener != null) {
                     listener.onDraft(taskRealms);
                 }

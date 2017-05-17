@@ -90,17 +90,36 @@ public class PublishControl {
         return PublishTaskRealm.STATUS_NORMAL;
     }
 
+    public boolean isInPublish(String uuid) {
+        for (PublishTaskRealm task : mPublishTasks) {
+            if (TextUtils.equals(task.getUuid(), uuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * 添加一个后台任务
      */
-    public void addTask(final PublishTaskRealm task) {
+    public void addTask(final PublishTaskRealm task, boolean save) {
         if (task == null) {
+            return;
+        }
+        if (mPublishTasks.contains(task)) {
+            for (UserDiscussListBean.DataListBean bean : mDataListBeen) {
+                if (TextUtils.equals(bean.getUuid(), task.getUuid())) {
+                    mDataListBeen.remove(bean);
+                    mDataListBeen.add(createBean(task));
+                }
+            }
             return;
         }
         mPublishTasks.add(task);
         mDataListBeen.add(createBean(task));
-
-        PublishTaskRealm.save(task);
+        if (save) {
+            PublishTaskRealm.save(task);
+        }
     }
 
     /**
@@ -122,10 +141,30 @@ public class PublishControl {
         onPublishStart(false);
     }
 
+    public void startPublish() {
+        startPublish(new OnPublishListener() {
+            @Override
+            public void onPublishStart() {
+                L.i("call: onPublishStart([])-> ");
+            }
+
+            @Override
+            public void onPublishEnd() {
+                L.i("call: onPublishEnd([])-> ");
+            }
+
+            @Override
+            public void onPublishError(String msg) {
+                L.i("call: onPublishError([msg])-> ");
+            }
+        });
+    }
+
     private void onPublishStart(boolean next) {
         if (mPublishTasks.isEmpty()) {
             isStart = false;
             mDataListBeen.clear();
+            mPublishTasks.clear();
             mPublishListener.onPublishEnd();
             return;
         }
@@ -141,15 +180,17 @@ public class PublishControl {
 
         final PublishTaskRealm publishTask = mPublishTasks.valueAt(index);
 
-        mPublishListener.onPublishStart();
         PublishTaskRealm.changeStatus(publishTask.getUuid(), PublishTaskRealm.STATUS_ING);
+        mPublishListener.onPublishStart();
 
         if (NetworkStateReceiver.getNetType().value() <= 0) {
             for (PublishTaskRealm task : mPublishTasks) {
                 PublishTaskRealm.changeStatus(task.getUuid(), PublishTaskRealm.STATUS_ERROR);
             }
-            mPublishListener.onPublishError("No network.");
+            mPublishTasks.clear();
+            mDataListBeen.clear();
             isStart = false;
+            mPublishListener.onPublishError("No network.");
             return;
         }
 

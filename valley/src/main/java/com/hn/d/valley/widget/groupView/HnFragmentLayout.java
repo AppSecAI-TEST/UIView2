@@ -34,10 +34,16 @@ public class HnFragmentLayout extends FrameLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         View childAt = getChildAt(0);
         if (childAt != null) {
-            setMeasuredDimension(childAt.getMeasuredWidth(), childAt.getMeasuredHeight());
+            int wSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.UNSPECIFIED);
+            int hSpec = MeasureSpec.makeMeasureSpec(MeasureSpec.getSize(heightMeasureSpec), MeasureSpec.UNSPECIFIED);
+            childAt.measure(wSpec, hSpec);
+            //setMeasuredDimension(childAt.getMeasuredWidth(), childAt.getMeasuredHeight());
+            widthMeasureSpec = MeasureSpec.makeMeasureSpec(childAt.getMeasuredWidth(), MeasureSpec.EXACTLY);
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(childAt.getMeasuredHeight(), MeasureSpec.EXACTLY);
         }
+
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }

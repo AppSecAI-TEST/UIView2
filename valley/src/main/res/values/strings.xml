@@ -121,6 +121,7 @@
     <string name="new_frient_text">新朋友</string>
     <string name="link_count_tip">%1$s个人赞过</string>
     <string name="delete_text">删除</string>
+    <string name="delete_text_format">删除(%1$s)</string>
     <string name="see_all">查看全部</string>
     <string name="sex">性别</string>
     <string name="reply_cnt_tip">%1$s条回复</string>
@@ -497,6 +498,7 @@
     <string name="delete_reply_tip">确定删除该回复吗?</string>
     <string name="image_empty_tip">请选择图片</string>
     <string name="sending">正在发送中...</string>
+    <string name="sending2">发送中...</string>
     <string name="send_error">发送失败.</string>
     <string name="add_bgm_tip">添加配乐</string>
     <string name="max_record_time_tip">最长[5分钟]录制哦</string>
@@ -594,7 +596,24 @@
     <string name="have_account">已有帐号</string>
     <string name="other_login_tip">第三方帐号登录</string>
     <string name="network_exception">您的网络有问题, 请稍后重试!</string>
+    <string name="texc_msg_notify">消息通知</string>
+    <string name="text_reveive_msg_notify">接受新消息通知</string>
+    <string name="text_enable_klg_msg_notify">关闭或开启恐龙谷的新消息通知.</string>
+    <string name="text_notification_enable_detail">通知显示消息详情</string>
+    <string name="text_notification_detail_tip">关闭后,当收到恐龙谷消息时,通知提示将不显示发信人和内容摘要.</string>
+    <string name="text_func_msg_bother">功能消息免打扰</string>
+    <string name="tex_set_msg_perid_of_time">设置系统功能消息提示声音和振动的时段.</string>
+    <string name="text_sound">声音</string>
+    <string name="text_virbrate">震动</string>
+    <string name="text_sound_virbrate_tip">当恐龙谷运行时,你可以设置是否需要声音或者振动.</string>
+    <string name="text_friend_circle_dynamic_notify">朋友圈动态更新</string>
+    <string name="text_cirlcle_show_tip">关闭后,有朋友更新动态时,界面下面的\"首页\"切换按钮上不再出现红点提示.</string>
+    <string name="text_subscribe_redpacket_notify">订阅红包通知</string>
+    <string name="text_redpacket_noti_tip">打开后,你将收到所有的红包通知!</string>
+    <string name="text_man_ait_you">有人@你</string>
     <string name="sex_tip">性别:</string>
     <string name="selector_sex_tip">请选择性别</string>
     <string name="selector_all">全选</string>
+    <string name="save_draft">保存草稿</string>
+    <string name="no_save">不保存</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.hn.d.valley.sub.user;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -20,6 +21,7 @@ import com.hn.d.valley.control.MusicControl;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.control.VoiceStatusInfo;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.widget.HnBigPlayView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
@@ -29,8 +31,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import rx.functions.Action0;
 import rx.functions.Action1;
+
+import static com.hn.d.valley.control.UserDiscussItemControl.getVideoTimeLong;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -45,6 +50,7 @@ import rx.functions.Action1;
  */
 public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
 
+    private static PublishTaskRealm mPublishTaskRealm;
     String filePath;
     int recordTime;//秒
     Action0 mPublishAction;
@@ -60,6 +66,13 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
         new File(filePath).renameTo(new File(newName));
         this.filePath = newName;
         mMusicRealm = musicRealm;
+    }
+
+    public PublishVoiceNextDynamicUIView(PublishTaskRealm publishTaskRealm) {
+        mPublishTaskRealm = publishTaskRealm;
+        this.filePath = publishTaskRealm.getVoiceStatusInfo().getVoicePath();
+        this.mImagePath = publishTaskRealm.getVoiceStatusInfo().getVoiceImagePath();
+        this.recordTime = getVideoTimeLong(this.filePath);
     }
 
     @Override
@@ -81,13 +94,25 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     }
 
     private void onPublish() {
+        if (mPublishTaskRealm != null) {
+            RRealm.exe(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    mPublishTaskRealm.deleteFromRealm();
+                    mPublishTaskRealm = null;
+                }
+            });
+        }
+
         PublishTaskRealm publishTask = new PublishTaskRealm(
                 new VoiceStatusInfo(mImagePath, filePath));
-        PublishControl.instance().addTask(publishTask);
+        PublishControl.instance().addTask(publishTask, true);
 
         finishIView();
         if (mPublishAction != null) {
             mPublishAction.call();
+        } else {
+            PublishControl.instance().startPublish();
         }
     }
 
@@ -111,6 +136,9 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+
+        showPreview();
+
         mTimeView = mViewHolder.v(R.id.time_view);
         mTimeView.setSumTime(recordTime);
 
@@ -202,8 +230,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                         mImagePath = strings.get(0);
                         L.e("call: call([strings])-> " + mImagePath);
 
-                        HnGlideImageView glideImageView = mViewHolder.v(R.id.image_view);
-                        glideImageView.setImageUrl(mImagePath);
+                        showPreview();
                     }
                 }, new Action1<Throwable>() {
                     @Override
@@ -216,5 +243,13 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                         HnLoading.hide();
                     }
                 });
+    }
+
+    private void showPreview() {
+        if (TextUtils.isEmpty(mImagePath)) {
+            return;
+        }
+        HnGlideImageView glideImageView = mViewHolder.v(R.id.image_view);
+        glideImageView.setImageUrl(mImagePath);
     }
 }

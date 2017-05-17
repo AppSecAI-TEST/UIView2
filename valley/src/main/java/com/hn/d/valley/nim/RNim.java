@@ -4,6 +4,7 @@ import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
@@ -16,6 +17,7 @@ import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.MsgNotifySetting;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
@@ -92,16 +94,8 @@ public class RNim {
         RApplication application = ValleyApp.getApp();
         SDKOptions options = new SDKOptions();
 
-        // 如果将新消息通知提醒托管给 SDK 完成，需要添加以下配置。否则无需设置。
-        StatusBarNotificationConfig config = new StatusBarNotificationConfig();
-        config.notificationEntrance = HnSplashActivity.class; // 点击通知栏跳转到该Activity
-        config.notificationSmallIconId = R.drawable.login_logo;
-        // 呼吸灯配置
-        config.ledARGB = Color.GREEN;
-        config.ledOnMs = 1000;
-        config.ledOffMs = 1500;
-        // 通知铃声的uri字符串
-        config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
+        StatusBarNotificationConfig config = genNotiConfig();
+
         options.statusBarNotificationConfig = config;
 
         // 配置保存图片，文件，log 等数据的目录
@@ -158,6 +152,29 @@ public class RNim {
         return options;
     }
 
+    @NonNull
+    public static StatusBarNotificationConfig genNotiConfig() {
+        // 如果将新消息通知提醒托管给 SDK 完成，需要添加以下配置。否则无需设置。
+        StatusBarNotificationConfig config = new StatusBarNotificationConfig();
+        config.notificationEntrance = HnSplashActivity.class; // 点击通知栏跳转到该Activity
+        config.notificationSmallIconId = R.drawable.login_logo;
+        // 呼吸灯配置
+        config.ledARGB = Color.GREEN;
+        config.ledOnMs = 1000;
+        config.ledOffMs = 1500;
+        // 通知铃声的uri字符串
+        config.notificationSound = "android.resource://com.netease.nim.demo/raw/msg";
+
+        //设置不显示消息详情开关
+        config.hideContent = MsgNotifySetting.instance().isShowMsgNotiDetail();
+
+        config.vibrate = MsgNotifySetting.instance().isVirbrate();
+
+        config.ring = MsgNotifySetting.instance().isRing();
+
+        return config;
+    }
+
     // 如果已经存在用户登录信息，返回LoginInfo，否则返回null即可
     private static LoginInfo loginInfo() {
         String account = UserCache.getUserAccount();
@@ -199,6 +216,8 @@ public class RNim {
 //            }
 //        });
 
+//        UserCache.setUserAccount("62176");
+//        UserCache.setUserToken("9abe7fa2826c1c9dde32779569116013");
         UserCache.setUserAccount("50033");
         UserCache.setUserToken("1ad6c5e17b3150f7398bb9846664b8ba");
         login("50033", "1ad6c5e17b3150f7398bb9846664b8ba", new RequestCallbackWrapper<LoginInfo>() {

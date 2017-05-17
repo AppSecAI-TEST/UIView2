@@ -190,6 +190,7 @@
 
         </RelativeLayout>
 
+        <!-- 群公告 -->
         <RelativeLayout
             android:id="@+id/rl_group_announcement"
             android:layout_width="match_parent"
@@ -212,6 +213,38 @@
                 tools:text="angcyo:angcyo" />
         </RelativeLayout>
 
+        <!-- @消息 -->
+        <LinearLayout
+            android:id="@+id/ait_control_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/base_xxhdpi"
+            android:background="@drawable/base_left_round_selector"
+            android:gravity="center_vertical"
+            android:minWidth="@dimen/base_80dpi"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:padding="@dimen/base_ldpi"
+            >
+
+            <ImageView
+                android:id="@+id/voice_play_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/voice_playing_blue" />
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/voice_time_view"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccentBlack"
+                android:padding="@dimen/base_ldpi"
+                android:text="@string/text_man_ait_you"
+                tools:text="13" />
+
+        </LinearLayout>
 
         <!--录音时间覆盖-->
         <FrameLayout

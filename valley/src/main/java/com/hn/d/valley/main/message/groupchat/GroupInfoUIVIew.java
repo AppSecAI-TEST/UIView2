@@ -34,6 +34,7 @@ import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ItemTypes;
+import com.hn.d.valley.main.me.setting.MsgNotifySetting;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.chatfile.ChatFileUIView;
 import com.hn.d.valley.main.message.search.ChatRecordSearchUIView;
@@ -326,16 +327,18 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 final SwitchCompat switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_message_notity_no));
-                boolean notice = NIMClient.getService(FriendService.class).isNeedMessageNotify(mSessionId);
-                switchCompat.setChecked(notice);
+                Team t = TeamDataCache.getInstance().getTeamById(mSessionId);
+                if (t != null) {
+                    switchCompat.setChecked(t.mute());
+                }
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                      SessionSettingDelegate.getInstance().setMessageNotify(mSessionId,isChecked,switchCompat);
-                        NIMClient.getService(TeamService.class).muteTeam(mSessionId, true).setCallback(new com.netease.nimlib.sdk.RequestCallback<Void>() {
+                    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+//                      SessionSettingDelegate.getInstance().setMessageNotify(mSessionId,isChecked,switchCompat);
+                        NIMClient.getService(TeamService.class).muteTeam(mSessionId, isChecked).setCallback(new com.netease.nimlib.sdk.RequestCallback<Void>() {
                             @Override
                             public void onSuccess(Void param) {
-
+                                MsgNotifySetting.instance().enableGroupMsgNotify(isChecked);
                             }
 
                             @Override

@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 
+import com.angcyo.library.utils.L;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.cache.NimUserInfoCache;

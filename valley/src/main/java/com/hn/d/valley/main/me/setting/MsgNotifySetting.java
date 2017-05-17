@@ -3,6 +3,7 @@ package com.hn.d.valley.main.me.setting;
 import android.text.TextUtils;
 
 import com.angcyo.uiview.github.utilcode.utils.SPUtils;
+import com.hn.d.valley.nim.RNim;
 import com.netease.nimlib.sdk.NIMClient;
 
 /**
@@ -26,6 +27,8 @@ public class MsgNotifySetting {
     private static final String DOWNTIMETOGGLE = "downTimeToggle";
     private static final String RING = "ring";
     private static final String VIBRATE = "vibrate";
+    private static final String CIRCLE_NOTIFY = "circle_notify";
+    private static final String GROUPMSG_NOTIFY = "groupmsg_notify";
 
     private SPUtils mSPUtils;
 
@@ -46,6 +49,7 @@ public class MsgNotifySetting {
     // 开启/关闭通知栏消息提醒
     public MsgNotifySetting toggleNotification(boolean enable) {
         NIMClient.toggleNotification(enable);
+        NIMClient.updateStatusBarNotificationConfig(RNim.genNotiConfig());
         mSPUtils.putBoolean(TOGGLENOTIFICATION,enable);
         return this;
     }
@@ -65,7 +69,7 @@ public class MsgNotifySetting {
     }
 
     public boolean isShowMsgNotiDetail() {
-        return mSPUtils.getBoolean(SHOWMSGNOTIDETAIL);
+        return mSPUtils.getBoolean(SHOWMSGNOTIDETAIL,false);
     }
 
     public MsgNotifySetting setAvoidMsgNotify(boolean enable)  {
@@ -114,5 +118,20 @@ public class MsgNotifySetting {
         return mSPUtils.getBoolean(VIBRATE,true);
     }
 
+    public void enableCircleNotify(boolean enable) {
+        mSPUtils.putBoolean(CIRCLE_NOTIFY,enable);
+    }
+
+    public boolean isCircleCNotify() {
+        return mSPUtils.getBoolean(CIRCLE_NOTIFY);
+    }
+
+    public void enableGroupMsgNotify(boolean enable) {
+        mSPUtils.putBoolean(GROUPMSG_NOTIFY,enable);
+    }
+
+    public boolean isGroupMsgNotify() {
+        return mSPUtils.getBoolean(GROUPMSG_NOTIFY,true);
+    }
 
 }

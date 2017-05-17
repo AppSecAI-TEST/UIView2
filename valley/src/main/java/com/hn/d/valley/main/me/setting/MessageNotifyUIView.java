@@ -31,12 +31,12 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
 
     @Override
     protected String getTitleString() {
-        return "消息通知";
+        return mActivity.getString(R.string.texc_msg_notify);
     }
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        if (viewType == 0 || viewType == 2 || viewType == 4 || viewType == 6 || viewType == 7 || viewType == 9) {
+        if (viewType == 0 || viewType == 2 || viewType == 4 || viewType == 6 || viewType == 7 || viewType == 9 || viewType == 11) {
             return R.layout.item_switch_view;
         }
         return R.layout.item_single_text_view;
@@ -57,7 +57,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                         MsgNotifySetting.instance().toggleNotification(isChecked);
                     }
                 });
-                infoLayout.setItemText("接受新消息通知");
+                infoLayout.setItemText(mActivity.getString(R.string.text_reveive_msg_notify));
             }
 
             @Override
@@ -69,7 +69,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
-                textView.setText("关闭或开启恐龙谷的新消息通知.");
+                textView.setText(R.string.text_enable_klg_msg_notify);
             }
         }));
 
@@ -85,7 +85,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                         MsgNotifySetting.instance().showMsgNotiDetail(isChecked);
                     }
                 });
-                infoLayout.setItemText("通知显示消息详情");
+                infoLayout.setItemText(mActivity.getString(R.string.text_notification_enable_detail));
             }
 
             @Override
@@ -97,7 +97,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
-                textView.setText("关闭后,当收到恐龙谷消息时,通知提示将不显示发信人和内容摘要.");
+                textView.setText(R.string.text_notification_detail_tip);
             }
         }));
 
@@ -106,7 +106,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setRightDrawableRes(R.drawable.base_next);
-                infoLayout.setItemText("功能消息免打扰");
+                infoLayout.setItemText(mActivity.getString(R.string.text_func_msg_bother));
                 holder.v(R.id.switch_view).setVisibility(View.GONE);
             }
 
@@ -119,7 +119,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
-                textView.setText("设置系统功能消息提示声音和振动的时段.");
+                textView.setText(R.string.tex_set_msg_perid_of_time);
             }
         }));
 
@@ -135,7 +135,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                         MsgNotifySetting.instance().setRing(isChecked);
                     }
                 });
-                infoLayout.setItemText("声音");
+                infoLayout.setItemText(mActivity.getString(R.string.text_sound));
             }
 
             @Override
@@ -155,7 +155,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                         MsgNotifySetting.instance().setVibrate(isChecked);
                     }
                 });
-                infoLayout.setItemText("震动");
+                infoLayout.setItemText(mActivity.getString(R.string.text_virbrate));
             }
 
             @Override
@@ -176,7 +176,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
-                textView.setText("当恐龙谷运行时,你可以设置是否需要声音或者振动.");
+                textView.setText(R.string.text_sound_virbrate_tip);
             }
         }));
 
@@ -184,7 +184,16 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("圈子动态更新");
+                infoLayout.setItemText(mActivity.getString(R.string.text_friend_circle_dynamic_notify));
+                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isCircleCNotify());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().enableCircleNotify(isChecked);
+                    }
+                });
+                infoLayout.setItemText(mActivity.getString(R.string.text_friend_circle_dynamic_notify));
             }
 
             @Override
@@ -196,7 +205,36 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView textView = holder.v(R.id.text_view);
-                textView.setText("关闭后,有朋友更新动态时,界面下面的\"首页\"切换按钮上不再出现红点提示.");
+                textView.setText(R.string.text_cirlcle_show_tip);
+            }
+        }));
+
+        items.add(ViewItemInfo.build(new ItemCallback() {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                infoLayout.setItemText(mActivity.getString(R.string.text_subscribe_redpacket_notify));
+                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isCircleCNotify());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().enableCircleNotify(isChecked);
+                    }
+                });
+                infoLayout.setItemText(mActivity.getString(R.string.text_subscribe_redpacket_notify));
+            }
+
+            @Override
+            public void setItemOffsets(Rect rect) {
+                rect.set(0, size, 0, 0);
+            }
+        }));
+        items.add(ViewItemInfo.build(new ItemCallback() {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                TextView textView = holder.v(R.id.text_view);
+                textView.setText(R.string.text_redpacket_noti_tip);
             }
         }));
     }

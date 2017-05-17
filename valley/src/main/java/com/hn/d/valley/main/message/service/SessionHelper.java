@@ -7,6 +7,8 @@ import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
+import java.util.Set;
+
 /**
  * Created by hewking on 2017/3/30.
  */
@@ -25,7 +27,11 @@ public class SessionHelper {
     }
 
     public static void startTeamSession(ILayout mLayout, String sessionId, SessionTypeEnum sessionType, IMMessage anchor) {
-        GroupChatUIView.start(mLayout,sessionId,sessionType,anchor);
+        startTeamSession(mLayout,sessionId,sessionType,anchor,null);
+    }
+
+    public static void startTeamSession(ILayout mLayout, String sessionId, SessionTypeEnum sessionType, IMMessage anchor, Set<IMMessage> aitMessages) {
+        GroupChatUIView.start(mLayout,sessionId,sessionType,anchor,aitMessages);
     }
 
     public static void startSession(ILayout mlayout, String sessionId , SessionTypeEnum sessionType) {

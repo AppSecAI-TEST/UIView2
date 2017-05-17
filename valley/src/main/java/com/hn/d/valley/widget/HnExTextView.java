@@ -101,4 +101,8 @@ public class HnExTextView extends RExTextView {
                     text.length() - 1, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
+
+    public void showEmoji() {
+        MoonUtil.show(getContext(), this, getText().toString());
+    }
 }

@@ -27,9 +27,12 @@ import com.hwangjr.rxbus.annotation.Tag;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import rx.functions.Action0;
@@ -94,7 +97,15 @@ public class MessageUIView extends BaseUIView {
                         }
 
                         if (recentContact.getSessionType() == SessionTypeEnum.Team) {
-                            SessionHelper.startTeamSession(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
+                            // 被@的信息 进入聊天页面清除 cachmessages
+                            Map<String, Set<IMMessage>> cacheMessages = RecentContactsCache.instance().getCacheMessages();
+                            Set<IMMessage> aitMessages = cacheMessages.get(recentContact.getContactId());
+                            if (aitMessages != null && aitMessages.size() > 0) {
+                                SessionHelper.startTeamSession(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType(),null,aitMessages);
+                            } else {
+                                SessionHelper.startTeamSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                            }
+                            cacheMessages.remove(recentContact.getContactId());
                             return;
                         }
                         //打开对话界面

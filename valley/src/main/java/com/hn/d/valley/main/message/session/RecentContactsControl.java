@@ -106,11 +106,6 @@ public class RecentContactsControl {
     Action1<RecentContact> itemChatAction;
     Action0 searchAction;
 
-    // data
-    private List<RecentContact> items;
-
-    // 暂存消息，当RecentContact 监听回来时使用，结束后清掉
-    private Map<String, Set<IMMessage>> cacheMessages = new HashMap<>();
     /**
      * 监听消息的状态改变
      */
@@ -190,80 +185,7 @@ public class RecentContactsControl {
         this.itemChatAction = itemChatAction;
         this.searchAction = searchAction;
         mRecentContactsAdapter = new RecentContactsAdapter(mContext, null);
-
-        initMessageList();
-        registerObservers(true);
-
     }
-
-    private void initMessageList() {
-        items = new ArrayList<>();
-
-    }
-
-    private void registerObservers(boolean register) {
-        MsgServiceObserve service = NIMClient.getService(MsgServiceObserve.class);
-        service.observeMsgStatus(statusObserver, register);
-        service.observeRecentContact(messageObserver, register);
-        service.observeReceiveMessage(messageReceiverObserver, register);
-
-
-    }
-
-    Observer<List<RecentContact>> messageObserver = new Observer<List<RecentContact>>() {
-        @Override
-        public void onEvent(List<RecentContact> recentContacts) {
-            L.i(TAG, "messageObserver recentContacts " + recentContacts.get(0).getContent());
-            onRecentContactChanged(recentContacts);
-        }
-    };
-
-    //监听在线消息中是否有@我
-    private Observer<List<IMMessage>> messageReceiverObserver = new Observer<List<IMMessage>>() {
-        @Override
-        public void onEvent(List<IMMessage> imMessages) {
-
-            L.i(TAG, "messageReceiverObserver onEvent " + imMessages.get(0).getContent());
-
-            if (imMessages != null) {
-                for (IMMessage imMessage : imMessages) {
-                    if (!AitHelper.isAitMessage(imMessage)) {
-                        continue;
-                    }
-                    Set<IMMessage> cacheMessageSet = cacheMessages.get(imMessage.getSessionId());
-                    if (cacheMessageSet == null) {
-                        cacheMessageSet = new HashSet<>();
-                        cacheMessages.put(imMessage.getSessionId(), cacheMessageSet);
-                    }
-                    cacheMessageSet.add(imMessage);
-                }
-            }
-        }
-    };
-
-    private void onRecentContactChanged(List<RecentContact> recentContacts) {
-        int index;
-        for (RecentContact r : recentContacts) {
-            index = -1;
-            for (int i = 0; i < items.size(); i++) {
-                if (r.getContactId().equals(items.get(i).getContactId())
-                        && r.getSessionType() == (items.get(i).getSessionType())) {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index >= 0) {
-                items.remove(index);
-            }
-
-            items.add(r);
-            if (r.getSessionType() == SessionTypeEnum.Team && cacheMessages.get(r.getContactId()) != null) {
-                AitHelper.setRecentContactAited(r, cacheMessages.get(r.getContactId()));
-            }
-        }
-    }
-
 
     public static RecentContactsInfo getRecentContactsInfo(RecentContact bean) {
         return getRecentContactsInfo(bean.getContactId(), bean.getFromAccount(), bean.getSessionType(), bean.getContent());
@@ -623,6 +545,17 @@ public class RecentContactsControl {
         }
 
         @Override
+        public void resetData(List<RecentContact> datas) {
+            if (datas == null) {
+                this.mAllDatas = new ArrayList<>();
+            } else {
+                this.mAllDatas.clear();
+                this.mAllDatas.addAll(datas);
+            }
+            notifyDataSetChanged();
+        }
+
+        @Override
         protected void onBindView(final RBaseViewHolder holder, final int position, final RecentContact b) {
             if (holder.getItemViewType() == ITEM_TYPE_SEARCH) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -663,6 +596,7 @@ public class RecentContactsControl {
 
                 String content = teamNick + ": " + bean.getContent();
 
+                L.i(TAG,content + ": " + AitHelper.hasAitExtention(bean));
                 if (AitHelper.hasAitExtention(bean)) {
                     if (bean.getUnreadCount() == 0) {
                         AitHelper.clearRecentContactAited(bean);
@@ -671,6 +605,7 @@ public class RecentContactsControl {
                     }
                 }
 //                MoonUtil.show(mContext, holder.tv(R.id.msg_content_view), content);
+                // @ 提示字体变红
                 MoonUtil.identifyRecentVHFaceExpressionAndTags(mContext, msgContentView
                         , content, ImageSpan.ALIGN_BOTTOM, 0.45f);
 

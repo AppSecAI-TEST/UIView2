@@ -50,11 +50,15 @@ import com.netease.nimlib.sdk.msg.model.MemberPushOption;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.netease.nimlib.sdk.team.model.Team;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,10 +77,12 @@ public class GroupChatUIView extends ChatUIView2 {
     View layout;
     @BindView(R.id.tv_announcement)
     TextView tv_announce;
+    @BindView(R.id.ait_control_layout)
+    LinearLayout ait_control_layout;
 
     private Map<String, GroupMemberBean> selectedMembers;
-
     private GroupDescBean mGroupDesc;
+    private Set<IMMessage> mAitMessages;
 
     private CheckBox cb_show;
     private TextView tv_title;
@@ -167,21 +173,52 @@ public class GroupChatUIView extends ChatUIView2 {
                 cb_show.setChecked(showAnnounce);
             }
         });
+
+        if (mAitMessages != null && mAitMessages.size() != 0) {
+            ait_control_layout.setVisibility(View.VISIBLE);
+            ait_control_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    animAit();
+                    List<IMMessage> aitList = new ArrayList<>(mAitMessages);
+                    Collections.sort(aitList, new Comparator<IMMessage>() {
+                        @Override
+                        public int compare(IMMessage o1, IMMessage o2) {
+                            return (int) (o2.getTime() - o1.getTime());
+                        }
+                    });
+                    IMMessage target = aitList.get(0);
+                    int index = mChatControl.containTarget(target);
+                    if ( index != -1) {
+                        mChatControl.scrollToTarget(index);
+                    } else {
+                        fetchAnchorAndScrollTo(target);
+                    }
+                }
+            });
+        }
     }
 
     private void animAnnounce(boolean show) {
-
         if (layout.getVisibility() == View.GONE) {
             layout.setVisibility(View.VISIBLE);
         }
 
         float start = show? ScreenUtil.dip2px(- 40):0;
         float end = show?0:ScreenUtil.dip2px(- 40);
-        ObjectAnimator animator = new ObjectAnimator().ofFloat(layout,"translationY",start,end);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(layout,"translationY",start,end);
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
+    }
 
+    private void animAit() {
+        float start = 0;
+        float end = ScreenUtil.dip2px(95);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ait_control_layout,"translationX",start,end);
+        animator.setDuration(300);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
     }
 
     private boolean checkInGroup() {
@@ -193,8 +230,6 @@ public class GroupChatUIView extends ChatUIView2 {
     }
 
     private void loadAnnounce(final GroupDescBean bean) {
-
-
         add(RRetrofit.create(GroupChatService.class)
                 .announcementList(Param.buildMap("gid:" + bean.getGid()))
                 .compose(Rx.transformerList(GroupAnnouncementBean.class))
@@ -217,7 +252,6 @@ public class GroupChatUIView extends ChatUIView2 {
     }
 
     private void showNotice() {
-
         final View layout = mViewHolder.v(R.id.recent_contact_layout);
         final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
         content.setText(R.string.team_invalid_tip);
@@ -237,18 +271,18 @@ public class GroupChatUIView extends ChatUIView2 {
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType , IMMessage anchor) {
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType , IMMessage anchor, Set<IMMessage> aitMessages) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
         bundle.putSerializable(KEY_ANCHOR,anchor);
+        bundle.putSerializable(KEY_AITMESSAGES, (Serializable) aitMessages);
         mLayout.startIView(new GroupChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-
         if(checkInGroup()) {
             add(RRetrofit.create(GroupChatService.class)
                     .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
@@ -269,6 +303,12 @@ public class GroupChatUIView extends ChatUIView2 {
                         }
                     }));
         }
+    }
+
+    @Override
+    protected void parseBundle(Bundle bundle) {
+        super.parseBundle(bundle);
+        mAitMessages = (Set<IMMessage>) bundle.getSerializable(KEY_AITMESSAGES);
     }
 
     @Override
@@ -307,6 +347,10 @@ public class GroupChatUIView extends ChatUIView2 {
                 GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null,bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseRxView, List<AbsContactItem> items, RequestCallback callback) {
+                        if (items.size() == 0) {
+                            T_.show("不能为空!");
+                            return;
+                        }
                         callback.onSuccess("");
 
                         GroupMemberItem item = (GroupMemberItem) items.get(0);
