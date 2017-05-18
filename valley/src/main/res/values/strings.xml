@@ -624,4 +624,5 @@
     <string name="text_unselected_chat_file">未选中或没有聊天文件!</string>
     <string name="save_draft">保存草稿</string>
     <string name="no_save">不保存</string>
+    <string name="authing">正在授权...</string>
 </resources>

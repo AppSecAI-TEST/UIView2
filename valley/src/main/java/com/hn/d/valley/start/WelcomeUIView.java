@@ -5,13 +5,15 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.dialog.UILoading;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.umeng.UM;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.bean.realm.LoginBean;
+import com.hn.d.valley.control.LoginControl;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -80,6 +82,36 @@ public class WelcomeUIView extends BaseContentUIView {
             UILoading.hide();
         }
     };
+    private LoginControl.OnLoginListener mLoginListener = new LoginControl.OnLoginListener() {
+        @Override
+        public void onLoginStart() {
+            UILoading.show2(mILayout)
+                    .setLoadingTipText(getString(R.string.authing))
+                    .addDismissListener(new UIIDialogImpl.OnDismissListener() {
+                        @Override
+                        public void onDismiss() {
+                            LoginControl.instance().setCancel(true);
+                        }
+                    });
+        }
+
+        @Override
+        public void onLoginSuccess(LoginBean bean) {
+            UILoading.hide();
+            LoginUIView2.onLoginSuccess(mActivity, bean);
+        }
+
+        @Override
+        public void onLoginError(Throwable exception) {
+            UILoading.hide();
+            exception.printStackTrace();
+        }
+
+        @Override
+        public void onLoginCancel() {
+            UILoading.hide();
+        }
+    };
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -122,7 +154,8 @@ public class WelcomeUIView extends BaseContentUIView {
 //                        SHARE_LISTENER);
                 //UM.authVerify(mActivity, SHARE_MEDIA.QQ, AUTH_LISTENER);
 
-                UM.getPlatformInfo(mActivity, SHARE_MEDIA.QQ, AUTH_LISTENER);
+                //UM.getPlatformInfo(mActivity, SHARE_MEDIA.QQ, AUTH_LISTENER);
+                loginQQ();
             }
         });
         mViewHolder.v(R.id.weixin_view).setOnClickListener(new View.OnClickListener() {
@@ -132,8 +165,29 @@ public class WelcomeUIView extends BaseContentUIView {
 //                UM.shareImage(mActivity, SHARE_MEDIA.WEIXIN, "http://klg-news.oss-cn-shenzhen.aliyuncs.com/3bb80ebaea4a45fb390d8bd14ef7e313.png",
 //                        R.drawable.login_logo, SHARE_LISTENER);
                 //UM.authVerify(mActivity, SHARE_MEDIA.WEIXIN, AUTH_LISTENER);
-                UM.getPlatformInfo(mActivity, SHARE_MEDIA.WEIXIN, AUTH_LISTENER);
+                //UM.getPlatformInfo(mActivity, SHARE_MEDIA.WEIXIN, AUTH_LISTENER);
+                loginWX();
             }
         });
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        LoginControl.instance().setCancel(true);
+    }
+
+    /**
+     * QQ登录
+     */
+    private void loginQQ() {
+        LoginControl.instance().loginQQ(mActivity, mLoginListener);
+    }
+
+    /**
+     * 微信登录
+     */
+    private void loginWX() {
+        LoginControl.instance().loginWX(mActivity, mLoginListener);
     }
 }

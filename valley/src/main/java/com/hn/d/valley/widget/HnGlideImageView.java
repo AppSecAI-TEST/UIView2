@@ -66,6 +66,15 @@ public class HnGlideImageView extends AppCompatImageView {
     }
 
     @Override
+    public void draw(Canvas canvas) {
+        try {
+            super.draw(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (showBorder) {
