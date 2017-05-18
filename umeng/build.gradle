@@ -21,7 +21,7 @@ android {
                 QQ_ID       : "1106097075",
                 QQ_KEY      : "IsbX0vmkDIXvyoxo",
                 WX_ID       : "wx813dd6b4a7b4a9ff",
-                WX_KEY      : "1de6bcf6f4bafb51e9504d32c3b7ab12"
+                WX_KEY      : "fd40969eb2864b46ac9ac794f3e63fca"
         ]
 
         //请记得调用UM.init(), 初始化!

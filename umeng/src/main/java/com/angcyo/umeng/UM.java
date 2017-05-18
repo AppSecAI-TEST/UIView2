@@ -9,11 +9,13 @@ import android.content.pm.PackageManager;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.UmengTool;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -61,7 +63,41 @@ public class UM {
     }
 
     /**
-     * QQ 不能分享纯文本
+     * 删除授权
+     */
+    public static void deleteAuth(Activity activity, SHARE_MEDIA platform, UMAuthListener listener) {
+        UMShareAPI.get(sApplication).deleteOauth(activity, platform, listener);
+    }
+
+    /**
+     * 授权验证
+     */
+    public static void authVerify(Activity activity, SHARE_MEDIA platform, UMAuthListener listener) {
+        UMShareAPI.get(sApplication).doOauthVerify(activity, platform, listener);
+    }
+
+    /**
+     * 返回是否授权
+     */
+    public static boolean isAuthorize(Activity activity, SHARE_MEDIA platform) {
+        return UMShareAPI.get(sApplication).isAuthorize(activity, platform);
+    }
+
+    /**
+     * 获取平台信息
+     * <p/>
+     * 如果未授权, 会拉取授权界面, 再返回数据
+     * <p/>
+     * 如果已授权, 会直接返回数据
+     */
+    public static void getPlatformInfo(Activity activity, SHARE_MEDIA platform, UMAuthListener listener) {
+        UMShareAPI.get(sApplication).getPlatformInfo(activity, platform, listener);
+    }
+
+    /**
+     * 分享纯文本
+     * <p/>
+     * <b>注意:QQ 不能分享纯文本</b>
      */
     public static void shareText(Activity activity, SHARE_MEDIA shareMedia,
                                  String shareText, UMShareListener listener) {
@@ -72,15 +108,67 @@ public class UM {
                 .share();
     }
 
+    /**
+     * 分享图片
+     * <p/
+     * 分享到微信必须要设置缩略图
+     */
     public static void shareImage(Activity activity, SHARE_MEDIA shareMedia,
                                   String imageUrl, int thumbRes,
                                   UMShareListener listener) {
         UMImage umImage = new UMImage(activity, imageUrl);
-        UMImage umThumb = new UMImage(activity, thumbRes);
-        umImage.setThumb(umThumb);
+        if (thumbRes != -1) {
+            UMImage umThumb = new UMImage(activity, thumbRes);
+            umImage.setThumb(umThumb);
+        }
         new ShareAction(activity)
                 .setPlatform(shareMedia)
                 .withMedia(umImage)
+                .setCallback(listener)
+                .share();
+    }
+
+    /**
+     * 分享图文
+     */
+    public static void shareImageText(Activity activity, SHARE_MEDIA shareMedia,
+                                      String imageUrl, int thumbRes,
+                                      String text,
+                                      UMShareListener listener) {
+        UMImage umImage = new UMImage(activity, imageUrl);
+        if (thumbRes != -1) {
+            UMImage umThumb = new UMImage(activity, thumbRes);
+            umImage.setThumb(umThumb);
+        }
+        new ShareAction(activity)
+                .setPlatform(shareMedia)
+                .withMedia(umImage)
+                .withText(text)
+                .setCallback(listener)
+                .share();
+    }
+
+    /**
+     * 分享链接
+     */
+    public static void shareWeb(Activity activity, SHARE_MEDIA shareMedia,
+                                String url, int thumbRes,
+                                String title, String des,
+                                String text,
+                                UMShareListener listener) {
+        UMWeb web = new UMWeb(url);
+        web.setTitle(title);//标题
+        //缩略图
+        if (thumbRes != -1) {
+            UMImage umThumb = new UMImage(activity, thumbRes);
+            web.setThumb(umThumb);
+        }
+        web.setDescription(des);//描述
+
+        new ShareAction(activity)
+                .setPlatform(shareMedia)
+                .withMedia(web)
+                .withText(text)
                 .setCallback(listener)
                 .share();
     }

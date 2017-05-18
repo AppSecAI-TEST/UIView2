@@ -5,13 +5,18 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.dialog.UILoading;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.umeng.UM;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.Map;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -26,7 +31,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
  */
 public class WelcomeUIView extends BaseContentUIView {
 
-    public static final UMShareListener SHARE_LISTENER = new UMShareListener() {
+    public final UMShareListener SHARE_LISTENER = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA share_media) {
             L.e("call: onStart([share_media])-> " + share_media);
@@ -46,6 +51,33 @@ public class WelcomeUIView extends BaseContentUIView {
         @Override
         public void onCancel(SHARE_MEDIA share_media) {
             L.e("call: onCancel([share_media])-> " + share_media);
+        }
+    };
+    public final UMAuthListener AUTH_LISTENER = new UMAuthListener() {
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+            L.e("call: onStart([share_media])-> ");
+            UILoading.show2(mILayout).setLoadingTipText("正在授权...");
+        }
+
+        @Override
+        public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+            L.e("call: onComplete([share_media, i, map])-> " + i);
+            RUtils.logMap(map);
+            UILoading.hide();
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+            L.e("call: onError([share_media, i, throwable])-> " + i);
+            throwable.printStackTrace();
+            UILoading.hide();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media, int i) {
+            L.e("call: onCancel([share_media, i])-> " + i);
+            UILoading.hide();
         }
     };
 
@@ -83,18 +115,24 @@ public class WelcomeUIView extends BaseContentUIView {
         mViewHolder.v(R.id.qq_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UM.checkQQ(mActivity);
-                UM.shareImage(mActivity, SHARE_MEDIA.QQ,
-                        "http://klg-news.oss-cn-shenzhen.aliyuncs.com/3bb80ebaea4a45fb390d8bd14ef7e313.png",
-                        R.drawable.login_logo,
-                        SHARE_LISTENER);
+                //UM.checkQQ(mActivity);
+//                UM.shareImage(mActivity, SHARE_MEDIA.QQ,
+//                        "http://klg-news.oss-cn-shenzhen.aliyuncs.com/3bb80ebaea4a45fb390d8bd14ef7e313.png",
+//                        R.drawable.login_logo,
+//                        SHARE_LISTENER);
+                //UM.authVerify(mActivity, SHARE_MEDIA.QQ, AUTH_LISTENER);
+
+                UM.getPlatformInfo(mActivity, SHARE_MEDIA.QQ, AUTH_LISTENER);
             }
         });
         mViewHolder.v(R.id.weixin_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UM.checkWX(mActivity);
-                UM.shareText(mActivity, SHARE_MEDIA.WEIXIN, "分享测试\n文本", SHARE_LISTENER);
+                //UM.checkWX(mActivity);
+//                UM.shareImage(mActivity, SHARE_MEDIA.WEIXIN, "http://klg-news.oss-cn-shenzhen.aliyuncs.com/3bb80ebaea4a45fb390d8bd14ef7e313.png",
+//                        R.drawable.login_logo, SHARE_LISTENER);
+                //UM.authVerify(mActivity, SHARE_MEDIA.WEIXIN, AUTH_LISTENER);
+                UM.getPlatformInfo(mActivity, SHARE_MEDIA.WEIXIN, AUTH_LISTENER);
             }
         });
     }

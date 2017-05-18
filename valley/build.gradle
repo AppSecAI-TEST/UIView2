@@ -42,7 +42,7 @@ android {
 
     productFlavors {
         //develop
-        dev {
+        _dev {
             minSdkVersion 21
             buildConfigField "boolean", "SHOW_DEBUG", "true"
         }
@@ -111,7 +111,6 @@ dependencies {
     compile project(':pay-library')
     compile project(':rbaudiomixlibrary')
     compile project(':audiocache')
-    compile project(':umeng')
 
     compile 'org.jsoup:jsoup:1.10.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
@@ -133,6 +132,4 @@ dependencies {
     compile "com.netease.nimlib:rts:${nim_ver}"
     // 全文检索服务需要
     compile "com.netease.nimlib:lucene:${nim_ver}"
-
-
 }
