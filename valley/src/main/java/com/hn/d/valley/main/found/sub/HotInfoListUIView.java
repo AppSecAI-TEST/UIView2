@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -77,6 +78,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             @Override
             public void displayImage(ImageView imageView, String url) {
                 HotInfoListUIView.displayImage(imageView, url);
+                L.i("RTextImageLayout: displayImage([imageView, url])-> " + url);
             }
         });
         textImageLayout.setText(text);

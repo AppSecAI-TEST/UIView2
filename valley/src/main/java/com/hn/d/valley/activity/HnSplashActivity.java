@@ -9,6 +9,7 @@ import android.view.Gravity;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.umeng.UM;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.control.MainControl;
@@ -137,5 +138,11 @@ public class HnSplashActivity extends BaseActivity {
                     .setDialogContent(getString(R.string.kick_out_tip, client))
                     .setGravity(Gravity.CENTER));
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UM.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -34,7 +34,8 @@
                 <TextView
                     android:id="@+id/recent_name_view"
                     style="@style/NameTextStyle"
-                    android:minHeight="@dimen/base_25dpi"/>
+                    android:textSize="@dimen/default_text_size_15"
+                    />
 
             </LinearLayout>
 
@@ -54,7 +55,7 @@
                 <com.hn.d.valley.widget.HnExTextView
                     android:id="@+id/msg_content_view"
                     style="@style/SingleDarkTextStyle"
-                    android:minHeight="@dimen/base_25dpi"/>
+                    />
 
             </LinearLayout>
 

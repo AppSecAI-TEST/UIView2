@@ -5,6 +5,7 @@ import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.Root;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.storage.StorageUtil;
+import com.angcyo.umeng.UM;
 import com.example.m3b.Audio;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hn.d.valley.bean.realm.LoginBean;
@@ -92,5 +93,7 @@ public class ValleyApp extends RApplication {
         FDown.init(this, false/*BuildConfig.DEBUG*/);
 
         Audio.init(this);
+
+        UM.init(this, BuildConfig.DEBUG);
     }
 }

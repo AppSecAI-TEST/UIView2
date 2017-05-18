@@ -13,6 +13,7 @@ import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHDynamicMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHExpression;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHForwardAudio;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHHotSpotInfo;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHLikeMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHReceiptsNoticeMsg;
@@ -95,6 +96,8 @@ public class MsgViewHolderFactory {
 //        list.add(MsgViewHolderUnknown.class);
         list.add(MsgViewHolderText.class);
         list.add(MsgViewHolderTip.class);
+        // 语音转发viewholder
+        list.add(MsgVHForwardAudio.class);
         return list;
     }
 
@@ -104,6 +107,9 @@ public class MsgViewHolderFactory {
         } else if (message.getMsgType() == MsgTypeEnum.tip) {
 //            return tipMsgViewHolder == null ? MsgViewHolderUnknown.class : tipMsgViewHolder;
             return MsgViewHolderTip.class;
+        } else if(MsgVHForwardAudio.isForfardMsg(message)) {
+            // 语音转发 viewholder
+            return MsgVHForwardAudio.class;
         } else {
             Class<? extends MsgViewHolderBase> viewHolder = null;
             if (message.getAttachment() != null) {

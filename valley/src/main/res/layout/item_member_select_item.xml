@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/base_xhdpi">
 
-        <android.support.v7.widget.AppCompatCheckBox
+        <com.hn.d.valley.widget.HnCheckBox
             android:id="@+id/cb_friend_addfirend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -158,7 +158,6 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
 
     @Override
     protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
-        super.inflateRecyclerRootLayout(baseContentLayout,inflater);
         View root = inflater.inflate(R.layout.view_member_select,baseContentLayout);
         mRefreshLayout = (RefreshLayout) root.findViewById(R.id.refresh_layout);
         mRecyclerView = (RRecyclerView) root.findViewById(R.id.recycler_view);
@@ -185,7 +184,6 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
     }
 
     private void animBottom(boolean show) {
-
         if (ll_bottom.getVisibility() == View.GONE) {
             ll_bottom.setVisibility(View.VISIBLE);
         }
@@ -196,7 +194,6 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
-
     }
 
     private class GroupMemberAdapter extends RExBaseAdapter<String,GroupMemberBean,String> {
@@ -218,6 +215,15 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
             animBottom(true);
         }
 
+        public void slideClose() {
+            tv_selected.setText(String.format(getString(R.string.text_already_selected_number),0));
+            mISlideHelper.slideClose();
+            isEditable = true;
+            animBottom(false);
+            mCheckStats.clear();
+            unSelectorAll(true);
+        }
+
         @Override
         public void resetAllData(List<GroupMemberBean> allDatas) {
             //去除群成员中的群主 不会被踢出
@@ -229,15 +235,6 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                 filterList.add(member);
             }
             super.resetAllData(filterList);
-        }
-
-        public void slideClose() {
-            tv_selected.setText(String.format("已选中 %d 人",0));
-            mISlideHelper.slideClose();
-            isEditable = true;
-            animBottom(false);
-            mCheckStats.clear();
-            unSelectorAll(true);
         }
 
         @NonNull
@@ -297,7 +294,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                     } else {
                         mCheckStats.delete(tag);
                     }
-                    tv_selected.setText(String.format("已选中 %d 人",mCheckStats.size()));
+                    tv_selected.setText(String.format(getString(R.string.text_already_selected_number),mCheckStats.size()));
                 }
             };
 
@@ -330,13 +327,13 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                                     public void onError(int code, String msg) {
                                         super.onError(code, msg);
                                         if (code == 1044) {
-                                            T_.show("你不是群主！");
+                                            T_.show(mActivity.getString(R.string.text_you_are_not_host));
                                         }
                                     }
 
                                     @Override
                                     public void onSucceed(String bean) {
-                                        T_.show("踢出群成员成功！");
+                                        T_.show(getString(R.string.text_kick_out_success));
                                         onUILoadData("0");
                                         if (kictAction != null) {
                                             kictAction.call(true);
@@ -357,11 +354,11 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
 
     private void editItems() {
         TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
-        if ("编辑".equals(selectNum.getText().toString())) {
-            selectNum.setText("取消");
+        if (getString(R.string.text_edit).equals(selectNum.getText().toString())) {
+            selectNum.setText(getString(R.string.cancel));
             mGroupMemberAdapter.slideOpen();
-        } else if ("取消".equals(selectNum.getText().toString())) {
-            selectNum.setText("编辑");
+        } else if (getString(R.string.cancel).equals(selectNum.getText().toString())) {
+            selectNum.setText(getString(R.string.text_edit));
             mGroupMemberAdapter.slideClose();
         }
     }

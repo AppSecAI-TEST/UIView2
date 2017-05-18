@@ -105,14 +105,14 @@ public class RecommendUserUIView extends BaseContentUIView {
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText("跳过").setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_jump)).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                T_.show("跳过");
+
             }
         }));
 
-        return super.getTitleBar().setTitleString("推荐").setRightItems(rightItems);
+        return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_recommend)).setRightItems(rightItems);
     }
 
     @Override

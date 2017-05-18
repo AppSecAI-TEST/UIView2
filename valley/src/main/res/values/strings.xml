@@ -416,6 +416,7 @@
     <string name="text_quit_success">退出成功</string>
     <string name="search_contact">搜索手机号/姓名</string>
     <string name="text_is_kict_group">确定踢出群聊吗?</string>
+    <string name="text_is_delete_file">确定删除文件吗?</string>
     <string name="text_is_empty">确定清空吗?</string>
     <string name="text_photo_wall">照片墙</string>
     <string name="text_upload_photo">上传照片</string>
@@ -614,6 +615,13 @@
     <string name="sex_tip">性别:</string>
     <string name="selector_sex_tip">请选择性别</string>
     <string name="selector_all">全选</string>
+    <string name="text_you_are_not_host">你不是群主！</string>
+    <string name="text_kick_out_success">踢出群成员成功！</string>
+    <string name="text_already_selected_number">已选中 %d 人</string>
+    <string name="text_already_selected_file_number">已选中 %d 个文件</string>
+    <string name="text_recommend">推荐</string>
+    <string name="text_jump">跳过</string>
+    <string name="text_unselected_chat_file">未选中或没有聊天文件!</string>
     <string name="save_draft">保存草稿</string>
     <string name="no_save">不保存</string>
 </resources>

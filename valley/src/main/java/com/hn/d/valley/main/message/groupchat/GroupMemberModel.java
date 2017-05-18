@@ -18,6 +18,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -77,6 +78,7 @@ public class GroupMemberModel {
         LinearLayout layout_wrap_member_head = holder.v(R.id.layout_wrap_member_head);
         FrameLayout layout_container_add = holder.v(R.id.layout_container_add);
         ImageView iv_group_members = holder.imageView(R.id.iv_group_members);
+        tv_add_groupmembers.setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
         icoRecyclerView.setLayoutManager(new LinearLayoutManager(ctx,LinearLayoutManager.HORIZONTAL,false));
         icoRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {

@@ -14,6 +14,7 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
@@ -237,6 +238,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
         TextView tv_add_group = holder.tv(R.id.tv_add_group);
         FrameLayout layout_container_add = holder.v(R.id.layout_container_add);
         ImageView iv_user_detail = holder.imgV(R.id.iv_user_detail);
+        tv_add_group.setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
         tv.setText(mUserInfo.getName());
         imageView.setImageUrl(mUserInfo.getAvatar());

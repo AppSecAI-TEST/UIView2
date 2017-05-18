@@ -5,7 +5,6 @@ import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
-import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.AudioViewControl;
 import com.hn.d.valley.main.message.audio.AudioPlayCallback;
@@ -27,14 +25,12 @@ import java.util.List;
 import java.util.Map;
 
 import static com.hn.d.valley.R.id.message_item_audio_duration;
-import static com.hn.d.valley.R.id.search_go_btn;
-import static com.hn.d.valley.R.id.time;
 
 /**
  * Created by hewking on 2017/4/9.
  */
 
-public class MsgViewHolderAudio extends MsgViewHolderBase {
+public class MsgVHForwardAudio extends MsgViewHolderBase {
 
     private RelativeLayout msgAudioLayout;
     private ImageView imageView;
@@ -43,13 +39,13 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
     private LinearLayout msg_item_forward_audio_layout;
     private RelativeLayout mRelativeLayout;
 
-    public MsgViewHolderAudio(BaseMultiAdapter adapter) {
+    public MsgVHForwardAudio(BaseMultiAdapter adapter) {
         super(adapter);
     }
 
     @Override
     protected int getContentResId() {
-        return R.layout.msg_audio_layout;
+        return R.layout.msg_audio_forward_layout;
     }
 
     @Override

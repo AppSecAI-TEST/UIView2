@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="120dp"
+    android:layout_height="120dp">
+
+    <com.angcyo.uiview.widget.RImageView
+        android:id="@+id/image_view"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/zhanweitu_1"/>
+
+    <com.hn.d.valley.widget.HnCheckBox
+        android:id="@+id/delete_view"
+        android:layout_width="@dimen/base_xxxhdpi"
+        android:layout_height="@dimen/base_xxxhdpi"
+        android:gravity="center"
+        android:background="@drawable/base_bg2_selector"
+        android:button="@drawable/check_selector"
+        android:scaleType="centerInside"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

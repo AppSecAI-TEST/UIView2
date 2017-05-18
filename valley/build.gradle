@@ -111,6 +111,7 @@ dependencies {
     compile project(':pay-library')
     compile project(':rbaudiomixlibrary')
     compile project(':audiocache')
+    compile project(':umeng')
 
     compile 'org.jsoup:jsoup:1.10.2'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
