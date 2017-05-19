@@ -44,6 +44,8 @@ public class UM {
         UMShareAPI.get(sApplication);
 
         initPlatformConfig();
+
+        MobclickAgent.setCatchUncaughtExceptions(true);
     }
 
     static void initPlatformConfig() {
