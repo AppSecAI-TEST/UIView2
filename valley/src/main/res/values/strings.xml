@@ -270,6 +270,7 @@
     <string name="square_title">广场</string>
     <string name="circle_title">朋友圈</string>
     <string name="publish_image_tip">发布图文</string>
+    <string name="image_text">图文</string>
     <string name="publish_video_tip">发布视频</string>
     <string name="publishing_tip">动态还未发布完成...</string>
     <string name="me">我</string>

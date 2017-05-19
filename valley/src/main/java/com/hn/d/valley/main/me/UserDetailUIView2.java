@@ -389,6 +389,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     CircleUIView circleUIView = new CircleUIView(mUserInfoBean.getUid());
                     circleUIView.bindOtherILayout(mOtherILayout);
                     circleUIView.setInSubUIView(true);
+                    circleUIView.setNeedRefresh(false);
                     return circleUIView;
                 } else {
                     MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());

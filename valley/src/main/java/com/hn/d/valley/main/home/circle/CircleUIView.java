@@ -24,6 +24,7 @@ import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
@@ -49,8 +50,16 @@ import rx.functions.Action1;
 public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
 
     LoadStatusCallback mLoadStatusCallback;
+    /**
+     * 只在查看个人动态的时候使用
+     */
+    MyStatusUIView.StatusType mStatusType = MyStatusUIView.StatusType.ALL;
     private String to_uid;
+    /**
+     * 只在查看个人动态的时候使用
+     */
     private boolean isInSubUIView = false;
+    private boolean needRefresh = true;
 
     public CircleUIView(String to_uid) {
         this.to_uid = to_uid;
@@ -62,6 +71,14 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
 
     public void setInSubUIView(boolean inSubUIView) {
         isInSubUIView = inSubUIView;
+    }
+
+    public void setNeedRefresh(boolean needRefresh) {
+        this.needRefresh = needRefresh;
+    }
+
+    public void setStatusType(MyStatusUIView.StatusType statusType) {
+        mStatusType = statusType;
     }
 
     @Override
@@ -93,7 +110,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
     @Override
     protected void initRefreshLayout() {
         super.initRefreshLayout();
-        if (isInSubUIView) {
+        if (isInSubUIView && !needRefresh) {
             mRefreshLayout.setRefreshDirection(RefreshLayout.NONE);
         }
     }
@@ -137,7 +154,7 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
 
         if (isInSubUIView) {
             add(RRetrofit.create(UserInfoService.class)
-                    .myDiscuss(Param.buildMap("to_uid:" + to_uid, "type:1", "page:" + page))
+                    .myDiscuss(Param.buildMap("to_uid:" + to_uid, "type:" + mStatusType.getId(), "page:" + page))
                     .compose(Rx.transformer(UserDiscussListBean.class))
                     .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
 
@@ -263,6 +280,10 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
         }
 
         mRExBaseAdapter.resetAllData(newDatas);
+    }
+
+    public void setLoadStatusCallback(LoadStatusCallback loadStatusCallback) {
+        mLoadStatusCallback = loadStatusCallback;
     }
 
     public void onPublishError() {

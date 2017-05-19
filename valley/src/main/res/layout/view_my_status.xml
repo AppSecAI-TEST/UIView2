@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.angcyo.uiview.github.tablayout.SlidingTabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_35dpi"
+        android:background="@color/base_chat_bg_color"
+        android:paddingBottom="@dimen/base_ldpi"
+        android:paddingEnd="@dimen/base_50dpi"
+        android:paddingStart="@dimen/base_50dpi"
+        app:tl_indicator_color="@color/colorPrimary"
+        app:tl_indicator_corner_radius="3dp"
+        app:tl_indicator_height="4dp"
+        app:tl_indicator_margin_left="@dimen/base_xxhdpi"
+        app:tl_indicator_margin_right="@dimen/base_xxhdpi"
+        app:tl_tab_padding="@dimen/base_hdpi"
+        app:tl_tab_space_equal="true"
+        app:tl_textBold="NONE"
+        app:tl_textSelectColor="@color/base_text_color"
+        app:tl_textUnselectColor="@color/base_text_color_dark"
+        app:tl_textsize="@dimen/default_text_size"
+        app:tl_underline_height="0dp"/>
+
+    <com.angcyo.uiview.widget.viewpager.UIViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

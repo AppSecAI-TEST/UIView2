@@ -1439,22 +1439,15 @@ public class UserDiscussItemControl {
 
                         int abs = Math.abs(w - h);
 
-                        boolean isCenterCrop = false;
                         //自动根据图片的长宽差, 选择缩放类型
                         if (imageSize <= 1 || abs < Math.min(w / 2, h / 2)) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         } else {
-                            isCenterCrop = true;
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         }
 
                         if (imageView instanceof RImageView) {
-                            if (isCenterCrop) {
-                                ((RImageView) imageView).setImageBitmap(imageView.getDrawable(),
-                                        RImageView.centerCrop(imageView.getResources(), resource, width, height));
-                            } else {
-                                ((RImageView) imageView).setImageBitmap(imageView.getDrawable(), resource);
-                            }
+                            ((RImageView) imageView).setImageBitmap(imageView.getDrawable(), resource);
                         } else {
                             imageView.setImageBitmap(resource);
                         }

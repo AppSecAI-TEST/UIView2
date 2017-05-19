@@ -140,8 +140,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base_title_bar_item_size"
                 android:layout_marginStart="@dimen/base_xhdpi"
-                android:clipChildren="false"
-                android:clipToPadding="false"
                 app:tl_indicator_color="@color/colorPrimary"
                 app:tl_indicator_corner_radius="3dp"
                 app:tl_indicator_height="4dp"
