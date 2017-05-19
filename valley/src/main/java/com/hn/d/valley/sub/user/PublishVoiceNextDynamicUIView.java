@@ -14,6 +14,7 @@ import com.example.m3b.Audio;
 import com.example.m3b.audiocachedemo.Player;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.bean.realm.MusicRealm;
@@ -83,6 +84,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                 .addRightItem(TitleBarPattern.buildText(getString(R.string.publish), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Action.publishAction();
                         onPublish();
                     }
                 }));

@@ -40,6 +40,7 @@ import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
@@ -471,6 +472,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                             mOtherILayout.startIView(new MyAuthStatusUIView(integer));
                             break;
                         default:
+                            Action.authAction();
                             mOtherILayout.startIView(new MyAuthUIView());
                             break;
                     }

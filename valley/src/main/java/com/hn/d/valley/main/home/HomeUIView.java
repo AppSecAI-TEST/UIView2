@@ -22,6 +22,7 @@ import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.PublishControl;
@@ -410,6 +411,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_image_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Action.publishAction_Picture();
                         mOtherILayout.startIView(new PublishDynamicUIView2(DynamicType.IMAGE)
                                 .setPublishAction(getPublishAction()));
                     }
@@ -417,6 +419,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Action.publishAction_Video();
                         mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
                             @Override
                             public void call(UIIViewImpl iView, String path, String s) {
@@ -430,6 +433,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_voice), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Action.publishAction_Audio();
                         mOtherILayout.startIView(new PublishVoiceDynamicUIView().setPublishAction(getPublishAction()));
                     }
                 })

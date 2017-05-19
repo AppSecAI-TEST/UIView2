@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
@@ -279,6 +280,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                             return;
                         }
 
+                        Action.authAction_commit();
                         onApply();
                     }
                 });

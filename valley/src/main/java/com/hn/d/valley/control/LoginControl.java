@@ -11,6 +11,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.umeng.UM;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.receiver.JPushReceiver;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.RException;
@@ -120,6 +121,12 @@ public class LoginControl {
                     } else {
                         sex = "0";
                     }
+                }
+
+                if (loginType == TYPE_QQ) {
+                    Action.qq_register();
+                } else {
+                    Action.wechat_register();
                 }
 
                 login(map.get("openid"), map.get("name"), map.get("profile_image_url"), sex);

@@ -30,6 +30,7 @@ import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseUIView;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
@@ -214,7 +215,8 @@ public class MainUIView extends BaseUIView {
         boolean isRightToLeft = position < lastPosition;
 
         if (position == Constant.POS_HOME) {
-            //首页
+            //首页 恐龙谷界面
+            Action.tap_klg();
             if (mHomeUIView == null) {
                 mHomeUIView = new HomeUIView();
                 mHomeUIView.bindOtherILayout(mILayout);

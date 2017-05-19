@@ -10,6 +10,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.receiver.NetworkStateReceiver;
 import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.oss.OssControl2;
@@ -409,6 +410,7 @@ public class PublishControl {
                 .subscribe(new BaseSingleSubscriber<String>() {
                                @Override
                                public void onSucceed(String s) {
+                                   Action.publishAction_Success();
                                    task.setPublishStatus(PublishTaskRealm.STATUS_SUCCESS);
                                    PublishTaskRealm.changeStatus(task.getUuid(), PublishTaskRealm.STATUS_SUCCESS);
 

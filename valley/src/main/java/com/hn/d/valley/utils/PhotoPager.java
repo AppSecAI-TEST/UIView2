@@ -57,8 +57,12 @@ public class PhotoPager {
         for (int i = 0; i < photos.size(); i++) {
             final ImageItem imageItem = new ImageItem();
             imageItem.url = photos.get(i);
-            imageItem.placeholderDrawable = imageList.get(i).getDrawable()
-                    .getConstantState().newDrawable();
+            try {
+                imageItem.placeholderDrawable = imageList.get(i).getDrawable()
+                        .getConstantState().newDrawable();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             imageItems.add(imageItem);
         }
 

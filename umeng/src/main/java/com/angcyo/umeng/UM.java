@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.ShareAction;
@@ -187,5 +188,12 @@ public class UM {
 
     public static void onDestroy() {
         UMShareAPI.get(sApplication).release();
+    }
+
+    /**
+     * 友盟事件统计
+     */
+    public static void onEvent(String eventId) {
+        MobclickAgent.onEvent(sApplication, eventId);
     }
 }

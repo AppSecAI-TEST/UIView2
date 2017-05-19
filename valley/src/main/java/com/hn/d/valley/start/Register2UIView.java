@@ -23,6 +23,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -103,6 +104,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                 .subscribe(new Action1<Void>() {
                     @Override
                     public void call(Void aVoid) {
+                        Action.phone_register();
                         onFinishClick();
                     }
                 });

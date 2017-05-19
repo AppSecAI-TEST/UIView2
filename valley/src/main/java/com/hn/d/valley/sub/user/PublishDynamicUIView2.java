@@ -40,6 +40,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter2;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
@@ -232,7 +233,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
 
                         checkDynamicType();
-
+                        Action.publishAction();
                         onPublish();
                     }
                 }));

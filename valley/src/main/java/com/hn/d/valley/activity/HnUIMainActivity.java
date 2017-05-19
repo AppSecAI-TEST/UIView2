@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
+import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.MainUIView;
@@ -22,6 +23,8 @@ public class HnUIMainActivity extends BaseActivity {
 
     @Override
     protected void onLoadView() {
+        Action.app_launch();
+
         startIView(new MainUIView());
 
         MainControl.checkCrash(mLayout);
