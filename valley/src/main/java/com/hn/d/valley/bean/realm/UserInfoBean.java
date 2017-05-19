@@ -523,7 +523,7 @@ public class UserInfoBean extends RealmObject {
     }
 
     public long getVoiceDuration() {
-        return Long.parseLong(getVoiceTime());
+        return Long.parseLong(getVoiceTime().replaceAll("s", "").replaceAll("S", "").trim());
     }
 
     public String getVoiceUrl() {

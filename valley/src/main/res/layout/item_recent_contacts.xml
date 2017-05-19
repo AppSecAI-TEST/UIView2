@@ -13,9 +13,12 @@
         android:orientation="horizontal"
         android:padding="@dimen/base_xhdpi">
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <com.hn.d.valley.widget.HnGlideImageView
             android:id="@+id/ico_view"
-            style="@style/UserLittleIcoStyle"/>
+            android:layout_width="@dimen/avatar_image_size_little"
+            android:layout_height="@dimen/avatar_image_size_little"
+            android:contentDescription="@string/is_circle"
+            android:src="@drawable/default_avatar"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -34,8 +37,7 @@
                 <TextView
                     android:id="@+id/recent_name_view"
                     style="@style/NameTextStyle"
-                    android:textSize="@dimen/default_text_size_15"
-                    />
+                    android:minHeight="@dimen/base_xhdpi_15"/>
 
             </LinearLayout>
 
@@ -43,6 +45,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_ldpi"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -55,7 +58,7 @@
                 <com.hn.d.valley.widget.HnExTextView
                     android:id="@+id/msg_content_view"
                     style="@style/SingleDarkTextStyle"
-                    />
+                    android:minHeight="@dimen/base_25dpi"/>
 
             </LinearLayout>
 

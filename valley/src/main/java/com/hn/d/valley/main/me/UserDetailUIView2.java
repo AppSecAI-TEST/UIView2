@@ -511,22 +511,24 @@ public class UserDetailUIView2 extends BaseContentUIView {
             controlLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mAudioPlayHelper.playAudio(mUserInfoBean.getVoiceUrl(), mUserInfoBean.getVoiceDuration(), new BaseAudioControl.AudioControlListener() {
-                        @Override
-                        public void onAudioControllerReady(Playable playable) {
+                    mAudioPlayHelper.playAudio(mUserInfoBean.getVoiceUrl(),
+                            mUserInfoBean.getVoiceDuration(),
+                            new BaseAudioControl.AudioControlListener() {
+                                @Override
+                                public void onAudioControllerReady(Playable playable) {
 
-                        }
+                                }
 
-                        @Override
-                        public void onEndPlay(Playable playable) {
-                            initVoiceView();
-                        }
+                                @Override
+                                public void onEndPlay(Playable playable) {
+                                    initVoiceView();
+                                }
 
-                        @Override
-                        public void updatePlayingProgress(Playable playable, long curPosition) {
-                            voiceTimeView.setText(String.valueOf(curPosition / 1000));
-                        }
-                    });
+                                @Override
+                                public void updatePlayingProgress(Playable playable, long curPosition) {
+                                    voiceTimeView.setText(String.valueOf(curPosition / 1000));
+                                }
+                            });
                 }
             });
         }

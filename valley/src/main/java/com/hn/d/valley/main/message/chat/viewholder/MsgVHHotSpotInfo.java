@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
@@ -60,6 +61,7 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
         }
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.addItemDecoration(new RBaseItemDecoration());
         mRecyclerView.setAdapter(new RBaseAdapter<HotSpotInfo.NewsBean>(context, hotSpotInfoAttachment.getHotSpotInfo().getNews()) {
             @Override
             protected int getItemLayoutId(int viewType) {
@@ -98,8 +100,16 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
                     }
                 });
             }
-
         });
+    }
 
+    @Override
+    protected boolean isMiddleItem() {
+        return true;
+    }
+
+    @Override
+    protected boolean isShowBubble() {
+        return false;
     }
 }

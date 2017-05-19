@@ -1,8 +1,10 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.emoji.MoonUtil;
@@ -43,11 +45,14 @@ public class MsgViewHolderPushText extends MsgViewHolderBase {
 
         TextView contentView = (TextView) findViewById(R.id.msg_text_view);
         Map<String, Object> extension = message.getRemoteExtension();
-
-        MoonUtil.show(context, contentView, (String) extension.get("ext"));
-        String title = (String) extension.get("title");
+//        String title = (String) extension.get("title");
         final String link = (String) extension.get("link");
-        String thumb = (String) extension.get("thumb");
+//        String thumb = (String) extension.get("thumb");
+
+        contentView.setText(SpannableStringUtils.getBuilder((String) extension.get("ext"))
+                .append(context.getString(R.string.text_click_look_detail))
+                .setForegroundColor(ContextCompat.getColor(context,R.color.blue_4777af))
+                .create());
 
         contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override

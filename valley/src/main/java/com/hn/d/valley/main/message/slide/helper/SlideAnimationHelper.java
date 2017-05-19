@@ -14,7 +14,7 @@ public class SlideAnimationHelper {
   public static final int STATE_CLOSE = 20000;
   public static final int STATE_OPEN = 30000;
 
-  private static int mCurrentState = STATE_CLOSE;
+  private int mCurrentState = STATE_CLOSE;
 
   private ValueAnimator mValueAnimator;
 

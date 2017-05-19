@@ -224,8 +224,8 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     }
 
                     @Override
-                    public void displayImage(final ImageView imageView, String url, int width, int height) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height);
+                    public void displayImage(final ImageView imageView, String url, int width, int height, int imageSize) {
+                        UserDiscussItemControl.displayImage(imageView, url, width, height, imageSize);
                     }
 
                     @Override
@@ -594,7 +594,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
             //Glide.with(mContext).load(bean.thumbPath).override(size, size).placeholder(R.drawable.zhanweitu_1)
             //      .into(holder.imgV(R.id.image_view));
 
-            UserDiscussItemControl.displayImage(holder.imgV(R.id.image_view), bean.thumbPath, 0, 0);
+            UserDiscussItemControl.displayImage(holder.imgV(R.id.image_view), bean.thumbPath, 0, 0, getItemCount());
 
             holder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -3,34 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="205dp"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:orientation="vertical"
+    android:layout_marginTop="@dimen/base_ldpi"
+    android:paddingLeft="@dimen/base_xhdpi"
+    android:paddingRight="@dimen/base_xhdpi"
+    android:paddingBottom="@dimen/base_xhdpi"
     tools:background="@android:color/darker_gray">
 
     <TextView
         android:id="@+id/msg_text_view"
         style="@style/MainTextStyle"
-        android:gravity="left"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:ellipsize="end"
         tools:text="1231242"/>
 
-
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/msg_image_view"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:actualImageScaleType="centerInside"
-        app:placeholderImage="@drawable/default_image"
-        app:placeholderImageScaleType="fitXY"
-        app:progressBarAutoRotateInterval="1000"
-        app:progressBarImage="@drawable/loading"
-        app:progressBarImageScaleType="centerInside"
-        app:roundAsCircle="false"
-        app:roundBottomLeft="true"
-        app:roundBottomRight="true"
-        app:roundTopLeft="true"
-        app:roundTopRight="true"
-        app:roundedCornerRadius="@dimen/base_xhdpi"/>
+        android:layout_marginTop="@dimen/base_ldpi"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_120dpi"
+        android:scaleType="fitXY"
+        android:src="@drawable/zhanweitu_1" />
 
 </LinearLayout>

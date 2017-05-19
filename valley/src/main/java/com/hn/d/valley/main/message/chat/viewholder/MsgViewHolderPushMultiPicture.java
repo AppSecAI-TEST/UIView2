@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
@@ -56,6 +57,7 @@ public class MsgViewHolderPushMultiPicture extends MsgViewHolderBase {
         final ArrayList<HashMap<String, String>> dataList = (ArrayList<HashMap<String, String>>) extension.get("data_list");
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.addItemDecoration(new RBaseItemDecoration());
         mRecyclerView.setAdapter(new RBaseAdapter<HashMap<String, String>>(context, dataList) {
             @Override
             protected int getItemLayoutId(int viewType) {

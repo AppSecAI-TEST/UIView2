@@ -41,7 +41,6 @@ import com.hn.d.valley.emoji.EmojiRecyclerView;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.me.UserDetailUIView2;
-import com.hn.d.valley.main.message.EmojiLayoutControl;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.skin.SkinUtils;

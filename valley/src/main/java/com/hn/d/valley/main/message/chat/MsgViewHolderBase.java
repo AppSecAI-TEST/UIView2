@@ -24,6 +24,7 @@ import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.main.other.KLJUIView;
 import com.hn.d.valley.skin.SkinUtils;
 import com.netease.nimlib.sdk.NIMClient;
@@ -217,15 +218,7 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
         msgIcoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (message.getFromAccount().equals(Constant.klj)) {
-                    mUIBaseView.startIView(new KLJUIView());
-                } if (message.getFromAccount().equals(Constant.wallet)) {
-
-                } else if (message.getFromAccount().equals(Constant.hot_news)) {
-
-                } else {
-                    mUIBaseView.startIView(new UserDetailUIView2(message.getFromAccount()));
-                }
+                SessionHelper.getSessionListener().onAvatarClicked(mUIBaseView,message);
             }
         });
 

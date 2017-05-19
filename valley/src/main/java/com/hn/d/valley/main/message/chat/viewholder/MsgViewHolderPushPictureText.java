@@ -10,6 +10,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -44,7 +45,7 @@ public class MsgViewHolderPushPictureText extends MsgViewHolderBase {
     protected void bindContentView() {
 
         TextView contentView = (TextView) findViewById(R.id.msg_text_view);
-        SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.msg_image_view);
+        HnGlideImageView draweeView = (HnGlideImageView) findViewById(R.id.msg_image_view);
 
         Map<String, Object> extension = message.getRemoteExtension();
 
@@ -52,12 +53,8 @@ public class MsgViewHolderPushPictureText extends MsgViewHolderBase {
         final String link = (String) extension.get("link");
         String thumb = (String) extension.get("thumb");
 
+        draweeView.setImageUrl(thumb);
         contentView.setText(title);
-//        if (isReceivedMessage(message)) {
-//            RFresco.mask(context, draweeView, R.drawable.bubble_box_left_s, thumb, false);
-//        } else {
-//            RFresco.mask(context, draweeView, R.drawable.bubble_box_right_n2, thumb, false);
-//        }
         contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

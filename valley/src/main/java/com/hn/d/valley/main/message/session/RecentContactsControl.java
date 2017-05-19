@@ -39,6 +39,7 @@ import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
+import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
@@ -48,6 +49,7 @@ import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.widget.HnExTextView;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -421,7 +423,7 @@ public class RecentContactsControl {
                 }
             });
         }
-        mRecentContactsAdapter.resetData(recentContact);
+        mRecentContactsAdapter.resetData(new ArrayList<>(recentContact));
     }
 
     /**
@@ -475,6 +477,8 @@ public class RecentContactsControl {
             GrabedMsgAttachment msgAttachment = (GrabedMsgAttachment) attachment;
             RedPacketGrabedMsg grabedMsg = msgAttachment.getGrabedMsg();
             return grabedMsg.getMsg();
+        } else if (attachment instanceof HotSpotInfoAttachment) {
+            return ((HotSpotInfoAttachment) attachment).getHotSpotInfo().getMsg();
         }
         return "[自定义消息]";
     }
@@ -664,7 +668,7 @@ public class RecentContactsControl {
          */
         private void updateUserInfo(RBaseViewHolder holder, RecentContact bean) {
             final RecentContactsInfo recentContactsInfo = getRecentContactsInfo(bean);
-            SimpleDraweeView draweeView = holder.v(R.id.ico_view);
+            HnGlideImageView draweeView = holder.v(R.id.ico_view);
             holder.tv(R.id.recent_name_view).setText(recentContactsInfo.name);
 
             if (isAddContact(bean)) {
@@ -674,7 +678,7 @@ public class RecentContactsControl {
                 draweeView.setImageResource(R.drawable.dynamic_notification);
                 return;
             }
-            DraweeViewUtil.setDraweeViewHttp(draweeView, recentContactsInfo.icoUrl);
+            draweeView.setImageUrl(recentContactsInfo.icoUrl);
         }
 
         /**

@@ -476,8 +476,8 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void displayImage(final ImageView imageView, String url, int width, int height) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height, !isInDetail);
+                    public void displayImage(final ImageView imageView, String url, int width, int height, int imageSize) {
+                        UserDiscussItemControl.displayImage(imageView, url, width, height, !isInDetail, imageSize);
                     }
 
                     @Override
@@ -516,8 +516,8 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void displayImage(ImageView imageView, String url, int width, int height) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height, true);
+                    public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
+                        UserDiscussItemControl.displayImage(imageView, url, width, height, true, imageSize);
                     }
 
                     @Override
@@ -586,7 +586,7 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void displayImage(ImageView imageView, String url, int width, int height) {
+                    public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
                         UserDiscussItemControl.displayVoiceImage(imageView, url, width, height, !isInDetail);
                     }
 
@@ -1339,12 +1339,12 @@ public class UserDiscussItemControl {
     }
 
     public static void displayImage(final ImageView imageView, final String url,
-                                    final int width, final int height) {
-        displayImage(imageView, url, width, height, true);
+                                    final int width, final int height, int imageSize) {
+        displayImage(imageView, url, width, height, true, imageSize);
     }
 
     public static void displayImage(final ImageView imageView, final String url,
-                                    final int width, final int height, final boolean noGif) {
+                                    final int width, final int height, final boolean noGif, final int imageSize) {
 //        ImagePicker.getInstance().getImageLoader().displayImage((Activity) imageView.getContext(),
 //                "", "", OssHelper.getImageThumb(url, width, height), imageView, 0, 0);
 
@@ -1380,7 +1380,7 @@ public class UserDiscussItemControl {
                 Ok.instance().type(url, new Ok.OnImageTypeListener() {
                     @Override
                     public void onImageType(Ok.ImageType imageType) {
-                        L.e("call: onImageType([imageType])-> " + url + " : " + imageType);
+                        L.d("call: onImageType([imageType])-> " + url + " : " + imageType);
 
                         if (imageType != Ok.ImageType.UNKNOWN) {
                             if (!noGif && imageType == Ok.ImageType.GIF) {
@@ -1404,7 +1404,7 @@ public class UserDiscussItemControl {
                                 if (imageView instanceof RImageView) {
                                     ((RImageView) imageView).setShowGifTip(imageType == Ok.ImageType.GIF);
                                 }
-                                displayJpeg(imageView, url, width, height);
+                                displayJpeg(imageView, url, width, height, imageSize);
                             }
                         }
                     }
@@ -1419,7 +1419,7 @@ public class UserDiscussItemControl {
         }
     }
 
-    public static void displayJpeg(final ImageView imageView, final String url, int width, int height) {
+    public static void displayJpeg(final ImageView imageView, final String url, int width, int height, final int imageSize) {
         Glide.with(imageView.getContext())
                 .load(OssHelper.getImageThumb(url, width, height))
                 .asBitmap()
@@ -1434,13 +1434,13 @@ public class UserDiscussItemControl {
 
                         int w = resource.getWidth();
                         int h = resource.getHeight();
-                        L.e("call: onResourceReady([resource, glideAnimation])-> " + url + " w:" +
+                        L.d("call: onResourceReady([resource, glideAnimation])-> " + url + " w:" +
                                 w + " H:" + h);
 
                         int abs = Math.abs(w - h);
 
                         //自动根据图片的长宽差, 选择缩放类型
-                        if (abs < Math.min(w / 2, h / 2)) {
+                        if (imageSize <= 1 || abs < Math.min(w / 2, h / 2)) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         } else {
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

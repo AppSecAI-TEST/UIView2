@@ -36,10 +36,10 @@ import com.hn.d.valley.bean.event.GroupDissolveEvent;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.message.CommandLayoutControl;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView;
 import com.hn.d.valley.main.message.session.AitHelper;
+import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.service.GroupChatService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -126,11 +126,11 @@ public class GroupChatUIView extends ChatUIView2 {
     }
 
     @Override
-    protected List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
+    protected List<CommandItemInfo> createCommandItems() {
 
-        List<CommandLayoutControl.CommandItemInfo> items = super.createCommandItems();
+        List<CommandItemInfo> items = super.createCommandItems();
 
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_rts_normal, "红包", new View.OnClickListener() {
+        items.add(new CommandItemInfo(R.drawable.message_plus_rts_normal, "红包", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //红包

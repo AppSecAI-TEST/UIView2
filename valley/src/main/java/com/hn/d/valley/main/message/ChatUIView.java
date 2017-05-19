@@ -11,7 +11,6 @@ import android.support.v4.view.ViewCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -59,7 +58,12 @@ import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.message.session.CommandItemInfo;
+import com.hn.d.valley.main.message.session.CommandLayoutControl;
+import com.hn.d.valley.main.message.session.Container;
+import com.hn.d.valley.main.message.session.EmojiLayoutControl;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
+import com.hn.d.valley.main.message.session.SessionProxy;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -93,7 +97,7 @@ import rx.functions.Action3;
 /**
  * Created by hewking on 2017/3/16.
  */
-public class ChatUIView extends BaseContentUIView implements IAudioRecordCallback {
+public class ChatUIView extends BaseContentUIView implements IAudioRecordCallback ,SessionProxy{
 
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
@@ -212,8 +216,9 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 //
 //            }
 //        });
+        Container container = new Container(mActivity,mSessionId,sessionType,mOtherILayout,this);
 
-        mCommandLayoutControl = new CommandLayoutControl(mActivity, mViewHolder, createCommandItems());
+        mCommandLayoutControl = new CommandLayoutControl(container, mViewHolder, createCommandItems());
 
         initRefreshLayout();
 
@@ -271,16 +276,16 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         initAudioRecordButton();
     }
 
-    private List<CommandLayoutControl.CommandItemInfo> createCommandItems() {
-        List<CommandLayoutControl.CommandItemInfo> items = new ArrayList<>();
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_photo_normal, "图片", new View.OnClickListener() {
+    private List<CommandItemInfo> createCommandItems() {
+        List<CommandItemInfo> items = new ArrayList<>();
+        items.add(new CommandItemInfo(R.drawable.nim_message_plus_photo_normal, "图片", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //发送图片
                 ImagePickerHelper.startImagePicker(mActivity, false, false, 9);
             }
         }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_video_normal, "视频", new View.OnClickListener() {
+        items.add(new CommandItemInfo(R.drawable.nim_message_plus_video_normal, "视频", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //视频
@@ -309,7 +314,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
             }
 
         }));
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.nim_message_plus_location_normal, "位置", new View.OnClickListener() {
+        items.add(new CommandItemInfo(R.drawable.nim_message_plus_location_normal, "位置", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //位置
@@ -328,7 +333,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
             }
         }));
 
-        items.add(new CommandLayoutControl.CommandItemInfo(R.drawable.message_plus_rts_normal, "个人名片", new View.OnClickListener() {
+        items.add(new CommandItemInfo(R.drawable.message_plus_rts_normal, "个人名片", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //个人名片
@@ -801,9 +806,10 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         mInputView.setText("");
     }
 
-    private void sendMessage(IMMessage message) {
+    public boolean sendMessage(IMMessage message) {
         msgService().sendMessage(message, false);
         mChatControl.addData(message);
+        return true;
     }
 
     @NonNull

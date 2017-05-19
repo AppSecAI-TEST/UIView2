@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.ThreadExecutor;
 import com.hn.d.valley.R;
 import com.netease.nimlib.sdk.media.player.AudioPlayer;
 import com.netease.nimlib.sdk.media.player.OnPlayListener;
@@ -36,7 +38,16 @@ abstract public class BaseAudioControl<T> {
                 return;
             }
 //            currentAudioStreamType = AudioManager.STREAM_MUSIC;
-            currentAudioPlayer.start(currentAudioStreamType);
+            if (RUtils.isMainThread()) {
+                ThreadExecutor.instance().onThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        currentAudioPlayer.start(currentAudioStreamType);
+                    }
+                });
+            } else {
+                currentAudioPlayer.start(currentAudioStreamType);
+            }
         }
     };
 

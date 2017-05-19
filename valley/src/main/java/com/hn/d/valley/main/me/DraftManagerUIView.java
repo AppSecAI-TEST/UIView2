@@ -279,8 +279,8 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
 
                 @Override
-                public void displayImage(final ImageView imageView, String url, int width, int height) {
-                    UserDiscussItemControl.displayImage(imageView, url, width, height, true);
+                public void displayImage(final ImageView imageView, String url, int width, int height, int imageSize) {
+                    UserDiscussItemControl.displayImage(imageView, url, width, height, true, imageSize);
                 }
 
                 @Override
@@ -308,8 +308,8 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
 
                 @Override
-                public void displayImage(ImageView imageView, String url, int width, int height) {
-                    UserDiscussItemControl.displayImage(imageView, url, width, height, true);
+                public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
+                    UserDiscussItemControl.displayImage(imageView, url, width, height, true, imageSize);
                 }
 
                 @Override
@@ -351,7 +351,7 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
 
                 @Override
-                public void displayImage(ImageView imageView, String url, int width, int height) {
+                public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
                     if (VoiceStatusInfo.NOPIC.equalsIgnoreCase(url)) {
                         imageView.setImageResource(R.drawable.luyin_caogaoxiangi_morentu);
                     } else {

@@ -13,6 +13,7 @@ import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
+import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
@@ -78,7 +79,7 @@ public class HnChatActivity extends BaseActivity {
                 RBus.post(new SwipeEvent((int) (-getOffsetX() * percent)));
             }
         });
-        P2PChatUIView.start(mLayout, mAccount, SessionTypeEnum.P2P);
+        SessionHelper.startSession(mLayout, mAccount, SessionTypeEnum.P2P);
     }
 
     @Override
