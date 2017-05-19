@@ -201,11 +201,17 @@ public class AutoLoginControl {
         mAutoLoginListener = listener;
         if (canAutoLogin()) {
             //自动登录流程
-            AutoLoginBean autoLoginBean = getAutoLoginBean();
-            if (autoLoginBean.login_type == LOGIN_PHONE) {
-                loginPhone(activity, autoLoginBean.phone, autoLoginBean.pwd);
-            } else {
-                loginPlatform(activity, autoLoginBean.open_id, String.valueOf(autoLoginBean.login_type));
+            try {
+                AutoLoginBean autoLoginBean = getAutoLoginBean();
+                if (autoLoginBean.login_type == LOGIN_PHONE) {
+                    loginPhone(activity, autoLoginBean.phone, autoLoginBean.pwd);
+                } else {
+                    loginPlatform(activity, autoLoginBean.open_id, String.valueOf(autoLoginBean.login_type));
+                }
+            } catch (Exception e) {
+                if (mAutoLoginListener != null) {
+                    mAutoLoginListener.onLoginError();
+                }
             }
         } else {
             //正常登录流程
