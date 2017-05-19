@@ -71,10 +71,10 @@ public class HnSplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onLoadView() {
+    protected void onLoadView(Intent intent) {
         if (RNim.isAutoLoginSucceed()) {
             //startIView(new MainUIView(), true);
-            HnUIMainActivity.launcher(this);
+            HnUIMainActivity.launcher(this, true);
             finish();
         } else {
             final String versionName = RUtils.getAppVersionName(this);

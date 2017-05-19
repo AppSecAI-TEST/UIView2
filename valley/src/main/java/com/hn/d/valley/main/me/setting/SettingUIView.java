@@ -63,7 +63,7 @@ public class SettingUIView extends BaseSubContentUIView {
                         .setOkListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                MainControl.onMainUnload(true);
+                                MainControl.onLoginOut();
                                 HnSplashActivity.launcher(mActivity, false);
                                 mActivity.finish();
                             }

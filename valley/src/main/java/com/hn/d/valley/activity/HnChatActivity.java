@@ -12,7 +12,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.SwipeEvent;
-import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.main.message.service.SessionHelper;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -52,7 +51,7 @@ public class HnChatActivity extends BaseActivity {
     }
 
     @Override
-    protected void onLoadView() {
+    protected void onLoadView(Intent intent) {
         ((UILayoutImpl) mLayout).setEnableRootSwipe(true);
         ((UILayoutImpl) mLayout).setOnPanelSlideListener(new SwipeBackLayout.OnPanelSlideListener() {
             @Override

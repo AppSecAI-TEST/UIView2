@@ -34,6 +34,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.service.StartService;
@@ -76,7 +77,7 @@ public class LoginUIView2 extends BaseContentUIView {
      */
     private static void jumpToMain(Activity activity) {
         //replaceIView(new MainUIView(500));
-        HnUIMainActivity.launcher(activity);
+        HnUIMainActivity.launcher(activity, true);
 //        HnMainActivity.launcher(mActivity);
         activity.finish();
     }
@@ -121,7 +122,11 @@ public class LoginUIView2 extends BaseContentUIView {
         } else {
             //手机号登录
             map.put("phone", phone);
-            map.put("pwd", RSA.encode(pwd));
+            String encode = RSA.encode(pwd);
+            map.put("pwd", encode);
+
+            AutoLoginControl.saveAutoLoginBean(AutoLoginControl.AutoLoginBean.LOGIN_PHONE,
+                    "", phone, encode);
         }
 
         String jpushId;

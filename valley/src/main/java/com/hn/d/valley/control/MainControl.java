@@ -43,17 +43,18 @@ public class MainControl {
     }
 
     public static void onMainUnload() {
-        onMainUnload(BuildConfig.DEBUG);
-
         SystemNotifyManager.getInstance().registerCustomNotificationObserver(false);
 
         FDown.unInit();
     }
 
-    public static void onMainUnload(boolean quit) {
-        if (quit) {
-            RNim.logout();
-        }
+    public static void onLoginOut() {
+        RNim.logout();
+        AutoLoginControl.setLogin(false);
+    }
+
+    public static void onLoginIn() {
+        AutoLoginControl.setLogin(true);
     }
 
     public static void checkCrash(ILayout iLayout) {

@@ -12,7 +12,7 @@ import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
-import com.hn.d.valley.activity.HnSplashActivity;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.NimUserInfoCache;
@@ -156,7 +156,7 @@ public class RNim {
     public static StatusBarNotificationConfig genNotiConfig() {
         // 如果将新消息通知提醒托管给 SDK 完成，需要添加以下配置。否则无需设置。
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
-        config.notificationEntrance = HnSplashActivity.class; // 点击通知栏跳转到该Activity
+        config.notificationEntrance = HnUIMainActivity.class; // 点击通知栏跳转到该Activity
         config.notificationSmallIconId = R.drawable.login_logo;
         // 呼吸灯配置
         config.ledARGB = Color.GREEN;

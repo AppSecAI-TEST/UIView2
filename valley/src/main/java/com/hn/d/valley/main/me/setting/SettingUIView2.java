@@ -171,7 +171,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         .setOkListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                MainControl.onMainUnload(true);
+                                MainControl.onLoginOut();
                                 HnSplashActivity.launcher(mActivity, false);
                                 mActivity.finish();
                             }

@@ -169,6 +169,8 @@ public class LoginControl {
         map.put("open_avatar", open_avatar);
         map.put("open_sex", open_sex);
 
+        AutoLoginControl.saveAutoLoginBean(loginType, open_id, "", "");
+
         String jpushId;
         if (TextUtils.isEmpty(JPushReceiver.mRegistrationId)) {
             jpushId = JPushInterface.getRegistrationID(ValleyApp.getApp());

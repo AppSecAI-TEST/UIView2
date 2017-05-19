@@ -37,7 +37,6 @@ import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.nim.RNim;
@@ -209,8 +208,6 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
         bindPresenter(new LoginPresenter());
-
-        MainControl.onMainUnload(true);
     }
 
     @Override
@@ -438,7 +435,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
      */
     private void jumpToMain() {
         //replaceIView(new MainUIView(500));
-        HnUIMainActivity.launcher(mActivity);
+        HnUIMainActivity.launcher(mActivity, true);
 //        HnMainActivity.launcher(mActivity);
         mActivity.finish();
     }

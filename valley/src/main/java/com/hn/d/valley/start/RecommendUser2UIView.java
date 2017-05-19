@@ -56,7 +56,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                 .setListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HnUIMainActivity.launcher(mActivity);
+                        HnUIMainActivity.launcher(mActivity, true);
                         mActivity.finish();
                     }
                 }));
@@ -126,7 +126,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onSucceed(String bean) {
-                        HnUIMainActivity.launcher(mActivity);
+                        HnUIMainActivity.launcher(mActivity, true);
                         mActivity.finish();
                     }
                 }));
