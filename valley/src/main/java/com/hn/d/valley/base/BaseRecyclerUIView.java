@@ -141,7 +141,11 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     /**
      * 创建分割线
      */
-    protected RBaseItemDecoration initItemDecoration() {
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return createBaseItemDecoration();
+    }
+
+    protected RBaseItemDecoration createBaseItemDecoration() {
         return new RBaseItemDecoration(getItemDecorationHeight(), getItemDecorationColor())
                 .setDrawLastLine(hasLastDecoration());
     }

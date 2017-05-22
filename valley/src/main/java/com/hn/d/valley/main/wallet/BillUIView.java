@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.wallet;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -9,14 +10,12 @@ import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 
@@ -159,7 +158,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
     }
 }

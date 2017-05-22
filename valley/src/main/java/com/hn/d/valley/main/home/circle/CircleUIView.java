@@ -20,7 +20,7 @@ import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
-import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
+import com.hn.d.valley.main.home.HomeBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.service.UserInfoService;
@@ -47,7 +47,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
+public class CircleUIView extends HomeBaseRecyclerUIView {
 
     LoadStatusCallback mLoadStatusCallback;
     /**
@@ -113,11 +113,6 @@ public class CircleUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBean.
         if (isInSubUIView && !needRefresh) {
             mRefreshLayout.setRefreshDirection(RefreshLayout.NONE);
         }
-    }
-
-    @Override
-    protected int getItemDecorationColor() {
-        return getColor(R.color.base_main_color_bg_color);
     }
 
     @Override

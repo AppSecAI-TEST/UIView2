@@ -1,6 +1,7 @@
 package com.hn.d.valley.sub.other;
 
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
+import android.support.v7.widget.RecyclerView;
+
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.LikeUserInfoBean;
@@ -67,8 +68,8 @@ public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUs
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration()
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration()
                 .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
                 .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
                 .setDrawLastLine(true);

@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,6 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
@@ -39,9 +39,7 @@ import com.hn.d.valley.main.message.slide.holder.OneSlideViewHolder;
 import com.hn.d.valley.main.message.slide.holder.SlideViewHolder;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
-import com.hn.d.valley.widget.HnButton;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -365,7 +363,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
     }
 }

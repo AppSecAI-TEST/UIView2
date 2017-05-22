@@ -129,11 +129,12 @@ public class UserDiscussItemControl {
         holder.tv(R.id.view_cnt).setText(dataListBean.getView_cnt());
         //地址
         holder.tv(R.id.address).setText(dataListBean.getAddress());
+        holder.tv(R.id.address).setVisibility(TextUtils.isEmpty(dataListBean.getAddress()) ? View.GONE : View.VISIBLE);
+
         holder.tv(R.id.fav_cnt).setText(dataListBean.getFav_cnt());
         holder.tv(R.id.forward_cnt).setText(dataListBean.getForward_cnt());
         holder.tv(R.id.like_cnt).setText(dataListBean.getLike_cnt());
         holder.tv(R.id.comment_cnt).setText(dataListBean.getComment_cnt());
-
 
 
         //时间

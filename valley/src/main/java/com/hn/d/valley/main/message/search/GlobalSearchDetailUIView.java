@@ -3,13 +3,13 @@ package com.hn.d.valley.main.message.search;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.TimeUtil;
@@ -125,8 +125,8 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration().setMarginStart(getResources().getDimensionPixelSize(R.dimen.base_xhdpi))
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration().setMarginStart(getResources().getDimensionPixelSize(R.dimen.base_xhdpi))
                 .setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.base_xhdpi));
     }
 

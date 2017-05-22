@@ -3,6 +3,7 @@ package com.hn.d.valley.sub.user;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -18,8 +19,8 @@ import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.control.MediaTypeControl;
 import com.hn.d.valley.control.UnreadMessageControl;
-import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.CustomBean;
+import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -73,8 +74,8 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        RBaseItemDecoration itemDecoration = super.initItemDecoration();
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        RBaseItemDecoration itemDecoration = super.createBaseItemDecoration();
         itemDecoration.setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
         return itemDecoration;
     }

@@ -25,7 +25,6 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RPagerSnapHelper;
 import com.angcyo.uiview.recycler.RRecyclerView;
@@ -191,8 +190,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration()
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration()
                 .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
                 .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
                 .setDrawLastLine(true);

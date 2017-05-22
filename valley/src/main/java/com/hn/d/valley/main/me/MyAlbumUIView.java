@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
@@ -240,7 +239,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
+    protected RecyclerView.ItemDecoration initItemDecoration() {
         return super.initItemDecoration();
     }
 

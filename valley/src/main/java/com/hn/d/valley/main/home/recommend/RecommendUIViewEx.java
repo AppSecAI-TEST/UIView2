@@ -8,7 +8,6 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
-import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
@@ -16,7 +15,7 @@ import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
-import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
+import com.hn.d.valley.main.home.HomeBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.user.DynamicDetailUIView2;
@@ -37,7 +36,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class RecommendUIViewEx extends NoTitleBaseRecyclerUIView<UserDiscussListBean.DataListBean> {
+public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
 
     LoadStatusCallback mLoadStatusCallback;
     /**
@@ -75,11 +74,6 @@ public class RecommendUIViewEx extends NoTitleBaseRecyclerUIView<UserDiscussList
     @Override
     public void loadData() {
         super.loadData();
-    }
-
-    @Override
-    protected int getItemDecorationColor() {
-        return getColor(R.color.base_main_color_bg_color);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.hn.d.valley.sub.user;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +13,6 @@ import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.Json;
@@ -248,8 +248,8 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
     }
 
     @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return super.initItemDecoration()
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration()
                 .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
                 .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
                 .setDrawLastLine(true);
