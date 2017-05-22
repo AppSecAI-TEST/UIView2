@@ -12,7 +12,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.SwipeEvent;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 

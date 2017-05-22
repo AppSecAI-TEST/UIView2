@@ -11,5 +11,14 @@ package com.hn.d.valley.main.message.session;
  * 修改备注：
  * Version: 1.0.0
  */
-public class VoiceCommandItem {
+public class VoiceCommandItem extends CommandItemInfo{
+
+    public VoiceCommandItem(int icoResId, String text) {
+        super(icoResId, text);
+    }
+
+    @Override
+    protected void onClick() {
+        super.onClick();
+    }
 }

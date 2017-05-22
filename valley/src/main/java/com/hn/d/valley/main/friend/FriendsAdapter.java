@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
@@ -75,9 +77,10 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
         if (holder.getItemViewType() == ItemTypes.SYSTEMPUSH) {
             final SystemPushItem pushItem = (SystemPushItem) bean;
             final FriendBean friendBean = pushItem.getFriendBean();
-            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
+            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-            iv_head.setImageUrl(friendBean.getAvatar());
+//            iv_head.setImageUrl(friendBean.getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
             tv_friend_name.setText(friendBean.getDefaultMark());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -90,7 +93,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
         if(holder.getItemViewType() == ItemTypes.FUNC) {
             final FuncItem funcItem = (FuncItem) bean;
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
+            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
             iv_head.setImageResource(funcItem.getDrawableRes());
             tv_friend_name.setText(funcItem.text);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -105,9 +108,10 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
         } else if (holder.getItemViewType() == ItemTypes.FRIEND) {
             ContactItem friendItem = (ContactItem) bean;
             final FriendBean friendBean = friendItem.getFriendBean();
-            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
+            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-            iv_head.setImageUrl(friendBean.getAvatar());
+//            iv_head.setImageThumbUrl(friendBean.getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
             tv_friend_name.setText(friendBean.getDefaultMark());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {

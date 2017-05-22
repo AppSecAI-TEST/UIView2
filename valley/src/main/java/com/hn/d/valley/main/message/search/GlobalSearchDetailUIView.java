@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -18,7 +17,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.message.query.TextQuery;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;

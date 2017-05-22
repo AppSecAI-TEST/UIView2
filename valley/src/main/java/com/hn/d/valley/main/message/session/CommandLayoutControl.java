@@ -108,8 +108,13 @@ public class CommandLayoutControl {
         }
 
         @Override
-        protected void onBindRawView(RBaseViewHolder holder, int position, CommandItemInfo bean) {
-            holder.itemView.setOnClickListener(bean.mClickListener);
+        protected void onBindRawView(RBaseViewHolder holder, int position, final CommandItemInfo bean) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bean.onClick();
+                }
+            });
             final TextView textView = holder.tag("text");
             textView.setText(bean.text);
             textView.setCompoundDrawablesWithIntrinsicBounds(0, bean.icoResId, 0, 0);

@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -18,18 +19,17 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.T_;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.ListModel;
-import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.GroupBean;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
-import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -38,10 +38,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.functions.Action1;
 import rx.functions.Action2;
-
-import static android.R.attr.action;
 
 /**
  * Created by hewking on 2017/3/13.
@@ -170,10 +167,10 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
 
             //checkNotNull
 
-            HnGlideImageView glideImageView = holder.v(R.id.iv_item_head);
+            SimpleDraweeView glideImageView = holder.v(R.id.iv_item_head);
             TextView tv = holder.tv(R.id.tv_friend_name);
 
-            glideImageView.setImageUrl(dataBean.getDefaultAvatar());
+            DraweeViewUtil.setDraweeViewHttp(glideImageView,dataBean.getDefaultAvatar());
             tv.setText(dataBean.getDefaultName());
 
             final String yxGid = dataBean.getYxGid();

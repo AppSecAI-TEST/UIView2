@@ -12,7 +12,7 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;

@@ -7,9 +7,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.T_;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
@@ -53,9 +55,9 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
         } else if (getItemType(position) == ItemTypes.FRIEND){
             ContactItem item = (ContactItem) bean;
 
-            HnGlideImageView imageView = holder.v(R.id.iv_item_head);
+            SimpleDraweeView imageView = holder.v(R.id.iv_item_head);
             TextView nickName = holder.tv(R.id.tv_friend_name);
-            imageView.setImageUrl(item.getFriendBean().getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(imageView,item.getFriendBean().getAvatar());
             nickName.setText(item.getFriendBean().getDefaultMark());
         }
 
@@ -88,9 +90,11 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
                 if (mSelectedUsers.contains(friendBean.getUid()) ){
                     mCheckStats.put(position,true);
                     holder.itemView.setEnabled(false);
+                    holder.itemView.setBackgroundResource(R.color.default_base_bg_dark2);
                     checkBox.setEnabled(false);
                 } else {
                     holder.itemView.setEnabled(true);
+                    holder.itemView.setBackgroundResource(R.drawable.base_bg_selector);
                     checkBox.setEnabled(true);
                 }
             }

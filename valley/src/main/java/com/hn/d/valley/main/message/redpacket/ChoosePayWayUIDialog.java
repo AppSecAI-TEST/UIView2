@@ -60,6 +60,14 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
+
+        ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishDialog();
+            }
+        });
+
         infoBalance.setItemText(mActivity.getString(R.string.text_balance));
         infoBalance.setLeftDrawableRes(R.drawable.icon_chai);
         if (params.getBalance() != -1) {

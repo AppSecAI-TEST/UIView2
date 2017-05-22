@@ -52,7 +52,7 @@ import com.hn.d.valley.main.me.sub.UserDetailMoreUIView;
 import com.hn.d.valley.main.me.sub.UserInfoSubUIView;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.InputUIView;

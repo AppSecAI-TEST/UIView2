@@ -338,7 +338,6 @@ public class RecentContactsControl {
                                 }
                             });
                         } else if (tag == MENU_NO_READ) {
-
                             if (recentContact.getUnreadCount() + UnreadMessageControl.getMessageUnreadCount(messageId) > 0) {
                                 recentContact.setMsgStatus(MsgStatusEnum.read);
                                 NIMClient.getService(MsgService.class).clearUnreadCount(contactId,
@@ -396,7 +395,6 @@ public class RecentContactsControl {
             Collections.sort(recentContact, new Comparator<RecentContact>() {
                 @Override
                 public int compare(RecentContact o1, RecentContact o2) {
-
                     if (SessionSettingDelegate.getInstance().checkTop(o1.getContactId())) {
                         RNim.addRecentContactTag(o1, IS_TOP);
                     } else {
@@ -668,7 +666,7 @@ public class RecentContactsControl {
          */
         private void updateUserInfo(RBaseViewHolder holder, RecentContact bean) {
             final RecentContactsInfo recentContactsInfo = getRecentContactsInfo(bean);
-            HnGlideImageView draweeView = holder.v(R.id.ico_view);
+            SimpleDraweeView draweeView = holder.v(R.id.ico_view);
             holder.tv(R.id.recent_name_view).setText(recentContactsInfo.name);
 
             if (isAddContact(bean)) {
@@ -678,7 +676,8 @@ public class RecentContactsControl {
                 draweeView.setImageResource(R.drawable.dynamic_notification);
                 return;
             }
-            draweeView.setImageUrl(recentContactsInfo.icoUrl);
+//            draweeView.setImageUrl(recentContactsInfo.icoUrl);
+            DraweeViewUtil.setDraweeViewHttp(draweeView, recentContactsInfo.icoUrl);
         }
 
         /**

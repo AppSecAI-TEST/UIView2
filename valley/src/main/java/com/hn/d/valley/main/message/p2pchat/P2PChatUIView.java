@@ -11,6 +11,8 @@ import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.redpacket.NewRedPacketUIView;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
+import com.hn.d.valley.main.message.session.RedPacketCommandItem;
+import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -38,11 +40,12 @@ public class P2PChatUIView extends ChatUIView2 {
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType,IMMessage anchor) {
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType,IMMessage anchor, SessionCustomization customization) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
         bundle.putSerializable(KEY_ANCHOR, anchor);
+        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION,customization);
         mLayout.startIView(new P2PChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
@@ -61,23 +64,6 @@ public class P2PChatUIView extends ChatUIView2 {
         }));
 
         return super.getTitleBar().setRightItems(rightItems);
-    }
-
-    @Override
-    protected List<CommandItemInfo> createCommandItems() {
-
-        List<CommandItemInfo> items = super.createCommandItems();
-
-        items.add(new CommandItemInfo(R.drawable.message_plus_rts_normal, "红包", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //红包
-                mOtherILayout.startIView(new NewRedPacketUIView(mSessionId));
-            }
-        }));
-
-        return items;
-
     }
 
     @Subscribe

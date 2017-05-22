@@ -40,6 +40,8 @@ import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView;
 import com.hn.d.valley.main.message.session.AitHelper;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
+import com.hn.d.valley.main.message.session.RedPacketCommandItem;
+import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hn.d.valley.service.GroupChatService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -126,31 +128,24 @@ public class GroupChatUIView extends ChatUIView2 {
     }
 
     @Override
-    protected List<CommandItemInfo> createCommandItems() {
-
-        List<CommandItemInfo> items = super.createCommandItems();
-
-        items.add(new CommandItemInfo(R.drawable.message_plus_rts_normal, "红包", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //红包
-                mOtherILayout.startIView(new NewGroupRedPacketUIView(mSessionId,mGroupDesc == null ? 0 :mGroupDesc.getMemberCount()));
-            }
-        }));
-
-        return items;
-
-    }
-
-
-    @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
 
         if(!checkInGroup()){
             showNotice();
         }
+    }
 
+    @Override
+    protected List<CommandItemInfo> createCommandItems() {
+        List<CommandItemInfo> list = super.createCommandItems();
+        list.add(new RedPacketCommandItem(){
+            @Override
+            protected void onClick() {
+                getContainer().mLayout.startIView(new NewGroupRedPacketUIView(mSessionId,mGroupDesc == null ? 0 :mGroupDesc.getMemberCount()));
+            }
+        });
+        return list;
     }
 
     @Override
@@ -271,12 +266,13 @@ public class GroupChatUIView extends ChatUIView2 {
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType , IMMessage anchor, Set<IMMessage> aitMessages) {
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType , IMMessage anchor, Set<IMMessage> aitMessages,SessionCustomization customization) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
         bundle.putSerializable(KEY_ANCHOR,anchor);
         bundle.putSerializable(KEY_AITMESSAGES, (Serializable) aitMessages);
+        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION,customization);
         mLayout.startIView(new GroupChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 

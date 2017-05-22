@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -13,12 +12,18 @@
         android:orientation="horizontal"
         android:padding="@dimen/base_xhdpi">
 
-        <com.hn.d.valley.widget.HnGlideImageView
+        <!--<com.hn.d.valley.widget.HnGlideImageView-->
+            <!--android:id="@+id/ico_view"-->
+            <!--android:layout_width="@dimen/avatar_image_size_little"-->
+            <!--android:layout_height="@dimen/avatar_image_size_little"-->
+            <!--android:contentDescription="@string/is_circle"-->
+            <!--android:src="@drawable/default_avatar" />-->
+
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/ico_view"
+            style="@style/UserLittleIcoStyle"
             android:layout_width="@dimen/avatar_image_size_little"
-            android:layout_height="@dimen/avatar_image_size_little"
-            android:contentDescription="@string/is_circle"
-            android:src="@drawable/default_avatar"/>
+            android:layout_height="@dimen/avatar_image_size_little" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -37,7 +42,7 @@
                 <TextView
                     android:id="@+id/recent_name_view"
                     style="@style/NameTextStyle"
-                    android:minHeight="@dimen/base_xhdpi_15"/>
+                    android:minHeight="@dimen/base_xhdpi_15" />
 
             </LinearLayout>
 
@@ -53,12 +58,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_ldpi"
-                    android:scaleType="centerInside"/>
+                    android:scaleType="centerInside" />
 
                 <com.hn.d.valley.widget.HnExTextView
                     android:id="@+id/msg_content_view"
                     style="@style/SingleDarkTextStyle"
-                    android:minHeight="@dimen/base_25dpi"/>
+                    android:minHeight="@dimen/base_25dpi" />
 
             </LinearLayout>
 
@@ -75,7 +80,7 @@
             <TextView
                 android:id="@+id/msg_time_view"
                 style="@style/DarkTextStyle"
-                android:textSize="@dimen/default_text_size10"/>
+                android:textSize="@dimen/default_text_size10" />
 
             <com.angcyo.uiview.github.tablayout.MsgView
                 android:id="@+id/msg_num_view"
@@ -91,7 +96,7 @@
                 app:mv_backgroundColor="#FD481F"
                 app:mv_isRadiusHalfHeight="true"
                 app:mv_strokeColor="#ffffff"
-                app:mv_strokeWidth="1dp"/>
+                app:mv_strokeWidth="1dp" />
         </LinearLayout>
 
     </LinearLayout>

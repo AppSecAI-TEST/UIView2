@@ -35,6 +35,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.cache.MsgCache;
+import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
@@ -44,6 +45,7 @@ import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.skin.SkinUtils;
+import com.hn.d.valley.start.RecommendUser2UIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.widget.HnLoading;
@@ -318,6 +320,11 @@ public class MainUIView extends BaseUIView {
             lastViewPattern.mIView.onViewShow(bundle);
         }
         MsgCache.notifyNoreadNum();
+
+        if (LoginControl.instance().isFirstRegister()) {
+            //// TODO: 2017/5/19
+            mOtherILayout.startIView(new RecommendUser2UIView());
+        }
     }
 
     @Override

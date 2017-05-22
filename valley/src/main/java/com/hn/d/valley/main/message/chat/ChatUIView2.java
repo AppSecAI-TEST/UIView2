@@ -67,6 +67,9 @@ import com.hn.d.valley.main.message.session.CommandLayoutControl;
 import com.hn.d.valley.main.message.session.Container;
 import com.hn.d.valley.main.message.session.EmojiLayoutControl;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
+import com.hn.d.valley.main.message.session.ImageCommandItem;
+import com.hn.d.valley.main.message.session.LocationCommandItem;
+import com.hn.d.valley.main.message.session.PersonalCardCommandItem;
 import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
@@ -76,6 +79,7 @@ import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.main.message.session.SessionProxy;
+import com.hn.d.valley.main.message.session.VideoCommandItem;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnLoading;
@@ -344,80 +348,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     protected List<CommandItemInfo> createCommandItems() {
         List<CommandItemInfo> items = new ArrayList<>();
 
-        items.add(new CommandItemInfo(R.drawable.nim_message_plus_photo_normal, "图片", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //发送图片
-                ImagePickerHelper.startImagePicker(mActivity, false, false, 9);
-            }
-        }));
+        items.add(new ImageCommandItem());
+        items.add(new VideoCommandItem());
 
-        items.add(new CommandItemInfo(R.drawable.nim_message_plus_video_normal, "视频", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //视频
-                mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
-                    @Override
-                    public void call(UIIViewImpl view, String s, String s2) {
-
-                        view.finishIView();
-
-                        File file = new File(s2);
-                        if (!file.exists()) {
-                            return;
-                        }
-
-                        MediaPlayer mediaPlayer = getVideoMediaPlayer(file);
-                        long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
-                        int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
-                        int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
-                        String md5 = MD5.getStreamMD5(s2);
-                        IMMessage message = MessageBuilder.createVideoMessage(mSessionId, sessionType, file, duration, width, height, md5);
-                        sendMessage(message);
-
-                    }
-                }));
-            }
-
-        }));
-        items.add(new CommandItemInfo(R.drawable.nim_message_plus_location_normal, "位置", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //位置
-                startIView(new AmapUIView(new Action1<AmapBean>() {
-                    @Override
-                    public void call(AmapBean bean) {
-                        if (bean == null) {
-                            return;
-                        }
-                        IMMessage locationMessage = MessageBuilder.createLocationMessage(mSessionId, sessionType, bean.latitude, bean.longitude, bean.address);
-                        sendMessage(locationMessage);
-                    }
-                }, null, null, true));
-            }
-        }));
-
-        items.add(new CommandItemInfo(R.drawable.message_plus_rts_normal, "个人名片", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //个人名片
-                ContactSelectUIVIew.start(mOtherILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
-                        , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                            @Override
-                            public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
-
-                                requestCallback.onSuccess("");
-
-                                ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                                FriendBean friendBean = contactItem.getFriendBean();
-                                PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
-                                IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, friendBean.getIntroduce(), attachment);
-                                sendMessage(message);
-
-                            }
-                        });
-            }
-        }));
+        if (mCustomization != null) {
+            items.addAll(mCustomization.createItems());
+        }
 
         return items;
     }
@@ -552,6 +488,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
      */
     private void initRefreshLayout() {
         mRefreshLayout.setBottomView(new PlaceholderView(mActivity));
+        // 不显示键盘
+        if (!mCustomization.isShowInputPanel()) {
+            return;
+        }
         mRefreshLayout.addOnRefreshListener(new RefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh(@RefreshLayout.Direction int direction) {
@@ -778,20 +718,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         msgService().setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, sessionType);
     }
 
-    /**
-     * 获取视频mediaPlayer
-     *
-     * @param file 视频文件
-     * @return mediaPlayer
-     */
-    private MediaPlayer getVideoMediaPlayer(File file) {
-        try {
-            return MediaPlayer.create(mActivity, Uri.fromFile(file));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     /**
      * 表情功能切换
@@ -924,71 +850,8 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         super.onActivityResult(requestCode, resultCode, data);
 
         mCommandLayoutControl.onActivityResult(requestCode,resultCode,data);
-
-        final ArrayList<String> images = ImagePickerHelper.getImages(mActivity, requestCode, resultCode, data);
-        if (images.isEmpty()) {
-            return;
-        }
-        HnLoading.show(mILayout);
-        Luban.luban(mActivity, images)
-                .subscribe(new Action1<ArrayList<String>>() {
-                    @Override
-                    public void call(ArrayList<String> strings) {
-                        sendPictureAndGif(strings);
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        HnLoading.hide();
-                    }
-                }, new Action0() {
-                    @Override
-                    public void call() {
-                        HnLoading.hide();
-                    }
-                });
     }
 
-    private void sendPictureAndGif(ArrayList<String> strings) {
-        //发送图片和gif图
-        boolean isGif = false;
-        String path = strings.get(0);
-        File file = new File(path);
-
-        try {
-            InputStream is = new FileInputStream(file);
-            String imageType = Ok.ImageTypeUtil.getImageType(is);
-            Ok.ImageType type = Ok.ImageType.of(imageType);
-            if (type == Ok.ImageType.GIF) {
-                isGif = true;
-            }
-            is.close();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
-        if (isGif) {
-            IMMessage gifMessage =
-                    MessageBuilder.createFileMessage(mSessionId, sessionType, file, FileUtil.getFileNameNoEx(path));
-            Map<String,Object> remoteExtension =  new HashMap<>();
-            String size = null;
-            int[] bounds = null;
-            bounds = BitmapDecoder.decodeBound(new File(path));
-            if (bounds != null) {
-                size = "{" + bounds[0] + "," + bounds[1] + "}";
-            }
-
-            remoteExtension.put("size",size);
-            remoteExtension.put("extend_type","gifTypeImage");
-            gifMessage.setRemoteExtension(remoteExtension);
-            sendMessage(gifMessage);
-
-        } else {
-            IMMessage imageMessage =
-                    MessageBuilder.createImageMessage(mSessionId, sessionType, new File(strings.get(0)));
-            sendMessage(imageMessage);
-        }
-    }
 
 //    @Subscribe
 //    public void onEvent(LastContactsEvent lastContactsEvent) {

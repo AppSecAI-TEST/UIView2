@@ -62,8 +62,12 @@ import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.CommandLayoutControl;
 import com.hn.d.valley.main.message.session.Container;
 import com.hn.d.valley.main.message.session.EmojiLayoutControl;
+import com.hn.d.valley.main.message.session.ImageCommandItem;
+import com.hn.d.valley.main.message.session.LocationCommandItem;
+import com.hn.d.valley.main.message.session.PersonalCardCommandItem;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.main.message.session.SessionProxy;
+import com.hn.d.valley.main.message.session.VideoCommandItem;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -276,85 +280,15 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         initAudioRecordButton();
     }
 
-    private List<CommandItemInfo> createCommandItems() {
+    protected List<CommandItemInfo> createCommandItems() {
         List<CommandItemInfo> items = new ArrayList<>();
-        items.add(new CommandItemInfo(R.drawable.nim_message_plus_photo_normal, "图片", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //发送图片
-                ImagePickerHelper.startImagePicker(mActivity, false, false, 9);
-            }
-        }));
-        items.add(new CommandItemInfo(R.drawable.nim_message_plus_video_normal, "视频", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //视频
 
-                mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
-                    @Override
-                    public void call(UIIViewImpl view, String s, String s2) {
-
-                        view.finishIView();
-
-                        File file = new File(s2);
-                        if (!file.exists()) {
-                            return;
-                        }
-
-                        MediaPlayer mediaPlayer = getVideoMediaPlayer(file);
-                        long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
-                        int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
-                        int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
-                        String md5 = MD5.getStreamMD5(s2);
-                        IMMessage message = MessageBuilder.createVideoMessage(mSessionId, sessionType, file, duration, width, height, md5);
-                        sendMessage(message);
-
-                    }
-                }));
-            }
-
-        }));
-        items.add(new CommandItemInfo(R.drawable.nim_message_plus_location_normal, "位置", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //位置
-                startIView(new AmapUIView(new Action1<AmapBean>() {
-                    @Override
-                    public void call(AmapBean bean) {
-                        if (bean == null) {
-                            return;
-                        }
-                        IMMessage locationMessage = MessageBuilder.createLocationMessage(mSessionId, sessionType, bean.latitude, bean.longitude, bean.address);
-                        sendMessage(locationMessage);
-//                        final IMMessage message = MessageBuilder.createTextMessage(mSessionId, sessionType, "测试");
-//                        sendMessage(message);
-                    }
-                }, null, null, true));
-            }
-        }));
-
-        items.add(new CommandItemInfo(R.drawable.message_plus_rts_normal, "个人名片", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //个人名片
-                ContactSelectUIVIew.start(mOtherILayout,new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
-                        ,null,new Action3< UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                    @Override
-                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
-
-                        requestCallback.onSuccess("");
-
-                        ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                        FriendBean friendBean = contactItem.getFriendBean();
-                        PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
-                        IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, friendBean.getIntroduce(), attachment);
-                        sendMessage(message);
+        items.add(new ImageCommandItem(R.drawable.nim_message_plus_photo_normal, "图片"));
+        items.add(new VideoCommandItem(R.drawable.nim_message_plus_video_normal, "视频"));
 
 
-                    }
-                });
-            }
-        }));
+        items.add(new LocationCommandItem(R.drawable.nim_message_plus_location_normal, "位置"));
+        items.add(new PersonalCardCommandItem(R.drawable.message_plus_rts_normal, "个人名片"));
 
         return items;
     }

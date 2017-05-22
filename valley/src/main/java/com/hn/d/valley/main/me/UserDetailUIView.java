@@ -36,7 +36,7 @@ import com.hn.d.valley.bean.realm.NewestDiscussPicBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;

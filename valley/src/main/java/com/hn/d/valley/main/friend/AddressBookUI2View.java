@@ -26,6 +26,7 @@ import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.ContactsPickerHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.utils.string.StringUtil;
 import com.angcyo.uiview.widget.ExEditText;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
@@ -33,13 +34,16 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.PhoneUser;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.query.ContactSearch;
 import com.hn.d.valley.main.message.query.TextQuery;
 import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnRefreshLayout;
@@ -64,7 +68,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by hewking on 2017/3/22.
  */
-public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRefreshListener{
+public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRefreshListener {
 
     private AddressBookAdapter mAddressAdapter;
 
@@ -84,7 +88,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().setShowBackImageView(true)
-                .setTitleString("添加手机联系人");
+                .setTitleString(mActivity.getString(R.string.text_add_phone_contacts));
     }
 
     @Override
@@ -123,7 +127,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 //                                        } else {
                                 if (mContacts != null) {
                                     List<AbsContactItem> datas = new ArrayList<>();
-                                    for(Iterator<AbsContactItem> it = mContacts.iterator();it.hasNext();) {
+                                    for (Iterator<AbsContactItem> it = mContacts.iterator(); it.hasNext(); ) {
                                         PhoneContactItem item = (PhoneContactItem) it.next();
                                         boolean hit = ContactSearch.hitContactInfo(item.getContactsInfo(), new TextQuery(et_search.getText().toString()));
                                         if (!hit) {
@@ -134,7 +138,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                                     return Observable.just(datas);
                                 } else {
                                     mContacts = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT, new TextQuery(et_search.getText().toString()));
-                                    return  Observable.just(mContacts);
+                                    return Observable.just(mContacts);
                                 }
 //                                        }
                             }
@@ -161,51 +165,12 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     }
 
     private void startLoad() {
-
-//        Observable.create(new Observable.OnSubscribe<List<AbsContactItem>>() {
-//
-//            @Override
-//            public void call(Subscriber<? super List<AbsContactItem>> subscriber) {
-//                subscriber.onStart();
-//                List<AbsContactItem> contactItems = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT, null);
-//                subscriber.onNext(contactItems);
-//                subscriber.onCompleted();
-//            }
-//        })
-//                .flatMap(new Func1<List<AbsContactItem>, Observable<PhoneUserList>>() {
-//                    @Override
-//                    public Observable<PhoneUserList> call(List<AbsContactItem> absContactItems) {
-//
-//                        String phones = buildJsonParam(absContactItems);
-//
-//                        return RRetrofit.create(ContactService.class)
-//                                .phoneUser(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:" + phones
-//                                        , "phone_model:" + Build.MODEL, "device_id:" + Build.DEVICE))
-//                                .compose(Rx.transformer(PhoneUserList.class));
-//                    }
-//                })
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new BaseSingleSubscriber<PhoneUserList>() {
-//                    @Override
-//                    public void onSucceed(PhoneUserList bean) {
-//                        super.onSucceed(bean);
-////                        bean.get
-//                    }
-//
-//                    @Override
-//                    public void onEnd() {
-//                        super.onEnd();
-//                    }
-//                });
-
         Observable.create(new Observable.OnSubscribe<List<AbsContactItem>>() {
-
             @Override
             public void call(Subscriber<? super List<AbsContactItem>> subscriber) {
                 L.i("AddressBookUIView : call " + Thread.currentThread().getName());
                 subscriber.onStart();
-                mContacts = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT,null);
+                mContacts = DataResourceRepository.getInstance().provide(ItemTypes.PHONECOTACT, null);
                 subscriber.onNext(mContacts);
                 subscriber.onCompleted();
             }
@@ -219,8 +184,6 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                         if (refreshLayout != null) {
                             refreshLayout.setRefreshEnd();
                         }
-
-                        hideLoadView();
                     }
 
                     @Override
@@ -234,8 +197,8 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                         super.onSucceed(bean);
                         L.i("AddressBookUIView : " + Thread.currentThread().getName());
                         showContentLayout();
-//                        checkPhoneMatch(bean);
-                        mAddressAdapter.resetData(bean);
+                        checkPhoneMatch(bean);
+//                        mAddressAdapter.resetData(bean);
                     }
 
                 });
@@ -246,23 +209,22 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         RRetrofit.create(ContactService.class)
                 .phoneUser(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:" + phones
                         , "phone_model:" + Build.MODEL, "device_id:" + Build.DEVICE))
-                .timeout(2000,TimeUnit.MILLISECONDS)
                 .compose(Rx.transformer(PhoneUserList.class))
                 .subscribe(new BaseSingleSubscriber<PhoneUserList>() {
                     @Override
                     public void onSucceed(PhoneUserList bean) {
                         super.onSucceed(bean);
-                        if (bean != null || bean.getData_list().size() != 0) {
-                            mAddressAdapter.resetData(absContactItems);
+                        if (bean == null || bean.getData_list().size() == 0) {
+//                            mAddressAdapter.resetData(absContactItems);
                         } else {
-                            List<AbsContactItem> contactItems = new ArrayList<AbsContactItem>(absContactItems.size());
+                            List<AbsContactItem> contactItems = new ArrayList<>(absContactItems.size());
                             List<PhoneUser> users = bean.getData_list();
-                            for (Iterator<AbsContactItem> it = absContactItems.iterator(); it.hasNext() ;) {
+                            for (Iterator<AbsContactItem> it = absContactItems.iterator(); it.hasNext(); ) {
                                 PhoneContactItem item = (PhoneContactItem) it.next();
                                 boolean flag = false;
                                 for (PhoneUser user : users) {
                                     if (item.getContactsInfo().phone.equals(user.getPhone())) {
-                                        contactItems.add(new WrapPhoneContactItem(item.getContactsInfo(),user));
+                                        contactItems.add(new WrapPhoneContactItem(item.getContactsInfo(), user));
                                         flag = true;
                                         break;
                                     }
@@ -271,14 +233,21 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                                     contactItems.add(item);
                                 }
                             }
-
+                            mContacts = contactItems;
                             mAddressAdapter.resetData(contactItems);
                         }
                     }
 
                     @Override
+                    public void onEnd() {
+                        super.onEnd();
+                        hideLoadView();
+                    }
+
+                    @Override
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
+                        hideLoadView();
                         mAddressAdapter.resetData(absContactItems);
                     }
                 });
@@ -296,8 +265,8 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         }
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("phone",RUtils.connect(phones));
-            jsonObject.put("name",RUtils.connect(names));
+            jsonObject.put("phone", StringUtil.removeBlanks(RUtils.connect(phones)));
+            jsonObject.put("name", StringUtil.removeBlanks(RUtils.connect(names)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -308,10 +277,10 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 
 
     protected RExBaseAdapter initRExBaseAdapter() {
-        mAddressAdapter = new AddressBookAdapter(mActivity){
+        mAddressAdapter = new AddressBookAdapter(mActivity) {
             @Override
             protected void onPreProvide() {
-                mAllDatas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
+                mAllDatas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
                         mOtherILayout.startIView(new SearchUserUIView());
@@ -325,7 +294,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     protected void initRecyclerView() {
         rv_phoneusers.setLayoutManager(new LinearLayoutManager(mActivity));
         rv_phoneusers.setAdapter(mAddressAdapter);
-        rv_phoneusers.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mAddressAdapter)));
+        rv_phoneusers.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity, mAddressAdapter)));
     }
 
     @Override
@@ -335,14 +304,14 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         }
     }
 
-    public class AddressBookAdapter extends RExBaseAdapter<String,AbsContactItem,String> {
+    public class AddressBookAdapter extends RExBaseAdapter<String, AbsContactItem, String> {
 
         public AddressBookAdapter(Context context) {
             super(context);
             setModel(RModelAdapter.MODEL_MULTI);
         }
 
-        protected void onPreProvide(){
+        protected void onPreProvide() {
         }
 
         public void resetData(List<AbsContactItem> datas) {
@@ -382,12 +351,40 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     signature.setText(phoneUser.getSignature());
                     image_view.setImageUrl(phoneUser.getAvatar());
 
+                    //关注
+                    if (isContact(phoneUser)) {
+                        follow_image_view.setImageResource(R.drawable.huxiangguanzhu);
+                    } else {
+                        if (isAttention(phoneUser)) {
+                            follow_image_view.setImageResource(R.drawable.focus_on);
+                        } else {
+                            switch (SkinUtils.getSkin()) {
+                                case SkinManagerUIView.SKIN_BLUE:
+                                    follow_image_view.setImageResource(R.drawable.follow_blue);
+                                    break;
+                                case SkinManagerUIView.SKIN_GREEN:
+                                    follow_image_view.setImageResource(R.drawable.follow);
+                                    break;
+                                default:
+                                    follow_image_view.setImageResource(R.drawable.follow_black);
+                                    break;
+                            }
+                        }
+                    }
+
+                    follow_image_view.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+
                 } else {
                     final PhoneContactItem item = (PhoneContactItem) dataBean;
 
                     username.setText(item.getContactsInfo().name);
                     signature.setText("手机号:" + item.getContactsInfo().phone);
 
+                    follow_image_view.setImageResource(R.drawable.quyaoqing);
                     follow_image_view.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -421,6 +418,16 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         }
     }
 
+    //是否是联系人
+    protected boolean isContact(PhoneUser dataBean) {
+        return dataBean.getIs_contact() == 1;
+    }
+
+    //是否已关注
+    protected boolean isAttention(PhoneUser dataBean) {
+        return dataBean.getIs_attention() == 1;
+    }
+
     private void buildMsg(PhoneContactItem item) {
         //                            NSString *spm = [NSString stringWithFormat:@"%@_invite_%@",[ToolObject getUid],[ToolObject returnNowDate]];
 //                            NSString *shareUrl = [NSString stringWithFormat:@"wap.klgwl.com/user/register?spm=%@",[ToolObject encryptString:spm publicKey:RSAPUBLICKEY]];
@@ -436,16 +443,16 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         String encodeInfo = RSA.encodeInfo(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
         sb = new StringBuilder();
         sb.append("【恐龙谷】")
-        .append(UserCache.getUserAccount())
-        .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
-        .append("wap.klgwl.com/user/register?spm=")
-        .append(encodeInfo)
-        .append(" 注册吧");
+                .append(UserCache.getUserAccount())
+                .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
+                .append("wap.klgwl.com/user/register?spm=")
+                .append(encodeInfo)
+                .append(" 注册吧");
 
-        RUtils.sendSMS(mActivity,sb.toString(), item.getContactsInfo().phone);
+        RUtils.sendSMS(mActivity, sb.toString(), item.getContactsInfo().phone);
     }
 
-    public class AddressBookViewHolder extends RBaseViewHolder{
+    public class AddressBookViewHolder extends RBaseViewHolder {
 
 
         public AddressBookViewHolder(View itemView, int viewType) {
@@ -453,18 +460,19 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 
         }
 
-        public void bind(View itemView){
+        public void bind(View itemView) {
 
         }
     }
 
-    public class PhoneUserList extends ListModel<PhoneUser>{}
+    public class PhoneUserList extends ListModel<PhoneUser> {
+    }
 
     public class WrapPhoneContactItem extends PhoneContactItem {
 
         PhoneUser phoneUser;
 
-        public WrapPhoneContactItem(ContactsPickerHelper.ContactsInfo info,PhoneUser phoneUser) {
+        public WrapPhoneContactItem(ContactsPickerHelper.ContactsInfo info, PhoneUser phoneUser) {
             super(info);
             this.phoneUser = phoneUser;
         }
@@ -473,7 +481,6 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
             return phoneUser;
         }
     }
-
 
 
 }

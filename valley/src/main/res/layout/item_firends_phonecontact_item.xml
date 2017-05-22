@@ -12,6 +12,7 @@
         android:layout_width="@dimen/avatar_image_size_little"
         android:layout_height="@dimen/avatar_image_size_little"
         android:contentDescription="@string/is_circle"
+        android:layout_centerVertical="true"
         android:src="@drawable/default_avatar" />
 
     <RelativeLayout

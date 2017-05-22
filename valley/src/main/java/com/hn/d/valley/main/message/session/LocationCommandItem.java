@@ -2,6 +2,14 @@ package com.hn.d.valley.main.message.session;
 
 import android.view.View;
 
+import com.hn.d.valley.R;
+import com.hn.d.valley.bean.realm.AmapBean;
+import com.hn.d.valley.main.other.AmapUIView;
+import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
+
+import rx.functions.Action1;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -15,13 +23,26 @@ import android.view.View;
  */
 public class LocationCommandItem extends CommandItemInfo {
 
+    public LocationCommandItem() {
+        this(R.drawable.nim_message_plus_location_normal, "位置");
+    }
 
-
-    public LocationCommandItem(int icoResId, String text, View.OnClickListener clickListener) {
-        super(icoResId, text, clickListener);
+    public LocationCommandItem(int icoResId, String text) {
+        super(icoResId, text);
     }
 
     @Override
     protected void onClick() {
+        //位置
+        getContainer().mLayout.startIView(new AmapUIView(new Action1<AmapBean>() {
+            @Override
+            public void call(AmapBean bean) {
+                if (bean == null) {
+                    return;
+                }
+                IMMessage locationMessage = MessageBuilder.createLocationMessage(getContainer().account, getContainer().sessionType, bean.latitude, bean.longitude, bean.address);
+                getContainer().proxy.sendMessage(locationMessage);
+            }
+        }, null, null, true));
     }
 }

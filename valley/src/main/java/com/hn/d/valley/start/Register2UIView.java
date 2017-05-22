@@ -29,6 +29,7 @@ import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.EmptyAction;
+import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -286,6 +287,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
 //        Bundle bundle = new Bundle();
 //        bundle.putParcelable(Constant.LOGIN_INFO, new LoginUserInfo(phone, mPasswordView.string(), mIcoFilePathUrl));
 //        showIView(((UILayoutImpl) mILayout).getViewPatternWithClass(LoginUIView.class).mView, false, bundle);
+        LoginControl.instance().setFirstRegister(true);
         LoginUIView2.login(mActivity, mOtherILayout, mSubscriptions,
                 phone, mPasswordView.string(), "", "", "", "", "");
     }

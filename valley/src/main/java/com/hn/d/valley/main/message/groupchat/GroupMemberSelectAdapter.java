@@ -6,8 +6,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
@@ -47,9 +49,9 @@ public class GroupMemberSelectAdapter extends BaseContactSelectAdapter {
         } else if (getItemType(position) == ItemTypes.GROUPMEMBER){
             GroupMemberItem item = (GroupMemberItem) bean;
 
-            HnGlideImageView imageView = holder.v(R.id.iv_item_head);
+            SimpleDraweeView imageView = holder.v(R.id.iv_item_head);
             TextView nickName = holder.tv(R.id.tv_friend_name);
-            imageView.setImageUrl(item.getMemberBean().getUserAvatar());
+            DraweeViewUtil.setDraweeViewHttp(imageView,item.getMemberBean().getUserAvatar());
             nickName.setText(item.getMemberBean().getDefaultNick());
         }
 

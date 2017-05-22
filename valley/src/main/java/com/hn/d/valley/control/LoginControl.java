@@ -265,6 +265,14 @@ public class LoginControl {
         UM.getPlatformInfo(activity, SHARE_MEDIA.WEIXIN, mInfoListener);
     }
 
+    public boolean isFirstRegister() {
+        return isFirstRegister;
+    }
+
+    public void setFirstRegister(boolean firstRegister) {
+        isFirstRegister = firstRegister;
+    }
+
     /**
      * 取消登录
      */

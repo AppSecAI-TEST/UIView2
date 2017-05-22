@@ -2,6 +2,12 @@ package com.hn.d.valley.main.message.session;
 
 import android.view.View;
 
+import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.groupchat.GroupReportUIView;
+import com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView;
+import com.hn.d.valley.main.message.redpacket.NewRedPacketUIView;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -15,11 +21,20 @@ import android.view.View;
  */
 public class RedPacketCommandItem extends CommandItemInfo {
 
-    public RedPacketCommandItem(int icoResId, String text, View.OnClickListener clickListener) {
-        super(icoResId, text, clickListener);
+    public RedPacketCommandItem() {
+        this(R.drawable.message_plus_rts_normal, "红包");
+    }
+
+    public RedPacketCommandItem(int icoResId, String text) {
+        super(icoResId, text);
     }
 
     @Override
     protected void onClick() {
+        //红包
+        if (getContainer().sessionType == SessionTypeEnum.P2P) {
+            getContainer().mLayout.startIView(new NewRedPacketUIView(getContainer().account));
+        } else if (getContainer().sessionType == SessionTypeEnum.Team) {
+        }
     }
 }

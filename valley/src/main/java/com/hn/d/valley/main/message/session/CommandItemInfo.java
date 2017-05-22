@@ -18,7 +18,6 @@ import android.view.View;
 public class CommandItemInfo {
     @DrawableRes
     public int icoResId;
-    public View.OnClickListener mClickListener;
     public String text;
     private Container mContainer;
 
@@ -32,9 +31,8 @@ public class CommandItemInfo {
         this.index = index;
     }
 
-    public CommandItemInfo(int icoResId, String text, View.OnClickListener clickListener) {
+    public CommandItemInfo(int icoResId, String text) {
         this.icoResId = icoResId;
-        mClickListener = clickListener;
         this.text = text;
     }
 

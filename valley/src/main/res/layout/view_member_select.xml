@@ -38,13 +38,15 @@
             android:text="已选中0人"
             tools:text="已选中5人" />
 
-        <com.hn.d.valley.widget.HnButton
+        <com.angcyo.uiview.widget.RTextView
             android:id="@+id/btn_send"
-            style="@style/WhiteColorTextStyle"
-            android:layout_width="@dimen/base_60dpi"
+            style="@style/WhiteColorTextButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:minHeight="@dimen/base_item_size"
-            android:text="@string/delete_text" />
+            android:background="@drawable/base_red_color_bg_selector"
+            android:paddingEnd="@dimen/base_xxhdpi"
+            android:paddingStart="@dimen/base_xxhdpi"
+            android:text="@string/delete_text"/>
+
     </LinearLayout>
 </com.angcyo.uiview.widget.SoftRelativeLayout>

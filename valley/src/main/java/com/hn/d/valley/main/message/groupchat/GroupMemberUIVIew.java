@@ -27,6 +27,7 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -70,7 +71,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
 
     private LinearLayout ll_bottom;
     private TextView tv_selected;
-    private HnButton btn_delete;
+    private RTextView btn_delete;
 
     public void setKictAction(Action1<Boolean> kictAction) {
         this.kictAction = kictAction;
@@ -163,7 +164,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         mRecyclerView = (RRecyclerView) root.findViewById(R.id.recycler_view);
         ll_bottom = (LinearLayout) root.findViewById(R.id.ll_bottom);
         tv_selected = (TextView) root.findViewById(R.id.tv_selected);
-        btn_delete = (HnButton) root.findViewById(R.id.btn_send);
+        btn_delete = (RTextView) root.findViewById(R.id.btn_send);
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

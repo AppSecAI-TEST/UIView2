@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.recycler.RSwipeRecycleView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
@@ -19,7 +20,7 @@ import com.hn.d.valley.main.friend.FriendNewUIView2;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -86,11 +87,7 @@ public class MessageUIView extends BaseUIView {
                                 mOtherILayout.startIView(new NewNotifyUIView(recentContact.getContactId(), recentContact.getSessionType()));
                                 return;
                             case Constant.klj:
-                                SessionHelper.startSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
-                                return;
                             case Constant.wallet:
-                                SessionHelper.startSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
-                                return;
                             case Constant.hot_news:
                                 SessionHelper.startSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
                                 return;

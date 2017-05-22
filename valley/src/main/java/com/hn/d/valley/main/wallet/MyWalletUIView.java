@@ -97,8 +97,8 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onSuccess(WalletAccount walletAccount) {
                 hideLoadView();
-                showContentLayout();
                 mAccount = walletAccount;
+                showContentLayout();
             }
 
             @Override

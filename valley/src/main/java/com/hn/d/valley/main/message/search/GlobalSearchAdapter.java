@@ -20,7 +20,7 @@ import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.query.RecordHitInfo;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;

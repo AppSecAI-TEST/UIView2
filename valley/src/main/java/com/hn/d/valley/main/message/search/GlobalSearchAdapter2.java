@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.facebook.DraweeViewUtil;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RTextView;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.cache.TeamDataCache;
@@ -25,7 +27,7 @@ import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.query.RecordHitInfo;
-import com.hn.d.valley.main.message.service.SessionHelper;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -170,7 +172,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.iv_item_head)
-        HnGlideImageView ivItemHead;
+        SimpleDraweeView ivItemHead;
         @BindView(R.id.tv_friend_name)
         TextView tvFriendName;
 
@@ -185,7 +187,8 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
         public void onBind(RecordContactItem contactItem) {
 
             final FriendBean friendBean = contactItem.getFriendBean();
-            ivItemHead.setImageUrl(friendBean.getAvatar());
+//            ivItemHead.setImageUrl(friendBean.getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(ivItemHead,friendBean.getAvatar());
 //        tv_friend_name.setText(friendBean.getDefaultMark());
 
             display(tvFriendName, friendBean.getDefaultMark(), contactItem.getHitInfo());
@@ -203,7 +206,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
     public static class GroupVH extends RecyclerView.ViewHolder {
 
         @BindView(R.id.iv_item_head)
-        HnGlideImageView ivItemHead;
+        SimpleDraweeView ivItemHead;
         @BindView(R.id.tv_friend_name)
         TextView tvFriendName;
 
@@ -217,7 +220,8 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
         public void onBind(RecordGroupItem item) {
             final GroupBean groupBean = item.getBean();
-            ivItemHead.setImageUrl(groupBean.getAvatar());
+//            ivItemHead.setImageUrl(groupBean.getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(ivItemHead,groupBean.getAvatar());
 //        tv_friend_name.setText(groupBean.getDefaultName());
             display(tvFriendName, groupBean.getDefaultName(), item.hitInfo);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -340,7 +344,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
             final String sessionId = imMessage.getSessionId();
 
             recentNameView.setText(msgItem.getDisplayName());
-            icoView.setImageResource(R.drawable.default_avatar);
+//            icoView.setImageResource(R.drawable.default_avatar);
 
             if (msgItem.isQuerySession()) {
                 msgTimeView.setVisibility(View.VISIBLE);

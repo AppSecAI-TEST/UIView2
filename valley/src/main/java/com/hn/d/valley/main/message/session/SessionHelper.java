@@ -1,12 +1,9 @@
-package com.hn.d.valley.main.message.service;
+package com.hn.d.valley.main.message.session;
 
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.main.me.UserDetailUIView2;
-import com.hn.d.valley.main.message.session.CommandItemInfo;
-import com.hn.d.valley.main.message.session.SessionCustomization;
-import com.hn.d.valley.main.message.session.SessionEventListener;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
@@ -64,7 +61,7 @@ public class SessionHelper {
     }
 
     public static void startP2PSession(ILayout mLayout, String sessionId, SessionTypeEnum sessionType, IMMessage anchor) {
-        P2PChatUIView.start(mLayout,sessionId,sessionType,anchor);
+        P2PChatUIView.start(mLayout,sessionId,sessionType,anchor,getP2pCustomization());
     }
 
     public static void startTeamSession(ILayout mLayout, String sessionId, SessionTypeEnum sessionType) {
@@ -76,7 +73,7 @@ public class SessionHelper {
     }
 
     public static void startTeamSession(ILayout mLayout, String sessionId, SessionTypeEnum sessionType, IMMessage anchor, Set<IMMessage> aitMessages) {
-        GroupChatUIView.start(mLayout,sessionId,sessionType,anchor,aitMessages);
+        GroupChatUIView.start(mLayout,sessionId,sessionType,anchor,aitMessages,getTeamCustomization());
     }
 
     public static void init() {
@@ -84,16 +81,29 @@ public class SessionHelper {
     }
 
     public static void startSession(ILayout mlayout, String sessionId , SessionTypeEnum sessionType) {
-        ChatUIView2.start(mlayout,sessionId,SessionTypeEnum.P2P,getCustomization());
+        switch (sessionId) {
+            case Constant.klj:
+                ChatUIView2.start(mlayout,sessionId,SessionTypeEnum.P2P,getKljCustomization());
+                break;
+            case Constant.wallet:
+                ChatUIView2.start(mlayout,sessionId,SessionTypeEnum.P2P,getKljCustomization());
+                break;
+            case Constant.hot_news:
+                ChatUIView2.start(mlayout,sessionId,SessionTypeEnum.P2P,getHotSpotCustomization());
+                break;
+        }
     }
 
     private static SessionCustomization getP2pCustomization() {
-        if (p2pCustomization != null) {
+        if (p2pCustomization == null) {
             p2pCustomization = new SessionCustomization(){
-
                 @Override
                 public List<CommandItemInfo> createItems() {
-                    return null;
+                    List<CommandItemInfo> items = new ArrayList<>();
+                    items.add(new LocationCommandItem());
+                    items.add(new PersonalCardCommandItem());
+                    items.add(new RedPacketCommandItem());
+                    return items;
                 }
             };
         }
@@ -101,26 +111,16 @@ public class SessionHelper {
         return p2pCustomization;
 
     }
-
-    private static SessionCustomization getCustomization() {
-        if (customization == null) {
-            customization = new SessionCustomization(){
-                @Override
-                public List<CommandItemInfo> createItems() {
-                    return null;
-                }
-            };
-        }
-        customization.setShowInputPanel(false);
-        return customization;
-    }
-
     private static SessionCustomization getTeamCustomization() {
         if (teamCustomization == null) {
             teamCustomization = new SessionCustomization() {
                 @Override
                 public List<CommandItemInfo> createItems() {
                     List<CommandItemInfo> items = new ArrayList<>();
+                    items.add(new LocationCommandItem());
+                    items.add(new PersonalCardCommandItem());
+                    //因为 发红包涉及到 群聊人数 先注释
+//                    items.add(new RedPacketCommandItem());
                     return items;
                 }
             };
@@ -141,18 +141,6 @@ public class SessionHelper {
         return kljCustomization;
     }
 
-    private static SessionCustomization getWalletCustomization() {
-        if (walletCustomization == null) {
-            walletCustomization = new SessionCustomization() {
-                @Override
-                public List<CommandItemInfo> createItems() {
-                    List<CommandItemInfo> items = new ArrayList<>();
-                    return items;
-                }
-            };
-        }
-        return walletCustomization;
-    }
 
     private static SessionCustomization getHotSpotCustomization() {
         if (hotSpotCustomization == null) {
