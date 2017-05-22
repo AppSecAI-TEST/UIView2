@@ -99,7 +99,9 @@ public class ImagePagerUIView extends UIIViewImpl {
 
             @Override
             public void onMoveExitCancel(DragPhotoView view) {
-                hideLastViewPattern();
+                if (!isToFinish) {
+                    hideLastViewPattern();
+                }
             }
 
             @Override
@@ -108,13 +110,13 @@ public class ImagePagerUIView extends UIIViewImpl {
                 mMRootLayout.setBackgroundColor(mLastTranColor);
             }
         });
-        mMCircleIndicator.setViewPager(mMViewPager);
         mAdapter.setPhotoViewClickListener(new ImagePageAdapter.PhotoViewClickListener() {
             @Override
             public void OnPhotoTapListener(View view, float v, float v1) {
                 animToFinish();
             }
         });
+        mMCircleIndicator.setViewPager(mMViewPager);
         mMViewPager.setCurrentItem(startPosition);
     }
 
