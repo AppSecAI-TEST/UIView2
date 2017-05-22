@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.github.swipe.RBaseMenuAdapter;
 import com.angcyo.uiview.github.swipe.recyclerview.Closeable;
 import com.angcyo.uiview.github.swipe.recyclerview.OnSwipeMenuItemClickListener;

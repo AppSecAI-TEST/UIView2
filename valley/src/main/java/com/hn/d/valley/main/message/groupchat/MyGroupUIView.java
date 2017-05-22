@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -30,7 +30,6 @@ import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
-import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 

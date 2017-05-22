@@ -11,6 +11,7 @@ import com.example.m3b.Audio;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
@@ -98,5 +99,24 @@ public class ValleyApp extends RApplication {
         UM.init(this, BuildConfig.DEBUG);
 
         UIBaseView.ENABLE_LAYOUT_CHANGE_ANIM = false;
+
+        DraweeViewUtil.init(this);
+
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (Fresco.hasBeenInitialized()) {
+            Fresco.getImagePipeline().clearMemoryCaches();
+        }
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if (Fresco.hasBeenInitialized()) {
+            Fresco.getImagePipeline().clearMemoryCaches();
+        }
     }
 }

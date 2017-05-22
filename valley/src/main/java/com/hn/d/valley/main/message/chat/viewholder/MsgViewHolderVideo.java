@@ -8,12 +8,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.angcyo.library.facebook.RFresco;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.angcyo.uiview.utils.string.StringUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;

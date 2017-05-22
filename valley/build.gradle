@@ -132,4 +132,8 @@ dependencies {
     compile "com.netease.nimlib:rts:${nim_ver}"
     // 全文检索服务需要
     compile "com.netease.nimlib:lucene:${nim_ver}"
+
+    compile 'com.facebook.fresco:fresco:1.1.0'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'jp.wasabeef:fresco-processors:2.0.0'
 }

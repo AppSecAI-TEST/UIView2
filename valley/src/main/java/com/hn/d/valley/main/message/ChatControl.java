@@ -1,57 +1,24 @@
 package com.hn.d.valley.main.message;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.amap.api.maps.model.LatLng;
-import com.angcyo.library.facebook.DraweeViewUtil;
-import com.angcyo.library.facebook.RFresco;
 import com.angcyo.uiview.base.UIBaseView;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.utils.TimeUtil;
-import com.angcyo.uiview.utils.media.BitmapDecoder;
-import com.angcyo.uiview.utils.media.ImageUtil;
-import com.angcyo.uiview.widget.RSoftInputLayout;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.bean.event.LastMessageEvent;
-import com.hn.d.valley.bean.realm.AmapBean;
-import com.hn.d.valley.cache.NimUserInfoCache;
-import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.emoji.MoonUtil;
-import com.hn.d.valley.main.me.UserDetailUIView;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
-import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
-import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
-import com.netease.nimlib.sdk.msg.attachment.ImageAttachment;
-import com.netease.nimlib.sdk.msg.attachment.LocationAttachment;
-import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
-import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
-import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
-import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
-import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

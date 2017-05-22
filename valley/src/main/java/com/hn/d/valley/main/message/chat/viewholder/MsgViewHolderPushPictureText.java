@@ -3,11 +3,8 @@ package com.hn.d.valley.main.message.chat.viewholder;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.library.facebook.RFresco;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
-import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.widget.HnGlideImageView;

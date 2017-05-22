@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amap.api.maps.model.LatLng;
-import com.angcyo.library.facebook.DraweeViewUtil;
-import com.angcyo.library.facebook.RFresco;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
+import com.hn.d.valley.library.fresco.RFresco;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;

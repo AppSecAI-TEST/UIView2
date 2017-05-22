@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
-import com.angcyo.uiview.control.PhotoPagerControl;
+import com.hn.d.valley.library.fresco.PhotoPagerControl;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;

@@ -7,17 +7,20 @@ import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.angcyo.library.widget.DragPhotoView;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.resources.AnimUtil;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.lzy.imagepicker.adapter.ImagePageAdapter;
@@ -48,6 +51,7 @@ public class ImagePagerUIView extends UIIViewImpl {
     private RelativeLayout mMRootLayout;
     private int startPosition = 0;
     private ValueAnimator mValueAnimator;
+    private int mLastTranColor = Color.BLACK;
 
     private ImagePagerUIView(ArrayList<ImageItem> imageItems, int startPosition) {
         mImageItems = imageItems;
@@ -81,6 +85,29 @@ public class ImagePagerUIView extends UIIViewImpl {
         super.onViewCreate(rootView);
         ImagePageAdapter mAdapter = new ImagePageAdapter(mActivity, mImageItems);
         mMViewPager.setAdapter(mAdapter);
+        mAdapter.setOnExitListener(new DragPhotoView.OnExitListener() {
+            @Override
+            public void onMoveTo(DragPhotoView view, float w, float h, float translateX, float translateY) {
+                showLastViewPattern();
+                onMoveExitCancelTo(view, w, h, translateX, translateY);
+            }
+
+            @Override
+            public void onExit(DragPhotoView view, float translateX, float translateY, float w, float h) {
+                animToFinish();
+            }
+
+            @Override
+            public void onMoveExitCancel(DragPhotoView view) {
+                hideLastViewPattern();
+            }
+
+            @Override
+            public void onMoveExitCancelTo(DragPhotoView view, float w, float h, float translateX, float translateY) {
+                mLastTranColor = SkinHelper.getTranColor(Color.BLACK, 255 - (int) (255 * (translateY * 2 / h)));
+                mMRootLayout.setBackgroundColor(mLastTranColor);
+            }
+        });
         mMCircleIndicator.setViewPager(mMViewPager);
         mAdapter.setPhotoViewClickListener(new ImagePageAdapter.PhotoViewClickListener() {
             @Override
@@ -89,6 +116,13 @@ public class ImagePagerUIView extends UIIViewImpl {
             }
         });
         mMViewPager.setCurrentItem(startPosition);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        animToFinish();
+        finishIView(this, new UIParam(true, true, false));
+        return false;
     }
 
     @Override
@@ -132,15 +166,12 @@ public class ImagePagerUIView extends UIIViewImpl {
         if (isToFinish) {
             return;
         }
-        try {
-            getILayout().getViewPatternAtLast(1).mView.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-        }
+        showLastViewPattern();
 
         isToFinish = true;
         mMCircleIndicator.setVisibility(View.GONE);
         mMCircleIndicator.setAlpha(0);
-        AnimUtil.startArgb(mMRootLayout, Color.BLACK, Color.TRANSPARENT, UIIViewImpl.DEFAULT_ANIM_TIME);
+        AnimUtil.startArgb(mMRootLayout, mLastTranColor, Color.TRANSPARENT, UIIViewImpl.DEFAULT_ANIM_TIME);
         ViewCompat.animate(mMViewPager).alpha(0).scaleX(0.2f).scaleY(0.2f)
                 .setInterpolator(new AccelerateInterpolator())
                 .setDuration(UIIViewImpl.DEFAULT_ANIM_TIME)
@@ -153,6 +184,20 @@ public class ImagePagerUIView extends UIIViewImpl {
                 }).start();
     }
 
+    private void showLastViewPattern() {
+        try {
+            getILayout().getViewPatternAtLast(1).mView.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+        }
+    }
+
+    private void hideLastViewPattern() {
+        try {
+            getILayout().getViewPatternAtLast(1).mView.setVisibility(View.GONE);
+        } catch (Exception e) {
+        }
+    }
+
     @Deprecated
     private void startAnimation() {
         mMCircleIndicator.setVisibility(View.GONE);
@@ -163,7 +208,10 @@ public class ImagePagerUIView extends UIIViewImpl {
         mMViewPager.setY(mStartY + mStartH / 2 - screenHeight / 2);
         mMViewPager.setScaleX((mStartW + 0f) / screenWidth);
         mMViewPager.setScaleY((mStartH + 0f) / screenHeight);
-        mMViewPager.animate().x(0).y(0).scaleX(1).scaleY(1).setInterpolator(new DecelerateInterpolator()).setDuration(UIIViewImpl.DEFAULT_ANIM_TIME).start();
+        final ViewPropertyAnimator viewPropertyAnimator = mMViewPager.animate().x(0).y(0)
+                .scaleX(1).scaleY(1)
+                .setInterpolator(new DecelerateInterpolator())
+                .setDuration(UIIViewImpl.DEFAULT_ANIM_TIME);
         mMViewPager.animate().setListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -185,6 +233,13 @@ public class ImagePagerUIView extends UIIViewImpl {
             @Override
             public void onAnimationRepeat(Animator animation) {
 
+            }
+        });
+
+        mMViewPager.post(new Runnable() {
+            @Override
+            public void run() {
+                viewPropertyAnimator.start();
             }
         });
     }

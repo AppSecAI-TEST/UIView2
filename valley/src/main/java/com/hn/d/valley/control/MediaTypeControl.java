@@ -2,7 +2,7 @@ package com.hn.d.valley.control;
 
 import android.view.View;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.utils.RUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;

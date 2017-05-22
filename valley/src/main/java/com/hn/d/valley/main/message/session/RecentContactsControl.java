@@ -9,7 +9,7 @@ import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.swipe.RBaseMenuAdapter;
 import com.angcyo.uiview.github.swipe.recyclerview.Closeable;
@@ -49,7 +49,6 @@ import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.widget.HnExTextView;
-import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -66,11 +65,7 @@ import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import io.realm.Realm;
 import rx.functions.Action0;

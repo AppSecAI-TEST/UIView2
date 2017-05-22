@@ -4,15 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.library.facebook.DraweeViewUtil;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
-import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
-import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
 

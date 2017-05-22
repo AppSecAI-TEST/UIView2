@@ -596,7 +596,7 @@
     <string name="wx_login">微信帐号登录</string>
     <string name="tel_register">手机注册</string>
     <string name="have_account">已有帐号</string>
-    <string name="other_login_tip">第三方帐号登录</string>
+    <string name="other_login_tip">第三方登录</string>
     <string name="network_exception">您的网络有问题, 请稍后重试!</string>
     <string name="texc_msg_notify">消息通知</string>
     <string name="text_reveive_msg_notify">接受新消息通知</string>

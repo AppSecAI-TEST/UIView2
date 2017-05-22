@@ -3,9 +3,7 @@ package com.hn.d.valley.main.message.chat.viewholder;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.angcyo.library.facebook.RFresco;
 import com.angcyo.uiview.utils.media.ImageUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
