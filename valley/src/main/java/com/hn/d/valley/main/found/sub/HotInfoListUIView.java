@@ -87,6 +87,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 
     public static void initItem(final RBaseViewHolder holder, HotInfoListBean dataBean) {
         holder.fillView(dataBean);
+
         holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getDate() * 1000, true));
 
         HnGlideImageView imageView = holder.v(R.id.image_view);

@@ -18,8 +18,8 @@ android {
         applicationId "com.hn.d.valley"
         minSdkVersion Integer.parseInt(rootProject.M_SDK)
         targetSdkVersion Integer.parseInt(rootProject.T_SDK)
-        versionCode 36
-        versionName "1.0.36"
+        versionCode 37
+        versionName "1.0.37"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         resValue "string", "build_time", build_time

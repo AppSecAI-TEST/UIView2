@@ -443,13 +443,17 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     }
 
     public void initConfigId(UserDiscussListBean listBean) {
+        initConfigId(listBean, true);
+    }
+
+    public void initConfigId(UserDiscussListBean listBean, boolean showToast) {
         List<UserDiscussListBean.DataListBean> dataList = listBean.getData_list();
         if (dataList != null && !dataList.isEmpty()) {
             if (page <= 1) {
                 first_id = dataList.get(0).getDiscuss_id();
 
                 int dataCount = listBean.getData_count();
-                if (dataCount != 0) {
+                if (showToast && dataCount != 0) {
                     T_.show(mActivity.getString(R.string.how_count_status_format, dataCount));
                 }
             }

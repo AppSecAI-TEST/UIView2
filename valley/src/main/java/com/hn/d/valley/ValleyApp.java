@@ -3,6 +3,7 @@ package com.hn.d.valley;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.Root;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.storage.StorageUtil;
 import com.angcyo.umeng.UM;
@@ -95,5 +96,7 @@ public class ValleyApp extends RApplication {
         Audio.init(this);
 
         UM.init(this, BuildConfig.DEBUG);
+
+        UIBaseView.ENABLE_LAYOUT_CHANGE_ANIM = false;
     }
 }

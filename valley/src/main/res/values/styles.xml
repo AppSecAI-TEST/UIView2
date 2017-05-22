@@ -247,6 +247,7 @@
         <item name="android:singleLine">true</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:maxLength">@integer/signature_show_count</item>
     </style>
 
     <style name="SingleMainTextStyle" parent="SingleDarkTextStyle">

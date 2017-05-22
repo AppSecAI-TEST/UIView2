@@ -125,6 +125,10 @@ public class HnGlideImageView extends AppCompatImageView {
     }
 
     public void setImageThumbUrl(final String url) {
+        setImageThumbUrl(url, true);
+    }
+
+    public void setImageThumbUrl(final String url, final boolean anim) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -140,6 +144,9 @@ public class HnGlideImageView extends AppCompatImageView {
                     BitmapTypeRequest<String> builder = Glide.with(getContext())
                             .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
                             .asBitmap();
+                    if (!anim) {
+                        builder.dontAnimate();
+                    }
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }
@@ -161,6 +168,9 @@ public class HnGlideImageView extends AppCompatImageView {
                     DrawableRequestBuilder<String> builder = Glide.with(getContext())
                             .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()))
                             .transform(new GlideCircleTransform(getContext()));
+                    if (!anim) {
+                        builder.dontAnimate();
+                    }
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }

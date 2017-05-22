@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.resources.AnimUtil;
@@ -71,7 +73,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         imagePagerUIView.mStartY = rt[1];
         imagePagerUIView.mStartW = (int) w;
         imagePagerUIView.mStartH = (int) h;
-        iLayout.startIView(imagePagerUIView, new UIParam(false).setHideLastIView(false));
+        iLayout.startIView(imagePagerUIView, new UIParam(true).setHideLastIView(true /*false*/));
     }
 
     @Override
@@ -130,6 +132,11 @@ public class ImagePagerUIView extends UIIViewImpl {
         if (isToFinish) {
             return;
         }
+        try {
+            getILayout().getViewPatternAtLast(1).mView.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+        }
+
         isToFinish = true;
         mMCircleIndicator.setVisibility(View.GONE);
         mMCircleIndicator.setAlpha(0);
@@ -210,4 +217,23 @@ public class ImagePagerUIView extends UIIViewImpl {
                 .start();
     }
 
+    @Override
+    public Animation loadStartAnimation() {
+        return UIBaseView.createClipEnterAnim(1f);
+    }
+
+    @Override
+    public Animation loadFinishAnimation() {
+        return UIBaseView.createClipExitAnim(1f);
+    }
+
+    @Override
+    public Animation loadOtherEnterAnimation() {
+        return UIBaseView.createClipEnterAnim(1f);
+    }
+
+    @Override
+    public Animation loadOtherExitAnimation() {
+        return UIBaseView.createClipExitAnim(1f);
+    }
 }

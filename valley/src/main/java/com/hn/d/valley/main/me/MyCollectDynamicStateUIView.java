@@ -69,8 +69,20 @@ public class MyCollectDynamicStateUIView extends BaseRecyclerUIView<String, User
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setFloating(false).setTitleHide(false)
-                .setTitleBarBGColor(mActivity.getResources().getColor(com.angcyo.uiview.R.color.theme_color_primary));
+        return super.getTitleBar()
+                .setFloating(false)
+                .setTitleHide(false)
+                .setTitleBarBGColor(getTitleBarBGColor());
+    }
+
+    @Override
+    protected boolean hasScrollListener() {
+        return false;
+    }
+
+    @Override
+    public int getDefaultBackgroundColor() {
+        return getColor(R.color.base_main_color_bg_color);
     }
 
     @NonNull
@@ -106,7 +118,7 @@ public class MyCollectDynamicStateUIView extends BaseRecyclerUIView<String, User
                             onUILoadDataEnd();
                         } else {
                             List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
-                            initConfigId(userDiscussListBean);
+                            initConfigId(userDiscussListBean, false);
                             onUILoadDataEnd(data_list);
                         }
                     }

@@ -120,8 +120,21 @@ public class UserDiscussItemControl {
                                 final Action0 itemRootAction, final ILayout iLayout, boolean isInDetail) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
 
-        holder.fillView(dataListBean, true);
-        holder.fillView(user_info, true);
+        //holder.fillView(dataListBean, true);
+        //holder.fillView(user_info, true);
+
+        //用户名
+        holder.tv(R.id.username).setText(user_info.getUsername());
+        //多少人阅读
+        holder.tv(R.id.view_cnt).setText(dataListBean.getView_cnt());
+        //地址
+        holder.tv(R.id.address).setText(dataListBean.getAddress());
+        holder.tv(R.id.fav_cnt).setText(dataListBean.getFav_cnt());
+        holder.tv(R.id.forward_cnt).setText(dataListBean.getForward_cnt());
+        holder.tv(R.id.like_cnt).setText(dataListBean.getLike_cnt());
+        holder.tv(R.id.comment_cnt).setText(dataListBean.getComment_cnt());
+
+
 
         //时间
         TextView showTimeView = holder.v(R.id.show_time);

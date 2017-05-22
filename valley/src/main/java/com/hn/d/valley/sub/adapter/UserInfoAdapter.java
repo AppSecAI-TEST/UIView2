@@ -36,7 +36,10 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
     }
 
     public static void initUserItem(RBaseViewHolder holder, final LikeUserInfoBean dataBean, final ILayout ILayout) {
-        holder.fillView(dataBean);
+        //holder.fillView(dataBean);
+
+        //名称
+        holder.tv(R.id.username).setText(dataBean.getUsername());
 
         //用户个人详情
         holder.itemView.setOnClickListener(new View.OnClickListener() {
