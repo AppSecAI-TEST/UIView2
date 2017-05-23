@@ -138,6 +138,9 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
 
     @Override
     public void onHideInPager(UIViewPager viewPager) {
+        if (isInSubUIView) {
+            return;
+        }
         super.onHideInPager(viewPager);
     }
 
