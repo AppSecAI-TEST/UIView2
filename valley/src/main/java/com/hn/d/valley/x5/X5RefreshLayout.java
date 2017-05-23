@@ -1,7 +1,9 @@
 package com.hn.d.valley.x5;
 
 import android.content.Context;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.angcyo.uiview.rsen.EmptyRefreshLayout;
@@ -18,6 +20,9 @@ import com.angcyo.uiview.rsen.EmptyRefreshLayout;
  * Version: 1.0.0
  */
 public class X5RefreshLayout extends EmptyRefreshLayout {
+
+    private boolean handler;
+
     public X5RefreshLayout(Context context) {
         super(context);
     }
@@ -40,4 +45,43 @@ public class X5RefreshLayout extends EmptyRefreshLayout {
         }
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        handlerEvent(event);
+
+        if (handler || isCancel(MotionEventCompat.getActionMasked(event))) {
+            return super.onInterceptTouchEvent(event);
+        } else {
+            return false;
+        }
+    }
+
+    protected void handlerEvent(MotionEvent event) {
+        int action = MotionEventCompat.getActionMasked(event);//event.getActionMasked();
+
+        if (action == MotionEvent.ACTION_DOWN) {
+            if (mTargetView instanceof X5WebView) {
+                handler = ((X5WebView) mTargetView).isStopInTop();
+            } else {
+                handler = true;
+            }
+        } else if (isCancel(action)) {
+            handler = false;
+        }
+    }
+
+    private boolean isCancel(int action) {
+        return action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        handlerEvent(event);
+
+        if (handler || isCancel(MotionEventCompat.getActionMasked(event))) {
+            return super.onTouchEvent(event);
+        } else {
+            return false;
+        }
+    }
 }

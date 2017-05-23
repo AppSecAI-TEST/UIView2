@@ -133,7 +133,10 @@ public class UserDiscussItemControl {
 
         holder.tv(R.id.fav_cnt).setText(dataListBean.getFav_cnt());
         holder.tv(R.id.forward_cnt).setText(dataListBean.getForward_cnt());
-        holder.tv(R.id.like_cnt).setText(dataListBean.getLike_cnt());
+        View likeCntView = holder.v(R.id.like_cnt);
+        if (likeCntView instanceof TextView) {
+            ((TextView) likeCntView).setText(dataListBean.getLike_cnt());
+        }
         holder.tv(R.id.comment_cnt).setText(dataListBean.getComment_cnt());
 
 
@@ -211,7 +214,6 @@ public class UserDiscussItemControl {
         updateMediaLayout(dataListBean, iLayout, holder, isInDetail);
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
-        View like_cnt = holder.v(R.id.like_cnt);
 
         if (dataListBean.getIs_collection() == 1) {
             //是否收藏
@@ -220,12 +222,12 @@ public class UserDiscussItemControl {
             fav_cnt.setLeftIco(R.drawable.collection_icon_n);
         }
 
-        if (like_cnt instanceof HnItemTextView) {
+        if (likeCntView instanceof HnItemTextView) {
             if (dataListBean.getIs_like() == 1) {
                 //是否点赞
-                ((HnItemTextView) like_cnt).setLeftIco(R.drawable.thumb_up_icon_s);
+                ((HnItemTextView) likeCntView).setLeftIco(R.drawable.thumb_up_icon_s);
             } else {
-                ((HnItemTextView) like_cnt).setLeftIco(R.drawable.thumb_up_icon_n);
+                ((HnItemTextView) likeCntView).setLeftIco(R.drawable.thumb_up_icon_n);
             }
         }
 

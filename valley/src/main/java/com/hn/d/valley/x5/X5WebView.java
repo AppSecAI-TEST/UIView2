@@ -45,6 +45,7 @@ public class X5WebView extends WebView {
     private String resourceUrl = "";
     private WebView smallWebView;
     private boolean isClampedY = true;
+    private boolean isStopInTop = true;//页面在顶部, 没有滚动过
     private Map<String, Object> mJsBridges;
     private TextView tog;
     private RelativeLayout refreshRela;
@@ -266,7 +267,8 @@ public class X5WebView extends WebView {
     };
     private int mScrollY = 0;//Y轴滚动的距离, 用来下拉刷新判断使用
     private float mDownY;
-    private boolean isScrollTop = false;
+    private boolean isScrollToBottom = false;//手指向下
+    private int mLastDeltaY;
 
     @SuppressLint("SetJavaScriptEnabled")
     public X5WebView(Context arg0, AttributeSet arg1) {
@@ -429,6 +431,9 @@ public class X5WebView extends WebView {
         }
     }
 
+    /**
+     * 当WebView在边界滚动的时候回调
+     */
     protected void tbs_onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY, View view) {
 //        if (getContext() instanceof RefreshActivity) {
 //            if (this.tog == null) {
@@ -446,7 +451,8 @@ public class X5WebView extends WebView {
 //                this.isClampedY = false;
 //            }
 //        }
-        this.isClampedY = clampedY && scrollY == 0 && isScrollTop;
+        this.isClampedY = clampedY && scrollY == 0 && isScrollToBottom;
+        isStopInTop = clampedY && scrollY == 0 && mLastDeltaY < 0;
 //        L.e("call: tbs_onOverScrolled([scrollX, scrollY, clampedX, clampedY, view])-> " + scrollY + " " + clampedY);
         super_onOverScrolled(scrollX, scrollY, clampedX, clampedY);
     }
@@ -462,6 +468,9 @@ public class X5WebView extends WebView {
         super_computeScroll();
     }
 
+    /**
+     * 当WebView滚动了多少距离时, 回调
+     */
     protected boolean tbs_overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX,
                                        int scrollRangeY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent, View view) {
 //        if (getContext() instanceof RefreshActivity) {
@@ -478,6 +487,7 @@ public class X5WebView extends WebView {
 //        }
 
         mScrollY = scrollY;
+        mLastDeltaY = deltaY;
 
         if (scrollY == 0) {
             if (mOnWebViewListener != null) {
@@ -486,10 +496,6 @@ public class X5WebView extends WebView {
         }
         return super_overScrollBy(deltaX, deltaY, scrollX, scrollY, scrollRangeX, scrollRangeY, maxOverScrollX,
                 maxOverScrollY, isTouchEvent);
-    }
-
-    public void setTitle(TextView title) {
-        this.title = title;
     }
 
     protected boolean tbs_onTouchEvent(MotionEvent event, View view) {
@@ -507,13 +513,14 @@ public class X5WebView extends WebView {
             mDownY = event.getY();
         } else if (actionMasked == MotionEvent.ACTION_MOVE) {
             float eventY = event.getY();
+            isStopInTop = false;
             if (mDownY != eventY) {
                 isClampedY = false;
             }
-            isScrollTop = eventY > mDownY;
+            isScrollToBottom = eventY > mDownY;
         } else if (actionMasked == MotionEvent.ACTION_UP) {
             isClampedY = false;
-            isScrollTop = false;
+            isScrollToBottom = false;
         }
         boolean touchEvent = super_onTouchEvent(event);
 //        L.e("call: tbs_onTouchEvent([event, view])-> " + touchEvent);
@@ -526,6 +533,14 @@ public class X5WebView extends WebView {
 
     public void setOnWebViewListener(OnWebViewListener onWebViewListener) {
         mOnWebViewListener = onWebViewListener;
+    }
+
+    public void setTitle(TextView title) {
+        this.title = title;
+    }
+
+    public boolean isStopInTop() {
+        return isStopInTop;
     }
 
     @Override
