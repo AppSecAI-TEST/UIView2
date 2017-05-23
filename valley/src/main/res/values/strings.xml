@@ -636,4 +636,5 @@
     <string name="clear_success">清理成功.</string>
     <string name="clear_faild">清理失败.</string>
     <string name="clear_chat_record">清空聊天记录</string>
+    <string name="share_title">记录生活点滴，分享心情印记</string>
 </resources>

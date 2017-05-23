@@ -10,6 +10,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ThreadExecutor;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.me.setting.CurrencyUIView;
 import com.netease.nimlib.sdk.media.player.AudioPlayer;
 import com.netease.nimlib.sdk.media.player.OnPlayListener;
 
@@ -66,6 +67,7 @@ abstract public class BaseAudioControl<T> {
 
     public void setEarPhoneModeEnable(boolean isEarPhoneModeEnable) {
         this.isEarPhoneModeEnable = isEarPhoneModeEnable;
+        CurrencyUIView.setIsReceiverMode(isEarPhoneModeEnable);
         if (isEarPhoneModeEnable) {
             updateAudioStreamType(AudioManager.STREAM_VOICE_CALL);
         } else {
@@ -154,7 +156,7 @@ abstract public class BaseAudioControl<T> {
 
     protected int getUserSettingAudioStreamType() {
         // 听筒模式/扬声器模式
-        if (isEarPhoneModeEnable) {
+        if (/*isEarPhoneModeEnable*/ CurrencyUIView.isReceiverMode()) {
             return AudioManager.STREAM_VOICE_CALL;
         } else {
             return AudioManager.STREAM_MUSIC;
