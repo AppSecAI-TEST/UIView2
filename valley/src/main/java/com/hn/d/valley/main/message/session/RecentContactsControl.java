@@ -129,6 +129,11 @@ public class RecentContactsControl {
         }
     };
 
+    private void registerObservers(boolean register) {
+        MsgServiceObserve service = NIMClient.getService(MsgServiceObserve.class);
+        service.observeMsgStatus(statusObserver, register);
+    }
+
     /**
      * 滑动菜单构造器
      */
@@ -182,6 +187,7 @@ public class RecentContactsControl {
         this.itemChatAction = itemChatAction;
         this.searchAction = searchAction;
         mRecentContactsAdapter = new RecentContactsAdapter(mContext, null);
+        registerObservers(true);
     }
 
     public static RecentContactsInfo getRecentContactsInfo(RecentContact bean) {
@@ -375,7 +381,8 @@ public class RecentContactsControl {
                             mViewHolder.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    setRecentContact(mRecentContactsAdapter.getAllDatas());
+                                    RecentContactsCache.instance().buildCache();
+//                                    setRecentContact(mRecentContactsAdapter.getAllDatas());
                                 }
                             });
                         }

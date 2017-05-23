@@ -190,6 +190,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                         LoginBean loginBean = UserCache.instance().getLoginBean();
                         if (TextUtils.isEmpty(loginBean.getPhone())) {
                             startIView(new BindPhoneUIView());
+                            T_.show(mActivity.getString(R.string.text_unselected_phonenumber));
                         } else {
                             startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
                         }

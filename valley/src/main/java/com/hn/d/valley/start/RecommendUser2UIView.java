@@ -23,6 +23,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.RecommendUserBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.start.service.StartService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
@@ -56,8 +57,9 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                 .setListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        HnUIMainActivity.launcher(mActivity, true);
-                        mActivity.finish();
+//                        HnUIMainActivity.launcher(mActivity, true);
+//                        mActivity.finish();
+                        startIView(new MainUIView());
                     }
                 }));
         return super.getTitleBar().setRightItems(rightItems).setTitleHide(true)
@@ -126,8 +128,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onSucceed(String bean) {
-                        HnUIMainActivity.launcher(mActivity, true);
-                        mActivity.finish();
+                        startIView(new MainUIView());
                     }
                 }));
 

@@ -233,6 +233,9 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
     }
 
     private void bindMemberInfo(RBaseViewHolder holder) {
+        if (mUserInfo == null) {
+            return;
+        }
         TextView tv = holder.tv(R.id.tv_username);
         HnGlideImageView imageView = holder.v(R.id.image_view);
         TextView tv_add_group = holder.tv(R.id.tv_add_group);

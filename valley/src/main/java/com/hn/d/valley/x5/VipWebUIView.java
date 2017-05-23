@@ -2,7 +2,6 @@ package com.hn.d.valley.x5;
 
 import android.webkit.JavascriptInterface;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.T_;
@@ -80,25 +79,24 @@ public class VipWebUIView extends X5WebUIView {
     @Override
     protected void onPageFinished(final WebView webView, String url) {
         super.onPageFinished(webView, url);
+        if (!isLogin) {
+            final String js = "javascript:app_login" + createMethodParams(UserCache.getUserAccount(), mToken, "onTest", "android");
+            webView.loadUrl(js);
+//
+//            webView.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    L.e("call: run([])-> load Js :" + js);
+//                    webView.loadUrl(js);
+//                }
+//            }, 300);
 
+            isLogin = true;
+        }
     }
 
     @Override
     protected void onProgressChanged(final WebView webView, int progress) {
         super.onProgressChanged(webView, progress);
-
-        if (progress >= 100) {
-            if (!isLogin) {
-                final String js = "javascript:app_login" + createMethodParams(UserCache.getUserAccount(), mToken, "onTest", "android");
-                webView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        L.e("call: run([])-> load Js :" + js);
-                        webView.loadUrl(js);
-                    }
-                }, 300);
-                isLogin = true;
-            }
-        }
     }
 }

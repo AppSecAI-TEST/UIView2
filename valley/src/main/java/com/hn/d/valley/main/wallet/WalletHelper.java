@@ -1,18 +1,28 @@
 package com.hn.d.valley.main.wallet;
 
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.Json;
+import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -56,8 +66,8 @@ public class WalletHelper {
     public void fetchWallet(final RequestCallback<WalletAccount> callback) {
         RRetrofit.create(WalletService.class)
                 .account(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"device:" + RApplication.getIMEI()))
-                .compose(Rx.transformer(WalletAccount.class))
-                .subscribe(new BaseSingleSubscriber<WalletAccount>() {
+                .compose(getTransformer())
+                .subscribe(new BaseSingleSubscriber<String>() {
 
                     @Override
                     public void onStart() {
@@ -81,14 +91,67 @@ public class WalletHelper {
                     }
 
                     @Override
-                    public void onSucceed(WalletAccount bean) {
+                    public void onSucceed(String bean) {
                         super.onSucceed(bean);
-                        mWalletAccount = bean;
-                        if (callback != null) {
-                            callback.onSuccess(bean);
+                        parseResult(bean,callback);
+                    }
+                });
+    }
+
+    private void parseResult(String beans, RequestCallback<WalletAccount> callback) {
+        int code = -1;
+        String data = "";
+        try {
+            JSONObject jsonObject = new JSONObject(beans);
+            code = jsonObject.optInt("code");
+            data = jsonObject.optString("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (code == 200) {
+            mWalletAccount = Json.from(data,WalletAccount.class);
+        } else if (code == 404) {
+            //未开户
+            openAccount(UserCache.getUserAccount(),callback);
+        } else if (code == 400) {
+            //参数缺失
+        }
+        if (callback != null) {
+            callback.onSuccess(mWalletAccount);
+        }
+
+    }
+
+    public void openAccount(String uid, final RequestCallback<WalletAccount> requestCallback) {
+        RRetrofit.create(WalletService.class)
+                .open(Param.buildInfoMap("uid:" + uid))
+                .compose(getTransformer())
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                    }
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                    }
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        super.onSucceed(bean);
+                        if(requestCallback == null) {
+                            fetchWallet();
+                        } else {
+                            fetchWallet(requestCallback);
                         }
                     }
                 });
+    }
+
+    public void openAccount(String uid) {
+        openAccount(uid,null);
     }
 
     public static Observable.Transformer<ResponseBody, String> getTransformer() {

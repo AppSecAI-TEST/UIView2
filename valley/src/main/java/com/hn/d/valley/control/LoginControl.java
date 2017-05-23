@@ -16,6 +16,8 @@ import com.hn.d.valley.base.receiver.JPushReceiver;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.RException;
 import com.hn.d.valley.bean.realm.LoginBean;
+import com.hn.d.valley.main.wallet.WalletAccount;
+import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.start.service.StartService;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -196,6 +198,12 @@ public class LoginControl {
                             }
                             return;
                         }
+
+                        //第一次登录钱包开户
+                        if (LoginControl.instance().isFirstRegister()) {
+                            WalletHelper.getInstance().openAccount(bean.getUid());
+                        }
+
                         if (mOnLoginListener != null) {
                             mOnLoginListener.onLoginSuccess(bean);
                         }

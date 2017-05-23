@@ -2,6 +2,7 @@ package com.hn.d.valley.x5;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Message;
 import android.support.v4.view.MotionEventCompat;
@@ -525,6 +526,11 @@ public class X5WebView extends WebView {
 
     public void setOnWebViewListener(OnWebViewListener onWebViewListener) {
         mOnWebViewListener = onWebViewListener;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 
     public interface OnWebViewListener {

@@ -137,7 +137,6 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
     }
 
     private void download(IMMessage message) {
-
         if (!isVideoHasDownloaded(message)) {
             // async download original image
             onDownloadStart(message);
@@ -166,7 +165,6 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
                 !TextUtils.isEmpty(((VideoAttachment) message.getAttachment()).getPath())) {
             return true;
         }
-
         return false;
     }
 
@@ -200,7 +198,6 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
         if (downloadFuture != null) {
             downloadFuture.abort();
             downloadFuture = null;
-
             downloading = false;
         }
     }
@@ -218,39 +215,38 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
                 , null, new int[]{msgAttachment.getWidth(),msgAttachment.getHeight()}));
     }
 
-    private Observer<AttachmentProgress> attachmentProgressObserver = new Observer<AttachmentProgress>() {
-        @Override
-        public void onEvent(AttachmentProgress p) {
-
-            if (!p.getUuid().equals(message.getUuid())) {
-                return;
-            }
-
-            long total = p.getTotal();
-            long progress = p.getTransferred();
-            float percent = (float) progress / (float) total;
-            if (percent > 1.0) {
-                // 消息中标识的文件大小有误，小于实际大小
-                percent = (float) 1.0;
-                progress = total;
-            }
-            progressLabel.setVisibility(View.VISIBLE);
-
-            if (percent - lastPercent >= 0.10) {
-                lastPercent = percent;
-                progressLabel.setText(StringUtil.getPercentString(progress / total));
-            } else {
-                if (lastPercent == 0.0) {
-                    lastPercent = percent;
-                    progressLabel.setText(StringUtil.getPercentString(progress / total));
-                }
-                if (percent == 1.0 && lastPercent != 1.0) {
-                    lastPercent = percent;
-                    progressLabel.setText(StringUtil.getPercentString(progress / total));
-                }
-            }
-        }
-    };
+//    private Observer<AttachmentProgress> attachmentProgressObserver = new Observer<AttachmentProgress>() {
+//        @Override
+//        public void onEvent(AttachmentProgress p) {
+//            if (!p.getUuid().equals(message.getUuid())) {
+//                return;
+//            }
+//
+//            long total = p.getTotal();
+//            long progress = p.getTransferred();
+//            float percent = (float) progress / (float) total;
+//            if (percent > 1.0) {
+//                // 消息中标识的文件大小有误，小于实际大小
+//                percent = (float) 1.0;
+//                progress = total;
+//            }
+//            progressLabel.setVisibility(View.VISIBLE);
+//
+//            if (percent - lastPercent >= 0.10) {
+//                lastPercent = percent;
+//                progressLabel.setText(StringUtil.getPercentString(progress / total));
+//            } else {
+//                if (lastPercent == 0.0) {
+//                    lastPercent = percent;
+//                    progressLabel.setText(StringUtil.getPercentString(progress / total));
+//                }
+//                if (percent == 1.0 && lastPercent != 1.0) {
+//                    lastPercent = percent;
+//                    progressLabel.setText(StringUtil.getPercentString(progress / total));
+//                }
+//            }
+//        }
+//    };
 
     private void refreshStatus() {
         FileAttachment attachment = (FileAttachment) message.getAttachment();

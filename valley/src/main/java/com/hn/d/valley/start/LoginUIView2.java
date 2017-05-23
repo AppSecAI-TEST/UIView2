@@ -35,7 +35,9 @@ import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AutoLoginControl;
+import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
+import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.service.StartService;
 import com.hn.d.valley.widget.HnLoading;
@@ -86,6 +88,10 @@ public class LoginUIView2 extends BaseContentUIView {
         L.i("登录成功:" + loginBean.getUsername());
 
         //showUserIco(loginBean.getAvatar());
+        //第一次登录开户
+        if (LoginControl.instance().isFirstRegister()) {
+            WalletHelper.getInstance().openAccount(loginBean.getUid());
+        }
 
         //登录成功, 保存用户的头像
         Hawk.put(loginBean.getPhone(), loginBean.getAvatar());

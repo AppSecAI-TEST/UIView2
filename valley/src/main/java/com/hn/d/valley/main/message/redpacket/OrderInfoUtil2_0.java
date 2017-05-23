@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
-
+@Deprecated
 public class OrderInfoUtil2_0 {
 	
 	/**

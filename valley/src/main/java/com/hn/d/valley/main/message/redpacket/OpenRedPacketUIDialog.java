@@ -75,7 +75,6 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     private GrabedRDDetail grabedRDDetail;
 
     private AnimatorSet mFrontAnimator;
-    private AnimatorSet mBackAnimator;
 
     public OpenRedPacketUIDialog(int redpacketStatus, String sessionId, long redId) {
         this.redId = redId;
@@ -176,8 +175,6 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     private void initAnimator() {
         mFrontAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(mActivity,
                 R.animator.anim_in);
-        mBackAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(mActivity,
-                R.animator.anim_out);
     }
 
     /**
@@ -187,9 +184,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
      */
     public void startAnimation(View view) {
         mFrontAnimator.setTarget(ivOpen);
-//        mBackAnimator.setTarget(ivOpen);
         mFrontAnimator.start();
-//        mBackAnimator.start();
     }
 
     private void grabRedpacket() {

@@ -324,6 +324,7 @@ public class MainUIView extends BaseUIView {
         if (LoginControl.instance().isFirstRegister()) {
             //// TODO: 2017/5/19
             mOtherILayout.startIView(new RecommendUser2UIView());
+            LoginControl.instance().setFirstRegister(false);
         }
     }
 

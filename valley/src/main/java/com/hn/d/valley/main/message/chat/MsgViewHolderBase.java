@@ -120,6 +120,14 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
         contentContainer = findViewById(R.id.msg_content_layout);
         msgNameLayout = findViewById(R.id.msg_name_layout);
 
+        if (isMiddleItem()) {
+            itemRootLayout.removeAllViews();
+            if (contentContainer.getChildCount() == 0) {
+                View.inflate(view.getContext(),getContentResId(),itemRootLayout);
+            }
+            return;
+        }
+
         // 这里只要inflate出来后加入一次即可
         if(contentContainer.getChildCount() == 0) {
             if(getContentResId() == 0) {
@@ -152,10 +160,12 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
         }
 
         if (isMiddleItem()) {
-            nameTextView.setVisibility(View.GONE);
-            msgIcoView.setVisibility(View.GONE);
-            itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            itemRootLayout.setGravity(Gravity.CENTER_HORIZONTAL);
+            bindContentView();
+            return;
+//            nameTextView.setVisibility(View.GONE);
+//            msgIcoView.setVisibility(View.GONE);
+//            itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+//            itemRootLayout.setGravity(Gravity.CENTER_HORIZONTAL);
         } else {
             if (isReceivedMessage()) {
                 //收到的消息

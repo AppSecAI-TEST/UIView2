@@ -86,6 +86,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
         rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_edit))
+                .setVisibility(View.GONE)
                 .setListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -133,6 +134,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
         }
 
         public void slideOpen() {
+            tv_selected.setText(String.format(getString(R.string.text_already_selected_file_number), 0));
             mISlideHelper.slideOpen();
             animBottom(true);
         }
@@ -303,6 +305,9 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                                 fileList.add(ChatFile.create(message));
                             }
                         }
+                        if (fileList.size() == 0) {
+                            getUITitleBarContainer().showRightItem(0);
+                        }
                         setChatFileGroups(fileList);
 //                        mGroupAdapter.setEnableLoadMore(false);
                     }
@@ -357,6 +362,12 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
 
     private void deleteFile() {
         List<Integer> integerList = mGroupAdapter.getAllSelectorList();
+
+        if (integerList.size() == 0) {
+            T_.show(mActivity.getString(R.string.text_unselected));
+            return;
+        }
+
         List<ChatFile> selectFile = mGroupAdapter.getSelectFile(integerList);
         for (ChatFile chatFile : selectFile) {
             String path = chatFile.getThumbPath();

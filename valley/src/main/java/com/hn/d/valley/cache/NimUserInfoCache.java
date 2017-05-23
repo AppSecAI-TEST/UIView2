@@ -7,6 +7,7 @@ import com.angcyo.library.utils.L;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.utils.RBus;
+import com.netease.nimlib.sdk.InvocationFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
@@ -212,7 +213,7 @@ public class NimUserInfoCache {
      */
     public String getUserDisplayName(String account) {
         String alias = getAlias(account);
-        if (!TextUtils.isEmpty(alias)) {
+        if (!TextUtils.isEmpty(alias) && !" ".equals(alias)) {
             return alias;
         }
 

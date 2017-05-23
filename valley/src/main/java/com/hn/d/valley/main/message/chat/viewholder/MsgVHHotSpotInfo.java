@@ -1,8 +1,13 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
@@ -33,6 +38,7 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
     static int NORMOL_TYPE = 1;
 
     private RRecyclerView mRecyclerView;
+    private RelativeLayout mItemlayout;
 
     public MsgVHHotSpotInfo(BaseMultiAdapter<RBaseViewHolder> adapter) {
         super(adapter);
@@ -51,6 +57,7 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
     @Override
     protected void inflateContentView() {
         mRecyclerView = (RRecyclerView) findViewById(R.id.rv_msg_push);
+        mItemlayout = (RelativeLayout) findViewById(R.id.item_layout);
     }
 
     @Override
@@ -59,6 +66,10 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
         if (hotSpotInfoAttachment == null)  {
             return;
         }
+
+//        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mItemlayout.getLayoutParams();
+//        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+//        mItemlayout.setLayoutParams(params);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new RBaseItemDecoration());
@@ -80,6 +91,11 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
 
             @Override
             protected void onBindView(RBaseViewHolder holder, int position, HotSpotInfo.NewsBean news) {
+
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+                params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                holder.itemView.setLayoutParams(params);
+
                 ImageView imageView = holder.imgV(R.id.image_view);
                 TextView desc = holder.tv(R.id.tv_desc);
 

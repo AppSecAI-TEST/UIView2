@@ -131,26 +131,25 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_pay_passwd));
-                infoLayout.setItemDarkText(mAccount.hasPin() ? "" : mActivity.getString(R.string.text_not_set));
-                if (mAccount.hasPin()) {
-                    infoLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            startIView(new PayPwdSettingUIView());
-                        }
-                    });
-                } else {
-                    if (!isBindPhone()) {
-                        infoLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
-                            }
-                        });
-                    } else {
-                        toBindPhone();
-                    }
+                if (mAccount == null) {
+                    return;
                 }
+                infoLayout.setItemDarkText(mAccount.hasPin() ? "" : mActivity.getString(R.string.text_not_set));
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mAccount.hasPin()) {
+                            startIView(new PayPwdSettingUIView());
+                        } else {
+                            if (!isBindPhone()) {
+                                startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
+                            } else {
+                                toBindPhone();
+                            }
+                        }
+                    }
+                });
+
             }
         }));
 
@@ -167,7 +166,9 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_bind_alipay));
-
+                if (mAccount == null) {
+                    return;
+                }
                 if (mAccount.hasAlipay()) {
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override

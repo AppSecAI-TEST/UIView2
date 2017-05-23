@@ -628,4 +628,6 @@
     <string name="text_click_look_detail">点击查看详情</string>
     <string name="authing">正在授权...</string>
     <string name="text_add_phone_contacts">添加手机联系人</string>
+    <string name="text_unselected">未选中</string>
+    <string name="text_unselected_phonenumber">未绑定手机号!</string>
 </resources>

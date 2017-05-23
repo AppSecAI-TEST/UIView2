@@ -136,7 +136,9 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
     public void reset(List<FriendBean> beanList) {
         //checkNotNull
         if(beanList == null || beanList.size() == 0) {
+            getAllDatas().clear();
             getAllDatas().addAll(onPreProvide());
+            FriendsControl.sort(getAllDatas());
             notifyDataSetChanged();
             return;
         }

@@ -76,7 +76,7 @@ public class FoundUIView extends BaseItemUIView {
 
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                baseInitItem(holder, R.drawable.search, getString(R.string.scan_title), mBaseOffsetSize, new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.scan, getString(R.string.scan_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new ScanUIView());
@@ -88,7 +88,7 @@ public class FoundUIView extends BaseItemUIView {
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                baseInitItem(holder, R.drawable.scan, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.search, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mOtherILayout.startIView(new SearchUIView());
@@ -100,7 +100,7 @@ public class FoundUIView extends BaseItemUIView {
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                baseInitItem(holder, R.drawable.search, getString(R.string.game), mBaseOffsetSize, new View.OnClickListener() {
+                baseInitItem(holder, R.drawable.animal, getString(R.string.game), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 

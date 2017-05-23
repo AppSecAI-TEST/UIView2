@@ -314,7 +314,11 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
     }
 
     private void kickMember(List<GroupMemberBean> selectedData) {
-                Observable.from(selectedData)
+        if (selectedData.size() == 0) {
+            T_.show(mActivity.getString(R.string.text_unselected));
+            return;
+        }
+        Observable.from(selectedData)
                 .map(new Func1<GroupMemberBean, String>() {
                     @Override
                     public String call(GroupMemberBean bean) {

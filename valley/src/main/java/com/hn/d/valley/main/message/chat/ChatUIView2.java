@@ -97,6 +97,7 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -616,7 +617,24 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         if (bundle != null) {
             final String lastId = mSessionId;
 
-            setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
+//            setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
+
+            NimUserInfoCache.getInstance().getUserInfoFromRemote(mSessionId, new com.netease.nimlib.sdk.RequestCallback<NimUserInfo>() {
+                @Override
+                public void onSuccess(NimUserInfo param) {
+                    setTitleString(param.getName());
+                }
+
+                @Override
+                public void onFailed(int code) {
+
+                }
+
+                @Override
+                public void onException(Throwable exception) {
+
+                }
+            });
 
             loadFirst(lastId);
         }

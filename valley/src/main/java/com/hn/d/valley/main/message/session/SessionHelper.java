@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.session;
 
+import android.os.Build;
+
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.hn.d.valley.base.constant.Constant;
@@ -100,6 +102,7 @@ public class SessionHelper {
                 @Override
                 public List<CommandItemInfo> createItems() {
                     List<CommandItemInfo> items = new ArrayList<>();
+                    items.add(new AVChatCommandItem());
                     items.add(new LocationCommandItem());
                     items.add(new PersonalCardCommandItem());
                     items.add(new RedPacketCommandItem());
