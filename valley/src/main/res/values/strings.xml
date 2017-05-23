@@ -160,6 +160,7 @@
     <string name="selector_report_tip">请选择举报理由</string>
     <string name="open_network_setting">打开网络设置</string>
     <string name="retry_refresh">刷新试试</string>
+    <string name="refresh">刷新</string>
     <string name="no_selector_report_tip">请选择举报理由!</string>
     <string name="account_safe">帐号与安全</string>
     <string name="message_notify">消息通知</string>
@@ -630,4 +631,9 @@
     <string name="text_add_phone_contacts">添加手机联系人</string>
     <string name="text_unselected">未选中</string>
     <string name="text_unselected_phonenumber">未绑定手机号!</string>
+    <string name="receiver_mode">听筒模式</string>
+    <string name="storage_space">存储空间</string>
+    <string name="clear_success">清理成功.</string>
+    <string name="clear_faild">清理失败.</string>
+    <string name="clear_chat_record">清空聊天记录</string>
 </resources>

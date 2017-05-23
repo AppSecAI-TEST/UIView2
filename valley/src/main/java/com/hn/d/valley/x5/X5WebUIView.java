@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.widget.EmptyView;
@@ -48,6 +49,21 @@ public class X5WebUIView extends BaseContentUIView {
                 .setTitleString("")
                 //.setTitleBarBGColor(Color.TRANSPARENT)
                 //.setFloating(true)
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.more, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UIBottomItemDialog.build()
+                                .addItem(getString(R.string.refresh), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (mWebView != null) {
+                                            mWebView.reload();
+                                        }
+                                    }
+                                })
+                                .showDialog(X5WebUIView.this);
+                    }
+                }))
                 ;
     }
 
