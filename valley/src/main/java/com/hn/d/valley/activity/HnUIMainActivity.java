@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.umeng.UM;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.base.constant.Action;
@@ -77,5 +78,11 @@ public class HnUIMainActivity extends BaseActivity {
     @Override
     protected void onUIBackPressed() {
         moveTaskToBack(true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UM.onActivityResult(requestCode, resultCode, data);
     }
 }

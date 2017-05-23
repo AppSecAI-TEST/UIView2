@@ -8,7 +8,6 @@ import android.widget.TextView;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
-import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -22,6 +21,7 @@ import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
+import com.hn.d.valley.control.ShareControl;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.service.UserInfoService;
@@ -64,33 +64,6 @@ public class UserDetailMoreUIView extends BaseItemUIView {
     public UserDetailMoreUIView(UserInfoBean userInfoBean, Integer relation) {
         mUserInfoBean = userInfoBean;
         this.relation = relation;
-    }
-
-    public static void initShareControlLayout(RBaseViewHolder holder, ILayout iLayout) {
-        holder.v(R.id.share_wx).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder.v(R.id.share_wxc).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder.v(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        holder.v(R.id.share_qqz).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     @Override
@@ -214,7 +187,10 @@ public class UserDetailMoreUIView extends BaseItemUIView {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
                 holder.itemView.setBackgroundColor(Color.WHITE);
-                initShareControlLayout(holder, mILayout);
+                ShareControl.shareCardControl(mActivity, holder,
+                        mUserInfoBean.getUid(),
+                        mUserInfoBean.getUsername() + "的恐龙谷首页",
+                        mUserInfoBean.getUsername() + "的恐龙谷首页\n" + "粉丝数: " + mUserInfoBean.getFans_count());
             }
         });
 

@@ -203,4 +203,18 @@ public interface SocialService {
     @POST("social/reply")
     Observable<ResponseBody> reply(@QueryMap Map<String, String> map);
 
+    /**
+     * 分享
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	分享类型【discuss-动态 news-资讯 user-名片 group-群 invite-邀请】
+     * item_id	否	int	数据id【动态id/资讯id/用户id/群id】
+     * title	否	string	分享的标题
+     * site	是	string	分享的平台【微信好友，QQ,微博，朋友圈，QQ空间，手机短信】
+     * spm	是	string	唯一记录【记录回访】
+     * url	是	string	分享的网址【回链】
+     */
+    @POST("social/share")
+    Observable<ResponseBody> share(@QueryMap Map<String, String> map);
+
 }

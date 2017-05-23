@@ -106,7 +106,10 @@ public class ImagePagerUIView extends UIIViewImpl {
 
             @Override
             public void onMoveExitCancelTo(DragPhotoView view, float w, float h, float translateX, float translateY) {
-                mLastTranColor = SkinHelper.getTranColor(Color.BLACK, 255 - (int) (255 * (translateY * 2 / h)));
+                int alpha = 255 - (int) (255 * (translateY * 2 / h));
+                alpha = Math.max(0, alpha);
+                alpha = Math.min(255, alpha);
+                mLastTranColor = SkinHelper.getTranColor(Color.BLACK, alpha);
                 mMRootLayout.setBackgroundColor(mLastTranColor);
             }
         });

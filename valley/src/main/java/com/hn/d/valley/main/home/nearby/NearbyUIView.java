@@ -441,7 +441,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                         } else {
                             if (mapMode) {
                                 List<LikeUserInfoBean> datas = new ArrayList<>();
-                                for (int i = 0; i < 100; i++) {
+                                for (int i = 0; i < Math.min(nearUserBean.getData_list().size(), 100); i++) {
                                     datas.add(nearUserBean.getData_list().get(i));
                                 }
 
