@@ -191,7 +191,7 @@ public class ReportUIView extends BaseContentUIView {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        HnLoading.show(mOtherILayout, false);
+                        HnLoading.show(mParentILayout, false);
                     }
 
                     @Override
@@ -219,7 +219,7 @@ public class ReportUIView extends BaseContentUIView {
                     @Override
                     public void onStart() {
                         super.onStart();
-                        HnLoading.show(mOtherILayout, false);
+                        HnLoading.show(mParentILayout, false);
                     }
 
                     @Override

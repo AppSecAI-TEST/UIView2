@@ -26,7 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
@@ -34,30 +33,18 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.utils.string.MD5;
-import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.base.iview.VideoRecordUIView;
-import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.LastMessageEvent;
-import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
-import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
-import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
-import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
-import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.CommandLayoutControl;
 import com.hn.d.valley.main.message.session.Container;
@@ -68,7 +55,6 @@ import com.hn.d.valley.main.message.session.PersonalCardCommandItem;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.main.message.session.SessionProxy;
 import com.hn.d.valley.main.message.session.VideoCommandItem;
-import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -96,7 +82,6 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Action3;
 
 /**
  * Created by hewking on 2017/3/16.
@@ -220,7 +205,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
 //
 //            }
 //        });
-        Container container = new Container(mActivity,mSessionId,sessionType,mOtherILayout,this);
+        Container container = new Container(mActivity,mSessionId,sessionType, mParentILayout,this);
 
         mCommandLayoutControl = new CommandLayoutControl(container, mViewHolder, createCommandItems());
 

@@ -170,7 +170,7 @@ public class AddGroupChatUIView extends BaseUIView {
                 datas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
-                        mOtherILayout.startIView(new SearchUserUIView());
+                        mParentILayout.startIView(new SearchUserUIView());
                     }
                 }));
                 for (FriendBean bean : beanList) {
@@ -198,7 +198,7 @@ public class AddGroupChatUIView extends BaseUIView {
     }
 
     private void createAndSavePhoto(final List<AbsContactItem> selectorData) {
-        HnLoading.show(mOtherILayout);
+        HnLoading.show(mParentILayout);
         final List<FriendBean> beans = new ArrayList<>();
         for (AbsContactItem item : selectorData) {
             beans.add(((ContactItem)item).getFriendBean());

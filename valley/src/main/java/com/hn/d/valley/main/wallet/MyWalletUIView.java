@@ -7,20 +7,12 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.resources.ResUtil;
-import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
@@ -222,7 +214,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         startIView(new BindPhoneUIView());
                     }
                 })
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     private void bindBalance(RBaseViewHolder holder) {

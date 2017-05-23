@@ -9,9 +9,6 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
-import com.hn.d.valley.main.message.redpacket.NewRedPacketUIView;
-import com.hn.d.valley.main.message.session.CommandItemInfo;
-import com.hn.d.valley.main.message.session.RedPacketCommandItem;
 import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -58,7 +55,7 @@ public class P2PChatUIView extends ChatUIView2 {
             @Override
             public void onClick(View v) {
 //                startIView(new P2PInfoUIView());
-                P2PInfoUIView.start(mOtherILayout, mSessionId, sessionType);
+                P2PInfoUIView.start(mParentILayout, mSessionId, sessionType);
 
             }
         }));

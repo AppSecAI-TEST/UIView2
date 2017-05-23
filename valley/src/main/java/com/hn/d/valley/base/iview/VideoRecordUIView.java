@@ -179,7 +179,7 @@ public class VideoRecordUIView extends UIIViewImpl {
                                 + OssHelper.createImageFileName(DefaultLevel.getHeight(), DefaultLevel.getWidth());
                     }
 
-                    HnLoading.show(mOtherILayout, false);
+                    HnLoading.show(mParentILayout, false);
                     Observable.just("")
                             .delay(100, TimeUnit.MILLISECONDS)
                             .map(new Func1<String, String>() {

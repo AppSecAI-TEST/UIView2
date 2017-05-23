@@ -50,14 +50,14 @@ public class MyCollectDynamicStateUIView extends BaseRecyclerUIView<String, User
                 }, new Action0() {
                     @Override
                     public void call() {
-                        mOtherILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
                     }
                 }, getILayout());
             }
 
             @Override
             protected ILayout getILayout() {
-                return mOtherILayout;
+                return mParentILayout;
             }
         };
     }

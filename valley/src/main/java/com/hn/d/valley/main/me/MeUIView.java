@@ -103,7 +103,7 @@ public class MeUIView extends BaseUIView {
 //                    public void onClick(View v) {
 //                        /* 编辑资料 */
 //                        //T_.show("编辑");
-//                        mOtherILayout.startIView(new EditInfoUIView());
+//                        mParentILayout.startIView(new EditInfoUIView());
 //                    }
 //                }));
     }
@@ -163,7 +163,7 @@ public class MeUIView extends BaseUIView {
 
         mViewPagerPlaceholderView.setVisibility(View.GONE);
         initPhotos(userInfoBean);
-        PhotoPager.init(mOtherILayout, mTextIndicatorView, mViewPager, mPhotos);
+        PhotoPager.init(mParentILayout, mTextIndicatorView, mViewPager, mPhotos);
 
         //
         mViewHolder.fillView(UserInfoBean.class, userInfoBean, false, true);
@@ -243,13 +243,13 @@ public class MeUIView extends BaseUIView {
     public void onInfoClick(View view) {
         switch (view.getId()) {
             case R.id.qr_code_view://二维码
-                mOtherILayout.startIView(new MyQrCodeUIView());
+                mParentILayout.startIView(new MyQrCodeUIView());
                 break;
             case R.id.follow_item_layout://关注
-                mOtherILayout.startIView(new FollowersRecyclerUIView());
+                mParentILayout.startIView(new FollowersRecyclerUIView());
                 break;
             case R.id.follower_item_layout://粉丝
-                mOtherILayout.startIView(new FansRecyclerUIView());
+                mParentILayout.startIView(new FansRecyclerUIView());
                 break;
         }
     }
@@ -259,29 +259,29 @@ public class MeUIView extends BaseUIView {
     public void onItemInfoClick(View view) {
         switch (view.getId()) {
             case R.id.my_status_layout://我的动态
-                mOtherILayout.startIView(new MyStatusDetailUIView());
+                mParentILayout.startIView(new MyStatusDetailUIView());
                 break;
             case R.id.my_favor_layout://我的收藏
-                mOtherILayout.startIView(new MyCollectUIView());
+                mParentILayout.startIView(new MyCollectUIView());
                 break;
             case R.id.level_layout://等级
-                mOtherILayout.startIView(new MyGradeUIView());
+                mParentILayout.startIView(new MyGradeUIView());
                 break;
             case R.id.coin_layout://龙币
-                mOtherILayout.startIView(new MyCoinUIView());
+                mParentILayout.startIView(new MyCoinUIView());
                 break;
             case R.id.person_auth_layout://名人认证
                 break;
             case R.id.setting_layout://设置
-//                mOtherILayout.startIView(new SettingUIView());
-                mOtherILayout.startIView(new SettingUIView2());
+//                mParentILayout.startIView(new SettingUIView());
+                mParentILayout.startIView(new SettingUIView2());
                 break;
         }
     }
 
     @OnClick(R.id.user_ico_view)
     public void onUserIcoClick() {
-        mOtherILayout.startIView(new EditInfoUIView(mPhotos, new Action0() {
+        mParentILayout.startIView(new EditInfoUIView(mPhotos, new Action0() {
             @Override
             public void call() {
                 initMeUIView();
@@ -293,10 +293,10 @@ public class MeUIView extends BaseUIView {
     public void onDynamicClick(View view) {
         switch (view.getId()) {
             case R.id.dynamic_notification_layout://动态通知
-                mOtherILayout.startIView(new SeeStateUserUIView());
+                mParentILayout.startIView(new SeeStateUserUIView());
                 break;
             case R.id.my_visitor_layout://我的访客
-                mOtherILayout.startIView(new MyVisitorUserUIView());
+                mParentILayout.startIView(new MyVisitorUserUIView());
                 break;
         }
     }

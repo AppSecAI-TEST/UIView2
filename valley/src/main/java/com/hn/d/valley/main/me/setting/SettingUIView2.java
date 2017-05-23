@@ -176,7 +176,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                                 mActivity.finish();
                             }
                         })
-                        .showDialog(mOtherILayout);
+                        .showDialog(mParentILayout);
             }
         }));
     }

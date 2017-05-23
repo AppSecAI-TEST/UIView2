@@ -1,19 +1,13 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.graphics.Color;
-import android.support.annotation.NonNull;
 import android.text.Editable;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -284,9 +278,9 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                 //参数设置余额
                 params.setBalance(money);
                 if (money >= params.money) {
-                    mOtherILayout.startIView(new PayUIDialog(action,params));
+                    mParentILayout.startIView(new PayUIDialog(action,params));
                 } else {
-                    mOtherILayout.startIView(new ChoosePayWayUIDialog(action,params));
+                    mParentILayout.startIView(new ChoosePayWayUIDialog(action,params));
                 }
             }
         });
@@ -309,7 +303,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                     }
                 })
                 .setCancelText(getString(R.string.cancel))
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     private ClickableSpan switchRPType = new ClickableSpan() {

@@ -119,7 +119,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         datas.add(new FuncItem<>(mActivity.getString(R.string.search), new Action1<ILayout>() {
             @Override
             public void call(ILayout o) {
-                mOtherILayout.startIView(new SearchUserUIView());
+                mParentILayout.startIView(new SearchUserUIView());
             }
         }));
         for (FriendBean bean : beanList) {

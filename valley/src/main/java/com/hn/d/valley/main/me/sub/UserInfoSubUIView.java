@@ -101,7 +101,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
                     @Override
                     public void onItemClick(RBaseViewHolder holder, View view, int position, String bean) {
-                        ImagePagerUIView.start(mOtherILayout, view, PhotoPager.getImageItems(stringList), position);
+                        ImagePagerUIView.start(mParentILayout, view, PhotoPager.getImageItems(stringList), position);
                     }
 
                     @Override
@@ -112,7 +112,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
                                 holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        mOtherILayout.startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), mAction0));
+                                        mParentILayout.startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), mAction0));
                                     }
                                 });
                             } else {
@@ -167,7 +167,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 holder.v(R.id.more_info_view).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MoreInfoUIView(mUserInfoBean));
+                        mParentILayout.startIView(new MoreInfoUIView(mUserInfoBean));
                     }
                 });
             }
@@ -199,7 +199,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 holder.v(R.id.more_info_view).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new X5WebUIView(website));
+                        mParentILayout.startIView(new X5WebUIView(website));
                     }
                 });
             }

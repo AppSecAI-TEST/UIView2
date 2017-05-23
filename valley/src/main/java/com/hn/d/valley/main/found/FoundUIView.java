@@ -50,7 +50,7 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.hot_news, getString(R.string.hot_information), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new HotInformationUIView());
+                        mParentILayout.startIView(new HotInformationUIView());
                     }
                 });
             }
@@ -61,7 +61,7 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.invite_friends, getString(R.string.nearby_perple), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new NearbyUIView());
+                        mParentILayout.startIView(new NearbyUIView());
                     }
                 });
             }
@@ -79,7 +79,7 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.scan, getString(R.string.scan_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new ScanUIView());
+                        mParentILayout.startIView(new ScanUIView());
                     }
                 });
             }
@@ -91,7 +91,7 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.search, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SearchUIView());
+                        mParentILayout.startIView(new SearchUIView());
                     }
                 });
             }

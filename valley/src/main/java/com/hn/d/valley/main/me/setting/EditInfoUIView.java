@@ -379,7 +379,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         final List<Luban.ImageItem> allDatas = mHnAddImageAdapter.getAllDatas();
         final List<String> needUploadFiles = new ArrayList<>();
 
-        HnLoading.show(mOtherILayout, false);
+        HnLoading.show(mParentILayout, false);
 
         if (allDatas.isEmpty()) {
 //            checkUserIco();
@@ -536,7 +536,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                             onSaveInfo();
                         }
                     })
-                    .showDialog(mOtherILayout);
+                    .showDialog(mParentILayout);
             return false;
         }
         return true;
@@ -1025,7 +1025,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
             @Override
             public void onItemClick(View view, int position, Luban.ImageItem item) {
-                ImagePagerUIView.start(mOtherILayout, view,
+                ImagePagerUIView.start(mParentILayout, view,
                         PhotoPager.getImageItems2(mHnAddImageAdapter.getAllDatas()), position);
             }
 

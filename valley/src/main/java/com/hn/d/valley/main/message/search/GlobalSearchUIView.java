@@ -97,7 +97,7 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
 //        refreshLayout.setRefreshDirection(RefreshLayout.TOP);
 //        refreshLayout.setNotifyListener(false);
 
-        mSearchUserAdapter = new GlobalSearchAdapter(mActivity,mOtherILayout);
+        mSearchUserAdapter = new GlobalSearchAdapter(mActivity, mParentILayout);
         mRecyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mSearchUserAdapter)));
         mRecyclerView.setAdapter(mSearchUserAdapter);
 

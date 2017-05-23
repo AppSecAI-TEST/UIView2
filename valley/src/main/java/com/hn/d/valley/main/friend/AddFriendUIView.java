@@ -138,7 +138,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
         static final int QRCODE = 10003;
 
         public AddFriendAdpater() {
-            super(mActivity, mOtherILayout, mSubscriptions);
+            super(mActivity, mParentILayout, mSubscriptions);
         }
 
         @Override
@@ -180,7 +180,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SearchUserUIView());
+                        mParentILayout.startIView(new SearchUserUIView());
                     }
                 });
 
@@ -193,7 +193,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
 //               holder.itemView.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        mOtherILayout.startIView(new MyQrCodeUIView());
+//                        mParentILayout.startIView(new MyQrCodeUIView());
 //                    }
 //                });
 //
@@ -203,7 +203,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new AddressBookUI2View());
+                        mParentILayout.startIView(new AddressBookUI2View());
                     }
                 });
 

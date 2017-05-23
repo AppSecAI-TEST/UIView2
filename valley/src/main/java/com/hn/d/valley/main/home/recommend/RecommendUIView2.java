@@ -114,7 +114,7 @@ public class RecommendUIView2 extends BaseContentUIView {
         mViewHolder.v(R.id.image_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new TagsManageUIView2(new Action1<List<Tag>>() {
+                mParentILayout.startIView(new TagsManageUIView2(new Action1<List<Tag>>() {
                     @Override
                     public void call(List<Tag> tags) {
                         //1:得到当前的item位置
@@ -196,7 +196,7 @@ public class RecommendUIView2 extends BaseContentUIView {
             @Override
             protected IView getIView(int position) {
                 final RecommendUIView uiView = new RecommendUIView(mLoadStatusCallback);
-                uiView.bindOtherILayout(mOtherILayout);
+                uiView.bindParentILayout(mParentILayout);
                 uiView.setFilterTag(mMyTags.get(position));
                 if (position == mViewPager.getCurrentItem()) {
                     mLastUIView = uiView;

@@ -289,7 +289,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     }
 
     private void onApplyFinish() {
-        mOtherILayout.finishIView(MyAuthUIView.class);
+        mParentILayout.finishIView(MyAuthUIView.class);
         finishIView();
         RRealm.exe(new Realm.Transaction() {
             @Override
@@ -304,7 +304,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
      */
     private void onApply() {
         isCancel = false;
-        HnLoading.show(mOtherILayout).addDismissListener(new UIIDialogImpl.OnDismissListener() {
+        HnLoading.show(mParentILayout).addDismissListener(new UIIDialogImpl.OnDismissListener() {
             @Override
             public void onDismiss() {
                 isCancel = true;

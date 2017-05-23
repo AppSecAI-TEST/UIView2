@@ -8,7 +8,6 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.swipe.recyclerview.SwipeMenuRecyclerView;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RSwipeRecycleView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
@@ -80,16 +79,16 @@ public class MessageUIView extends BaseUIView {
                         switch (recentContact.getContactId()) {
                             case Constant.add_contact:
                                 //打开新朋友界面
-                                mOtherILayout.startIView(new FriendNewUIView2());
+                                mParentILayout.startIView(new FriendNewUIView2());
                                 return;
                             case Constant.comment:
                                 //打开动态通知页面
-                                mOtherILayout.startIView(new NewNotifyUIView(recentContact.getContactId(), recentContact.getSessionType()));
+                                mParentILayout.startIView(new NewNotifyUIView(recentContact.getContactId(), recentContact.getSessionType()));
                                 return;
                             case Constant.klj:
                             case Constant.wallet:
                             case Constant.hot_news:
-                                SessionHelper.startSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                                SessionHelper.startSession(mParentILayout,recentContact.getContactId(),recentContact.getSessionType());
                                 return;
                         }
 
@@ -98,15 +97,15 @@ public class MessageUIView extends BaseUIView {
                             Map<String, Set<IMMessage>> cacheMessages = RecentContactsCache.instance().getCacheMessages();
                             Set<IMMessage> aitMessages = cacheMessages.get(recentContact.getContactId());
                             if (aitMessages != null && aitMessages.size() > 0) {
-                                SessionHelper.startTeamSession(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType(),null,aitMessages);
+                                SessionHelper.startTeamSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType(),null,aitMessages);
                             } else {
-                                SessionHelper.startTeamSession(mOtherILayout,recentContact.getContactId(),recentContact.getSessionType());
+                                SessionHelper.startTeamSession(mParentILayout,recentContact.getContactId(),recentContact.getSessionType());
                             }
                             cacheMessages.remove(recentContact.getContactId());
                             return;
                         }
                         //打开对话界面
-                        SessionHelper.startP2PSession(mOtherILayout, recentContact.getContactId(), recentContact.getSessionType());
+                        SessionHelper.startP2PSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType());
                         //HnChatActivity.launcher(mActivity, recentContact.getFromAccount());
                     }
                 },
@@ -151,19 +150,19 @@ public class MessageUIView extends BaseUIView {
         leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_friends_2).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new FriendUIView());
+                mParentILayout.startIView(new FriendUIView());
             }
         }));
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.tianjia_3)
         .setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mOtherILayout.startIView(new FriendUIView());
+//                mParentILayout.startIView(new FriendUIView());
 
-//                MenuPopUpWindow popUpWindow = new MenuPopUpWindow(mActivity,mOtherILayout);
+//                MenuPopUpWindow popUpWindow = new MenuPopUpWindow(mActivity,mParentILayout);
 //                popUpWindow.showAsDropDown(v, Gravity.BOTTOM,0,0);
 
-                mOtherILayout.startIView(new FriendMenuUIDialog(v,mOtherILayout));
+                mParentILayout.startIView(new FriendMenuUIDialog(v, mParentILayout));
 
 
             }
@@ -176,7 +175,7 @@ public class MessageUIView extends BaseUIView {
      * 打开搜索界面
      */
     private void startSearch() {
-        GlobalSearchUIView2.start(mOtherILayout, GlobalSearchUIView2.Options.sOptions,new int[]{ItemTypes.FRIEND,ItemTypes.GROUP,ItemTypes.MSG,});
+        GlobalSearchUIView2.start(mParentILayout, GlobalSearchUIView2.Options.sOptions,new int[]{ItemTypes.FRIEND,ItemTypes.GROUP,ItemTypes.MSG,});
     }
 
     @Override

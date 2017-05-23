@@ -150,7 +150,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
             selectAction.call(this, mGroupAdapter.getSelectorData(), new RequestCallback() {
                 @Override
                 public void onStart() {
-                    HnLoading.show(mOtherILayout);
+                    HnLoading.show(mParentILayout);
                 }
 
                 @Override

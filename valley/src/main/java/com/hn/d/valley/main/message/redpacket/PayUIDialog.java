@@ -4,18 +4,15 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
@@ -23,7 +20,6 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
-import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.main.wallet.WalletService;
 import com.hn.d.valley.widget.PasscodeView;
 
@@ -113,7 +109,7 @@ public class PayUIDialog extends UIIDialogImpl {
         baseItemInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new ChoosePayWayUIDialog(action,params));
+                mParentILayout.startIView(new ChoosePayWayUIDialog(action,params));
                 finishDialog();
             }
         });
@@ -146,7 +142,7 @@ public class PayUIDialog extends UIIDialogImpl {
 
                     @Override
                     public void onSucceed(String beans) {
-                        parseResult(mOtherILayout, beans, new Action1() {
+                        parseResult(mParentILayout, beans, new Action1() {
                             @Override
                             public void call(Object o) {
                                 sendRedPacket();

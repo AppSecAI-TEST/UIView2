@@ -383,17 +383,17 @@ public class UserDetailUIView2 extends BaseContentUIView {
             protected IView getIView(int position) {
                 if (position == 0) {
                     UserInfoSubUIView userInfoSubUIView = new UserInfoSubUIView(mUserInfoBean, mOnFinishAction);
-                    userInfoSubUIView.bindOtherILayout(mOtherILayout);
+                    userInfoSubUIView.bindParentILayout(mParentILayout);
                     return userInfoSubUIView;
                 } else if (position == 1) {
                     CircleUIView circleUIView = new CircleUIView(mUserInfoBean.getUid());
-                    circleUIView.bindOtherILayout(mOtherILayout);
+                    circleUIView.bindParentILayout(mParentILayout);
                     circleUIView.setInSubUIView(true);
                     circleUIView.setNeedRefresh(false);
                     return circleUIView;
                 } else {
                     MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
-                    myAlbumUIView.bindOtherILayout(mOtherILayout);
+                    myAlbumUIView.bindParentILayout(mParentILayout);
                     return myAlbumUIView;
                 }
             }
@@ -470,11 +470,11 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         case 1:
                         case 2:
                         case 3:
-                            mOtherILayout.startIView(new MyAuthStatusUIView(integer));
+                            mParentILayout.startIView(new MyAuthStatusUIView(integer));
                             break;
                         default:
                             Action.authAction();
-                            mOtherILayout.startIView(new MyAuthUIView());
+                            mParentILayout.startIView(new MyAuthUIView());
                             break;
                     }
                 }
@@ -595,7 +595,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     /**
@@ -622,7 +622,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     /**
@@ -649,7 +649,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     /**
@@ -697,7 +697,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
 
     }
 

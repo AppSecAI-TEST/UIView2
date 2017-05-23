@@ -233,7 +233,7 @@ public class CommentInputDialog extends UIIDialogImpl {
     }
 
     private void onSendClick() {
-        HnLoading.show(mOtherILayout).addDismissListener(new OnDismissListener() {
+        HnLoading.show(mParentILayout).addDismissListener(new OnDismissListener() {
             @Override
             public void onDismiss() {
                 onViewUnload();

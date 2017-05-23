@@ -211,7 +211,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                 finishIView(PublishDynamicUIView2.this, new UIParam(true, true, false));
                             }
                         })
-                        .showDialog(mOtherILayout);
+                        .showDialog(mParentILayout);
                 return false;
             }
         }
@@ -341,7 +341,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
             @Override
             public void onItemClick(View view, int position, Luban.ImageItem item) {
-                ImagePagerUIView.start(mOtherILayout, view,
+                ImagePagerUIView.start(mParentILayout, view,
                         PhotoPager.getImageItems2(mAddImageAdapter2.getAllDatas()), position);
             }
 
@@ -715,7 +715,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             }
         } else {
             //转发动态, 不需要再后台进行
-            HnLoading.show(mOtherILayout);
+            HnLoading.show(mParentILayout);
             String item_id;
             if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
                 item_id = mDataListBean.getDiscuss_id();

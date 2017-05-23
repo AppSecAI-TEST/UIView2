@@ -34,7 +34,6 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.PhoneUser;
 import com.hn.d.valley.cache.UserCache;
@@ -283,7 +282,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                 mAllDatas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
-                        mOtherILayout.startIView(new SearchUserUIView());
+                        mParentILayout.startIView(new SearchUserUIView());
                     }
                 }));
             }

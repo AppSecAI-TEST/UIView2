@@ -45,7 +45,6 @@ import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.main.message.slide.ISlideHelper;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.utils.PhotoPager;
-import com.hn.d.valley.widget.HnButton;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -355,7 +354,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                                 deleteFile();
                             }
                         })
-                        .showDialog(mOtherILayout);
+                        .showDialog(mParentILayout);
             }
         });
     }
@@ -573,7 +572,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ImagePagerUIView.start(mOtherILayout, imageView,
+                        ImagePagerUIView.start(mParentILayout, imageView,
                                 PhotoPager.getImageItems(getAllPhotos()), getPhotoStartIndex(position));
                     }
                 });
@@ -593,7 +592,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                             T_.show("视频已过期！");
                             return;
                         }
-                        mOtherILayout.startIView(new VideoPlayUIView(chatFile.getPath(),
+                        mParentILayout.startIView(new VideoPlayUIView(chatFile.getPath(),
                                 imageView.getDrawable().getConstantState().newDrawable(),
                                 ((VideoFile) chatFile).genWidthAndHeight()));
                     }

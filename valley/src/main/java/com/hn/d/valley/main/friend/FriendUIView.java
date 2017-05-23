@@ -33,12 +33,12 @@ public class FriendUIView extends BaseUIView {
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_add_friends).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new NewFriend3UIView());
+                mParentILayout.startIView(new NewFriend3UIView());
 //                UIItemDialog.build()
 //                        .addItem(getString(R.string.add_friend), new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View v) {
-//                                mOtherILayout.startIView(new SearchUserUIView());
+//                                mParentILayout.startIView(new SearchUserUIView());
 //                            }
 //                        })
 //                        .addItem("添加群聊", new View.OnClickListener() {
@@ -51,9 +51,9 @@ public class FriendUIView extends BaseUIView {
 //                                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView, absContactItems, requestCallback);
 //                                    }
 //                                });
-//                                mOtherILayout.startIView(targetView);
+//                                mParentILayout.startIView(targetView);
 //                            }
-//                        }).showDialog(mOtherILayout);
+//                        }).showDialog(mParentILayout);
             }
         }));
 
@@ -67,8 +67,8 @@ public class FriendUIView extends BaseUIView {
         mFriendsControl.setToUserDetailAction(new Action1<FriendBean>() {
             @Override
             public void call(FriendBean o) {
-//                mOtherILayout.startIView(new UserDetailUIView2(o.getUid()));
-                SessionHelper.startP2PSession(mOtherILayout,o.getUid(), SessionTypeEnum.P2P);
+//                mParentILayout.startIView(new UserDetailUIView2(o.getUid()));
+                SessionHelper.startP2PSession(mParentILayout,o.getUid(), SessionTypeEnum.P2P);
             }
         });
 
@@ -81,7 +81,7 @@ public class FriendUIView extends BaseUIView {
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
-        mFriendsControl = new FriendsControl(mActivity, mSubscriptions, mOtherILayout, new RequestCallback() {
+        mFriendsControl = new FriendsControl(mActivity, mSubscriptions, mParentILayout, new RequestCallback() {
             @Override
             public void onStart() {
                 showLoadView();

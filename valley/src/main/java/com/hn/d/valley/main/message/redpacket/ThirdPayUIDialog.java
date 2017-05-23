@@ -128,7 +128,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         baseItemInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new ChoosePayWayUIDialog(action,params));
+                mParentILayout.startIView(new ChoosePayWayUIDialog(action,params));
                 finishDialog();
             }
         });

@@ -75,7 +75,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
                 finishDialog();
-                mOtherILayout.startIView(new ReportUIView(mDataListBean));
+                mParentILayout.startIView(new ReportUIView(mDataListBean));
             }
         });
 

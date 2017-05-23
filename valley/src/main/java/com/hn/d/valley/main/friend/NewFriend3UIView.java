@@ -44,7 +44,7 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SearchUserUIView());
+                        mParentILayout.startIView(new SearchUserUIView());
                     }
                 });
             }
@@ -59,7 +59,7 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyQrCodeUIView());
+                        mParentILayout.startIView(new MyQrCodeUIView());
                     }
                 });
             }
@@ -72,7 +72,7 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new AddressBookUI2View());
+                        mParentILayout.startIView(new AddressBookUI2View());
                     }
                 });
 
@@ -91,7 +91,7 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new ScanUIView());
+                        mParentILayout.startIView(new ScanUIView());
                     }
                 });
                 TextView tv_username = holder.tv(R.id.tv_friend_name);

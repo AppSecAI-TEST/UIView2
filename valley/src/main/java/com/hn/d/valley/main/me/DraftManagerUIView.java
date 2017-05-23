@@ -411,7 +411,7 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 if (selectorData.isEmpty()) {
                     return;
                 }
-                HnLoading.show(mOtherILayout);
+                HnLoading.show(mParentILayout);
                 RRealm.exe(new Realm.Transaction() {
                     @Override
                     public void execute(Realm realm) {

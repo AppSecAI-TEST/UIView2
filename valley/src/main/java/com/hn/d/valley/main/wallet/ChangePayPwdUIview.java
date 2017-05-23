@@ -146,7 +146,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
                     @Override
                     public void onSucceed(String beans) {
-                        parseResult(mOtherILayout,beans, new Action1() {
+                        parseResult(mParentILayout,beans, new Action1() {
                             @Override
                             public void call(Object o) {
                                 finishIView();
@@ -171,7 +171,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     @Override
                     public void onSucceed(String beans) {
 //                        replaceIView(new ChangePayPwdUIview());
-                        parseResult(mOtherILayout,beans, new Action1<Integer>() {
+                        parseResult(mParentILayout,beans, new Action1<Integer>() {
                             @Override
                             public void call(Integer o) {
                                 confirmPwd = true;

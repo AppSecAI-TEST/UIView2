@@ -165,7 +165,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new ChatFileUIView(mSessionId,sessionType));
+                        mParentILayout.startIView(new ChatFileUIView(mSessionId,sessionType));
                     }
                 });
 
@@ -180,7 +180,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ChatRecordSearchUIView.start(mOtherILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
+                        ChatRecordSearchUIView.start(mParentILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
                     }
                 });
             }
@@ -206,7 +206,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                                         RBus.post(new EmptyChatEvent(mSessionId));
                                     }
                                 })
-                                .showDialog(mOtherILayout);
+                                .showDialog(mParentILayout);
                     }
                 });
 
@@ -222,7 +222,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new GroupReportUIView());
+                        mParentILayout.startIView(new GroupReportUIView());
                     }
                 });
 
@@ -261,7 +261,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                         TeamCreateHelper.createAndSavePhoto(uiBaseDataView, absContactItems, requestCallback);
                     }
                 });
-                mOtherILayout.startIView(targetView);
+                mParentILayout.startIView(targetView);
             }
         });
     }

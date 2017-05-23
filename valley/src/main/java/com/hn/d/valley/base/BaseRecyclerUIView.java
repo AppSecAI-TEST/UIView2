@@ -221,7 +221,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     @Override
     public void onShowInPager(UIViewPager viewPager) {
         super.onShowInPager(viewPager);
-        if (mIViewStatus == STATE_VIEW_SHOW && isLoadInViewPager() && delayTime()) {
+        if (mIViewStatus == IViewShowState.STATE_VIEW_SHOW && isLoadInViewPager() && delayTime()) {
             loadData();
         }
     }

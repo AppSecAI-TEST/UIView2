@@ -96,7 +96,7 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
                             datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
                                 @Override
                                 public void call(ILayout o) {
-                                    mOtherILayout.startIView(new SearchUserUIView());
+                                    mParentILayout.startIView(new SearchUserUIView());
                                 }
                             }));
                             for (GroupMemberBean bean : beans.getData_list()) {

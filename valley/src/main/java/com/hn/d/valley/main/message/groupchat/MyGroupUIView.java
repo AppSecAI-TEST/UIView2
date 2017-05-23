@@ -177,7 +177,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SessionHelper.startTeamSession(mOtherILayout,yxGid, SessionTypeEnum.Team);
+                    SessionHelper.startTeamSession(mParentILayout,yxGid, SessionTypeEnum.Team);
                 }
             });
 
@@ -221,7 +221,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                     selectAction.call(getSelectorData().get(0), new RequestCallback() {
                         @Override
                         public void onStart() {
-                            HnLoading.show(mOtherILayout);
+                            HnLoading.show(mParentILayout);
                         }
 
                         @Override

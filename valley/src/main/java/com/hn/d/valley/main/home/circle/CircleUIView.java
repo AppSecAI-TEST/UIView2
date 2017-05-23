@@ -95,14 +95,14 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                 }, new Action0() {
                     @Override
                     public void call() {
-                        mOtherILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
                     }
                 }, getILayout());
             }
 
             @Override
             protected ILayout getILayout() {
-                return mOtherILayout;
+                return mParentILayout;
             }
         };
     }
@@ -251,7 +251,7 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
      */
     @Subscribe(tags = {@Tag(Constant.TAG_UPDATE_CIRCLE)})
     public void onEvent(UpdateDataEvent event) {
-        if (mIViewStatus == STATE_VIEW_SHOW) {
+        if (mIViewStatus == IViewShowState.STATE_VIEW_SHOW) {
             if (getRecyclerView() != null) {
                 getRecyclerView().smoothScrollToPosition(0);
             }

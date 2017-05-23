@@ -24,7 +24,7 @@ public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUs
 
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
-        mUserInfoAdapter = new UserInfoClickAdapter(mActivity, mOtherILayout, mSubscriptions) {
+        mUserInfoAdapter = new UserInfoClickAdapter(mActivity, mParentILayout, mSubscriptions) {
 
             @Override
             protected boolean isContact(LikeUserInfoBean dataBean) {

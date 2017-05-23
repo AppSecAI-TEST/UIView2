@@ -67,7 +67,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
         if (position == 0) {
             if (mFollowersUIView == null) {
                 mFollowersUIView = new FriendsNewUIView();
-                mFollowersUIView.bindOtherILayout(mOtherILayout);
+                mFollowersUIView.bindParentILayout(mParentILayout);
                 mFollowersUIView.setIsRightJumpLeft(isRightToLeft);
                 mContainerLayout.startIView(mFollowersUIView);
             } else {
@@ -77,7 +77,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
         } else if (position == 1) {
             if (mFriendsRecommUIView == null) {
                 mFriendsRecommUIView = new FriendsRecommendUIView(UserCache.getUserAccount());
-                mFriendsRecommUIView.bindOtherILayout(mOtherILayout);
+                mFriendsRecommUIView.bindParentILayout(mParentILayout);
                 mFriendsRecommUIView.setIsRightJumpLeft(isRightToLeft);
                 mContainerLayout.startIView(mFriendsRecommUIView);
             } else {
@@ -100,7 +100,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
         super.onViewShowFirst(bundle);
         if (mFollowersUIView == null) {
             mFollowersUIView = new FriendsNewUIView();
-            mFollowersUIView.bindOtherILayout(mOtherILayout);
+            mFollowersUIView.bindParentILayout(mParentILayout);
             mContainerLayout.startIView(mFollowersUIView, new UIParam(false));
         } else {
             mContainerLayout.showIView(mFollowersUIView, false);

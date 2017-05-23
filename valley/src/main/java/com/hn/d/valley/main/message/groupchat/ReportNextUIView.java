@@ -3,7 +3,6 @@ package com.hn.d.valley.main.message.groupchat;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -16,20 +15,14 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RAddPhotoAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.MyAuthNextUIView;
-import com.hn.d.valley.main.me.MyAuthUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
 
@@ -161,7 +154,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
      */
     private void onApply() {
         isCancel = false;
-        HnLoading.show(mOtherILayout).addDismissListener(new UIIDialogImpl.OnDismissListener() {
+        HnLoading.show(mParentILayout).addDismissListener(new UIIDialogImpl.OnDismissListener() {
             @Override
             public void onDismiss() {
                 isCancel = true;

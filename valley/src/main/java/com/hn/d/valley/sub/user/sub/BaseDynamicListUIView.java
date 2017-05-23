@@ -113,7 +113,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         glideImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOtherILayout.startIView(new UserDetailUIView2(dataBean.getUid()));
+                mParentILayout.startIView(new UserDetailUIView2(dataBean.getUid()));
             }
         });
 
@@ -186,7 +186,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                                         }));
                             }
                         })
-                        .showDialog(mOtherILayout);
+                        .showDialog(mParentILayout);
             }
         });
 
@@ -194,7 +194,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         if (mListType != ListType.REPLY_TYPE) {
             hnExTextView.setMaxShowLine(3);
         }
-        hnExTextView.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mOtherILayout));
+        hnExTextView.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mParentILayout));
         String content = dataBean.getContent();
         if (mListType == ListType.REPLY_TYPE && position > 0) {
             String reply = getString(R.string.reply);
@@ -230,7 +230,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
             UserDiscussItemControl.initMediaLayout("3",
                     RUtils.split(dataBean.getImages()),
                     mediaControlLayout,
-                    mOtherILayout,
+                    mParentILayout,
                     false
             );
         } else {
@@ -245,7 +245,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOtherILayout.startIView(new ReplyListUIView(dataBean));
+                    mParentILayout.startIView(new ReplyListUIView(dataBean));
                 }
             });
         }
@@ -269,7 +269,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                     tv1.setVisibility(View.VISIBLE);
                     CommentListBean.DataListBean.ReplyListBean replyListBean = reply_list.get(0);
                     tv1.setImageSpanTextColor(SkinHelper.getSkin().getThemeSubColor());
-                    tv1.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mOtherILayout));
+                    tv1.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mParentILayout));
                     tv1.setImage(replyListBean.getImages());
                     tv1.setText(
                             UserDiscussItemControl.createMention(replyListBean.getUid(), replyListBean.getUsername()) +
@@ -284,7 +284,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                     tv2.setVisibility(View.VISIBLE);
                     CommentListBean.DataListBean.ReplyListBean replyListBean = reply_list.get(1);
                     tv2.setImageSpanTextColor(SkinHelper.getSkin().getThemeSubColor());
-                    tv2.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mOtherILayout));
+                    tv2.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mParentILayout));
                     tv2.setImage(replyListBean.getImages());
                     tv2.setText(UserDiscussItemControl.createMention(replyListBean.getUid(), replyListBean.getUsername()) +
                             ":" + replyListBean.getContent());
@@ -297,7 +297,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                 holder.tv(R.id.reply_count_view).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new ReplyListUIView(dataBean));
+                        mParentILayout.startIView(new ReplyListUIView(dataBean));
                     }
                 });
             }

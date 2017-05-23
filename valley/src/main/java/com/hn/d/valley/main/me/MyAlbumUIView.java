@@ -83,7 +83,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
     }
 
     private boolean isInSubUIView() {
-        return mOtherILayout != mILayout;
+        return mParentILayout != mILayout;
     }
 
     @Override
@@ -331,7 +331,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ImagePagerUIView.start(mOtherILayout, imageView,
+                        ImagePagerUIView.start(mParentILayout, imageView,
                                 PhotoPager.getImageItems(getAllPhotos()), getPhotoStartIndex(indexInData));
                     }
                 });
@@ -352,7 +352,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
                     imageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mOtherILayout.startIView(new VideoPlayUIView(videoUrl,
+                            mParentILayout.startIView(new VideoPlayUIView(videoUrl,
                                     imageView.getDrawable().getConstantState().newDrawable(),
                                     OssHelper.getWidthHeightWithUrl(videoUrl)));
 

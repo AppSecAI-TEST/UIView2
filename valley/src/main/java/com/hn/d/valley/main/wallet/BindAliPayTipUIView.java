@@ -58,7 +58,7 @@ public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                         @Override
                         public void onClick(View v) {
                             if (WalletHelper.getInstance().getWalletAccount().getMoney() > 0) {
-                                mOtherILayout.startIView(new UnableUnBindUIView());
+                                mParentILayout.startIView(new UnableUnBindUIView());
                             } else {
                                 replaceIView(new VerifyAlipayUIView(false));
                             }

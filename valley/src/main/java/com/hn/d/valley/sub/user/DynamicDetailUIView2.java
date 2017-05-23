@@ -297,13 +297,13 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 if (position == 0) {
                     if (mCommentListUIView == null) {
                         mCommentListUIView = new CommentListUIView(mDataListBean.getDiscuss_id());
-                        mCommentListUIView.bindOtherILayout(mOtherILayout);
+                        mCommentListUIView.bindParentILayout(mParentILayout);
                     }
                     return mCommentListUIView;
                 }
                 if (mForwardListUIView == null) {
                     mForwardListUIView = new ForwardListUIView(mDataListBean.getDiscuss_id());
-                    mForwardListUIView.bindOtherILayout(mOtherILayout);
+                    mForwardListUIView.bindParentILayout(mParentILayout);
                 }
                 return mForwardListUIView;
             }

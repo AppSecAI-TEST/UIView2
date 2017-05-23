@@ -90,7 +90,7 @@ public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
                 }, new Action0() {
                     @Override
                     public void call() {
-                        mOtherILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
                     }
                 }, getILayout());
 
@@ -98,7 +98,7 @@ public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
 
             @Override
             protected ILayout getILayout() {
-                return mOtherILayout;
+                return mParentILayout;
             }
         };
     }

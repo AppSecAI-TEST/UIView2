@@ -18,8 +18,6 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
-import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
@@ -135,7 +133,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
         static final int QRCODE = 10003;
 
         public AddFriendAdpater() {
-            super(mActivity, mOtherILayout, mSubscriptions);
+            super(mActivity, mParentILayout, mSubscriptions);
         }
 
         @Override
@@ -177,7 +175,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SearchUserUIView());
+                        mParentILayout.startIView(new SearchUserUIView());
                     }
                 });
 
@@ -190,7 +188,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
 //               holder.itemView.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        mOtherILayout.startIView(new MyQrCodeUIView());
+//                        mParentILayout.startIView(new MyQrCodeUIView());
 //                    }
 //                });
 //
@@ -200,7 +198,7 @@ public class AddFriendUIView extends UserInfoRecyclerUIView {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new AddressBookUI2View());
+                        mParentILayout.startIView(new AddressBookUI2View());
                     }
                 });
 

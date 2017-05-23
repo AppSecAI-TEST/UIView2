@@ -22,7 +22,6 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
-import com.hn.d.valley.main.wallet.BindAliPayTipUIView;
 import com.hn.d.valley.main.wallet.SetPayPwdUIView;
 import com.hn.d.valley.main.wallet.WalletAccount;
 import com.hn.d.valley.main.wallet.WalletHelper;
@@ -197,7 +196,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     }
                 })
                 .setCancelText(getString(R.string.cancel))
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     private void performClick(EditText etContent, EditText etMoney,WalletAccount account) {
@@ -207,7 +206,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         }
         PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(etMoney.getText().toString()) * 100,content,to_uid,null,0);
         params.setBalance(account.getMoney());
-        mOtherILayout.startIView(new PayUIDialog(new Action1() {
+        mParentILayout.startIView(new PayUIDialog(new Action1() {
             @Override
             public void call(Object o) {
                 finishIView();

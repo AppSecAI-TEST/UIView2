@@ -192,9 +192,9 @@ public class GlobalSearchDetailUIView extends SingleRecyclerUIView<AbsContactIte
                     @Override
                     public void onClick(View v) {
                         if (SessionTypeEnum.Team == sessionType) {
-                            SessionHelper.startTeamSession(mOtherILayout, sessionId, SessionTypeEnum.Team, imMessage);
+                            SessionHelper.startTeamSession(mParentILayout, sessionId, SessionTypeEnum.Team, imMessage);
                         } else if (SessionTypeEnum.P2P == sessionType) {
-                            SessionHelper.startP2PSession(mOtherILayout, sessionId, SessionTypeEnum.P2P, imMessage);
+                            SessionHelper.startP2PSession(mParentILayout, sessionId, SessionTypeEnum.P2P, imMessage);
                         }
                     }
                 });

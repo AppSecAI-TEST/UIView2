@@ -45,7 +45,6 @@ import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.team.TeamService;
@@ -269,8 +268,8 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        mOtherILayout.startIView(new GroupQrCodeUIView());
-                        GroupQrCodeUIView.start(mOtherILayout,mSessionId,SessionTypeEnum.Team);
+//                        mParentILayout.startIView(new GroupQrCodeUIView());
+                        GroupQrCodeUIView.start(mParentILayout,mSessionId,SessionTypeEnum.Team);
                     }
                 });
             }
@@ -290,7 +289,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         bundle.putString(GroupMemberUIVIew.GID, mGroupDescBean.getGid());
                         bundle.putBoolean(GroupMemberUIVIew.IS_ADMIN, isSelfAdmin);
                         UIParam param = new UIParam().setBundle(bundle);
-                        mOtherILayout.startIView(new GroupAnnouncementUIView(), param);
+                        mParentILayout.startIView(new GroupAnnouncementUIView(), param);
                     }
                 });
             }
@@ -386,7 +385,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new ChatFileUIView(mSessionId,sessionType));
+                        mParentILayout.startIView(new ChatFileUIView(mSessionId,sessionType));
                     }
                 });
 
@@ -401,7 +400,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ChatRecordSearchUIView.start(mOtherILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
+                        ChatRecordSearchUIView.start(mParentILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
                     }
                 });
             }
@@ -426,7 +425,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                                         RBus.post(new EmptyChatEvent(mSessionId));
                                     }
                                 })
-                                .showDialog(mOtherILayout);
+                                .showDialog(mParentILayout);
                     }
                 });
 
@@ -443,7 +442,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mOtherILayout.startIView(new ReportUIView(mGroupDescBean));
+                            mParentILayout.startIView(new ReportUIView(mGroupDescBean));
                         }
                     });
 
@@ -516,7 +515,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                            GroupMemberSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
                                     , null,mGroupDescBean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                         @Override
                                         public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, final RequestCallback requestCallback) {

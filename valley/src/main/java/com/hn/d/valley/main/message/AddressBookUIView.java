@@ -1,10 +1,8 @@
 package com.hn.d.valley.main.message;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,8 +10,6 @@ import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
@@ -23,11 +19,9 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ExEditText;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.PhoneUser;
-import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.DataResourceRepository;
@@ -35,7 +29,6 @@ import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.PhoneContactItem;
 import com.hn.d.valley.main.message.query.TextQuery;
-import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -44,10 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Predicate;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -219,7 +210,7 @@ public class AddressBookUIView extends SingleRecyclerUIView<AbsContactItem> {
                 mAllDatas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
-                        mOtherILayout.startIView(new SearchUserUIView());
+                        mParentILayout.startIView(new SearchUserUIView());
                     }
                 }));
             }

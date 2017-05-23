@@ -103,7 +103,7 @@ public class MyStatusUIView extends BaseContentUIView {
             @Override
             protected IView getIView(int position) {
                 CircleUIView circleUIView = new CircleUIView(UserCache.getUserAccount());
-                circleUIView.bindOtherILayout(mOtherILayout);
+                circleUIView.bindParentILayout(mParentILayout);
                 circleUIView.setInSubUIView(true);
                 circleUIView.setStatusType(mStatusTypes[position]);
                 circleUIView.setLoadStatusCallback(new LoadStatusCallback() {

@@ -292,10 +292,10 @@ public class UserDetailUIView extends BaseContentUIView {
                 break;
             case R.id.follow_item_layout://关注
                 if (UserCache.getUserAccount().equalsIgnoreCase(mUserInfoBean.getUid())) {
-                    mOtherILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
+                    mParentILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
                 } else {
                     if (mUserInfoBean.getLook_fans() == 1) {
-                        mOtherILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
+                        mParentILayout.startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
                     } else {
                         T_.error("对方不允许您查看.");
                     }
@@ -303,10 +303,10 @@ public class UserDetailUIView extends BaseContentUIView {
                 break;
             case R.id.follower_item_layout://粉丝
                 if (UserCache.getUserAccount().equalsIgnoreCase(mUserInfoBean.getUid())) {
-                    mOtherILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
+                    mParentILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
                 } else {
                     if (mUserInfoBean.getLook_fans() == 1) {
-                        mOtherILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
+                        mParentILayout.startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
                     } else {
                         T_.error("对方不允许您查看.");
                     }
@@ -520,7 +520,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     /**
@@ -547,7 +547,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     /**
@@ -574,7 +574,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     /**
@@ -622,7 +622,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     }
                 })
                 .addItem(getBlackListItem())
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
 
     }
 

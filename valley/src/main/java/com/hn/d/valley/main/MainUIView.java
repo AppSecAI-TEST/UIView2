@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.luban.Luban;
@@ -21,7 +22,6 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.model.ViewPattern;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.skin.ISkin;
@@ -116,6 +116,12 @@ public class MainUIView extends BaseUIView {
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
         MainControl.onMainCreate();
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        setChildILayout((ILayout) mViewHolder.v(R.id.main_layout));
     }
 
     @NonNull
@@ -221,7 +227,7 @@ public class MainUIView extends BaseUIView {
             Action.tap_klg();
             if (mHomeUIView == null) {
                 mHomeUIView = new HomeUIView();
-                mHomeUIView.bindOtherILayout(mILayout);
+                mHomeUIView.bindParentILayout(mILayout);
                 mHomeUIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.startIView(mHomeUIView);
             } else {
@@ -232,7 +238,7 @@ public class MainUIView extends BaseUIView {
             //发现
             if (mFoundUIView == null) {
                 mFoundUIView = new FoundUIView();
-                mFoundUIView.bindOtherILayout(mILayout);
+                mFoundUIView.bindParentILayout(mILayout);
                 mFoundUIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.startIView(mFoundUIView);
             } else {
@@ -243,7 +249,7 @@ public class MainUIView extends BaseUIView {
             //联系人, 好友
             if (mFriend2UIView == null) {
                 mFriend2UIView = new FriendUIView();
-                mFriend2UIView.bindOtherILayout(mILayout);
+                mFriend2UIView.bindParentILayout(mILayout);
                 mFriend2UIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.startIView(mFriend2UIView);
             } else {
@@ -256,7 +262,7 @@ public class MainUIView extends BaseUIView {
             //消息
             if (mMessageUIView == null) {
                 mMessageUIView = new MessageUIView();
-                mMessageUIView.bindOtherILayout(mILayout);
+                mMessageUIView.bindParentILayout(mILayout);
                 mMessageUIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.startIView(mMessageUIView, new UIParam(!isFirst));
             } else {
@@ -267,7 +273,7 @@ public class MainUIView extends BaseUIView {
             //我的
             if (mMeUIView == null) {
                 mMeUIView = new MeUIView2();
-                mMeUIView.bindOtherILayout(mILayout);
+                mMeUIView.bindParentILayout(mILayout);
                 mMeUIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.startIView(mMeUIView);
             } else {
@@ -312,18 +318,30 @@ public class MainUIView extends BaseUIView {
 //        return false;
 //    }
 
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+    }
+
+    @Override
+    public void onViewReShow(Bundle bundle) {
+        super.onViewReShow(bundle);
+    }
+
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        ViewPattern lastViewPattern = mMainUILayout.getLastViewPattern();
-        if (lastViewPattern != null) {
-            lastViewPattern.mIView.onViewShow(bundle);
-        }
+
+//        ViewPattern lastViewPattern = mMainUILayout.getLastViewPattern();
+//        if (lastViewPattern != null) {
+//            lastViewPattern.mIView.onViewShow(bundle);
+//        }
         MsgCache.notifyNoreadNum();
 
         if (LoginControl.instance().isFirstRegister()) {
             //// TODO: 2017/5/19
-            mOtherILayout.startIView(new RecommendUser2UIView());
+            mParentILayout.startIView(new RecommendUser2UIView());
             LoginControl.instance().setFirstRegister(false);
         }
     }

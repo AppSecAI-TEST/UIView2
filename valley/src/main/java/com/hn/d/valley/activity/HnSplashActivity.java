@@ -72,24 +72,21 @@ public class HnSplashActivity extends BaseActivity {
 
     @Override
     protected void onLoadView(Intent intent) {
-        if (RNim.isAutoLoginSucceed()) {
+        final String versionName = RUtils.getAppVersionName(this);
+        if (Hawk.get(versionName, true)) {
+            startIView(new LauncherUIView(new Action0() {
+                @Override
+                public void call() {
+                    Hawk.put(versionName, false);
+                    mLayout.replaceIView(new WelcomeUIView());
+                }
+            }));
+        } else if (RNim.isAutoLoginSucceed()) {
             //startIView(new MainUIView(), true);
             HnUIMainActivity.launcher(this, true);
             finish();
         } else {
-            final String versionName = RUtils.getAppVersionName(this);
-            if (Hawk.get(versionName, true)) {
-                startIView(new LauncherUIView(new Action0() {
-                    @Override
-                    public void call() {
-                        Hawk.put(versionName, false);
-                        mLayout.replaceIView(new WelcomeUIView());
-                    }
-                }));
-            } else {
-                startIView(new WelcomeUIView().setEnableClipMode(UIBaseView.ClipMode.CLIP_START), false);
-            }
-
+            startIView(new WelcomeUIView().setEnableClipMode(UIBaseView.ClipMode.CLIP_START), false);
             MainControl.checkCrash(mLayout);
         }
 

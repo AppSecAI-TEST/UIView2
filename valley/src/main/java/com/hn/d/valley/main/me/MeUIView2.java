@@ -96,7 +96,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                mOtherILayout.startIView(new SettingUIView2());
+                                mParentILayout.startIView(new SettingUIView2());
                             }
                         }));
     }
@@ -164,28 +164,28 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 holder.v(R.id.user_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new UserDetailUIView2());
+                        mParentILayout.startIView(new UserDetailUIView2());
                     }
                 });
                 //粉丝
                 holder.v(R.id.follower_item_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new FansRecyclerUIView());
+                        mParentILayout.startIView(new FansRecyclerUIView());
                     }
                 });
                 //关注
                 holder.v(R.id.follow_item_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new FollowersRecyclerUIView());
+                        mParentILayout.startIView(new FollowersRecyclerUIView());
                     }
                 });
                 //动态
                 holder.v(R.id.status_item_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyStatusUIView());
+                        mParentILayout.startIView(new MyStatusUIView());
                     }
                 });
 
@@ -216,7 +216,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        mOtherILayout.startIView(new MyAlbumUIView());
+//                        mParentILayout.startIView(new MyAlbumUIView());
 //                    }
 //                });
 //            }
@@ -242,7 +242,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.dynamic_notification_text, R.drawable.icon_notice, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SeeStateUserUIView());
+                        mParentILayout.startIView(new SeeStateUserUIView());
 
                         RRealm.exe(new Realm.Transaction() {
                             @Override
@@ -272,7 +272,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.my_visitor_text, R.drawable.icon_vistor, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyVisitorUserUIView2());
+                        mParentILayout.startIView(new MyVisitorUserUIView2());
 
                         RRealm.exe(new Realm.Transaction() {
                             @Override
@@ -298,7 +298,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.my_code, R.drawable.icon_mycard, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyQrCodeUIView());
+                        mParentILayout.startIView(new MyQrCodeUIView());
                     }
                 });
             }
@@ -313,7 +313,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.my_collect_tip, R.drawable.icon_collection, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyCollectUIView());
+                        mParentILayout.startIView(new MyCollectUIView());
                     }
                 });
             }
@@ -328,7 +328,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.my_draft_tip, R.drawable.icon_draft, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new DraftManagerUIView());
+                        mParentILayout.startIView(new DraftManagerUIView());
                     }
                 });
 
@@ -354,7 +354,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new VipWebUIView());
+                        mParentILayout.startIView(new VipWebUIView());
                     }
                 });
             }
@@ -367,7 +367,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.my_wallet_tip, R.drawable.icon_wallet, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new MyWalletUIView());
+                        mParentILayout.startIView(new MyWalletUIView());
                     }
                 });
             }
@@ -380,7 +380,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.personalized_dress, R.drawable.icon_skin, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SkinManagerUIView());
+                        mParentILayout.startIView(new SkinManagerUIView());
                     }
                 });
             }
@@ -436,10 +436,10 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //                            case 1:
 //                            case 2:
 //                            case 3:
-//                                mOtherILayout.startIView(new MyAuthStatusUIView(is_auth));
+//                                mParentILayout.startIView(new MyAuthStatusUIView(is_auth));
 //                                break;
 //                            default:
-//                                mOtherILayout.startIView(new MyAuthUIView());
+//                                mParentILayout.startIView(new MyAuthUIView());
 //                                break;
 //                        }
 //                    }
@@ -459,7 +459,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
-//                        mOtherILayout.startIView(new MyGradeUIView());
+//                        mParentILayout.startIView(new MyGradeUIView());
 //                    }
 //                });
 //            }
@@ -483,7 +483,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.invite_friends, R.drawable.icon_invitation, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new InviteFriendsUIDialog());
+                        mParentILayout.startIView(new InviteFriendsUIDialog());
                     }
                 });
             }
@@ -504,7 +504,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.friends_recommend_tip, R.drawable.icon_intrduction, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new FriendsRecommendUIView(false));
+                        mParentILayout.startIView(new FriendsRecommendUIView(false));
                     }
                 });
             }

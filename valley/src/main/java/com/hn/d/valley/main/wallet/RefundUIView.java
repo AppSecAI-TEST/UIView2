@@ -1,7 +1,5 @@
 package com.hn.d.valley.main.wallet;
 
-import android.graphics.Color;
-import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -9,7 +7,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,7 +23,6 @@ import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
 
-import rx.functions.Action1;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -86,9 +82,9 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     public void onClick(View v) {
 
                         if (WalletHelper.getInstance().getWalletAccount().hasAlipay()) {
-                            mOtherILayout.startIView(new BindAliPayTipUIView(true));
+                            mParentILayout.startIView(new BindAliPayTipUIView(true));
                         }  else {
-                            mOtherILayout.startIView(new BindAliPayTipUIView(false));
+                            mParentILayout.startIView(new BindAliPayTipUIView(false));
                         }
                     }
                 });

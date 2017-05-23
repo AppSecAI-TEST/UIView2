@@ -101,7 +101,7 @@ public class GroupChatUIView extends ChatUIView2 {
             public void onClick(View v) {
                 Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
                 if (team != null && team.isMyTeam()) {
-                    GroupInfoUIVIew.start(mOtherILayout,mSessionId,sessionType);
+                    GroupInfoUIVIew.start(mParentILayout,mSessionId,sessionType);
                 } else {
                     T_.info(mActivity.getString(R.string.team_invalid_tip));
                 }
@@ -340,7 +340,7 @@ public class GroupChatUIView extends ChatUIView2 {
         mInputView.setOnMentionInputListener(new ExEditText.OnMentionInputListener() {
             @Override
             public void onMentionCharacterInput() {
-                GroupMemberSelectUIVIew.start(mOtherILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null,bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                GroupMemberSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null,bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseRxView, List<AbsContactItem> items, RequestCallback callback) {
                         if (items.size() == 0) {
@@ -417,7 +417,7 @@ public class GroupChatUIView extends ChatUIView2 {
             return;
         }
 
-        mOtherILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
+        mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
 
         L.i(TAG,event.notification.getContent());
 
@@ -429,7 +429,7 @@ public class GroupChatUIView extends ChatUIView2 {
             return;
         }
 
-        mOtherILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_group_dissolove),event.notification.getMsg()));
+        mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_group_dissolove),event.notification.getMsg()));
 
         L.i(TAG,event.notification.getMsg());
     }

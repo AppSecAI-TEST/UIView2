@@ -108,7 +108,7 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOtherILayout.startIView(new UserDetailUIView2(dataBean.getBodyBean().getUid()));
+                    mParentILayout.startIView(new UserDetailUIView2(dataBean.getBodyBean().getUid()));
                 }
             });
 
@@ -200,7 +200,7 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
                                                     }
                                                 }));
                                     }
-                                })).showDialog(mOtherILayout);
+                                })).showDialog(mParentILayout);
                     }
                 };
                 followView.setOnClickListener(clickListener);

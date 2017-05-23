@@ -35,7 +35,7 @@ public class SeeStateUserUIView extends UserInfoRecyclerUIView {
 
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
-        return new UserInfoAdapter(mActivity, mOtherILayout) {
+        return new UserInfoAdapter(mActivity, mParentILayout) {
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);

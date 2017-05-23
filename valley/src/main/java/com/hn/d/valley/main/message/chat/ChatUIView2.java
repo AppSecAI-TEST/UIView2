@@ -3,8 +3,6 @@ package com.hn.d.valley.main.message.chat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -27,17 +25,13 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.library.okhttp.Ok;
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
-import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
@@ -45,47 +39,30 @@ import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.file.FileUtil;
-import com.angcyo.uiview.utils.media.BitmapDecoder;
-import com.angcyo.uiview.utils.string.MD5;
-import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.base.iview.VideoRecordUIView;
-import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.LastMessageEvent;
-import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
-import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.session.CommandLayoutControl;
 import com.hn.d.valley.main.message.session.Container;
 import com.hn.d.valley.main.message.session.EmojiLayoutControl;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.ImageCommandItem;
-import com.hn.d.valley.main.message.session.LocationCommandItem;
-import com.hn.d.valley.main.message.session.PersonalCardCommandItem;
 import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
-import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
-import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
-import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.main.message.session.SessionProxy;
 import com.hn.d.valley.main.message.session.VideoCommandItem;
-import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.skin.SkinUtils;
-import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.hwangjr.rxbus.annotation.Subscribe;
-import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -101,21 +78,13 @@ import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnTextChanged;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Action3;
 
 /**
  * Created by hewking on 2017/3/16.
@@ -284,7 +253,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             }
         });
 
-        Container container = new Container(mActivity,mSessionId,sessionType,mOtherILayout,this);
+        Container container = new Container(mActivity,mSessionId,sessionType, mParentILayout,this);
         mCommandLayoutControl = new CommandLayoutControl(container, mViewHolder, createCommandItems());
 
         initRefreshLayout();

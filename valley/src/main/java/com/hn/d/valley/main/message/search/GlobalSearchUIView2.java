@@ -16,16 +16,13 @@ import android.widget.TextView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RExItemDecoration;
-import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.message.query.TextQuery;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -119,7 +116,7 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
             }
         });
 
-        mSearchUserAdapter = new GlobalSearchAdapter2(mActivity,mOtherILayout,option);
+        mSearchUserAdapter = new GlobalSearchAdapter2(mActivity, mParentILayout,option);
 //        mRecyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mSearchUserAdapter)));
         mRecyclerView.addItemDecoration(mSearchItemDecoration);
         mRecyclerView.setAdapter(mSearchUserAdapter);

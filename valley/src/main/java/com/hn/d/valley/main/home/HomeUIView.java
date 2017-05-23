@@ -123,7 +123,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         super.onViewShowFirst(bundle);
 //        if (mRecommendUIView3 == null) {
 //            mRecommendUIView3 = new RecommendUIViewEx(this);
-//            mRecommendUIView3.bindOtherILayout(mOtherILayout);
+//            mRecommendUIView3.bindParentILayout(mParentILayout);
 //            mHomeLayout.startIView(mRecommendUIView3, new UIParam(false));
 //        } else {
 //            mHomeLayout.showIView(mRecommendUIView3, false);
@@ -141,18 +141,18 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 //                    if (mRecommendUIView3 == null) {
 //                        mRecommendUIView3 = new RecommendUIView();
 //                    }
-//                    return mRecommendUIView3.bindOtherILayout(mOtherILayout);
+//                    return mRecommendUIView3.bindParentILayout(mParentILayout);
 //                }
 //                if (position == 2) {
 //                    if (mNearbyUIView == null) {
 //                        mNearbyUIView = new NearbyUIView();
 //                    }
-//                    return mNearbyUIView.bindOtherILayout(mOtherILayout);
+//                    return mNearbyUIView.bindParentILayout(mParentILayout);
 //                }
 //                if (mCircleUIView == null) {
 //                    mCircleUIView = new CircleUIView();
 //                }
-//                return mCircleUIView.bindOtherILayout(mOtherILayout);
+//                return mCircleUIView.bindParentILayout(mParentILayout);
 //            }
 //
 //            @Override
@@ -194,7 +194,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 ////                            mRecommendUIView3.setFilterTag(tag);
 ////                            mRecommendUIView3.loadData();
 ////                        }
-////                    }, currentTag == null ? TagsControl.recommendTag : currentTag).showDialog(mOtherILayout);
+////                    }, currentTag == null ? TagsControl.recommendTag : currentTag).showDialog(mParentILayout);
 ////                }
 //            }
 //        });
@@ -219,7 +219,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
             @Override
             public void onTabReselect(int position, View tabView) {
                 if (position == 1) {
-                    mOtherILayout.startIView(new TagFilterUIDialog2(tabView,
+                    mParentILayout.startIView(new TagFilterUIDialog2(tabView,
                             TagsControl.getMyTags(),
                             new Action1<Tag>() {
                                 @Override
@@ -310,7 +310,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         if (position == 0) {
             if (mCircleUIView == null) {
                 mCircleUIView = new CircleUIView(this);
-                mCircleUIView.bindOtherILayout(mOtherILayout);
+                mCircleUIView.bindParentILayout(mParentILayout);
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
                 mHomeLayout.startIView(mCircleUIView, new UIParam(!isFirst));
             } else {
@@ -320,7 +320,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         } else if (position == 1) {
             if (mRecommendUIView3 == null) {
                 mRecommendUIView3 = new RecommendUIViewEx(this);
-                mRecommendUIView3.bindOtherILayout(mOtherILayout);
+                mRecommendUIView3.bindParentILayout(mParentILayout);
                 mRecommendUIView3.setIsRightJumpLeft(isRightToLeft);
                 mHomeLayout.startIView(mRecommendUIView3, new UIParam(!isFirst));
             } else {
@@ -330,7 +330,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         } else if (position == 2) {
             if (mNearbyUIView == null) {
                 mNearbyUIView = new NearbyUIView();
-                mNearbyUIView.bindOtherILayout(mOtherILayout);
+                mNearbyUIView.bindParentILayout(mParentILayout);
                 mNearbyUIView.setIsRightJumpLeft(isRightToLeft);
                 mHomeLayout.startIView(mNearbyUIView, new UIParam(!isFirst));
             } else {
@@ -412,7 +412,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                     @Override
                     public void onClick(View v) {
                         Action.publishAction_Picture();
-                        mOtherILayout.startIView(new PublishDynamicUIView2(DynamicType.IMAGE)
+                        mParentILayout.startIView(new PublishDynamicUIView2(DynamicType.IMAGE)
                                 .setPublishAction(getPublishAction()));
                     }
                 })
@@ -420,7 +420,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                     @Override
                     public void onClick(View v) {
                         Action.publishAction_Video();
-                        mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
+                        mParentILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
                             @Override
                             public void call(UIIViewImpl iView, String path, String s) {
                                 iView.replaceIView(new PublishDynamicUIView2(new VideoStatusInfo(path, s))
@@ -434,10 +434,10 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                     @Override
                     public void onClick(View v) {
                         Action.publishAction_Audio();
-                        mOtherILayout.startIView(new PublishVoiceDynamicUIView().setPublishAction(getPublishAction()));
+                        mParentILayout.startIView(new PublishVoiceDynamicUIView().setPublishAction(getPublishAction()));
                     }
                 })
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
     @NonNull
@@ -478,7 +478,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
+                        mParentILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
                             @Override
                             public void call(UIIViewImpl iView, String path, String s) {
 
@@ -508,7 +508,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                         T_.show("开发中...");
                     }
                 })
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 */
 

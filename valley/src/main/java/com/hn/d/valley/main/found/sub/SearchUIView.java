@@ -347,7 +347,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        //((UILayoutImpl) mOtherILayout).setEnableSwipeBack(false);
+        //((UILayoutImpl) mParentILayout).setEnableSwipeBack(false);
         loadUserRecommend();
     }
 

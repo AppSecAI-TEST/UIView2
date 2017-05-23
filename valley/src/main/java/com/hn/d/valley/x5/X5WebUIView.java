@@ -11,6 +11,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.SimpleProgressBar;
 import com.hn.d.valley.R;
@@ -53,6 +54,14 @@ public class X5WebUIView extends BaseContentUIView {
                     @Override
                     public void onClick(View v) {
                         UIBottomItemDialog.build()
+                                .addItem("在浏览器中打开", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        if (mWebView != null) {
+                                            RUtils.openUrl(mActivity, mWebView.getUrl());
+                                        }
+                                    }
+                                })
                                 .addItem(getString(R.string.refresh), new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -186,12 +195,14 @@ public class X5WebUIView extends BaseContentUIView {
     @Override
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
+        mWebView.onResume();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
     @Override
     public void onViewHide() {
         super.onViewHide();
+        mWebView.onPause();
         mActivity.getWindow().setSoftInputMode(mSoftInputMode);
     }
 

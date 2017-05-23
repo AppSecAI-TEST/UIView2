@@ -140,7 +140,7 @@ public class ReplyListUIView extends BaseDynamicListUIView {
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mOtherILayout.startIView(new CommentInputDialog(new CommentInputDialog.InputConfig() {
+                            mParentILayout.startIView(new CommentInputDialog(new CommentInputDialog.InputConfig() {
                                 @Override
                                 public void onInitDialogLayout(RBaseViewHolder viewHolder) {
                                     viewHolder.tv(R.id.input_view).setHint(getHintString(dataBean.getUsername()));

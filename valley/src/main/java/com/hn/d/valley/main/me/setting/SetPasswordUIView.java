@@ -218,7 +218,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                                 @Override
                                 public void onStart() {
                                     super.onStart();
-                                    HnLoading.show(mOtherILayout);
+                                    HnLoading.show(mParentILayout);
                                 }
 
                                 @Override
@@ -270,7 +270,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                                 @Override
                                 public void onStart() {
                                     super.onStart();
-                                    HnLoading.show(mOtherILayout);
+                                    HnLoading.show(mParentILayout);
                                 }
 
                                 @Override
@@ -315,7 +315,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                                 @Override
                                 public void onStart() {
                                     super.onStart();
-                                    HnLoading.show(mOtherILayout);
+                                    HnLoading.show(mParentILayout);
                                 }
 
                                 @Override

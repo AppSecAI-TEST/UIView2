@@ -164,7 +164,7 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                             @Override
                             public void onStart() {
                                 super.onStart();
-                                HnLoading.show(mOtherILayout, false);
+                                HnLoading.show(mParentILayout, false);
                             }
 
                             @Override
@@ -190,7 +190,7 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         });
                     }
                 })
-                .showDialog(mOtherILayout);
+                .showDialog(mParentILayout);
     }
 
 }

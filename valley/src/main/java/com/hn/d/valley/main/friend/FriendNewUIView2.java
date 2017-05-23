@@ -5,15 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
-import com.angcyo.uiview.dialog.UIBottomItemDialog;
-import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -23,26 +20,16 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.CustomMessageBean;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.UserDetailUIView2;
-import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.MessageService;
-import com.hn.d.valley.service.UserInfoService;
-import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
-import com.hn.d.valley.sub.other.UserInfoRecyclerUIView;
 import com.hn.d.valley.sub.user.FriendsNewUIView;
-import com.hn.d.valley.widget.HnFollowImageView;
-import com.hn.d.valley.widget.HnGenderView;
-import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import rx.subscriptions.CompositeSubscription;
@@ -211,7 +198,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new SearchUserUIView());
+                        mParentILayout.startIView(new SearchUserUIView());
                     }
                 });
 
@@ -221,7 +208,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mOtherILayout.startIView(new AddressBookUI2View());
+                        mParentILayout.startIView(new AddressBookUI2View());
                     }
                 });
 

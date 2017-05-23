@@ -204,7 +204,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
-        return new UserInfoAdapter(mActivity, mOtherILayout) {
+        return new UserInfoAdapter(mActivity, mParentILayout) {
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
@@ -246,7 +246,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 //                    chatView.setOnClickListener(new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View v) {
-//                            P2PChatUIView.start(mOtherILayout, dataBean.getUid(), SessionTypeEnum.P2P);
+//                            P2PChatUIView.start(mParentILayout, dataBean.getUid(), SessionTypeEnum.P2P);
 //                        }
 //                    });
 //                } else {
@@ -293,7 +293,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        mMapCardAdapter = new MapCardAdapter(mActivity, mOtherILayout, mSubscriptions);
+        mMapCardAdapter = new MapCardAdapter(mActivity, mParentILayout, mSubscriptions);
         mMapCardAdapter.setAudioPlayHelper(mAudioPlayHelper);
 
         mCardRecyclerView.setAdapter(mMapCardAdapter);

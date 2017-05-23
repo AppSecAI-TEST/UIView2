@@ -177,7 +177,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                                 kickMember(selectorData);
                             }
                         })
-                        .showDialog(mOtherILayout);
+                        .showDialog(mParentILayout);
             }
         });
     }
@@ -263,7 +263,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOtherILayout.startIView(new UserDetailUIView2(dataBean.getUserId()));
+                    mParentILayout.startIView(new UserDetailUIView2(dataBean.getUserId()));
                 }
             });
 

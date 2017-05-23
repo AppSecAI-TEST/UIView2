@@ -2,6 +2,7 @@ package com.hn.d.valley.x5;
 
 import android.webkit.JavascriptInterface;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.T_;
@@ -63,11 +64,13 @@ public class VipWebUIView extends X5WebUIView {
 
                             @JavascriptInterface
                             public void onAndroid() {
+                                L.e("js call: onAndroid([])-> ");
                                 T_.show("onAndroid");
                             }
 
                             @JavascriptInterface
                             public void onTest() {
+                                L.e("js call: onTest([])-> ");
                                 //T_.show("onTest");
                                 mWebView.reload();
                             }
@@ -81,6 +84,7 @@ public class VipWebUIView extends X5WebUIView {
         super.onPageFinished(webView, url);
         if (!isLogin) {
             final String js = "javascript:app_login" + createMethodParams(UserCache.getUserAccount(), mToken, "onTest", "android");
+            L.e("call: run([])-> load Js : " + mToken + "\n" + js);
             webView.loadUrl(js);
 //
 //            webView.postDelayed(new Runnable() {

@@ -316,7 +316,7 @@ public class LoginUIView2 extends BaseContentUIView {
                             return;
                         }
 
-                        login(mActivity, mOtherILayout, mSubscriptions,
+                        login(mActivity, mParentILayout, mSubscriptions,
                                 mPhoneView.string(), mPasswordView.string(), "", "", "", "", "");
                     }
                 });
