@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_layout"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:gravity="center"
+    android:background="@drawable/base_bg_selector"
+    android:layout_marginTop="@dimen/base_xhdpi">
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/zhanweitu_1" />
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/tv_desc"
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_40dpi"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="#60000000"
+        android:gravity="center_vertical"
+        android:textColor="@color/default_base_white"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="测试文本" />
+</RelativeLayout>

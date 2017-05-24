@@ -330,12 +330,12 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        started = audioMessageHelper.startRecord();
+        /*started = */audioMessageHelper.startRecord();
         cancelled = false;
-        if (!started) {
-            T_.show(mActivity.getString(R.string.recording_init_failed));
-            return;
-        }
+//        if (!started) {
+//            T_.show(mActivity.getString(R.string.recording_init_failed));
+//            return;
+//        }
 
         if (!touched) {
             return;

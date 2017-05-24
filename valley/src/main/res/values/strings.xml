@@ -631,6 +631,10 @@
     <string name="text_add_phone_contacts">添加手机联系人</string>
     <string name="text_unselected">未选中</string>
     <string name="text_unselected_phonenumber">未绑定手机号!</string>
+    <string name="avchat_hangup">结束通话</string>
+    <string name="avchat_switch_to_video">切换视频</string>
+    <string name="avchat_switch_to_audio">切换语音</string>
+    <string name="avchat_video_call_request">请求视频聊天…</string>
     <string name="receiver_mode">听筒模式</string>
     <string name="storage_space">存储空间</string>
     <string name="clear_success">清理成功.</string>

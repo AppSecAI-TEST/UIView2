@@ -195,18 +195,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        UIDialog.build()
-                                .setDialogContent(mActivity.getString(R.string.text_is_empty))
-                                .setOkText(mActivity.getString(R.string.ok))
-                                .setCancelText(mActivity.getString(R.string.cancel))
-                                .setOkListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        NIMClient.getService(MsgService.class).clearChattingHistory(mSessionId, sessionType);
-                                        RBus.post(new EmptyChatEvent(mSessionId));
-                                    }
-                                })
-                                .showDialog(mParentILayout);
+                        cleanChatRecord();
                     }
                 });
 
@@ -230,6 +219,21 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
         }));
 
 
+    }
+
+    private void cleanChatRecord() {
+        UIDialog.build()
+                .setDialogContent(mActivity.getString(R.string.text_is_empty))
+                .setOkText(mActivity.getString(R.string.ok))
+                .setCancelText(mActivity.getString(R.string.cancel))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        NIMClient.getService(MsgService.class).clearChattingHistory(mSessionId, sessionType);
+                        RBus.post(new EmptyChatEvent(mSessionId));
+                    }
+                })
+                .showDialog(mParentILayout);
     }
 
     private void bindMemberInfo(RBaseViewHolder holder) {

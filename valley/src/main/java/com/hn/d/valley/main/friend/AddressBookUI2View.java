@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.github.utilcode.utils.StringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -29,6 +30,7 @@ import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.string.StringUtil;
 import com.angcyo.uiview.widget.ExEditText;
 import com.bumptech.glide.Glide;
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
@@ -473,6 +475,15 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 
         public WrapPhoneContactItem(ContactsPickerHelper.ContactsInfo info, PhoneUser phoneUser) {
             super(info);
+            char ch = phoneUser.getUsername().charAt(0);
+            String letter = StringUtils.getAsciiLeadingUp(ch);
+            if (letter != null ) {
+                groupText = letter;
+            } else if (Pinyin.isChinese(ch)) {
+                groupText = String.valueOf(Pinyin.toPinyin(ch).toUpperCase().charAt(0));
+            } else {
+                groupText = "#";
+            }
             this.phoneUser = phoneUser;
         }
 

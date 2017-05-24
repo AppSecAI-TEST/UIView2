@@ -122,9 +122,14 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
 
         if (isMiddleItem()) {
             itemRootLayout.removeAllViews();
-            if (contentContainer.getChildCount() == 0) {
+            itemRootLayout.setGravity(Gravity.CENTER);
+            if (itemRootLayout.getChildCount() == 0) {
+                if(getContentResId() == 0) {
+                    return;
+                }
                 View.inflate(view.getContext(),getContentResId(),itemRootLayout);
             }
+            inflateContentView();
             return;
         }
 
@@ -141,6 +146,21 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
     }
 
     private void refresh(V holder) {
+
+        //时间
+        String timeString = TimeUtil.getTimeShowString(message.getTime(), false);
+        msgTimeView.setText(timeString);
+        if (position == 0) {
+            msgTimeView.setVisibility(View.VISIBLE);
+        } else {
+            final IMMessage preMessage = getMsgAdapter().getAllDatas().get(position - 1);
+            msgTimeView.setVisibility(isMiddleItem() || needShowTime(preMessage.getTime(), message.getTime()) ? View.VISIBLE : View.GONE);
+        }
+
+        if (isMiddleItem()) {
+            bindContentView();
+            return;
+        }
 
         setLongClickListener();
 
@@ -159,14 +179,6 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
             nameTextView.setVisibility(View.GONE);
         }
 
-        if (isMiddleItem()) {
-            bindContentView();
-            return;
-//            nameTextView.setVisibility(View.GONE);
-//            msgIcoView.setVisibility(View.GONE);
-//            itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-//            itemRootLayout.setGravity(Gravity.CENTER_HORIZONTAL);
-        } else {
             if (isReceivedMessage()) {
                 //收到的消息
                 itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
@@ -195,7 +207,6 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
                 }
                 avatar = UserCache.instance().getAvatar();
             }
-        }
 
         itemRootLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -207,16 +218,6 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
 
         //头像
         DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) msgIcoView, avatar);
-
-        //时间
-        String timeString = TimeUtil.getTimeShowString(message.getTime(), false);
-        msgTimeView.setText(timeString);
-        if (position == 0) {
-            msgTimeView.setVisibility(View.VISIBLE);
-        } else {
-            final IMMessage preMessage = getMsgAdapter().getAllDatas().get(position - 1);
-            msgTimeView.setVisibility(isMiddleItem() || needShowTime(preMessage.getTime(), message.getTime()) ? View.VISIBLE : View.GONE);
-        }
 
         //消息状态
         updateMsgStatus(holder, message);

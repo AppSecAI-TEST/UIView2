@@ -40,9 +40,9 @@ public class ShareControl {
     /**
      * 分享名片
      *
-     * @param shareType 分享类型【discuss-动态 news-资讯 user-名片 group-群 invite-邀请】
-     * @param item_id   item_id	否	int	数据id【动态id/资讯id/用户id/群id】
-     * @param site      分享的平台【微信好友，QQ,微博，朋友圈，QQ空间，手机短信】
+     * param shareType 分享类型【discuss-动态 news-资讯 user-名片 group-群 invite-邀请】
+     * param item_id   item_id	否	int	数据id【动态id/资讯id/用户id/群id】
+     * param site      分享的平台【微信好友，QQ,微博，朋友圈，QQ空间，手机短信】
      */
     public static void shareCardControl(final Activity activity,
                                         RBaseViewHolder holder,

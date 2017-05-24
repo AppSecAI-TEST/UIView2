@@ -1,7 +1,7 @@
 package com.hn.d.valley.main.message.session;
 
 import com.hn.d.valley.R;
-import com.hn.d.valley.main.message.avchat.AVChatUIView;
+import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.

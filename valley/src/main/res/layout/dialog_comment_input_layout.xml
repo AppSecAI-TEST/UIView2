@@ -78,6 +78,7 @@
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
+                    android:minWidth="@dimen/base_25dpi"
                     android:src="@drawable/expression_comments_n"/>
 
                 <ImageView

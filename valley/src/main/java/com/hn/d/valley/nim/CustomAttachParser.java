@@ -59,6 +59,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.WITHDRAWAL_MSG:
                     attachment = new WithDrawalAttachment(json);
                     break;
+                case CustomAttachmentType.KLGGIF_MSG:
+                    attachment = new CustomExpressionAttachment(json);
+                    break;
                 case CustomAttachmentType.LIKE_MSG:
                     attachment = new LikeMsgAttachment(json);
                     break;

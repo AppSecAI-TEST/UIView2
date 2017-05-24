@@ -380,12 +380,14 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        started = audioMessageHelper.startRecord();
+//        started = audioMessageHelper.startRecord();
+        // nimsdk 3.7.0 无返回值
+        audioMessageHelper.startRecord();
         cancelled = false;
-        if (!started) {
-            T_.show(mActivity.getString(R.string.recording_init_failed));
-            return;
-        }
+//        if (!started) {
+//            T_.show(mActivity.getString(R.string.recording_init_failed));
+//            return;
+//        }
 
         if (!touched) {
             return;
@@ -586,24 +588,24 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         if (bundle != null) {
             final String lastId = mSessionId;
 
-//            setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
+            setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
 
-            NimUserInfoCache.getInstance().getUserInfoFromRemote(mSessionId, new com.netease.nimlib.sdk.RequestCallback<NimUserInfo>() {
-                @Override
-                public void onSuccess(NimUserInfo param) {
-                    setTitleString(param.getName());
-                }
-
-                @Override
-                public void onFailed(int code) {
-
-                }
-
-                @Override
-                public void onException(Throwable exception) {
-
-                }
-            });
+//            NimUserInfoCache.getInstance().getUserInfoFromRemote(mSessionId, new com.netease.nimlib.sdk.RequestCallback<NimUserInfo>() {
+//                @Override
+//                public void onSuccess(NimUserInfo param) {
+//                    setTitleString(param.getName());
+//                }
+//
+//                @Override
+//                public void onFailed(int code) {
+//
+//                }
+//
+//                @Override
+//                public void onException(Throwable exception) {
+//
+//                }
+//            });
 
             loadFirst(lastId);
         }

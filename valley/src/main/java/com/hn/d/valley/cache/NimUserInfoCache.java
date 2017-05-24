@@ -6,6 +6,7 @@ import android.util.Log;
 import com.angcyo.library.utils.L;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
+import com.hn.d.valley.main.message.uinfo.UserInfoHelper;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.InvocationFuture;
 import com.netease.nimlib.sdk.NIMClient;
@@ -35,6 +36,7 @@ public class NimUserInfoCache {
     private Observer<List<NimUserInfo>> userInfoUpdateObserver = new Observer<List<NimUserInfo>>() {
         @Override
         public void onEvent(List<NimUserInfo> users) {
+            L.i("userInfoUpdateObserver");
             if (users == null || users.isEmpty()) {
                 return;
             }
@@ -274,6 +276,7 @@ public class NimUserInfoCache {
      */
 
     private void addOrUpdateUsers(final List<NimUserInfo> users, boolean notify) {
+        L.i("addOrUpdateUsers  " + users);
         if (users == null || users.isEmpty()) {
             return;
         }
@@ -290,6 +293,7 @@ public class NimUserInfoCache {
         // 通知变更
         if (notify && accounts != null && !accounts.isEmpty()) {
             //NimUIKit.notifyUserInfoChanged(accounts); // 通知到UI组件
+            UserInfoHelper.notifyChanged(accounts);
         }
     }
 

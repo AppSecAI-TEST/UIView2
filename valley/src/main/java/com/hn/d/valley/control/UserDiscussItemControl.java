@@ -71,6 +71,7 @@ import com.hn.d.valley.widget.HnVideoPlayView;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImageUtils;
+import com.lzy.imagepicker.YImageControl;
 
 import java.io.File;
 import java.util.List;
@@ -488,12 +489,16 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
-                        return OssHelper.getImageThumbSize2(url);
+                        return OssHelper.getImageThumbSize2(YImageControl.url(url));
                     }
 
                     @Override
                     public void displayImage(final ImageView imageView, String url, int width, int height, int imageSize) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height, !isInDetail, imageSize);
+                        if (YImageControl.isYellowImage(url)) {
+                            YImageControl.showYellowImageXiao(imageView);
+                        } else {
+                            UserDiscussItemControl.displayImage(imageView, url, width, height, !isInDetail, imageSize);
+                        }
                     }
 
                     @Override
@@ -533,7 +538,11 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
-                        UserDiscussItemControl.displayImage(imageView, url, width, height, true, imageSize);
+                        if (YImageControl.isYellowImage(url)) {
+                            YImageControl.showYellowImageXiao(imageView);
+                        } else {
+                            UserDiscussItemControl.displayImage(imageView, url, width, height, true, imageSize);
+                        }
                     }
 
                     @Override
@@ -603,7 +612,11 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
-                        UserDiscussItemControl.displayVoiceImage(imageView, url, width, height, !isInDetail);
+                        if (YImageControl.isYellowImage(url)) {
+                            YImageControl.showYellowImageXiao(imageView);
+                        } else {
+                            UserDiscussItemControl.displayVoiceImage(imageView, url, width, height, !isInDetail);
+                        }
                     }
 
                     @Override

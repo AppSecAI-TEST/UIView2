@@ -10,6 +10,8 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.session.SessionCustomization;
+import com.hn.d.valley.main.message.uinfo.UserInfoHelper;
+import com.hn.d.valley.main.message.uinfo.UserInfoObservable;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -32,6 +34,8 @@ import java.util.List;
  * Version: 1.0.0
  */
 public class P2PChatUIView extends ChatUIView2 {
+
+    private UserInfoObservable.UserInfoObserver uinfoObserver;
 
     /**
      * @param sessionId   聊天对象账户
@@ -63,6 +67,18 @@ public class P2PChatUIView extends ChatUIView2 {
         return super.getTitleBar().setRightItems(rightItems);
     }
 
+    @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+        registerObservers(true);
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        registerObservers(false);
+    }
+
     @Subscribe
     public void onEvent(EmptyChatEvent event) {
         if (!mSessionId.equals(event.sessionId)) {
@@ -81,4 +97,38 @@ public class P2PChatUIView extends ChatUIView2 {
                     }
                 });
     }
+
+    private void registerObservers(boolean register) {
+        if (register) {
+            registerUserInfoObserver();
+        } else {
+            unregisterUserInfoObserver();
+        }
+    }
+
+    private void registerUserInfoObserver() {
+        if (uinfoObserver == null) {
+            uinfoObserver = new UserInfoObservable.UserInfoObserver() {
+                @Override
+                public void onUserInfoChanged(List<String> accounts) {
+                    if (accounts.contains(mSessionId)) {
+                        requestBuddyInfo();
+                    }
+                }
+            };
+        }
+
+        UserInfoHelper.registerObserver(uinfoObserver);
+    }
+
+    private void requestBuddyInfo() {
+        setTitleString(UserInfoHelper.getUserTitleName(mSessionId, SessionTypeEnum.P2P));
+    }
+
+    private void unregisterUserInfoObserver() {
+        if (uinfoObserver != null) {
+            UserInfoHelper.unregisterObserver(uinfoObserver);
+        }
+    }
+
 }

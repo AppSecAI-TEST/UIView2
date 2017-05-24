@@ -113,6 +113,7 @@ public class RecentContactsControl {
             L.i(TAG, "statusObserver " + imMessage.getContent());
 
             //消息状态发生了改变
+
             List<RecentContact> allDatas = mRecentContactsAdapter.getAllDatas();
             for (int i = 0; i < allDatas.size(); i++) {
                 RecentContact recentContact = allDatas.get(i);

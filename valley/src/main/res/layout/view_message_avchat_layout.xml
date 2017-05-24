@@ -7,7 +7,25 @@
     android:layout_height="match_parent">
 
     <include
+        android:id="@+id/avchat_audio_layout"
+        layout="@layout/avchat_audio_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/avchat_surface_layout"
         layout="@layout/layout_avchat_suface"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
+    <include
+        android:id="@+id/avchat_video_layout"
+        layout="@layout/avchat_video_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 
 </FrameLayout>

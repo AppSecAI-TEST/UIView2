@@ -73,7 +73,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                 } else {
                     outRect.top = getItemDecorationHeight();
                 }
-                if (mRExBaseAdapter.isLast(position)) {
+                if (!mRExBaseAdapter.isEnableLoadMore() && mRExBaseAdapter.isLast(position)) {
                     outRect.bottom = 10 * getItemDecorationHeight();
                 }
             }

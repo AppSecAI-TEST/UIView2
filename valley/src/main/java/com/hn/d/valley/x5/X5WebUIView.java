@@ -196,6 +196,7 @@ public class X5WebUIView extends BaseContentUIView {
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
         mWebView.onResume();
+        mWebView.resumeTimers();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
@@ -203,6 +204,7 @@ public class X5WebUIView extends BaseContentUIView {
     public void onViewHide() {
         super.onViewHide();
         mWebView.onPause();
+        mWebView.pauseTimers();
         mActivity.getWindow().setSoftInputMode(mSoftInputMode);
     }
 
