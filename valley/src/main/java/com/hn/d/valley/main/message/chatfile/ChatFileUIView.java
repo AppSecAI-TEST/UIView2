@@ -304,7 +304,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                                 fileList.add(ChatFile.create(message));
                             }
                         }
-                        if (fileList.size() == 0) {
+                        if (fileList.size() != 0) {
                             getUITitleBarContainer().showRightItem(0);
                         }
                         setChatFileGroups(fileList);

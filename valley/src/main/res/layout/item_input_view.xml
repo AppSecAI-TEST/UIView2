@@ -22,7 +22,6 @@
         style="@style/EditStyle"
         android:layout_toEndOf="@id/input_tip_view"
         android:imeOptions="actionDone"
-        android:inputType="numberDecimal"
         android:textColor="@color/main_text_color"
         android:textColorHint="@color/main_text_color_dark"/>
 

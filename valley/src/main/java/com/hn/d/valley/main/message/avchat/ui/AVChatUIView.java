@@ -1,13 +1,20 @@
 package com.hn.d.valley.main.message.avchat.ui;
 
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.base.UILayoutActivity;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.utils.NetworkUtil;
 import com.angcyo.uiview.utils.T;
 import com.angcyo.uiview.utils.T_;
@@ -51,11 +58,11 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
 
     //constant
     private static final String TAG = AVChatUIView.class.getSimpleName();
-    private static final String KEY_IN_CALLING = "KEY_IN_CALLING";
-    private static final String KEY_ACCOUNT = "KEY_ACCOUNT";
-    private static final String KEY_CALL_TYPE = "KEY_CALL_TYPE";
-    private static final String KEY_SOURCE = "source";
-    private static final String KEY_CALL_CONFIG = "KEY_CALL_CONFIG";
+    public static final String KEY_IN_CALLING = "KEY_IN_CALLING";
+    public static final String KEY_ACCOUNT = "KEY_ACCOUNT";
+    public static final String KEY_CALL_TYPE = "KEY_CALL_TYPE";
+    public static final String KEY_SOURCE = "source";
+    public static final String KEY_CALL_CONFIG = "KEY_CALL_CONFIG";
     public static final String INTENT_ACTION_AVCHAT = "INTENT_ACTION_AVCHAT";
 
     /**
@@ -78,8 +85,6 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
     // data
     private AVChatControl avChatControl; // 音视频总管理器
     private AVChatData avChatData; // config for connect video server
-    private int state; // calltype 音频或视频
-    private String receiverId; // 对方的account
 
     // state
     private boolean isUserFinish = false;
@@ -95,6 +100,7 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
     private String sessionId;
     private int callType;
     private int source;
+
 
     public static void start(ILayout layout , String sessionId , int callType , int source) {
         needFinish = false;
@@ -115,6 +121,10 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
         layout.startIView(new AVChatUIView(),new UIParam().setBundle(bundle));
     }
 
+    @Override
+    protected TitleBarPattern getTitleBar() {
+        return null;
+    }
 
     @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
@@ -127,14 +137,13 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
         parseParam(param);
         registerNetCallObserver(true);
 
-        if (mIsInComingCall) {
-            inComingCalling();
-        } else {
-            outgoingCalling();
-        }
 
-        notifier = new AVChatNotification(mActivity);
-        notifier.init(receiverId != null ? receiverId : avChatData.getAccount());
+    }
+
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.CONTENT;
     }
 
     /**
@@ -146,7 +155,7 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
             finishIView();
             return;
         }
-        avChatControl.outGoingCalling(receiverId, AVChatType.typeOfValue(state));
+        avChatControl.outGoingCalling(sessionId, AVChatType.typeOfValue(callType));
     }
 
     /**
@@ -196,15 +205,24 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
     }
 
     private void activeCallingNotifier() {
-
-
+        if (notifier != null && !isUserFinish) {
+            notifier.activeCallingNotification(true);
+        }
     }
 
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-
         avChatControl = new AVChatControl(mActivity,mViewHolder,this);
+
+        if (mIsInComingCall) {
+            inComingCalling();
+        } else {
+            outgoingCalling();
+        }
+
+//        notifier = new AVChatNotification(mActivity);
+//        notifier.init(receiverId != null ? receiverId : avChatData.getAccount());
     }
 
     /**
@@ -228,13 +246,9 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
     Observer<AVChatCalleeAckEvent> callAckObserver = new Observer<AVChatCalleeAckEvent>() {
         @Override
         public void onEvent(AVChatCalleeAckEvent ackInfo) {
-
             AVChatSoundPlayer.instance().stop();
-
             if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_BUSY) {
-
                 AVChatSoundPlayer.instance().play(AVChatSoundPlayer.RingerTypeEnum.PEER_BUSY);
-
                 avChatControl.closeSessions(AVChatExitCode.PEER_BUSY);
             } else if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_REJECT) {
                 avChatControl.closeSessions(AVChatExitCode.REJECT);
@@ -307,13 +321,17 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
         }
     };
 
-    private void activeMissCallNotifier() {
-
-    }
 
     private void cancelCallingNotifier() {
+        if (notifier != null) {
+            notifier.activeCallingNotification(false);
+        }
+    }
 
-
+    private void activeMissCallNotifier() {
+        if (notifier != null) {
+            notifier.activeMissCallNotification(true);
+        }
     }
 
     /**
@@ -401,17 +419,35 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
 
     @Override
     public void onAVRecordingCompletion(String account, String filePath) {
-
+        if (account != null && filePath != null && filePath.length() > 0) {
+            String msg = "音视频录制已结束, " + "账号：" + account + " 录制文件已保存至：" + filePath;
+//            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        } else {
+//            Toast.makeText(this, "录制已结束.", Toast.LENGTH_SHORT).show();
+        }
+        if (avChatControl != null) {
+            avChatControl.resetRecordTip();
+        }
     }
 
     @Override
     public void onAudioRecordingCompletion(String filePath) {
-
+        if (filePath != null && filePath.length() > 0) {
+            String msg = "音频录制已结束, 录制文件已保存至：" + filePath;
+//            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        } else {
+//            Toast.makeText(this, "录制已结束.", Toast.LENGTH_SHORT).show();
+        }
+        if (avChatControl != null) {
+            avChatControl.resetRecordTip();
+        }
     }
 
     @Override
     public void onLowStorageSpaceWarning(long availableSize) {
-
+        if (avChatControl != null) {
+            avChatControl.showRecordWarning();
+        }
     }
 
     @Override
@@ -426,7 +462,21 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
 
     @Override
     public void onJoinedChannel(int code, String audioFile, String videoFile) {
+        handleWithConnectServerResult(code);
+    }
 
+    private void handleWithConnectServerResult(int auth_result) {
+        if (auth_result == 200) {
+            Log.d(TAG, "onConnectServer success");
+        } else if (auth_result == 101) { // 连接超时
+            avChatControl.closeSessions(AVChatExitCode.PEER_NO_RESPONSE);
+        } else if (auth_result == 401) { // 验证失败
+            avChatControl.closeSessions(AVChatExitCode.CONFIG_ERROR);
+        } else if (auth_result == 417) { // 无效的channelId
+            avChatControl.closeSessions(AVChatExitCode.INVALIDE_CHANNELID);
+        } else { // 连接服务器错误，直接退出
+            avChatControl.closeSessions(AVChatExitCode.CONFIG_ERROR);
+        }
     }
 
     @Override
@@ -436,7 +486,8 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
 
     @Override
     public void onUserJoined(String account) {
-
+        avChatControl.setVideoAccount(account);
+        avChatControl.initLargeSurfaceView(avChatControl.getVideoAccount());
     }
 
     @Override
@@ -461,7 +512,16 @@ public class AVChatUIView extends BaseUIView implements AVChatStateObserver{
 
     @Override
     public void onCallEstablished() {
+        if (avChatControl.getTimeBase() == 0)
+            avChatControl.setTimeBase(SystemClock.elapsedRealtime());
 
+        if (callType == AVChatType.AUDIO.getValue()) {
+            avChatControl.onCallStateChange(CallStateEnum.AUDIO);
+        } else {
+            avChatControl.initSmallSurfaceView();
+            avChatControl.onCallStateChange(CallStateEnum.VIDEO);
+        }
+        isCallEstablished = true;
     }
 
     @Override

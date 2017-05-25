@@ -14,7 +14,7 @@
         android:id="@+id/ico_view"
         style="@style/UserBigIcoStyle"
         android:layout_marginTop="@dimen/base_xxxhdpi"
-        app:placeholderImage="@drawable/login_logo"/>
+        app:placeholderImage="@drawable/logo"/>
 
     <TextView
         style="@style/WhiteColorTextStyle"

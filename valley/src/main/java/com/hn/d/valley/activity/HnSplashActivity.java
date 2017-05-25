@@ -40,7 +40,7 @@ public class HnSplashActivity extends BaseActivity {
     /**
      * 是否被踢
      */
-    private static final String IS_KICKOUT = "is_kick_out";
+    public static final String IS_KICKOUT = "is_kick_out";
     Intent mIntent;
 
     public static void launcher(Activity activity, boolean isKickOut) {

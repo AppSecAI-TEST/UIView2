@@ -14,6 +14,8 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnLoading;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.List;
@@ -149,7 +151,17 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
      * 清理聊天记录对话框
      */
     private void showClearChatRecordDialog() {
-
+        UIDialog.build()
+                .setDialogContent(mActivity.getString(R.string.text_is_empty))
+                .setOkText(mActivity.getString(R.string.ok))
+                .setCancelText(mActivity.getString(R.string.cancel))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        NIMClient.getService(MsgService.class).clearMsgDatabase(true);
+                    }
+                })
+                .showDialog(mParentILayout);
     }
 
     protected void showClearDialog() {

@@ -83,7 +83,7 @@ public class ShareControl {
         final String userCardSpm = createUserCardSpm(userId);
         final String cardUrl = createShareUserCardUrl(userId, userCardSpm);
 
-        UM.shareWeb(activity, shareMedia, cardUrl, R.drawable.login_logo, shareTitle, shareDes, "", new UMShareListener() {
+        UM.shareWeb(activity, shareMedia, cardUrl, R.drawable.logo, shareTitle, shareDes, "", new UMShareListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
 

@@ -293,10 +293,10 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
                             if (!TextUtils.isEmpty(mOtherEditTexts.get(1).string())) {
                                 //如果不为空,则检测网址是否正确
-//                                if (!RUtils.isHttpUrl(mOtherEditTexts.get(1).string())) {
-//                                    T_.error(getString(R.string.url_error_tip));
-//                                    return;
-//                                }
+                                if (!RUtils.isHttpUrl(mOtherEditTexts.get(1).string())) {
+                                    T_.error(getString(R.string.url_error_tip));
+                                    return;
+                                }
                             }
 
                             ExEditText editText = mCheckEditTexts.get(1);

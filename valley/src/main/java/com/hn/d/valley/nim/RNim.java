@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
@@ -18,6 +19,8 @@ import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.MsgNotifySetting;
+import com.hn.d.valley.main.message.avchat.AVChatProfile;
+import com.hn.d.valley.main.message.avchat.receiver.PhoneCallStateObserver;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
@@ -30,6 +33,9 @@ import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.netease.nimlib.sdk.avchat.AVChatManager;
+import com.netease.nimlib.sdk.avchat.constant.AVChatControlCommand;
+import com.netease.nimlib.sdk.avchat.model.AVChatData;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -39,6 +45,8 @@ import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 import java.util.List;
 
 import rx.functions.Action1;
+
+import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.FROM_BROADCASTRECEIVER;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -52,8 +60,13 @@ import rx.functions.Action1;
  * Version: 1.0.0
  */
 public class RNim {
+
+    private static final String TAG = RNim.class.getSimpleName();
+
     public static void init(ValleyApp app) {
         NIMClient.init(app, loginInfo(), options());
+        // 注册网络通话来电
+//        registerAVChatIncomingCallObserver(true);
     }
 
     public static void initOnce(Application application) {
@@ -76,7 +89,7 @@ public class RNim {
                 }, true);
 
         /*消息通知打开*/
-        NIMClient.toggleNotification(true);
+//        NIMClient.toggleNotification(true);
 
         //注册数据变化监听
         DataCacheManager.observeSDKDataChanged(true);
@@ -86,6 +99,26 @@ public class RNim {
         }
 
         ScreenUtil.init(application);
+    }
+
+    private static void registerAVChatIncomingCallObserver(boolean register) {
+        AVChatManager.getInstance().observeIncomingCall(new Observer<AVChatData>() {
+            @Override
+            public void onEvent(AVChatData data) {
+                String extra = data.getExtra();
+                Log.e("Extra", "Extra Message->" + extra);
+                if (PhoneCallStateObserver.getInstance().getPhoneCallState() != PhoneCallStateObserver.PhoneCallStateEnum.IDLE
+                        || AVChatProfile.getInstance().isAVChatting()
+                        || AVChatManager.getInstance().getCurrentChatId() != 0) {
+                    L.i(TAG, "reject incoming call data =" + data.toString() + " as local phone is not idle");
+                    AVChatManager.getInstance().sendControlCommand(data.getChatId(), AVChatControlCommand.BUSY, null);
+                    return;
+                }
+                // 有网络来电打开AVChatActivity
+                AVChatProfile.getInstance().setAVChatting(true);
+                HnUIMainActivity.launch(ValleyApp.getApp().getApplicationContext(), data,FROM_BROADCASTRECEIVER);
+            }
+        }, register);
     }
 
 
@@ -130,7 +163,7 @@ public class RNim {
 
             @Override
             public int getDefaultIconResId() {
-                return R.drawable.login_logo;
+                return R.drawable.logo;
             }
 
             @Override
@@ -157,7 +190,7 @@ public class RNim {
         // 如果将新消息通知提醒托管给 SDK 完成，需要添加以下配置。否则无需设置。
         StatusBarNotificationConfig config = new StatusBarNotificationConfig();
         config.notificationEntrance = HnUIMainActivity.class; // 点击通知栏跳转到该Activity
-        config.notificationSmallIconId = R.drawable.login_logo;
+        config.notificationSmallIconId = R.drawable.logo;
         // 呼吸灯配置
         config.ledARGB = Color.GREEN;
         config.ledOnMs = 1000;
@@ -188,6 +221,8 @@ public class RNim {
     }
 
 
+
+
     /**
      * 自动登录是否成功了
      */
@@ -216,10 +251,8 @@ public class RNim {
 //            }
 //        });
 
-//        UserCache.setUserAccount("62176");
-//        UserCache.setUserToken("9abe7fa2826c1c9dde32779569116013");
-        UserCache.setUserAccount("50033");
-        UserCache.setUserToken("1ad6c5e17b3150f7398bb9846664b8ba");
+        UserCache.setUserAccount("62176");
+        UserCache.setUserToken("9abe7fa2826c1c9dde32779569116013");
         login("50033", "1ad6c5e17b3150f7398bb9846664b8ba", new RequestCallbackWrapper<LoginInfo>() {
             @Override
             public void onResult(int code, LoginInfo result, Throwable exception) {

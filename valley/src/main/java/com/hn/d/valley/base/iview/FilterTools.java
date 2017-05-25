@@ -115,7 +115,7 @@ public class FilterTools {
 
             case LOGO:
                 RBLogoFilter logofilter = new RBLogoFilter(new Rect(100, 100, 200, 200));
-                logofilter.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.login_logo));
+                logofilter.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.logo));
                 return logofilter;
 
             case PAOPAO:

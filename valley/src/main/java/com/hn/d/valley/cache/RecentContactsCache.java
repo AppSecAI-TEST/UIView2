@@ -137,11 +137,15 @@ public class RecentContactsCache implements ICache {
     private Observer<RecentContact> mRecentContactDeleteObserver = new Observer<RecentContact>() {
         @Override
         public void onEvent(RecentContact recentContact) {
-            for (RecentContact contact : mRecentContactList) {
-                if (TextUtils.equals(contact.getContactId(), recentContact.getContactId())) {
-                    mRecentContactList.remove(contact);
-                    break;
+            if (recentContact != null) {
+                for (RecentContact contact : mRecentContactList) {
+                    if (TextUtils.equals(contact.getContactId(), recentContact.getContactId())) {
+                        mRecentContactList.remove(contact);
+                        break;
+                    }
                 }
+            } else {
+                mRecentContactList.clear();
             }
             RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
         }
