@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.message.avchat;
+package com.hn.d.valley.main.avchat;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +10,8 @@ import android.media.SoundPool;
 import com.angcyo.library.utils.L;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
-import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.cache.UserCache;
+
 
 /**
  * SoundPool 铃声尽量不要超过1M

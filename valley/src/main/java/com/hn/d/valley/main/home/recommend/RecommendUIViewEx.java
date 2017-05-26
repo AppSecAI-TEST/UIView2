@@ -61,8 +61,12 @@ public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
         this.filterTag = filterTag;
         if (refresh) {
             onCancel();//取消之前的请求
-            mRecyclerView.scrollTo(0, false);
-            mRefreshLayout.setRefreshState(RefreshLayout.TOP);
+            if (mRecyclerView == null) {
+                loadData();
+            } else {
+                mRecyclerView.scrollTo(0, false);
+                mRefreshLayout.setRefreshState(RefreshLayout.TOP);
+            }
         }
     }
 
@@ -119,7 +123,14 @@ public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
                         } else {
                             List<UserDiscussListBean.DataListBean> data_list = userDiscussListBean.getData_list();
                             initConfigId(userDiscussListBean);
+
                             onUILoadDataEnd(data_list);
+
+                            if (filterTag == TagsControl.recommendTag) {
+                                last_id = String.valueOf(userDiscussListBean.getLast_id());
+                                mRExBaseAdapter.setEnableLoadMore(true);
+                                onUILoadDataFinish();
+                            }
                         }
                     }
 

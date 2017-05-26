@@ -7,14 +7,12 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.main.avchat.AVChatUIListener;
+import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.main.message.avchat.AVChatControl;
-import com.hn.d.valley.main.message.avchat.AVChatUIListener;
-import com.hn.d.valley.main.message.avchat.CallStateEnum;
-import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 /**

@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.message.avchat;
+package com.hn.d.valley.main.avchat;
 
 /**
  * Created by huangjun on 2015/5/12.

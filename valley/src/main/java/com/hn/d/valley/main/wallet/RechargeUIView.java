@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.wallet;
 
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -75,6 +76,7 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 holder.tv(R.id.input_tip_view).setText(R.string.text_jine_yuan);
                 edit_text_view = holder.v(R.id.edit_text_view);
+                edit_text_view.setInputType(InputType.TYPE_CLASS_NUMBER);
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {

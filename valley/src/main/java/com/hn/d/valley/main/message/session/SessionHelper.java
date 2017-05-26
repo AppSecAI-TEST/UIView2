@@ -10,6 +10,7 @@ import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
 import com.hn.d.valley.main.other.KLJUIView;
+import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -102,7 +103,8 @@ public class SessionHelper {
                 @Override
                 public List<CommandItemInfo> createItems() {
                     List<CommandItemInfo> items = new ArrayList<>();
-                    items.add(new AVChatCommandItem());
+                    items.add(new AVChatCommandItem(AVChatType.AUDIO));
+                    items.add(new AVChatCommandItem(AVChatType.VIDEO));
                     items.add(new LocationCommandItem());
                     items.add(new PersonalCardCommandItem());
                     items.add(new RedPacketCommandItem());

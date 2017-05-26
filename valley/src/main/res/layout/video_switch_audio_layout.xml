@@ -9,12 +9,12 @@
         android:layout_height="wrap_content" >
 
         <RelativeLayout
-                android:clickable="true"
-                android:id="@+id/avchat_video_switch_audio"
-                android:descendantFocusability="blocksDescendants"
-                android:background="@drawable/video_audio_mode_switch_bg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            android:clickable="true"
+            android:id="@+id/avchat_video_switch_audio"
+            android:descendantFocusability="blocksDescendants"
+            android:background="@drawable/video_audio_mode_switch_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <Button
                 android:clickable="false"
@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:drawableLeft="@drawable/scanning"
                 android:drawablePadding="5dip"
                 android:shadowColor="#353738"
                 android:shadowDy="-1"
@@ -31,7 +32,7 @@
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:visibility="visible" />
-        <!--</FrameLayout>-->
+            <!--</FrameLayout>-->
         </RelativeLayout>
 
         <Chronometer
@@ -61,7 +62,7 @@
         android:shadowColor="#353738"
         android:shadowDy="-1"
         android:shadowRadius="1"
-        android:text="网络不稳定"
+        android:text="@string/network_exception"
         android:textColor="@color/white"
         android:textSize="13sp"
         android:visibility="gone" />

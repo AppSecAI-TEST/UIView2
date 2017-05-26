@@ -71,6 +71,7 @@
 
 
             <Button
+                android:id="@+id/avchat_audio_record_button"
                 android:clickable="false"
                 android:drawablePadding="8dp"
                 android:layout_centerInParent="true"

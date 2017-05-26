@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,8 +58,6 @@ public class MsgViewHolderText extends MsgViewHolderBase {
 
     @Override
     protected void bindContentView() {
-
-
         final String msg = message.getContent();
         if (TextUtils.isEmpty(msg)) {
             return;
@@ -72,19 +71,14 @@ public class MsgViewHolderText extends MsgViewHolderBase {
 //            }
 //        }
 
-        String regex = Regex.URL_PATTERN2;
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Patterns.WEB_URL;
         if (pattern.matcher(msg.toLowerCase().trim()).matches()) {
-
             LinkBeanWrap bean = (LinkBeanWrap) contentContainer.getTag();
             if (bean != null) {
-
                 if (getViewHolder().getLayoutPosition() != bean.position){
                     return;
                 }
-
                 boolean isFetch = bean.isError;
-
                 if(!isFetch) {
                     return;
                 }
@@ -97,7 +91,6 @@ public class MsgViewHolderText extends MsgViewHolderBase {
             } else {
                 requestLink(msg);
             }
-
         } else {
             linkLayout.setVisibility(View.GONE);
             MoonUtil.show(context, contentView, message.getContent());

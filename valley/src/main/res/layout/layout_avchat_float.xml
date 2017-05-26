@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/small_size_preview_layout"
+    android:layout_width="64dp"
+    android:layout_height="98dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="18dp">
+
+    <LinearLayout
+        android:id="@+id/small_size_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <com.netease.nimlib.sdk.avchat.model.AVChatVideoRender
+            android:id="@+id/small_preview_render"
+            android:layout_width="64dp"
+            android:layout_height="98dp" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/smallSizePreviewCoverImg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/avchat_close_video_send"
+        android:visibility="visible" />
+</FrameLayout>

@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.message.avchat;
+package com.hn.d.valley.main.avchat.constant;
 
 /**
  * 呼叫状态,用来控制刷新界面

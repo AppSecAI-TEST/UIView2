@@ -1,21 +1,18 @@
 package com.hn.d.valley.main.message.avchat.ui;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.angcyo.uiview.utils.NetworkUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.cache.NimUserInfoCache;
-import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.avchat.AVChatUIListener;
+import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.main.message.avchat.AVChatControl;
-import com.hn.d.valley.main.message.avchat.AVChatUIListener;
-import com.hn.d.valley.main.message.avchat.CallStateEnum;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 /**

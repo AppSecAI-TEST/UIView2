@@ -14,11 +14,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-
+        android:background="@color/base_red"
         android:contentDescription="@string/empty"
         android:padding="10dp"
         android:scaleType="centerInside"
-         />
+        android:src="@drawable/scanning" />
 
 
     <ImageView
@@ -26,39 +26,43 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/base_red"
         android:contentDescription="@string/empty"
         android:padding="10dp"
         android:scaleType="centerInside"
-    />
+        android:src="@drawable/scanning" />
 
     <ImageView
         android:id="@+id/avchat_video_mute"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/colorAccent"
         android:contentDescription="@string/empty"
         android:padding="10dp"
         android:scaleType="centerInside"
-         />
+        android:src="@drawable/scanning" />
 
     <ImageView
         android:id="@+id/avchat_video_record"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/colorAccent"
         android:contentDescription="@string/empty"
         android:padding="10dp"
         android:scaleType="centerInside"
-        />
+        android:src="@drawable/scanning" />
 
     <ImageView
         android:id="@+id/avchat_video_logout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="@color/colorAccent"
         android:contentDescription="@string/empty"
         android:padding="10dp"
         android:scaleType="centerInside"
-         />
+        android:src="@drawable/scanning" />
 
 </LinearLayout>

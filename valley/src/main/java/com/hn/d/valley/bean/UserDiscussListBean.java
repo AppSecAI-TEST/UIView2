@@ -27,6 +27,7 @@ public class UserDiscussListBean {
      */
 
     private int data_count;
+    private int last_id;
     private List<DataListBean> data_list;
     /**
      * type : news
@@ -56,6 +57,14 @@ public class UserDiscussListBean {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getLast_id() {
+        return last_id;
+    }
+
+    public void setLast_id(int last_id) {
+        this.last_id = last_id;
     }
 
     public static class DataListBean implements RExBaseAdapter.ObjectEmpty, ILikeData {

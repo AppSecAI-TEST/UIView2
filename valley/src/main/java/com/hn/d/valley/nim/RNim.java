@@ -18,9 +18,10 @@ import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.avchat.AVChatProfile;
+import com.hn.d.valley.main.avchat.activity.AVChatActivity;
+import com.hn.d.valley.main.avchat.receiver.PhoneCallStateObserver;
 import com.hn.d.valley.main.me.setting.MsgNotifySetting;
-import com.hn.d.valley.main.message.avchat.AVChatProfile;
-import com.hn.d.valley.main.message.avchat.receiver.PhoneCallStateObserver;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
@@ -46,8 +47,6 @@ import java.util.List;
 
 import rx.functions.Action1;
 
-import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.FROM_BROADCASTRECEIVER;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -66,7 +65,7 @@ public class RNim {
     public static void init(ValleyApp app) {
         NIMClient.init(app, loginInfo(), options());
         // 注册网络通话来电
-//        registerAVChatIncomingCallObserver(true);
+        registerAVChatIncomingCallObserver(true);
     }
 
     public static void initOnce(Application application) {
@@ -116,7 +115,8 @@ public class RNim {
                 }
                 // 有网络来电打开AVChatActivity
                 AVChatProfile.getInstance().setAVChatting(true);
-                HnUIMainActivity.launch(ValleyApp.getApp().getApplicationContext(), data,FROM_BROADCASTRECEIVER);
+//                HnUIMainActivity.launch(ValleyApp.getApp().getApplicationContext(), data,FROM_BROADCASTRECEIVER);
+                AVChatActivity.launch(ValleyApp.getApp().getApplicationContext(),data,AVChatActivity.FROM_BROADCASTRECEIVER);
             }
         }, register);
     }

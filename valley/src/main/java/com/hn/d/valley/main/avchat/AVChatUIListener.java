@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.message.avchat;
+package com.hn.d.valley.main.avchat;
 
 /**
  * 音视频界面操作

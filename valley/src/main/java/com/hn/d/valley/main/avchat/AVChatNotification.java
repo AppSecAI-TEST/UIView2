@@ -1,14 +1,13 @@
-package com.hn.d.valley.main.message.avchat;
+package com.hn.d.valley.main.avchat;
 
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
+
 
 /**
  * 音视频聊天通知栏

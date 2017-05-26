@@ -15,8 +15,8 @@ import android.widget.TextView;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.main.message.avchat.AVChatControl;
-import com.hn.d.valley.main.message.avchat.CallStateEnum;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
 import com.netease.nimlib.sdk.avchat.constant.AVChatVideoScalingType;
 import com.netease.nimlib.sdk.avchat.model.AVChatVideoRender;
@@ -113,15 +113,30 @@ public class AVChatSurface {
     }
 
     public void peerVideoOff() {
-
-
+        isPeerVideoOff = false;
+        if (localPreviewInSmallSize) {
+            largeSizePreviewCoverLayout.setVisibility(View.GONE);
+        } else {
+            smallSizePreviewCoverImg.setVisibility(View.GONE);
+        }
     }
 
     public void peerVideoOn() {
+        isPeerVideoOff = false;
+        if (localPreviewInSmallSize) {
+            largeSizePreviewCoverLayout.setVisibility(View.GONE);
+        } else {
+            smallSizePreviewCoverImg.setVisibility(View.GONE);
+        }
     }
 
     public void localVideoOn() {
-
+        isLocalVideoOff = false;
+        if (localPreviewInSmallSize) {
+            smallSizePreviewCoverImg.setVisibility(View.GONE);
+        } else {
+            largeSizePreviewCoverLayout.setVisibility(View.GONE);
+        }
     }
 
     public void initLargeSurfaceView(String largeAccount) {
@@ -144,6 +159,7 @@ public class AVChatSurface {
         if (surfaceView.getParent() != null) {
             ((ViewGroup) surfaceView.getParent()).removeView(surfaceView);
         }
+        surfaceView.setBackgroundResource(R.color.base_red_d85940);
         largeSizePreviewLayout.addView(surfaceView);
         surfaceView.setZOrderMediaOverlay(false);
         if (avChatControl.getCallingState() == CallStateEnum.VIDEO || avChatControl.getCallingState() == CallStateEnum.OUTGOING_VIDEO_CALLING) {
@@ -169,8 +185,30 @@ public class AVChatSurface {
 
     }
 
-    public void initSmallSurfaceView(Context applicationContext) {
+    public void initSmallSurfaceView(String account) {
+        smallAccount = account;
+        findViews();
+        smallSizePreviewFrameLayout.setVisibility(View.VISIBLE);
+        /**
+         * 设置画布，加入到自己的布局中，用于呈现视频图像
+         * account 要显示视频的用户帐号
+         */
+        if (UserCache.getUserAccount().equals(account)) {
+            AVChatManager.getInstance().setupLocalVideoRender(smallRender, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
+        } else {
+            AVChatManager.getInstance().setupRemoteVideoRender(account, smallRender, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
+        }
+        addIntoSmallSizePreviewLayout(smallRender);
+    }
 
+    private void addIntoSmallSizePreviewLayout(SurfaceView surfaceView) {
+        smallSizePreviewCoverImg.setVisibility(View.GONE);
+        if (surfaceView.getParent() != null) {
+            ((ViewGroup) surfaceView.getParent()).removeView(surfaceView);
+        }
+        smallSizePreviewLayout.addView(surfaceView);
+        surfaceView.setZOrderMediaOverlay(true);
+        smallSizePreviewLayout.setVisibility(View.VISIBLE);
     }
 
 
