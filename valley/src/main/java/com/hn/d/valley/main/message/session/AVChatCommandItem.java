@@ -2,11 +2,13 @@ package com.hn.d.valley.main.message.session;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
-import com.hn.d.valley.main.message.avchat.AVChatControl;
-import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
+//import com.hn.d.valley.main.message.avchat.AVChatControl;
+//import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 
-import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.FROM_INTERNAL;
+import static com.hn.d.valley.main.avchat.activity.AVChatActivity.FROM_INTERNAL;
+
+//import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.FROM_INTERNAL;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.

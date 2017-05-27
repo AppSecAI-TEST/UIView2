@@ -1,7 +1,6 @@
 package com.hn.d.valley.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 
 import com.angcyo.library.utils.L;
@@ -15,16 +14,16 @@ import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.MainUIView;
-import com.hn.d.valley.main.message.avchat.AVChatControl;
-import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
-import com.netease.nimlib.sdk.avchat.model.AVChatData;
 import com.orhanobut.hawk.Hawk;
 
-import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.FROM_UNKNOWN;
-import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.KEY_CALL_CONFIG;
-import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.KEY_IN_CALLING;
-import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.KEY_SOURCE;
+//import com.hn.d.valley.main.message.avchat.AVChatControl;
+//import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
+
+//import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.FROM_UNKNOWN;
+//import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.KEY_CALL_CONFIG;
+//import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.KEY_IN_CALLING;
+//import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.KEY_SOURCE;
 
 public class HnUIMainActivity extends BaseActivity {
 
@@ -38,21 +37,21 @@ public class HnUIMainActivity extends BaseActivity {
                 R.anim.base_tran_to_left_exit);
     }
 
-    /**
-     * incoming call
-     *
-     * @param context
-     */
-    public static void launch(Context context, AVChatData config, int source) {
-//        needFinish = false;
-        Intent intent = new Intent();
-        intent.setClass(context, HnUIMainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(KEY_CALL_CONFIG, config);
-        intent.putExtra(KEY_IN_CALLING, true);
-        intent.putExtra(KEY_SOURCE, source);
-        context.startActivity(intent);
-    }
+//    /**
+//     * incoming call
+//     *
+//     * @param context
+//     */
+//    public static void launch(Context context, AVChatData config, int source) {
+////        needFinish = false;
+//        Intent intent = new Intent();
+//        intent.setClass(context, HnUIMainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.putExtra(KEY_CALL_CONFIG, config);
+//        intent.putExtra(KEY_IN_CALLING, true);
+//        intent.putExtra(KEY_SOURCE, source);
+//        context.startActivity(intent);
+//    }
 
     @Override
     protected void onLoadView(Intent intent) {
@@ -63,13 +62,13 @@ public class HnUIMainActivity extends BaseActivity {
             return;
         }
 
-        boolean isCalling = intent.getBooleanExtra(KEY_IN_CALLING, false);
-        if (isCalling) {
-            AVChatData config = (AVChatData) intent.getSerializableExtra(KEY_CALL_CONFIG);
-            int source = intent.getIntExtra(KEY_SOURCE,FROM_UNKNOWN);
-            showAVChatUI(config,source);
-            return;
-        }
+//        boolean isCalling = intent.getBooleanExtra(KEY_IN_CALLING, false);
+//        if (isCalling) {
+//            AVChatData config = (AVChatData) intent.getSerializableExtra(KEY_CALL_CONFIG);
+//            int source = intent.getIntExtra(KEY_SOURCE,FROM_UNKNOWN);
+//            showAVChatUI(config,source);
+//            return;
+//        }
 
         boolean isLoginSuccess = intent.getBooleanExtra(KEY_IS_LOGIN_SUCCESS, false);
         if (isLoginSuccess) {
@@ -93,9 +92,9 @@ public class HnUIMainActivity extends BaseActivity {
         }
     }
 
-    private void showAVChatUI(AVChatData config,int source) {
-        AVChatUIView.start(mLayout,config,source);
-    }
+//    private void showAVChatUI(AVChatData config,int source) {
+//        AVChatUIView.start(mLayout,config,source);
+//    }
 
     private void toSplashActivity() {
         HnSplashActivity.launcher(HnUIMainActivity.this, false);

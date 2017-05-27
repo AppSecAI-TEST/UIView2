@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'realm-android'
 
 def build_time = buildTime()
@@ -137,4 +138,8 @@ dependencies {
     compile 'com.facebook.fresco:fresco:1.1.0'
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'jp.wasabeef:fresco-processors:2.0.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

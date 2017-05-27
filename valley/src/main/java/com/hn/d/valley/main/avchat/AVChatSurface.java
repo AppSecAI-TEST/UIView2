@@ -13,13 +13,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.glide.GlideBlurTransformation;
 import com.angcyo.uiview.utils.ScreenUtil;
+import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.oss.OssHelper;
+import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
 import com.netease.nimlib.sdk.avchat.constant.AVChatVideoScalingType;
 import com.netease.nimlib.sdk.avchat.model.AVChatVideoRender;
+import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 /**
  * 视频绘制管理
@@ -43,7 +50,8 @@ public class AVChatSurface {
     private FrameLayout smallSizePreviewFrameLayout;
     private LinearLayout smallSizePreviewLayout;
     private ImageView smallSizePreviewCoverImg;//stands for peer or local close camera
-    private View largeSizePreviewCoverLayout;//stands for peer or local close camera
+    private ImageView largeSizePreviewCoverLayout;//stands for peer or local close camera
+    private TextView tv_notification;//stands for peer or local close camera
 
     //render
     private AVChatVideoRender smallRender;
@@ -84,7 +92,8 @@ public class AVChatSurface {
             smallSizePreviewFrameLayout.setOnTouchListener(touchListener);
 
             largeSizePreviewLayout = (LinearLayout) surfaceRoot.findViewById(R.id.large_size_preview);
-            largeSizePreviewCoverLayout = surfaceRoot.findViewById(R.id.notificationLayout);
+            largeSizePreviewCoverLayout = (ImageView) surfaceRoot.findViewById(R.id.iv_preview_img);
+            tv_notification = (TextView) surfaceRoot.findViewById(R.id.notificationLayout);
 
             init = true;
         }
@@ -172,6 +181,10 @@ public class AVChatSurface {
             case OUTGOING_AUDIO_TO_VIDEO:
                 showNotificationLayout(AUDIO_TO_VIDEO_WAIT);
                 break;
+            case INCOMING_VIDEO_CALLING:
+                genBlurBg();
+
+                break;
             case INCOMING_AUDIO_TO_VIDEO:
                 break;
             case AUDIO:
@@ -183,6 +196,17 @@ public class AVChatSurface {
                 break;
         }
         setSurfaceRoot(CallStateEnum.isVideoMode(state));
+    }
+
+    private void genBlurBg() {
+        // 显示预览图 头像高斯模糊
+        UserInfoProvider.UserInfo userInfo = NimUserInfoCache.getInstance().getUserInfo(manager.getAccount());
+        DrawableRequestBuilder<String> builder = Glide.with(context)
+                .load(userInfo.getAvatar())
+                .placeholder(R.drawable.avchat_call_bg)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        builder.bitmapTransform(new GlideBlurTransformation(context))
+                    .into(largeSizePreviewCoverLayout);
     }
 
     /**
@@ -337,7 +361,7 @@ public class AVChatSurface {
         if(largeSizePreviewCoverLayout == null) {
             return;
         }
-        TextView textView = (TextView) largeSizePreviewCoverLayout;
+        TextView textView = (TextView) tv_notification;
         switch (closeType) {
             case PEER_CLOSE_CAMERA:
                 textView.setText("avchat_peer_close_camera");

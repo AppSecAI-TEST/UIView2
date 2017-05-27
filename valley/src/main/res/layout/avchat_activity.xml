@@ -27,4 +27,11 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+    <!--<Button-->
+        <!--android:id="@+id/btn_move_to_back"-->
+        <!--android:text="最小化"-->
+        <!--android:layout_margin="@dimen/base_xhdpi"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
+
 </FrameLayout>

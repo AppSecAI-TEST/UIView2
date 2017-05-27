@@ -2,17 +2,21 @@ package com.hn.d.valley.main.avchat.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.base.StyleActivity;
 import com.angcyo.uiview.utils.NetworkUtil;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.main.avchat.AVChatNotification;
 import com.hn.d.valley.main.avchat.AVChatProfile;
 import com.hn.d.valley.main.avchat.AVChatSoundPlayer;
@@ -41,9 +45,8 @@ import java.util.Map;
 
 /**
  * 音视频界面
- * Created by hzxuwen on 2015/4/21.
  */
-public class AVChatActivity extends AppCompatActivity implements AVChatUI.AVChatListener, AVChatStateObserver {
+public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatListener, AVChatStateObserver {
     // constant
     private static final String TAG = "AVChatActivity";
     private static final String KEY_IN_CALLING = "KEY_IN_CALLING";
@@ -86,6 +89,8 @@ public class AVChatActivity extends AppCompatActivity implements AVChatUI.AVChat
     // notification
     private AVChatNotification notifier;
 
+    private Button movetoback;
+
     public static void launch(Context context, String account, int callType, int source) {
         needFinish = false;
         Intent intent = new Intent();
@@ -116,6 +121,9 @@ public class AVChatActivity extends AppCompatActivity implements AVChatUI.AVChat
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+
         if (needFinish || !checkSource()) {
             finish();
             return;
@@ -124,9 +132,6 @@ public class AVChatActivity extends AppCompatActivity implements AVChatUI.AVChat
         setContentView(root);
         mIsInComingCall = getIntent().getBooleanExtra(KEY_IN_CALLING, false);
         avChatUI = new AVChatUI(this, root, this);
-
-        //启动悬浮窗service
-        avChatUI.bindService();
 
         if (!avChatUI.initiation()) {
             this.finish();
@@ -145,6 +150,20 @@ public class AVChatActivity extends AppCompatActivity implements AVChatUI.AVChat
         isCallEstablished = false;
         //放到所有UI的基类里面注册，所有的UI实现onKickOut接口
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(userStatusObserver, true);
+    }
+
+    @Override
+    protected void onCreateView() {
+//        movetoback = (Button) findViewById(R.id.btn_move_to_back);
+//        movetoback.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                L.d("AVChatSurface","movetoback");
+////                moveTaskToBack(false);
+//                HnUIMainActivity.launcher(AVChatActivity.this,true);
+//            }
+//        });
+
     }
 
     @Override
@@ -180,7 +199,9 @@ public class AVChatActivity extends AppCompatActivity implements AVChatUI.AVChat
         needFinish = true;
 
         //销毁悬浮窗服务
-        avChatUI.destroy();
+        if (avChatUI != null) {
+            avChatUI.destroy();
+        }
     }
 
     @Override
@@ -585,6 +606,9 @@ public class AVChatActivity extends AppCompatActivity implements AVChatUI.AVChat
         Log.d(TAG, "onCallEstablished");
         if (avChatUI.getTimeBase() == 0)
             avChatUI.setTimeBase(SystemClock.elapsedRealtime());
+
+        //启动悬浮窗service
+        avChatUI.bindService();
 
         if (state == AVChatType.AUDIO.getValue()) {
             avChatUI.onCallStateChange(CallStateEnum.AUDIO);

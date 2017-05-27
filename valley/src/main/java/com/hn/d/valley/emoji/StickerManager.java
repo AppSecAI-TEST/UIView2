@@ -24,6 +24,7 @@ public class StickerManager {
 
     private static StickerManager instance;
     public static final String CATEGORY_EXPRESSION = "expression";
+    public static final String CATEGORY_HN = "hn";
 
     /**
      * 数据源
@@ -52,6 +53,7 @@ public class StickerManager {
     private void initStickerOrder() {
         // 默认贴图顺序
         stickerOrder.put(CATEGORY_EXPRESSION, 1);
+//        stickerOrder.put(CATEGORY_HN,2);
     }
 
     private boolean isSystemSticker(String category) {

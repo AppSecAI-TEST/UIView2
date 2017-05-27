@@ -1,18 +1,17 @@
 package com.hn.d.valley.main.avchat;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.view.View;
 import android.widget.Chronometer;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
+import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 /**
  * 视频管理器， 视频界面初始化和相关管理
@@ -24,11 +23,7 @@ public class AVChatVideo implements View.OnClickListener{
     private Context context;
     private View root;
     private AVChatUI manager;
-    //顶部控制按钮
-    private View topRoot;
-    private View switchAudio;
     private Chronometer time;
-    private TextView netUnstableTV;
     //中间控制按钮
     private View middleRoot;
     private HnGlideImageView headImg;
@@ -39,19 +34,14 @@ public class AVChatVideo implements View.OnClickListener{
     private TextView receiveTV;
     //底部控制按钮
     private View bottomRoot;
-//    ToggleView switchCameraToggle;
-//    ToggleView closeCameraToggle;
-//    ToggleView muteToggle;
-    ImageView recordToggle;
-    ImageView hangUpImg;
+    private LinearLayout ll_receive;
+    private LinearLayout ll_cancelchat;
+    private LinearLayout ll_switchCamera;
+    private LinearLayout ll_switchAudio;
 
     //摄像头权限提示显示
     private View permissionRoot;
 
-    //record
-    private View recordView;
-    private View recordTip;
-    private View recordWarning;
 
     private int topRootHeight = 0;
     private int bottomRootHeight = 0;
@@ -73,11 +63,6 @@ public class AVChatVideo implements View.OnClickListener{
     private void findViews() {
         if(init || root == null )
             return;
-        topRoot = root.findViewById(R.id.avchat_video_top_control);
-        switchAudio = topRoot.findViewById(R.id.avchat_video_switch_audio);
-        switchAudio.setOnClickListener(this);
-        time = (Chronometer) topRoot.findViewById(R.id.avchat_video_time);
-        netUnstableTV = (TextView) topRoot.findViewById(R.id.avchat_video_netunstable);
 
         middleRoot = root.findViewById(R.id.avchat_video_middle_control);
         headImg = (HnGlideImageView) middleRoot.findViewById(R.id.avchat_video_head);
@@ -90,19 +75,16 @@ public class AVChatVideo implements View.OnClickListener{
         refuseTV.setOnClickListener(this);
         receiveTV.setOnClickListener(this);
 
-        recordView = root.findViewById(R.id.avchat_record_layout);
-        recordTip = recordView.findViewById(R.id.avchat_record_tip);
-        recordWarning = recordView.findViewById(R.id.avchat_record_warning);
-
         bottomRoot = root.findViewById(R.id.avchat_video_bottom_control);
-//        switchCameraToggle = new ToggleView(bottomRoot.findViewById(R.id.avchat_switch_camera), ToggleState.DISABLE, this);
-//        closeCameraToggle = new ToggleView(bottomRoot.findViewById(R.id.avchat_close_camera), ToggleState.DISABLE, this);
-//        muteToggle = new ToggleView(bottomRoot.findViewById(R.id.avchat_video_mute), ToggleState.DISABLE, this);
-        recordToggle = (ImageView) bottomRoot.findViewById(R.id.avchat_video_record);
-        recordToggle.setEnabled(false);
-        recordToggle.setOnClickListener(this);
-        hangUpImg = (ImageView) bottomRoot.findViewById(R.id.avchat_video_logout);
-        hangUpImg.setOnClickListener(this);
+        ll_switchCamera = (LinearLayout) bottomRoot.findViewById(R.id.avchat_switch_camera);
+        ll_receive = (LinearLayout) bottomRoot.findViewById(R.id.avchat_video_receive);
+        ll_cancelchat = (LinearLayout) bottomRoot.findViewById(R.id.avchat_video_logout);
+        ll_switchAudio = (LinearLayout) bottomRoot.findViewById(R.id.avchat_switch_mode);
+
+        ll_switchCamera.setOnClickListener(this);
+        ll_receive.setOnClickListener(this);
+        ll_cancelchat.setOnClickListener(this);
+
 
         permissionRoot = root.findViewById(R.id.avchat_video_permission_control);
         init = true;
@@ -118,30 +100,33 @@ public class AVChatVideo implements View.OnClickListener{
         switch (state){
             case OUTGOING_VIDEO_CALLING:
                 showProfile();//对方的详细信息
-//                showNotify(R.string.avchat_wait_recieve);
+                showNotify(R.string.text_wait_receiving);
                 setRefuseReceive(false);
                 shouldEnableToggle = true;
-                enableCameraToggle();   //使用音视频预览时这里可以开启切换摄像头按钮
-                setTopRoot(false);
+//                enableCameraToggle(false);   //使用音视频预览时这里可以开启切换摄像头按钮
+//                enableReceiveToggle(false);
                 setMiddleRoot(true);
                 setBottomRoot(true);
+                callingVideoUI();
                 break;
             case INCOMING_VIDEO_CALLING:
                 showProfile();//对方的详细信息
                 showNotify(R.string.avchat_video_call_request);
-                setRefuseReceive(true);
-                receiveTV.setText(R.string.text_pickup);
-                setTopRoot(false);
+                setRefuseReceive(false);
+//                receiveTV.setText(R.string.text_pickup);
                 setMiddleRoot(true);
-                setBottomRoot(false);
+                setBottomRoot(true);
+                waigingVideoUI();
                 break;
             case VIDEO:
                 isInSwitch = false;
                 enableToggle();
                 setTime(true);
-                setTopRoot(true);
                 setMiddleRoot(false);
                 setBottomRoot(true);
+//                enableCameraToggle(true);
+//                enableReceiveToggle(true);
+                receingVideoUI();
                 showNoneCameraPermissionView(false);
                 break;
             case VIDEO_CONNECTING:
@@ -151,7 +136,6 @@ public class AVChatVideo implements View.OnClickListener{
             case OUTGOING_AUDIO_TO_VIDEO:
                 isInSwitch = true;
                 setTime(true);
-                setTopRoot(true);
                 setMiddleRoot(false);
                 setBottomRoot(true);
                 break;
@@ -168,7 +152,9 @@ public class AVChatVideo implements View.OnClickListener{
      */
     private void showProfile(){
         String account = manager.getAccount();
-//        headImg.loadBuddyAvatar(account);
+        UserInfoProvider.UserInfo userInfo = NimUserInfoCache.getInstance().getUserInfo(account);
+        headImg.setImageThumbUrl(userInfo.getAvatar());
+//        headImg.get
         nickNameTV.setText(NimUserInfoCache.getInstance().getUserDisplayName(account));
     }
 
@@ -191,14 +177,6 @@ public class AVChatVideo implements View.OnClickListener{
         refuse_receive.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
-    private void setTopRoot(boolean visible){
-        topRoot.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if(topRootHeight == 0){
-            Rect rect = new Rect();
-            topRoot.getGlobalVisibleRect(rect);
-            topRootHeight = rect.bottom;
-        }
-    }
 
     private void setMiddleRoot(boolean visible){
         middleRoot.setVisibility(visible ? View.VISIBLE : View.GONE);
@@ -212,11 +190,11 @@ public class AVChatVideo implements View.OnClickListener{
     }
 
     private void setTime(boolean visible){
-        time.setVisibility(visible ? View.VISIBLE : View.GONE);
-        if(visible){
-            time.setBase(manager.getTimeBase());
-            time.start();
-        }
+//        time.setVisibility(visible ? View.VISIBLE : View.GONE);
+//        if(visible){
+//            time.setBase(manager.getTimeBase());
+//            time.start();
+//        }
     }
 
     /**
@@ -228,24 +206,55 @@ public class AVChatVideo implements View.OnClickListener{
 //                switchCameraToggle.enable();
 //            closeCameraToggle.enable();
 //            muteToggle.enable();
-            recordToggle.setEnabled(true);
+//            recordToggle.setEnabled(true);
             shouldEnableToggle = false;
         }
     }
 
-    private void enableCameraToggle() {
+    private void enableCameraToggle(boolean boo) {
         if (shouldEnableToggle) {
             if (manager.canSwitchCamera() && AVChatManager.getInstance().hasMultipleCameras()){
 //                switchCameraToggle.enable();
+                ll_switchCamera.setVisibility(boo?View.VISIBLE:View.GONE);
             }
         }
     }
+
+    private void enableReceiveToggle(boolean boo) {
+        ll_receive.setVisibility(boo?View.VISIBLE:View.GONE);
+    }
+
+    private void callingVideoUI(){
+        ll_cancelchat.setVisibility(View.VISIBLE);
+        ll_switchAudio.setVisibility(View.GONE);
+        ll_switchCamera.setVisibility(View.GONE);
+        ll_receive.setVisibility(View.GONE);
+    }
+
+    private void waigingVideoUI(){
+        ll_cancelchat.setVisibility(View.VISIBLE);
+        ll_switchAudio.setVisibility(View.GONE);
+        ll_switchCamera.setVisibility(View.GONE);
+        ll_receive.setVisibility(View.VISIBLE);
+    }
+
+    private void receingVideoUI(){
+        ll_cancelchat.setVisibility(View.VISIBLE);
+        ll_switchAudio.setVisibility(View.VISIBLE);
+        ll_switchCamera.setVisibility(View.VISIBLE);
+        ll_receive.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.avchat_video_logout:
-                listener.onHangUp();
+                if (shouldEnableToggle) {
+                    listener.onHangUp();
+                } else {
+                    listener.onRefuse();
+                }
                 break;
             case R.id.refuse:
                 listener.onRefuse();
@@ -253,8 +262,12 @@ public class AVChatVideo implements View.OnClickListener{
             case R.id.receive:
                 listener.onReceive();
                 break;
-            case R.id.avchat_video_mute:
-                listener.toggleMute();
+            case R.id.avchat_video_receive:
+                if (shouldEnableToggle) {
+                    listener.toggleMute();
+                } else {
+                    listener.onReceive();
+                }
                 break;
             case R.id.avchat_video_switch_audio:
                 if(isInSwitch) {
@@ -266,36 +279,18 @@ public class AVChatVideo implements View.OnClickListener{
             case R.id.avchat_switch_camera:
                 listener.switchCamera();
                 break;
-            case R.id.avchat_close_camera:
-                listener.closeCamera();
-                break;
-            case R.id.avchat_video_record:
-                listener.toggleRecord();
-                break;
+//            case R.id.avchat_close_camera:
+//                listener.closeCamera();
+//                break;
+//            case R.id.avchat_video_record:
+//                listener.toggleRecord();
+//                break;
             default:
                 break;
         }
 
     }
 
-    public void showRecordView(boolean show, boolean warning) {
-        if(show) {
-            recordToggle.setEnabled(true);
-            recordToggle.setSelected(true);
-            recordView.setVisibility(View.VISIBLE);
-            recordTip.setVisibility(View.VISIBLE);
-            if(warning) {
-                recordWarning.setVisibility(View.VISIBLE);
-            } else {
-                recordWarning.setVisibility(View.GONE);
-            }
-        } else {
-            recordToggle.setSelected(false);
-            recordView.setVisibility(View.INVISIBLE);
-            recordTip.setVisibility(View.INVISIBLE);
-            recordWarning.setVisibility(View.GONE);
-        }
-    }
 
     public void showNoneCameraPermissionView(boolean show) {
         permissionRoot.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -311,10 +306,8 @@ public class AVChatVideo implements View.OnClickListener{
         if(manager.canSwitchCamera()){
 //            switchCameraToggle.off(false);
         }
-        recordToggle.setEnabled(true);
-        recordToggle.setSelected(recordOn);
-        showRecordView(recordOn, recordWarning);
-
+//        recordToggle.setEnabled(true);
+//        recordToggle.setSelected(recordOn);
     }
 
     /******************************* toggle listener *************************/
@@ -335,14 +328,14 @@ public class AVChatVideo implements View.OnClickListener{
 
     public void closeSession(int exitCode){
         if(init){
-            time.stop();
+//            time.stop();
 //            switchCameraToggle.disable(false);
 //            muteToggle.disable(false);
-            recordToggle.setEnabled(false);
+//            recordToggle.setEnabled(false);
 //            closeCameraToggle.disable(false);
             receiveTV.setEnabled(false);
             refuseTV.setEnabled(false);
-            hangUpImg.setEnabled(false);
+//            hangUpImg.setEnabled(false);
         }
     }
 }

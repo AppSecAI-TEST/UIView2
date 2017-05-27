@@ -65,7 +65,7 @@ public class RNim {
     public static void init(ValleyApp app) {
         NIMClient.init(app, loginInfo(), options());
         // 注册网络通话来电
-        registerAVChatIncomingCallObserver(true);
+        //registerAVChatIncomingCallObserver(true);
     }
 
     public static void initOnce(Application application) {
@@ -98,6 +98,9 @@ public class RNim {
         }
 
         ScreenUtil.init(application);
+
+        // 注册网络通话来电
+        registerAVChatIncomingCallObserver(true);
     }
 
     private static void registerAVChatIncomingCallObserver(boolean register) {

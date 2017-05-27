@@ -1,9 +1,5 @@
 package com.hn.d.valley.main.avchat.constant;
 
-/**
- * 呼叫状态,用来控制刷新界面
- * Created by hzxuwen on 2015/4/27.
- */
 public enum CallStateEnum {
     INVALID(-1), //无效的状态,该状态下无界面显示
 

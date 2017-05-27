@@ -49,6 +49,16 @@ public class MusicControl {
         return musicFolder + File.separator + name + ".mp3";
     }
 
+    public static String generateApkFilePath(String name) {
+        String musicFolder = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                File.separator +
+                Root.APP_FOLDER +
+                File.separator +
+                "apk";
+        new File(musicFolder).mkdirs();
+        return musicFolder + File.separator + name;
+    }
+
     /**
      * 返回已经下载好的音乐
      */

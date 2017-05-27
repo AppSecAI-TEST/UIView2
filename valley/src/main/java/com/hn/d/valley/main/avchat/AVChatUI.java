@@ -372,6 +372,7 @@ public class AVChatUI implements AVChatUIListener {
                 }
             });
         }
+
         AVChatManager.getInstance().disableRtc();
         closeSessions(type);
         AVChatSoundPlayer.instance().stop();
@@ -692,9 +693,6 @@ public class AVChatUI implements AVChatUIListener {
     private void updateRecordTip() {
         if (CallStateEnum.isAudioMode(callingState)) {
             avChatAudio.showRecordView(isRecording, recordWarning);
-        }
-        if (CallStateEnum.isVideoMode(callingState)) {
-            avChatVideo.showRecordView(isRecording, recordWarning);
         }
     }
 

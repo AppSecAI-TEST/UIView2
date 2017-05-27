@@ -40,6 +40,9 @@ public class MainControl {
                     }
                 });
         TagsControl.getTags(null);
+
+        //版本检测
+        VersionControl.INSTANCE.checkVersion();
     }
 
     public static void onMainUnload() {

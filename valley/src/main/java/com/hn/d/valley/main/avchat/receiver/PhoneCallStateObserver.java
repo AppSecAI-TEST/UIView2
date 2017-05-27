@@ -12,9 +12,6 @@ import com.netease.nimlib.sdk.avchat.AVChatManager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by huangjun on 2015/5/13.
- */
 public class PhoneCallStateObserver {
 
     public enum PhoneCallStateEnum {
