@@ -40,7 +40,7 @@ import static com.lzy.imagepicker.ImagePickerHelper.REQUEST_CODE;
 public class ImageCommandItem extends CommandItemInfo{
 
     public ImageCommandItem(){
-        this(R.drawable.nim_message_plus_photo_normal, "图片");
+        this(R.drawable.zhaopian_xiaoxi, "图片");
     }
 
     public ImageCommandItem(int icoResId, String text) {

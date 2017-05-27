@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.session;
 
+import android.content.Intent;
+
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 //import com.hn.d.valley.main.message.avchat.AVChatControl;
@@ -7,6 +9,7 @@ import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 
 import static com.hn.d.valley.main.avchat.activity.AVChatActivity.FROM_INTERNAL;
+import static com.hn.d.valley.main.avchat.activity.AVChatActivity.PREVIEW_REQUESTCODE;
 
 //import static com.hn.d.valley.main.message.avchat.ui.AVChatUIView.FROM_INTERNAL;
 
@@ -26,7 +29,8 @@ public class AVChatCommandItem extends CommandItemInfo {
     private AVChatType chatType;
 
     public AVChatCommandItem(AVChatType type){
-        this(R.drawable.nim_message_plus_photo_normal, type == AVChatType.AUDIO ?"语音聊天":"视频聊天");
+        this(type == AVChatType.AUDIO ? R.drawable.yuying_xiaoxi_n:R.drawable.shipingliaotian_xiaoxi,
+                type == AVChatType.AUDIO ?"语音聊天":"视频聊天");
         this.chatType = type;
     }
 
@@ -38,5 +42,13 @@ public class AVChatCommandItem extends CommandItemInfo {
     protected void onClick() {
 //        AVChatUIView.start(getContainer().mLayout,getContainer().account, AVChatType.VIDEO.getValue(),FROM_INTERNAL);
         AVChatActivity.launch(getContainer().activity,getContainer().account,chatType.getValue(),FROM_INTERNAL);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PREVIEW_REQUESTCODE) {
+
+        }
     }
 }

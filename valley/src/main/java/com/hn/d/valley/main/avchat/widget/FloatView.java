@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
@@ -34,6 +35,8 @@ import com.netease.nimlib.sdk.avchat.model.AVChatVideoRender;
  * Version: 1.0.0
  */
 public class FloatView extends FrameLayout implements View.OnTouchListener{
+
+    private static final String TAG = FloatView.class.getSimpleName();
 
     private Context mContext;
     private WindowManager.LayoutParams mWmParams;
@@ -207,6 +210,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
          * 设置画布，加入到自己的布局中，用于呈现视频图像
          * account 要显示视频的用户帐号
          */
+        L.d(TAG,"initSmallSurfaceView  " + account + "boo : " + UserCache.getUserAccount().equals(account));
         smallSizePreviewCoverImg.setVisibility(GONE);
         small_size_preview.setVisibility(VISIBLE);
         if (UserCache.getUserAccount().equals(account)) {

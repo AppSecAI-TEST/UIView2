@@ -64,11 +64,14 @@ public class RNim {
 
     public static void init(ValleyApp app) {
         NIMClient.init(app, loginInfo(), options());
-        // 注册网络通话来电
-        //registerAVChatIncomingCallObserver(true);
+
     }
 
     public static void initOnce(Application application) {
+
+        // 注册网络通话来电
+        //registerAVChatIncomingCallObserver(true);
+
         NIMClient.getService(MsgService.class).registerCustomAttachmentParser(new CustomAttachParser()); // 监听的注册，必须在主进程中。
 
         /*云信登录状态监听*/

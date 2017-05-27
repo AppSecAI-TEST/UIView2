@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parentLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/avchat_audio_layout"
-        layout="@layout/avchat_audio_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
 
     <include
         android:id="@+id/avchat_surface_layout"
@@ -19,6 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible" />
+
+    <include
+        android:id="@+id/avchat_audio_layout"
+        layout="@layout/avchat_audio_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <include
         android:id="@+id/avchat_video_layout"

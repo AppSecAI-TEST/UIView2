@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.avchat.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -56,6 +57,8 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
     private static final String KEY_CALL_CONFIG = "KEY_CALL_CONFIG";
     public static final String INTENT_ACTION_AVCHAT = "INTENT_ACTION_AVCHAT";
 
+    public static final int PREVIEW_REQUESTCODE = 50000;
+
     /**
      * 来自广播
      */
@@ -91,7 +94,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
 
     private Button movetoback;
 
-    public static void launch(Context context, String account, int callType, int source) {
+    public static void launch(Activity context, String account, int callType, int source) {
         needFinish = false;
         Intent intent = new Intent();
         intent.setClass(context, AVChatActivity.class);
@@ -99,7 +102,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         intent.putExtra(KEY_IN_CALLING, false);
         intent.putExtra(KEY_CALL_TYPE, callType);
         intent.putExtra(KEY_SOURCE, source);
-        context.startActivity(intent);
+        context.startActivityForResult(intent,PREVIEW_REQUESTCODE);
     }
 
     /**
@@ -137,6 +140,9 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
             this.finish();
             return;
         }
+
+        //启动悬浮窗service
+        avChatUI.bindService();
 
         registerNetCallObserver(true);
         if (mIsInComingCall) {
@@ -201,6 +207,14 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         //销毁悬浮窗服务
         if (avChatUI != null) {
             avChatUI.destroy();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PREVIEW_REQUESTCODE) {
+
         }
     }
 
@@ -607,15 +621,13 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         if (avChatUI.getTimeBase() == 0)
             avChatUI.setTimeBase(SystemClock.elapsedRealtime());
 
-        //启动悬浮窗service
-        avChatUI.bindService();
-
         if (state == AVChatType.AUDIO.getValue()) {
             avChatUI.onCallStateChange(CallStateEnum.AUDIO);
         } else {
             avChatUI.initSmallSurfaceView();
             avChatUI.onCallStateChange(CallStateEnum.VIDEO);
         }
+
         isCallEstablished = true;
     }
 

@@ -6,6 +6,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.angcyo.library.utils.L;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.widget.FloatView;
 
 /**
@@ -45,6 +47,7 @@ public class AVFloatViewService extends Service {
     }
 
     public void showFloat(String account) {
+        L.d("AVFloatViewService","showFloat  " + account + "boo : " + mFloatView);
         if ( mFloatView != null ) {
             mFloatView.show();
             mFloatView.initSmallSurfaceView(account);

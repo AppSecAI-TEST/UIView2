@@ -11,7 +11,6 @@ import com.hn.d.valley.cache.NimUserInfoCache;
 
 /**
  * 音视频聊天通知栏
- * Created by huangjun on 2015/5/14.
  */
 public class AVChatNotification {
 

@@ -33,7 +33,7 @@ import rx.functions.Action3;
 public class PersonalCardCommandItem extends CommandItemInfo {
 
     public PersonalCardCommandItem() {
-        this(R.drawable.message_plus_rts_normal, "个人名片");
+        this(R.drawable.calling_card_xiaoxi_n, "个人名片");
     }
 
     public PersonalCardCommandItem(int icoResId, String text) {

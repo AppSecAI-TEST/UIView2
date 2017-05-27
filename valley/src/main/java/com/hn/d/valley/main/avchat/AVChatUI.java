@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.activity.AVChatExitCode;
@@ -46,7 +45,7 @@ public class AVChatUI implements AVChatUIListener {
     private static final String TAG = "AVChatUI";
 
     // data
-    private Context context;
+    private Activity mActivity;
     private AVChatData avChatData;
     private final AVChatListener aVChatListener;
     private String receiverId;
@@ -82,8 +81,8 @@ public class AVChatUI implements AVChatUIListener {
         void uiExit();
     }
 
-    public AVChatUI(Context context, View root, AVChatListener listener) {
-        this.context = context;
+    public AVChatUI(Activity context, View root, AVChatListener listener) {
+        this.mActivity = context;
         this.root = root;
         this.aVChatListener = listener;
         this.avChatParameters = new AVChatParameters();
@@ -112,26 +111,26 @@ public class AVChatUI implements AVChatUIListener {
     private boolean audioDtx;
 
     private void configFromPreference(SharedPreferences preferences) {
-        videoCropRatio = Integer.parseInt(preferences.getString(context.getString(R.string.nrtc_setting_vie_crop_ratio_key), "0"));
-        videoAutoRotate = preferences.getBoolean(context.getString(R.string.nrtc_setting_vie_rotation_key), true);
-        videoQuality = Integer.parseInt(preferences.getString(context.getString(R.string.nrtc_setting_vie_quality_key), 0 + ""));
-        serverRecordAudio = preferences.getBoolean(context.getString(R.string.nrtc_setting_other_server_record_audio_key), false);
-        serverRecordVideo = preferences.getBoolean(context.getString(R.string.nrtc_setting_other_server_record_video_key), false);
-        defaultFrontCamera = preferences.getBoolean(context.getString(R.string.nrtc_setting_vie_default_front_camera_key), true);
-        autoCallProximity = preferences.getBoolean(context.getString(R.string.nrtc_setting_voe_call_proximity_key), true);
-        videoHwEncoderMode = Integer.parseInt(preferences.getString(context.getString(R.string.nrtc_setting_vie_hw_encoder_key), 0 + ""));
-        videoHwDecoderMode = Integer.parseInt(preferences.getString(context.getString(R.string.nrtc_setting_vie_hw_decoder_key), 0 + ""));
-        videoFpsReported = preferences.getBoolean(context.getString(R.string.nrtc_setting_vie_fps_reported_key), true);
-        audioEffectAecMode = Integer.parseInt(preferences.getString(context.getString(R.string.nrtc_setting_voe_audio_aec_key), 2 + ""));
-        audioEffectNsMode = Integer.parseInt(preferences.getString(context.getString(R.string.nrtc_setting_voe_audio_ns_key), 2 + ""));
-        String value1 = preferences.getString(context.getString(R.string.nrtc_setting_vie_max_bitrate_key), 0 + "");
+        videoCropRatio = Integer.parseInt(preferences.getString(mActivity.getString(R.string.nrtc_setting_vie_crop_ratio_key), "0"));
+        videoAutoRotate = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_vie_rotation_key), true);
+        videoQuality = Integer.parseInt(preferences.getString(mActivity.getString(R.string.nrtc_setting_vie_quality_key), 0 + ""));
+        serverRecordAudio = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_other_server_record_audio_key), false);
+        serverRecordVideo = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_other_server_record_video_key), false);
+        defaultFrontCamera = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_vie_default_front_camera_key), true);
+        autoCallProximity = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_voe_call_proximity_key), true);
+        videoHwEncoderMode = Integer.parseInt(preferences.getString(mActivity.getString(R.string.nrtc_setting_vie_hw_encoder_key), 0 + ""));
+        videoHwDecoderMode = Integer.parseInt(preferences.getString(mActivity.getString(R.string.nrtc_setting_vie_hw_decoder_key), 0 + ""));
+        videoFpsReported = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_vie_fps_reported_key), true);
+        audioEffectAecMode = Integer.parseInt(preferences.getString(mActivity.getString(R.string.nrtc_setting_voe_audio_aec_key), 2 + ""));
+        audioEffectNsMode = Integer.parseInt(preferences.getString(mActivity.getString(R.string.nrtc_setting_voe_audio_ns_key), 2 + ""));
+        String value1 = preferences.getString(mActivity.getString(R.string.nrtc_setting_vie_max_bitrate_key), 0 + "");
         videoMaxBitrate = Integer.parseInt(TextUtils.isDigitsOnly(value1) && !TextUtils.isEmpty(value1) ? value1 : 0 + "");
-        String value2 = preferences.getString(context.getString(R.string.nrtc_setting_other_device_default_rotation_key), 0 + "");
+        String value2 = preferences.getString(mActivity.getString(R.string.nrtc_setting_other_device_default_rotation_key), 0 + "");
         deviceDefaultRotation = Integer.parseInt(TextUtils.isDigitsOnly(value2) && !TextUtils.isEmpty(value2) ? value2 : 0 + "");
-        String value3 = preferences.getString(context.getString(R.string.nrtc_setting_other_device_rotation_fixed_offset_key), 0 + "");
+        String value3 = preferences.getString(mActivity.getString(R.string.nrtc_setting_other_device_rotation_fixed_offset_key), 0 + "");
         deviceRotationOffset = Integer.parseInt(TextUtils.isDigitsOnly(value3) && !TextUtils.isEmpty(value3) ? value3 : 0 + "");
-        audioHighQuality = preferences.getBoolean(context.getString(R.string.nrtc_setting_voe_high_quality_key), false);
-        audioDtx = preferences.getBoolean(context.getString(R.string.nrtc_setting_voe_dtx_key), true);
+        audioHighQuality = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_voe_high_quality_key), false);
+        audioDtx = preferences.getBoolean(mActivity.getString(R.string.nrtc_setting_voe_dtx_key), true);
     }
 
 
@@ -232,9 +231,9 @@ public class AVChatUI implements AVChatUIListener {
      */
     public boolean initiation() {
         AVChatProfile.getInstance().setAVChatting(true);
-        avChatAudio = new AVChatAudio(context, root.findViewById(R.id.avchat_audio_layout), this, this);
-        avChatVideo = new AVChatVideo(context, root.findViewById(R.id.avchat_video_layout), this, this);
-        avChatSurface = new AVChatSurface(context, this, root.findViewById(R.id.avchat_surface_layout));
+        avChatAudio = new AVChatAudio(mActivity, root.findViewById(R.id.avchat_audio_layout), this, this);
+        avChatVideo = new AVChatVideo(mActivity, root.findViewById(R.id.avchat_video_layout), this, this);
+        avChatSurface = new AVChatSurface(mActivity, this, root.findViewById(R.id.avchat_surface_layout));
 
         return true;
     }
@@ -265,7 +264,7 @@ public class AVChatUI implements AVChatUIListener {
      */
     public void outGoingCalling(String account, final AVChatType callTypeEnum) {
 
-//        DialogMaker.showProgressDialog(context, null);
+//        DialogMaker.showProgressDialog(mActivity, null);
 
         AVChatSoundPlayer.instance().play(AVChatSoundPlayer.RingerTypeEnum.CONNECTING);
 
@@ -292,7 +291,7 @@ public class AVChatUI implements AVChatUIListener {
                 //如果需要使用视频预览功能，在此进行设置，调用setupLocalVideoRender
                 //如果不需要视频预览功能，那么删掉下面if语句代码即可
                 if (callTypeEnum == AVChatType.VIDEO) {
-//                    List<String> deniedPermissions = BaseMPermission.getDeniedPermissions((Activity) context, BASIC_PERMISSIONS);
+//                    List<String> deniedPermissions = BaseMPermission.getDeniedPermissions((Activity) mActivity, BASIC_PERMISSIONS);
 //                    if (deniedPermissions != null && !deniedPermissions.isEmpty()) {
 //                        avChatVideo.showNoneCameraPermissionView(true);
 //                        return;
@@ -311,9 +310,9 @@ public class AVChatUI implements AVChatUIListener {
                 AVChatSoundPlayer.instance().stop();
 
                 if (code == ResponseCode.RES_FORBIDDEN) {
-//                    Toast.makeText(context, R.string.avchat_no_permission, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mActivity, R.string.avchat_no_permission, Toast.LENGTH_SHORT).show();
                 } else {
-//                    Toast.makeText(context, R.string.avchat_call_failed, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mActivity, R.string.avchat_call_failed, Toast.LENGTH_SHORT).show();
                 }
                 closeSessions(-1);
             }
@@ -407,28 +406,28 @@ public class AVChatUI implements AVChatUIListener {
             case AVChatExitCode.NET_CHANGE: // 网络切换
             case AVChatExitCode.NET_ERROR: // 网络异常
             case AVChatExitCode.CONFIG_ERROR: // 服务器返回数据错误
-//                Toast.makeText(context, R.string.avchat_net_error_then_quit, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mActivity, R.string.avchat_net_error_then_quit, Toast.LENGTH_SHORT).show();
                 break;
             case AVChatExitCode.PEER_HANGUP:
             case AVChatExitCode.HANGUP:
                 if (isCallEstablish.get()) {
-//                    Toast.makeText(context, R.string.avchat_call_finish, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(mActivity, R.string.avchat_call_finish, Toast.LENGTH_SHORT).show();
                 }
                 break;
             case AVChatExitCode.PEER_BUSY:
-//                Toast.makeText(context, R.string.avchat_peer_busy, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mActivity, R.string.avchat_peer_busy, Toast.LENGTH_SHORT).show();
                 break;
             case AVChatExitCode.PROTOCOL_INCOMPATIBLE_PEER_LOWER:
-//                Toast.makeText(context, R.string.avchat_peer_protocol_low_version, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mActivity, R.string.avchat_peer_protocol_low_version, Toast.LENGTH_SHORT).show();
                 break;
             case AVChatExitCode.PROTOCOL_INCOMPATIBLE_SELF_LOWER:
-//                Toast.makeText(context, R.string.avchat_local_protocol_low_version, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mActivity, R.string.avchat_local_protocol_low_version, Toast.LENGTH_SHORT).show();
                 break;
             case AVChatExitCode.INVALIDE_CHANNELID:
-//                Toast.makeText(context, R.string.avchat_invalid_channel_id, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mActivity, R.string.avchat_invalid_channel_id, Toast.LENGTH_SHORT).show();
                 break;
             case AVChatExitCode.LOCAL_CALL_BUSY:
-//                Toast.makeText(context, R.string.avchat_local_call_busy, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(mActivity, R.string.avchat_local_call_busy, Toast.LENGTH_SHORT).show();
                 break;
             default:
                 break;
@@ -523,9 +522,9 @@ public class AVChatUI implements AVChatUIListener {
             @Override
             public void onFailed(int code) {
                 if (code == -1) {
-                    Toast.makeText(context, "本地音视频启动失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "本地音视频启动失败", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "建立连接失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "建立连接失败", Toast.LENGTH_SHORT).show();
                 }
                 L.e(TAG, "accept onFailed->" + code);
                 closeSessions(AVChatExitCode.CANCEL);
@@ -641,10 +640,10 @@ public class AVChatUI implements AVChatUIListener {
 
         } else {
             //探测对话框
-//            final MultiSelectDialog selectDialog = new MultiSelectDialog(context);
+//            final MultiSelectDialog selectDialog = new MultiSelectDialog(mActivity);
 //            selectDialog.setTitle("选择录制内容");
 //            selectDialog.setMessage("录制的内容会被单独保存");
-//            selectDialog.setMessageTextColor(context.getResources().getColor(R.color.color_grey_999999));
+//            selectDialog.setMessageTextColor(mActivity.getResources().getColor(R.color.color_grey_999999));
 //            selectDialog.addItem("语音对话", false);
 //            if (CallStateEnum.isAudioMode(callingState)) {
 //                selectDialog.addItem("我的音频", false);
@@ -679,7 +678,7 @@ public class AVChatUI implements AVChatUIListener {
 //                            selectDialog.dismiss();
 //                        }
 //                    });
-//            selectDialog.addNegativeButton(context.getString(com.netease.nim.uikit.R.string.cancel), MultiSelectDialog.NO_TEXT_COLOR,
+//            selectDialog.addNegativeButton(mActivity.getString(com.netease.nim.uikit.R.string.cancel), MultiSelectDialog.NO_TEXT_COLOR,
 //                    MultiSelectDialog.NO_TEXT_SIZE, new View.OnClickListener() {
 //                        @Override
 //                        public void onClick(View view) {
@@ -967,6 +966,7 @@ public class AVChatUI implements AVChatUIListener {
      * 显示悬浮图标
      */
     public void showFloatingView() {
+        L.d("mFloatViewService","showFloatingView  " + "boo : " + mFloatViewService);
         if (mFloatViewService != null) {
             mFloatViewService.showFloat(UserCache.getUserAccount());
         }
@@ -983,9 +983,9 @@ public class AVChatUI implements AVChatUIListener {
 
     public void bindService() {
         try {
-            Intent intent = new Intent(context, AVFloatViewService.class);
-            context.startService(intent);
-            context.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+            Intent intent = new Intent(mActivity, AVFloatViewService.class);
+            mActivity.startService(intent);
+            mActivity.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         } catch (Exception e) {
         }
     }
@@ -995,8 +995,8 @@ public class AVChatUI implements AVChatUIListener {
      */
     public void destroy() {
         try {
-            context.stopService(new Intent(context, AVFloatViewService.class));
-            context.unbindService(mServiceConnection);
+            mActivity.stopService(new Intent(mActivity, AVFloatViewService.class));
+            mActivity.unbindService(mServiceConnection);
         } catch (Exception e) {
         }
     }

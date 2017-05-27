@@ -100,7 +100,7 @@ public class MsgThumbImageView extends android.support.v7.widget.AppCompatImageV
     public void loadAsPath(boolean isOriginal, final String path, final String tag, final int width, final int height, final int maskId) {
         if (TextUtils.isEmpty(path)) {
             setTag(null);
-            loadAsResource(R.drawable.default_image, maskId);
+            loadAsResource(R.drawable.zhanweitu_1, maskId);
             return;
         }
 
@@ -112,7 +112,7 @@ public class MsgThumbImageView extends android.support.v7.widget.AppCompatImageV
         // async load
         if (!hasLoaded) {
             // load default image first
-            loadAsResource(R.drawable.default_image, maskId);
+            loadAsResource(R.drawable.zhanweitu_1, maskId);
             final ImageUtil.ImageSize imageSize = new ImageUtil.ImageSize(width, height);
 
             BitmapTypeRequest<String> builder = Glide.with(getContext())

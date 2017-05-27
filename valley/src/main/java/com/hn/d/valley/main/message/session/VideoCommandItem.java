@@ -28,7 +28,7 @@ import rx.functions.Action3;
 public class VideoCommandItem extends CommandItemInfo {
 
     public VideoCommandItem() {
-        this(R.drawable.nim_message_plus_video_normal, "视频");
+        this(R.drawable.paise_xiaoxi, "视频");
     }
 
     public VideoCommandItem(int icoResId, String text) {

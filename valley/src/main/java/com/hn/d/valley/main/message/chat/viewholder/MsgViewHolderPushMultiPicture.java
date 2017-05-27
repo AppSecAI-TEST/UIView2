@@ -83,8 +83,8 @@ public class MsgViewHolderPushMultiPicture extends MsgViewHolderBase {
                 desc.setText(bean.get("title"));
                 Glide.with(context)
                         .load(bean.get("thumb"))
-                        .placeholder(com.angcyo.uiview.R.drawable.default_image)
-                        .error(com.angcyo.uiview.R.drawable.default_image)
+                        .placeholder(R.drawable.zhanweitu_1)
+                        .error(R.drawable.zhanweitu_1)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
 

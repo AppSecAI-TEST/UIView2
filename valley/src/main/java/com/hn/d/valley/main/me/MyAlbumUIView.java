@@ -439,9 +439,11 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
             return R.layout.item_image_layout;
         }
 
-        public void setData(String media) {
+        @Override
+        public RExBaseAdapter<String, String, String> setData(String media) {
             List<String> medias = RUtils.split(media);
             resetAllData(medias);
+            return this;
         }
 
         @Override

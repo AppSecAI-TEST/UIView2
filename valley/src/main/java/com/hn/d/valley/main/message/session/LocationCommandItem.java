@@ -24,7 +24,7 @@ import rx.functions.Action1;
 public class LocationCommandItem extends CommandItemInfo {
 
     public LocationCommandItem() {
-        this(R.drawable.nim_message_plus_location_normal, "位置");
+        this(R.drawable.location_xiaoxi_n, "位置");
     }
 
     public LocationCommandItem(int icoResId, String text) {

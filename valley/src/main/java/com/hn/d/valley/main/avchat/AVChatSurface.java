@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.glide.GlideBlurTransformation;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
@@ -30,9 +31,10 @@ import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 /**
  * 视频绘制管理
- * Created by hzxuwen on 2015/5/6.
  */
 public class AVChatSurface {
+
+    private static final String TAG = AVChatSurface.class.getSimpleName();
 
     private Context context;
     private AVChatUI manager;
@@ -172,8 +174,10 @@ public class AVChatSurface {
     };
 
     public void onCallStateChange(CallStateEnum state) {
-        if (CallStateEnum.isVideoMode(state))
+        // video audio 两种模式都需要findviews
+        if (CallStateEnum.isVideoMode(state) /*|| CallStateEnum.isAudioMode(state)*/) {
             findViews();
+        }
         switch (state) {
             case VIDEO:
                 largeSizePreviewCoverLayout.setVisibility(View.GONE);
@@ -183,14 +187,30 @@ public class AVChatSurface {
                 break;
             case INCOMING_VIDEO_CALLING:
                 genBlurBg();
-
                 break;
+//            case INCOMING_AUDIO_CALLING:
+//                tv_notification.setVisibility(View.GONE);
+//                if(largeSizePreviewLayout != null) {
+//                    largeSizePreviewLayout.setVisibility(View.GONE);
+//                }
+//                largeSizePreviewCoverLayout.setVisibility(View.VISIBLE);
+//                genBlurBg();
+//                break;
+//            case OUTGOING_AUDIO_CALLING:
+//                tv_notification.setVisibility(View.GONE);
+//                if(largeSizePreviewLayout != null) {
+//                    largeSizePreviewLayout.setVisibility(View.GONE);
+//                }
+//                largeSizePreviewCoverLayout.setVisibility(View.VISIBLE);
+//                genBlurBg();
+//                break;
             case INCOMING_AUDIO_TO_VIDEO:
                 break;
             case AUDIO:
                 if(smallSizePreviewFrameLayout != null) {
                     smallSizePreviewFrameLayout.setVisibility(View.INVISIBLE);
                 }
+//                genBlurBg();
                 break;
             default:
                 break;

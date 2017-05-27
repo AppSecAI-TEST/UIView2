@@ -5,16 +5,23 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.angcyo.library.glide.GlideBlurTransformation;
 import com.angcyo.uiview.utils.NetworkUtil;
+import com.bumptech.glide.DrawableRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 /**
  * 音频管理器， 音频界面初始化和管理
@@ -32,25 +39,36 @@ public class AVChatAudio implements View.OnClickListener{
     private HnGlideImageView headImg;
     private TextView nickNameTV;
     private Chronometer time;
-    private TextView wifiUnavailableNotifyTV;
+//    private TextView wifiUnavailableNotifyTV;
     private TextView notifyTV;
-    private TextView netUnstableTV;
+    private ImageView ivPreImg;
+//    private TextView netUnstableTV;
 
-    private View mute_speaker_hangup;
+    private View iv_avaudio_scale;
+
+    private View ll_avaudio_bottom;
 //    private ToggleView muteToggle;
 //    private ToggleView speakerToggle;
-    private View recordToggle;
-    private Button recordToggleButton;
-    private View hangup;
+//    private View recordToggle;
+//    private Button recordToggleButton;
+//    private View hangup;
 
-    private View refuse_receive;
-    private TextView refuseTV;
-    private TextView receiveTV;
+    // bottom control
+    private View ll_avaudio_jinyin;
+    private View ll_avaudio_logout;
+    private View ll_avaudio_handsfree;
+    private View ll_avaudio_receive;
+    private View ll_avaudio_audiotovideo;
+
+
+//    private View refuse_receive;
+//    private TextView refuseTV;
+//    private TextView receiveTV;
 
     //record
-    private View recordView;
-    private View recordTip;
-    private View recordWarning;
+//    private View recordView;
+//    private View recordTip;
+//    private View recordWarning;
 
     // data
     private AVChatUI manager;
@@ -61,6 +79,9 @@ public class AVChatAudio implements View.OnClickListener{
 
     // is in switch
     private boolean isInSwitch = false;
+
+    //是否接听
+    private boolean isReceived = false;
 
     public AVChatAudio(Context context, View root, AVChatUIListener listener, AVChatUI manager) {
         this.context = context;
@@ -74,8 +95,10 @@ public class AVChatAudio implements View.OnClickListener{
      * @param state
      */
     public void onCallStateChange(CallStateEnum state){
-        if(CallStateEnum.isAudioMode(state))
+        if(CallStateEnum.isAudioMode(state)) {
             findViews();
+            genBlurBg();
+        }
         switch (state){
             case OUTGOING_AUDIO_CALLING: //拨打出的免费通话
                 setSwitchVideo(false);
@@ -84,14 +107,18 @@ public class AVChatAudio implements View.OnClickListener{
                 setWifiUnavailableNotifyTV(true);
                 setMuteSpeakerHangupControl(true);
                 setRefuseReceive(false);
+                isReceived = true;
+                showCallingUI();
                 break;
             case INCOMING_AUDIO_CALLING://免费通话请求
                 setSwitchVideo(false);
                 showProfile();//对方的详细信息
                 showNotify(R.string.text_wait_receiving);
-                setMuteSpeakerHangupControl(false);
+                setMuteSpeakerHangupControl(true);
                 setRefuseReceive(true);
-                receiveTV.setText(R.string.text_pickup);
+                isReceived = false;
+                showWaitingUI();
+//                receiveTV.setText(R.string.text_pickup);
                 break;
             case AUDIO:
                 isInSwitch = false;
@@ -104,6 +131,8 @@ public class AVChatAudio implements View.OnClickListener{
                 setMuteSpeakerHangupControl(true);
                 setRefuseReceive(false);
                 enableToggle();
+                showReceivedUI();
+                isReceived = true;
                 break;
             case AUDIO_CONNECTING:
                 showNotify(R.string.text_connecting);
@@ -111,9 +140,14 @@ public class AVChatAudio implements View.OnClickListener{
             case INCOMING_AUDIO_TO_VIDEO:
                 isInSwitch = true;
                 showNotify(R.string.text_invite_start_video_chat);
-                setMuteSpeakerHangupControl(false);
+                setMuteSpeakerHangupControl(true);
                 setRefuseReceive(true);
-                receiveTV.setText(R.string.text_av_receive);
+                // 直接开启视频聊天 不需要点击同意
+//                showWaitingUI();
+                if(listener != null) {
+                    listener.onReceive();
+                }
+//                receiveTV.setText(R.string.text_av_receive);
                 break;
             default:
                 break;
@@ -125,7 +159,7 @@ public class AVChatAudio implements View.OnClickListener{
 
     private void enableToggle() {
         if(!isEnabled) {
-            recordToggle.setEnabled(true);
+//            recordToggle.setEnabled(true);
         }
         isEnabled = true;
     }
@@ -137,38 +171,46 @@ public class AVChatAudio implements View.OnClickListener{
         if(init || rootView == null){
             return;
         }
-        switchVideo = rootView.findViewById(R.id.avchat_audio_switch_video);
+        switchVideo = rootView.findViewById(R.id.ll_avaudio_audiotovideo);
         switchVideo.setOnClickListener(this);
 
-        headImg = (HnGlideImageView) rootView.findViewById(R.id.avchat_audio_head);
-        nickNameTV = (TextView) rootView.findViewById(R.id.avchat_audio_nickname);
-        time = (Chronometer) rootView.findViewById(R.id.avchat_audio_time);
-        wifiUnavailableNotifyTV = (TextView) rootView.findViewById(R.id.avchat_audio_wifi_unavailable);
-        notifyTV = (TextView) rootView.findViewById(R.id.avchat_audio_notify);
-        netUnstableTV = (TextView) rootView.findViewById(R.id.avchat_audio_netunstable);
+        headImg = (HnGlideImageView) rootView.findViewById(R.id.iv_aaaudic_head);
+        nickNameTV = (TextView) rootView.findViewById(R.id.tv_avaudio_nickname);
+        time = (Chronometer) rootView.findViewById(R.id.tv_avaudio_time);
+        notifyTV = (TextView) rootView.findViewById(R.id.tv_avaudio_notify);
+        iv_avaudio_scale = rootView.findViewById(R.id.iv_avaudio_scale);
+        ivPreImg = (ImageView) rootView.findViewById(R.id.iv_preview_img);
 
-        mute_speaker_hangup = rootView.findViewById(R.id.avchat_audio_mute_speaker_huangup);
-        View mute = mute_speaker_hangup.findViewById(R.id.avchat_audio_mute);
-//        muteToggle = new ToggleView(mute, ToggleState.OFF, this);
-        View speaker = mute_speaker_hangup.findViewById(R.id.avchat_audio_speaker);
-//        speakerToggle = new ToggleView(speaker, ToggleState.OFF, this);
-        recordToggle = mute_speaker_hangup.findViewById(R.id.avchat_audio_record);
-        recordToggleButton = (Button) mute_speaker_hangup.findViewById(R.id.avchat_audio_record_button);
+        ll_avaudio_bottom = rootView.findViewById(R.id.audio_call_bottom_switch_layout);
+        ll_avaudio_audiotovideo = ll_avaudio_bottom.findViewById(R.id.ll_avaudio_audiotovideo);
+        ll_avaudio_jinyin = ll_avaudio_bottom.findViewById(R.id.ll_avaudio_jinyin);
+        ll_avaudio_logout = ll_avaudio_bottom.findViewById(R.id.ll_avaudio_logout);
+        ll_avaudio_receive = ll_avaudio_bottom.findViewById(R.id.ll_avaudio_receive);
+        ll_avaudio_handsfree = ll_avaudio_bottom.findViewById(R.id.ll_avaudio_handsfree);
 
-        hangup = mute_speaker_hangup.findViewById(R.id.avchat_audio_hangup);
-        hangup.setOnClickListener(this);
-        recordToggle.setOnClickListener(this);
-        recordToggle.setEnabled(false);
+        ll_avaudio_handsfree.setOnClickListener(this);
+        ll_avaudio_receive.setOnClickListener(this);
+        ll_avaudio_jinyin.setOnClickListener(this);
+        ll_avaudio_audiotovideo.setOnClickListener(this);
+        ll_avaudio_logout.setOnClickListener(this);
 
-        refuse_receive = rootView.findViewById(R.id.avchat_audio_refuse_receive);
-        refuseTV = (TextView) refuse_receive.findViewById(R.id.refuse);
-        receiveTV = (TextView) refuse_receive.findViewById(R.id.receive);
-        refuseTV.setOnClickListener(this);
-        receiveTV.setOnClickListener(this);
+//        recordToggle = ll_avaudio_bottom.findViewById(R.id.avchat_audio_record);
+//        recordToggleButton = (Button) ll_avaudio_bottom.findViewById(R.id.avchat_audio_record_button);
 
-        recordView = rootView.findViewById(R.id.avchat_record_layout);
-        recordTip = rootView.findViewById(R.id.avchat_record_tip);
-        recordWarning = rootView.findViewById(R.id.avchat_record_warning);
+//        hangup = ll_avaudio_bottom.findViewById(R.id.avchat_audio_hangup);
+//        hangup.setOnClickListener(this);
+//        recordToggle.setOnClickListener(this);
+//        recordToggle.setEnabled(false);
+
+//        refuse_receive = rootView.findViewById(R.id.avchat_audio_refuse_receive);
+//        refuseTV = (TextView) refuse_receive.findViewById(R.id.refuse);
+//        receiveTV = (TextView) refuse_receive.findViewById(R.id.receive);
+//        refuseTV.setOnClickListener(this);
+//        receiveTV.setOnClickListener(this);
+
+//        recordView = rootView.findViewById(R.id.avchat_record_layout);
+//        recordTip = rootView.findViewById(R.id.avchat_record_tip);
+//        recordWarning = rootView.findViewById(R.id.avchat_record_warning);
 
         init = true;
     }
@@ -177,12 +219,50 @@ public class AVChatAudio implements View.OnClickListener{
      * ********************************* 界面设置 *************************************
      */
 
+    private void genBlurBg() {
+        // 显示预览图 头像高斯模糊
+        UserInfoProvider.UserInfo userInfo = NimUserInfoCache.getInstance().getUserInfo(manager.getAccount());
+        DrawableRequestBuilder<String> builder = Glide.with(context)
+                .load(userInfo.getAvatar())
+                .placeholder(R.drawable.avchat_call_bg)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
+        builder.bitmapTransform(new GlideBlurTransformation(context))
+                .into(ivPreImg);
+    }
+
+
+    private void showWaitingUI(){
+        ll_avaudio_logout.setVisibility(View.VISIBLE);
+        ll_avaudio_receive.setVisibility(View.VISIBLE);
+        ll_avaudio_handsfree.setVisibility(View.GONE);
+        ll_avaudio_audiotovideo.setVisibility(View.GONE);
+        ll_avaudio_jinyin.setVisibility(View.GONE);
+    }
+
+    private void showReceivedUI(){
+        ll_avaudio_logout.setVisibility(View.VISIBLE);
+        ll_avaudio_receive.setVisibility(View.GONE);
+        ll_avaudio_handsfree.setVisibility(View.VISIBLE);
+        ll_avaudio_audiotovideo.setVisibility(View.VISIBLE);
+        ll_avaudio_jinyin.setVisibility(View.VISIBLE);
+    }
+
+    private void showCallingUI(){
+        ll_avaudio_logout.setVisibility(View.VISIBLE);
+        ll_avaudio_receive.setVisibility(View.GONE);
+        ll_avaudio_handsfree.setVisibility(View.GONE);
+        ll_avaudio_audiotovideo.setVisibility(View.GONE);
+        ll_avaudio_jinyin.setVisibility(View.GONE);
+    }
+
+
     /**
      * 个人信息设置
      */
     private void showProfile(){
         String account = manager.getAccount();
-//        headImg.loadBuddyAvatar(account);
+        UserInfoProvider.UserInfo userInfo = NimUserInfoCache.getInstance().getUserInfo(account);
+        headImg.setImageThumbUrl(userInfo.getAvatar());
         nickNameTV.setText(NimUserInfoCache.getInstance().getUserDisplayName(account));
     }
 
@@ -204,21 +284,21 @@ public class AVChatAudio implements View.OnClickListener{
 
     public void showRecordView(boolean show, boolean warning) {
         if(show) {
-            recordToggle.setSelected(true);
-            recordToggleButton.setText("结束");
-            recordView.setVisibility(View.VISIBLE);
-            recordTip.setVisibility(View.VISIBLE);
+//            recordToggle.setSelected(true);
+//            recordToggleButton.setText("结束");
+//            recordView.setVisibility(View.VISIBLE);
+//            recordTip.setVisibility(View.VISIBLE);
             if(warning) {
-                recordWarning.setVisibility(View.VISIBLE);
+//                recordWarning.setVisibility(View.VISIBLE);
             } else {
-                recordWarning.setVisibility(View.GONE);
+//                recordWarning.setVisibility(View.GONE);
             }
         } else {
-            recordToggle.setSelected(false);
-            recordToggleButton.setText("录制");
-            recordView.setVisibility(View.INVISIBLE);
-            recordTip.setVisibility(View.INVISIBLE);
-            recordWarning.setVisibility(View.GONE);
+//            recordToggle.setSelected(false);
+//            recordToggleButton.setText("录制");
+//            recordView.setVisibility(View.INVISIBLE);
+//            recordTip.setVisibility(View.INVISIBLE);
+//            recordWarning.setVisibility(View.GONE);
         }
     }
 
@@ -260,9 +340,9 @@ public class AVChatAudio implements View.OnClickListener{
      */
     private void setWifiUnavailableNotifyTV(boolean show){
         if(show && !NetworkUtil.isWifi(context)){
-            wifiUnavailableNotifyTV.setVisibility(View.VISIBLE);
+//            wifiUnavailableNotifyTV.setVisibility(View.VISIBLE);
         }else {
-            wifiUnavailableNotifyTV.setVisibility(View.GONE);
+//            wifiUnavailableNotifyTV.setVisibility(View.GONE);
         }
     }
 
@@ -271,7 +351,7 @@ public class AVChatAudio implements View.OnClickListener{
      * @param visible
      */
     private void setMuteSpeakerHangupControl(boolean visible){
-        mute_speaker_hangup.setVisibility(visible ? View.VISIBLE : View.GONE);
+        ll_avaudio_bottom.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -279,7 +359,7 @@ public class AVChatAudio implements View.OnClickListener{
      * @param visible
      */
     private void setRefuseReceive(boolean visible){
-        refuse_receive.setVisibility(visible ? View.VISIBLE : View.GONE);
+//        refuse_receive.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     /**
@@ -303,37 +383,41 @@ public class AVChatAudio implements View.OnClickListener{
 
 //        muteToggle.toggle(muteOn ? ToggleState.ON : ToggleState.OFF);
 //        speakerToggle.toggle(speakerOn ? ToggleState.ON : ToggleState.OFF);
-        recordToggle.setSelected(recordOn);
+//        recordToggle.setSelected(recordOn);
         showRecordView(recordOn, recordWarning);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.avchat_audio_hangup:
-                listener.onHangUp();
+            case R.id.ll_avaudio_logout:
+                if (isReceived) {
+                    listener.onHangUp();
+                } else {
+                    listener.onRefuse();
+                }
                 break;
             case R.id.refuse:
                 listener.onRefuse();
                 break;
-            case R.id.receive:
+            case R.id.ll_avaudio_receive:
                 listener.onReceive();
                 break;
-            case R.id.avchat_audio_mute:
+            case R.id.ll_avaudio_handsfree:
+                break;
+            case R.id.ll_avaudio_jinyin:
                 listener.toggleMute();
                 break;
             case R.id.avchat_audio_speaker:
                 listener.toggleSpeaker();
                 break;
-            case R.id.avchat_audio_switch_video:
-                if(isInSwitch) {
-                    Toast.makeText(context,"avchat_in_switch", Toast.LENGTH_SHORT).show();
-                }else {
-                    listener.audioSwitchVideo();
-                }
+            case R.id.ll_avaudio_audiotovideo:
+                listener.audioSwitchVideo();
                 break;
             case R.id.avchat_audio_record:
                 listener.toggleRecord();
+                break;
+            case R.id.iv_avaudio_scale:
                 break;
             default:
                 break;
@@ -345,10 +429,10 @@ public class AVChatAudio implements View.OnClickListener{
             time.stop();
 //            muteToggle.disable(false);
 //            speakerToggle.disable(false);
-            recordToggle.setEnabled(false);
-            refuseTV.setEnabled(false);
-            receiveTV.setEnabled(false);
-            hangup.setEnabled(false);
+//            recordToggle.setEnabled(false);
+//            refuseTV.setEnabled(false);
+//            receiveTV.setEnabled(false);
+//            hangup.setEnabled(false);
         }
     }
 

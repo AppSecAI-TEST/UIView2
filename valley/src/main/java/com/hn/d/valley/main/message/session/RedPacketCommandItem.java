@@ -22,7 +22,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 public class RedPacketCommandItem extends CommandItemInfo {
 
     public RedPacketCommandItem() {
-        this(R.drawable.message_plus_rts_normal, "红包");
+        this(R.drawable.hongbao_xiaoxi_n, "红包");
     }
 
     public RedPacketCommandItem(int icoResId, String text) {
