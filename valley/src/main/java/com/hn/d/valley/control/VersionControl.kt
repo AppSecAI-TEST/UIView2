@@ -33,7 +33,7 @@ object VersionControl {
 
     lateinit var versionBean: VersionBean
 
-    fun isChecking(isCheck: () -> Unit) {
+    fun isChecking(isCheck: (() -> Unit)?) {
         if (checking) {
             //正在检测的回调
             isCheck?.invoke()
