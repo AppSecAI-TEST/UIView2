@@ -345,6 +345,8 @@ public class MainUIView extends BaseUIView {
             mParentILayout.startIView(new RecommendUser2UIView());
             LoginControl.instance().setFirstRegister(false);
         }
+
+        MainControl.checkVersion(mILayout);
     }
 
     @Override

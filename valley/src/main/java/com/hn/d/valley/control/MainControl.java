@@ -1,5 +1,6 @@
 package com.hn.d.valley.control;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RCrashHandler;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RSubscriber;
@@ -10,6 +11,9 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.notify.SystemNotifyManager;
 import com.hn.d.valley.nim.RNim;
 import com.liulishuo.FDown;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function0;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -40,9 +44,6 @@ public class MainControl {
                     }
                 });
         TagsControl.getTags(null);
-
-        //版本检测
-        VersionControl.INSTANCE.checkVersion();
     }
 
     public static void onMainUnload() {
@@ -65,5 +66,18 @@ public class MainControl {
             RCrashHandler.QQ_GROUP_KEY = "oo8iBWHEAOxrj06LFKxcy2yDJTILXamC";
             RCrashHandler.checkCrash(iLayout);
         }
+    }
+
+    public static void checkVersion(ILayout layout) {
+        //版本检测
+        VersionControl.INSTANCE.checkVersion();
+        VersionControl.INSTANCE.isChecking(null);
+        VersionControl.INSTANCE.isChecking(new Function0<Unit>() {
+            @Override
+            public Unit invoke() {
+                L.e("call: invoke([])-> ");
+                return null;
+            }
+        });
     }
 }

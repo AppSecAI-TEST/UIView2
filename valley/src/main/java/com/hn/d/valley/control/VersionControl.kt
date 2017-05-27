@@ -29,21 +29,21 @@ import java.io.File
 object VersionControl {
 
     //是否正在检测
-    var isChecking = false
+    var checking = false
 
     lateinit var versionBean: VersionBean
 
     fun isChecking(isCheck: () -> Unit) {
-        if (isChecking) {
+        if (checking) {
             //正在检测的回调
-            isCheck.invoke()
+            isCheck?.invoke()
         }
     }
 
     //检查版本
     fun checkVersion() {
-        if (!isChecking) {
-            isChecking = true
+        if (!checking) {
+            checking = true
             RRetrofit.create<AppService>(AppService::class.java)
                     .checkVersion(Param.buildMap())
                     .compose(Rx.transformer(VersionBean::class.java))
@@ -56,7 +56,7 @@ object VersionControl {
 
                         override fun onError(code: Int, msg: String?) {
                             super.onError(code, msg)
-                            isChecking = false
+                            checking = false
                         }
                     })
         }
@@ -74,11 +74,11 @@ object VersionControl {
                     downFile()
                 } else {
                     //无更新
-                    isChecking = false
+                    checking = false
                 }
             }
         } catch (e: Exception) {
-            isChecking = false
+            checking = false
         }
     }
 
@@ -86,7 +86,7 @@ object VersionControl {
         val targetFile = File(MusicControl.generateApkFilePath("${versionBean.version}.apk"))
 
         if (targetFile.exists()) {
-            isChecking = false
+            checking = false
         } else {
             val path = MusicControl.generateApkFilePath("${targetFile.name}.temp")
             L.e("下载:${versionBean.download_url} 至$path")
@@ -96,12 +96,12 @@ object VersionControl {
                         override fun onCompleted(task: BaseDownloadTask?) {
                             super.onCompleted(task)
                             FileUtils.rename(File(path), targetFile.name)
-                            isChecking = false
+                            checking = false
                         }
 
                         override fun onError(task: BaseDownloadTask?, e: Throwable?) {
                             super.onError(task, e)
-                            isChecking = false
+                            checking = false
                         }
                     })
         }

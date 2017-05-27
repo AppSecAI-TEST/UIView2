@@ -24,14 +24,18 @@ public class UnreadMessageControl {
      */
     public static int getUnreadCount() {
         int size = 0;
-        Realm realm = null;
         try {
-            realm = RRealm.getRealmInstance();
-            size = realm.where(UnreadMessage.class).findAll().size();
-        } finally {
-            if (realm != null) {
-                realm.close();
+            Realm realm = null;
+            try {
+                realm = RRealm.getRealmInstance();
+                size = realm.where(UnreadMessage.class).findAll().size();
+            } finally {
+                if (realm != null) {
+                    realm.close();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return size;
     }
