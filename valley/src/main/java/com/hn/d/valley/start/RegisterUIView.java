@@ -3,6 +3,7 @@ package com.hn.d.valley.start;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.Anim;
@@ -25,9 +26,6 @@ import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
 import com.hn.d.valley.start.mvp.Start;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -40,11 +38,8 @@ import butterknife.OnClick;
  * Version: 1.0.0
  */
 public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Start.IRegisterView {
-    @BindView(R.id.phone_view)
     ExEditText mPhoneView;
-    @BindView(R.id.verify_view)
     VerifyButton mVerifyView;
-    @BindView(R.id.code_view)
     ExEditText mCodeView;
 
     /**
@@ -71,6 +66,29 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mPhoneView = v(R.id.phone_view);
+        mVerifyView = v(R.id.verify_view);
+        mCodeView = v(R.id.code_view);
+
+        click(R.id.next_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onNextClick();
+            }
+        });
+        click(R.id.protocol_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onProtocolClick();
+            }
+        });
+        click(R.id.verify_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onVerifyClick();
+            }
+        });
+
         if (BuildConfig.DEBUG) {
             mCodeView.setText("888888");
         }
@@ -84,7 +102,6 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
     /**
      * 下一步
      */
-    @OnClick(R.id.next_view)
     public void onNextClick() {
         if (!mPhoneView.isPhone()) {
             Anim.band(mPhoneView);
@@ -110,7 +127,6 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
     /**
      * 用户协议
      */
-    @OnClick(R.id.protocol_view)
     public void onProtocolClick() {
 
     }
@@ -118,7 +134,6 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
     /**
      * 获取验证码
      */
-    @OnClick(R.id.verify_view)
     public void onVerifyClick() {
         if (!mPhoneView.isPhone()) {
             Anim.band(mPhoneView);

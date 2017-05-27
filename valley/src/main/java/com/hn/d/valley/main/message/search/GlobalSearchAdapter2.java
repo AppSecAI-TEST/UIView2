@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
@@ -21,6 +20,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.cache.TeamDataCache;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.found.sub.SearchNextUIView;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
@@ -36,9 +36,6 @@ import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -171,16 +168,16 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.iv_item_head)
         SimpleDraweeView ivItemHead;
-        @BindView(R.id.tv_friend_name)
         TextView tvFriendName;
 
         private ILayout mLayout;
 
         public ContactViewHolder(View itemView, ILayout mLayout) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            //ButterKnife.bind(this, itemView);
+            ivItemHead = (SimpleDraweeView) itemView.findViewById(R.id.iv_item_head);
+            tvFriendName = (TextView) itemView.findViewById(R.id.tv_friend_name);
             this.mLayout = mLayout;
         }
 
@@ -205,16 +202,16 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class GroupVH extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.iv_item_head)
         SimpleDraweeView ivItemHead;
-        @BindView(R.id.tv_friend_name)
         TextView tvFriendName;
 
         private ILayout mLayout;
 
         public GroupVH(View itemView, ILayout layout) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            /*ButterKnife.bind(this, itemView);*/
+            ivItemHead = (SimpleDraweeView) itemView.findViewById(R.id.iv_item_head);
+            tvFriendName = (TextView) itemView.findViewById(R.id.tv_friend_name);
             this.mLayout = layout;
         }
 
@@ -235,7 +232,6 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class SectionVH extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.tip_view)
         RTextView tipView;
 //        @BindView(R.id.search_line1)
 //        View searchLine1;
@@ -244,7 +240,8 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
         public SectionVH(View itemView, ILayout layout) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+//            ButterKnife.bind(this, itemView);
+            tipView = (RTextView) itemView.findViewById(R.id.tip_view);
             this.mLayout = layout;
         }
 
@@ -257,13 +254,14 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class SearchVH extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.search_word_view)
         RTextView searchWordView;
         private ILayout mLayout;
 
         public SearchVH(View itemView, ILayout layout) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+//            ButterKnife.bind(this, itemView);
+            searchWordView = (RTextView) itemView.findViewById(R.id.search_word_view);
+
             this.mLayout = layout;
         }
 
@@ -280,15 +278,16 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public  class FuncVH extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.search_line2)
         View searchLine2;
-        @BindView(R.id.tip_more_view)
         RTextView tipMoreView;
         private ILayout mLayout;
 
         public FuncVH(View itemView, ILayout layout) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            //ButterKnife.bind(this, itemView);
+            searchLine2 = itemView.findViewById(R.id.search_line2);
+            tipMoreView = (RTextView) itemView.findViewById(R.id.tip_more_view);
+
             this.mLayout = layout;
         }
 
@@ -317,22 +316,23 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class MsgVH extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.ico_view)
         HnGlideImageView icoView;
-        @BindView(R.id.recent_name_view)
         TextView recentNameView;
-        @BindView(R.id.msg_content_view)
         TextView msgContentView;
-        @BindView(R.id.msg_time_view)
         TextView msgTimeView;
-        @BindView(R.id.item_root_layout)
         LinearLayout itemRootLayout;
 
         private ILayout mLayout;
 
         public MsgVH(View itemView, ILayout layout) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            //ButterKnife.bind(this, itemView);
+            icoView = (HnGlideImageView) itemView.findViewById(R.id.ico_view);
+            recentNameView = (TextView) itemView.findViewById(R.id.recent_name_view);
+            msgContentView = (TextView) itemView.findViewById(R.id.msg_content_view);
+            msgTimeView = (TextView) itemView.findViewById(R.id.msg_time_view);
+            itemRootLayout = (LinearLayout) itemView.findViewById(R.id.item_root_layout);
+
             this.mLayout = layout;
         }
 

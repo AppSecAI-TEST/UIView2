@@ -51,9 +51,6 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -69,19 +66,19 @@ import butterknife.OnClick;
 public class UserDetailUIView extends BaseContentUIView {
 
     String to_uid;
-    @BindView(R.id.scroll_root_layout)
+//    @BindView(R.id.scroll_root_layout)
     NestedScrollView mScrollRootLayout;
-    @BindView(R.id.ico_recycler_view)
+//    @BindView(R.id.ico_recycler_view)
     HnIcoRecyclerView mIcoRecyclerView;
-    @BindView(R.id.view_pager_placeholder_view)
+//    @BindView(R.id.view_pager_placeholder_view)
     ImageView mViewPagerPlaceholderView;
-    @BindView(R.id.view_pager)
+//    @BindView(R.id.view_pager)
     ViewPager mViewPager;
-    @BindView(R.id.single_text_indicator_view)
+//    @BindView(R.id.single_text_indicator_view)
     TextIndicator mSingleTextIndicatorView;
-    @BindView(R.id.command_item_view)
+//    @BindView(R.id.command_item_view)
     TextView mCommandItemView;
-    @BindView(R.id.auth_desc)
+//    @BindView(R.id.auth_desc)
     TextView mAuthDesc;
     /**
      * 是否是粉丝
@@ -126,6 +123,7 @@ public class UserDetailUIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+
         mScrollRootLayout.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -285,7 +283,7 @@ public class UserDetailUIView extends BaseContentUIView {
         }
     }
 
-    @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
+//    @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.qr_code_view://二维码

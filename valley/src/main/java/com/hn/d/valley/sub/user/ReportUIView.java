@@ -31,9 +31,6 @@ import com.hn.d.valley.widget.HnLoading;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -46,8 +43,6 @@ import butterknife.OnClick;
  * Version: 1.0.0
  */
 public class ReportUIView extends BaseContentUIView {
-
-    @BindView(R.id.content_layout)
     RCheckGroup mContentLayout;
 
     UserDiscussListBean.DataListBean mDataBean;
@@ -82,6 +77,13 @@ public class ReportUIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mContentLayout = v(R.id.content_layout);
+        click(R.id.submit_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSubmitClick();
+            }
+        });
         ResUtil.setBgDrawable(mViewHolder.v(R.id.submit_view), SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
     }
 
@@ -153,7 +155,7 @@ public class ReportUIView extends BaseContentUIView {
             return "group";
         } else if (mDataBean != null) {
             return "discuss";
-        }else if (mGroupDesc != null) {
+        } else if (mGroupDesc != null) {
             return "group";
         }
         return "";
@@ -162,7 +164,6 @@ public class ReportUIView extends BaseContentUIView {
     /**
      * 举报
      */
-    @OnClick(R.id.submit_view)
     public void onSubmitClick() {
         final View checkView = mContentLayout.getCheckView();
         if (checkView == null) {
@@ -174,7 +175,7 @@ public class ReportUIView extends BaseContentUIView {
             } else if (mDataBean != null) {
                 reportDiscuss(tag);
             } else if (mGroupDesc != null) {
-                startIView(new ReportNextUIView(tag,mGroupDesc.getGid()));
+                startIView(new ReportNextUIView(tag, mGroupDesc.getGid()));
             }
         }
     }

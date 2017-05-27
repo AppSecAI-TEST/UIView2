@@ -26,7 +26,6 @@ import com.hn.d.valley.widget.PasscodeView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import butterknife.BindView;
 import rx.functions.Action1;
 
 import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.balanceCheck;
@@ -47,21 +46,14 @@ public class PayUIDialog extends UIIDialogImpl {
 
     public static final String TAG = PayUIDialog.class.getSimpleName();
 
-    @BindView(R.id.iv_cancel)
     ImageView ivCancel;
-    @BindView(R.id.base_dialog_title_view)
     TextView baseDialogTitleView;
-    @BindView(R.id.base_dialog_content_view)
     TextView baseDialogContentView;
-    @BindView(R.id.line_layout)
     View lineLayout;
-    @BindView(R.id.base_item_info_layout)
     ItemInfoLayout baseItemInfoLayout;
     //    @BindView(R.id.btn_send)
 //    Button btn_send;
-    @BindView(R.id.base_dialog_root_layout)
     LinearLayout baseDialogRootLayout;
-    @BindView(R.id.passcode_view)
     PasscodeView passcodeView;
 
     private Params params;
@@ -92,6 +84,14 @@ public class PayUIDialog extends UIIDialogImpl {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
+        ivCancel = v(R.id.iv_cancel);
+        baseDialogTitleView = v(R.id.base_dialog_title_view);
+        baseDialogContentView = v(R.id.base_dialog_content_view);
+        lineLayout = v(R.id.line_layout);
+        baseItemInfoLayout = v(R.id.base_item_info_layout);
+        baseDialogRootLayout = v(R.id.base_dialog_root_layout);
+        passcodeView = v(R.id.passcode_view);
+
 
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,10 +14,10 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.OverLayCardLayoutManager;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.RenRenCallback;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -26,8 +26,8 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.CustomBean;
+import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.service.UserInfoService;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.NIMClient;
@@ -43,9 +43,6 @@ import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -63,9 +60,7 @@ public final class NewFriendUIView extends BaseContentUIView {
 
     String mSessionId;
     SessionTypeEnum mSessionTypeEnum;
-    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.control_layout)
     LinearLayout mControlLayout;
     private FriendAdapter mFriendAdapter;
     private RenRenCallback mRenRenCallback;
@@ -83,6 +78,21 @@ public final class NewFriendUIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mRecyclerView = v(R.id.recycler_view);
+        mControlLayout = v(R.id.control_layout);
+        click(R.id.disagree_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewFriendUIView.this.onControlClick(v);
+            }
+        });
+        click(R.id.attention_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NewFriendUIView.this.onControlClick(v);
+            }
+        });
+
         mRecyclerView.setItemAnim(false);
         mRecyclerView.setLayoutManager(new OverLayCardLayoutManager(mActivity)
                 .setTopOffset((int) ResUtil.dpToPx(mActivity, 20)));
@@ -209,7 +219,6 @@ public final class NewFriendUIView extends BaseContentUIView {
         return MessageBuilder.createEmptyMessage(mSessionId, mSessionTypeEnum, System.currentTimeMillis());
     }
 
-    @OnClick({R.id.disagree_view, R.id.attention_view})
     public void onControlClick(View view) {
         switch (view.getId()) {
             case R.id.disagree_view:

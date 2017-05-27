@@ -89,7 +89,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Action0;
@@ -113,13 +112,9 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     protected AudioRecorder audioMessageHelper;
     OldParams mOldParams;
     boolean canBack = false;
-    @BindView(R.id.over_layout)
     FrameLayout over_layout;
-    @BindView(R.id.layoutPlayAudio)
     LinearLayout layoutPlayAudio;
-    @BindView(R.id.timer)
     Chronometer mTimer;
-    @BindView(R.id.timer_tip_container)
     LinearLayout timpContainer;
     private HnAddImageAdapter mHnAddImageAdapter;
     private List<Luban.ImageItem> mOldItems = new ArrayList<>();//原先的照片地址
@@ -202,6 +197,15 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
+        over_layout = v(R.id.over_layout);
+        layoutPlayAudio = v(R.id.layoutPlayAudio);
+        mTimer = v(R.id.timer);
+        timpContainer = v(R.id.timer_tip_container);
     }
 
     @Override
@@ -638,7 +642,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-       /* started = */audioMessageHelper.startRecord();
+       /* started = */
+        audioMessageHelper.startRecord();
         cancelled = false;
 //        if (!started) {
 //            T_.show(mActivity.getString(R.string.recording_init_failed));

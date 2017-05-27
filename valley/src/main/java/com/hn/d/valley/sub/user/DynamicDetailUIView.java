@@ -52,9 +52,6 @@ import com.hn.d.valley.widget.HnRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -75,19 +72,19 @@ import rx.functions.Func2;
 public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.DataListBean,
         CommentListBean.DataListBean, String> implements UIIDialogImpl.OnDismissListener {
 
-    @BindView(R.id.recycler_view)
+//    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.refresh_layout)
+//    @BindView(R.id.refresh_layout)
     HnRefreshLayout mRefreshLayout;
-    @BindView(R.id.dynamic_root_layout)
+//    @BindView(R.id.dynamic_root_layout)
     RSoftInputLayout mDynamicRootLayout;
-    @BindView(R.id.emoji_recycler_view)
+//    @BindView(R.id.emoji_recycler_view)
     EmojiRecyclerView mEmojiRecyclerView;
-    @BindView(R.id.input_view)
+//    @BindView(R.id.input_view)
     ExEditText mInputView;
-    @BindView(R.id.emoji_control_layout)
+//    @BindView(R.id.emoji_control_layout)
     CheckBox mEmojiControlLayout;
-    @BindView(R.id.send_view)
+//    @BindView(R.id.send_view)
     TextView mSendView;
     /**
      * 动态id
@@ -430,7 +427,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     /**
      * 发送评价
      */
-    @OnClick({R.id.send_view})
+//    @OnClick({R.id.send_view})
     public void onSendClick(View view) {
         add(RRetrofit.create(SocialService.class)
                 .comment(Param.buildMap("type:discuss", "item_id:" + discuss_id, "mContent:" + mInputView.string()))
@@ -458,7 +455,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     /**
      * 输入框文本变化
      */
-    @OnTextChanged(R.id.input_view)
+//    @OnTextChanged(R.id.input_view)
     public void onInputTextChanged(Editable editable) {
         mSendView.setEnabled(!TextUtils.isEmpty(editable));
     }
@@ -466,7 +463,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     /**
      * 表情切换
      */
-    @OnClick({R.id.emoji_control_layout})
+//    @OnClick({R.id.emoji_control_layout})
     public void onEmojiControlClick(CompoundButton view) {
         if (view.isChecked()) {
             mDynamicRootLayout.showEmojiLayout();

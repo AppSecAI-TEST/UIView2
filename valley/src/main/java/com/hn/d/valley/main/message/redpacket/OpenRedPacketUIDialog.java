@@ -23,8 +23,6 @@ import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindInt;
-import butterknife.BindView;
 import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -51,21 +49,13 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
 
     public static final String TAG = OpenRedPacketUIDialog.class.getSimpleName();
 
-    @BindView(R.id.iv_cancel)
     ImageView ivCancel;
-    @BindView(R.id.iv_icon_head)
     HnGlideImageView ivIconHead;
-    @BindView(R.id.tv_username)
     TextView tvUsername;
-    @BindView(R.id.tv_tip)
     TextView tvTip;
-    @BindView(R.id.tv_red_content)
     TextView tvRedContent;
-    @BindView(R.id.base_dialog_root_layout)
     RelativeLayout baseDialogRootLayout;
-    @BindView(R.id.iv_open)
     ImageView ivOpen;
-    @BindView(R.id.tv_red_to_detail)
     TextView tvRedToDetail;
 
     private long redId;
@@ -128,6 +118,15 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
+        ivCancel = v(R.id.iv_cancel);
+        ivIconHead = v(R.id.iv_icon_head);
+        tvUsername = v(R.id.tv_username);
+        tvTip = v(R.id.tv_tip);
+        tvRedContent = v(R.id.tv_red_content);
+        baseDialogRootLayout = v(R.id.base_dialog_root_layout);
+        tvRedToDetail = v(R.id.tv_red_to_detail);
+        ivOpen = v(R.id.iv_open);
+
 
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override

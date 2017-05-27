@@ -26,7 +26,6 @@ import com.jakewharton.rxbinding.widget.RxTextView;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -45,11 +44,8 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
 
     public static final String ITEMTYPES = "itemTypes";
 
-    @BindView(R.id.search_input_view)
     ExEditText mSearchInputView;
-    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.empty_tip_view)
     TextView mEmptyTipView;
 //    @BindView(R.id.refresh_layout)
 //    RefreshLayout refreshLayout;
@@ -92,6 +88,10 @@ public class GlobalSearchUIView extends BaseUIView<GlobalSearch.ISearchPresenter
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mSearchInputView = v(R.id.search_input_view);
+        mRecyclerView = v(R.id.recycler_view);
+        mEmptyTipView = v(R.id.empty_tip_view);
+
         bindPresenter(new GlobalSearchPresenter());
 
 //        refreshLayout.setRefreshDirection(RefreshLayout.TOP);

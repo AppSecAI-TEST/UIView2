@@ -6,11 +6,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
-import com.hn.d.valley.R;
 import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.R;
 import com.lzy.imagepicker.ImagePickerHelper;
-
-import butterknife.OnClick;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -30,22 +28,42 @@ public class PostStatusUIDialog extends UIIDialogImpl {
     }
 
     @Override
+    protected void initDialogContentView() {
+        super.initDialogContentView();
+        click(R.id.cancel_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCancelClick();
+            }
+        });
+        click(R.id.image_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onImageClick();
+            }
+        });
+        click(R.id.video_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onVideoClick();
+            }
+        });
+    }
+
+    @Override
     public int getDimColor() {
         return Color.parseColor("#80000000");
     }
 
-    @OnClick(R.id.cancel_view)
     public void onCancelClick() {
         finishDialog();
     }
 
-    @OnClick(R.id.image_view)
     public void onImageClick() {
         finishDialog();
         ImagePickerHelper.startImagePicker(mActivity, false, true, false, true, 9);
     }
 
-    @OnClick(R.id.video_view)
     public void onVideoClick() {
         T_.show("莫慌, 马上就能发布视频了...");
         finishDialog();

@@ -17,14 +17,11 @@ import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.other.FriendsRecommendUIView;
 
-import butterknife.BindView;
-
 /**
  * Created by hewking on 2017/3/16.
  */
 public final class NewFriend2UIView extends BaseContentUIView {
 
-    @BindView(R.id.main_new_friend)
     UILayoutImpl mContainerLayout;
     SegmentTabLayout tabLayout;
 
@@ -44,6 +41,7 @@ public final class NewFriend2UIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mContainerLayout = v(R.id.main_new_friend);
     }
 
     private void initTablayout() {

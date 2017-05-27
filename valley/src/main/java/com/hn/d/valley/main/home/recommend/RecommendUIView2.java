@@ -25,7 +25,6 @@ import com.hn.d.valley.control.TagsControl;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import rx.functions.Action1;
 
 /**
@@ -42,9 +41,7 @@ import rx.functions.Action1;
 @Deprecated
 public class RecommendUIView2 extends BaseContentUIView {
 
-    @BindView(R.id.slid_tab_layout)
     SlidingTabLayout mSlidTabLayout;
-    @BindView(R.id.view_pager)
     UIViewPager mViewPager;
     ArrayList<Tag> mAllTags, mMyTags;
 
@@ -105,6 +102,9 @@ public class RecommendUIView2 extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mSlidTabLayout = v(R.id.slid_tab_layout);
+        mViewPager = v(R.id.view_pager);
+
         TagsControl.initMyTags(mAllTags, mMyTags);
 
         initViewPager();

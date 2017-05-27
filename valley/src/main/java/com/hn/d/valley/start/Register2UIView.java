@@ -10,7 +10,6 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -30,6 +29,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.EmptyAction;
 import com.hn.d.valley.control.LoginControl;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
@@ -41,11 +41,6 @@ import com.orhanobut.hawk.Hawk;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import butterknife.OnFocusChange;
-import butterknife.OnTouch;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -63,13 +58,9 @@ import rx.functions.Action1;
 public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IRegister2Presenter>
         implements Start.IRegister2View<String, B> {
 
-    @BindView(R.id.ico_view)
     SimpleDraweeView mIcoView;
-    @BindView(R.id.name_view)
     ExEditText mNameView;
-    @BindView(R.id.sex_view)
     TextView mSexView;
-    @BindView(R.id.password_view)
     ExEditText mPasswordView;
 
     String mIcoFilePath;
@@ -79,7 +70,6 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     String phone, code;
 
     int sex = 1;//1:男  2;女
-    @BindView(R.id.finish_view)
     TextView mFinishView;
 
     public Register2UIView(IView registerIView, String phone, String code) {
@@ -98,6 +88,39 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mIcoView = v(R.id.ico_view);
+        mNameView = v(R.id.name_view);
+        mSexView = v(R.id.sex_view);
+        mPasswordView = v(R.id.password_view);
+        mFinishView = v(R.id.finish_view);
+
+        CompoundButton cb = v(R.id.show_password_checkbox);
+        cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                onShowCheckbox(buttonView, isChecked);
+            }
+        });
+        click(R.id.ico_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onIcoClick();
+            }
+        });
+
+        v(R.id.sex_view).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return onSexTouch(event);
+            }
+        });
+
+        v(R.id.sex_view).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Register2UIView.this.onFocusChange(hasFocus);
+            }
+        });
 
         RxView.clicks(mFinishView)
                 .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
@@ -131,7 +154,6 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     /**
      * 隐藏和显示密码
      */
-    @OnCheckedChanged(R.id.show_password_checkbox)
     public void onShowCheckbox(CompoundButton checkbox, boolean show) {
         if (show) {
             mPasswordView.showPassword();
@@ -143,7 +165,6 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     /**
      * 头像
      */
-    @OnClick(R.id.ico_view)
     public void onIcoClick() {
         ImagePickerHelper.startImagePicker(mActivity, true, false, 1);
     }
@@ -198,7 +219,6 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         }
     }
 
-    @OnTouch(R.id.sex_view)
     public boolean onSexTouch(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             selectorSex();
@@ -206,7 +226,6 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         return true;
     }
 
-    @OnFocusChange(R.id.sex_view)
     public void onFocusChange(boolean focus) {
         if (focus) {
             selectorSex();

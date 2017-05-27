@@ -35,7 +35,6 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
-import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
@@ -76,55 +75,52 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
  * Created by hewking on 2017/3/16.
  */
+@Deprecated
 public class ChatUIView extends BaseContentUIView implements IAudioRecordCallback ,SessionProxy{
 
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
     protected static final String KEY_ANCHOR = "anchor";
 
-    @BindView(R.id.group_view)
+//    @BindView(R.id.group_view)
     RadioGroup mGroupView;
-    @BindView(R.id.chat_root_layout)
+//    @BindView(R.id.chat_root_layout)
     RSoftInputLayout mChatRootLayout;
-    @BindView(R.id.input_view)
+//    @BindView(R.id.input_view)
     protected ExEditText mInputView;
-    @BindView(R.id.record_view)
+//    @BindView(R.id.record_view)
     TextView mRecordView;
-    @BindView(R.id.refresh_layout)
+//    @BindView(R.id.refresh_layout)
     HnRefreshLayout mRefreshLayout;
-    @BindView(R.id.recycler_view)
+//    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.message_expression_view)
+//    @BindView(R.id.message_expression_view)
     RadioButton mMessageExpressionView;
-    @BindView(R.id.message_add_view)
+//    @BindView(R.id.message_add_view)
     RadioButton mMessageAddView;
-    @BindView(R.id.send_view)
+//    @BindView(R.id.send_view)
     TextView mSendView;
-    @BindView(R.id.timer)
+//    @BindView(R.id.timer)
     Chronometer mTimer;
-    @BindView(R.id.timer_tip)
+//    @BindView(R.id.timer_tip)
     TextView mTimerTip;
-    @BindView(R.id.timer_tip_container)
+//    @BindView(R.id.timer_tip_container)
     LinearLayout mTimerTipContainer;
-    @BindView(R.id.layoutPlayAudio)
+//    @BindView(R.id.layoutPlayAudio)
     FrameLayout mLayoutPlayAudio;
-    @BindView(R.id.over_layout)
+//    @BindView(R.id.over_layout)
     FrameLayout mOverLayout;
-    @BindView(R.id.emoji_control_layout)
+//    @BindView(R.id.emoji_control_layout)
     RelativeLayout mEmojiControlLayout;
-    @BindView(R.id.command_control_layout)
+//    @BindView(R.id.command_control_layout)
     RelativeLayout mCommandControlLayout;
-    @BindView(R.id.message_voice_box)
+//    @BindView(R.id.message_voice_box)
     CheckBox mMessageVoiceBox;
 
     private String mLastInputText = "";
@@ -467,7 +463,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     /**
      * 切换语音输入
      */
-    @OnCheckedChanged(R.id.message_voice_box)
+//    @OnCheckedChanged(R.id.message_voice_box)
     public void onMessageVoiceBox(boolean isChecked) {
         mRecordView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         if (isChecked) {
@@ -666,7 +662,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     /**
      * 表情功能切换
      */
-    @OnClick({R.id.message_expression_view, R.id.message_add_view})
+//    @OnClick({R.id.message_expression_view, R.id.message_add_view})
     public void onMessageClick(CompoundButton view) {
         if (isRecording()) {
             view.setChecked(false);
@@ -706,7 +702,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     /**
      * 输入框文本变化
      */
-    @OnTextChanged(R.id.input_view)
+//    @OnTextChanged(R.id.input_view)
     public void onInputTextChanged(Editable editable) {
         mSendView.setEnabled(!TextUtils.isEmpty(editable));
     }
@@ -714,7 +710,7 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
     /**
      * 发送消息
      */
-    @OnClick(R.id.send_view)
+//    @OnClick(R.id.send_view)
     public void onSendClick() {
         final String string = mInputView.getText().toString();
         if (TextUtils.isEmpty(string)) {

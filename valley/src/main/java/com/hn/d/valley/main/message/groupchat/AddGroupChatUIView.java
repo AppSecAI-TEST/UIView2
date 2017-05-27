@@ -46,7 +46,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -61,9 +60,7 @@ public class AddGroupChatUIView extends BaseUIView {
 
     public static final String SELECTED_UIDS = "SELECTED_UIDS";
 
-    @BindView(R.id.friend_add_refreshlayout)
     HnRefreshLayout refreshLayout;
-    @BindView(R.id.friend_add_recyclerview)
     RecyclerView recyclerView;
 //    @BindView(R.id.rv_groupchat_icon)
 //    HnIcoRecyclerView iconSelectedRv;
@@ -126,6 +123,8 @@ public class AddGroupChatUIView extends BaseUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        refreshLayout = v(R.id.friend_add_refreshlayout);
+        recyclerView = v(R.id.friend_add_recyclerview);
         init();
     }
 

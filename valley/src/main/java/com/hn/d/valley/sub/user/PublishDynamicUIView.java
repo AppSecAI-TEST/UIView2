@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
@@ -52,6 +51,7 @@ import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.control.VideoStatusInfo;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
@@ -64,9 +64,6 @@ import com.lzy.imagepicker.ImagePickerHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
@@ -88,25 +85,25 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
      * 是否显示过提示
      */
     private static boolean isShowTip = false;
-    @BindView(R.id.recycler_view)
+//    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.tag_layout)
+//    @BindView(R.id.tag_layout)
     ItemInfoLayout mTagLayout;
-    @BindView(R.id.top_box)
+//    @BindView(R.id.top_box)
     SwitchCompat mTopBox;
-    @BindView(R.id.share_box)
+//    @BindView(R.id.share_box)
     SwitchCompat mShareBox;
     boolean isFirst = true;
-    @BindView(R.id.input_view)
+//    @BindView(R.id.input_view)
     ExEditText mInputView;
-    @BindView(R.id.forward_control_layout)
+//    @BindView(R.id.forward_control_layout)
     RelativeLayout mForwardControlLayout;
-    @BindView(R.id.single_text_indicator_view)
+//    @BindView(R.id.single_text_indicator_view)
     TextIndicator mSingleTextIndicatorView;
     Action0 mPublishAction;
-    @BindView(R.id.video_control_layout)
+//    @BindView(R.id.video_control_layout)
     View mVideoControlLayout;
-    @BindView(R.id.video_thumb_layout)
+//    @BindView(R.id.video_thumb_layout)
     RNineImageLayout mVideoThumbLayout;
     private ResizeAdapter mImageAdapter;
     /**
@@ -454,7 +451,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         RAmap.stopLocation();
     }
 
-    @OnClick({R.id.top_layout, R.id.share_layout})
+//    @OnClick({R.id.top_layout, R.id.share_layout})
     public void onLayoutClick(View view) {
         switch (view.getId()) {
             case R.id.top_layout:
@@ -466,7 +463,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         }
     }
 
-    @OnCheckedChanged(R.id.top_box)
+//    @OnCheckedChanged(R.id.top_box)
     public void onTopCheck(boolean isCheck) {
         if (isCheck && !isShowTip) {
             UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
@@ -480,7 +477,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         }
     }
 
-    @OnCheckedChanged(R.id.share_box)
+//    @OnCheckedChanged(R.id.share_box)
     public void onShareCheck(boolean isCheck) {
         final ItemInfoLayout infoLayout = mViewHolder.v(R.id.address_layout);
         if (isCheck) {
@@ -513,7 +510,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     /**
      * 选择标签
      */
-    @OnClick(R.id.tag_layout)
+//    @OnClick(R.id.tag_layout)
     public void onTagClick() {
         isFirst = false;
         startIView(new TagsUIView(mListAction1, mSelectorTags).setIsVideo(mVideoStatusInfo != null));

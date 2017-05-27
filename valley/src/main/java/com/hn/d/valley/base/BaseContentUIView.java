@@ -33,6 +33,24 @@ public abstract class BaseContentUIView extends UIContentView {
         return inflater.inflate(R.layout.no_network_layout, baseRootLayout);
     }
 
+    @Override
+    public void loadContentView(View rootView) {
+        super.loadContentView(rootView);
+    }
+
+//    @Override
+//    public void showContentLayout() {
+//        //基类中, 已经不使用 butterknife 了, 为了兼容, 在这里使用.
+//        removeOtherView(LayoutState.CONTENT);
+//        if (mBaseContentLayout.getChildCount() == 0) {
+//            inflateContentLayout(mBaseContentLayout, LayoutInflater.from(mActivity));
+//            ButterKnife.bind(this, mBaseContentLayout);
+//            initOnShowContentLayout();
+//        }
+//        OnShowContentLayout();
+//        changeState(mLayoutState, LayoutState.CONTENT);
+//    }
+
     @CallSuper
     @Override
     public void onViewLoad() {

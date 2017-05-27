@@ -19,8 +19,8 @@ import com.hn.d.valley.main.friend.FriendNewUIView2;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
-import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-import butterknife.BindView;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -51,7 +50,6 @@ import rx.functions.Action1;
  */
 public class MessageUIView extends BaseUIView {
 
-    @BindView(R.id.swipe_recycler_view)
     SwipeMenuRecyclerView mSwipeRecyclerView;
 
     private boolean isLoading = false;
@@ -88,7 +86,7 @@ public class MessageUIView extends BaseUIView {
                             case Constant.klj:
                             case Constant.wallet:
                             case Constant.hot_news:
-                                SessionHelper.startSession(mParentILayout,recentContact.getContactId(),recentContact.getSessionType());
+                                SessionHelper.startSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType());
                                 return;
                         }
 
@@ -97,9 +95,9 @@ public class MessageUIView extends BaseUIView {
                             Map<String, Set<IMMessage>> cacheMessages = RecentContactsCache.instance().getCacheMessages();
                             Set<IMMessage> aitMessages = cacheMessages.get(recentContact.getContactId());
                             if (aitMessages != null && aitMessages.size() > 0) {
-                                SessionHelper.startTeamSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType(),null,aitMessages);
+                                SessionHelper.startTeamSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType(), null, aitMessages);
                             } else {
-                                SessionHelper.startTeamSession(mParentILayout,recentContact.getContactId(),recentContact.getSessionType());
+                                SessionHelper.startTeamSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType());
                             }
                             cacheMessages.remove(recentContact.getContactId());
                             return;
@@ -138,6 +136,8 @@ public class MessageUIView extends BaseUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mSwipeRecyclerView = v(R.id.swipe_recycler_view);
+
         mRecentContactsControl.init(mBaseContentLayout);
         onEvent(null);
     }
@@ -154,19 +154,19 @@ public class MessageUIView extends BaseUIView {
             }
         }));
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.tianjia_3)
-        .setListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                .setListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 //                mParentILayout.startIView(new FriendUIView());
 
 //                MenuPopUpWindow popUpWindow = new MenuPopUpWindow(mActivity,mParentILayout);
 //                popUpWindow.showAsDropDown(v, Gravity.BOTTOM,0,0);
 
-                mParentILayout.startIView(new FriendMenuUIDialog(v, mParentILayout));
+                        mParentILayout.startIView(new FriendMenuUIDialog(v, mParentILayout));
 
 
-            }
-        }));
+                    }
+                }));
 
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.nav_message_text)).setLeftItems(leftItems).setRightItems(rightItems);
     }
@@ -175,7 +175,7 @@ public class MessageUIView extends BaseUIView {
      * 打开搜索界面
      */
     private void startSearch() {
-        GlobalSearchUIView2.start(mParentILayout, GlobalSearchUIView2.Options.sOptions,new int[]{ItemTypes.FRIEND,ItemTypes.GROUP,ItemTypes.MSG,});
+        GlobalSearchUIView2.start(mParentILayout, GlobalSearchUIView2.Options.sOptions, new int[]{ItemTypes.FRIEND, ItemTypes.GROUP, ItemTypes.MSG,});
     }
 
     @Override

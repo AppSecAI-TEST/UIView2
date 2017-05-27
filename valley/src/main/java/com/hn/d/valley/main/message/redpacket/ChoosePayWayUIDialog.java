@@ -13,7 +13,6 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 
-import butterknife.BindView;
 import rx.functions.Action1;
 
 /**
@@ -30,17 +29,11 @@ import rx.functions.Action1;
 public class ChoosePayWayUIDialog extends UIIDialogImpl {
 
 
-    @BindView(R.id.iv_cancel)
     ImageView ivCancel;
-    @BindView(R.id.base_dialog_title_view)
     TextView baseDialogTitleView;
-    @BindView(R.id.base_dialog_root_layout)
     LinearLayout baseDialogRootLayout;
-    @BindView(R.id.info_alipay)
     ItemInfoLayout infoAlipay;
-    @BindView(R.id.info_wechat)
     ItemInfoLayout infoWechat;
-    @BindView(R.id.info_balance)
     ItemInfoLayout infoBalance;
 
     private PayUIDialog.Params params;
@@ -60,6 +53,13 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
+
+        ivCancel = v(R.id.iv_cancel);
+        baseDialogTitleView = v(R.id.base_dialog_title_view);
+        baseDialogRootLayout = v(R.id.base_dialog_root_layout);
+        infoAlipay = v(R.id.info_alipay);
+        infoWechat = v(R.id.info_wechat);
+        infoBalance = v(R.id.info_balance);
 
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.BindView;
 import rx.functions.Action3;
 
 /**
@@ -39,11 +38,8 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
     public static final String SELECTED_UIDS = "SELECTED_UIDS";
 
-    @BindView(R.id.friend_add_refreshlayout)
     HnRefreshLayout refreshLayout;
-    @BindView(R.id.friend_add_recyclerview)
     RecyclerView recyclerView;
-    @BindView(R.id.sidebar_friend_index)
     WaveSideBarView sideBarView;
 
     protected BaseContactSelectAdapter.Options options;
@@ -96,6 +92,9 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        refreshLayout = v(R.id.friend_add_refreshlayout);
+        recyclerView = v(R.id.friend_add_recyclerview);
+        sideBarView = v(R.id.sidebar_friend_index);
         init();
     }
 

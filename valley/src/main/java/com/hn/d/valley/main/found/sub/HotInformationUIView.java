@@ -25,8 +25,6 @@ import com.hn.d.valley.service.NewsService;
 
 import java.util.List;
 
-import butterknife.BindView;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -41,9 +39,7 @@ import butterknife.BindView;
 public class HotInformationUIView extends BaseContentUIView {
 
     List<String> mTypeList;
-    @BindView(R.id.slid_tab_layout)
     SlidingTabLayout mSlidTabLayout;
-    @BindView(R.id.view_pager)
     UIViewPager mViewPager;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
 
@@ -66,6 +62,9 @@ public class HotInformationUIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mSlidTabLayout = v(R.id.slid_tab_layout);
+        mViewPager = v(R.id.view_pager);
+
         initViewPager();
         initTabLayout();
         updateSkin();

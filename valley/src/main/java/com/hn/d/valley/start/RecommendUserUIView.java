@@ -15,10 +15,9 @@ import android.widget.TextView;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.ScreenUtil;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.bean.RecommendUserBean;
@@ -28,18 +27,13 @@ import com.hn.d.valley.widget.HnLoading;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Created by hewking on 2017/2/27.
  */
 
 public class RecommendUserUIView extends BaseContentUIView {
 
-    @BindView(R.id.tv_focus)
     TextView tv_focus;
-    @BindView(R.id.recycler_view)
     RRecyclerView rRecyclerView;
 
     private RBaseViewHolder mViewHolder;
@@ -58,6 +52,14 @@ public class RecommendUserUIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        click(R.id.tv_focus, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                focusRecommendUser();
+            }
+        });
+        tv_focus = v(R.id.tv_focus);
+        rRecyclerView = v(R.id.recycler_view);
         init();
     }
 
@@ -91,7 +93,6 @@ public class RecommendUserUIView extends BaseContentUIView {
         super.onViewShow(bundle);
     }
 
-    @OnClick(R.id.tv_focus)
     public void focusRecommendUser() {
         HnLoading.show(mILayout);
         tv_focus.postDelayed(new Runnable() {

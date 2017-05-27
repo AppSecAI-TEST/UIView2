@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -62,9 +61,7 @@ public class VideoRecordUIView extends UIIViewImpl {
     public static final int MEDIA_TYPE_VOICE = 3;
     public boolean mIsRecording = false;
     int rotationRecord = 0;
-    @BindView(R.id.record_view)
     RecordButton mRecordView;
-    @BindView(R.id.loop_recycler_view)
     RLoopRecyclerView mLoopRecyclerView;
     Action3<UIIViewImpl, String, String> publishAction;
     /**
@@ -125,6 +122,13 @@ public class VideoRecordUIView extends UIIViewImpl {
     @Override
     protected View inflateBaseView(FrameLayout container, LayoutInflater inflater) {
         return LayoutInflater.from(mActivity).inflate(R.layout.view_video_record_layout, container);
+    }
+
+    @Override
+    public void loadContentView(View rootView) {
+        super.loadContentView(rootView);
+        mRecordView = v(R.id.record_view);
+        mLoopRecyclerView = v(R.id.loop_recycler_view);
     }
 
     @Override

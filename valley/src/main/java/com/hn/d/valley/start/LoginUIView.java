@@ -15,7 +15,6 @@ import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -37,6 +36,7 @@ import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.nim.RNim;
@@ -54,13 +54,11 @@ import com.orhanobut.hawk.Hawk;
 
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
+
+//import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -75,13 +73,9 @@ import rx.functions.Func1;
  */
 @Deprecated
 public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements Start.ILoginView<LoginBean, Bean<LoginBean>> {
-    @BindView(R.id.ico_view)
     SimpleDraweeView mIcoView;
-    @BindView(R.id.phone_view)
     ExEditText mPhoneView;
-    @BindView(R.id.password_view)
     ExEditText mPasswordView;
-    @BindView(R.id.login_view)
     TextView mLoginView;
 
     AbortableFuture loginFuture;
@@ -106,6 +100,10 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mIcoView = v(R.id.ico_view);
+        mPhoneView = v(R.id.phone_view);
+        mPasswordView = v(R.id.password_view);
+        mLoginView = v(R.id.login_view);
 
         if (BuildConfig.DEBUG) {
             RxView.longClicks(mLoginView)
@@ -232,7 +230,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         }
     }
 
-    @OnTextChanged(R.id.phone_view)
+//    @OnTextChanged(R.id.phone_view)
     public void onPhoneTextChanged(Editable editable) {
         if (TextUtils.isEmpty(editable)) {
             mIcoView.setImageURI("");
@@ -259,7 +257,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
         DraweeViewUtil.setDraweeViewHttp(mIcoView, icoUrl);
     }
 
-    @OnClick(R.id.ico_view)
+//    @OnClick(R.id.ico_view)
     public void onIcoClick() {
         startIView(UIItemDialog.build()
                 .addItem("中文", new View.OnClickListener() {
@@ -300,7 +298,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     /**
      * 隐藏和显示密码
      */
-    @OnCheckedChanged(R.id.show_password_checkbox)
+//    @OnCheckedChanged(R.id.show_password_checkbox)
     public void onShowCheckbox(CompoundButton checkbox, boolean show) {
         if (show) {
             mPasswordView.showPassword();
@@ -312,7 +310,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     /**
      * 快速注册按钮
      */
-    @OnClick(R.id.register_view)
+//    @OnClick(R.id.register_view)
     public void onRegisterClick() {
         startIView(new RegisterUIView());
     }
@@ -320,7 +318,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     /**
      * 忘记密码按钮
      */
-    @OnClick(R.id.forget_view)
+//    @OnClick(R.id.forget_view)
     public void onForgetClick(View view) {
         //HnChatActivity.launcher(mActivity, "50033");
         //HnUIMainActivity.launcher(mActivity);
@@ -335,7 +333,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     /**
      * 微信登录按钮
      */
-    @OnClick(R.id.weixin_view)
+//    @OnClick(R.id.weixin_view)
     public void onWeixinClick() {
         if (!BuildConfig.DEBUG) {
             return;
@@ -352,7 +350,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
     /**
      * QQ登录按钮
      */
-    @OnClick(R.id.qq_view)
+//    @OnClick(R.id.qq_view)
     public void onQqClick() {
         if (!BuildConfig.DEBUG) {
             return;

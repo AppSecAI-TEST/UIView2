@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -37,8 +36,8 @@ import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.file.FileUtil;
+import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
@@ -49,15 +48,15 @@ import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
+import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.CommandLayoutControl;
 import com.hn.d.valley.main.message.session.Container;
 import com.hn.d.valley.main.message.session.EmojiLayoutControl;
-import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.ImageCommandItem;
-import com.hn.d.valley.main.message.session.SessionCustomization;
-import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
-import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
+import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hn.d.valley.main.message.session.SessionProxy;
 import com.hn.d.valley.main.message.session.VideoCommandItem;
 import com.hn.d.valley.skin.SkinUtils;
@@ -74,22 +73,16 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
-import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import butterknife.OnTextChanged;
-
 /**
  * Created by hewking on 2017/3/16.
  */
-public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallback ,SessionProxy{
+public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallback, SessionProxy {
 
     protected static final String KEY_SESSION_ID = "key_account";
     protected static final String KEY_SESSION_TYPE = "key_sessiontype";
@@ -98,7 +91,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     protected static final String KEY_ANCHOR = "anchor";
     protected static final String KEY_AITMESSAGES = "aitMessages";
 
-    @BindView(R.id.input_view)
     protected ExEditText mInputView;
     protected ChatControl2 mChatControl;
     protected SessionTypeEnum sessionType;
@@ -107,39 +99,22 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     protected IMMessage mAnchor;
     protected SessionCustomization mCustomization;
 
-    @BindView(R.id.group_view)
     RadioGroup mGroupView;
-    @BindView(R.id.chat_root_layout)
     RSoftInputLayout mChatRootLayout;
-    @BindView(R.id.record_view)
     TextView mRecordView;
-    @BindView(R.id.refresh_layout)
     HnRefreshLayout mRefreshLayout;
-    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.message_expression_view)
     RadioButton mMessageExpressionView;
-    @BindView(R.id.message_add_view)
     RadioButton mMessageAddView;
-    @BindView(R.id.send_view)
     TextView mSendView;
-    @BindView(R.id.timer)
     Chronometer mTimer;
-    @BindView(R.id.timer_tip)
     TextView mTimerTip;
-    @BindView(R.id.timer_tip_container)
     LinearLayout mTimerTipContainer;
-    @BindView(R.id.layoutPlayAudio)
     FrameLayout mLayoutPlayAudio;
-    @BindView(R.id.over_layout)
     FrameLayout mOverLayout;
-    @BindView(R.id.emoji_control_layout)
     RelativeLayout mEmojiControlLayout;
-    @BindView(R.id.command_control_layout)
     RelativeLayout mCommandControlLayout;
-    @BindView(R.id.message_voice_box)
     CheckBox mMessageVoiceBox;
-    @BindView(R.id.ll_warp_add_view)
     LinearLayout wrap_add_view;
 
     QueryDirectionEnum direction;
@@ -187,7 +162,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
-        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION,customization);
+        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION, customization);
         mLayout.startIView(new ChatUIView2(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
@@ -216,6 +191,60 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mInputView = v(R.id.input_view);
+        mGroupView = v(R.id.group_view);
+        mChatRootLayout = v(R.id.chat_root_layout);
+        mRecordView = v(R.id.record_view);
+        mRefreshLayout = v(R.id.refresh_layout);
+        mRecyclerView = v(R.id.recycler_view);
+        mMessageExpressionView = v(R.id.message_expression_view);
+        mMessageAddView = v(R.id.message_add_view);
+        mSendView = v(R.id.send_view);
+        mTimer = v(R.id.timer);
+        mTimerTip = v(R.id.timer_tip);
+        mTimerTipContainer = v(R.id.timer_tip_container);
+        mLayoutPlayAudio = v(R.id.layoutPlayAudio);
+        mOverLayout = v(R.id.over_layout);
+        mEmojiControlLayout = v(R.id.emoji_control_layout);
+        mCommandControlLayout = v(R.id.command_control_layout);
+        mMessageVoiceBox = v(R.id.message_voice_box);
+        wrap_add_view = v(R.id.ll_warp_add_view);
+
+
+        CompoundButton compoundButton = v(R.id.message_voice_box);
+        compoundButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                onMessageVoiceBox(isChecked);
+            }
+        });
+        click(R.id.message_expression_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMessageClick((CompoundButton) v);
+            }
+        });
+        click(R.id.message_add_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMessageClick((CompoundButton) v);
+            }
+        });
+        mInputView.addTextChangedListener(new SingleTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                super.onTextChanged(s, start, before, count);
+                onInputTextChanged(s);
+            }
+        });
+        click(R.id.send_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSendClick();
+            }
+        });
+
+
         mBaseRootLayout.fitsSystemWindows(false);
 
         mChatControl = new ChatControl2(mActivity, mViewHolder, this);
@@ -248,12 +277,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 //                T_.show(categoryName + ": " + stickerName);
                 CustomExpressionMsg expressionMsg = new CustomExpressionMsg(FileUtil.getFileNameNoEx(stickerName));
                 CustomExpressionAttachment attachment = new CustomExpressionAttachment(expressionMsg);
-                IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "贴图表情",attachment );
+                IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "贴图表情", attachment);
                 sendMessage(message);
             }
         });
 
-        Container container = new Container(mActivity,mSessionId,sessionType, mParentILayout,this);
+        Container container = new Container(mActivity, mSessionId, sessionType, mParentILayout, this);
         mCommandLayoutControl = new CommandLayoutControl(container, mViewHolder, createCommandItems());
 
         initRefreshLayout();
@@ -527,7 +556,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     /**
      * 切换语音输入
      */
-    @OnCheckedChanged(R.id.message_voice_box)
     public void onMessageVoiceBox(boolean isChecked) {
         mRecordView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         if (isChecked) {
@@ -711,7 +739,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     /**
      * 表情功能切换
      */
-    @OnClick({R.id.message_expression_view, R.id.message_add_view})
     public void onMessageClick(CompoundButton view) {
         if (isRecording()) {
             view.setChecked(false);
@@ -753,8 +780,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     /**
      * 输入框文本变化
      */
-    @OnTextChanged(R.id.input_view)
-    public void onInputTextChanged(Editable editable) {
+    public void onInputTextChanged(CharSequence editable) {
         boolean isEmpty = TextUtils.isEmpty(editable);
         mSendView.setEnabled(!isEmpty);
         if (!isEmpty) {
@@ -771,7 +797,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     /**
      * 发送消息
      */
-    @OnClick(R.id.send_view)
     public void onSendClick() {
         final String string = mInputView.getText().toString();
         if (TextUtils.isEmpty(string)) {
@@ -782,7 +807,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         mInputView.setText("");
     }
 
-    public boolean sendMessage(IMMessage message){
+    public boolean sendMessage(IMMessage message) {
         msgService().sendMessage(message, false);
         mChatControl.addData(message);
         return true;
@@ -838,7 +863,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        mCommandLayoutControl.onActivityResult(requestCode,resultCode,data);
+        mCommandLayoutControl.onActivityResult(requestCode, resultCode, data);
     }
 
 

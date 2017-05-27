@@ -18,7 +18,6 @@ import com.lzy.imagepicker.ImagePickerHelper;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.QRCodeDecoder;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;
@@ -35,11 +34,8 @@ import cn.bingoogolapple.qrcode.zxing.ZXingView;
  * Version: 1.0.0
  */
 public class ScanUIView extends BaseContentUIView implements QRCodeView.Delegate {
-    @BindView(R.id.zxing_view)
     ZXingView mZxingView;
-    @BindView(R.id.light_switch_view)
     RImageCheckView mLightSwitchView;
-    @BindView(R.id.photo_selector_view)
     RImageCheckView mPhotoSelectorView;
 
     @Override
@@ -55,6 +51,10 @@ public class ScanUIView extends BaseContentUIView implements QRCodeView.Delegate
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mZxingView = v(R.id.zxing_view);
+        mLightSwitchView = v(R.id.light_switch_view);
+        mPhotoSelectorView = v(R.id.photo_selector_view);
+
         mLightSwitchView.setOnCheckedChangeListener(new RImageCheckView.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RImageCheckView buttonView, boolean isChecked) {

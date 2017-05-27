@@ -64,7 +64,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import butterknife.BindView;
 import rx.functions.Action3;
 
 /**
@@ -75,11 +74,8 @@ public class GroupChatUIView extends ChatUIView2 {
     public static final String TAG = GroupChatUIView.class.getSimpleName();
 
 
-    @BindView(R.id.rl_group_announcement)
     View layout;
-    @BindView(R.id.tv_announcement)
     TextView tv_announce;
-    @BindView(R.id.ait_control_layout)
     LinearLayout ait_control_layout;
 
     private Map<String, GroupMemberBean> selectedMembers;
@@ -134,6 +130,14 @@ public class GroupChatUIView extends ChatUIView2 {
         if(!checkInGroup()){
             showNotice();
         }
+    }
+
+    @Override
+    public void loadContentView(View rootView) {
+        super.loadContentView(rootView);
+        layout = v(R.id.rl_group_announcement);
+        tv_announce = v(R.id.tv_announcement);
+        ait_control_layout = v(R.id.ait_control_layout);
     }
 
     @Override

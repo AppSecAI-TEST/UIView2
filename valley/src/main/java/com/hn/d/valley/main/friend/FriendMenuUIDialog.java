@@ -1,7 +1,6 @@
 package com.hn.d.valley.main.friend;
 
 import android.graphics.Rect;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseRxView;
@@ -23,10 +21,8 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.resources.ResUtil;
-import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
-import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.main.found.sub.ScanUIView;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
@@ -37,7 +33,6 @@ import com.hn.d.valley.widget.MenuPopUpWindow;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import rx.functions.Action1;
 import rx.functions.Action3;
 

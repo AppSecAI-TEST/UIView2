@@ -55,7 +55,6 @@ import com.netease.nimlib.sdk.StatusCode;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action0;
@@ -74,10 +73,9 @@ import rx.functions.Action0;
 public class MainUIView extends BaseUIView {
 
     protected long startAnimTime = DEFAULT_ANIM_TIME;
-    @BindView(R.id.bottom_nav_layout)
     CommonTabLayout mBottomNavLayout;
-    @BindView(R.id.main_layout)
     UILayoutImpl mMainUILayout;
+
     /*首页*/
     HomeUIView mHomeUIView;
     /*发现*/
@@ -133,6 +131,9 @@ public class MainUIView extends BaseUIView {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
+        mBottomNavLayout = mViewHolder.v(R.id.bottom_nav_layout);
+        mMainUILayout = mViewHolder.v(R.id.main_layout);
+
         mMainUILayout.lock();
         initILayout();
         initTabLayout();

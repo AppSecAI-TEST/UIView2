@@ -115,7 +115,7 @@ dependencies {
 
 
     compile 'org.jsoup:jsoup:1.10.2'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    //annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     /*腾讯Bugly依赖*/
     //compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
@@ -136,9 +136,11 @@ dependencies {
     compile "com.netease.nimlib:lucene:${nim_ver}"
 
     compile 'com.facebook.fresco:fresco:1.1.0'
-    compile 'com.jakewharton:butterknife:8.5.1'
+    //compile 'com.jakewharton:butterknife:8.5.1'
     compile 'jp.wasabeef:fresco-processors:2.0.0'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+//    compile 'com.jakewharton:butterknife:8.4.0'
 }
 repositories {
     mavenCentral()

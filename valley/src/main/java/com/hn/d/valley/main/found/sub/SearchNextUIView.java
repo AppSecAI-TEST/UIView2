@@ -12,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import com.angcyo.uiview.recycler.widget.IShowState;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -45,7 +47,6 @@ import com.hn.d.valley.widget.HnGlideImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.OnTextChanged;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -161,7 +162,6 @@ public class SearchNextUIView extends BaseContentUIView {
     /**
      * 输入框文本变化
      */
-    @OnTextChanged(R.id.edit_text_view)
     public void onInputTextChanged(Editable editable) {
         if (TextUtils.isEmpty(editable)) {
             switchToNormal();
@@ -584,6 +584,15 @@ public class SearchNextUIView extends BaseContentUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        final EditText editText = v(R.id.edit_text_view);
+        editText.addTextChangedListener(new SingleTextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                super.onTextChanged(s, start, before, count);
+                onInputTextChanged(editText.getText());
+            }
+        });
+
         mViewHolder.v(R.id.cancel_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

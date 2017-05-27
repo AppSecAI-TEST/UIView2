@@ -24,6 +24,8 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.wallet.WalletService;
+import com.hn.pay_library.alipay.AlipayConstants;
+import com.hn.pay_library.alipay.OrderInfoUtil2_0;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,17 +37,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-import butterknife.BindView;
-
-import com.hn.pay_library.alipay.AlipayConstants;
-import com.hn.pay_library.alipay.OrderInfoUtil2_0;
-
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
-import static com.hn.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
 import static com.hn.pay_library.alipay.AlipayConstants.APPID;
+import static com.hn.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -68,15 +65,10 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     private static final int SDK_PAY_FLAG = 1;
     private static final int SDK_AUTH_FLAG = 2;
 
-    @BindView(R.id.iv_cancel)
     ImageView ivCancel;
-    @BindView(R.id.base_dialog_title_view)
     TextView baseDialogTitleView;
-    @BindView(R.id.base_dialog_content_view)
     TextView baseDialogContentView;
-    @BindView(R.id.base_item_info_layout)
     ItemInfoLayout baseItemInfoLayout;
-    @BindView(R.id.btn_send)
     Button btnSend;
 
     private PayUIDialog.Params params;
@@ -103,6 +95,11 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
+        ivCancel = v(R.id.iv_cancel);
+        baseDialogTitleView = v(R.id.base_dialog_title_view);
+        baseDialogContentView = v(R.id.base_dialog_content_view);
+        baseItemInfoLayout = v(R.id.base_item_info_layout);
+        btnSend = v(R.id.btn_send);
 
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override

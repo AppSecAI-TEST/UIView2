@@ -58,7 +58,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -73,11 +72,8 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 
     private AddressBookAdapter mAddressAdapter;
 
-    @BindView(R.id.recycler_friend)
     RecyclerView rv_phoneusers;
-    @BindView(R.id.search_input_view)
     ExEditText et_search;
-    @BindView(R.id.refresh_layout)
     HnRefreshLayout refreshLayout;
 
     private List<AbsContactItem> mContacts;
@@ -100,6 +96,10 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        rv_phoneusers = v(R.id.recycler_friend);
+        et_search = v(R.id.search_input_view);
+        refreshLayout = v(R.id.refresh_layout);
+
         initView();
     }
 

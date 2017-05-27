@@ -52,9 +52,6 @@ import com.hwangjr.rxbus.annotation.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -68,22 +65,15 @@ import butterknife.OnClick;
  */
 public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 
-    @BindView(R.id.check_group_view)
     RCheckGroup mCheckGroupView;
-    @BindView(R.id.map_check_view)
     RImageCheckView mMapCheckView;
-    @BindView(R.id.filter_root_layout)
     LinearLayout mFilterRootLayout;
     AmapControl mAmapControl;
-    @BindView(R.id.map_view)
     TextureMapView mMapView;
-    @BindView(R.id.my_location)
     Button mMyLocation;
     //@BindView(R.id.view_pager)
     //ViewPager mViewPager;
-    @BindView(R.id.card_recycler_view)
     RRecyclerView mCardRecyclerView;
-    @BindView(R.id.bottom_control_layout)
     LinearLayout mBottomControlLayout;
     AudioPlayHelper mAudioPlayHelper;
     private AmapBean lastAmapBean;
@@ -293,6 +283,21 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mCheckGroupView = v(R.id.check_group_view);
+        mMapCheckView = v(R.id.map_check_view);
+        mFilterRootLayout = v(R.id.filter_root_layout);
+        mMapView = v(R.id.map_view);
+        mMyLocation = v(R.id.my_location);
+        mCardRecyclerView = v(R.id.card_recycler_view);
+        mBottomControlLayout = v(R.id.bottom_control_layout);
+
+        click(R.id.my_location, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMyLocationClick();
+            }
+        });
+
         mMapCardAdapter = new MapCardAdapter(mActivity, mParentILayout, mSubscriptions);
         mMapCardAdapter.setAudioPlayHelper(mAudioPlayHelper);
 
@@ -542,7 +547,6 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         mAmapControl = null;
     }
 
-    @OnClick(R.id.my_location)
     public void onMyLocationClick() {
         initLocation();
     }

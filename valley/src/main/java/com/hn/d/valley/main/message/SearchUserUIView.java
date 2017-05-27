@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
@@ -23,6 +22,7 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.mvp.Search;
 import com.hn.d.valley.main.message.mvp.SearchPresenter;
@@ -30,8 +30,6 @@ import com.jakewharton.rxbinding.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
@@ -48,15 +46,10 @@ import rx.functions.Action1;
  */
 public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implements Search.ISearchView {
 
-    @BindView(R.id.edit_text_view)
     ExEditText mSearchInputView;
-    @BindView(R.id.search_tip_view)
     TextView mSearchTipView;
-    @BindView(R.id.search_control_layout)
     LinearLayout mSearchControlLayout;
-    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.empty_tip_view)
     TextView mEmptyTipView;
     private SearchUserAdapter mSearchUserAdapter;
 
@@ -79,6 +72,19 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mSearchInputView = v(R.id.edit_text_view);
+        mSearchTipView = v(R.id.search_tip_view);
+        mSearchControlLayout = v(R.id.search_control_layout);
+        mRecyclerView = v(R.id.recycler_view);
+        mEmptyTipView = v(R.id.empty_tip_view);
+
+        click(R.id.search_tip_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSearchTipClick();
+            }
+        });
+
         bindPresenter(new SearchPresenter());
         mSearchUserAdapter = new SearchUserAdapter(mActivity);
         mRecyclerView.setAdapter(mSearchUserAdapter);
@@ -136,7 +142,6 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
     /**
      * 开始搜索用户
      */
-    @OnClick(R.id.search_tip_view)
     public void onSearchTipClick() {
         mPresenter.onSearch(UserCache.getUserAccount(), mSearchInputView.getText().toString());
     }

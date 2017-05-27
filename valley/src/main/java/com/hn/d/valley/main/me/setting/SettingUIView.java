@@ -10,8 +10,6 @@ import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseSubContentUIView;
 import com.hn.d.valley.control.MainControl;
 
-import butterknife.OnClick;
-
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -35,9 +33,9 @@ public class SettingUIView extends BaseSubContentUIView {
         return mActivity.getString(R.string.settting);
     }
 
-    @OnClick({R.id.account_safe_layout, R.id.message_notify_layout, R.id.conceal_layout,
-            R.id.currency_layout, R.id.feedback_layout, R.id.faq_layout, R.id.about_me_layout,
-            R.id.user_agreement_layout, R.id.quit_login_layout})
+//    @OnClick({R.id.account_safe_layout, R.id.message_notify_layout, R.id.conceal_layout,
+//            R.id.currency_layout, R.id.feedback_layout, R.id.faq_layout, R.id.about_me_layout,
+//            R.id.user_agreement_layout, R.id.quit_login_layout})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.account_safe_layout://帐号安全

@@ -27,8 +27,6 @@ import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import rx.functions.Action1;
 import rx.functions.Action3;
 
@@ -162,15 +160,14 @@ public class MenuPopUpWindow extends PopupWindow implements View.OnClickListener
 
     public static class MenuVH extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.tip_view)
         RTextView tipView;
-        @BindView(R.id.iv_item_head)
         ImageView ivHead;
 
         public MenuVH(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-
+            //ButterKnife.bind(this, itemView);
+            tipView = (RTextView) itemView.findViewById(R.id.tip_view);
+            ivHead = (ImageView) itemView.findViewById(R.id.iv_item_head);
         }
 
         public void bind(final MenuItem item) {

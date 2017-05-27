@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.utils.RUtils;
@@ -26,6 +25,7 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
@@ -39,8 +39,6 @@ import com.hn.d.valley.utils.PhotoPager;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
@@ -57,28 +55,28 @@ import rx.functions.Action1;
  */
 @Deprecated
 public class MeUIView extends BaseUIView {
-    @BindView(R.id.view_pager)
+//    @BindView(R.id.view_pager)
     ViewPager mViewPager;
-    @BindView(R.id.single_text_indicator_view)
+//    @BindView(R.id.single_text_indicator_view)
     TextIndicator mTextIndicatorView;
-    @BindView(R.id.user_ico_view)
+//    @BindView(R.id.user_ico_view)
     SimpleDraweeView mUserIcoView;
 
-    @BindView(R.id.user_id_view)
+//    @BindView(R.id.user_id_view)
     TextView mUserIdView;
 
-    @BindView(R.id.scroll_root_layout)
+//    @BindView(R.id.scroll_root_layout)
     NestedScrollView mScrollRootLayout;
 
-    @BindView(R.id.person_auth_layout)
+//    @BindView(R.id.person_auth_layout)
     ItemInfoLayout mPersonAuthLayout;
-    @BindView(R.id.setting_layout)
+//    @BindView(R.id.setting_layout)
     ItemInfoLayout mSettingLayout;
-    @BindView(R.id.view_pager_placeholder_view)
+//    @BindView(R.id.view_pager_placeholder_view)
     ImageView mViewPagerPlaceholderView;
-    @BindView(R.id.dynamic_notification_layout)
+//    @BindView(R.id.dynamic_notification_layout)
     ItemInfoLayout mDynamicNotificationLayout;//动态通知
-    @BindView(R.id.my_visitor_layout)
+//    @BindView(R.id.my_visitor_layout)
     ItemInfoLayout mMyVisitorLayout;//我的访客
     private ArrayList<String> mPhotos = new ArrayList<>();
     Runnable refreshRunnable = new Runnable() {
@@ -239,7 +237,7 @@ public class MeUIView extends BaseUIView {
                 });
     }
 
-    @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
+//    @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
     public void onInfoClick(View view) {
         switch (view.getId()) {
             case R.id.qr_code_view://二维码
@@ -254,8 +252,8 @@ public class MeUIView extends BaseUIView {
         }
     }
 
-    @OnClick({R.id.my_status_layout, R.id.my_favor_layout, R.id.level_layout,
-            R.id.coin_layout, R.id.person_auth_layout, R.id.setting_layout})
+//    @OnClick({R.id.my_status_layout, R.id.my_favor_layout, R.id.level_layout,
+//            R.id.coin_layout, R.id.person_auth_layout, R.id.setting_layout})
     public void onItemInfoClick(View view) {
         switch (view.getId()) {
             case R.id.my_status_layout://我的动态
@@ -279,7 +277,7 @@ public class MeUIView extends BaseUIView {
         }
     }
 
-    @OnClick(R.id.user_ico_view)
+//    @OnClick(R.id.user_ico_view)
     public void onUserIcoClick() {
         mParentILayout.startIView(new EditInfoUIView(mPhotos, new Action0() {
             @Override
@@ -289,7 +287,7 @@ public class MeUIView extends BaseUIView {
         }));
     }
 
-    @OnClick({R.id.dynamic_notification_layout, R.id.my_visitor_layout})
+//    @OnClick({R.id.dynamic_notification_layout, R.id.my_visitor_layout})
     public void onDynamicClick(View view) {
         switch (view.getId()) {
             case R.id.dynamic_notification_layout://动态通知

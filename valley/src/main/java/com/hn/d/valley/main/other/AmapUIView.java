@@ -41,8 +41,6 @@ import com.hn.d.valley.utils.RAmap;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.OnClick;
 import io.realm.RealmResults;
 import rx.functions.Action1;
 
@@ -59,18 +57,12 @@ import rx.functions.Action1;
  */
 public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChangeListener/*, LocationSource, AMapLocationListener*/ {
 
-    @BindView(R.id.map_view)
     TextureMapView mMapView;
-    @BindView(R.id.marker_address)
     TextView mMarkerAddress;
-    @BindView(R.id.location_info_layout)
     LinearLayout mLocationInfoLayout;
     AmapBean mLastBean, mTargetBean;
-    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-    @BindView(R.id.empty_view)
     EmptyView mEmptyView;
-    @BindView(R.id.bottom_layout)
     RelativeLayout mBottomLayout;
     private AMap mMap;
     //    private OnLocationChangedListener mListener;
@@ -108,6 +100,21 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+
+        mMapView = v(R.id.map_view);
+        mMarkerAddress = v(R.id.marker_address);
+        mLocationInfoLayout = v(R.id.location_info_layout);
+        mRecyclerView = v(R.id.recycler_view);
+        mEmptyView = v(R.id.empty_view);
+        mBottomLayout = v(R.id.bottom_layout);
+
+        click(R.id.my_location, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMyLocationClick();
+            }
+        });
+
         mBottomLayout.setVisibility(mSend ? View.VISIBLE : View.GONE);
         mMapView.onCreate(null);
         initAmap();
@@ -240,7 +247,6 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
         mMapView.onResume();
     }
 
-    @OnClick(R.id.my_location)
     public void onMyLocationClick() {
         mLastBean = RAmap.getLastLocation();
         moveToLocation(mLastBean);

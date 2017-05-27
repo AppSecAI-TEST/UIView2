@@ -7,11 +7,9 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -24,44 +22,28 @@ import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupAnnounceDetailBean;
-import com.hn.d.valley.bean.GroupAnnouncementBean;
-import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.widget.HnEmojiTextView;
 import com.hn.d.valley.widget.HnEmptyRefreshLayout;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.hn.d.valley.widget.HnRefreshLayout;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
 
 public class EditGroupAnnounceUIView extends BaseUIView {
 
 
-    @BindView(R.id.iv_item_head)
     HnGlideImageView ivItemHead;
-    @BindView(R.id.tv_friend_name)
     TextView tvFriendName;
-    @BindView(R.id.tv_func_desc)
     TextView tvFuncDesc;
-    @BindView(R.id.item_root_layout)
     RelativeLayout itemRootLayout;
-    @BindView(R.id.tv_announcement_desc)
     RTextView tvAnnouncementDesc;
-    @BindView(R.id.refresh_layout)
     HnEmptyRefreshLayout refreshLayout;
-    @BindView(R.id.command_item_view)
     RTextView commandItemView;
 
     private String gid;
@@ -101,6 +83,13 @@ public class EditGroupAnnounceUIView extends BaseUIView {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        ivItemHead = v(R.id.iv_item_head);
+        tvFriendName = v(R.id.tv_friend_name);
+        tvFuncDesc = v(R.id.tv_func_desc);
+        itemRootLayout = v(R.id.item_root_layout);
+        tvAnnouncementDesc = v(R.id.tv_announcement_desc);
+        refreshLayout = v(R.id.refresh_layout);
+        commandItemView = v(R.id.command_item_view);
 
         if(isAdmin) {
             getUITitleBarContainer().showRightItem(0);

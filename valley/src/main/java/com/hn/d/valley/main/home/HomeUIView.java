@@ -43,7 +43,6 @@ import com.hn.d.valley.sub.user.PublishVoiceDynamicUIView;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Action3;
@@ -65,7 +64,6 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 //    CommonTabLayout mHomeNavLayout;
     //    @BindView(R.id.view_pager)
 //    UIViewPager mViewPager;
-    @BindView(R.id.ui_layout)
     UILayoutImpl mHomeLayout;
     SegmentTabLayout mHomeNavLayout;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
@@ -94,6 +92,8 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mHomeLayout = v(R.id.ui_layout);
+
         //initViewPager();
         initTabLayout();
 
