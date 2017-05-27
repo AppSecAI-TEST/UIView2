@@ -104,6 +104,8 @@ public class HnSplashActivity extends BaseActivity {
 //                        startIView(new LoginUIView(), false);
 //                    }
 //                });
+
+        checkPermissions();
     }
 
     @Override
