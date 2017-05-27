@@ -42,7 +42,7 @@ public class RRealm {
         if (object == null) {
             return;
         }
-        Realm realm = checkMainThread() ? realm() : getRealmInstance();
+        Realm realm = isMainThread() ? realm() : getRealmInstance();
         try {
             if (realm.isInTransaction()) {
                 realm.copyToRealm(object);
@@ -51,8 +51,9 @@ public class RRealm {
                 realm.copyToRealm(object);
                 realm.commitTransaction();
             }
+        } catch (Exception e) {
         } finally {
-            if (!checkMainThread()) {
+            if (!isMainThread()) {
                 if (realm != null) {
                     realm.close();
                 }
@@ -69,7 +70,7 @@ public class RRealm {
         if (objects == null) {
             return;
         }
-        Realm realm = checkMainThread() ? realm() : getRealmInstance();
+        Realm realm = isMainThread() ? realm() : getRealmInstance();
         try {
             if (realm.isInTransaction()) {
                 realm.copyToRealm(objects);
@@ -79,7 +80,7 @@ public class RRealm {
                 realm.commitTransaction();
             }
         } finally {
-            if (!checkMainThread()) {
+            if (!isMainThread()) {
                 if (realm != null) {
                     realm.close();
                 }
@@ -91,7 +92,7 @@ public class RRealm {
      * 同步执行,并出现错误自动回滚事务
      */
     public static void exe(final Realm.Transaction transaction) {
-        Realm realm = checkMainThread() ? realm() : getRealmInstance();
+        Realm realm = isMainThread() ? realm() : getRealmInstance();
         try {
             if (realm.isInTransaction()) {
                 transaction.execute(realm);
@@ -99,7 +100,7 @@ public class RRealm {
                 realm.executeTransaction(transaction);
             }
         } finally {
-            if (!checkMainThread()) {
+            if (!isMainThread()) {
                 if (realm != null) {
                     realm.close();
                 }
@@ -111,7 +112,7 @@ public class RRealm {
      * 异步执行,并出现错误自动回滚事务
      */
     public static void async(final Realm.Transaction transaction) {
-        Realm realm = checkMainThread() ? realm() : getRealmInstance();
+        Realm realm = isMainThread() ? realm() : getRealmInstance();
         try {
             if (realm.isInTransaction()) {
                 transaction.execute(realm);
@@ -119,7 +120,7 @@ public class RRealm {
                 realm.executeTransactionAsync(transaction);
             }
         } finally {
-            if (!checkMainThread()) {
+            if (!isMainThread()) {
                 if (realm != null) {
                     realm.close();
                 }
@@ -131,7 +132,7 @@ public class RRealm {
      * 异步执行,并出现错误自动回滚事务
      */
     public static void async(final Realm.Transaction transaction, final Realm.Transaction.OnSuccess onSuccess) {
-        Realm realm = checkMainThread() ? realm() : getRealmInstance();
+        Realm realm = isMainThread() ? realm() : getRealmInstance();
         try {
             if (realm.isInTransaction()) {
                 transaction.execute(realm);
@@ -140,7 +141,7 @@ public class RRealm {
                 realm.executeTransactionAsync(transaction, onSuccess);
             }
         } finally {
-            if (!checkMainThread()) {
+            if (!isMainThread()) {
                 if (realm != null) {
                     realm.close();
                 }
@@ -156,11 +157,11 @@ public class RRealm {
      * 异步执行,并出现错误自动回滚事务
      */
     public static void async(final Realm.Transaction transaction, final Realm.Transaction.OnSuccess onSuccess, final Realm.Transaction.OnError onError) {
-        Realm realm = checkMainThread() ? realm() : getRealmInstance();
+        Realm realm = isMainThread() ? realm() : getRealmInstance();
         try {
             realm.executeTransactionAsync(transaction, onSuccess, onError);
         } finally {
-            if (!checkMainThread()) {
+            if (!isMainThread()) {
                 if (realm != null) {
                     realm.close();
                 }
@@ -169,11 +170,11 @@ public class RRealm {
     }
 
     public static void where(Action1<Realm> action) {
-        Realm realm = checkMainThread() ? realm() : getRealmInstance();
+        Realm realm = isMainThread() ? realm() : getRealmInstance();
         try {
             action.call(realm);
         } finally {
-            if (!checkMainThread()) {
+            if (!isMainThread()) {
                 if (realm != null) {
                     realm.close();
                 }
@@ -231,8 +232,9 @@ public class RRealm {
     /**
      * 主线程的Realm实例不关闭
      */
-    public static boolean checkMainThread() {
-        return Looper.getMainLooper().getThread() == Thread.currentThread();
+    public static boolean isMainThread() {
+//        return Looper.getMainLooper().getThread() == Thread.currentThread();
+        return Looper.myLooper() == Looper.getMainLooper();
     }
 
     /**
@@ -243,6 +245,9 @@ public class RRealm {
     }
 
     public Realm getRealm() {
+        if (!isMainThread()) {
+            throw new IllegalArgumentException("请在主线程调用, 子线程请直接调用 getRealmInstance(),并自行close");
+        }
         if (mRealm == null || mRealm.isClosed()) {
             mRealm = Realm.getDefaultInstance();
         }

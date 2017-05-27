@@ -172,12 +172,6 @@ public class LoginUIView2 extends BaseContentUIView {
                     public void onSucceed(LoginBean bean) {
                         onLoginSuccess(activity, bean);
                     }
-
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                        HnLoading.hide();
-                    }
                 }));
     }
 

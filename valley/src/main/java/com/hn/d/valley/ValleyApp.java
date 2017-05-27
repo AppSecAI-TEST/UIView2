@@ -1,4 +1,5 @@
 package com.hn.d.valley;
+
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.Root;
@@ -10,8 +11,8 @@ import com.example.m3b.Audio;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
@@ -47,9 +48,15 @@ public class ValleyApp extends RApplication {
         super.onCreate();
     }
 
-
     @Override
     protected void onInit() {
+        super.onInit();
+        RRealm.init(this);
+        FDown.init(this, false/*BuildConfig.DEBUG*/);
+    }
+
+    @Override
+    protected void onAsyncInit() {
         Root.APP_FOLDER = "DValley";
 
         L.init(BuildConfig.DEBUG, "dvalley");
@@ -57,8 +64,6 @@ public class ValleyApp extends RApplication {
         Fresco.initialize(this);
 
         RRetrofit.DEBUG = BuildConfig.DEBUG;
-
-        RRealm.init(this);
 
         CrashReport.setIsDevelopmentDevice(this, BuildConfig.DEBUG);
 //        CrashReport.initCrashReport(this, "207e18ac24", false/*BuildConfig.DEBUG*/);
@@ -98,8 +103,6 @@ public class ValleyApp extends RApplication {
 
         //腾讯TBS X5内核浏览器初始化
         QbSdk.initX5Environment(getApplicationContext(), null);
-
-        FDown.init(this, false/*BuildConfig.DEBUG*/);
 
         Audio.init(this);
 

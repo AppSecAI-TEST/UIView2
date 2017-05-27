@@ -76,7 +76,11 @@ public class HnGlideImageView extends AppCompatImageView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+        try {
+            super.onDraw(canvas);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (showBorder) {
             int width = getResources().getDimensionPixelOffset(R.dimen.base_line);
             if (mPaint == null) {

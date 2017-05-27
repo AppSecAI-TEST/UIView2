@@ -404,7 +404,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
             }
         };
 
-        if (RRealm.checkMainThread()) {
+        if (RRealm.isMainThread()) {
             runnable.run();
         } else {
             mContext.getWindow().getDecorView().post(runnable);
