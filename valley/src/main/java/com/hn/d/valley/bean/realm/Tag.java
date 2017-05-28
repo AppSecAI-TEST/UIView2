@@ -3,7 +3,9 @@ package com.hn.d.valley.bean.realm;
 import android.text.TextUtils;
 
 import io.realm.RealmObject;
+import io.realm.annotations.RealmClass;
 
+@RealmClass
 public class Tag extends RealmObject {
 
     /**

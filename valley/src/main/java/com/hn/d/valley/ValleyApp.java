@@ -86,7 +86,7 @@ public class ValleyApp extends RApplication {
         JPushInterface.setDebugMode(BuildConfig.DEBUG);
         JPushInterface.init(this);
 
-        RNim.initOnce(this);
+        //RNim.initOnce(this);//移至MainActivity中初始化
 
         RAmap.init(this);
 

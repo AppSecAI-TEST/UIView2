@@ -418,7 +418,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
             AlbumPhotoAdapter albumAdapter = new AlbumPhotoAdapter(mActivity, itemHeight);
 
             recyclerView.setAdapter(albumAdapter);
-            albumAdapter.setData(dataBean.getMedia());
+            albumAdapter.setDataData(dataBean.getMedia());
         }
     }
 
@@ -440,7 +440,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
         }
 
         @Override
-        public RExBaseAdapter<String, String, String> setData(String media) {
+        public RExBaseAdapter<String, String, String> setDataData(String media) {
             List<String> medias = RUtils.split(media);
             resetAllData(medias);
             return this;

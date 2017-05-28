@@ -14,4 +14,5 @@ package com.hn.d.valley.bean
 data class VersionBean(var version: String = "",
                        var limit_version: String = "",
                        var download_url: String = "",
-                       var detail: String = "")
+                       var detail: String = "",
+                       var forceUpdate: Boolean = false)

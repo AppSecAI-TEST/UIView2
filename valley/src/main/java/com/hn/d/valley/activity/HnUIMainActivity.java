@@ -2,6 +2,8 @@ package com.hn.d.valley.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.UILayoutImpl;
@@ -14,6 +16,7 @@ import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.MainUIView;
+import com.hn.d.valley.nim.RNim;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.orhanobut.hawk.Hawk;
 
@@ -104,6 +107,12 @@ public class HnUIMainActivity extends BaseActivity {
     private void showMainUIView() {
         startIView(new MainUIView());
         MainControl.checkCrash(mLayout);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        RNim.initOnce(getApplication());
     }
 
     @Subscribe

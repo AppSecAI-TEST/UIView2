@@ -2,7 +2,9 @@ package com.hn.d.valley.control;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.RealmClass;
 
+@RealmClass
 public class UnreadMessage extends RealmObject {
     @PrimaryKey
     String messageUid;//未读消息的id

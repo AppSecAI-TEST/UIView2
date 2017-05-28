@@ -133,7 +133,7 @@ public class MusicControl {
                                 .setFullPath(generateFilePath(music.getName()))
                                 .download(new FDownListener() {
                                     @Override
-                                    protected void onCompleted(BaseDownloadTask task) {
+                                    public void onCompleted(BaseDownloadTask task) {
                                         super.onCompleted(task);
 
                                         MusicRealm musicRealm = new MusicRealm(music);

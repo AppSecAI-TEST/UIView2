@@ -331,6 +331,12 @@ public class MainUIView extends BaseUIView {
     }
 
     @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        MainControl.checkVersion(mILayout);
+    }
+
+    @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
 
@@ -345,8 +351,6 @@ public class MainUIView extends BaseUIView {
             mParentILayout.startIView(new RecommendUser2UIView());
             LoginControl.instance().setFirstRegister(false);
         }
-
-        MainControl.checkVersion(mILayout);
     }
 
     @Override

@@ -27,7 +27,6 @@ import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.TagsControl;
-import com.hn.d.valley.control.VersionControl;
 import com.hn.d.valley.control.VideoStatusInfo;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
@@ -121,8 +120,6 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-
-        VersionControl.INSTANCE.checkVersion();
     }
 
     @Override

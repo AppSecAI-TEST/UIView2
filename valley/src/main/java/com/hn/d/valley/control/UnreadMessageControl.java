@@ -65,7 +65,8 @@ public class UnreadMessageControl {
         Realm realm = null;
         try {
             realm = RRealm.getRealmInstance();
-            size = realm.where(UnreadMessage.class).equalTo("messageUid", messageId).findAll().size() > 0 ? 1 : 0;
+            size = realm.where(UnreadMessage.class)
+                    .equalTo("messageUid", messageId).findAll().size() > 0 ? 1 : 0;
         } finally {
             if (realm != null) {
                 realm.close();
