@@ -1424,12 +1424,18 @@ public class UserDiscussItemControl {
                                                 if (imageView == null || resource == null) {
                                                     return;
                                                 }
+                                                if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+                                                    return;
+                                                }
                                                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                                                 imageView.setImageDrawable(resource);
                                                 resource.start();
                                             }
                                         });
                             } else {
+                                if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+                                    return;
+                                }
                                 if (imageView instanceof RImageView) {
                                     ((RImageView) imageView).setShowGifTip(imageType == Ok.ImageType.GIF);
                                 }
@@ -1458,6 +1464,10 @@ public class UserDiscussItemControl {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         if (imageView == null || resource == null) {
+                            return;
+                        }
+
+                        if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
                             return;
                         }
 
