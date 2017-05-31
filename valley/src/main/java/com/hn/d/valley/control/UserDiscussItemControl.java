@@ -999,7 +999,7 @@ public class UserDiscussItemControl {
 
                                     @Override
                                     public void onSucceed(String bean) {
-                                        T_.show(bean);
+                                        T_.show(ValleyApp.getApp().getString(R.string.handle_success));
                                         if (commandAction != null) {
                                             commandAction.call(tBean);
                                         }

@@ -188,6 +188,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
                 holder.itemView.setBackgroundColor(Color.WHITE);
                 ShareControl.shareCardControl(mActivity, holder,
+                        mUserInfoBean.getAvatar(),
                         mUserInfoBean.getUid(),
                         mUserInfoBean.getUsername() + "的恐龙谷首页",
                         mUserInfoBean.getUsername() + "的恐龙谷首页\n" + "粉丝数: " + mUserInfoBean.getFans_count());

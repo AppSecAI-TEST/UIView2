@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
@@ -159,12 +160,31 @@ public class UM {
                                 String title, String des,
                                 String text,
                                 UMShareListener listener) {
+        shareWeb(activity, shareMedia, url,
+                thumbRes == -1 ? null : new UMImage(activity, thumbRes),
+                title, des, text, listener);
+    }
+
+    public static void shareWeb(Activity activity, SHARE_MEDIA shareMedia,
+                                String url, String thumbRes,
+                                String title, String des,
+                                String text,
+                                UMShareListener listener) {
+        shareWeb(activity, shareMedia, url,
+                TextUtils.isEmpty(thumbRes) ? null : new UMImage(activity, thumbRes),
+                title, des, text, listener);
+    }
+
+    public static void shareWeb(Activity activity, SHARE_MEDIA shareMedia,
+                                String url, UMImage thumbImage,
+                                String title, String des,
+                                String text,
+                                UMShareListener listener) {
         UMWeb web = new UMWeb(url);
         web.setTitle(title);//标题
         //缩略图
-        if (thumbRes != -1) {
-            UMImage umThumb = new UMImage(activity, thumbRes);
-            web.setThumb(umThumb);
+        if (thumbImage == null) {
+            web.setThumb(thumbImage);
         }
         web.setDescription(des);//描述
 
@@ -197,5 +217,27 @@ public class UM {
      */
     public static void onEvent(String eventId) {
         MobclickAgent.onEvent(sApplication, eventId);
+    }
+
+    public static abstract class UMListener implements UMShareListener {
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA share_media) {
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+            throwable.printStackTrace();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media) {
+
+        }
     }
 }

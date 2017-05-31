@@ -687,4 +687,11 @@
     <string name="nrtc_setting_voe_high_quality">高清语音</string>
     <string name="nrtc_setting_voe_dtx_key">nrtc_setting_voe_dtx_key</string>
     <string name="nrtc_setting_voe_dtx">人声检测</string>
+    <string name="handle_success">操作成功</string>
+    <string name="share_dynamic_format">%1$s的动态</string>
+    <string name="share_image">分享图片</string>
+    <string name="share_text">分享文本</string>
+    <string name="share_video">分享视频</string>
+    <string name="share_voice">分享语音</string>
+    <string name="share_success">分享成功</string>
 </resources>

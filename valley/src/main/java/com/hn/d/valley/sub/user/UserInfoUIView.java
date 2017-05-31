@@ -158,7 +158,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
 
                                     @Override
                                     public void onSucceed(String bean) {
-                                        T_.show(bean);
+                                        T_.show(getString(R.string.handle_success));
                                         mSearchUserBean.setIs_attention(1);
                                         initCommandView();
                                         loadData();
@@ -364,7 +364,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
 
                                     @Override
                                     public void onSucceed(String bean) {
-                                        T_.show(bean);
+                                        T_.show(getString(R.string.handle_success));
                                         notifyItemChanged(getHeaderCount() + posInData);
                                     }
                                 }));

@@ -14,8 +14,10 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.control.ShareControl;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserService;
+import com.hn.d.valley.sub.user.DynamicType;
 import com.hn.d.valley.sub.user.ReportUIView;
 
 import rx.subscriptions.CompositeSubscription;
@@ -61,7 +63,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
                             @Override
                             public void onSucceed(String bean) {
-                                T_.show("");
+                                T_.show(getString(R.string.handle_success));
                             }
                         }));
             }
@@ -95,6 +97,23 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 finishDialog();
             }
         });
+
+        //分享
+        String mediaType = mDataListBean.getMedia_type();
+        String shareDes = getString(R.string.share);
+        if (DynamicType.isImage(mediaType)) {
+            shareDes = getString(R.string.share_image);
+        } else if (DynamicType.isText(mediaType)) {
+            shareDes = getString(R.string.share_text);
+        } else if (DynamicType.isVideo(mediaType)) {
+            shareDes = getString(R.string.share_video);
+        } else if (DynamicType.isVoice(mediaType)) {
+            shareDes = getString(R.string.share_voice);
+        }
+        ShareControl.shareDynamicControl(mActivity, mViewHolder,
+                mDataListBean.getUser_info().getAvatar(),
+                mDataListBean.getDiscuss_id(),
+                getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()), shareDes);
     }
 
     private void initCollectView() {
