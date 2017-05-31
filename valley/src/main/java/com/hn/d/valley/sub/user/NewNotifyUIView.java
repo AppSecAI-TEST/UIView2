@@ -19,6 +19,7 @@ import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.control.MediaTypeControl;
 import com.hn.d.valley.control.UnreadMessageControl;
+import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
@@ -186,7 +187,8 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new DynamicDetailUIView2(customBean.getItem_id()));
+                    //startIView(new DynamicDetailUIView2(customBean.getItem_id()));
+                    UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, customBean.getItem_id(), false, false);
                 }
             });
         }

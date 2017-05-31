@@ -19,7 +19,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.OtherService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnLoading;
 
@@ -116,7 +116,7 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                     if (!TextUtils.isEmpty(code)) {
                         if (TextUtils.equals(code, mCodeEdit.string())) {
                             //调用绑定手机号码
-                            add(RRetrofit.create(UserInfoService.class)
+                            add(RRetrofit.create(UserService.class)
                                     .bindPhone(Param.buildMap("phone:" + mPhoneEdit.string(), "code:" + mCodeEdit.string(), "is_bind:1"))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {

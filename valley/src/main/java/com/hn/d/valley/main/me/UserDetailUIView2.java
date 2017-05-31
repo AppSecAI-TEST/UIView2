@@ -54,7 +54,7 @@ import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.service.ContactService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
@@ -151,7 +151,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 commandView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        subscription.add(RRetrofit.create(UserInfoService.class)
+                        subscription.add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("to_uid:" + uid, "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -185,7 +185,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                             @Override
                             public void onClick(View v) {
                                 iLayout.finishIView(mIView);
-                                subscription.add(RRetrofit.create(UserInfoService.class)
+                                subscription.add(RRetrofit.create(UserService.class)
                                         .addContact(Param.buildMap("to_uid:" + userInfoBean.getUid(),
                                                 "tip:" + mExEditText.string()))
                                         .compose(Rx.transformer(String.class))
@@ -315,7 +315,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .userInfo(Param.buildMap("to_uid:" + to_uid))
                 .compose(Rx.transformer(UserInfoBean.class))
                 .subscribe(new RSubscriber<UserInfoBean>() {
@@ -351,6 +351,15 @@ public class UserDetailUIView2 extends BaseContentUIView {
         );
 
         updateRelationship();
+
+        if (!isMe(to_uid)) {
+            add(RRetrofit.create(UserService.class)
+                    .visit(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                    }));
+        }
     }
 
     protected void updateRelationship() {
@@ -713,7 +722,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
      * 取消关注
      */
     private void unAttention() {
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .unAttention(Param.buildMap("to_uid:" + to_uid))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {

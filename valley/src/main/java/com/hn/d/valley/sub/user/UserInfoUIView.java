@@ -28,7 +28,7 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.message.session.SessionHelper;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -130,7 +130,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                     mCommandImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            add(RRetrofit.create(UserInfoService.class)
+                            add(RRetrofit.create(UserService.class)
                                     .addContact(Param.buildMap("uid:" + uid, "to_uid:" + to_uid,
                                             "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
                                                     UserCache.instance().getUserInfoBean().getUsername())))
@@ -151,7 +151,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 mCommandImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        add(RRetrofit.create(UserInfoService.class)
+                        add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -182,7 +182,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
         map.put("uid", UserCache.getUserAccount());
         map.put("to_uid", mSearchUserBean.getUid());
 
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .discussList(Param.map(map))
                 .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
@@ -322,7 +322,8 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
             }, new Action0() {
                 @Override
                 public void call() {
-                    mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                    //mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                    UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(), false, false);
                 }
             }, mParentILayout);
         }
@@ -339,7 +340,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 commandItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        add(RRetrofit.create(UserInfoService.class)
+                        add(RRetrofit.create(UserService.class)
                                 .unAttention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -356,7 +357,7 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 commandItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        add(RRetrofit.create(UserInfoService.class)
+                        add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {

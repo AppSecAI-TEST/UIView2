@@ -19,7 +19,7 @@ import rx.Observable;
  * 修改备注：
  * Version: 1.0.0
  */
-public interface UserInfoService {
+public interface UserService {
     /**
      * 获取用户信息【包括自己】
      * 参数名	必选	类型	说明
@@ -209,4 +209,13 @@ public interface UserInfoService {
      */
     @POST("discuss/myDiscuss")
     Observable<ResponseBody> myDiscuss(@QueryMap Map<String, String> map);
+
+    /**
+     * 访问个人主页
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	被访问者用户id
+     */
+    @POST("user/visit")
+    Observable<ResponseBody> visit(@QueryMap Map<String, String> map);
 }

@@ -72,19 +72,19 @@ import rx.functions.Func2;
 public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.DataListBean,
         CommentListBean.DataListBean, String> implements UIIDialogImpl.OnDismissListener {
 
-//    @BindView(R.id.recycler_view)
+    //    @BindView(R.id.recycler_view)
     RRecyclerView mRecyclerView;
-//    @BindView(R.id.refresh_layout)
+    //    @BindView(R.id.refresh_layout)
     HnRefreshLayout mRefreshLayout;
-//    @BindView(R.id.dynamic_root_layout)
+    //    @BindView(R.id.dynamic_root_layout)
     RSoftInputLayout mDynamicRootLayout;
-//    @BindView(R.id.emoji_recycler_view)
+    //    @BindView(R.id.emoji_recycler_view)
     EmojiRecyclerView mEmojiRecyclerView;
-//    @BindView(R.id.input_view)
+    //    @BindView(R.id.input_view)
     ExEditText mInputView;
-//    @BindView(R.id.emoji_control_layout)
+    //    @BindView(R.id.emoji_control_layout)
     CheckBox mEmojiControlLayout;
-//    @BindView(R.id.send_view)
+    //    @BindView(R.id.send_view)
     TextView mSendView;
     /**
      * 动态id
@@ -239,7 +239,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                             likeUserControlLayout.setVisibility(itemRawCount > 0 ? View.VISIBLE : View.GONE);
                         }
                     }
-                });
+                }, true);
 
                 View userDeleteView = holder.v(R.id.user_delete_view);
                 userDeleteView.setVisibility(View.GONE);

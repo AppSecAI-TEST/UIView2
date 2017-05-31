@@ -255,7 +255,7 @@
         <!-- Required SDK核心功能-->
         <receiver android:name="cn.jpush.android.service.AlarmReceiver"/>
 
-        <!-- UserInfoService defined. 用户自定义的广播接收器-->
+        <!-- UserService defined. 用户自定义的广播接收器-->
         <receiver
             android:name=".base.receiver.JPushReceiver"
             android:enabled="true">

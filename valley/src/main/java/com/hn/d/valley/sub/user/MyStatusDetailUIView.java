@@ -12,7 +12,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public class MyStatusDetailUIView extends SingleRecyclerUIView<UserDiscussListBe
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .discussList(Param.buildMap("page:" + page, "to_uid:" + targetUid))
                 .compose(Rx.transformer(UserDiscussListBean.class))
                 .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {

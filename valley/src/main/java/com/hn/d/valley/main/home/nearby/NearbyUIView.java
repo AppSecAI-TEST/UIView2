@@ -44,7 +44,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AmapControl;
 import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 import com.hn.d.valley.utils.RAmap;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -92,7 +92,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    RRetrofit.create(UserInfoService.class)
+                    RRetrofit.create(UserService.class)
                             .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
@@ -112,7 +112,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RRetrofit.create(UserInfoService.class)
+                    RRetrofit.create(UserService.class)
                             .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
@@ -429,7 +429,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 
         final boolean mapMode = isMapMode();
 
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .nearUser(Param.buildMap(
                         "page:" + (mapMode ? "" : page),
                         "sex:" + mSex,

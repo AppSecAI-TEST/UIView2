@@ -48,7 +48,7 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
 ////                    commandView.setOnClickListener(new View.OnClickListener() {
 ////                        @Override
 ////                        public void onClick(final View v) {
-////                            add(RRetrofit.create(UserInfoService.class)
+////                            add(RRetrofit.create(UserService.class)
 ////                                    .addContact(Param.buildMap("to_uid:" + dataBean.getUid(),
 ////                                            "tip:" + mActivity.getResources().getString(R.string.add_contact_tip,
 ////                                                    UserCache.instance().getUserInfoBean().getUsername())))
@@ -76,7 +76,7 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
 //                                }
 //                            });
 //
-//                            add(RRetrofit.create(UserInfoService.class)
+//                            add(RRetrofit.create(UserService.class)
 //                                    .attention(Param.buildMap("to_uid:" + dataBean.getUid()))
 //                                    .compose(Rx.transformer(String.class))
 //                                    .subscribe(new BaseSingleSubscriber<String>() {

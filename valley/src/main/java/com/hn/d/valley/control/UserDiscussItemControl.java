@@ -54,7 +54,7 @@ import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.service.SocialService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.ReadListUserUIView;
 import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hn.d.valley.sub.user.DynamicType;
@@ -109,9 +109,9 @@ public class UserDiscussItemControl {
                                 final ILayout iLayout, boolean isInDetail) {
         initItem(holder, dataListBean, itemRootAction, iLayout, isInDetail);
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
-        bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout);
-        bindFavItemView(subscription, holder, dataListBean);
-        bindLikeItemView(subscription, holder, dataListBean, null);
+        bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout, isInDetail);
+        bindFavItemView(subscription, holder, dataListBean, isInDetail);
+        bindLikeItemView(subscription, holder, dataListBean, null, isInDetail);
     }
 
     /**
@@ -341,7 +341,8 @@ public class UserDiscussItemControl {
      */
     private static void initForwardLayout(RBaseViewHolder holder,
                                           final UserDiscussListBean.DataListBean.OriginalInfo original_info,
-                                          final ILayout iLayout, boolean isInDetail) {
+                                          final ILayout iLayout,
+                                          final boolean isInDetail) {
         holder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
         HnExTextView exTextView = holder.v(R.id.forward_content_ex_view);
         exTextView.setOnImageSpanClick(createSpanClick(iLayout));
@@ -358,7 +359,11 @@ public class UserDiscussItemControl {
         holder.v(R.id.forward_control_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iLayout.startIView(new DynamicDetailUIView2(original_info.getDiscuss_id()));
+                jumpToDynamicDetailUIView(iLayout, original_info.getDiscuss_id(), true, isInDetail);
+
+                if (!isInDetail) {
+                    updateDiscussReadCnt(original_info.getDiscuss_id());
+                }
             }
         });
 
@@ -642,7 +647,7 @@ public class UserDiscussItemControl {
                                 }
                             } else {
                                 if (!TextUtils.isEmpty(discuss_id)) {
-                                    iLayout.startIView(new DynamicDetailUIView2(discuss_id));
+                                    jumpToDynamicDetailUIView(iLayout, discuss_id, false, isInDetail);
                                 }
                             }
                         }
@@ -652,6 +657,14 @@ public class UserDiscussItemControl {
             } else {
                 mediaImageTypeView.setVisibility(View.GONE);
             }
+        }
+    }
+
+    public static void jumpToDynamicDetailUIView(ILayout iLayout, String discuss_id,
+                                                 boolean isForward, boolean isInDetail) {
+        iLayout.startIView(new DynamicDetailUIView2(discuss_id));
+        if (!isForward && !isInDetail) {
+            updateDiscussReadCnt(discuss_id);
         }
     }
 
@@ -692,7 +705,7 @@ public class UserDiscussItemControl {
                     .subscribe(new Action1<Void>() {
                         @Override
                         public void call(Void aVoid) {
-                            subscription.add(RRetrofit.create(UserInfoService.class)
+                            subscription.add(RRetrofit.create(UserService.class)
                                     .unAttention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
@@ -710,7 +723,7 @@ public class UserDiscussItemControl {
 //            commandItemView.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
-//                    subscription.add(RRetrofit.create(UserInfoService.class)
+//                    subscription.add(RRetrofit.create(UserService.class)
 //                            .unAttention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
 //                            .compose(Rx.transformer(String.class))
 //                            .subscribe(new BaseSingleSubscriber<String>() {
@@ -729,7 +742,7 @@ public class UserDiscussItemControl {
                     .subscribe(new Action1<Void>() {
                         @Override
                         public void call(Void aVoid) {
-                            subscription.add(RRetrofit.create(UserInfoService.class)
+                            subscription.add(RRetrofit.create(UserService.class)
                                     .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
@@ -748,7 +761,7 @@ public class UserDiscussItemControl {
 //            commandItemView.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
-//                    subscription.add(RRetrofit.create(UserInfoService.class)
+//                    subscription.add(RRetrofit.create(UserService.class)
 //                            .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
 //                            .compose(Rx.transformer(String.class))
 //                            .subscribe(new BaseSingleSubscriber<String>() {
@@ -770,7 +783,7 @@ public class UserDiscussItemControl {
     private static void bindAttentionItemView2(final CompositeSubscription subscription, final RBaseViewHolder holder,
                                                final UserDiscussListBean.DataListBean tBean,
                                                final Action1<UserDiscussListBean.DataListBean> commandAction,
-                                               final ILayout iLayout) {
+                                               final ILayout iLayout, final boolean isInDetail) {
         //是否置顶
         showTopView(holder, tBean);
 
@@ -798,7 +811,7 @@ public class UserDiscussItemControl {
                                     try {
                                         T_.show(bean);
                                         tBean.setIs_top("0");
-                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
                                     } catch (Exception e) {
                                     }
                                 }
@@ -820,7 +833,7 @@ public class UserDiscussItemControl {
                                     try {
                                         T_.show(bean);
                                         tBean.setIs_top("1");
-                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
                                     } catch (Exception e) {
                                     }
                                 }
@@ -848,7 +861,7 @@ public class UserDiscussItemControl {
                                         T_.show(bean);
                                         tBean.setIs_collection(0);
                                         tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
-                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
                                     } catch (Exception e) {
 
                                     }
@@ -872,12 +885,16 @@ public class UserDiscussItemControl {
                                         T_.show(bean);
                                         tBean.setIs_collection(1);
                                         tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
-                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout);
+                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
                                     } catch (Exception e) {
 
                                     }
                                 }
                             }));
+
+                    if (!isInDetail) {
+                        updateDiscussReadCnt(tBean.getDiscuss_id());
+                    }
                 }
             };
         }
@@ -936,7 +953,7 @@ public class UserDiscussItemControl {
                 followItemClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        subscription.add(RRetrofit.create(UserInfoService.class)
+                        subscription.add(RRetrofit.create(UserService.class)
                                 .unAttention(Param.buildMap("to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -957,7 +974,7 @@ public class UserDiscussItemControl {
                 followItemClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        subscription.add(RRetrofit.create(UserInfoService.class)
+                        subscription.add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -1047,7 +1064,8 @@ public class UserDiscussItemControl {
      */
     private static void initFavView(final HnItemTextView itemTextView,
                                     final UserDiscussListBean.DataListBean tBean,
-                                    final CompositeSubscription subscription) {
+                                    final CompositeSubscription subscription,
+                                    final boolean isInDetail) {
         final String uid = UserCache.getUserAccount();
 
         itemTextView.setLeftIco(R.drawable.collection_icon_s);
@@ -1079,7 +1097,7 @@ public class UserDiscussItemControl {
             public void onClick(View v) {
                 tBean.setIs_collection(0);
                 tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) - 1));
-                initUnFavView(itemTextView, tBean, subscription);
+                initUnFavView(itemTextView, tBean, subscription, isInDetail);
 
                 subscription.add(RRetrofit.create(SocialService.class)
                         .unCollect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
@@ -1100,7 +1118,8 @@ public class UserDiscussItemControl {
      */
     private static void initUnFavView(final HnItemTextView itemTextView,
                                       final UserDiscussListBean.DataListBean tBean,
-                                      final CompositeSubscription subscription) {
+                                      final CompositeSubscription subscription,
+                                      final boolean isInDetail) {
         final String uid = UserCache.getUserAccount();
 
         itemTextView.setLeftIco(R.drawable.collection_icon_n);
@@ -1134,7 +1153,7 @@ public class UserDiscussItemControl {
                 GoodView.build(itemTextView);
                 tBean.setIs_collection(1);
                 tBean.setFav_cnt(String.valueOf(Integer.valueOf(tBean.getFav_cnt()) + 1));
-                initFavView(itemTextView, tBean, subscription);
+                initFavView(itemTextView, tBean, subscription, isInDetail);
 
                 subscription.add(RRetrofit.create(SocialService.class)
                         .collect(Param.buildMap("uid:" + uid, "type:discuss", "item_id:" + tBean.getDiscuss_id()))
@@ -1150,6 +1169,10 @@ public class UserDiscussItemControl {
 //                                initFavView(itemTextView, tBean, subscription);
                             }
                         }));
+
+                if (!isInDetail) {
+                    updateDiscussReadCnt(tBean.getDiscuss_id());
+                }
             }
         });
     }
@@ -1159,16 +1182,17 @@ public class UserDiscussItemControl {
      */
     private static void bindFavItemView(final CompositeSubscription subscription,
                                         RBaseViewHolder holder,
-                                        UserDiscussListBean.DataListBean tBean) {
+                                        UserDiscussListBean.DataListBean tBean,
+                                        boolean isInDetail) {
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
         fav_cnt.setVisibility(View.GONE);//星期五 2017-2-10 不显示
 
         if (tBean.getIs_collection() == 1) {
             //是否收藏
-            initFavView(fav_cnt, tBean, subscription);
+            initFavView(fav_cnt, tBean, subscription, isInDetail);
         } else {
-            initUnFavView(fav_cnt, tBean, subscription);
+            initUnFavView(fav_cnt, tBean, subscription, isInDetail);
         }
     }
 
@@ -1179,7 +1203,8 @@ public class UserDiscussItemControl {
                                      final ILikeData tBean,
                                      final CompositeSubscription subscription,
                                      final String type,
-                                     final Action1<Boolean> likeAction) {
+                                     final Action1<Boolean> likeAction,
+                                     final boolean isInDetail) {
         final String uid = UserCache.getUserAccount();
 
         if (itemTextView instanceof HnItemTextView) {
@@ -1228,7 +1253,7 @@ public class UserDiscussItemControl {
 
                 tBean.setIsLike(0);
                 tBean.setLikeCount(String.valueOf(Integer.valueOf(tBean.getLikeCount()) - 1));
-                initUnLikeView(itemTextView, tBean, subscription, type, likeAction);
+                initUnLikeView(itemTextView, tBean, subscription, type, likeAction, isInDetail);
 
                 subscription.add(RRetrofit.create(SocialService.class)
                         .dislike(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId(type)))
@@ -1252,7 +1277,8 @@ public class UserDiscussItemControl {
                                        final ILikeData tBean,
                                        final CompositeSubscription subscription,
                                        final String type,
-                                       final Action1<Boolean> likeAction) {
+                                       final Action1<Boolean> likeAction,
+                                       final boolean isInDetail) {
         final String uid = UserCache.getUserAccount();
 
         if (itemTextView instanceof HnItemTextView) {
@@ -1303,7 +1329,7 @@ public class UserDiscussItemControl {
                 GoodView.build(itemTextView);
                 tBean.setIsLike(1);
                 tBean.setLikeCount(String.valueOf(Integer.valueOf(tBean.getLikeCount()) + 1));
-                initLikeView(itemTextView, tBean, subscription, type, likeAction);
+                initLikeView(itemTextView, tBean, subscription, type, likeAction, isInDetail);
 
                 subscription.add(RRetrofit.create(SocialService.class)
                         .like(Param.buildMap("type:" + type, "item_id:" + tBean.getDiscussId(type)))
@@ -1315,6 +1341,10 @@ public class UserDiscussItemControl {
                                 //T_.show(bean);
                             }
                         }));
+
+                if (!isInDetail) {
+                    updateDiscussReadCnt(tBean.getDiscussId(type));
+                }
             }
         });
     }
@@ -1325,24 +1355,26 @@ public class UserDiscussItemControl {
     public static void bindLikeItemView(final CompositeSubscription subscription,
                                         RBaseViewHolder holder,
                                         ILikeData tBean,
-                                        Action1<Boolean> likeAction) {
+                                        Action1<Boolean> likeAction,
+                                        boolean isInDetail) {
 
-        bindLikeItemView(subscription, holder, tBean, "discuss", likeAction);
+        bindLikeItemView(subscription, holder, tBean, "discuss", likeAction, isInDetail);
     }
 
     public static void bindLikeItemView(final CompositeSubscription subscription,
                                         RBaseViewHolder holder,
                                         ILikeData tBean,
                                         String likeType,
-                                        Action1<Boolean> likeAction) {
+                                        Action1<Boolean> likeAction,
+                                        boolean isInDetail) {
 
         View like_cnt = holder.v(R.id.like_cnt);
 
         if (tBean.getIsLike() == 1) {
             //是否点赞
-            initLikeView(like_cnt, tBean, subscription, likeType, likeAction);
+            initLikeView(like_cnt, tBean, subscription, likeType, likeAction, isInDetail);
         } else {
-            initUnLikeView(like_cnt, tBean, subscription, likeType, likeAction);
+            initUnLikeView(like_cnt, tBean, subscription, likeType, likeAction, isInDetail);
         }
     }
 
@@ -1526,5 +1558,17 @@ public class UserDiscussItemControl {
                 builder.into(imageView);
             }
         }
+    }
+
+    /**
+     * 更新的动态的阅读数量
+     */
+    public static void updateDiscussReadCnt(String item_id) {
+        RRetrofit.create(SocialService.class)
+                .updateReadCnt(Param.buildMap("type:discuss", "item_id:" + item_id))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                });
     }
 }

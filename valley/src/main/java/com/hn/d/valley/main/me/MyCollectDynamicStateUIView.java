@@ -17,7 +17,6 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.service.SocialService;
-import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 
 import java.util.List;
 
@@ -50,7 +49,8 @@ public class MyCollectDynamicStateUIView extends BaseRecyclerUIView<String, User
                 }, new Action0() {
                     @Override
                     public void call() {
-                        mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        //mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(), false, false);
                     }
                 }, getILayout());
             }

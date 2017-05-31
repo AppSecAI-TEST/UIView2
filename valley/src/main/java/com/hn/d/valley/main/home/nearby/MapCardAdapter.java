@@ -27,7 +27,7 @@ import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 
 import rx.subscriptions.CompositeSubscription;
@@ -88,7 +88,7 @@ public class MapCardAdapter extends UserInfoAdapter {
                     @Override
                     public void onClick(View v) {
                         setSelectorPosition(posInData);
-                        mSubscription.add(RRetrofit.create(UserInfoService.class)
+                        mSubscription.add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -123,7 +123,7 @@ public class MapCardAdapter extends UserInfoAdapter {
                                 @Override
                                 public void onClick(View v) {
                                     setSelectorPosition(posInData);
-                                    mSubscription.add(RRetrofit.create(UserInfoService.class)
+                                    mSubscription.add(RRetrofit.create(UserService.class)
                                             .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                             .compose(Rx.transformer(String.class))
                                             .subscribe(new BaseSingleSubscriber<String>() {

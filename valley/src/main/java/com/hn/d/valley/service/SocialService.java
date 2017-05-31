@@ -217,4 +217,13 @@ public interface SocialService {
     @POST("social/share")
     Observable<ResponseBody> share(@QueryMap Map<String, String> map);
 
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	string	类型【discuss-动态 news-资讯】
+     * item_id	是	int	数据id【动态id/资讯id】
+     */
+    @POST("social/updateReadCnt")
+    Observable<ResponseBody> updateReadCnt(@QueryMap Map<String, String> map);
+
 }

@@ -20,6 +20,7 @@ import com.hn.d.valley.sub.other.FriendsRecommendUIView;
 /**
  * Created by hewking on 2017/3/16.
  */
+@Deprecated
 public final class NewFriend2UIView extends BaseContentUIView {
 
     UILayoutImpl mContainerLayout;

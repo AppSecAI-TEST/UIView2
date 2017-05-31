@@ -15,7 +15,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.service.SocialService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.user.ReportUIView;
 
 import rx.subscriptions.CompositeSubscription;
@@ -54,7 +54,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
         mViewHolder.v(R.id.follow_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSubscription.add(RRetrofit.create(UserInfoService.class)
+                mSubscription.add(RRetrofit.create(UserService.class)
                         .attention(Param.buildMap("to_uid:" + mDataListBean.getUid()))
                         .compose(Rx.transformer(String.class))
                         .subscribe(new BaseSingleSubscriber<String>() {

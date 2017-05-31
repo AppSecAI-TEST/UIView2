@@ -200,7 +200,7 @@ public class ReplyListUIView extends BaseDynamicListUIView {
                     likeUserControlLayout.setVisibility(itemRawCount > 0 ? View.VISIBLE : View.GONE);
                 }
             }
-        });
+        }, true);
 
         //点赞人数列表
         holder.v(R.id.click_view).setOnClickListener(new View.OnClickListener() {

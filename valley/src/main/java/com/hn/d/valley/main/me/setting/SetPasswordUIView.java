@@ -26,7 +26,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.service.OtherService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnLoading;
 
@@ -211,7 +211,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                         T_.error(mActivity.getString(R.string.modify_password_error_tip));
                         return;
                     }
-                    add(RRetrofit.create(UserInfoService.class)
+                    add(RRetrofit.create(UserService.class)
                             .resetPassword(Param.buildMap("old_pwd:" + RSA.encode(mEditText1.string()), "pwd:" + RSA.encode(mEditText2.string())))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
@@ -263,7 +263,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                         return;
                     }
 
-                    add(RRetrofit.create(UserInfoService.class)
+                    add(RRetrofit.create(UserService.class)
                             .forgot(Param.buildMap("phone:" + mEditText1.string() + "code:" + mEditText2.string() + "pwd:" + RSA.encode(mEditText3.string())))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
@@ -308,7 +308,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                         T_.error(mActivity.getString(R.string.modify_password_error_tip));
                         return;
                     }
-                    add(RRetrofit.create(UserInfoService.class)
+                    add(RRetrofit.create(UserService.class)
                             .resetPassword(Param.buildMap("pwd:" + RSA.encode(mEditText2.string())))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {

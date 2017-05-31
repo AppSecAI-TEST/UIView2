@@ -18,13 +18,12 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
-import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.RecommendUserBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.MainUIView;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.start.service.StartService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.Preconditions;
@@ -122,7 +121,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
 
     private void focusRecommendUser(List<RecommendUserBean> allDatas) {
 
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .attentionBatch(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(allDatas)))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -136,7 +135,7 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
 //                .map(new Func1<RecommendUserBean, String>() {
 //                    @Override
 //                    public String call(RecommendUserBean likeUserInfoBean) {
-//                        add(RRetrofit.create(UserInfoService.class)
+//                        add(RRetrofit.create(UserService.class)
 //                                .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + likeUserInfoBean.getUid()))
 //                                .compose(Rx.transformer(String.class))
 //                                .subscribe(new BaseSingleSubscriber<String>() {

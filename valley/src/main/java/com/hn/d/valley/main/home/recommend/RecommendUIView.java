@@ -15,8 +15,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.NoTitleBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
-import com.hn.d.valley.service.UserInfoService;
-import com.hn.d.valley.sub.user.DynamicDetailUIView2;
+import com.hn.d.valley.service.UserService;
 
 import java.util.List;
 
@@ -65,7 +64,8 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                 }, new Action0() {
                     @Override
                     public void call() {
-                        mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        //mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(), false, false);
                     }
                 }, getILayout());
 
@@ -81,7 +81,7 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
     @Override
     protected void onUILoadData(final String page) {
         mLoadStatusCallback.onLoadStart();
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .discussList(Param.buildMap("uid:" + UserCache.getUserAccount(),
                         "type:" + 2, "page:" + page, "tag:" + getFilterTagId(), "first_id:" + first_id, "last_id:" + last_id))
                 .compose(Rx.transformer(UserDiscussListBean.class))

@@ -24,7 +24,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.control.ShareControl;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.SettingService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
@@ -230,7 +230,7 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         textView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                add(RRetrofit.create(UserInfoService.class)
+                                add(RRetrofit.create(UserService.class)
                                         .unAttention(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
                                         .compose(Rx.transformer(String.class))
                                         .subscribe(new BaseSingleSubscriber<String>() {

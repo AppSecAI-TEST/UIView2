@@ -78,7 +78,7 @@ public class RNim {
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(
                 new Observer<StatusCode>() {
                     public void onEvent(StatusCode status) {
-                        L.w("UserInfoService status changed to: " + status);
+                        L.w("UserService status changed to: " + status);
                         if (status.wontAutoLogin()) {
                             // 被踢出、账号被禁用、密码错误等情况，自动登录失败，需要返回到登录界面进行重新登录操作
                         }

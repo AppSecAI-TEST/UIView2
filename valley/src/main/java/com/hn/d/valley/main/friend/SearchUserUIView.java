@@ -16,6 +16,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
@@ -99,6 +100,8 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
         });
 
         mSearchInputView.setHint(R.string.search_hint);
+
+        RSoftInputLayout.showSoftInput(mSearchInputView);
 
         RxTextView.textChanges(mSearchInputView)
                 .debounce(Constant.DEBOUNCE_TIME_700, TimeUnit.MILLISECONDS)

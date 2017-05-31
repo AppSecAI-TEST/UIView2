@@ -24,7 +24,7 @@ import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.MessageService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnFollowImageView;
@@ -149,7 +149,7 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
                 @Override
                 public void onClick(View v) {
                     setSelectorPosition(posInData);
-                    add(RRetrofit.create(UserInfoService.class)
+                    add(RRetrofit.create(UserService.class)
                             .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
@@ -181,7 +181,7 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
                                     @Override
                                     public void onClick(View v) {
                                         setSelectorPosition(posInData);
-                                        add(RRetrofit.create(UserInfoService.class)
+                                        add(RRetrofit.create(UserService.class)
                                                 .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                                 .compose(Rx.transformer(String.class))
                                                 .subscribe(new BaseSingleSubscriber<String>() {

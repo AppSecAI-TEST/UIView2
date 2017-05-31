@@ -26,7 +26,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -147,7 +147,7 @@ public class RAmap {
         });
 
         /**上报地理位置信息*/
-        RRetrofit.create(UserInfoService.class)
+        RRetrofit.create(UserService.class)
                 .location(Param.buildMap(
                         "uid:" + UserCache.getUserAccount(),
                         "lat:" + location.getLatitude(),

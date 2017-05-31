@@ -41,7 +41,7 @@ import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.bean.MyPhotoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.utils.PhotoPager;
@@ -102,7 +102,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
     @Override
     protected void onUILoadData(final String page) {
         super.onUILoadData(page);
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .myPhotos(Param.buildMap("to_uid:" + to_uid, "page:" + page))
                 .compose(Rx.transformerList(MyPhotoBean.class))
                 .subscribe(new SingleRSubscriber<List<MyPhotoBean>>(this) {

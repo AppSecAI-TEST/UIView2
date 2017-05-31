@@ -9,7 +9,7 @@ import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.tencent.smtt.sdk.WebView;
 
 /**
@@ -50,7 +50,7 @@ public class VipWebUIView extends X5WebUIView {
 
     @Override
     protected void onLoadUrl() {
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .getToken(Param.buildMap())
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {

@@ -74,7 +74,7 @@ import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.PathAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.Image;
@@ -275,7 +275,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             signature = "empty";
         }
 
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .editInfo(Param.buildMap("photos:" + allPhotos,
                         "avatar:" + mUserSetIco,
                         "username:" + userInfoBean.getUsername(),
@@ -1087,7 +1087,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         });
         infoLayout.setItemDarkText(UserControl.getSex(mActivity, sex));
-//        add(RRetrofit.create(UserInfoService.class)
+//        add(RRetrofit.create(UserService.class)
 //                .editInfo(Param.buildMap("sex:" + sex))
 //                .compose(Rx.transformer(UserInfoBean.class))
 //                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
@@ -1131,7 +1131,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                                                 });
                                                 infoLayout.setItemDarkText(mExEditText.string());
 
-//                                                add(RRetrofit.create(UserInfoService.class)
+//                                                add(RRetrofit.create(UserService.class)
 //                                                        .editInfo(Param.buildMap("signature:" + value))
 //                                                        .compose(Rx.transformer(UserInfoBean.class))
 //                                                        .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
@@ -1218,7 +1218,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                                                 });
                                                 infoLayout.setItemDarkText(name);
 
-//                                                add(RRetrofit.create(UserInfoService.class)
+//                                                add(RRetrofit.create(UserService.class)
 //                                                        .editInfo(Param.buildMap("username:" + name))
 //                                                        .compose(Rx.transformer(UserInfoBean.class))
 //                                                        .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
@@ -1268,7 +1268,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         });
                         infoLayout.setItemDarkText(getBirthday(time));
 
-//                        add(RRetrofit.create(UserInfoService.class)
+//                        add(RRetrofit.create(UserService.class)
 //                                .editInfo(Param.buildMap("birthday:" + time))
 //                                .compose(Rx.transformer(UserInfoBean.class))
 //                                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
@@ -1311,7 +1311,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         });
                         infoLayout.setItemDarkText(userInfoBean.getProvince_name() + " " + userInfoBean.getCity_name());
 
-//                        add(RRetrofit.create(UserInfoService.class)
+//                        add(RRetrofit.create(UserService.class)
 //                                .editInfo(Param.buildMap("province_id:" + provinceBean.getId(), "city_id:" + provinceBean2.getId()))
 //                                .compose(Rx.transformer(UserInfoBean.class))
 //                                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {

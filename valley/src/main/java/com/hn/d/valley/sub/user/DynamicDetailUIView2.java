@@ -185,7 +185,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                         likeUserControlLayout.setVisibility(itemRawCount > 0 ? View.VISIBLE : View.GONE);
                     }
                 }
-            });
+            }, true);
 
             //点赞人数列表
             mViewHolder.v(R.id.click_view).setOnClickListener(new View.OnClickListener() {

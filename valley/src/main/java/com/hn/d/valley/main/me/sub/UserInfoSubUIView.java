@@ -23,7 +23,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.adapter.ImageAdapter;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.x5.X5WebUIView;
@@ -120,7 +120,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
                                 holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        add(RRetrofit.create(UserInfoService.class)
+                                        add(RRetrofit.create(UserService.class)
                                                 .inviteUploadPhotos(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
                                                 .compose(Rx.transformer(String.class))
                                                 .subscribe(new BaseSingleSubscriber<String>() {

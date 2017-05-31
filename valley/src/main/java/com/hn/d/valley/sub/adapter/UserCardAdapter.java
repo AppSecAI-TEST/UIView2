@@ -15,7 +15,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.session.SessionHelper;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
@@ -40,7 +40,7 @@ public class UserCardAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    RRetrofit.create(UserInfoService.class)
+                    RRetrofit.create(UserService.class)
                             .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
@@ -60,7 +60,7 @@ public class UserCardAdapter extends RExBaseAdapter<String, LikeUserInfoBean, St
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    RRetrofit.create(UserInfoService.class)
+                    RRetrofit.create(UserService.class)
                             .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {

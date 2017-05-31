@@ -7,7 +7,7 @@ import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.UserListModel;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -30,7 +30,7 @@ public class MyVisitorUserUIView2 extends UserInfoTimeRecyclerUIView {
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .visitorList(Param.buildMap("page:" + page))
                 .compose(Rx.transformer(UserListModel.class))
                 .subscribe(new SingleRSubscriber<UserListModel>(this) {

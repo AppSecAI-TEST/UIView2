@@ -16,7 +16,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -60,7 +60,7 @@ public class UserInfoClickAdapter extends UserInfoAdapter {
                     @Override
                     public void onClick(View v) {
                         setSelectorPosition(posInData);
-                        mCompositeSubscription.add(RRetrofit.create(UserInfoService.class)
+                        mCompositeSubscription.add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -96,7 +96,7 @@ public class UserInfoClickAdapter extends UserInfoAdapter {
                                 @Override
                                 public void onClick(View v) {
                                     setSelectorPosition(posInData);
-                                    mCompositeSubscription.add(RRetrofit.create(UserInfoService.class)
+                                    mCompositeSubscription.add(RRetrofit.create(UserService.class)
                                             .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                             .compose(Rx.transformer(String.class))
                                             .subscribe(new BaseSingleSubscriber<String>() {

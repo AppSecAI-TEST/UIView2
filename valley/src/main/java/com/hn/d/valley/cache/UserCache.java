@@ -12,7 +12,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.StatusCode;
@@ -191,7 +191,7 @@ public class UserCache {
         Map<String, String> map = new HashMap<>();
         map.put("uid", getUserAccount());
         map.put("to_uid", to_uid);
-        return RRetrofit.create(UserInfoService.class)
+        return RRetrofit.create(UserService.class)
                 .userInfo(Param.map(map))
                 .compose(Rx.transformer(UserInfoBean.class))
                 .map(new Func1<UserInfoBean, UserInfoBean>() {

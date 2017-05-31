@@ -38,7 +38,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.service.ContactService;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.InputUIView;
@@ -144,7 +144,7 @@ public class UserDetailUIView extends BaseContentUIView {
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .userInfo(Param.buildMap("to_uid:" + to_uid))
                 .compose(Rx.transformer(UserInfoBean.class))
                 .subscribe(new RSubscriber<UserInfoBean>() {
@@ -353,7 +353,7 @@ public class UserDetailUIView extends BaseContentUIView {
                 mCommandItemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        add(RRetrofit.create(UserInfoService.class)
+                        add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("uid:" + uid, "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -384,7 +384,7 @@ public class UserDetailUIView extends BaseContentUIView {
                             @Override
                             public void onClick(View v) {
                                 finishIView(mIView);
-                                add(RRetrofit.create(UserInfoService.class)
+                                add(RRetrofit.create(UserService.class)
                                         .addContact(Param.buildMap("to_uid:" + to_uid,
                                                 "tip:" + mExEditText.string()))
                                         .compose(Rx.transformer(String.class))
@@ -636,7 +636,7 @@ public class UserDetailUIView extends BaseContentUIView {
      * 取消关注
      */
     private void unAttention() {
-        add(RRetrofit.create(UserInfoService.class)
+        add(RRetrofit.create(UserService.class)
                 .unAttention(Param.buildMap("to_uid:" + to_uid))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {

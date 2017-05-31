@@ -28,7 +28,7 @@ import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.widget.HnGenderView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -115,7 +115,7 @@ public final class NewFriendUIView extends BaseContentUIView {
                     if (direction == ItemTouchHelper.LEFT) {
                         MsgCache.instance().deleteMessage(remove);
                     } else if (direction == ItemTouchHelper.RIGHT) {
-                        add(RRetrofit.create(UserInfoService.class)
+                        add(RRetrofit.create(UserService.class)
                                 .attention(Param.buildMap("uid:" + UserCache.getUserAccount(),
                                         "to_uid:" + bean.getUid()))
                                 .compose(Rx.transformer(String.class))

@@ -23,9 +23,8 @@ import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.HomeBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
-import com.hn.d.valley.service.UserInfoService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.MyStatusUIView;
-import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
@@ -95,7 +94,8 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                 }, new Action0() {
                     @Override
                     public void call() {
-                        mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        //mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
+                        UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(), false, false);
                     }
                 }, getILayout());
             }
@@ -151,7 +151,7 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
         }
 
         if (isInSubUIView) {
-            add(RRetrofit.create(UserInfoService.class)
+            add(RRetrofit.create(UserService.class)
                     .myDiscuss(Param.buildMap("to_uid:" + to_uid, "type:" + mStatusType.getId(), "page:" + page))
                     .compose(Rx.transformer(UserDiscussListBean.class))
                     .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
@@ -189,7 +189,7 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                         }
                     }));
         } else {
-            add(RRetrofit.create(UserInfoService.class)
+            add(RRetrofit.create(UserService.class)
                     .discussList(buildParam(page))
                     .compose(Rx.transformer(UserDiscussListBean.class))
                     .subscribe(new BaseSingleSubscriber<UserDiscussListBean>() {
