@@ -10,7 +10,6 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.skin.BaseSkin;
 import com.angcyo.uiview.skin.ISkin;
-import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
@@ -108,9 +107,10 @@ public class SkinManagerUIView extends BaseRecyclerUIView<String, ISkin, String>
 
             @Override
             protected boolean onSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
-                SkinUtils.setSkin(position);
-                mActivity.setTheme(SkinUtils.getSkinStyle());
-                SkinHelper.changeSkin(mAllDatas.get(position), mILayout);
+                //SkinUtils.setSkin(position);
+                //mActivity.setTheme(SkinUtils.getSkinStyle());
+                //SkinHelper.changeSkin(mAllDatas.get(position), mILayout);
+                SkinUtils.setSkin(mActivity, mILayout, position);
                 notifyItemChanged(0);
                 return super.onSelectorPosition(viewHolder, position, isSelector);
             }

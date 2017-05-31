@@ -2,14 +2,15 @@ package com.hn.d.valley.utils;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
-import com.hn.d.valley.library.fresco.PhotoPagerControl;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.library.fresco.PhotoPagerControl;
 import com.lzy.imagepicker.bean.ImageItem;
 
 import java.util.ArrayList;
@@ -43,6 +44,9 @@ public class PhotoPager {
     public static ArrayList<ImageItem> getImageItems(List<String> photos) {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
         for (String s : photos) {
+            if (TextUtils.isEmpty(s)) {
+                continue;
+            }
             final ImageItem imageItem = new ImageItem();
             imageItem.url = s;
             imageItems.add(imageItem);

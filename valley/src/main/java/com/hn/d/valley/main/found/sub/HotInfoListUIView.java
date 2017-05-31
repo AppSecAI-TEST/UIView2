@@ -16,13 +16,13 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RTextImageLayout;
-import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.HotInfoListBean;
+import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.widget.HnGlideImageView;
 
@@ -104,10 +104,14 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
     }
 
     public static void displayImage(ImageView imageView, String url) {
-        Glide.with(imageView.getContext())
-                .load(url)
-                .placeholder(R.drawable.zhanweitu_1)
-                .into(imageView);
+//        Glide.with(imageView.getContext())
+//                .load(url)
+//                .placeholder(R.drawable.zhanweitu_1)
+//                .into(imageView);
+
+        UserDiscussItemControl.displayImage(imageView, url,
+                imageView.getMeasuredWidth(), imageView.getMeasuredHeight(),
+                true, Integer.MAX_VALUE);
     }
 
     @Override

@@ -38,4 +38,32 @@ public interface SettingService {
      */
     @POST("setting/loginProtect")
     Observable<ResponseBody> loginProtect(@QueryMap Map<String, String> map);
+
+    /**
+     * 设置皮肤、主题
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * key	是	string	theme_skin-主题皮肤 chat_bubble-聊天气泡 theme_cover-主题背景
+     * val	是	string	参考下面说明
+     * <p>
+     * code码	说明
+     * 1001	主题皮肤之黑色
+     * 1002	主题皮肤之绿色
+     * 1003	主题皮肤之蓝色
+     * 2001	聊天气泡之蓝色河马
+     * 2002	聊天气泡之萌萌哒
+     * 2003	聊天气泡之水果系列
+     * 3001	主题背景之圣诞节
+     */
+    @POST("setting/setSkin")
+    Observable<ResponseBody> setSkin(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * key	否	string	【如果不传 则返回所有】theme_skin-主题皮肤 chat_bubble-聊天气泡 theme_cover-主题背景
+     */
+    @POST("setting/getSkin")
+    Observable<ResponseBody> getSkin(@QueryMap Map<String, String> map);
 }
+

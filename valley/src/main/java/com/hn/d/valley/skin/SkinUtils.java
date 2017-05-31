@@ -1,16 +1,24 @@
 package com.hn.d.valley.skin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
+import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.ThemeBean;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
+import com.hn.d.valley.service.SettingService;
 import com.orhanobut.hawk.Hawk;
 
 /**
@@ -25,6 +33,29 @@ import com.orhanobut.hawk.Hawk;
  * Version: 1.0.0
  */
 public class SkinUtils {
+
+    /**
+     * 从服务器获取主题信息
+     */
+    public static void init(final Activity activity, final ILayout layout) {
+        RRetrofit.create(SettingService.class)
+                .getSkin(Param.buildMap())
+                .compose(Rx.transformer(ThemeBean.class))
+                .subscribe(new BaseSingleSubscriber<ThemeBean>() {
+                    @Override
+                    public void onSucceed(ThemeBean bean) {
+                        super.onSucceed(bean);
+                        if ("1001".equalsIgnoreCase(bean.getTheme_skin())) {
+                            setSkin(activity, layout, SkinManagerUIView.SKIN_BLACK);
+                        } else if ("1002".equalsIgnoreCase(bean.getTheme_skin())) {
+                            setSkin(activity, layout, SkinManagerUIView.SKIN_GREEN);
+                        } else if ("1003".equalsIgnoreCase(bean.getTheme_skin())) {
+                            setSkin(activity, layout, SkinManagerUIView.SKIN_BLUE);
+                        }
+                    }
+                });
+    }
+
     public static ISkin getSkin(Context context) {
         int skin = getSkin();
         ISkin iSkin = SkinHelper.getSkin();
@@ -49,6 +80,30 @@ public class SkinUtils {
     public static void setSkin(int skin) {
         Hawk.put(SkinManagerUIView.SKIN_KEY, skin);
         Hawk.put(MyQrCodeUIView.KEY_NEED_CREATE_QR, true);
+
+        String s = "";
+        if (skin == 1) {
+            s = "1001";
+        } else if (skin == 2) {
+            s = "1002";
+        } else if (skin == 3) {
+            s = "1003";
+        }
+        RRetrofit.create(SettingService.class)
+                .setSkin(Param.buildMap("key:theme_skin", "val:" + s))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                });
+    }
+
+    public static void setSkin(Activity activity, ILayout iLayout, int skin) {
+        Integer oldSkin = getSkin();
+        SkinUtils.setSkin(skin);
+        activity.setTheme(SkinUtils.getSkinStyle());
+        if (oldSkin != skin) {
+            SkinHelper.changeSkin(getSkin(activity), iLayout);
+        }
     }
 
     public static int getSkinStyle() {

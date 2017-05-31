@@ -1373,7 +1373,8 @@ public class UserDiscussItemControl {
     }
 
     public static void displayImage(final ImageView imageView, final String url,
-                                    final int width, final int height, final boolean noGif, final int imageSize) {
+                                    final int width, final int height,
+                                    final boolean noGif, final int imageSize) {
 //        ImagePicker.getInstance().getImageLoader().displayImage((Activity) imageView.getContext(),
 //                "", "", OssHelper.getImageThumb(url, width, height), imageView, 0, 0);
 

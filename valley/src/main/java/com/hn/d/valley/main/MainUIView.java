@@ -334,6 +334,8 @@ public class MainUIView extends BaseUIView {
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
         MainControl.checkVersion(mILayout);
+
+        SkinUtils.init(mActivity, mParentILayout);
     }
 
     @Override

@@ -751,8 +751,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
                     SkinUtils.setKeyboardView(mMessageExpressionView);
-                } else if (mLastId == R.id.message_expression_view && mChatRootLayout.isEmojiShow()) {
-                    mChatRootLayout.hideEmojiLayout();
+                } else if (mLastId == R.id.message_expression_view) {
+                    if (mChatRootLayout.isEmojiShow()) {
+                        RSoftInputLayout.showSoftInput(mInputView);
+                    } else {
+                        mChatRootLayout.hideEmojiLayout();
+                    }
                     SkinUtils.setExpressView(mMessageExpressionView);
                     return;
                 }
