@@ -23,7 +23,6 @@ public class PhoneContactDataProvider implements IDataResource.IDataProvider {
 
     @Override
     public List<AbsContactItem> provide() {
-
         List<ContactsPickerHelper.ContactsInfo> contactsInfos = ContactsPickerHelper.getContactsList(ValleyApp.getApp().getApplicationContext());
         ArrayList<AbsContactItem> datas = new ArrayList<>(contactsInfos.size());
         for (ContactsPickerHelper.ContactsInfo info : contactsInfos) {

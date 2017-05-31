@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat;
 
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
@@ -13,6 +14,7 @@ import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHAVChat;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHDynamicMsg;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHDynamicShareDetail;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHExpression;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHForwardAudio;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHHotSpotInfo;
@@ -77,6 +79,7 @@ public class MsgViewHolderFactory {
         register(LikeMsgAttachment.class, MsgVHLikeMsg.class);
         register(DynamicMsgAttachment.class, MsgVHDynamicMsg.class);
         register(HotSpotInfoAttachment.class, MsgVHHotSpotInfo.class);
+        register(DynamicDetailAttachment.class, MsgVHDynamicShareDetail.class);
         register(SystemPushAttachment.SingleTextSPAttachment.class, MsgViewHolderPushText.class);
         register(SystemPushAttachment.TextAndPictureSPAttachment.class, MsgViewHolderPushPictureText.class);
         register(SystemPushAttachment.MultiPictureSPAttachment.class, MsgViewHolderPushMultiPicture.class);

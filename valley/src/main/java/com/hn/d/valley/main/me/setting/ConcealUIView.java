@@ -6,6 +6,7 @@ import android.view.View;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.sub.other.BlackListUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.List;
@@ -53,6 +54,13 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
 
                 itemInfoLayout.setItemText("联系人黑名单");
                 itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new BlackListUIView());
+                    }
+                });
             }
         }));
     }

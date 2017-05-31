@@ -38,11 +38,14 @@ public interface CustomAttachmentType {
 
     int HOTSPOTINFO = 12;
 
+    int SHARE_DYNAMIC = 13;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
 
     int SP_MULTI_PICTURE = 33;
+
 
     String PersonalCard_ = "user";
 
@@ -67,5 +70,7 @@ public interface CustomAttachmentType {
     String FORWARD_MSG = "forward";
 
     String HOTSPOTIFNO_MSG = "hot_news";
+
+    String SHARE_DYNAMIC_MSG  = "dynamic";
 
 }

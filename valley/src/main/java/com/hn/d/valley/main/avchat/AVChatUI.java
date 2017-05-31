@@ -7,8 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
@@ -16,8 +19,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 import com.hn.d.valley.main.avchat.activity.AVChatExitCode;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -297,6 +302,14 @@ public class AVChatUI implements AVChatUIListener {
 //                        return;
 //                    }
 
+                    // 判断是否有权限
+                    if (Build.VERSION.SDK_INT >= 23) {
+                        if (ActivityCompat.checkSelfPermission(mActivity,Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                            avChatVideo.showNoneCameraPermissionView(true);
+                            return;
+                        }
+                    }
+
                     initLargeSurfaceView(UserCache.getUserAccount());
                     canSwitchCamera = true;
                     onCallStateChange(CallStateEnum.OUTGOING_VIDEO_CALLING);
@@ -343,6 +356,18 @@ public class AVChatUI implements AVChatUIListener {
         avChatSurface.onCallStateChange(stateEnum);
         avChatAudio.onCallStateChange(stateEnum);
         avChatVideo.onCallStateChange(stateEnum);
+
+        // 显示隐藏悬浮窗
+        switch (stateEnum) {
+            case VIDEO:
+                showFloatingView();
+                break;
+            case VIDEO_OFF:
+            default:
+//                hideFloatingView();
+                break;
+        }
+
     }
 
     /**
@@ -824,6 +849,7 @@ public class AVChatUI implements AVChatUIListener {
     public void initAllSurfaceView(String largeAccount) {
         avChatSurface.initLargeSurfaceView(largeAccount);
         avChatSurface.initSmallSurfaceView(UserCache.getUserAccount());
+//        showFloatingView();
     }
 
     public void initLargeSurfaceView(String account) {
@@ -831,8 +857,8 @@ public class AVChatUI implements AVChatUIListener {
     }
 
     public void initSmallSurfaceView() {
-//        avChatSurface.initSmallSurfaceView(UserCache.getUserAccount());
-        showFloatingView();
+        avChatSurface.initSmallSurfaceView(UserCache.getUserAccount());
+//        showFloatingView();
     }
 
     /**
@@ -954,6 +980,14 @@ public class AVChatUI implements AVChatUIListener {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mFloatViewService = ((AVFloatViewService.FloatServiceBinder) iBinder).getService();
             L.d(TAG, "onServiceConnected " + mFloatViewService);
+
+            setFloatActionListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    T_.show("返回视频聊天");
+                    AVChatActivity.launch(mActivity);
+                }
+            });
         }
 
         @Override
@@ -978,6 +1012,20 @@ public class AVChatUI implements AVChatUIListener {
     public void hideFloatingView() {
         if (mFloatViewService != null) {
             mFloatViewService.hideFloat();
+        }
+    }
+
+    public void setFloatActionListener(View.OnClickListener listener) {
+        if (mFloatViewService != null) {
+            mFloatViewService.setActionListener(listener);
+        }
+    }
+
+    public boolean stopSmallSurfacePreview() {
+        if (mFloatViewService != null) {
+            return mFloatViewService.stopSmallSurfacePreview();
+        } else {
+            return true;
         }
     }
 

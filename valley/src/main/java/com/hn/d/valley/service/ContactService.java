@@ -123,4 +123,14 @@ public interface ContactService {
 
     @POST("recommend/user")
     Observable<ResponseBody> recommendUser(@QueryMap Map<String, String> map);
+
+    /**
+     * 黑名单列表
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	每页显示的数量 默认20
+     */
+    @POST("contact/blacklist")
+    Observable<ResponseBody> blacklist(@QueryMap Map<String, String> map);
 }

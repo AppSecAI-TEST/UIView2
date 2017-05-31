@@ -56,6 +56,12 @@ public class HnUIMainActivity extends BaseActivity {
 //        context.startActivity(intent);
 //    }
 
+    public static void launch(Activity activity) {
+        Intent intent = new Intent(activity,HnUIMainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void onLoadView(Intent intent) {
         Action.app_launch();
@@ -98,6 +104,12 @@ public class HnUIMainActivity extends BaseActivity {
 //    private void showAVChatUI(AVChatData config,int source) {
 //        AVChatUIView.start(mLayout,config,source);
 //    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+    }
 
     private void toSplashActivity() {
         HnSplashActivity.launcher(HnUIMainActivity.this, false);

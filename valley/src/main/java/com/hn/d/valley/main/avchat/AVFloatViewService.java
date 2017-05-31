@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.angcyo.library.utils.L;
 import com.hn.d.valley.cache.UserCache;
@@ -51,6 +52,22 @@ public class AVFloatViewService extends Service {
         if ( mFloatView != null ) {
             mFloatView.show();
             mFloatView.initSmallSurfaceView(account);
+        }
+    }
+
+    public void setActionListener (View.OnClickListener listener) {
+
+        if (mFloatView != null) {
+            mFloatView.setActionListener(listener);
+        }
+
+    }
+
+    public boolean stopSmallSurfacePreview() {
+        if (mFloatView != null) {
+            return mFloatView.stopSmallSurfacePreview();
+        }else {
+            return true;
         }
     }
 

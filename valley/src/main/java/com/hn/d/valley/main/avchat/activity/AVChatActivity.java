@@ -1,13 +1,16 @@
 package com.hn.d.valley.main.avchat.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -16,14 +19,17 @@ import android.widget.Toast;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.StyleActivity;
 import com.angcyo.uiview.utils.NetworkUtil;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnUIMainActivity;
+import com.hn.d.valley.main.avchat.AVChatFloatEvent;
 import com.hn.d.valley.main.avchat.AVChatNotification;
 import com.hn.d.valley.main.avchat.AVChatProfile;
 import com.hn.d.valley.main.avchat.AVChatSoundPlayer;
 import com.hn.d.valley.main.avchat.AVChatUI;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.main.avchat.receiver.PhoneCallStateObserver;
+import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.StatusCode;
@@ -102,6 +108,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         intent.putExtra(KEY_IN_CALLING, false);
         intent.putExtra(KEY_CALL_TYPE, callType);
         intent.putExtra(KEY_SOURCE, source);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivityForResult(intent,PREVIEW_REQUESTCODE);
     }
 
@@ -121,11 +128,20 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         context.startActivity(intent);
     }
 
+    public static void launch(Context activity) {
+        Intent intent = new Intent(activity,AVChatActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+
+        //在setContentView之前添加,未添加的话home键监听无效，设置窗体属性
+        this.getWindow().setFlags(0x80000000, 0x80000000);
 
         if (needFinish || !checkSource()) {
             finish();
@@ -142,7 +158,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         }
 
         //启动悬浮窗service
-        avChatUI.bindService();
+//        avChatUI.bindService();
 
         registerNetCallObserver(true);
         if (mIsInComingCall) {
@@ -156,6 +172,13 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         isCallEstablished = false;
         //放到所有UI的基类里面注册，所有的UI实现onKickOut接口
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(userStatusObserver, true);
+
+        //创建广播
+        InnerRecevier innerReceiver = new InnerRecevier();
+        //动态注册广播
+        IntentFilter intentFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+        //启动广播
+        registerReceiver(innerReceiver, intentFilter);
     }
 
     @Override
@@ -173,9 +196,16 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        // 预览框进入 传入intent
+
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
-        avChatUI.pauseVideo(); // 暂停视频聊天（用于在视频聊天过程中，APP退到后台时必须调用）
+//        avChatUI.pauseVideo(); // 暂停视频聊天（用于在视频聊天过程中，APP退到后台时必须调用）
         hasOnPause = true;
     }
 
@@ -190,7 +220,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         super.onResume();
         cancelCallingNotifier();
         if (hasOnPause) {
-            avChatUI.resumeVideo();
+//            avChatUI.resumeVideo();
             hasOnPause = false;
         }
     }
@@ -204,10 +234,55 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         cancelCallingNotifier();
         needFinish = true;
 
+        RBus.post(new AVChatFloatEvent(false));
+
         //销毁悬浮窗服务
         if (avChatUI != null) {
-            avChatUI.destroy();
+//            avChatUI.destroy();
         }
+    }
+
+    class InnerRecevier extends BroadcastReceiver {
+
+        final String SYSTEM_DIALOG_REASON_KEY = "reason";
+
+        final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+
+        final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(action)) {
+                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
+                if (reason != null) {
+                    if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
+                        L.d("onKeyDown :: Home键被监听" );
+                        RBus.post(new AVChatFloatEvent(true));
+                        HnUIMainActivity.launch(AVChatActivity.this);
+                    } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
+
+                    }
+                }
+            }
+        }
+    }
+
+    // 拦截返回键 home键
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        T_.show("onKeyDown :: " + keyCode);
+        L.d("onKeyDown :: " + keyCode);
+        if (keyCode == KeyEvent.KEYCODE_BACK ) {
+            RBus.post(new AVChatFloatEvent(true));
+            HnUIMainActivity.launch(this);
+            return true;//return true;拦截事件传递,从而屏蔽back键。
+        }
+        if (KeyEvent.KEYCODE_HOME == keyCode) {
+            RBus.post(new AVChatFloatEvent(true));
+            return true;//同理
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

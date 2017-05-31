@@ -3,9 +3,11 @@ package com.hn.d.valley.main.message.chat;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -48,6 +50,8 @@ import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.main.avchat.AVChatDelegete;
+import com.hn.d.valley.main.avchat.AVChatFloatEvent;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
@@ -895,6 +899,16 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 //    }
 
     @Subscribe
+    public void onEvent(AVChatFloatEvent event) {
+        L.d("onKeyDown :: " + event.show);
+        if (event.show) {
+            AVChatDelegete.getInstance().showFloatingView();
+        } else {
+            AVChatDelegete.getInstance().destroy();
+        }
+    }
+
+    @Subscribe
     public void onEvent(final LastMessageEvent lastMessageEvent) {
         if (lastMessageEvent.mMessage != null) {
             final View layout = mViewHolder.v(R.id.recent_contact_layout);
@@ -907,6 +921,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             if (layout.getVisibility() == View.GONE) {
                 layout.setVisibility(View.VISIBLE);
                 post(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
                     @Override
                     public void run() {
                         layout.setTranslationY(-layout.getMeasuredHeight());

@@ -9,8 +9,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
@@ -289,9 +291,12 @@ public class AVChatVideo implements View.OnClickListener{
                 listener.videoSwitchAudio();
                 break;
             case R.id.iv_avaudio_scale:
-                WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
-                lp.alpha = 0f;
-                mActivity.getWindow().setAttributes(lp);
+//                WindowManager.LayoutParams lp = mActivity.getWindow().getAttributes();
+//                lp.alpha = 0f;
+//                mActivity.getWindow().setAttributes(lp);
+
+                backToMainActivity();
+
                 break;
 //            case R.id.avchat_close_camera:
 //                listener.closeCamera();
@@ -303,6 +308,12 @@ public class AVChatVideo implements View.OnClickListener{
                 break;
         }
 
+    }
+
+    private void backToMainActivity() {
+//        HnUIMainActivity.launch(mActivity);
+        RBus.post(new AVChatFloatEvent(true));
+        AVChatDelegete.getInstance().showFloatingView();
     }
 
 

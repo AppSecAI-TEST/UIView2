@@ -24,7 +24,7 @@ public class StickerManager {
 
     private static StickerManager instance;
     public static final String CATEGORY_EXPRESSION = "expression";
-    public static final String CATEGORY_HN = "hn";
+    public static final String CATEGORY_HN = "hn_expression";
 
     /**
      * 数据源
@@ -53,7 +53,7 @@ public class StickerManager {
     private void initStickerOrder() {
         // 默认贴图顺序
         stickerOrder.put(CATEGORY_EXPRESSION, 1);
-//        stickerOrder.put(CATEGORY_HN,2);
+        stickerOrder.put(CATEGORY_HN,2);
     }
 
     private boolean isSystemSticker(String category) {
@@ -107,16 +107,16 @@ public class StickerManager {
             return null;
         }
 
-        if (isSystemSticker(categoryName)) {
+//        if (isSystemSticker(categoryName)) {
             if (!stickerName.contains(".gif")) {
                 stickerName += ".gif";
             }
 
             String path = "sticker/" + category.getName() + "/" + stickerName;
             return "file:///android_asset/" + path;
-        }
+//        }
 
-        return null;
+//        return null;
     }
 
 

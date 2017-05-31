@@ -3,6 +3,7 @@ package com.hn.d.valley.main.message.session;
 import android.content.Intent;
 
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.avchat.AVChatDelegete;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 //import com.hn.d.valley.main.message.avchat.AVChatControl;
 //import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
@@ -41,6 +42,7 @@ public class AVChatCommandItem extends CommandItemInfo {
     @Override
     protected void onClick() {
 //        AVChatUIView.start(getContainer().mLayout,getContainer().account, AVChatType.VIDEO.getValue(),FROM_INTERNAL);
+        AVChatDelegete.getInstance().bind(getContainer().activity);
         AVChatActivity.launch(getContainer().activity,getContainer().account,chatType.getValue(),FROM_INTERNAL);
     }
 

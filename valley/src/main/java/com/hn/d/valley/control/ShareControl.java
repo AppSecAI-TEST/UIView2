@@ -31,6 +31,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 public class ShareControl {
 
     private ShareControl() {
+
     }
 
     public static ShareControl instance() {
@@ -109,6 +110,35 @@ public class ShareControl {
                 shareDynamic(activity, SHARE_MEDIA.QZONE, userIco, itemId, shareTitle, shareDes);
             }
         });
+
+        holder.v(R.id.share_klg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareKlgDynamic(activity, userIco, itemId, shareTitle, shareDes);
+            }
+        });
+    }
+
+    private static void shareKlgDynamic(Activity activity, String userIco, String itemId, String shareTitle, String shareDes) {
+
+//        RRetrofit.create(SocialService.class)
+//                .share(Param.buildMap("type:discuss",
+//                        "item_id:" + itemId,
+//                        "title:" + shareTitle,
+//                        "site:" + getShareMediaString(shareMedia),
+//                        "spm:" + spm,
+//                        "url:" + url
+//                ))
+//                .compose(Rx.transformer(String.class))
+//                .subscribe(new BaseSingleSubscriber<String>() {
+//                    @Override
+//                    public void onSucceed(String bean) {
+//                        super.onSucceed(bean);
+//                    }
+//                });
+
+        T_.ok(activity.getString(R.string.share_success));
+
     }
 
     /**

@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.uiview.utils.TimeUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.main.me.SkinManagerUIView;
@@ -27,6 +28,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import java.util.List;
 import java.util.Map;
 
+import static com.hn.d.valley.R.id.image;
 import static com.hn.d.valley.R.id.message_item_audio_duration;
 
 /**
@@ -61,25 +63,38 @@ public class MsgVHAVChat extends MsgViewHolderBase {
         int duration = attachment.getDuration();
         AVChatRecordState state = attachment.getState();
         AVChatType type = attachment.getType();
-
-        if (type == AVChatType.VIDEO) {
-
+        imageView.setBackground(null);
+        timeView.setTextColor(Color.BLACK);
+        if (isReceivedMessage()) {
+            msgAudioLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            if (type == AVChatType.VIDEO) {
+                imageView.setImageResource(R.drawable.shipinjieshu_shipinliaotian_2);
+            } else {
+                imageView.setImageResource(R.drawable.yuyinjieshu_yuyingliaotian_2);
+            }
         } else {
-
+            msgAudioLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            if (type == AVChatType.VIDEO) {
+                imageView.setImageResource(R.drawable.shipinjieshu_shipinliaotian_1);
+            } else {
+                imageView.setImageResource(R.drawable.yuyinjieshu_yuyingliaotian_1);
+            }
         }
+
+
 
         switch (state) {
             case Success:
-                timeView.setText("通话成功建立");
+                timeView.setText("聊天时长: " + TimeUtil.secToTime(duration));
                 break;
             case Rejected:
-                timeView.setText("被拨打方拒绝接听电话或者正忙");
+                timeView.setText("对方已取消");
                 break;
             case Missed:
-                timeView.setText("被拨打方没有接听");
+                timeView.setText("对方没接听");
                 break;
             case Canceled:
-                timeView.setText("呼叫方在对方接听之前取消去电");
+                timeView.setText("取消聊天");
                 break;
         }
     }

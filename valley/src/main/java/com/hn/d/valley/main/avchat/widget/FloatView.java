@@ -56,6 +56,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
 
     private boolean mIsRight;
 
+    private OnClickListener mActionListener;
 
     public FloatView(@NonNull Context context) {
         super(context);
@@ -97,6 +98,8 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         mWmParams.height = LayoutParams.WRAP_CONTENT;
         addView(createView(mContext));
         mWindowManager.addView(this, mWmParams);
+
+        hide();
     }
 
     private View createView(Context mContext) {
@@ -110,12 +113,12 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         smallSizePreviewCoverImg = (ImageView) view.findViewById(R.id.smallSizePreviewCoverImg);
 
         view.setOnTouchListener(this);
-        view.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                T_.show("被点击了");
-            }
-        });
+//        view.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                T_.show("被点击了");
+//            }
+//        });
 
         view.measure(View.MeasureSpec.makeMeasureSpec(0,
                 View.MeasureSpec.UNSPECIFIED), View.MeasureSpec
@@ -156,6 +159,14 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
                 break;
         }
         mWindowManager.updateViewLayout(this, mWmParams);
+    }
+
+    public void setActionListener (OnClickListener listener) {
+        this.mActionListener = listener;
+        if (getChildCount() == 1) {
+            View view = getChildAt(0);
+            view.setOnClickListener(listener);
+        }
     }
 
     @Override
@@ -220,12 +231,23 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         }
     }
 
+    public boolean stopSmallSurfacePreview() {
+        return AVChatManager.getInstance().stopVideoPreview();
+    }
+
     public void hide(){
-        small_size_preview_layout.setVisibility(GONE);
+        T_.show("悬浮窗隐藏");
+        if (getVisibility() != GONE) {
+            setVisibility(GONE);
+//            stopSmallSurfacePreview();
+        }
+
     }
 
     public void show() {
-        small_size_preview_layout.setVisibility(VISIBLE);
+        if (getVisibility() != VISIBLE) {
+            setVisibility(VISIBLE);
+        }
     }
 
     private void removeFloatView() {

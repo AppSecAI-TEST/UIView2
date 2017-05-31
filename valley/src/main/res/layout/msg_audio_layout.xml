@@ -25,7 +25,9 @@
     <TextView
         android:id="@+id/message_item_audio_duration"
         style="@style/MainColorTextStyle"
+        android:layout_toStartOf="@id/message_item_audio_playing_animation"
         android:layout_alignParentEnd="true"
+        android:layout_alignStart="@id/message_item_audio_playing_animation"
         android:layout_centerVertical="true"
         android:layoutDirection="ltr"
         tools:text="angcyo'"/>

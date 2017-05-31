@@ -38,6 +38,7 @@ import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
+import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
@@ -480,6 +481,8 @@ public class RecentContactsControl {
             return grabedMsg.getMsg();
         } else if (attachment instanceof HotSpotInfoAttachment) {
             return ((HotSpotInfoAttachment) attachment).getHotSpotInfo().getMsg();
+        } else if (attachment instanceof DynamicDetailAttachment) {
+            return ((DynamicDetailAttachment) attachment).getDynamicMsg().getMsg();
         }
         return "[自定义消息]";
     }
