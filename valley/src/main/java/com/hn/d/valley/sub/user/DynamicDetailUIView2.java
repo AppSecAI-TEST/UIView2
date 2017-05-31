@@ -389,7 +389,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
      */
     private void comment(String imagePath, String content) {
         add(RRetrofit.create(SocialService.class)
-                .comment(Param.buildMap("type:discuss", "item_id:" + discuss_id, "mContent:" + content, "images:" + imagePath))
+                .comment(Param.buildMap("type:discuss", "item_id:" + discuss_id, "content:" + content, "images:" + imagePath))
                 .compose(Rx.transformer(String.class))
                 .doOnSubscribe(new Action0() {
                     @Override

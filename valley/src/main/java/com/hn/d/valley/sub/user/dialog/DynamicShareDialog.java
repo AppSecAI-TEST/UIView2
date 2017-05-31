@@ -61,7 +61,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
                             @Override
                             public void onSucceed(String bean) {
-                                T_.show(bean);
+                                T_.show("");
                             }
                         }));
             }

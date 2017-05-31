@@ -74,8 +74,10 @@ import com.lzy.imagepicker.ImageUtils;
 import com.lzy.imagepicker.YImageControl;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import rx.functions.Action0;
@@ -96,6 +98,11 @@ import rx.subscriptions.CompositeSubscription;
 
 
 public class UserDiscussItemControl {
+    /**
+     * 已经更新数量的动态
+     */
+    private static Set<String> updateReadCountList = new HashSet<>();
+
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
                                 UserDiscussListBean.DataListBean dataListBean,
                                 final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
@@ -511,6 +518,10 @@ public class UserDiscussItemControl {
                         //点击预览全部图片
                         ImagePagerUIView.start(iLayout, imageView,
                                 PhotoPager.getImageItems(medias, imageList), index);
+
+                        if (!isInDetail) {
+                            updateDiscussReadCnt(discuss_id);
+                        }
                     }
                 });
                 mediaImageTypeView.setImagesList(medias);
@@ -555,6 +566,9 @@ public class UserDiscussItemControl {
                         //T_.info(videoUrl);
                         if (!TextUtils.isEmpty(finalUrl)) {
                             iLayout.startIView(new VideoPlayUIView(finalUrl, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(thumbUrl)));
+                        }
+                        if (!isInDetail) {
+                            updateDiscussReadCnt(discuss_id);
                         }
                     }
                 });
@@ -649,6 +663,10 @@ public class UserDiscussItemControl {
                                 if (!TextUtils.isEmpty(discuss_id)) {
                                     jumpToDynamicDetailUIView(iLayout, discuss_id, false, isInDetail);
                                 }
+                            }
+
+                            if (!isInDetail) {
+                                updateDiscussReadCnt(discuss_id);
                             }
                         }
                     }
@@ -1057,7 +1075,6 @@ public class UserDiscussItemControl {
             }
         });
     }
-
 
     /**
      * 收藏
@@ -1563,12 +1580,26 @@ public class UserDiscussItemControl {
     /**
      * 更新的动态的阅读数量
      */
-    public static void updateDiscussReadCnt(String item_id) {
+    public static void updateDiscussReadCnt(final String item_id) {
+        if (updateReadCountList.contains(item_id)) {
+            return;
+        }
+        updateReadCountList.add(item_id);
         RRetrofit.create(SocialService.class)
                 .updateReadCnt(Param.buildMap("type:discuss", "item_id:" + item_id))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String bean) {
+                        super.onSucceed(bean);
+                        updateReadCountList.add(item_id);
+                    }
 
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        updateReadCountList.remove(item_id);
+                    }
                 });
     }
 }

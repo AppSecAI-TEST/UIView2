@@ -315,7 +315,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                             "media:" + RUtils.connect(mUploadMedias),
                             "is_top:" + (mTopBox.isChecked() ? 1 : 0),
                             "open_location:" + (mShareBox.isChecked() ? 1 : 0),
-                            "mContent:" + mInputView.string(),
+                            "content:" + mInputView.string(),
                             "address:" + getAddress(),
                             "lng:" + getLongitude(),
                             "lat:" + getLatitude()))
@@ -344,7 +344,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                             "item_id:" + forwardDataBean.getDiscuss_id(),
                             "is_top:" + (mTopBox.isChecked() ? 1 : 0),
                             "open_location:" + (mShareBox.isChecked() ? 1 : 0),
-                            "mContent:" + mInputView.string(),
+                            "content:" + mInputView.string(),
                             "address:" + getAddress(),
                             "lng:" + getLongitude(),
                             "lat:" + getLatitude()))

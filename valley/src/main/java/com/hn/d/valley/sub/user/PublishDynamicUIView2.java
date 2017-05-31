@@ -727,7 +727,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                             "type:discuss",
                             "item_id:" + item_id,
                             "is_top:" + hnTopImageView.isTop(),
-                            "mContent:" + mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
+                            "content:" + mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
                                 @Override
                                 public String userId(String userName) {
                                     for (FriendBean bean : mFriendList) {
@@ -841,7 +841,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //                            "media:" + RUtils.connect(mUploadMedias),
 //                            "is_top:" + (mTopBox.isChecked() ? 1 : 0),
 //                            "open_location:" + (mShareBox.isChecked() ? 1 : 0),
-//                            "mContent:" + mInputView.string(),
+//                            "content:" + mInputView.string(),
 //                            "address:" + getAddress(),
 //                            "lng:" + getLongitude(),
 //                            "lat:" + getLatitude()))
@@ -870,7 +870,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //                            "item_id:" + forwardDataBean.getDiscuss_id(),
 //                            "is_top:" + (mTopBox.isChecked() ? 1 : 0),
 //                            "open_location:" + (mShareBox.isChecked() ? 1 : 0),
-//                            "mContent:" + mInputView.string(),
+//                            "content:" + mInputView.string(),
 //                            "address:" + getAddress(),
 //                            "lng:" + getLongitude(),
 //                            "lat:" + getLatitude()))
