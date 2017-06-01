@@ -441,7 +441,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
     public void onViewLoad() {
         super.onViewLoad();
         mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        RAmap.startLocation();
+        RAmap.startLocation(true);
     }
 
     @Override

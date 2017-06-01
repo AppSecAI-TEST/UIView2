@@ -6,7 +6,9 @@ import com.angcyo.uiview.RCrashHandler;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.utilcode.utils.AppUtils;
+import com.angcyo.uiview.net.REmptySubscriber;
 import com.angcyo.uiview.net.RSubscriber;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.ProgressNotify;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
@@ -18,12 +20,17 @@ import com.hn.d.valley.cache.DataCacheManager;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.notify.SystemNotifyManager;
 import com.hn.d.valley.nim.RNim;
+import com.hn.d.valley.utils.RAmap;
 import com.liulishuo.FDown;
 import com.liulishuo.FDownListener;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 
+import java.util.concurrent.TimeUnit;
+
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -54,12 +61,25 @@ public class MainControl {
                     }
                 });
         TagsControl.getTags(null);
+
+        Rx.interval(5l, TimeUnit.MINUTES)
+                .map(new Func1<Long, Long>() {
+                    @Override
+                    public Long call(Long aLong) {
+                        RAmap.startLocation(true);
+                        return aLong;
+                    }
+                })
+                .subscribeOn(Schedulers.computation())
+                .subscribe(new REmptySubscriber<Long>());
     }
 
     public static void onMainUnload() {
         SystemNotifyManager.getInstance().registerCustomNotificationObserver(false);
 
         FDown.unInit();
+
+        RAmap.stopLocation();
     }
 
     public static void onLoginOut() {

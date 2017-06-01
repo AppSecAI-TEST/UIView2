@@ -172,6 +172,14 @@ public class LoginUIView2 extends BaseContentUIView {
                     public void onSucceed(LoginBean bean) {
                         onLoginSuccess(activity, bean);
                     }
+
+                    @Override
+                    public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            HnLoading.hide();
+                        }
+                    }
                 }));
     }
 

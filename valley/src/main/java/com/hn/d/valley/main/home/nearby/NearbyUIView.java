@@ -375,7 +375,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     @Override
     public void onShowInPager(UIViewPager viewPager) {
         super.onShowInPager(viewPager);
-        RAmap.startLocation();
+        RAmap.startLocation(false);
         if (isMapMode()) {
 //            UIViewPager.interceptTouch = false;
             if (mMapView != null) {
@@ -425,7 +425,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         L.e("加载数据..." + page);
 
         showLoadView();
-        RAmap.startLocation();
+        RAmap.startLocation(false);
 
         final boolean mapMode = isMapMode();
 

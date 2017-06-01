@@ -72,7 +72,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/base_ldpi"
-                        android:button="@drawable/password_checkbox_selector"/>
+                        android:button="@drawable/password_checkbox_selector"
+                        android:contentDescription="no_color"/>
 
                 </RelativeLayout>
 

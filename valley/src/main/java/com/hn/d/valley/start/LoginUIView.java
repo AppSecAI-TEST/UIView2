@@ -250,7 +250,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
             showUserIco(info.icoUrl);
             mLoginView.callOnClick();
         }
-        RAmap.startLocation();
+        RAmap.startLocation(true);
     }
 
     private void showUserIco(String icoUrl) {

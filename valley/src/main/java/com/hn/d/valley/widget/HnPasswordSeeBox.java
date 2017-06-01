@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.angcyo.uiview.skin.SkinHelper;
@@ -27,9 +28,12 @@ public class HnPasswordSeeBox extends AppCompatCheckBox {
         if (isInEditMode()) {
             return;
         }
-        ColorStateList stateList = new ColorStateList(
-                new int[][]{{android.R.attr.state_checked}, {}},
-                new int[]{SkinHelper.getSkin().getThemeSubColor(), Color.WHITE});
-        setSupportButtonTintList(stateList);
+        if (TextUtils.isEmpty(getContentDescription())) {
+            ColorStateList stateList = new ColorStateList(
+                    new int[][]{{android.R.attr.state_checked}, {}},
+                    new int[]{SkinHelper.getSkin().getThemeSubColor(), Color.WHITE});
+            setSupportButtonTintList(stateList);
+        }
+
     }
 }

@@ -53,6 +53,9 @@ public class RAmap {
     private static final String TAG = "RAmap";
     private static RAmap amap;
     private static SimpleDateFormat sdf = null;
+    boolean mAutoStop = false;//定位成功后, 自动停止
+    private GeocodeSearch geocoderSearch;
+    private AMapLocationClient locationClient = null;
     /**
      * 定位监听
      */
@@ -67,6 +70,9 @@ public class RAmap {
                     sb.append(location.getCity());
                     sb.append(location.getDistrict());
                     saveAmapLocation(location);
+                    if (mAutoStop) {
+                        stopLocation();
+                    }
                 } else {
                     sb.append("定位失败" + "\n");
                     sb.append("错误码:" + location.getErrorCode() + "\n");
@@ -86,8 +92,6 @@ public class RAmap {
             }
         }
     };
-    private GeocodeSearch geocoderSearch;
-    private AMapLocationClient locationClient = null;
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
     private Context mContext;
 
@@ -284,13 +288,13 @@ public class RAmap {
         return sdf == null ? "NULL" : sdf.format(l);
     }
 
-    public static void startLocation() {
+    public static void startLocation(boolean autoStop) {
         if (amap == null) {
             L.e("请先调用init方法.");
             return;
         }
         L.d("开始定位...");
-        amap.startLocationInner();
+        amap.startLocationInner(autoStop);
     }
 
     /**
@@ -362,7 +366,8 @@ public class RAmap {
      * @author hongming.wang
      * @since 2.8.0
      */
-    private void startLocationInner() {
+    private void startLocationInner(boolean autoStop) {
+        mAutoStop = autoStop;
         // 设置定位参数
         //locationClient.setLocationOption(locationOption);
         // 启动定位
