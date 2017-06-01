@@ -21,4 +21,9 @@ public abstract class BaseSingleSubscriber<T> extends RSubscriber<T> {
         super.onError(code, msg);
         T_.error(msg);
     }
+
+    @Override
+    public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+        super.onEnd(isError, isNoNetwork, e);
+    }
 }

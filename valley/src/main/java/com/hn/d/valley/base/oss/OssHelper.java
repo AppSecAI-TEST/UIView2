@@ -22,8 +22,10 @@ import com.hn.d.valley.bean.realm.FileUrlRealm;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.OtherService;
+import com.hn.d.valley.service.UploadService;
 
 import java.io.File;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -352,17 +354,51 @@ public class OssHelper {
      * 检查是否已经上传过
      */
     public static void checkUrl(final String filePath, final Action1<String> result) {
-        RRealm.exe(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<FileUrlRealm> md5 = realm.where(FileUrlRealm.class).equalTo("md5", MD5.getStreamMD5(filePath)).findAll();
-                if (md5.size() > 0) {
-                    result.call(md5.first().getUrl());
-                } else {
-                    result.call("");
-                }
-            }
-        });
+        RRetrofit.create(UploadService.class)
+                .checkMd5(Param.buildMap("md5:" + "[\"" + MD5.getStreamMD5(filePath) + "\"]"))
+                .compose(Rx.transformerList(String.class))
+                .retry(3)
+                .subscribe(new BaseSingleSubscriber<List<String>>() {
+                    @Override
+                    public void onSucceed(List<String> bean) {
+                        super.onSucceed(bean);
+                        if (bean.isEmpty()) {
+                            result.call("");
+                        } else {
+                            result.call(bean.get(0));
+                        }
+                    }
+
+                    @Override
+                    public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            RRealm.exe(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    RealmResults<FileUrlRealm> md5 = realm.where(FileUrlRealm.class).equalTo("md5", MD5.getStreamMD5(filePath)).findAll();
+                                    if (md5.size() > 0) {
+                                        result.call(md5.first().getUrl());
+                                    } else {
+                                        result.call("");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+    }
+
+    public static void saveUrl(String filePath, String url) {
+        final String streamMD5 = MD5.getStreamMD5(filePath);
+        RRealm.save(new FileUrlRealm(streamMD5, filePath, url));
+
+        RRetrofit.create(UploadService.class)
+                .success(Param.buildMap("md5:" + "{\"" + streamMD5 + "\":\"" + url + "\"}"))
+                .compose(Rx.transformer(String.class))
+                .retry(3)
+                .subscribe(new BaseSingleSubscriber<String>() {
+                });
     }
 
     static class OssObservable implements Observable.OnSubscribe<String> {

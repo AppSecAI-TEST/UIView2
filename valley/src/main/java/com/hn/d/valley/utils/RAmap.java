@@ -70,9 +70,6 @@ public class RAmap {
                     sb.append(location.getCity());
                     sb.append(location.getDistrict());
                     saveAmapLocation(location);
-                    if (mAutoStop) {
-                        stopLocation();
-                    }
                 } else {
                     sb.append("定位失败" + "\n");
                     sb.append("错误码:" + location.getErrorCode() + "\n");
@@ -89,6 +86,10 @@ public class RAmap {
             } else {
                 L.i(TAG, "onLocationChanged: 定位失败，location is null");
                 RBus.post(new AmapBean(false));
+            }
+
+            if (mAutoStop) {
+                stopLocation();
             }
         }
     };

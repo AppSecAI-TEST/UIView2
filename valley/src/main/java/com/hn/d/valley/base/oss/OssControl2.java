@@ -3,11 +3,8 @@ package com.hn.d.valley.base.oss;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.utils.string.MD5;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.realm.FileUrlRealm;
-import com.hn.d.valley.realm.RRealm;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -91,11 +88,14 @@ public class OssControl2 {
                                         }
                                         List<String> list = new ArrayList<>();
                                         String videoUrl = OssHelper.getVideoUrl(s);
+
+                                        OssHelper.saveUrl(videoPath, videoUrl);
+
                                         OssControl.urlMap.put(videoPath, videoUrl);
                                         list.add(videoUrl);
                                         mUploadListener.onUploadSucceed(list);
 
-                                        RRealm.save(new FileUrlRealm(MD5.getStreamMD5(videoPath), videoPath, videoUrl));
+                                        //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(videoPath), videoPath, videoUrl));
                                     }
 
                                     @Override
@@ -153,11 +153,14 @@ public class OssControl2 {
                                         }
                                         List<String> list = new ArrayList<>();
                                         String audioUrl = OssHelper.getAudioUrl(s);
+
+                                        OssHelper.saveUrl(audioPath, audioUrl);
+
                                         OssControl.urlMap.put(audioPath, audioUrl);
                                         list.add(audioUrl);
                                         mUploadListener.onUploadSucceed(list);
 
-                                        RRealm.save(new FileUrlRealm(MD5.getStreamMD5(audioPath), audioPath, audioUrl));
+                                        //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(audioPath), audioPath, audioUrl));
                                     }
 
                                     @Override
@@ -224,11 +227,14 @@ public class OssControl2 {
                                         L.i(needUploadPath + " 上传成功至->" + s);
                                     }
                                     String circleUrl = OssHelper.getCircleUrl(s);
+
+                                    OssHelper.saveUrl(needUploadPath, circleUrl);
+
                                     uploadList.add(needUploadPath + "|" + circleUrl);
                                     index++;
                                     startUpload();
 
-                                    RRealm.save(new FileUrlRealm(MD5.getStreamMD5(needUploadPath), needUploadPath, circleUrl));
+                                    //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(needUploadPath), needUploadPath, circleUrl));
                                 }
 
                                 @Override

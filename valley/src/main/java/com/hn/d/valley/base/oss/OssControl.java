@@ -4,11 +4,8 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.utils.string.MD5;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.realm.FileUrlRealm;
-import com.hn.d.valley.realm.RRealm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,10 +117,12 @@ public class OssControl {
                                         if (BuildConfig.DEBUG) {
                                             L.i(path + " 上传成功至->" + circleUrl);
                                         }
+                                        OssHelper.saveUrl(path, circleUrl);
+
                                         urlMap.put(path, circleUrl);
                                         succeed(circleUrl);
 
-                                        RRealm.save(new FileUrlRealm(MD5.getStreamMD5(path), path, circleUrl));
+                                        //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(path), path, circleUrl));
                                     }
 
                                     @Override
