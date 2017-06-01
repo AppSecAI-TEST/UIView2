@@ -70,19 +70,24 @@ public class DataCacheManager {
         // clear
         clearDataCache();
 
-        // build user/friend/team mData cache
-        FriendDataCache.getInstance().buildCache();
-        NimUserInfoCache.getInstance().buildCache();
-        TeamDataCache.getInstance().buildCache();
+        ThreadExecutor.instance().onThread(new Runnable() {
+            @Override
+            public void run() {
+                // build user/friend/team mData cache
+                FriendDataCache.getInstance().buildCache();
+                NimUserInfoCache.getInstance().buildCache();
+                TeamDataCache.getInstance().buildCache();
 
-        // build self avatar cache
-        List<String> accounts = new ArrayList<>(1);
-        accounts.add(UserCache.getUserAccount());
+                // build self avatar cache
+                List<String> accounts = new ArrayList<>(1);
+                accounts.add(UserCache.getUserAccount());
 
-        RecentContactsCache.instance().buildCache();
-        MsgCache.instance().buildCache();
+                RecentContactsCache.instance().buildCache();
+                MsgCache.instance().buildCache();
 
-        UserCache.instance().updateUserInfo();
+                UserCache.instance().updateUserInfo();
+            }
+        });
     }
 
     /**

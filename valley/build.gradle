@@ -142,6 +142,11 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
 //    compile 'com.jakewharton:butterknife:8.4.0'
+
+    compile 'jp.wasabeef:takt:1.0.4'
+
+    _devCompile 'com.github.markzhai:blockcanary-android:1.5.0'
+    preCompile 'com.github.markzhai:blockcanary-android:1.5.0'
 }
 repositories {
     mavenCentral()

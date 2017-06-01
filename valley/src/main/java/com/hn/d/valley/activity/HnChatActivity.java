@@ -27,6 +27,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class HnChatActivity extends BaseActivity {
 
     String mAccount;

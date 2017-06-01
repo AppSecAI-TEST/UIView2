@@ -7,7 +7,6 @@ import com.angcyo.uiview.base.UILayoutActivity;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.skin.SkinUtils;
-import com.hn.d.valley.utils.RBus;
 import com.orhanobut.hawk.Hawk;
 
 /**
@@ -29,12 +28,12 @@ public abstract class BaseActivity extends UILayoutActivity {
         SkinHelper.setSkin(SkinUtils.getSkin(this));
         setTheme(SkinUtils.getSkinStyle());
         super.onCreate(savedInstanceState);
-        RBus.register(this);
+        //RBus.register(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RBus.unregister(this);
+        //RBus.unregister(this);
     }
 }

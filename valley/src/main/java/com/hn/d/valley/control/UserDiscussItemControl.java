@@ -1561,11 +1561,13 @@ public class UserDiscussItemControl {
                     .placeholder(R.drawable.default_vociecover)
                     .bitmapTransform(new GlideBlurTransformation(imageView.getContext()))
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop()
                     .into(imageView);
         } else {
             DrawableRequestBuilder<String> builder = Glide.with(imageView.getContext())
                     .load(OssHelper.getImageThumb(url, width, height))
                     .placeholder(R.drawable.default_vociecover)
+                    .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
 
             if (blur) {
