@@ -20,6 +20,9 @@ import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.control.MediaTypeControl;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
+import com.hn.d.valley.main.message.attachment.LikeMsg;
+import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
@@ -53,6 +56,11 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
 
     String mSessionId;
     SessionTypeEnum mSessionTypeEnum;
+
+    public NewNotifyUIView() {
+        mSessionId = "14";
+        mSessionTypeEnum = SessionTypeEnum.P2P;
+    }
 
     public NewNotifyUIView(String sessionId, SessionTypeEnum sessionTypeEnum) {
         mSessionId = sessionId;
@@ -97,12 +105,20 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                                 NIMClient.getService(MsgService.class)
                                         .clearChattingHistory(Constant.comment, SessionTypeEnum.P2P);
                             }
-                        }));
+                        }).setVisibility(View.GONE));
     }
 
     @Override
     protected RExBaseAdapter<String, IMMessage, String> initRExBaseAdapter() {
         return new NotifyAdapter(mActivity);
+    }
+
+    @Override
+    protected void onLayoutStateChanged(LayoutState fromState, LayoutState toState) {
+        super.onLayoutStateChanged(fromState, toState);
+        if (toState != LayoutState.CONTENT) {
+            getUITitleBarContainer().hideRightItem(0);
+        }
     }
 
     private void getAllMessage() {
@@ -121,7 +137,6 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                                 showEmptyLayout();
                                 return;
                             }
-                            showContentLayout();
                             List<IMMessage> beans = new ArrayList<>();
                             List<String> users = new ArrayList<>();
                             for (IMMessage message : result) {
@@ -134,13 +149,21 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                                         } catch (Exception e) {
                                             e.printStackTrace();
                                         }
+                                    } else if (attachment instanceof LikeMsgAttachment) {
+                                        beans.add(message);
                                     }
                                 }
                             }
 
                             Collections.reverse(beans);
 
-                            mRExBaseAdapter.resetData(beans);
+                            if (beans.isEmpty()) {
+                                showEmptyLayout();
+                            } else {
+                                showContentLayout();
+                                mRExBaseAdapter.resetData(beans);
+                                getUITitleBarContainer().showRightItem(0);
+                            }
                         } else {
                             showEmptyLayout();
                         }
@@ -173,22 +196,52 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         @Override
         protected void onBindDataView(RBaseViewHolder holder, int posInData, IMMessage dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
-            final CustomBean customBean = getBean(dataBean);
-            holder.fillView(customBean);
+            String media = "", media_type = "", item_id = "", msg = "", created = "", avatar = "";
+            MsgAttachment attachment = dataBean.getAttachment();
+
+            if (attachment instanceof LikeMsgAttachment) {
+                LikeMsg likeMsg = ((LikeMsgAttachment) attachment).getLikeMsg();
+                media = likeMsg.getMedia();//媒体内容
+                media_type = likeMsg.getMedia_type();//媒体类型
+                item_id = likeMsg.getItem_id();//数据id
+                created = String.valueOf(likeMsg.getCreated());//时间
+                msg = likeMsg.getMsg();//显示的消息
+                avatar = likeMsg.getAvatar();//头像
+
+            } else if (attachment instanceof NoticeAttachment) {
+                final CustomBean customBean = getBean(dataBean);
+                holder.fillView(customBean);
+                media = customBean.getMedia();
+                media_type = customBean.getMedia_type();
+
+                item_id = customBean.getItem_id();
+                msg = customBean.getMsg();
+                avatar = customBean.getAvatar();
+                created = String.valueOf(customBean.getCreated());
+            }
+
             SimpleDraweeView mediaImageView = holder.v(R.id.media_image_view);
-            MediaTypeControl.initMedia(customBean.getMedia(),
-                    customBean.getMedia_type(), mediaImageView, null);
+            MediaTypeControl.initMedia(media, media_type, mediaImageView, null);
+
+            SimpleDraweeView avatarView = holder.v(R.id.avatar);
+            DraweeViewUtil.resize(avatarView, avatar);
+
             View contentView = holder.v(R.id.content);
             contentView.setVisibility(View.GONE);
-            if ("1".equalsIgnoreCase(customBean.getMedia_type())) {
+            if ("1".equalsIgnoreCase(media_type)) {
                 mediaImageView.setVisibility(View.GONE);
                 contentView.setVisibility(View.VISIBLE);
             }
+
+            holder.tv(R.id.created).setText(created);
+            holder.tv(R.id.msg).setText(msg);
+
+            final String finalItem_id = item_id;
             holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //startIView(new DynamicDetailUIView2(customBean.getItem_id()));
-                    UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, customBean.getItem_id(), false, false);
+                    UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false);
                 }
             });
         }

@@ -32,7 +32,7 @@ import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.FriendsRecommendUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
-import com.hn.d.valley.sub.other.SeeStateUserUIView;
+import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.VipWebUIView;
 
@@ -242,7 +242,8 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.dynamic_notification_text, R.drawable.icon_notice, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new SeeStateUserUIView());
+                        //mParentILayout.startIView(new SeeStateUserUIView());
+                        mParentILayout.startIView(new NewNotifyUIView());
 
                         RRealm.exe(new Realm.Transaction() {
                             @Override
