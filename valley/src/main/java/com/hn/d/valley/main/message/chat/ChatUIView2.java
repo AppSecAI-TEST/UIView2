@@ -900,7 +900,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     @Subscribe
     public void onEvent(AVChatFloatEvent event) {
-        L.d("onKeyDown :: " + event.show);
+        L.d("ChatUIVIew2 onKeyDown :: "  + event.show);
         if (event.show) {
             AVChatDelegete.getInstance().showFloatingView();
         } else {

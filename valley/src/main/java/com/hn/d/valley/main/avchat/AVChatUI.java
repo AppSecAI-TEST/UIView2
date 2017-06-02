@@ -360,7 +360,7 @@ public class AVChatUI implements AVChatUIListener {
         // 显示隐藏悬浮窗
         switch (stateEnum) {
             case VIDEO:
-                showFloatingView();
+//                showFloatingView();
                 break;
             case VIDEO_OFF:
             default:
@@ -985,6 +985,7 @@ public class AVChatUI implements AVChatUIListener {
                 @Override
                 public void onClick(View v) {
                     T_.show("返回视频聊天");
+                    hideFloatingView();
                     AVChatActivity.launch(mActivity);
                 }
             });

@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.attachment;
 
+import com.hn.d.valley.bean.UserDiscussListBean;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -35,6 +37,51 @@ public class DynamicDetailMsg extends BaseCustomMsg{
     private String vedioURL;
     private String item_id;
     private String apnsText;
+
+    public static DynamicDetailMsg create(UserDiscussListBean.DataListBean dataListBean) {
+        DynamicDetailMsg detailMsg = new DynamicDetailMsg();
+        detailMsg.avatar = dataListBean.getUser_info().getAvatar();
+        detailMsg.media_type = dataListBean.getMedia_type();
+        detailMsg.username = dataListBean.getUser_info().getUsername();
+        detailMsg.item_id = dataListBean.getDiscuss_id();
+        detailMsg.apnsText = String.format("分享了 %s 的动态",detailMsg.username);
+        detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
+
+        if (dataListBean.isImageMediaType()) {
+            detailMsg.picture = dataListBean.getMediaValue()[0];
+            detailMsg.msg = dataListBean.getContent();
+
+        } else if (dataListBean.isTextMediaType()) {
+            detailMsg.msg = dataListBean.getContent();
+
+        } else if (dataListBean.isVideoMediaType()) {
+            String[] split = dataListBean.getMediaValue();
+            detailMsg.cover = split[0];
+            detailMsg.vedioURL = split[1];
+            detailMsg.msg = "分享视频";
+
+        } else if (dataListBean.isVoiceMediaType()) {
+            detailMsg.msg = "分享音乐";
+        }
+
+        return detailMsg;
+    }
+
+    public boolean isImageMediaType() {
+        return "3".equalsIgnoreCase(getMedia_type());
+    }
+
+    public boolean isVideoMediaType() {
+        return "2".equalsIgnoreCase(getMedia_type());
+    }
+
+    public boolean isVoiceMediaType() {
+        return "4".equalsIgnoreCase(getMedia_type());
+    }
+
+    public boolean isTextMediaType() {
+        return "1".equalsIgnoreCase(getMedia_type());
+    }
 
     public String getAvatar() {
         return avatar;

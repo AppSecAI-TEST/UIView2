@@ -22,6 +22,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
 import com.netease.nimlib.sdk.avchat.constant.AVChatVideoScalingType;
 import com.netease.nimlib.sdk.avchat.model.AVChatVideoRender;
+import com.sdsmdg.harjot.materialshadows.MaterialShadowViewWrapper;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -43,7 +44,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     private WindowManager mWindowManager;
 
     // private view
-    private FrameLayout small_size_preview_layout;
+    private MaterialShadowViewWrapper small_size_preview_layout;
     private LinearLayout small_size_preview;
     private AVChatVideoRender small_preview_render;
     private ImageView smallSizePreviewCoverImg;
@@ -91,7 +92,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
 
         // 以屏幕左上角为原点，设置x、y初始值，相对于gravity
         mWmParams.x = 0;
-        mWmParams.y = mScreenHeight / 2;
+        mWmParams.y = 0;
 
         // 设置悬浮窗口长宽数据
         mWmParams.width = LayoutParams.WRAP_CONTENT;
@@ -107,7 +108,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.layout_avchat_float, null);
 
-        small_size_preview_layout = (FrameLayout) view.findViewById(R.id.small_size_preview_layout);
+        small_size_preview_layout = (MaterialShadowViewWrapper) view.findViewById(R.id.small_size_preview_layout);
         small_size_preview = (LinearLayout) view.findViewById(R.id.small_size_preview);
         small_preview_render = (AVChatVideoRender) view.findViewById(R.id.small_preview_render);
         smallSizePreviewCoverImg = (ImageView) view.findViewById(R.id.smallSizePreviewCoverImg);

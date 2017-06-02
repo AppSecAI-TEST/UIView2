@@ -22,6 +22,11 @@ public class DynamicDetailAttachment extends CustomAttachment {
         dynamicMsg = Json.from(content,DynamicDetailMsg.class);
     }
 
+    public DynamicDetailAttachment(DynamicDetailMsg detailMsg) {
+        super(CustomAttachmentType.SHARE_DYNAMIC);
+        dynamicMsg = detailMsg;
+    }
+
     public DynamicDetailMsg getDynamicMsg() {
         return dynamicMsg;
     }

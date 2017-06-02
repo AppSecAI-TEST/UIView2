@@ -20,8 +20,8 @@ android {
         applicationId "com.hn.d.valley"
         minSdkVersion Integer.parseInt(rootProject.M_SDK)
         targetSdkVersion Integer.parseInt(rootProject.T_SDK)
-        versionCode 38
-        versionName "1.0.38"
+        versionCode 39
+        versionName "1.0.39"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         resValue "string", "build_time", build_time
@@ -114,8 +114,9 @@ dependencies {
     compile project(':rbaudiomixlibrary')
     compile project(':audiocache')
 
-
     compile 'org.jsoup:jsoup:1.10.2'
+    compile 'com.sdsmdg.harjot:materialshadows:1.1.0'
+
     //annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     /*腾讯Bugly依赖*/
     //compile 'com.tencent.bugly:crashreport:latest.release'
@@ -147,6 +148,7 @@ dependencies {
 
     _devCompile 'com.github.markzhai:blockcanary-android:1.5.0'
     preCompile 'com.github.markzhai:blockcanary-android:1.5.0'
+    apkCompile 'com.github.markzhai:blockcanary-no-op:1.5.0'
 }
 repositories {
     mavenCentral()

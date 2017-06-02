@@ -59,11 +59,16 @@ public class Audio {
     /**
      * 可以播放本地音频, 和在线音频, 在线缓存
      */
-    public void play(String url) {
+    public void play(final String url) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
-        mPlayer.playUrl(url, !new File(url).exists());
+        ThreadExecutor.instance().onThread(new Runnable() {
+            @Override
+            public void run() {
+                mPlayer.playUrl(url, !new File(url).exists());
+            }
+        });
     }
 
     public void pause() {

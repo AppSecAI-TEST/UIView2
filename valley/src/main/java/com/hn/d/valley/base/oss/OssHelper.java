@@ -291,7 +291,9 @@ public class OssHelper {
         float tScale;
         if (srcWidth > TARGET_WIDTH) {
             if (srcHeight > TARGET_HEIGHT) {
-                tScale = Math.max(wScale, hScale);
+                tScale = Math.min(wScale, hScale);
+//                size[0] = (int) TARGET_WIDTH;
+//                size[1] = (int) TARGET_HEIGHT;
             } else {
                 tScale = wScale;
             }

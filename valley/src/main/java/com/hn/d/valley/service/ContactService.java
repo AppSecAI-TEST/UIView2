@@ -86,6 +86,7 @@ public interface ContactService {
     @POST("contact/cancelBlackList")
     Observable<ResponseBody> cancelBlackList(@QueryMap Map<String, String> map);
 
+
     /**
      * 设置为星标好友
      * 参数名	必选	类型	说明

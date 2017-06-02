@@ -4,23 +4,41 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.control.ShareControl;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
+import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
+import com.hn.d.valley.main.message.attachment.DynamicDetailMsg;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
+import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.user.DynamicType;
 import com.hn.d.valley.sub.user.ReportUIView;
+import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 
+import java.util.List;
+
+import rx.functions.Action3;
 import rx.subscriptions.CompositeSubscription;
+
+import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -114,6 +132,30 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 mDataListBean.getUser_info().getAvatar(),
                 mDataListBean.getDiscuss_id(),
                 getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()), shareDes);
+
+        mViewHolder.v(R.id.share_klg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                        , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                            @Override
+                            public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+
+                                requestCallback.onSuccess("");
+
+                                ContactItem contactItem = (ContactItem) absContactItems.get(0);
+                                FriendBean friendBean = contactItem.getFriendBean();
+
+                                DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mDataListBean);
+                                DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
+                                IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
+                                msgService().sendMessage(message,false);
+
+                            }
+                        });
+            }
+        });
+
     }
 
     private void initCollectView() {

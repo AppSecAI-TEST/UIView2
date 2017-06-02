@@ -15,6 +15,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RecyclerViewPager;
 import com.angcyo.uiview.recycler.adapter.RecyclerViewPagerAdapter;
 import com.angcyo.uiview.recycler.RecyclerViewPagerIndicator;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
 
@@ -98,6 +99,8 @@ public class CommandLayoutControl {
             textView.setGravity(Gravity.CENTER);
 
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);
+//            params.topMargin = ScreenUtil.dip2px(10);
+//            params.bottomMargin = ScreenUtil.dip2px(10);
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
 
             relativeLayout.addView(textView, params);

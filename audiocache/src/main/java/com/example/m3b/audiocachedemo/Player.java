@@ -7,6 +7,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.m3b.ThreadExecutor;
 import com.example.m3b.audiocachedemo.utils.MediaPlayerProxy;
 
 import java.io.IOException;
@@ -180,20 +181,31 @@ public class Player implements OnBufferingUpdateListener,
     }
 
     private void playEnd() {
-        String url = mUrl;
+        final String url = mUrl;
         mUrl = "";
         isPause = false;
-        for (OnPlayListener listener : mPlayListeners) {
-            listener.onPlayEnd(url);
-        }
+        ThreadExecutor.instance().onMain(new Runnable() {
+            @Override
+            public void run() {
+                for (OnPlayListener listener : mPlayListeners) {
+                    listener.onPlayEnd(url);
+                }
+            }
+        });
     }
 
-    private void playStart(String url) {
+    private void playStart(final String url) {
         isPause = false;
         mUrl = url;
-        for (OnPlayListener listener : mPlayListeners) {
-            listener.onPlay(url, false);
-        }
+
+        ThreadExecutor.instance().onMain(new Runnable() {
+            @Override
+            public void run() {
+                for (OnPlayListener listener : mPlayListeners) {
+                    listener.onPlay(url, false);
+                }
+            }
+        });
     }
 
     public interface OnPlayListener {

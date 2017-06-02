@@ -37,7 +37,7 @@ import static com.hn.d.valley.R.id.message_item_audio_duration;
 
 public class MsgVHAVChat extends MsgViewHolderBase {
 
-    private RelativeLayout msgAudioLayout;
+    private LinearLayout msgAudioLayout;
     private ImageView imageView;
     private TextView timeView;
 
@@ -47,12 +47,12 @@ public class MsgVHAVChat extends MsgViewHolderBase {
 
     @Override
     protected int getContentResId() {
-        return R.layout.msg_audio_layout;
+        return R.layout.msg_avchat_layout;
     }
 
     @Override
     protected void inflateContentView() {
-        msgAudioLayout = (RelativeLayout) findViewById(R.id.message_item_audio_layout);
+        msgAudioLayout = (LinearLayout) findViewById(R.id.message_item_audio_layout);
         imageView = (ImageView) findViewById(R.id.message_item_audio_playing_animation);
         timeView = (TextView) findViewById(message_item_audio_duration);
     }

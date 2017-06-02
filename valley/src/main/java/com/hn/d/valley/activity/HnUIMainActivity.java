@@ -16,7 +16,6 @@ import com.hn.d.valley.bean.event.SwipeEvent;
 import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.MainUIView;
-import com.hn.d.valley.nim.RNim;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.orhanobut.hawk.Hawk;
 
@@ -124,7 +123,7 @@ public class HnUIMainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RNim.initOnce(getApplication());
+        //RNim.initOnce(getApplication());
     }
 
     @Subscribe

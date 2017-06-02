@@ -59,8 +59,8 @@ object VersionControl {
                             checkUpgradeInfo(onUpdate)
                         }
 
-                        override fun onError(code: Int, msg: String?) {
-                            super.onError(code, msg)
+                        override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: Throwable?) {
+                            super.onEnd(isError, isNoNetwork, e)
                             checking = false
                         }
                     })

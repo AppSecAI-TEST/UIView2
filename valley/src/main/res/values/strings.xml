@@ -694,5 +694,11 @@
     <string name="share_video">分享视频</string>
     <string name="share_voice">分享语音</string>
     <string name="share_success">分享成功</string>
+    <string name="blacklist">黑名单</string>
+    <string name="text_remove_from_blacklist">移除黑名单</string>
+    <string name="avchat_notification">正在与%1$s通话中，点击继续</string>
+    <string name="avchat_call">网络通话</string>
+    <string name="avchat_no_pickup_call">未接听</string>
+
     <string name="black_list_title">黑名单</string>
 </resources>

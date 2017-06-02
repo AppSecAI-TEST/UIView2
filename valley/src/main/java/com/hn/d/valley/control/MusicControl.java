@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.angcyo.uiview.Root;
-import com.angcyo.uiview.utils.ThreadExecutor;
 import com.angcyo.uiview.widget.RDownloadView;
 import com.example.m3b.Audio;
 import com.hn.d.valley.bean.realm.MusicRealm;
@@ -173,11 +172,6 @@ public class MusicControl {
      * 播放mp3
      */
     public static void play(final String mp3) {
-        ThreadExecutor.instance().onThread(new Runnable() {
-            @Override
-            public void run() {
-                Audio.instance().play(mp3);
-            }
-        });
+        Audio.instance().play(mp3);
     }
 }

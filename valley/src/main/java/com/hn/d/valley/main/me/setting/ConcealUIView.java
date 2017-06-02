@@ -2,6 +2,7 @@ package com.hn.d.valley.main.me.setting;
 
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -42,6 +43,13 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isBindContacts());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().enableBindContacts(isChecked);
+                    }
+                });
                 itemInfoLayout.setItemText("绑定手机通讯录");
             }
         }));
@@ -61,6 +69,7 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                         startIView(new BlackListUIView());
                     }
                 });
+
             }
         }));
     }

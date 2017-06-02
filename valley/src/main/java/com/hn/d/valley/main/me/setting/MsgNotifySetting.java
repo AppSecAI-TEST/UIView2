@@ -29,6 +29,7 @@ public class MsgNotifySetting {
     private static final String VIBRATE = "vibrate";
     private static final String CIRCLE_NOTIFY = "circle_notify";
     private static final String GROUPMSG_NOTIFY = "groupmsg_notify";
+    private static final String BINDCONTACTS = "bind_contacts";
 
     private SPUtils mSPUtils;
 
@@ -132,6 +133,14 @@ public class MsgNotifySetting {
 
     public boolean isGroupMsgNotify() {
         return mSPUtils.getBoolean(GROUPMSG_NOTIFY,true);
+    }
+
+    public void enableBindContacts(boolean enable) {
+        mSPUtils.putBoolean(BINDCONTACTS,enable);
+    }
+
+    public boolean isBindContacts() {
+        return mSPUtils.getBoolean(BINDCONTACTS);
     }
 
 }

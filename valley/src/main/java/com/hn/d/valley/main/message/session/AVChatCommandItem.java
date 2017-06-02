@@ -42,7 +42,7 @@ public class AVChatCommandItem extends CommandItemInfo {
     @Override
     protected void onClick() {
 //        AVChatUIView.start(getContainer().mLayout,getContainer().account, AVChatType.VIDEO.getValue(),FROM_INTERNAL);
-        AVChatDelegete.getInstance().bind(getContainer().activity);
+//        AVChatDelegete.getInstance().bind(getContainer().activity);
         AVChatActivity.launch(getContainer().activity,getContainer().account,chatType.getValue(),FROM_INTERNAL);
     }
 

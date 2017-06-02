@@ -129,6 +129,8 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
     }
 
     public static void launch(Context activity) {
+        L.d(TAG,"launch 返回视频聊天");
+        needFinish = false;
         Intent intent = new Intent(activity,AVChatActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
@@ -158,7 +160,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         }
 
         //启动悬浮窗service
-//        avChatUI.bindService();
+        avChatUI.bindService();
 
         registerNetCallObserver(true);
         if (mIsInComingCall) {
@@ -178,7 +180,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         //动态注册广播
         IntentFilter intentFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         //启动广播
-        registerReceiver(innerReceiver, intentFilter);
+//        registerReceiver(innerReceiver, intentFilter);
     }
 
     @Override
@@ -228,17 +230,18 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        L.d(TAG,"onDestroy");
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(userStatusObserver, false);
         AVChatProfile.getInstance().setAVChatting(false);
         registerNetCallObserver(false);
         cancelCallingNotifier();
         needFinish = true;
 
-        RBus.post(new AVChatFloatEvent(false));
+//        RBus.post(new AVChatFloatEvent(false));
 
         //销毁悬浮窗服务
         if (avChatUI != null) {
-//            avChatUI.destroy();
+            avChatUI.destroy();
         }
     }
 
@@ -572,19 +575,19 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
      */
     private void activeCallingNotifier() {
         if (notifier != null && !isUserFinish) {
-//            notifier.activeCallingNotification(true);
+            notifier.activeCallingNotification(true);
         }
     }
 
     private void cancelCallingNotifier() {
         if (notifier != null) {
-//            notifier.activeCallingNotification(false);
+            notifier.activeCallingNotification(false);
         }
     }
 
     private void activeMissCallNotifier() {
         if (notifier != null) {
-//            notifier.activeMissCallNotification(true);
+            notifier.activeMissCallNotification(true);
         }
     }
 
