@@ -22,6 +22,7 @@
             android:layout_height="@dimen/base_50dpi"
             android:layout_marginRight="@dimen/base_xhdpi"
             android:visibility="gone"
+            app:placeholderImage="@drawable/zhanweitu_1"
             app:roundAsCircle="false"/>
 
         <com.hn.d.valley.widget.HnExTextView

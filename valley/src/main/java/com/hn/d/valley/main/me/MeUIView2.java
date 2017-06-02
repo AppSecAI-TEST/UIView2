@@ -189,15 +189,17 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     }
                 });
 
-                HnGlideImageView userIcoView = holder.v(R.id.user_ico_view);
-                userIcoView.setImageThumbUrl(userInfoBean.getAvatar());
+                if (userInfoBean != null) {
+                    HnGlideImageView userIcoView = holder.v(R.id.user_ico_view);
+                    userIcoView.setImageThumbUrl(userInfoBean.getAvatar());
 
-                holder.tv(R.id.user_name_view).setText(userInfoBean.getUsername());
-                holder.tv(R.id.user_id_view).setText(userInfoBean.getUid());
+                    holder.tv(R.id.user_name_view).setText(userInfoBean.getUsername());
+                    holder.tv(R.id.user_id_view).setText(userInfoBean.getUid());
 
-                holder.tv(R.id.fans_count).setText(userInfoBean.getFans_count() + "");
-                holder.tv(R.id.attention_count).setText(userInfoBean.getAttention_count() + "");
-                holder.tv(R.id.status_count).setText(userInfoBean.getDiscuss_count() + "");
+                    holder.tv(R.id.fans_count).setText(userInfoBean.getFans_count() + "");
+                    holder.tv(R.id.attention_count).setText(userInfoBean.getAttention_count() + "");
+                    holder.tv(R.id.status_count).setText(userInfoBean.getDiscuss_count() + "");
+                }
 
                 holder.tv(R.id.fans_count).setTextColor(SkinHelper.getSkin().getThemeSubColor());
                 holder.tv(R.id.attention_count).setTextColor(SkinHelper.getSkin().getThemeSubColor());
@@ -233,7 +235,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
                 resize(imageView, offset, offset * 3);
 
-                if (userInfoBean.isNew_notification()) {
+                if (userInfoBean != null && userInfoBean.isNew_notification()) {
                     imageView.setBackgroundResource(R.drawable.base_red_circle_shape);
                 } else {
                     imageView.setBackground(null);
@@ -248,7 +250,9 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         RRealm.exe(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                userInfoBean.setNew_notification(false);
+                                if (userInfoBean != null) {
+                                    userInfoBean.setNew_notification(false);
+                                }
                             }
                         });
                     }
@@ -264,7 +268,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 ImageView imageView = itemInfoLayout.getImageView();
                 int offset = getResources().getDimensionPixelOffset(R.dimen.base_hdpi);
                 resize(imageView, offset, offset * 3);
-                if (userInfoBean.isNew_visitor()) {
+                if (userInfoBean != null && userInfoBean.isNew_visitor()) {
                     imageView.setBackgroundResource(R.drawable.base_red_circle_shape);
                 } else {
                     imageView.setBackground(null);
@@ -278,7 +282,9 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         RRealm.exe(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                userInfoBean.setNew_visitor(false);
+                                if (userInfoBean != null) {
+                                    userInfoBean.setNew_visitor(false);
+                                }
                             }
                         });
                     }
@@ -309,7 +315,9 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemDarkText(userInfoBean.getCollect_count() + "");
+                if (userInfoBean != null) {
+                    itemInfoLayout.setItemDarkText(userInfoBean.getCollect_count() + "");
+                }
 
                 initItemLayout(itemInfoLayout, R.string.my_collect_tip, R.drawable.icon_collection, new View.OnClickListener() {
                     @Override

@@ -6,6 +6,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
@@ -72,7 +73,21 @@ public class VipWebUIView extends X5WebUIView {
                             public void onTest() {
                                 L.e("js call: onTest([])-> ");
                                 //T_.show("onTest");
+                                if (BuildConfig.SHOW_DEBUG) {
+                                    T_.ok("mWebView.reload...");
+                                }
                                 mWebView.reload();
+                            }
+
+                            @JavascriptInterface
+                            public void reload() {
+                                L.e("js call: reload([])-> ");
+                                //T_.show("onTest");
+                                //mWebView.reload();
+                                if (BuildConfig.SHOW_DEBUG) {
+                                    T_.ok("reload...");
+                                }
+                                login(mWebView);
                             }
                         }, "android");
                     }
@@ -82,19 +97,29 @@ public class VipWebUIView extends X5WebUIView {
     @Override
     protected void onPageFinished(final WebView webView, String url) {
         super.onPageFinished(webView, url);
-        if (!isLogin) {
-            final String js = "javascript:app_login" + createMethodParams(UserCache.getUserAccount(), mToken, "onTest", "android");
-            L.e("call: run([])-> load Js : " + mToken + "\n" + js);
-            webView.loadUrl(js);
-//
+        //login(webView);
+//        if (!isLogin) {
+//            final String js = "javascript:app_login" + createMethodParams(UserCache.getUserAccount(), mToken, "onTest", "android");
+//            L.e("call: run([])-> load Js : " + mToken + "\n" + js);
+////            webView.loadUrl(js);
+////
 //            webView.postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
 //                    L.e("call: run([])-> load Js :" + js);
 //                    webView.loadUrl(js);
 //                }
-//            }, 300);
+//            }, 1000);
+//
+//            isLogin = true;
+//        }
+    }
 
+    private void login(WebView webView) {
+        if (!isLogin) {
+            final String js = "javascript:app_login" + createMethodParams(UserCache.getUserAccount(), mToken, "onTest", "android");
+            L.e("call: run([])-> load Js : " + mToken + "\n" + js);
+            webView.loadUrl(js);
             isLogin = true;
         }
     }
