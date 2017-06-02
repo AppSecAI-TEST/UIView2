@@ -134,6 +134,8 @@ public class MainControl {
                                             dialog.setOkText("安装");
                                             AppUtils.installApp(ValleyApp.getApp(),
                                                     VersionControl.INSTANCE.getTargetFile());
+
+                                            showProgressNotify(100);
                                         }
 
                                         @Override
@@ -143,10 +145,7 @@ public class MainControl {
 
                                             //L.d("下载进度:" + task.getUrl() + ":" + VersionControl.INSTANCE.getTargetFile().getAbsolutePath() + " -> total:" + totalBytes + " :" + progress);
 
-                                            ProgressNotify.instance()
-                                                    .setClickActivity(HnUIMainActivity.class)
-                                                    .setTargetFilePath(VersionControl.INSTANCE.getTargetFile().getAbsolutePath())
-                                                    .show("恐龙谷", R.drawable.logo, (int) progress);
+                                            showProgressNotify((int) progress);
                                         }
                                     });
                                 }
@@ -158,5 +157,12 @@ public class MainControl {
                 return null;
             }
         });
+    }
+
+    private static void showProgressNotify(int progress) {
+        ProgressNotify.instance()
+                .setClickActivity(HnUIMainActivity.class)
+                .setTargetFilePath(VersionControl.INSTANCE.getTargetFile().getAbsolutePath())
+                .show("恐龙谷", R.drawable.logo, progress);
     }
 }
