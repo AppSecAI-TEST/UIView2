@@ -19,12 +19,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 import com.hn.d.valley.main.avchat.activity.AVChatExitCode;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
+import com.hn.d.valley.utils.permissionCompat.SettingsCompat;
 import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.avchat.AVChatCallback;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
@@ -84,6 +86,10 @@ public class AVChatUI implements AVChatUIListener {
 
     public interface AVChatListener {
         void uiExit();
+
+        void showIView();
+
+        void showPermissionCheckDialog();
     }
 
     public AVChatUI(Activity context, View root, AVChatListener listener) {
@@ -984,7 +990,7 @@ public class AVChatUI implements AVChatUIListener {
             setFloatActionListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    T_.show("返回视频聊天");
+//                    T_.show("返回视频聊天");
                     hideFloatingView();
                     AVChatActivity.launch(mActivity);
                 }
@@ -997,11 +1003,21 @@ public class AVChatUI implements AVChatUIListener {
         }
     };
 
+    public void showIView() {
+        aVChatListener.showIView();
+    }
+
     /**
      * 显示悬浮图标
      */
     public void showFloatingView() {
         L.d("mFloatViewService","showFloatingView  " + "boo : " + mFloatViewService);
+
+        // 先检测悬浮窗权限设置
+        if (!SettingsCompat.canDrawOverlays(mActivity)) {
+            aVChatListener.showPermissionCheckDialog();
+            return;
+        }
         if (mFloatViewService != null) {
             mFloatViewService.showFloat(UserCache.getUserAccount());
         }

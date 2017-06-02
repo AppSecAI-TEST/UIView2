@@ -316,6 +316,7 @@ public class AVChatVideo implements View.OnClickListener {
         HnUIMainActivity.launch(mActivity);
 
         manager.showFloatingView();
+//        manager.showIView();
 
 //        RBus.post(new AVChatFloatEvent(true));
 //        AVChatDelegete.getInstance().showFloatingView();

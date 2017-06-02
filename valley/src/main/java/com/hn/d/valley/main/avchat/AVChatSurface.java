@@ -440,12 +440,12 @@ public class AVChatSurface {
         }
 
         //重新设置上画布
-        if (user1 == UserCache.getUserAccount()) {
+        if (user1 .equals(UserCache.getUserAccount())) {
             AVChatManager.getInstance().setupLocalVideoRender(render1, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
         } else {
             AVChatManager.getInstance().setupRemoteVideoRender(user1, render1, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
         }
-        if (user2 == UserCache.getUserAccount()) {
+        if (user2 .equals(UserCache.getUserAccount())) {
             AVChatManager.getInstance().setupLocalVideoRender(render2, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
         } else {
             AVChatManager.getInstance().setupRemoteVideoRender(user2, render2, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);

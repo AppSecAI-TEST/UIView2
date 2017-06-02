@@ -109,7 +109,6 @@
         <activity
             android:name=".activity.HnUIMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"
             android:windowSoftInputMode="adjustResize">
@@ -127,7 +126,6 @@
         <activity
             android:name=".main.avchat.activity.AVChatActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
         </activity>

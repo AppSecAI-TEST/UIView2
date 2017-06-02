@@ -19,10 +19,10 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.utils.permissionCompat.SettingsCompat;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
 import com.netease.nimlib.sdk.avchat.constant.AVChatVideoScalingType;
 import com.netease.nimlib.sdk.avchat.model.AVChatVideoRender;
-import com.sdsmdg.harjot.materialshadows.MaterialShadowViewWrapper;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -44,7 +44,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     private WindowManager mWindowManager;
 
     // private view
-    private MaterialShadowViewWrapper small_size_preview_layout;
+    private FrameLayout small_size_preview_layout;
     private LinearLayout small_size_preview;
     private AVChatVideoRender small_preview_render;
     private ImageView smallSizePreviewCoverImg;
@@ -56,16 +56,18 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     private boolean mDraging;
 
     private boolean mIsRight;
+    private boolean init ;
 
     private OnClickListener mActionListener;
 
     public FloatView(@NonNull Context context) {
         super(context);
+        mContext = context;
+
         init(context);
     }
 
     private void init(Context context) {
-        mContext = context;
 
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         // 更新浮动窗口位置参数 靠边
@@ -100,6 +102,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         addView(createView(mContext));
         mWindowManager.addView(this, mWmParams);
 
+        init = true;
         hide();
     }
 
@@ -108,7 +111,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.layout_avchat_float, null);
 
-        small_size_preview_layout = (MaterialShadowViewWrapper) view.findViewById(R.id.small_size_preview_layout);
+        small_size_preview_layout = (FrameLayout) view.findViewById(R.id.small_size_preview_layout);
         small_size_preview = (LinearLayout) view.findViewById(R.id.small_size_preview);
         small_preview_render = (AVChatVideoRender) view.findViewById(R.id.small_preview_render);
         smallSizePreviewCoverImg = (ImageView) view.findViewById(R.id.smallSizePreviewCoverImg);
@@ -237,7 +240,10 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     }
 
     public void hide(){
-        T_.show("悬浮窗隐藏");
+//        T_.show("悬浮窗隐藏");
+        if (!init) {
+            return;
+        }
         if (getVisibility() != GONE) {
             setVisibility(GONE);
 //            stopSmallSurfacePreview();
@@ -246,10 +252,22 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     }
 
     public void show() {
+
+        if (!init){
+            //先检测悬浮窗权限
+            if (SettingsCompat.canDrawOverlays(mContext)) {
+                init(mContext);
+            } else {
+                T_.show("没有获取悬浮窗权限!");
+                return;
+            }
+        }
+
         if (getVisibility() != VISIBLE) {
             setVisibility(VISIBLE);
         }
     }
+
 
     private void removeFloatView() {
         try {

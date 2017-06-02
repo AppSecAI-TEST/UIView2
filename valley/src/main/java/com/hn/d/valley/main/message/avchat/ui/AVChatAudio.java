@@ -299,10 +299,10 @@
 //            case R.id.receive:
 //                listener.onReceive();
 //                break;
-//            case R.id.avchat_video_mute:
+////            case R.id.avchat_video_mute:
 ////                listener.toggleMute();
-//                listener.onHangUp();
-//                break;
+////                listener.onHangUp();
+////                break;
 //            case R.id.avchat_video_switch_audio:
 //                if(isInSwitch) {
 ////                    Toast.makeText(context, R.string.avchat_in_switch, Toast.LENGTH_SHORT).show();

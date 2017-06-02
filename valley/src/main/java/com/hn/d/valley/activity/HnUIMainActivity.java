@@ -34,6 +34,7 @@ public class HnUIMainActivity extends BaseActivity {
     public static void launcher(Activity activity, boolean isLoginSuccess) {
         Intent intent = new Intent(activity, HnUIMainActivity.class);
         intent.putExtra(KEY_IS_LOGIN_SUCCESS, isLoginSuccess);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
                 R.anim.base_tran_to_left_exit);
@@ -59,6 +60,8 @@ public class HnUIMainActivity extends BaseActivity {
         Intent intent = new Intent(activity,HnUIMainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
+                R.anim.base_tran_to_left_exit);
     }
 
     @Override

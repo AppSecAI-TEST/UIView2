@@ -20,8 +20,8 @@ android {
         applicationId "com.hn.d.valley"
         minSdkVersion Integer.parseInt(rootProject.M_SDK)
         targetSdkVersion Integer.parseInt(rootProject.T_SDK)
-        versionCode 39
-        versionName "1.0.39"
+        versionCode 30
+        versionName "1.0.30"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         resValue "string", "build_time", build_time
@@ -115,7 +115,7 @@ dependencies {
     compile project(':audiocache')
 
     compile 'org.jsoup:jsoup:1.10.2'
-    compile 'com.sdsmdg.harjot:materialshadows:1.1.0'
+    //compile 'com.sdsmdg.harjot:materialshadows:1.1.0'
 
     //annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     /*腾讯Bugly依赖*/

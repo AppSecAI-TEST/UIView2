@@ -77,16 +77,16 @@ public class GroupChatUIView extends ChatUIView2 {
     View layout;
     TextView tv_announce;
     LinearLayout ait_control_layout;
+    private CheckBox cb_show;
+    private TextView tv_title;
+    private LinearLayout ll_switch;
 
     private Map<String, GroupMemberBean> selectedMembers;
     private GroupDescBean mGroupDesc;
     private Set<IMMessage> mAitMessages;
 
-    private CheckBox cb_show;
-    private TextView tv_title;
-    private LinearLayout ll_switch;
-
     private boolean showAnnounce;
+    private boolean isVisible;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -126,10 +126,16 @@ public class GroupChatUIView extends ChatUIView2 {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-
+        isVisible = true;
         if(!checkInGroup()){
             showNotice();
         }
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        isVisible = false;
     }
 
     @Override
@@ -421,7 +427,9 @@ public class GroupChatUIView extends ChatUIView2 {
             return;
         }
 
-        mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
+        if (isVisible) {
+            mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
+        }
 
         L.i(TAG,event.notification.getContent());
 

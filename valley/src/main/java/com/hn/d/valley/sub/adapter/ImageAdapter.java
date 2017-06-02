@@ -58,7 +58,8 @@ public class ImageAdapter extends RBaseAdapter<String> {
             });
 
             DrawableRequestBuilder<String> builder = Glide.with(mContext)
-                    .load(bean);
+                    .load(bean)
+                    .centerCrop();
             builder.placeholder(R.drawable.zhanweitu_1);
             builder.into(imageView);
         }

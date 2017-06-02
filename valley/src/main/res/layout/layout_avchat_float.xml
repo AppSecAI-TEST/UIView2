@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sdsmdg.harjot.materialshadows.MaterialShadowViewWrapper xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/small_size_preview_layout"
     android:layout_width="64dp"
     android:layout_height="98dp"
@@ -22,6 +22,17 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_gravity="right|top"
+        android:layout_width="20dp"
+        android:layout_height="30dp">
+
+        <com.netease.nimlib.sdk.avchat.model.AVChatVideoRender
+            android:id="@+id/micro_preview_render"
+            android:layout_width="20dp"
+            android:layout_height="30dp" />
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/smallSizePreviewCoverImg"
         android:layout_width="match_parent"
@@ -29,4 +40,4 @@
         android:scaleType="fitXY"
         android:src="@drawable/avchat_close_video_send"
         android:visibility="visible" />
-</com.sdsmdg.harjot.materialshadows.MaterialShadowViewWrapper>
+</FrameLayout>
