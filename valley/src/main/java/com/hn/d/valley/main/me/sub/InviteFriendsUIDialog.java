@@ -64,7 +64,7 @@ public class InviteFriendsUIDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
                 super.onClick(v);
-                share(SHARE_MEDIA.WEIXIN);
+                //share(SHARE_MEDIA.WEIXIN);
             }
         });
 
