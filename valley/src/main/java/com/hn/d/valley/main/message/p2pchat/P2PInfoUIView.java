@@ -118,7 +118,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_stick_chat));
                 switchCompat.setChecked(SessionSettingDelegate.getInstance().checkTop(mSessionId));
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -142,7 +142,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                final SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                final CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_messge_notallow));
                 boolean notice = NIMClient.getService(FriendService.class).isNeedMessageNotify(mSessionId);
                 switchCompat.setChecked(notice);

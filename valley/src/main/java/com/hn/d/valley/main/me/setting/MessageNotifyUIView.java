@@ -3,7 +3,6 @@ package com.hn.d.valley.main.me.setting;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.support.v7.widget.SwitchCompat;
 import android.text.TextPaint;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -49,7 +48,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isEnableNoti());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -77,7 +76,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isShowMsgNotiDetail());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -127,7 +126,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isRing());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -147,7 +146,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isVirbrate());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -185,7 +184,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_friend_circle_dynamic_notify));
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isCircleCNotify());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -214,7 +213,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_subscribe_redpacket_notify));
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isCircleCNotify());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override

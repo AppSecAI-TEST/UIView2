@@ -8,11 +8,14 @@
     app:item_right_res="@null"
     tools:item_text="测试">
 
-    <android.support.v7.widget.SwitchCompat
+    <CheckBox
         android:id="@+id/switch_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:button="@drawable/default_switch_selector"
+        android:visibility="visible"
+        tools:background="@color/base_white"/>
 
 </com.angcyo.uiview.widget.ItemInfoLayout>

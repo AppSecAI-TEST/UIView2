@@ -1,6 +1,5 @@
 package com.hn.d.valley.main.me.setting;
 
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 
@@ -42,7 +41,7 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isBindContacts());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -57,7 +56,7 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setVisibility(View.GONE);
 
                 itemInfoLayout.setItemText("联系人黑名单");

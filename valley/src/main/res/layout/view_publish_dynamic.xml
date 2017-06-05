@@ -148,6 +148,7 @@
                 android:id="@+id/top_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:button="@drawable/default_switch_selector"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/base_xhdpi"/>
@@ -166,6 +167,7 @@
                 android:id="@+id/share_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:button="@drawable/default_switch_selector"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="@dimen/base_xhdpi"/>

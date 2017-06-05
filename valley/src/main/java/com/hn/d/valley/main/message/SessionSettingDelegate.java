@@ -1,6 +1,6 @@
 package com.hn.d.valley.main.message;
 
-import android.support.v7.widget.SwitchCompat;
+import android.widget.CompoundButton;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.net.RRetrofit;
@@ -16,10 +16,7 @@ import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -138,7 +135,7 @@ public class SessionSettingDelegate {
                 });
     }
 
-    public void setMessageNotify(String sessionId, final boolean checkState, final SwitchCompat switchCompat) {
+    public void setMessageNotify(String sessionId, final boolean checkState, final CompoundButton switchCompat) {
         if (!NetworkUtil.isNetAvailable(ValleyApp.getApp())) {
             T_.show("无网络！");
             switchCompat.setSelected(!checkState);

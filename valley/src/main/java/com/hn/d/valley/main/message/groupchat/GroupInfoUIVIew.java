@@ -2,7 +2,6 @@ package com.hn.d.valley.main.message.groupchat;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -299,7 +298,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_top_chat));
                 switchCompat.setChecked(SessionSettingDelegate.getInstance().checkTop(mSessionId));
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -324,7 +323,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                final SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                final CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_message_notity_no));
                 Team t = TeamDataCache.getInstance().getTeamById(mSessionId);
                 if (t != null) {

@@ -1,7 +1,6 @@
 package com.hn.d.valley.main.me.setting;
 
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -81,7 +80,7 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setVisibility(View.GONE);
 
                 itemInfoLayout.setItemText(mActivity.getString(R.string.language));
@@ -100,7 +99,7 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(getString(R.string.receiver_mode));
                 switchCompat.setChecked(isReceiverMode());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -116,7 +115,7 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 mStorageSpaceItemInfoLayout = holder.v(R.id.item_info_layout);
-                SwitchCompat switchCompat = holder.v(R.id.switch_view);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setVisibility(View.GONE);
 
                 mStorageSpaceItemInfoLayout.setItemText(getString(R.string.storage_space));
