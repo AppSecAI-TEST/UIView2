@@ -331,8 +331,11 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ImagePagerUIView.start(mParentILayout, imageView,
-                                PhotoPager.getImageItems(getAllPhotos()), getPhotoStartIndex(indexInData));
+                        int photoStartIndex = getPhotoStartIndex(indexInData);
+                        ImagePagerUIView.start(mParentILayout,
+                                imageView,
+                                PhotoPager.getImageItems(getAllPhotos(), imageView.copyDrawable(), photoStartIndex),
+                                photoStartIndex);
                     }
                 });
             } else if ("2".equalsIgnoreCase(albumBean.media_type)) {
@@ -353,7 +356,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
                         @Override
                         public void onClick(View v) {
                             mParentILayout.startIView(new VideoPlayUIView(videoUrl,
-                                    imageView.getDrawable().getConstantState().newDrawable(),
+                                    imageView.copyDrawable(),
                                     OssHelper.getWidthHeightWithUrl(videoUrl)));
 
                         }

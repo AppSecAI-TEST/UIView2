@@ -49,11 +49,11 @@ public class ImageAdapter extends RBaseAdapter<String> {
     @Override
     protected void onBindView(final RBaseViewHolder holder, final int position, final String bean) {
         if (!mImageAdapterConfig.onBindView(holder, position, bean)) {
-            RImageView imageView = holder.v(R.id.image_view);
+            final RImageView imageView = holder.v(R.id.image_view);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mImageAdapterConfig.onItemClick(holder, v, position, bean);
+                    mImageAdapterConfig.onItemClick(holder, imageView, position, bean);
                 }
             });
 
@@ -85,7 +85,7 @@ public class ImageAdapter extends RBaseAdapter<String> {
             return false;
         }
 
-        public void onItemClick(RBaseViewHolder holder, View view, int position, String bean) {
+        public void onItemClick(RBaseViewHolder holder, RImageView view, int position, String bean) {
 
         }
     }

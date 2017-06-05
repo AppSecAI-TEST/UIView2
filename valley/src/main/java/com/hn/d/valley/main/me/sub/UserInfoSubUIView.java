@@ -14,6 +14,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
@@ -100,8 +101,11 @@ public class UserInfoSubUIView extends BaseItemUIView {
                     }
 
                     @Override
-                    public void onItemClick(RBaseViewHolder holder, View view, int position, String bean) {
-                        ImagePagerUIView.start(mParentILayout, view, PhotoPager.getImageItems(stringList), position);
+                    public void onItemClick(RBaseViewHolder holder, RImageView view, int position, String bean) {
+                        ImagePagerUIView.start(mParentILayout,
+                                view,
+                                PhotoPager.getImageItems(stringList, view.copyDrawable(), position),
+                                position);
                     }
 
                     @Override

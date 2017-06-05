@@ -9,6 +9,7 @@ import com.angcyo.uiview.utils.storage.StorageUtil;
 import com.angcyo.umeng.UM;
 import com.example.m3b.Audio;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipeline;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
@@ -130,17 +131,22 @@ public class ValleyApp extends RApplication {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
+        clearFresco();
+    }
+
+    protected void clearFresco() {
         if (Fresco.hasBeenInitialized()) {
-            Fresco.getImagePipeline().clearMemoryCaches();
+            ImagePipeline imagePipeline = Fresco.getImagePipeline();
+            if (imagePipeline != null) {
+                imagePipeline.clearMemoryCaches();
+            }
         }
     }
 
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        if (Fresco.hasBeenInitialized()) {
-            Fresco.getImagePipeline().clearMemoryCaches();
-        }
+        clearFresco();
     }
 
     @Override

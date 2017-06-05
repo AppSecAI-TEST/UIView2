@@ -127,7 +127,10 @@
         <activity
             android:name=".main.avchat.activity.AVChatActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:taskAffinity="com.hn.d.valley.avchat"
             android:windowSoftInputMode="adjustResize">
         </activity>
 

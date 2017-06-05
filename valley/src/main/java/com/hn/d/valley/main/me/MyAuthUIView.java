@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import com.angcyo.library.utils.Anim;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.utilcode.utils.IDCardUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
@@ -83,6 +84,12 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
         }
         return R.layout.item_input_view;
+    }
+
+    @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+        mAuthType = AuthType.ZCMR;//默认职称名人
     }
 
     /**

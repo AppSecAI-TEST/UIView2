@@ -1,5 +1,6 @@
 package com.hn.d.valley.utils;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -59,13 +60,38 @@ public class PhotoPager {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
 
         for (int i = 0; i < photos.size(); i++) {
+            String s = photos.get(i);
+            if (TextUtils.isEmpty(s)) {
+                continue;
+            }
+
             final ImageItem imageItem = new ImageItem();
-            imageItem.url = photos.get(i);
-            try {
-                imageItem.placeholderDrawable = imageList.get(i).getDrawable()
-                        .getConstantState().newDrawable();
-            } catch (Exception e) {
-                e.printStackTrace();
+            imageItem.url = s;
+
+            if (imageList.size() > i) {
+                imageItem.placeholderDrawable = imageList.get(i).copyDrawable();
+            }
+            imageItems.add(imageItem);
+        }
+
+        return imageItems;
+    }
+
+    @NonNull
+    public static ArrayList<ImageItem> getImageItems(List<String> photos, Drawable curDrawable, int curDrawablePosition) {
+        final ArrayList<ImageItem> imageItems = new ArrayList<>();
+
+        for (int i = 0; i < photos.size(); i++) {
+            String s = photos.get(i);
+            if (TextUtils.isEmpty(s)) {
+                continue;
+            }
+
+            final ImageItem imageItem = new ImageItem();
+            imageItem.url = s;
+
+            if (curDrawablePosition == i) {
+                imageItem.placeholderDrawable = curDrawable;
             }
             imageItems.add(imageItem);
         }
