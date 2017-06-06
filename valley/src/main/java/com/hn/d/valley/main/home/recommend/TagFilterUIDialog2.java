@@ -1,6 +1,9 @@
 package com.hn.d.valley.main.home.recommend;
 
+import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.text.TextPaint;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.resources.ResUtil;
@@ -78,6 +82,22 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
         mRecyclerView = new RRecyclerView(mActivity);
         mRecyclerView.setHasFixedSize(true);
         ResUtil.setBgDrawable(mRecyclerView, getDrawable(R.drawable.base_white_round_bg));
+        mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
+            @Override
+            public void getItemOffsets2(Rect outRect, int position, int edge) {
+                outRect.bottom = getDimensionPixelOffset(R.dimen.base_line);
+            }
+
+            @Override
+            public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+                drawBottomLine(canvas, paint, itemView, offsetRect, itemCount, position);
+            }
+
+            @Override
+            protected int getPaintColor(Context context) {
+                return getColor(R.color.line_color);
+            }
+        }));
 
         mContentLayout.setOrientation(LinearLayout.VERTICAL);
         int width = (int) (density() * 200);
@@ -145,6 +165,14 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
             protected void onBindView(RBaseViewHolder holder, int position, final Tag bean) {
                 TextView textView = holder.tv(R.id.text_view);
                 textView.setGravity(Gravity.CENTER);
+
+                int offset = getDimensionPixelOffset(R.dimen.base_ldpi);
+
+                if (isLast(position)) {
+                    holder.itemView.setPadding(offset, offset, offset, offset);
+                } else {
+                    holder.itemView.setPadding(0, offset, 0, offset);
+                }
 
                 if (isLast(position)) {
                     textView.setText(R.string.edit_tag_tip);
