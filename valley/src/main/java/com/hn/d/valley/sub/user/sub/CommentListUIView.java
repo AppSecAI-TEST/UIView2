@@ -3,6 +3,7 @@ package com.hn.d.valley.sub.user.sub;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.CommentListBean;
@@ -34,6 +35,11 @@ public class CommentListUIView extends BaseDynamicListUIView {
     @Override
     protected TitleBarPattern getTitleBar() {
         return null;
+    }
+
+    @Override
+    protected String getEmptyTipString() {
+        return getString(R.string.comment_view_empty_tip);
     }
 
     @Override

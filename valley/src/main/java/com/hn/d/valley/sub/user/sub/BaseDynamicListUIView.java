@@ -2,7 +2,10 @@ package com.hn.d.valley.sub.user.sub;
 
 import android.graphics.Rect;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.net.RRetrofit;
@@ -100,6 +103,30 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         return TextUtils.equals(to_uid, UserCache.getUserAccount());
     }
 
+    @Override
+    protected void onLayoutStateChanged(LayoutState fromState, LayoutState toState) {
+        super.onLayoutStateChanged(fromState, toState);
+        if (toState == LayoutState.EMPTY) {
+            //不显示图片
+            mBaseEmptyLayout.findViewById(R.id.base_empty_image_view).setVisibility(View.GONE);
+            ((TextView) mBaseEmptyLayout.findViewById(R.id.base_empty_tip_view)).setText(getEmptyTipString());
+        }
+    }
+
+    @Override
+    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        inflate(R.layout.layout_default_empty_pager);
+    }
+
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        final View emptyRootLayout = mViewHolder.v(R.id.default_pager_root_layout);
+        final TextView emptyTipView = mViewHolder.v(R.id.default_pager_tip_view);
+        if (emptyRootLayout != null) {
+            emptyRootLayout.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+            emptyTipView.setText(getEmptyTipString());
+        }
+    }
 
     protected void initItemLayout(RBaseViewHolder holder, final CommentListBean.DataListBean dataBean,
                                   String likeType, int position) {

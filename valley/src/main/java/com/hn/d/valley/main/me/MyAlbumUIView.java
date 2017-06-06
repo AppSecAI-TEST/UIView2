@@ -12,9 +12,11 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.style.AbsoluteSizeSpan;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -84,6 +86,23 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
 
     private boolean isInSubUIView() {
         return mParentILayout != mILayout;
+    }
+
+    @Override
+    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        if (isInSubUIView()) {
+            inflate(R.layout.layout_default_empty_pager);
+        } else {
+            super.inflateOverlayLayout(baseContentLayout, inflater);
+        }
+    }
+
+    @Override
+    protected String getEmptyTipString() {
+        if (isInSubUIView()) {
+            return getString(R.string.album_empty_tip);
+        }
+        return super.getEmptyTipString();
     }
 
     @Override

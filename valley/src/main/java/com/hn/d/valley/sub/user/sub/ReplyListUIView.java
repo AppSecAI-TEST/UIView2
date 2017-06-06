@@ -61,6 +61,11 @@ public class ReplyListUIView extends BaseDynamicListUIView {
     }
 
     @Override
+    protected String getEmptyTipString() {
+        return getString(R.string.reply_view_empty_tip);
+    }
+
+    @Override
     protected boolean isLoadInViewPager() {
         return false;
     }

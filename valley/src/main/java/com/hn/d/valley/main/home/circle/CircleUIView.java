@@ -2,7 +2,9 @@ package com.hn.d.valley.main.home.circle;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RRetrofit;
@@ -116,13 +118,23 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
     }
 
     @Override
+    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        if (isInSubUIView) {
+            inflate(R.layout.layout_default_empty_pager);
+        } else {
+            super.inflateOverlayLayout(baseContentLayout, inflater);
+        }
+    }
+
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+    }
+
+    @Override
     protected int getEmptyTipStringId() {
         if (isInSubUIView) {
-            if (isMe()) {
-                return R.string.status_empty__tip;
-            } else {
-                return R.string.status_empty_his_tip;
-            }
+            return R.string.status_empty__tip;
         }
         return R.string.default_empty_circle_tip;
     }
