@@ -50,6 +50,7 @@ public class EmoticonView {
     private List<Integer> categoryPageNumberList;           // 每套表情贴图对应的页数
     private int[] pagerIndexInfo = new int[2];           // 0：category index；1：pager index in category
     private IEmoticonCategoryChanged categoryChangedCallback; // 横向滑动切换时回调picker
+    private boolean isShowSticker;                          // 是否显示贴图
 
     public EmoticonView(Context context, IEmoticonSelectedListener mlistener,
                         ViewPager mCurPage, LinearLayout pageNumberLayout) {
@@ -101,6 +102,18 @@ public class EmoticonView {
 
         this.categoryIndex = index;
         showStickerGridView();
+    }
+
+    public void showEmojiOnly() {
+        isShowSticker = false;
+        this.categoryIndex = 0;
+
+    }
+
+    public void showExpressionOnly() {
+        isShowSticker = true;
+        this.categoryIndex = 1;
+
     }
 
     public void showEmojis() {
@@ -324,6 +337,11 @@ public class EmoticonView {
 
         @Override
         public int getCount() {
+            if (isShowSticker) {
+                return pageCount == 0 ? 1 : pageCount;
+            } else {
+
+            }
             return pageCount == 0 ? 1 : pageCount;
         }
 

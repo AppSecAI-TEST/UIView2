@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#00ffffff"
+            android:textColor="@color/white"
             android:text="切换语音" />
 
     </LinearLayout>
@@ -58,7 +58,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#00ffffff"
+            android:textColor="@color/white"
             android:text="挂断" />
 
     </LinearLayout>
@@ -86,7 +86,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#00ffffff"
+            android:textColor="@color/white"
             android:text="接听" />
     </LinearLayout>
 
@@ -112,7 +112,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#00ffffff"
+            android:textColor="@color/white"
             android:text="切换摄像头" />
     </LinearLayout>
 

@@ -5,17 +5,20 @@ import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
@@ -46,8 +49,12 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     // private view
     private FrameLayout small_size_preview_layout;
     private LinearLayout small_size_preview;
+    private LinearLayout ll_micro_preview;
     private AVChatVideoRender small_preview_render;
+    private AVChatVideoRender micro_preview_render;
     private ImageView smallSizePreviewCoverImg;
+    private ImageView iv_max_sclae;
+    private ImageView iv_audio_flag;
 
     private float mTouchStartX;
     private float mTouchStartY;
@@ -107,14 +114,21 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     }
 
     private View createView(Context mContext) {
-
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.layout_avchat_float, null);
+        int width = mScreenWidth / 4;
+        int height = (int) (width * (mScreenHeight * 1.0f / mScreenWidth));
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width,height);
+        view.setLayoutParams(params);
 
         small_size_preview_layout = (FrameLayout) view.findViewById(R.id.small_size_preview_layout);
         small_size_preview = (LinearLayout) view.findViewById(R.id.small_size_preview);
         small_preview_render = (AVChatVideoRender) view.findViewById(R.id.small_preview_render);
+        micro_preview_render = (AVChatVideoRender) view.findViewById(R.id.micro_preview_render);
         smallSizePreviewCoverImg = (ImageView) view.findViewById(R.id.smallSizePreviewCoverImg);
+        ll_micro_preview = (LinearLayout) view.findViewById(R.id.ll_micro_preview);
+        iv_max_sclae = (ImageView) view.findViewById(R.id.iv_max_sclae);
+        iv_audio_flag = (ImageView) view.findViewById(R.id.iv_audio_flag);
 
         view.setOnTouchListener(this);
 //        view.setOnClickListener(new OnClickListener() {
@@ -220,18 +234,31 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         return false;
     }
 
-    public void initSmallSurfaceView(String account){
+
+    public void relocate() {
+        mWmParams.x = 0;
+        mWmParams.y = 0;
+        mWindowManager.updateViewLayout(this,mWmParams);
+    }
+
+    public void initSmallSurfaceView(String account,String largeAccount){
+        L.d(TAG,"initSmallSurfaceView  " + account + "laregaccount : " + largeAccount  +  "boo : " + UserCache.getUserAccount().equals(account));
+
+        if (TextUtils.isEmpty(account) || TextUtils.isEmpty(largeAccount)) {
+            return;
+        }
         /**
          * 设置画布，加入到自己的布局中，用于呈现视频图像
          * account 要显示视频的用户帐号
          */
-        L.d(TAG,"initSmallSurfaceView  " + account + "boo : " + UserCache.getUserAccount().equals(account));
         smallSizePreviewCoverImg.setVisibility(GONE);
         small_size_preview.setVisibility(VISIBLE);
+        micro_preview_render.setVisibility(VISIBLE);
         if (UserCache.getUserAccount().equals(account)) {
-            AVChatManager.getInstance().setupLocalVideoRender(small_preview_render, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
+            AVChatManager.getInstance().setupLocalVideoRender(micro_preview_render, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
+            AVChatManager.getInstance().setupRemoteVideoRender(largeAccount, small_preview_render, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
         } else {
-            AVChatManager.getInstance().setupRemoteVideoRender(account, small_preview_render, false, AVChatVideoScalingType.SCALE_ASPECT_BALANCED);
+
         }
     }
 
@@ -252,7 +279,6 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     }
 
     public void show() {
-
         if (!init){
             //先检测悬浮窗权限
             if (SettingsCompat.canDrawOverlays(mContext)) {
@@ -264,8 +290,56 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         }
 
         if (getVisibility() != VISIBLE) {
+            relocate();
+            showVideoUI();
+            iv_max_sclae.setVisibility(VISIBLE);
+            micro_preview_render.setVisibility(VISIBLE);
+            setVisibility(VISIBLE);
+
+            // 5秒后隐藏 micro 窗口
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    iv_max_sclae.setVisibility(GONE);
+                    micro_preview_render.setVisibility(GONE);
+                }
+            },5000);
+        }
+    }
+
+    public void showAudio() {
+        if (!init){
+            //先检测悬浮窗权限
+            if (SettingsCompat.canDrawOverlays(mContext)) {
+                init(mContext);
+            } else {
+                T_.show("没有获取悬浮窗权限!");
+                return;
+            }
+        }
+
+        if (getVisibility() != VISIBLE) {
+            relocate();
+            showAudioUI();
             setVisibility(VISIBLE);
         }
+    }
+
+    private void showVideoUI() {
+        small_size_preview.setVisibility(VISIBLE);
+        ll_micro_preview.setVisibility(VISIBLE);
+        iv_max_sclae.setVisibility(VISIBLE);
+        smallSizePreviewCoverImg.setVisibility(VISIBLE);
+        iv_audio_flag.setVisibility(GONE);
+
+    }
+
+    private void showAudioUI() {
+        iv_audio_flag.setVisibility(VISIBLE);
+        small_size_preview.setVisibility(GONE);
+        ll_micro_preview.setVisibility(GONE);
+        iv_max_sclae.setVisibility(GONE);
+        smallSizePreviewCoverImg.setVisibility(GONE);
     }
 
 

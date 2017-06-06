@@ -36,6 +36,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="切到视频聊天"
                  />
 
@@ -80,8 +81,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="静音"
-                android:textColor="#00ffffff" />
+                 />
 
         </LinearLayout>
 
@@ -106,8 +108,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="挂断"
-                android:textColor="#00ffffff" />
+                 />
 
         </LinearLayout>
 
@@ -134,8 +137,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="接听"
-                android:textColor="#00ffffff" />
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -160,8 +164,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:text="免提"
-                android:textColor="#00ffffff" />
+                 />
         </LinearLayout>
 
     </LinearLayout>

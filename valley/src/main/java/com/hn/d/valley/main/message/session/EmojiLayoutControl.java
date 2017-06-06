@@ -142,6 +142,34 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
         }
     }
 
+    public void showEmoji() {
+        // 只显示emoji
+        // 1. pageNumberLayout 只显示第一个emoji 其余隐藏
+        for (int i = 0 ; i < tabView.getChildCount() ; i ++) {
+            if (i != 0) {
+                tabView.getChildAt(i).setVisibility(View.GONE);
+                continue;
+            }
+            tabView.getChildAt(0).setVisibility(View.VISIBLE);
+        }
+        // 2. EmoticonView 判断显示数据源
+        gifView.showEmojiOnly();
+    }
+
+    public void showSticker() {
+        // 只显示自定义表情
+        // 1. pageNumberLayout 第一个emoji 隐藏
+        for (int i = 0 ; i < tabView.getChildCount() ; i ++) {
+            if (i == 0) {
+                tabView.getChildAt(i).setVisibility(View.GONE);
+            } else {
+                tabView.getChildAt(i).setVisibility(View.VISIBLE);
+            }
+        }
+
+        gifView.showExpressionOnly();
+    }
+
     private void onEmoticonBtnChecked(int index) {
         updateTabButton(index);
         showEmotPager(index);

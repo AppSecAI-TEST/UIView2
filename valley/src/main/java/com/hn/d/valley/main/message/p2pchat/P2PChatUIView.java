@@ -7,11 +7,13 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hn.d.valley.main.message.uinfo.UserInfoHelper;
 import com.hn.d.valley.main.message.uinfo.UserInfoObservable;
+import com.hn.d.valley.main.other.KLJUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -59,6 +61,10 @@ public class P2PChatUIView extends ChatUIView2 {
             @Override
             public void onClick(View v) {
 //                startIView(new P2PInfoUIView());
+                if (mSessionId == Constant.klj) {
+                    startIView(new KLJUIView());
+                    return;
+                }
                 P2PInfoUIView.start(mParentILayout, mSessionId, sessionType);
 
             }

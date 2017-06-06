@@ -16,10 +16,11 @@
 
     <ImageView
         android:id="@+id/iv_avaudio_scale"
-        android:padding="@dimen/base_xxxhdpi"
+        android:layout_margin="@dimen/base_xxxhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#1a282a21"
+        android:visibility="gone"
         android:src="@drawable/fangdasuoxiao_shipingliaotian"
         />
 

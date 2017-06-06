@@ -117,7 +117,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 FriendBean bean = new FriendBean();
                 bean.setDefaultMark("恐龙君");
                 bean.setUid("13");
-                bean.setAvatar("http://avatorimg.klgwl.com/13/13696.png");
+                bean.setAvatar("http://avatorimg.klgwl.com/13/13915.png");
 
                 SystemPushItem item = new SystemPushItem(bean, new Action1<FriendBean>() {
                     @Override

@@ -54,7 +54,7 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
 //    @BindView(R.id.refresh_layout)
 //    RefreshLayout refreshLayout;
 
-    private GlobalSearchAdapter2 mSearchUserAdapter;
+    protected GlobalSearchAdapter2 mSearchUserAdapter;
 
     protected int[] itemTypes;
 
@@ -69,7 +69,7 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
     }
 
     public GlobalSearchUIView2(Options options) {
-        this.option = options;
+        this.option = new Options(options.isSearchMuti());
     }
 
     @Override
@@ -165,6 +165,7 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
         if (items == null || items.size() == 0) {
             mEmptyTipView.setText("未搜索到数据");
         } else {
+            mSearchUserAdapter.getOption().setSearchFlag(true);
             mEmptyTipView.setText("");
         }
         mSearchUserAdapter.resetData(items);
@@ -182,8 +183,10 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
                     return;
                 }
 
-                if (position == mSearchUserAdapter.getItemCount() - 1) {
-                    outRect.top = getDimensionPixelOffset(R.dimen.base_xhdpi);
+                if (mSearchUserAdapter.getOption().isSearchMuti()) {
+                    if (position == mSearchUserAdapter.getItemCount() - 1) {
+                        outRect.top = getDimensionPixelOffset(R.dimen.base_xhdpi);
+                    }
                 }
             }
         }
@@ -230,7 +233,7 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
 
     public static class Options {
 
-        public static Options sOptions = new Options(true);
+        public static Options sOptions = new Options(false);
 
         protected boolean searchFlag  = true;
 

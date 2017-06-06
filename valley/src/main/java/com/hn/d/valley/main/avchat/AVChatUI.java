@@ -22,6 +22,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 import com.hn.d.valley.main.avchat.activity.AVChatExitCode;
@@ -83,6 +84,8 @@ public class AVChatUI implements AVChatUIListener {
     private boolean recordWarning = false;
 
     List<Pair<String, Boolean>> recordList = new LinkedList<Pair<String, Boolean>>();
+
+    private String largeAccount;
 
     public interface AVChatListener {
         void uiExit();
@@ -850,15 +853,17 @@ public class AVChatUI implements AVChatUIListener {
     /**
      * 初始化大小图像
      *
-     * @param largeAccount 对方的帐号
+     * @param account 对方的帐号
      */
-    public void initAllSurfaceView(String largeAccount) {
-        avChatSurface.initLargeSurfaceView(largeAccount);
+    public void initAllSurfaceView(String account) {
+        largeAccount = account;
+        avChatSurface.initLargeSurfaceView(account);
         avChatSurface.initSmallSurfaceView(UserCache.getUserAccount());
 //        showFloatingView();
     }
 
     public void initLargeSurfaceView(String account) {
+        largeAccount = account;
         avChatSurface.initLargeSurfaceView(account);
     }
 
@@ -908,6 +913,16 @@ public class AVChatUI implements AVChatUIListener {
 
     public void peerVideoOn() {
         avChatSurface.peerVideoOn();
+    }
+
+    public void onHomeKey() {
+        if (callingState == CallStateEnum.AUDIO) {
+            HnUIMainActivity.launch(mActivity.getApplicationContext());
+            showAudioModeUI();
+        } else {
+            HnUIMainActivity.launch(mActivity.getApplicationContext());
+            showFloatingView();
+        }
     }
 
 
@@ -990,9 +1005,15 @@ public class AVChatUI implements AVChatUIListener {
             setFloatActionListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    T_.show("返回视频聊天");
+                    T_.show("返回视频聊天");
                     hideFloatingView();
-                    AVChatActivity.launch(mActivity);
+//                    AVChatActivity.launch(mActivity);
+                    // 正在进行语音通话
+                    if (callingState == CallStateEnum.AUDIO) {
+                        AVChatActivity.launch(mActivity.getApplicationContext(),CallStateEnum.AUDIO);
+                    } else {
+                        AVChatActivity.launch(mActivity.getApplicationContext(),CallStateEnum.VIDEO);
+                    }
                 }
             });
         }
@@ -1019,9 +1040,24 @@ public class AVChatUI implements AVChatUIListener {
             return;
         }
         if (mFloatViewService != null) {
-            mFloatViewService.showFloat(UserCache.getUserAccount());
+            mFloatViewService.showFloat(UserCache.getUserAccount(),largeAccount);
         }
     }
+
+    /**
+     * 显示语音悬浮图标
+     */
+    public void showAudioModeUI() {
+        // 先检测悬浮窗权限设置
+        if (!SettingsCompat.canDrawOverlays(mActivity)) {
+            aVChatListener.showPermissionCheckDialog();
+            return;
+        }
+        if (mFloatViewService != null) {
+            mFloatViewService.showAudioUI();
+        }
+    }
+
 
     /**
      * 隐藏悬浮图标

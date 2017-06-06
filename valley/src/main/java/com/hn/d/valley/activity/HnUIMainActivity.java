@@ -1,6 +1,7 @@
 package com.hn.d.valley.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -56,12 +57,13 @@ public class HnUIMainActivity extends BaseActivity {
 //        context.startActivity(intent);
 //    }
 
-    public static void launch(Activity activity) {
+    public static void launch(Context activity) {
         Intent intent = new Intent(activity,HnUIMainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
-                R.anim.base_tran_to_left_exit);
+//        activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
+//                R.anim.base_tran_to_left_exit);
     }
 
     @Override
@@ -110,6 +112,8 @@ public class HnUIMainActivity extends BaseActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        L.d("HnUIMainActivity : taskid : " + getTaskId());
+
         super.onNewIntent(intent);
     }
 
@@ -127,6 +131,8 @@ public class HnUIMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //RNim.initOnce(getApplication());
+        L.d("HnUIMainActivity : taskid : " + getTaskId());
+
     }
 
     @Subscribe

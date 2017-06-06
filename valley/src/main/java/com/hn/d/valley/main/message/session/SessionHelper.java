@@ -86,7 +86,7 @@ public class SessionHelper {
     public static void startSession(ILayout mlayout, String sessionId , SessionTypeEnum sessionType) {
         switch (sessionId) {
             case Constant.klj:
-                ChatUIView2.start(mlayout,sessionId,SessionTypeEnum.P2P,getKljCustomization());
+                P2PChatUIView.start(mlayout,sessionId,sessionType,null,getKljCustomization());
                 break;
             case Constant.wallet:
                 ChatUIView2.start(mlayout,sessionId,SessionTypeEnum.P2P,getKljCustomization());

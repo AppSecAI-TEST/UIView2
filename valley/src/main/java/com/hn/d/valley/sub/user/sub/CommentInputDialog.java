@@ -146,6 +146,7 @@ public class CommentInputDialog extends UIIDialogImpl {
 
     private void initEmojiLayout() {
         final ImageView imageView = mViewHolder.v(R.id.ico_exp);
+        final ImageView iv_gif = mViewHolder.v(R.id.ico_gif);
 
         mSoftInputLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
             @Override
@@ -154,17 +155,6 @@ public class CommentInputDialog extends UIIDialogImpl {
                     imageView.setImageResource(R.drawable.icon_keyboard);
                 } else {
                     imageView.setImageResource(R.drawable.expression_comments_n);
-                }
-            }
-        });
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSoftInputLayout.isEmojiShow()) {
-                    mSoftInputLayout.showSoftInput(mInputView);
-                } else {
-                    mSoftInputLayout.showEmojiLayout();
                 }
             }
         });
@@ -188,6 +178,29 @@ public class CommentInputDialog extends UIIDialogImpl {
 
             }
         });
+
+        View.OnClickListener showEmojiListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (v == iv_gif) {
+                    // 显示gif图
+                    mEmojiLayoutControl.showSticker();
+                } else {
+                    // 显示emoji
+                    mEmojiLayoutControl.showEmoji();
+                }
+
+                if (mSoftInputLayout.isEmojiShow()) {
+                    RSoftInputLayout.showSoftInput(mInputView);
+                } else {
+                    mSoftInputLayout.showEmojiLayout();
+                }
+            }
+        };
+
+        imageView.setOnClickListener(showEmojiListener);
+        iv_gif.setOnClickListener(showEmojiListener);
     }
 
     private void initSendLayout() {

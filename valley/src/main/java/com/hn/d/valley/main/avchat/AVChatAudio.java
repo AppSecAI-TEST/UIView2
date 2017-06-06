@@ -1,14 +1,10 @@
 package com.hn.d.valley.main.avchat;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.angcyo.library.glide.GlideBlurTransformation;
 import com.angcyo.uiview.utils.NetworkUtil;
@@ -16,9 +12,8 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
-import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.cache.NimUserInfoCache;
-import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
@@ -174,7 +169,7 @@ public class AVChatAudio implements View.OnClickListener{
         switchVideo = rootView.findViewById(R.id.ll_avaudio_audiotovideo);
         switchVideo.setOnClickListener(this);
 
-        headImg = (HnGlideImageView) rootView.findViewById(R.id.iv_aaaudic_head);
+        headImg = (HnGlideImageView) rootView.findViewById(R.id.iv_audio_head);
         nickNameTV = (TextView) rootView.findViewById(R.id.tv_avaudio_nickname);
         time = (Chronometer) rootView.findViewById(R.id.tv_avaudio_time);
         notifyTV = (TextView) rootView.findViewById(R.id.tv_avaudio_notify);
@@ -193,6 +188,7 @@ public class AVChatAudio implements View.OnClickListener{
         ll_avaudio_jinyin.setOnClickListener(this);
         ll_avaudio_audiotovideo.setOnClickListener(this);
         ll_avaudio_logout.setOnClickListener(this);
+        iv_avaudio_scale.setOnClickListener(this);
 
 //        recordToggle = ll_avaudio_bottom.findViewById(R.id.avchat_audio_record);
 //        recordToggleButton = (Button) ll_avaudio_bottom.findViewById(R.id.avchat_audio_record_button);
@@ -237,6 +233,8 @@ public class AVChatAudio implements View.OnClickListener{
         ll_avaudio_handsfree.setVisibility(View.GONE);
         ll_avaudio_audiotovideo.setVisibility(View.GONE);
         ll_avaudio_jinyin.setVisibility(View.GONE);
+        time.setVisibility(View.GONE);
+
     }
 
     private void showReceivedUI(){
@@ -245,6 +243,7 @@ public class AVChatAudio implements View.OnClickListener{
         ll_avaudio_handsfree.setVisibility(View.VISIBLE);
         ll_avaudio_audiotovideo.setVisibility(View.VISIBLE);
         ll_avaudio_jinyin.setVisibility(View.VISIBLE);
+//        iv_avaudio_scale.setVisibility(View.VISIBLE);
     }
 
     private void showCallingUI(){
@@ -253,6 +252,7 @@ public class AVChatAudio implements View.OnClickListener{
         ll_avaudio_handsfree.setVisibility(View.GONE);
         ll_avaudio_audiotovideo.setVisibility(View.GONE);
         ll_avaudio_jinyin.setVisibility(View.GONE);
+        time.setVisibility(View.GONE);
     }
 
 
@@ -404,6 +404,7 @@ public class AVChatAudio implements View.OnClickListener{
                 listener.onReceive();
                 break;
             case R.id.ll_avaudio_handsfree:
+                listener.toggleSpeaker();
                 break;
             case R.id.ll_avaudio_jinyin:
                 listener.toggleMute();
@@ -418,10 +419,17 @@ public class AVChatAudio implements View.OnClickListener{
                 listener.toggleRecord();
                 break;
             case R.id.iv_avaudio_scale:
+                backToMain();
+
                 break;
             default:
                 break;
         }
+    }
+
+    private void backToMain() {
+        HnUIMainActivity.launch(context.getApplicationContext());
+        manager.showAudioModeUI();
     }
 
     public void closeSession(int exitCode){

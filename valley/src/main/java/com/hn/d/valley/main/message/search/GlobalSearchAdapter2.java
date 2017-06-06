@@ -52,6 +52,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static final int LAST_ITEM_TYPE = 999;
 
+
     private static final String PREFIX = "...";
 
     private Context mContext;
@@ -61,6 +62,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
     private SearchResultList mResultList;
 
     private LayoutInflater mLayoutInflater;
+    private OnTextChangeListener onTextChangeListener;
 
     public void setTextChangeListener(OnTextChangeListener onTextChangeListener) {
         this.onTextChangeListener = onTextChangeListener;
@@ -68,7 +70,10 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     private GlobalSearchUIView2.Options option;
 
-    private OnTextChangeListener onTextChangeListener;
+    public GlobalSearchUIView2.Options getOption() {
+        return option;
+    }
+
 
     public GlobalSearchAdapter2(Context context, ILayout layout, GlobalSearchUIView2.Options option) {
         this.mOtherLayout = layout;
@@ -153,7 +158,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
         if (!option.isSearchMuti()) {
             return mResultList.getItem(position).getItemType();
-    }
+        }
 
         if (position == getItemCount() - 1) {
             return LAST_ITEM_TYPE;

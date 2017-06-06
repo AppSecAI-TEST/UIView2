@@ -22,10 +22,11 @@
 
     <ImageView
         android:id="@+id/iv_avaudio_scale"
-        android:padding="@dimen/base_xxxhdpi"
+        android:layout_margin="@dimen/base_xxxhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#1a282a21"
+        android:visibility="visible"
         android:src="@drawable/fangdasuoxiao_shipingliaotian"
         />
 
@@ -41,9 +42,9 @@
         android:visibility="visible">
 
         <com.hn.d.valley.widget.HnGlideImageView
-            android:id="@+id/iv_aaaudic_head"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:id="@+id/iv_audio_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:minHeight="75dp"
             android:minWidth="75dp"
             android:padding="10dp"
@@ -55,14 +56,14 @@
             android:id="@+id/tv_avaudio_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25px"
+            android:textSize="@dimen/default_text_size"
              />
 
         <TextView
             android:id="@+id/tv_avaudio_notify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="25px"
+            android:textSize="@dimen/default_text_size"
              />
 
     </LinearLayout>

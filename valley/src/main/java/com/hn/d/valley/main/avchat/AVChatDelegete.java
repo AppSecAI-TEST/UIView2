@@ -12,6 +12,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
+import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.utils.RBus;
 
 /**
@@ -60,7 +61,7 @@ public class AVChatDelegete {
                 public void onClick(View v) {
                     T_.show("返回视频聊天");
                     RBus.post(new AVChatFloatEvent(false));
-                    AVChatActivity.launch(mActivity);
+                    AVChatActivity.launch(mActivity, CallStateEnum.VIDEO);
                 }
             });
         }
@@ -78,7 +79,7 @@ public class AVChatDelegete {
     public void showFloatingView() {
         L.d("event","showFloatingView  " + "boo : " + mFloatViewService);
         if (mFloatViewService != null) {
-            mFloatViewService.showFloat(UserCache.getUserAccount());
+            mFloatViewService.showFloat(UserCache.getUserAccount(),"");
         }
     }
 

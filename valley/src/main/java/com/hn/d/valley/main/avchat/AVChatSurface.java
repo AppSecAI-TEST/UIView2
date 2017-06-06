@@ -381,20 +381,20 @@ public class AVChatSurface {
         if(largeSizePreviewCoverLayout == null) {
             return;
         }
-        TextView textView = (TextView) tv_notification;
-        switch (closeType) {
-            case PEER_CLOSE_CAMERA:
-                textView.setText("avchat_peer_close_camera");
-                break;
-            case LOCAL_CLOSE_CAMERA:
-                textView.setText("avchat_local_close_camera");
-                break;
-            case AUDIO_TO_VIDEO_WAIT:
-                textView.setText("avchat_audio_to_video_wait");
-                break;
-            default:
-                return;
-        }
+//        TextView textView = (TextView) tv_notification;
+//        switch (closeType) {
+//            case PEER_CLOSE_CAMERA:
+//                textView.setText("avchat_peer_close_camera");
+//                break;
+//            case LOCAL_CLOSE_CAMERA:
+//                textView.setText("avchat_local_close_camera");
+//                break;
+//            case AUDIO_TO_VIDEO_WAIT:
+//                textView.setText("avchat_audio_to_video_wait");
+//                break;
+//            default:
+//                return;
+//        }
         largeSizePreviewCoverLayout.setVisibility(View.VISIBLE);
     }
 

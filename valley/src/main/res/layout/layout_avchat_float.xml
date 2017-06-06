@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/small_size_preview_layout"
-    android:layout_width="64dp"
-    android:layout_height="98dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:layout_marginRight="16dp"
     android:layout_marginTop="18dp">
 
@@ -16,14 +16,16 @@
 
         <com.netease.nimlib.sdk.avchat.model.AVChatVideoRender
             android:id="@+id/small_preview_render"
-            android:layout_width="64dp"
-            android:layout_height="98dp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_gravity="right|top"
+        android:id="@+id/ll_micro_preview"
+        android:visibility="visible"
+        android:layout_gravity="end|top"
         android:layout_width="20dp"
         android:layout_height="30dp">
 
@@ -34,10 +36,25 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/iv_max_sclae"
+        android:layout_margin="@dimen/base_ldpi"
+        android:src="@drawable/fangdasuoxiao_shipingliaotian_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
         android:id="@+id/smallSizePreviewCoverImg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@drawable/avchat_close_video_send"
         android:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_audio_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:src="@drawable/yuyingzhong_yuyingliaotian"
+        android:visibility="gone" />
 </FrameLayout>

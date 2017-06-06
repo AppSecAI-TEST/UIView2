@@ -119,7 +119,8 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         intent.putExtra(KEY_IN_CALLING, false);
         intent.putExtra(KEY_CALL_TYPE, callType);
         intent.putExtra(KEY_SOURCE, source);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivityForResult(intent,PREVIEW_REQUESTCODE);
     }
 
@@ -136,21 +137,28 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         intent.putExtra(KEY_CALL_CONFIG, config);
         intent.putExtra(KEY_IN_CALLING, true);
         intent.putExtra(KEY_SOURCE, source);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
-    public static void launch(Context activity) {
+    public static void launch(Context activity,CallStateEnum stateEnum) {
         L.d(TAG,"launch 返回视频聊天");
         needFinish = false;
         Intent intent = new Intent(activity,AVChatActivity.class);
-        intent.putExtra(PREVIEWINIT,PREVIEW_CODE);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        if (stateEnum == CallStateEnum.AUDIO) {
+            intent.putExtra(PREVIEWINIT,-1);
+        } else {
+            intent.putExtra(PREVIEWINIT,PREVIEW_CODE);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        L.d(TAG,"onCreate taskid : " + getTaskId());
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
 
@@ -252,7 +260,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        L.d(TAG,"onDestroy");
+        L.d(TAG,"onDestroy taskid : " + getTaskId());
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(userStatusObserver, false);
         AVChatProfile.getInstance().setAVChatting(false);
         registerNetCallObserver(false);
@@ -283,8 +291,9 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
                 if (reason != null) {
                     if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
                         L.d("onKeyDown :: Home键被监听" );
-                        RBus.post(new AVChatFloatEvent(true));
-                        HnUIMainActivity.launch(AVChatActivity.this);
+//                        RBus.post(new AVChatFloatEvent(true));
+//                        HnUIMainActivity.launch(AVChatActivity.this);
+                        avChatUI.onHomeKey();
                     } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
 
                     }
@@ -299,12 +308,14 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         T_.show("onKeyDown :: " + keyCode);
         L.d("onKeyDown :: " + keyCode);
         if (keyCode == KeyEvent.KEYCODE_BACK ) {
-            RBus.post(new AVChatFloatEvent(true));
-            HnUIMainActivity.launch(this);
+//            RBus.post(new AVChatFloatEvent(true));
+//            avChatUI.show
+            avChatUI.onHomeKey();
             return true;//return true;拦截事件传递,从而屏蔽back键。
         }
         if (KeyEvent.KEYCODE_HOME == keyCode) {
-            RBus.post(new AVChatFloatEvent(true));
+//            RBus.post(new AVChatFloatEvent(true));
+            avChatUI.onHomeKey();
             return true;//同理
         }
         return super.onKeyDown(keyCode, event);

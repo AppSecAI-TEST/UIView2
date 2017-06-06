@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -361,7 +362,9 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //                .setGravity(Gravity.CENTER_VERTICAL));
 
         //HnLoading.show(mILayout);
-//        ImagePickerHelper.startImagePicker(mActivity, false, true, true, 50);
+//        ImagePickerHelper.startImagePicker(mActivity, fals
+//
+// e, true, true, 50);
         //startIView(new RecommendUser2UIView());
         //startIView(new VideoRecordUIView(null));
 
@@ -371,6 +374,17 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //                .setCanCanceledOnOutside(true)
 //                .setCanTouchOnOutside(false)
 //                .setCanDoubleCancel(true)
+//                .showDialog(this);
+        mParentILayout.startIView(new RecommendUser2UIView());
+        UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
+                .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
+                .setCancelText("").setOkText(mActivity.getString(R.string.known))
+                .setCanCanceledOnOutside(false)
+                .showDialog(this);
+//        UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
+//                .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
+//                .setCancelText("").setOkText(mActivity.getString(R.string.known))
+//                .setCanCanceledOnOutside(false)
 //                .showDialog(this);
 
         //startIView(new KLJUIView());
@@ -387,7 +401,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 
     @Override
     public void onLoginSuccess(Bean<LoginBean> bean) {
-        LoginBean loginBean = bean.data;
+        final LoginBean loginBean = bean.data;
         L.i("登录成功:" + loginBean.getUsername());
 
         showUserIco(loginBean.getAvatar());
@@ -402,7 +416,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
                     @Override
                     public void onResult(int code, LoginInfo result, Throwable exception) {
                         HnLoading.hide();
-
+                        L.i(loginBean.getUid() + ":::" + loginBean.getYx_token());
                         if (code == ResponseCode.RES_SUCCESS) {
                             jumpToMain();
                         } else {

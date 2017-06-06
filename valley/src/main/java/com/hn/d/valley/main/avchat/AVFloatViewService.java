@@ -47,11 +47,17 @@ public class AVFloatViewService extends Service {
         mFloatView = null;
     }
 
-    public void showFloat(String account) {
+    public void showFloat(String account,String largeAccount) {
         L.d("AVFloatViewService","showFloat  " + account + "boo : " + mFloatView);
         if ( mFloatView != null ) {
             mFloatView.show();
-            mFloatView.initSmallSurfaceView(account);
+            mFloatView.initSmallSurfaceView(account,largeAccount);
+        }
+    }
+
+    public void showAudioUI() {
+        if (mFloatView != null) {
+            mFloatView.showAudio();
         }
     }
 

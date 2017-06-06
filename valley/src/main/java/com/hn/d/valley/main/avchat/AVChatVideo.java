@@ -257,6 +257,7 @@ public class AVChatVideo implements View.OnClickListener {
         ll_switchAudio.setVisibility(View.VISIBLE);
         ll_switchCamera.setVisibility(View.VISIBLE);
         ll_receive.setVisibility(View.GONE);
+        iv_scale.setVisibility(View.VISIBLE);
     }
 
 
@@ -313,7 +314,7 @@ public class AVChatVideo implements View.OnClickListener {
     }
 
     private void backToMainActivity() {
-        HnUIMainActivity.launch(mActivity);
+        HnUIMainActivity.launch(mActivity.getApplicationContext());
 
         manager.showFloatingView();
 //        manager.showIView();

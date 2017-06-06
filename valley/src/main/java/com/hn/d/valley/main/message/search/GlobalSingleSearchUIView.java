@@ -5,8 +5,11 @@ import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
+import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.message.query.TextQuery;
+
+import java.util.List;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -52,5 +55,15 @@ public class GlobalSingleSearchUIView extends GlobalSearchUIView2 {
         mSearchInputView.setText(textQuery);
         mPresenter.search(new TextQuery(textQuery), itemTypes);
 
+    }
+
+    @Override
+    public void onSearchSuccess(List<AbsContactItem> items) {
+        if (items == null || items.size() == 0) {
+            mEmptyTipView.setText("未搜索到数据");
+        } else {
+            mEmptyTipView.setText("");
+        }
+        mSearchUserAdapter.resetData(items);
     }
 }

@@ -37,4 +37,5 @@ public abstract class SessionCustomization implements Serializable{
     public void setOptionBtn(boolean optionBtn) {
         this.optionBtn = optionBtn;
     }
+
 }

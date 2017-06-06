@@ -107,6 +107,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
 
             EmojiRecyclerView recyclerView = new EmojiRecyclerView(context, pos * EMOJI_PER_PAGE);
 //            recyclerView.setOnEmojiSelectListener(mOnEmojiSelectListener);
+            recyclerView.setOnEmojiSelectListener(listener);
             container.addView(recyclerView);
             return recyclerView;
         }
@@ -274,6 +275,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
 
     private void showEmojiGridView() {
         pageCount = (int) Math.ceil(EmojiManager.getDisplayCount() / (float) EMOJI_PER_PAGE);
+        mUIViewPager.setAdapter(pagerAdapter);
         pagerAdapter.notifyDataSetChanged();
         resetEmotionPager();
     }
