@@ -20,16 +20,16 @@ import com.hn.d.valley.widget.HnGlideImageView;
  */
 public class OneSlideViewHolder extends SlideViewHolder {
 
-    private HnGlideImageView iv_head;
-    private TextView tv_friend_name;
+//    private HnGlideImageView iv_head;
+//    private TextView tv_friend_name;
     private RelativeLayout rlContent;
     private CheckBox cb_select;
 
     public OneSlideViewHolder(View itemView, int viewType) {
         super(itemView, viewType);
 
-        iv_head = (HnGlideImageView) itemView.findViewById(R.id.iv_item_head);
-        tv_friend_name = (TextView) itemView.findViewById(R.id.tv_friend_name);
+//        iv_head = (HnGlideImageView) itemView.findViewById(R.id.iv_item_head);
+//        tv_friend_name = (TextView) itemView.findViewById(R.id.tv_friend_name);
         rlContent = (RelativeLayout) itemView.findViewById(R.id.rl_content);
         cb_select = (CheckBox) itemView.findViewById(R.id.cb_friend_addfirend);
 

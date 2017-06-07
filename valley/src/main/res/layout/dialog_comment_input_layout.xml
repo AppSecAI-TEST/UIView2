@@ -71,24 +71,28 @@
                     android:background="@drawable/base_bg2_selector"
                     android:src="@drawable/abudongtai_n"/>
 
-                <ImageView
+                <CheckBox
                     android:id="@+id/ico_exp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
+                    android:button="@drawable/comment_emoji_selector"
                     android:background="@drawable/base_bg2_selector"
                     android:minWidth="@dimen/base_25dpi"
-                    android:src="@drawable/expression_comments_n"/>
+                    android:gravity="center"
+                    />
 
-                <ImageView
+                <CheckBox
                     android:id="@+id/ico_gif"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
+                    android:gravity="center"
                     android:background="@drawable/base_bg2_selector"
-                    android:src="@drawable/icon_addgif"/>
+                    android:button="@drawable/comment_expression_selector"
+                    />
 
             </LinearLayout>
 

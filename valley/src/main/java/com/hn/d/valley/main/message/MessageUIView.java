@@ -73,7 +73,6 @@ public class MessageUIView extends BaseUIView {
                 new Action1<RecentContact>() {
                     @Override
                     public void call(RecentContact recentContact) {
-
                         switch (recentContact.getContactId()) {
                             case Constant.add_contact:
                                 //打开新朋友界面
@@ -84,6 +83,8 @@ public class MessageUIView extends BaseUIView {
                                 mParentILayout.startIView(new NewNotifyUIView(recentContact.getContactId(), recentContact.getSessionType()));
                                 return;
                             case Constant.klj:
+                                SessionHelper.startSession(mParentILayout,Constant.klj,SessionTypeEnum.P2P);
+                                break;
                             case Constant.wallet:
                             case Constant.hot_news:
                                 SessionHelper.startSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType());

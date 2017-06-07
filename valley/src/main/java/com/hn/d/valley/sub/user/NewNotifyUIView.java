@@ -1,20 +1,34 @@
 package com.hn.d.valley.sub.user;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.utils.ScreenUtil;
+import com.angcyo.uiview.widget.RTextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.control.MediaTypeControl;
@@ -23,6 +37,9 @@ import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.message.attachment.LikeMsg;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
+import com.hn.d.valley.main.message.slide.ISlideHelper;
+import com.hn.d.valley.main.message.slide.holder.OneSlideViewHolder;
+import com.hn.d.valley.main.message.slide.holder.SlideViewHolder;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
@@ -56,6 +73,12 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
 
     String mSessionId;
     SessionTypeEnum mSessionTypeEnum;
+
+    private NotifyAdapter mNotifyAdapter;
+
+    private LinearLayout ll_bottom;
+    private TextView tv_selected;
+    private RTextView btn_delete;
 
     public NewNotifyUIView() {
         mSessionId = "14";
@@ -94,23 +117,46 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         return super.getTitleBar()
                 .setShowBackImageView(true)
                 .setTitleString(mActivity.getString(R.string.dynamic_notify))
-                .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getString(R.string.clear_all),
+                .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getString(R.string.text_edit),
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                UnreadMessageControl.removeMessageUnread(Constant.comment);
-                                MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount()
-                                        + UnreadMessageControl.getUnreadCount());
-                                onUILoadDataEnd();
-                                NIMClient.getService(MsgService.class)
-                                        .clearChattingHistory(Constant.comment, SessionTypeEnum.P2P);
+                                editItems();
                             }
                         }).setVisibility(View.GONE));
     }
 
     @Override
     protected RExBaseAdapter<String, IMMessage, String> initRExBaseAdapter() {
-        return new NotifyAdapter(mActivity);
+        mNotifyAdapter = new NotifyAdapter(mActivity);
+        return mNotifyAdapter;
+    }
+
+    @Override
+    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        View root = inflater.inflate(R.layout.view_member_select,baseContentLayout);
+        mRefreshLayout = (RefreshLayout) root.findViewById(R.id.refresh_layout);
+        mRecyclerView = (RRecyclerView) root.findViewById(R.id.recycler_view);
+        ll_bottom = (LinearLayout) root.findViewById(R.id.ll_bottom);
+        tv_selected = (TextView) root.findViewById(R.id.tv_selected);
+        btn_delete = (RTextView) root.findViewById(R.id.btn_send);
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UnreadMessageControl.removeMessageUnread(Constant.comment);
+                MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount()
+                        + UnreadMessageControl.getUnreadCount());
+                List<IMMessage> imMessages = mNotifyAdapter.getSelectorData();
+                for(IMMessage msg : imMessages) {
+                    NIMClient.getService(MsgService.class).deleteChattingHistory(msg);
+                    mNotifyAdapter.deleteItem(msg);
+                }
+                if (mNotifyAdapter.getDataCount() == 0) {
+                    onUILoadDataEnd();
+                    animBottom(false);
+                    getUITitleBarContainer().getRightControlLayout().getChildAt(0).setVisibility(View.GONE);                }
+            }
+        });
     }
 
     @Override
@@ -186,11 +232,41 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
 
         public NotifyAdapter(Context context) {
             super(context);
+            setModel(RModelAdapter.MODEL_MULTI);
+        }
+
+        private SparseBooleanArray mCheckStats = new SparseBooleanArray();
+
+        private ISlideHelper mISlideHelper = new ISlideHelper();
+
+        private boolean isEditable = true;
+
+        public void slideOpen() {
+            isEditable = true;
+            mISlideHelper.slideOpen();
+            animBottom(true);
+        }
+
+        public void slideClose() {
+            tv_selected.setText(String.format(getString(R.string.text_already_selected_item),0));
+            mISlideHelper.slideClose();
+            isEditable = true;
+            animBottom(false);
+            mCheckStats.clear();
+            unSelectorAll(true);
         }
 
         @Override
         protected int getItemLayoutId(int viewType) {
             return R.layout.item_new_notify;
+        }
+
+        @NonNull
+        @Override
+        protected RBaseViewHolder createBaseViewHolder(int viewType, View itemView) {
+            SlideViewHolder slideViewHolder = new OneSlideViewHolder(itemView,viewType);
+            mISlideHelper.add(slideViewHolder);
+            return slideViewHolder;
         }
 
         @Override
@@ -237,7 +313,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             holder.tv(R.id.msg).setText(msg);
 
             final String finalItem_id = item_id;
-            holder.v(R.id.user_info_root_layout).setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //startIView(new DynamicDetailUIView2(customBean.getItem_id()));
@@ -246,5 +322,68 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             });
         }
 
+        @Override
+        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, IMMessage bean) {
+            super.onBindModelView(model, isSelector, holder, position, bean);
+            if (!isEditable) {
+                return;
+            }
+
+            final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
+            checkBox.setTag(position);
+
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setSelectorPosition(position,checkBox);
+                    int tag = (int) checkBox.getTag();
+                    boolean selector = isPositionSelector(position);
+                    if (selector) {
+                        mCheckStats.put(tag,true);
+                    } else {
+                        mCheckStats.delete(tag);
+                    }
+                    tv_selected.setText(String.format(getString(R.string.text_already_selected_item),mCheckStats.size()));
+                }
+            };
+
+            checkBox.setOnClickListener(listener);
+            checkBox.setChecked(mCheckStats.get(position,false));
+        }
+
+        @Override
+        protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
+            final CheckBox checkBox = viewHolder.v(R.id.cb_friend_addfirend);
+            checkBox.setChecked(false);
+            checkBox.setTag(position);
+            mCheckStats.delete(position);
+            return true;
+        }
+
     }
+
+    private void animBottom(boolean show) {
+        if (ll_bottom.getVisibility() == View.GONE) {
+            ll_bottom.setVisibility(View.VISIBLE);
+        }
+
+        float start = show? ScreenUtil.dip2px(48):0;
+        float end = show?0:ScreenUtil.dip2px(48);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_bottom,"translationY",start,end);
+        animator.setDuration(300);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
+    }
+
+    private void editItems() {
+        TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
+        if (getString(R.string.text_edit).equals(selectNum.getText().toString())) {
+            selectNum.setText(getString(R.string.cancel));
+            mNotifyAdapter.slideOpen();
+        } else if (getString(R.string.cancel).equals(selectNum.getText().toString())) {
+            selectNum.setText(getString(R.string.text_edit));
+            mNotifyAdapter.slideClose();
+        }
+    }
+
 }

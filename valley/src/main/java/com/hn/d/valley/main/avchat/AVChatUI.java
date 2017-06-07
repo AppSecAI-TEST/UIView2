@@ -83,6 +83,9 @@ public class AVChatUI implements AVChatUIListener {
     // 检查存储
     private boolean recordWarning = false;
 
+    //是否退到后台
+    private boolean hasOnStop = false;
+
     List<Pair<String, Boolean>> recordList = new LinkedList<Pair<String, Boolean>>();
 
     private String largeAccount;
@@ -123,6 +126,10 @@ public class AVChatUI implements AVChatUIListener {
     private int deviceRotationOffset;
     private boolean audioHighQuality;
     private boolean audioDtx;
+
+    public void setHasOnStop(boolean hasOnStop) {
+        this.hasOnStop = hasOnStop;
+    }
 
     private void configFromPreference(SharedPreferences preferences) {
         videoCropRatio = Integer.parseInt(preferences.getString(mActivity.getString(R.string.nrtc_setting_vie_crop_ratio_key), "0"));
@@ -366,12 +373,23 @@ public class AVChatUI implements AVChatUIListener {
         avChatAudio.onCallStateChange(stateEnum);
         avChatVideo.onCallStateChange(stateEnum);
 
+        L.d(TAG,"onCallStateChange state : " + hasOnStop + "stateenum " + stateEnum.name());
+
         // 显示隐藏悬浮窗
         switch (stateEnum) {
             case VIDEO:
 //                showFloatingView();
+                if (hasOnStop) {
+                    showFloatingView();
+                }
                 break;
             case VIDEO_OFF:
+                break;
+            case AUDIO:
+                if (hasOnStop) {
+                    showAudioModeUI();
+                }
+                break;
             default:
 //                hideFloatingView();
                 break;

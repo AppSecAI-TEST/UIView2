@@ -71,10 +71,10 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         super(context);
         mContext = context;
 
-        init(context);
+        init();
     }
 
-    private void init(Context context) {
+    private void init() {
 
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         // 更新浮动窗口位置参数 靠边
@@ -116,10 +116,6 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     private View createView(Context mContext) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.layout_avchat_float, null);
-        int width = mScreenWidth / 4;
-        int height = (int) (width * (mScreenHeight * 1.0f / mScreenWidth));
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(width,height);
-        view.setLayoutParams(params);
 
         small_size_preview_layout = (FrameLayout) view.findViewById(R.id.small_size_preview_layout);
         small_size_preview = (LinearLayout) view.findViewById(R.id.small_size_preview);
@@ -129,6 +125,11 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         ll_micro_preview = (LinearLayout) view.findViewById(R.id.ll_micro_preview);
         iv_max_sclae = (ImageView) view.findViewById(R.id.iv_max_sclae);
         iv_audio_flag = (ImageView) view.findViewById(R.id.iv_audio_flag);
+
+        int width = mScreenWidth / 4;
+        int height = (int) (width * (mScreenHeight * 1.0f / mScreenWidth));
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width,height);
+        small_size_preview.setLayoutParams(params);
 
         view.setOnTouchListener(this);
 //        view.setOnClickListener(new OnClickListener() {
@@ -143,6 +144,28 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
                 .makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
         return view;
+    }
+
+    public void checkPermission() {
+        if (SettingsCompat.canDrawOverlays(mContext)) {
+            attach();
+        } else {
+            detach();
+        }
+    }
+
+    public void attach() {
+        if (getParent() == null) {
+            init();
+        }
+    }
+
+    public void detach() {
+//        try {
+//            mWm.removeViewImmediate(this);
+//        } catch (Exception e) {
+//
+//        }
     }
 
     @Override
@@ -282,7 +305,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         if (!init){
             //先检测悬浮窗权限
             if (SettingsCompat.canDrawOverlays(mContext)) {
-                init(mContext);
+                init();
             } else {
                 T_.show("没有获取悬浮窗权限!");
                 return;
@@ -311,7 +334,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         if (!init){
             //先检测悬浮窗权限
             if (SettingsCompat.canDrawOverlays(mContext)) {
-                init(mContext);
+                init();
             } else {
                 T_.show("没有获取悬浮窗权限!");
                 return;

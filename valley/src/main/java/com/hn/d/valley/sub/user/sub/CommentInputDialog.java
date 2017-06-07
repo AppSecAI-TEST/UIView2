@@ -2,11 +2,14 @@ package com.hn.d.valley.sub.user.sub;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RCheckGroup;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
@@ -29,6 +33,7 @@ import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.emoji.StickerManager;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
@@ -145,16 +150,18 @@ public class CommentInputDialog extends UIIDialogImpl {
     }
 
     private void initEmojiLayout() {
-        final ImageView imageView = mViewHolder.v(R.id.ico_exp);
-        final ImageView iv_gif = mViewHolder.v(R.id.ico_gif);
+        final CheckBox imageView = mViewHolder.v(R.id.ico_exp);
+        final CheckBox iv_gif = mViewHolder.v(R.id.ico_gif);
 
         mSoftInputLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
             @Override
             public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
                 if (isEmojiShow) {
-                    imageView.setImageResource(R.drawable.icon_keyboard);
+//                    imageView.setImageResource(R.drawable.icon_keyboard);
+//                    imageView.setChecked(true);
                 } else {
-                    imageView.setImageResource(R.drawable.expression_comments_n);
+//                    imageView.setImageResource(R.drawable.expression_comments_n);
+//                    imageView.setChecked(true);
                 }
             }
         });
@@ -175,32 +182,70 @@ public class CommentInputDialog extends UIIDialogImpl {
 
             @Override
             public void onStickerSelected(String categoryName, String stickerName) {
-
+                Uri uri = Uri.parse(StickerManager.getInstance().getStickerBitmapUri(categoryName
+                        , stickerName));
+                initPreviewLayout(uri.getPath());
             }
         });
 
-        View.OnClickListener showEmojiListener = new View.OnClickListener() {
+//        CompoundButton.OnCheckedChangeListener changedListener = new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton v, boolean isChecked) {
+//                if (v == iv_gif) {
+//                    // 显示gif图
+//                    mEmojiLayoutControl.showSticker();
+//                    if (isChecked) {
+//                        imageView.setChecked(false);
+//                    }
+//                } else {
+//                    // 显示emoji
+//                    mEmojiLayoutControl.showEmoji();
+//                    if (isChecked) {
+//                        iv_gif.setChecked(false);
+//                    }
+//                }
+//
+//                if (mSoftInputLayout.isEmojiShow() && !isChecked) {
+//                    RSoftInputLayout.showSoftInput(mInputView);
+//                } else {
+//                    mSoftInputLayout.showEmojiLayout();
+//                }
+//            }
+//        };
+
+        imageView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // 显示emoji
+                mEmojiLayoutControl.showEmoji();
+//                if (isChecked) {
+//                    iv_gif.setChecked(false);
+//                }
 
-                if (v == iv_gif) {
-                    // 显示gif图
-                    mEmojiLayoutControl.showSticker();
-                } else {
-                    // 显示emoji
-                    mEmojiLayoutControl.showEmoji();
-                }
-
-                if (mSoftInputLayout.isEmojiShow()) {
+                if (mSoftInputLayout.isEmojiShow() && !isChecked) {
                     RSoftInputLayout.showSoftInput(mInputView);
                 } else {
                     mSoftInputLayout.showEmojiLayout();
                 }
             }
-        };
+        });
 
-        imageView.setOnClickListener(showEmojiListener);
-        iv_gif.setOnClickListener(showEmojiListener);
+
+        iv_gif.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // 显示gif图
+                mEmojiLayoutControl.showSticker();
+//                if (isChecked) {
+//                    imageView.setChecked(false);
+//                }
+                if (mSoftInputLayout.isEmojiShow() ) {
+
+                } else {
+                    mSoftInputLayout.showEmojiLayout();
+                }
+            }
+        });
     }
 
     private void initSendLayout() {

@@ -31,3 +31,11 @@ task clean(type: Delete) {
 def buildTime() {
     return new Date().format("yyyy-MM-dd HH:mm:ss.sss")
 }
+
+def getBuildTime() {
+    return new Date().format("yyyy-MM-dd HH:mm:ss.sss")
+}
+
+def osName() {
+    return System.getProperty("os.name") + "@" + System.getProperty("os.version")
+}

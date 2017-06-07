@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -180,8 +181,19 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
             return;
         }
 
-        //启动悬浮窗service
-        avChatUI.bindService();
+        //检测悬浮窗权限 如果有启动
+        if (SettingsCompat.canDrawOverlays(this)) {
+            //启动悬浮窗service
+            avChatUI.bindService();
+        } else {
+
+            new Handler(getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showPermissionCheckDialog();
+                }
+            },3000);
+        }
 
         registerNetCallObserver(true);
         if (mIsInComingCall) {
@@ -239,6 +251,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         super.onPause();
 //        avChatUI.pauseVideo(); // 暂停视频聊天（用于在视频聊天过程中，APP退到后台时必须调用）
         hasOnPause = true;
+        avChatUI.setHasOnStop(true);
     }
 
     @Override
@@ -254,6 +267,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
         if (hasOnPause) {
 //            avChatUI.resumeVideo();
             hasOnPause = false;
+            avChatUI.setHasOnStop(false);
         }
     }
 

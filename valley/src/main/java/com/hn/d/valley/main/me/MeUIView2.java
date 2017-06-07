@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.uiview.github.utilcode.utils.AppUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -16,6 +17,7 @@ import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
@@ -105,6 +107,9 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
     protected int getItemLayoutId(int viewType) {
         if (viewType == 0) {
             return R.layout.item_user_top_layout;
+        }
+        if (BuildConfig.SHOW_DEBUG && mRExBaseAdapter.isLast(viewType)) {
+            return R.layout.item_version_layout;
         }
         return R.layout.item_info_layout;
     }
@@ -504,7 +509,9 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             @Override
             public void setItemOffsets(Rect rect) {
                 super.setItemOffsets(rect);
-                rect.bottom = size / 2;
+                if (!BuildConfig.SHOW_DEBUG) {
+                    rect.bottom = size / 2;
+                }
             }
 
             @Override
@@ -519,6 +526,25 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
+        if (BuildConfig.SHOW_DEBUG) {
+            //版本 编译时间
+            items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+
+                @Override
+                public void setItemOffsets(Rect rect) {
+                    super.setItemOffsets(rect);
+                    rect.bottom = size / 2;
+                }
+
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    holder.itemView.setPadding(0, 0, 0, 0);
+                    holder.tv(R.id.text_view).setText(AppUtils.getAppVersionName(mActivity) +
+                            " by " + getString(R.string.build_time) +
+                            " on " + getString(R.string.os_name));
+                }
+            }));
+        }
     }
 
     protected void initItemLayout(ItemInfoLayout itemInfoLayout, int titleId, int leftRes, View.OnClickListener listener) {

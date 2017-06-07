@@ -24,6 +24,8 @@ import java.util.List;
  */
 public class EmoticonView {
 
+    private static final String TAG = EmoticonView.class.getSimpleName();
+
     private ViewPager emotPager;
     private LinearLayout pageNumberLayout;
     /**
@@ -51,6 +53,7 @@ public class EmoticonView {
     private int[] pagerIndexInfo = new int[2];           // 0：category index；1：pager index in category
     private IEmoticonCategoryChanged categoryChangedCallback; // 横向滑动切换时回调picker
     private boolean isShowSticker;                          // 是否显示贴图
+    private boolean onNormal = true;                          // 是否正常状态显示 不区分emoji 和自定义表情
 
     public EmoticonView(Context context, IEmoticonSelectedListener mlistener,
                         ViewPager mCurPage, LinearLayout pageNumberLayout) {
@@ -105,15 +108,26 @@ public class EmoticonView {
     }
 
     public void showEmojiOnly() {
+        onNormal = false;
         isShowSticker = false;
         this.categoryIndex = 0;
-
+        pageCount = categoryPageNumberList.get(categoryIndex);
+        setCurStickerPage(0);
+        L.d(TAG,"show emojionly pagecount : " + pageCount );
+        pagerAdapter.notifyDataSetChanged();
     }
 
     public void showExpressionOnly() {
+        onNormal = false;
         isShowSticker = true;
         this.categoryIndex = 1;
-
+        pageCount = 0;
+        for (int i = categoryIndex ; i < categoryPageNumberList.size() ; i ++) {
+            pageCount += categoryPageNumberList.get(i);
+        }
+        setCurStickerPage(0);
+        L.d(TAG,"show showExpressionOnly pagecount : " + pageCount );
+        pagerAdapter.notifyDataSetChanged();
     }
 
     public void showEmojis() {
@@ -272,7 +286,13 @@ public class EmoticonView {
         int cIndex = categoryIndex;
         int startIndex = 0;
         int pageNumberPerCategory = 0;
-        for (int i = 0; i < categoryPageNumberList.size(); i++) {
+
+        int i = 0;
+        if (isShowSticker && !onNormal) {
+            i = 1;
+
+        }
+        for (; i < categoryPageNumberList.size(); i++) {
             pageNumberPerCategory = categoryPageNumberList.get(i);
             if (position < startIndex + pageNumberPerCategory) {
                 cIndex = i;
@@ -337,21 +357,18 @@ public class EmoticonView {
 
         @Override
         public int getCount() {
-            if (isShowSticker) {
-                return pageCount == 0 ? 1 : pageCount;
-            } else {
-
-            }
             return pageCount == 0 ? 1 : pageCount;
         }
 
 
         @Override
         protected View getView(LayoutInflater from, ViewGroup container, int position) {
+            L.d(TAG,"getView position : " + position );
             StickerCategory category;
+
             int pos;
             if (categoryDataList != null && categoryDataList.size() > 0 && categoryPageNumberList != null
-                    && categoryPageNumberList.size() > 0) {
+                    && categoryPageNumberList.size() > 0 || (!onNormal && isShowSticker)) {
                 // 显示所有贴图&表情
                 getPagerInfo(position);
                 int cIndex = pagerIndexInfo[0];

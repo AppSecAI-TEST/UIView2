@@ -109,6 +109,11 @@ public class ChatControl2 {
         MessageAudioControl.getInstance(mActivity).stopAudio();
     }
 
+    public void onViewHide() {
+        MessageAudioControl.getInstance(mActivity).stopAudio();
+
+    }
+
 
     public void resetData(List<IMMessage> messages) {
         mChatAdapter.resetData(messages);

@@ -34,6 +34,7 @@ import com.hn.d.valley.main.message.search.ChatRecordSearchUIView;
 import com.hn.d.valley.main.message.search.DefaultUserInfoProvider;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.NIMClient;
@@ -212,6 +213,8 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                     @Override
                     public void onClick(View v) {
                         mParentILayout.startIView(new GroupReportUIView());
+//                        mParentILayout.startIView(new ReportUIView(mGroupDescBean));
+
                     }
                 });
 
