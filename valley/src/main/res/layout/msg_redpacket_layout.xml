@@ -33,7 +33,7 @@
             android:maxEms="5"
             android:maxLines="2"
             android:ellipsize="end"
-            tools:text="day dayvvvvvvvvvvvvvvvvvvvvvvvvvvvvv "
+            tools:text="恭喜发财,大吉大利!"
             android:layout_marginTop="@dimen/base_50dpi"
             android:visibility="visible"
             android:layout_centerHorizontal="true"

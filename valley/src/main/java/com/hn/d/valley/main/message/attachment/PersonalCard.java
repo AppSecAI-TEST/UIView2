@@ -31,7 +31,7 @@ public class PersonalCard extends BaseCustomMsg{
         personalCard.setExtend_type(CustomAttachmentType.PersonalCard_);
         personalCard.setUid(bean.getUid());
         personalCard.setCreated((int) System.currentTimeMillis());
-        personalCard.setUsername(bean.getDefaultMark());
+        personalCard.setUsername(bean.getTrueName());
         personalCard.setAvatar(bean.getAvatar());
         return personalCard;
     }

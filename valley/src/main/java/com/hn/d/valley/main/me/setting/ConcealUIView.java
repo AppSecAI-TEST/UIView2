@@ -49,9 +49,64 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                         MsgNotifySetting.instance().enableBindContacts(isChecked);
                     }
                 });
-                itemInfoLayout.setItemText("绑定手机通讯录");
+                itemInfoLayout.setItemText("不允许查看我的粉丝及关注列表");
             }
         }));
+
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setChecked(MsgNotifySetting.instance().isBindContacts());
+                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        MsgNotifySetting.instance().enableBindContacts(isChecked);
+                    }
+                });
+                itemInfoLayout.setItemText("不出现在附近");
+            }
+        }));
+
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setVisibility(View.GONE);
+
+                itemInfoLayout.setItemText("不让TA看我的动态");
+                itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+
+            }
+        }));
+
+        items.add(ViewItemInfo.build(new ItemCallback() {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setVisibility(View.GONE);
+
+                itemInfoLayout.setItemText("不看TA的动态");
+                itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+
+            }
+        }));
+
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {

@@ -145,10 +145,14 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
                                 ContactItem contactItem = (ContactItem) absContactItems.get(0);
                                 FriendBean friendBean = contactItem.getFriendBean();
-
+                                SessionTypeEnum type = SessionTypeEnum.P2P;
+                                // 暂时 size > 1 判断 team
+                                if (absContactItems.size() > 1) {
+                                    type = SessionTypeEnum.Team;
+                                }
                                 DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mDataListBean);
                                 DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
-                                IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
+                                IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
                                 msgService().sendMessage(message,false);
 
                             }

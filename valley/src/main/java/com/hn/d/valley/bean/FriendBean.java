@@ -1,6 +1,9 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.SerializedName;
+import com.hn.d.valley.main.friend.GroupBean;
 
 import io.realm.RealmObject;
 
@@ -37,6 +40,22 @@ public class FriendBean extends RealmObject{
     private String introduce;
     private String signature;
     private String grade;
+
+    public static FriendBean create(GroupBean group) {
+        FriendBean friend = new FriendBean();
+        friend.mark = group.getTrueName();
+        friend.uid = group.getYxGid();
+        friend.introduce = group.getIntroduce();
+        return friend;
+    }
+
+    public String getTrueName() {
+        if (!TextUtils.isEmpty(mark)){
+            return mark;
+        } else {
+            return defaultMark;
+        }
+    }
 
     public String getUid() {
         return uid;
@@ -130,4 +149,6 @@ public class FriendBean extends RealmObject{
     public String toString() {
         return getUid();
     }
+
+
 }

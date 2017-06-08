@@ -3,6 +3,7 @@ package com.hn.d.valley.main.message;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ import static com.hn.d.valley.emoji.EmoticonView.EMOJI_PER_PAGE;
 public class EmojiLayoutControl implements IEmoticonCategoryChanged{
 
     RBaseViewHolder mViewHolder;
-    UIViewPager mUIViewPager;
+    ViewPager mUIViewPager;
     LinearLayout pageNumberLayout;
     private HorizontalScrollView scrollView;
     private LinearLayout tabView;

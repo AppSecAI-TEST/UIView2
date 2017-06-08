@@ -170,7 +170,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
             TextView tv = holder.tv(R.id.tv_friend_name);
 
             DraweeViewUtil.setDraweeViewHttp(glideImageView,dataBean.getDefaultAvatar());
-            tv.setText(dataBean.getDefaultName());
+            tv.setText(dataBean.getTrueName());
 
             final String yxGid = dataBean.getYxGid();
 

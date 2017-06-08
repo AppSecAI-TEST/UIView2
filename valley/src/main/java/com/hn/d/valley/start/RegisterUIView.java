@@ -25,6 +25,7 @@ import com.hn.d.valley.service.OtherService;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.RegisterPresenter;
 import com.hn.d.valley.start.mvp.Start;
+import com.hn.d.valley.x5.UseAgreementUIView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -128,7 +129,7 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
      * 用户协议
      */
     public void onProtocolClick() {
-
+        startIView(new UseAgreementUIView());
     }
 
     /**

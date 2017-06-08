@@ -79,7 +79,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
 //            iv_head.setImageUrl(friendBean.getAvatar());
             DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
-            tv_friend_name.setText(friendBean.getDefaultMark());
+            tv_friend_name.setText(friendBean.getTrueName());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -110,7 +110,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
 //            iv_head.setImageThumbUrl(friendBean.getAvatar());
             DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
-            tv_friend_name.setText(friendBean.getDefaultMark());
+            tv_friend_name.setText(friendBean.getTrueName());
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -193,7 +193,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
             DraweeViewUtil.setDraweeViewHttp(ivItemHead,friendBean.getAvatar());
 //        tv_friend_name.setText(friendBean.getDefaultMark());
 
-            display(tvFriendName, friendBean.getDefaultMark(), contactItem.getHitInfo());
+            display(tvFriendName, friendBean.getTrueName(), contactItem.getHitInfo());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -225,7 +225,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 //            ivItemHead.setImageUrl(groupBean.getAvatar());
             DraweeViewUtil.setDraweeViewHttp(ivItemHead,groupBean.getAvatar());
 //        tv_friend_name.setText(groupBean.getDefaultName());
-            display(tvFriendName, groupBean.getDefaultName(), item.hitInfo);
+            display(tvFriendName, groupBean.getTrueName(), item.hitInfo);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

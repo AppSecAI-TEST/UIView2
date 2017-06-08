@@ -44,7 +44,7 @@
             android:gravity="center"
             android:orientation="horizontal"/>
 
-        <com.angcyo.uiview.widget.viewpager.UIViewPager
+        <android.support.v4.view.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

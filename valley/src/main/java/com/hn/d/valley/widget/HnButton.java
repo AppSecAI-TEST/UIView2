@@ -26,6 +26,8 @@ public class HnButton extends RTextView {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        SkinUtils.setButton(this);
+        if (!isInEditMode()) {
+            SkinUtils.setButton(this);
+        }
     }
 }

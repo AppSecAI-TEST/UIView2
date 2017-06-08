@@ -181,7 +181,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
 
     public static char generateFirstLetter(FriendBean o2) {
-        return Pinyin.toPinyin(o2.getDefaultMark().charAt(0)).toUpperCase().charAt(0);
+        return Pinyin.toPinyin(o2.getTrueName().charAt(0)).toUpperCase().charAt(0);
     }
 
     public static List<String> generateIndexLetter(List<AbsContactItem> data_list) {

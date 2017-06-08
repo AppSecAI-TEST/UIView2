@@ -647,7 +647,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         String string = mInputView.string();
         for (int i = mFriendList.size() - 1; i >= 0; i--) {
             FriendBean friendBean = mFriendList.get(i);
-            if (!string.contains(friendBean.getDefaultMark())) {
+            if (!string.contains(friendBean.getTrueName())) {
                 mFriendList.remove(i);
                 atUsers.remove(friendBean.getUid());
             }
@@ -678,7 +678,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                 FriendBean friendBean = ((ContactItem) item).getFriendBean();
                                 atUsers.add(friendBean.getUid());
                                 mFriendList.add(friendBean);
-                                mInputView.addMention(friendBean.getDefaultMark());
+                                mInputView.addMention(friendBean.getTrueName());
                             }
                         }
                     }
@@ -731,7 +731,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                 @Override
                                 public String userId(String userName) {
                                     for (FriendBean bean : mFriendList) {
-                                        if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                                        if (TextUtils.equals(userName, bean.getTrueName())) {
                                             return bean.getUid();
                                         }
                                     }
@@ -785,7 +785,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                     @Override
                     public String userId(String userName) {
                         for (FriendBean bean : mFriendList) {
-                            if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                            if (TextUtils.equals(userName, bean.getTrueName())) {
                                 return bean.getUid();
                             }
                         }
@@ -797,7 +797,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                     @Override
                     public String userId(String userName) {
                         for (FriendBean bean : mFriendList) {
-                            if (TextUtils.equals(userName, bean.getDefaultMark())) {
+                            if (TextUtils.equals(userName, bean.getTrueName())) {
                                 return bean.getUid();
                             }
                         }

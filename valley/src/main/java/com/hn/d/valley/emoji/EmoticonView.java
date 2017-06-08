@@ -115,6 +115,11 @@ public class EmoticonView {
         setCurStickerPage(0);
         L.d(TAG,"show emojionly pagecount : " + pageCount );
         pagerAdapter.notifyDataSetChanged();
+        emotPager.setCurrentItem(0);
+    }
+
+    public void emotNotifiDataSetChanged() {
+        pagerAdapter.notifyDataSetChanged();
     }
 
     public void showExpressionOnly() {
@@ -128,6 +133,7 @@ public class EmoticonView {
         setCurStickerPage(0);
         L.d(TAG,"show showExpressionOnly pagecount : " + pageCount );
         pagerAdapter.notifyDataSetChanged();
+        emotPager.setCurrentItem(0);
     }
 
     public void showEmojis() {

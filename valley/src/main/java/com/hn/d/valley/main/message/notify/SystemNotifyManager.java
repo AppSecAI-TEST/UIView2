@@ -119,6 +119,18 @@ public class SystemNotifyManager {
         return mNotificationMap.get(key);
     }
 
+    public void onAppQuit() {
+        if (!mNotificationMap.isEmpty()) {
+            // 保存数据库
+//            RRealm.instance().save();
+        }
+    }
+
+    public void init() {
+        // 从数据库中恢复数据 之后清空数据库
+//        RRealm.instance().getRealm().where();
+    }
+
     private void notifyNewVisitor() {
         // 设置新的访客通知
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();

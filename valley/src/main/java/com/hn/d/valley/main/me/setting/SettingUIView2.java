@@ -143,24 +143,24 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 startIView(new X5WebUIView("http://www.baidu.com"));
             }
         }));
-        items.add(new ViewItemInfo(mActivity.getString(R.string.faq), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startIView(new X5WebUIView("http://www.baidu.com"));
-            }
-        }));
+//        items.add(new ViewItemInfo(mActivity.getString(R.string.faq), new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startIView(new X5WebUIView("http://www.baidu.com"));
+//            }
+//        }));
         items.add(new ViewItemInfo(mActivity.getString(R.string.about_me), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new X5WebUIView("http://www.baidu.com"));
+                startIView(new AboutKlgUIView().setEnableClipMode(ClipMode.CLIP_BOTH, v));
             }
         }));
-        items.add(new ViewItemInfo(mActivity.getString(R.string.user_agreement), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startIView(new X5WebUIView("http://www.baidu.com"));
-            }
-        }));
+//        items.add(new ViewItemInfo(mActivity.getString(R.string.user_agreement), new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startIView(new X5WebUIView("http://www.baidu.com"));
+//            }
+//        }));
 
         items.add(new ViewItemInfo(mActivity.getString(R.string.quit_login), new View.OnClickListener() {
             @Override

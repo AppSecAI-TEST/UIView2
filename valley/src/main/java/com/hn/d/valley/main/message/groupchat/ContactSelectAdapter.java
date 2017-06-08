@@ -71,7 +71,7 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
             SimpleDraweeView imageView = holder.v(R.id.iv_item_head);
             TextView nickName = holder.tv(R.id.tv_friend_name);
             DraweeViewUtil.setDraweeViewHttp(imageView,item.getFriendBean().getAvatar());
-            nickName.setText(item.getFriendBean().getDefaultMark());
+            nickName.setText(item.getFriendBean().getTrueName());
         }
 
 

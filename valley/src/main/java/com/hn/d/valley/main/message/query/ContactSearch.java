@@ -30,8 +30,8 @@ public class ContactSearch {
     }
 
     public static boolean hitGroup(GroupBean bean, TextQuery textQuery,RecordHitInfo hitInfo) {
-        return TextSearcher.contains(textQuery.t9, bean.getDefaultName(), textQuery.text,hitInfo)
-                || TextSearcher.contains(textQuery.t9,bean.getName(),textQuery.text,hitInfo);
+        return TextSearcher.contains(textQuery.t9, bean.getTrueName(), textQuery.text,hitInfo)
+                || TextSearcher.contains(textQuery.t9,bean.getTrueName(),textQuery.text,hitInfo);
     }
 
 }

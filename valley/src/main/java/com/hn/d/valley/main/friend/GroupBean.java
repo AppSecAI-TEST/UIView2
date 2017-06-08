@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.friend;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
@@ -37,6 +39,14 @@ public class GroupBean extends RealmObject{
     private String created;
     @SerializedName("member_count")
     private String memberCount;
+
+    public String getTrueName() {
+        if (!TextUtils.isEmpty(name)){
+            return name;
+        } else {
+            return defaultName;
+        }
+    }
 
     public String getGid() {
         return gid;

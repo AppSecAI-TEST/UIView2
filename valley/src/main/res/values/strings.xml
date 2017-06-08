@@ -168,7 +168,7 @@
     <string name="currency">通用</string>
     <string name="feedback">意见反馈</string>
     <string name="faq">常见问题</string>
-    <string name="about_me">关于我们</string>
+    <string name="about_me">关于恐龙谷</string>
     <string name="user_agreement">用户协议</string>
     <string name="quit_login">退出登录</string>
     <string name="settting">设置</string>
@@ -203,7 +203,7 @@
     <string name="login_protect_title">登录保护</string>
     <string name="open_login_protect_tip">开启后, 再其他设备上登录需要短信验证码</string>
     <string name="language">多语言</string>
-    <string name="zh">简体中文</string>
+    <string name="zh">中文</string>
     <string name="en">English</string>
     <string name="edit_into_title">编辑个人资料</string>
     <string name="photo_wall_tip">一次可上传多张图片,点击可查看和删除照片, 长按可以排序</string>
@@ -714,4 +714,8 @@
     <string name="auth_des_format">恐龙谷认证: %1$s</string>
     <string name="change_avatar_text">更换头像</string>
     <string name="avatar_change_success">头像修改成功!</string>
+    <string name="about_klg">关于恐龙谷</string>
+    <string name="jump_to_maker">去评分</string>
+    <string name="call_to">致电客服</string>
+    <string name="email_to">给我们发邮件</string>
 </resources>

@@ -103,8 +103,6 @@ public class EmojiRecyclerView extends RRecyclerView {
 
             final int count = EmojiManager.getDisplayCount();
             final int index = startIndex + position;
-
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -19,7 +19,7 @@ public class SystemPushItem extends AbsContactItem {
         this.friendBean = bean;
         this.action = action;
         itemType = ItemTypes.SYSTEMPUSH;
-        char ch = bean.getDefaultMark().charAt(0);
+        char ch = bean.getTrueName().charAt(0);
         String letter = StringUtils.getAsciiLeadingUp(ch);
         if (letter != null ) {
             groupText = letter;

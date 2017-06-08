@@ -100,18 +100,18 @@ public class LanguageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemLineCallback(size, line) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                mCheckBoxEn = holder.v(R.id.radio_view);
-                infoLayout.setItemText(mActivity.getString(R.string.en));
-
-                infoLayout.setOnClickListener(listenerEn);
-                mCheckBoxEn.setOnClickListener(listenerEn);
-            }
-
-        }));
+//        items.add(ViewItemInfo.build(new ItemLineCallback(size, line) {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+//                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+//                mCheckBoxEn = holder.v(R.id.radio_view);
+//                infoLayout.setItemText(mActivity.getString(R.string.en));
+//
+//                infoLayout.setOnClickListener(listenerEn);
+//                mCheckBoxEn.setOnClickListener(listenerEn);
+//            }
+//
+//        }));
     }
 
     private void change(int lang) {

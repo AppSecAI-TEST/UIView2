@@ -137,8 +137,15 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                             , new Action2<GroupBean, RequestCallback>() {
                                 @Override
                                 public void call(GroupBean groupBean, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
-//                                    selectAction.call(mParentILayout,null,requestCallback);
-                                    // TODO: 2017/6/7 群聊选中
+                                    FriendBean briend = FriendBean.create(groupBean);
+                                    ContactItem item = new ContactItem(briend);
+                                    List<AbsContactItem> list = new ArrayList<>();
+                                    list.add(item);
+                                    // 暂时 size > 1 判断 team
+                                    list.add(item);
+//                                    ContactSelectUIVIew.this.finishIView();
+                                    getILayout().finishIView(ContactSelectUIVIew.class);
+                                    selectAction.call(null, list, requestCallback);
                                 }
                             });
                 }

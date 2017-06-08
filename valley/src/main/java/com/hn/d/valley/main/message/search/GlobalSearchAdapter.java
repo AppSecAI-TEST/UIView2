@@ -107,7 +107,7 @@ public class GlobalSearchAdapter extends RBaseAdapter<AbsContactItem> {
         iv_head.setImageUrl(friendBean.getAvatar());
 //        tv_friend_name.setText(friendBean.getDefaultMark());
 
-        display(tv_friend_name, friendBean.getDefaultMark(), friendItem.getHitInfo());
+        display(tv_friend_name, friendBean.getTrueName(), friendItem.getHitInfo());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +125,7 @@ public class GlobalSearchAdapter extends RBaseAdapter<AbsContactItem> {
         iv_head.setImageUrl(groupBean.getAvatar());
 //        tv_friend_name.setText(groupBean.getDefaultName());
 
-        display(tv_friend_name, groupBean.getDefaultName(), groupItem.hitInfo);
+        display(tv_friend_name, groupBean.getTrueName(), groupItem.hitInfo);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

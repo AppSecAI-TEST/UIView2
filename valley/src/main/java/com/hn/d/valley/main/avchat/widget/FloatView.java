@@ -117,6 +117,10 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.layout_avchat_float, null);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.setElevation(10);
+        }
+
         small_size_preview_layout = (FrameLayout) view.findViewById(R.id.small_size_preview_layout);
         small_size_preview = (LinearLayout) view.findViewById(R.id.small_size_preview);
         small_preview_render = (AVChatVideoRender) view.findViewById(R.id.small_preview_render);

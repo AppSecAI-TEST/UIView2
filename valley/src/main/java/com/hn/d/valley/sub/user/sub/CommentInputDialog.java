@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RCheckGroup;
@@ -64,6 +66,9 @@ import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Op
  * Version: 1.0.0
  */
 public class CommentInputDialog extends UIIDialogImpl {
+
+    public static final String GIF_BASE_URL = "http://circleimg.klgwl.com/gif/1/";
+
     InputConfig mInputConfig;
     private EmojiLayoutControl mEmojiLayoutControl;
     private String mImagePath = "", mImageUrl = "";//选择的图片, 上传之后的地址
@@ -72,6 +77,12 @@ public class CommentInputDialog extends UIIDialogImpl {
     private RSoftInputLayout mSoftInputLayout;
     private ExEditText mInputView;
     private OssControl mOssControl;
+
+    //view
+    TextView sendView ;
+
+    //gif url
+    private String gifUrl;
 
     public CommentInputDialog(InputConfig inputConfig) {
         mInputConfig = inputConfig;
@@ -156,9 +167,12 @@ public class CommentInputDialog extends UIIDialogImpl {
         mSoftInputLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
             @Override
             public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
+                L.d(CommentInputDialog.class.getSimpleName(),"onEmojiLayoutChange isEmojiShow " + isEmojiShow + "isKeyboardShow " + isKeyboardShow);
+
                 if (isEmojiShow) {
 //                    imageView.setImageResource(R.drawable.icon_keyboard);
 //                    imageView.setChecked(true);
+                    mEmojiLayoutControl.emotNotifiDataSetChanged();
                 } else {
 //                    imageView.setImageResource(R.drawable.expression_comments_n);
 //                    imageView.setChecked(true);
@@ -184,7 +198,12 @@ public class CommentInputDialog extends UIIDialogImpl {
             public void onStickerSelected(String categoryName, String stickerName) {
                 Uri uri = Uri.parse(StickerManager.getInstance().getStickerBitmapUri(categoryName
                         , stickerName));
-                initPreviewLayout(uri.getPath());
+                L.d(CommentInputDialog.class.getSimpleName(),"onStickerSelected " + stickerName);
+                gifUrl = GIF_BASE_URL + stickerName;
+
+                sendView.setEnabled(true);
+
+                initPreviewLayout(uri.getPath(),true);
             }
         });
 
@@ -249,7 +268,7 @@ public class CommentInputDialog extends UIIDialogImpl {
     }
 
     private void initSendLayout() {
-        final TextView sendView = mViewHolder.v(R.id.send_view);
+        sendView = mViewHolder.v(R.id.send_view);
         ExEditText editText = mViewHolder.v(R.id.input_view);
         editText.addTextChangedListener(new SingleTextWatcher() {
             @Override
@@ -285,9 +304,25 @@ public class CommentInputDialog extends UIIDialogImpl {
         sendView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSendClick();
+                if (TextUtils.isEmpty(gifUrl)) {
+                    // 发送图片和文字
+                    onSendClick();
+                } else {
+                    //发送文字和gif
+                    onSendGif();
+                }
             }
         });
+    }
+
+    private void onSendGif() {
+        if (TextUtils.isEmpty(gifUrl)) {
+            return;
+        }
+        if (mInputConfig != null) {
+            mInputConfig.onSendClick(gifUrl, fixMentionString());
+        }
+        finishDialog();
     }
 
     private void onSendClick() {
@@ -297,6 +332,7 @@ public class CommentInputDialog extends UIIDialogImpl {
                 onViewUnload();
             }
         });
+
         mOssControl = new OssControl(new OssControl.OnUploadListener() {
             @Override
             public void onUploadStart() {
@@ -330,7 +366,7 @@ public class CommentInputDialog extends UIIDialogImpl {
         String string = mInputView.string();
         for (int i = mFriendList.size() - 1; i >= 0; i--) {
             FriendBean friendBean = mFriendList.get(i);
-            if (!string.contains(friendBean.getDefaultMark())) {
+            if (!string.contains(friendBean.getTrueName())) {
                 mFriendList.remove(i);
                 atUsers.remove(friendBean.getUid());
             }
@@ -353,7 +389,7 @@ public class CommentInputDialog extends UIIDialogImpl {
     private String createStringWithUserName(String userName) {
         String id = "";
         for (FriendBean bean : mFriendList) {
-            if (TextUtils.equals(bean.getDefaultMark(), userName)) {
+            if (TextUtils.equals(bean.getTrueName(), userName)) {
                 id = bean.getUid();
                 break;
             }
@@ -408,14 +444,15 @@ public class CommentInputDialog extends UIIDialogImpl {
                                 FriendBean friendBean = ((ContactItem) item).getFriendBean();
                                 atUsers.add(friendBean.getUid());
                                 mFriendList.add(friendBean);
-                                mInputView.addMention(friendBean.getDefaultMark());
+                                mInputView.addMention(friendBean.getTrueName());
                             }
                         }
                     }
                 });
     }
 
-    private void initPreviewLayout(String imagePath) {
+    // direction previewlayout 显示方向 控制 gif 或图片 方向 ,gif true
+    private void initPreviewLayout(String imagePath,boolean direction) {
         this.mImagePath = imagePath;
 
         View previewControlLayout = mViewHolder.v(R.id.preview_control_layout);
@@ -423,6 +460,13 @@ public class CommentInputDialog extends UIIDialogImpl {
             previewControlLayout.setVisibility(View.GONE);
         } else {
             previewControlLayout.setVisibility(View.VISIBLE);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) previewControlLayout.getLayoutParams();
+            if (direction) {
+                params.setMarginStart(ScreenUtil.dip2px(130));
+            } else {
+                params.setMarginStart(ScreenUtil.dip2px(10));
+            }
+            previewControlLayout.setLayoutParams(params);
             Glide.with(mActivity)
                     .load(imagePath)
                     .into(mViewHolder.imgV(R.id.preview_image_view));
@@ -431,7 +475,7 @@ public class CommentInputDialog extends UIIDialogImpl {
         mViewHolder.v(R.id.preview_delete_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initPreviewLayout("");
+                initPreviewLayout("",false);
             }
         });
     }
@@ -449,7 +493,9 @@ public class CommentInputDialog extends UIIDialogImpl {
                 .subscribe(new Action1<ArrayList<String>>() {
                     @Override
                     public void call(ArrayList<String> strings) {
-                        initPreviewLayout(strings.get(0));
+                        initPreviewLayout(strings.get(0),false);
+                        gifUrl = "";// girUrl 为"" 判断条件
+                        sendView.setEnabled(true);
                         L.e("call: call([strings])-> " + strings.get(0));
                     }
                 }, new Action1<Throwable>() {

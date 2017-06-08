@@ -48,6 +48,8 @@ public class MsgViewHolderVideo extends MsgViewHolderBase implements MsgUIObserv
 
     private float lastPercent;
 
+    //view state
+    private boolean hasOnShow;
 
     private AbortableFuture downloadFuture;
     private boolean downloading;
@@ -207,7 +209,9 @@ public class MsgViewHolderVideo extends MsgViewHolderBase implements MsgUIObserv
         registerObservers(false);
         downloadFuture = null;
         showStatusView(View.GONE);
-        playVideo();
+        if (getMsgAdapter().hasOnShow()) {
+            playVideo();
+        }
     }
 
     private void playVideo() {
@@ -294,12 +298,14 @@ public class MsgViewHolderVideo extends MsgViewHolderBase implements MsgUIObserv
 
     @Override
     public void onViewHide() {
-        stopDownload();
-        L.d("msgviewholdervideo onview hide stopdownload");
+//        stopDownload();
+        hasOnShow = false;
+        L.d("msgviewholdervideo onViewHide hide stopdownload " + hasOnShow);
     }
 
     @Override
     public void onViewShow() {
-
+        hasOnShow = true;
+        L.d("msgviewholdervideo onViewShow hide stopdownload " + hasOnShow);
     }
 }
