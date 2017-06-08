@@ -12,9 +12,6 @@
         android:layout_height="match_parent"/>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/filter_root_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,4 +90,17 @@
             android:tag="h"
             android:visibility="gone"/>
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/radar_scan_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true">
+
+        <com.angcyo.uiview.widget.RadarScanView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/base_xhdpi"/>
+    </FrameLayout>
 </RelativeLayout>

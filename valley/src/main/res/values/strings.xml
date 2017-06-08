@@ -324,6 +324,7 @@
     <string name="new_friend">新的朋友</string>
     <string name="frient_tip">好友推荐</string>
     <string name="nearby_perple">附近</string>
+    <string name="nearby_perple_all">附近(全部)</string>
     <string name="text_context">通讯录好友</string>
     <string name="user_ecommend_tip">名人推荐</string>
     <string name="new_hot_info_tip">最新资讯</string>

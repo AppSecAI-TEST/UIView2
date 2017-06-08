@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,10 +30,12 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RPagerSnapHelper;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.recycler.widget.IShowState;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.RCheckGroup;
 import com.angcyo.uiview.widget.RImageCheckView;
+import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -48,6 +51,7 @@ import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
 import com.hn.d.valley.utils.RAmap;
 import com.hwangjr.rxbus.annotation.Subscribe;
+import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +69,11 @@ import java.util.List;
  */
 public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 
+    /**
+     * 保存上一次过滤的性别
+     */
+    public static final String KEY_FILTER_SEX = "key_filter_sex";
+
     RCheckGroup mCheckGroupView;
     RImageCheckView mMapCheckView;
     LinearLayout mFilterRootLayout;
@@ -80,10 +89,11 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     /**
      * 1-男 2-女 0-所有
      */
-    private int mSex = 0;
+    private int mSex = Hawk.get(KEY_FILTER_SEX, 0);
     private MapCardPagerAdapter mMapCardPagerAdapter;
     private MapCardAdapter mMapCardAdapter;
     private boolean isMapMode = true;
+    private ViewGroup mRadarScanLayout;
 
     public static void setAttentionView(final ImageView view, final LikeUserInfoBean dataBean, final String to_uid) {
         if (dataBean.getIs_attention() == 1) {
@@ -146,7 +156,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                     public void onClick(View v) {
                         showMoreDialog();
                     }
-                }));
+                }).setVisibility(View.GONE));
     }
 
     private void showMoreDialog() {
@@ -283,6 +293,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mRadarScanLayout = v(R.id.radar_scan_layout);
+
         mCheckGroupView = v(R.id.check_group_view);
         mMapCheckView = v(R.id.map_check_view);
         mFilterRootLayout = v(R.id.filter_root_layout);
@@ -360,6 +372,8 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         } else if (id == R.id.all_check_view) {
             mSex = 0;
         }
+        Hawk.put(KEY_FILTER_SEX, mSex);
+        updateTitle();
         L.e("开始刷新...");
         mRecyclerView.scrollToPosition(0);
         //开始刷新
@@ -429,6 +443,10 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
 
         final boolean mapMode = isMapMode();
 
+        if (!mapMode) {
+            mRExBaseAdapter.setShowState(IShowState.LOADING);
+        }
+
         add(RRetrofit.create(UserService.class)
                 .nearUser(Param.buildMap(
                         "page:" + (mapMode ? "" : page),
@@ -440,6 +458,7 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                 .subscribe(new RSubscriber<NearUserBean>() {
                     @Override
                     public void onSucceed(NearUserBean nearUserBean) {
+                        getUITitleBarContainer().showRightItem(0);
 
                         if (nearUserBean == null) {
                             onUILoadDataEnd();
@@ -454,29 +473,32 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                                 //mMapCardPagerAdapter.resetDatas(mRExBaseAdapter.getAllDatas());
                                 mMapCardAdapter.resetData(datas);
                             } else {
+                                mRExBaseAdapter.setShowState(IShowState.NORMAL);
                                 onUILoadDataEnd(nearUserBean.getData_list(), nearUserBean.getData_count());
                                 onUILoadDataFinish(nearUserBean.getData_list().size());
                             }
                         }
+
+                        mRadarScanLayout.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         onUILoadDataFinish();
                         hideLoadView();
+                        if (isError) {
+                            getUITitleBarContainer().hideRightItem(0);
+
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loadData();
+                                }
+                            });
+                        }
                     }
 
-                    @Override
-                    public void onNoNetwork() {
-                        super.onNoNetwork();
-                        showNonetLayout(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadData();
-                            }
-                        });
-                    }
                 })
         );
     }
@@ -513,6 +535,27 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
         super.onViewLoad();
         mAudioPlayHelper = new AudioPlayHelper(mActivity);
         mAudioPlayHelper.setEarPhoneModeEnable(false);
+
+        updateTitle();
+    }
+
+    /**
+     * 更新标题
+     */
+    private void updateTitle() {
+        RTextView titleView = getUITitleBarContainer().getTitleView();
+        titleView.setText(getString(R.string.nearby_perple));
+        if (mSex == 0) {
+            //全部
+            titleView.setRightIco(-1);
+            titleView.setText(getString(R.string.nearby_perple_all));
+        } else if (mSex == 1) {
+            //男
+            titleView.setRightIco(R.drawable.boy_fujing);
+        } else {
+            //女
+            titleView.setRightIco(R.drawable.girl_fujing);
+        }
     }
 
     @Override
