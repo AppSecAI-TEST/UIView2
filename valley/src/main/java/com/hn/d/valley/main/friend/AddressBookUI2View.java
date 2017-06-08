@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.utilcode.utils.StringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -36,6 +38,7 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.PhoneUser;
 import com.hn.d.valley.cache.UserCache;
@@ -44,6 +47,7 @@ import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.query.ContactSearch;
 import com.hn.d.valley.main.message.query.TextQuery;
 import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -347,38 +351,77 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                 if (dataBean instanceof WrapPhoneContactItem) {
                     //处理关注相关
                     WrapPhoneContactItem wrapContact = (WrapPhoneContactItem) dataBean;
-                    PhoneUser phoneUser = wrapContact.getPhoneUser();
+                    final PhoneUser phoneUser = wrapContact.getPhoneUser();
 
                     username.setText(phoneUser.getUsername());
                     signature.setText(phoneUser.getSignature());
                     image_view.setImageUrl(phoneUser.getAvatar());
 
-                    //关注
-                    if (isContact(phoneUser)) {
-                        follow_image_view.setImageResource(R.drawable.huxiangguanzhu);
-                    } else {
-                        if (isAttention(phoneUser)) {
-                            follow_image_view.setImageResource(R.drawable.focus_on);
-                        } else {
-                            switch (SkinUtils.getSkin()) {
-                                case SkinManagerUIView.SKIN_BLUE:
-                                    follow_image_view.setImageResource(R.drawable.follow_blue);
-                                    break;
-                                case SkinManagerUIView.SKIN_GREEN:
-                                    follow_image_view.setImageResource(R.drawable.follow);
-                                    break;
-                                default:
-                                    follow_image_view.setImageResource(R.drawable.follow_black);
-                                    break;
-                            }
-                        }
-                    }
-
-                    follow_image_view.setOnClickListener(new View.OnClickListener() {
+                    String titleString = "";
+                    //未关注
+                    View.OnClickListener clickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            setSelectorPosition(posInData);
+                            add(RRetrofit.create(UserService.class)
+                                    .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + phoneUser.getUid()))
+                                    .compose(Rx.transformer(String.class))
+                                    .subscribe(new BaseSingleSubscriber<String>() {
+                                        @Override
+                                        public void onSucceed(String bean) {
+                                            if (!onSetDataBean(phoneUser, true)) {
+                                                phoneUser.setIs_attention(1);
+                                            }
+                                            setSelectorPosition(posInData);
+                                        }
+
+                                        @Override
+                                        public void onError(int code, String msg) {
+                                            super.onError(code, msg);
+                                            setSelectorPosition(posInData);
+                                        }
+                                    }));
                         }
-                    });
+                    };
+                    follow_image_view.setOnClickListener(clickListener);
+
+                    if (isContact(phoneUser) || isAttention(phoneUser)) {
+                        final String finalTitleString = titleString;
+                        clickListener = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                //取消关注
+                                UIBottomItemDialog.build()
+                                        .setTitleString(finalTitleString)
+                                        .addItem(new UIItemDialog.ItemInfo(mContext.getResources().getString(R.string.base_ok), new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                setSelectorPosition(posInData);
+                                                add(RRetrofit.create(UserService.class)
+                                                        .unAttention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + phoneUser.getUid()))
+                                                        .compose(Rx.transformer(String.class))
+                                                        .subscribe(new BaseSingleSubscriber<String>() {
+
+                                                            @Override
+                                                            public void onSucceed(String bean) {
+                                                                if (!onSetDataBean(phoneUser, false)) {
+                                                                    phoneUser.setIs_attention(0);
+                                                                }
+                                                                setSelectorPosition(posInData);
+                                                            }
+
+                                                            @Override
+                                                            public void onError(int code, String msg) {
+                                                                super.onError(code, msg);
+                                                                setSelectorPosition(posInData);
+                                                            }
+                                                        }));
+                                            }
+                                        })).showDialog(mILayout);
+                            }
+                        };
+                      follow_image_view.setOnClickListener(clickListener);
+                    }
 
                 } else {
                     final PhoneContactItem item = (PhoneContactItem) dataBean;
@@ -409,7 +452,39 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, AbsContactItem bean) {
             super.onBindModelView(model, isSelector, holder, position, bean);
             if (holder.getViewType() == ItemTypes.PHONECOTACT) {
+                if (! (bean instanceof WrapPhoneContactItem)) {
+                    return;
+                }
+                WrapPhoneContactItem wrapContact = (WrapPhoneContactItem) bean;
+                final PhoneUser phoneUser = wrapContact.getPhoneUser();
 
+                HnFollowImageView followView = holder.v(R.id.follow_image_view);
+                followView.setLoadingModel(isSelector);
+                followView.setLoadingModel(isSelector);
+                if (isSelector) {
+                    followView.setOnClickListener(null);
+                } else {
+                    //关注
+                    if (isContact(phoneUser)) {
+                        followView.setImageResource(R.drawable.huxiangguanzhu);
+                    } else {
+                        if (isAttention(phoneUser)) {
+                            followView.setImageResource(R.drawable.focus_on);
+                        } else {
+                            switch (SkinUtils.getSkin()) {
+                                case SkinManagerUIView.SKIN_BLUE:
+                                    followView.setImageResource(R.drawable.follow_blue);
+                                    break;
+                                case SkinManagerUIView.SKIN_GREEN:
+                                    followView.setImageResource(R.drawable.follow);
+                                    break;
+                                default:
+                                    followView.setImageResource(R.drawable.follow_black);
+                                    break;
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -428,6 +503,18 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     //是否已关注
     protected boolean isAttention(PhoneUser dataBean) {
         return dataBean.getIs_attention() == 1;
+    }
+
+    /**
+     * @param value true 关注, false 未关注
+     */
+    protected boolean onSetDataBean(PhoneUser dataBean, boolean value) {
+        //请根据界面设置对应关系值
+        if (!value) {
+            dataBean.setIs_contact(0);
+        }
+        dataBean.setIs_attention(value ? 1 : 0);
+        return true;
     }
 
     private void buildMsg(PhoneContactItem item) {

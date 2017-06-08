@@ -147,14 +147,12 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount()
                         + UnreadMessageControl.getUnreadCount());
                 List<IMMessage> imMessages = mNotifyAdapter.getSelectorData();
-                for(IMMessage msg : imMessages) {
-                    NIMClient.getService(MsgService.class).deleteChattingHistory(msg);
-                    mNotifyAdapter.deleteItem(msg);
-                }
+                mNotifyAdapter.deleteItems(imMessages);
                 if (mNotifyAdapter.getDataCount() == 0) {
                     onUILoadDataEnd();
                     animBottom(false);
-                    getUITitleBarContainer().getRightControlLayout().getChildAt(0).setVisibility(View.GONE);                }
+                    getUITitleBarContainer().getRightControlLayout().getChildAt(0).setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -256,6 +254,18 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             unSelectorAll(true);
         }
 
+        public void deleteItems(List<IMMessage> msgs){
+            for(IMMessage msg : msgs) {
+                NIMClient.getService(MsgService.class).deleteChattingHistory(msg);
+                mNotifyAdapter.deleteItem(msg);
+            }
+            editItems();
+        }
+
+        public void clearSelected() {
+            mCheckStats.clear();
+        }
+
         @Override
         protected int getItemLayoutId(int viewType) {
             return R.layout.item_new_notify;
@@ -274,6 +284,8 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             super.onBindDataView(holder, posInData, dataBean);
             String media = "", media_type = "", item_id = "", msg = "", created = "", avatar = "";
             MsgAttachment attachment = dataBean.getAttachment();
+
+            ((OneSlideViewHolder) holder).bind();
 
             if (attachment instanceof LikeMsgAttachment) {
                 LikeMsg likeMsg = ((LikeMsgAttachment) attachment).getLikeMsg();

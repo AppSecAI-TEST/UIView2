@@ -19,6 +19,7 @@ import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.AudioViewControl;
 import com.hn.d.valley.main.message.audio.AudioPlayCallback;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
+import com.hn.d.valley.main.message.chat.MsgUIObserver;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.skin.SkinUtils;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -34,7 +35,7 @@ import static com.hn.d.valley.R.id.time;
  * Created by hewking on 2017/4/9.
  */
 
-public class MsgViewHolderAudio extends MsgViewHolderBase {
+public class MsgViewHolderAudio extends MsgViewHolderBase implements MsgUIObserver{
 
     private RelativeLayout msgAudioLayout;
     private ImageView imageView;
@@ -45,6 +46,8 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
 
     public MsgViewHolderAudio(BaseMultiAdapter adapter) {
         super(adapter);
+        getMsgAdapter().registerUIObserver(this);
+
     }
 
     @Override
@@ -150,5 +153,15 @@ public class MsgViewHolderAudio extends MsgViewHolderBase {
                 animation.selectDrawable(2);
             }
         }
+    }
+
+    @Override
+    public void onViewHide() {
+        // 停止语音播放
+    }
+
+    @Override
+    public void onViewShow() {
+
     }
 }

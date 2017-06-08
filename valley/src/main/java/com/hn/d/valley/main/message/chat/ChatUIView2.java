@@ -600,7 +600,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-
+        mChatControl.onViewShow();
     }
 
     @Override
@@ -737,6 +737,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     public void onViewHide() {
         super.onViewHide();
         msgService().setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, sessionType);
+        mChatControl.onViewHide();
     }
 
 

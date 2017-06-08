@@ -211,7 +211,6 @@ public class RecentContactsControl {
         if (sessionTypeEnum == SessionTypeEnum.P2P) {
             //单聊
             if (userInfoCache != null) {
-
                 final NimUserInfo userInfo = userInfoCache.getUserInfo(contactId);
                 if (userInfo == null) {
                     info.name = contactId;
@@ -268,10 +267,23 @@ public class RecentContactsControl {
         return Constant.comment.equalsIgnoreCase(recent.getContactId());
     }
 
+    /**
+     * 是否恐龙君
+     */
     private static boolean isKLJ(RecentContact recent) {
         return Constant.klj.equalsIgnoreCase(recent.getContactId());
     }
 
+    /**
+     * 是否钱包消息
+     */
+    private static boolean isWalletJ(RecentContact recent) {
+        return Constant.wallet.equalsIgnoreCase(recent.getContactId());
+    }
+
+    private static boolean isHotNews(RecentContact recent) {
+        return Constant.hot_news.equalsIgnoreCase(recent.getContactId());
+    }
 
     private int getTopItemCount() {
         return 1;
@@ -677,10 +689,20 @@ public class RecentContactsControl {
 
             if (isAddContact(bean)) {
                 draweeView.setImageResource(R.drawable.new_friend);
+                holder.tv(R.id.recent_name_view).setText(mContext.getString(R.string.new_friend));
                 return;
             } else if (isComment(bean)) {
                 draweeView.setImageResource(R.drawable.dynamic_notification);
+                holder.tv(R.id.recent_name_view).setText(mContext.getString(R.string.dynamic_notify));
                 return;
+            } else if (isKLJ(bean)) {
+                holder.tv(R.id.recent_name_view).setText(R.string.text_klj);
+                draweeView.setImageResource(R.drawable.konglongjun);
+                return;
+            } else if (isWalletJ(bean)) {
+                holder.tv(R.id.recent_name_view).setText(R.string.text_klg_wallet);
+            } else if (isHotNews(bean)) {
+                holder.tv(R.id.recent_name_view).setText(R.string.text_hot_news);
             }
 //            draweeView.setImageUrl(recentContactsInfo.icoUrl);
             DraweeViewUtil.setDraweeViewHttp(draweeView, recentContactsInfo.icoUrl);
@@ -746,7 +768,7 @@ public class RecentContactsControl {
                             recent.getFromAccount(),
                             (NotificationAttachment) attachment);
                 case avchat:
-                    return "[会议]";
+                    return "[音视频聊天]";
                 case custom:
                     return bindCustomSession(recent, attachment);
                 default:

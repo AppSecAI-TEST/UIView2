@@ -202,6 +202,10 @@
         <item name="android:textColorHint">@color/base_text_color_dark</item>
     </style>
 
+    <style name="DarkTextStyle2" parent="DarkTextStyle">
+        <item name="android:textColor">@color/main_text_color_dark2</item>
+    </style>
+
     <style name="DarkTextButtonStyle" parent="DarkTextStyle">
         <item name="android:clickable">true</item>
         <item name="android:background">@drawable/default_bg_selector</item>

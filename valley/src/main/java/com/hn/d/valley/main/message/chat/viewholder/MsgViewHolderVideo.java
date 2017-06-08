@@ -15,6 +15,7 @@ import com.angcyo.uiview.utils.string.StringUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
+import com.hn.d.valley.main.message.chat.MsgUIObserver;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.widget.MsgThumbImageView;
 import com.netease.nimlib.sdk.AbortableFuture;
@@ -28,7 +29,6 @@ import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
-import com.netease.nimlib.sdk.msg.model.AttachmentProgress;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.io.File;
@@ -37,7 +37,7 @@ import java.io.File;
  * Created by hewking on 2017/4/9.
  */
 
-public class MsgViewHolderVideo extends MsgViewHolderBase {
+public class MsgViewHolderVideo extends MsgViewHolderBase implements MsgUIObserver{
 
     protected View progressCover;
     protected TextView progressLabel;
@@ -54,6 +54,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
 
     public MsgViewHolderVideo(BaseMultiAdapter adapter) {
         super(adapter);
+        getMsgAdapter().registerUIObserver(this);
     }
 
 
@@ -289,5 +290,16 @@ public class MsgViewHolderVideo extends MsgViewHolderBase {
             maskParams.height = imageSize.height;
             imageView.setLayoutParams(maskParams);
         }
+    }
+
+    @Override
+    public void onViewHide() {
+        stopDownload();
+        L.d("msgviewholdervideo onview hide stopdownload");
+    }
+
+    @Override
+    public void onViewShow() {
+
     }
 }

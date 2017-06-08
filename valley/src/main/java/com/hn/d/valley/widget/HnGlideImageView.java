@@ -243,6 +243,17 @@ public class HnGlideImageView extends AppCompatImageView {
         }
     }
 
+    public Drawable copyDrawable() {
+        Drawable result = null, drawable = getDrawable();
+        if (drawable != null) {
+            Drawable.ConstantState constantState = drawable.mutate().getConstantState();
+            if (constantState != null) {
+                result = constantState.newDrawable();
+            }
+        }
+        return result;
+    }
+
     private boolean isActivityDestroy() {
         Context context = getContext();
         if (context instanceof Activity) {

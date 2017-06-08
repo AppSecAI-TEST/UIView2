@@ -21,6 +21,7 @@ import com.hn.d.valley.bean.AuthDetailBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.AuthService;
+import com.hn.d.valley.widget.HnAuthStatusView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
@@ -133,27 +134,14 @@ public class MyAuthStatusUIView extends BaseItemUIView {
                 HnGlideImageView icoView = holder.v(R.id.avatar_view);
                 icoView.setImageThumbUrl(UserCache.getUserAvatar());
 
-                HnGlideImageView statusView = holder.v(R.id.status_view);
+                HnAuthStatusView statusView = holder.v(R.id.status_view);
                 HnGlideImageView backView = holder.v(R.id.image_view);
                 backView.setImageUrl(backUrl);
 
                 holder.tv(R.id.name_view).setText(mAuthDetailBean.getTrue_name());
                 holder.tv(R.id.job_view).setText(mAuthDetailBean.getCompany() + mAuthDetailBean.getJob());
 
-                switch (auth_type) {
-                    case 1:
-                        statusView.setImageResource(R.drawable.certified);
-                        break;
-                    case 2:
-                        statusView.setImageResource(R.drawable.authentication);
-                        break;
-                    case 3:
-                        statusView.setImageResource(R.drawable.authentication_failed);
-                        break;
-                    default:
-                        statusView.setImageResource(R.drawable.authentication);
-                        break;
-                }
+                statusView.setAuthType(auth_type);
             }
         });
         items.add(new SingleItem() {

@@ -111,7 +111,7 @@ public class ChatControl2 {
 
     public void onViewHide() {
         MessageAudioControl.getInstance(mActivity).stopAudio();
-
+        mChatAdapter.onViewHide();
     }
 
 
@@ -189,6 +189,10 @@ public class ChatControl2 {
         }
 
         return false;
+    }
+
+    public void onViewShow() {
+        mChatAdapter.onViewShow();
     }
 
     private class MsgItemEventListener implements ChatAdapter2.ViewHolderEventListener {

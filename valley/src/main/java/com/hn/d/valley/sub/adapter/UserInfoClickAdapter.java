@@ -64,7 +64,6 @@ public class UserInfoClickAdapter extends UserInfoAdapter {
                                 .attention(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + to_uid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
-
                                     @Override
                                     public void onSucceed(String bean) {
                                         if (!onSetDataBean(dataBean, true)) {

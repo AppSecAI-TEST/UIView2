@@ -318,6 +318,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
             T_.show(mActivity.getString(R.string.text_unselected));
             return;
         }
+
         Observable.from(selectedData)
                 .map(new Func1<GroupMemberBean, String>() {
                     @Override
@@ -337,10 +338,8 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                                     @Override
                                     public void onSucceed(String bean) {
                                         T_.show(getString(R.string.text_kick_out_success));
-                                        onUILoadData("0");
-                                        if (kictAction != null) {
-                                            kictAction.call(true);
-                                        }
+
+                                        kickSuccess();
                                     }
                                 }));
                         return bean.getUserId();
@@ -353,6 +352,18 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
             }
         });
 
+    }
+
+    private void kickSuccess() {
+//        onUILoadData("0");
+        List<GroupMemberBean> selectorData = mGroupMemberAdapter.getSelectorData();
+        for (GroupMemberBean bean : selectorData) {
+            mGroupMemberAdapter.deleteItem(bean);
+        }
+        editItems();
+        if (kictAction != null) {
+            kictAction.call(true);
+        }
     }
 
     private void editItems() {

@@ -706,4 +706,11 @@
     <string name="reply_view_empty_tip">回复精彩内容吧</string>
     <string name="forward_view_empty_tip">快来转发精彩内容吧</string>
     <string name="album_empty_tip">暂无相册</string>
+    <string name="text_klj">恐龙君</string>
+    <string name="text_hot_news">热点资讯</string>
+    <string name="auth_detail_title">恐龙谷认证</string>
+    <string name="auth_type_format">认证类型: %1$s</string>
+    <string name="auth_des_format">恐龙谷认证: %1$s</string>
+    <string name="change_avatar_text">更换头像</string>
+    <string name="avatar_change_success">头像修改成功!</string>
 </resources>

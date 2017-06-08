@@ -40,16 +40,30 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
         if (bean == null) {
             return;
         }
-        if (getItemType(position) == ItemTypes.FUNC) {
-
+        if (getItemType(position) == ItemTypes.SEARCH) {
             final FuncItem item = (FuncItem) bean;
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     item.onFuncClick(null);
                 }
             });
+
+        } else if (getItemType(position) == ItemTypes.FUNC) {
+            final FuncItem item = (FuncItem) bean;
+            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
+            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
+            iv_head.setImageResource(item.getDrawableRes());
+            tv_friend_name.setText(item.getText());
+            CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
+            checkBox.setVisibility(View.GONE);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    item.onFuncClick(null);
+                }
+            });
+
 
         } else if (getItemType(position) == ItemTypes.FRIEND){
             ContactItem item = (ContactItem) bean;
@@ -79,7 +93,6 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
 
     @Override
     protected void onBindModelView(int model, final boolean isSelector, final RBaseViewHolder holder, final int position, final AbsContactItem bean) {
-
         if (getItemType(position) == ItemTypes.FRIEND) {
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
             checkBox.setTag(position);
@@ -101,7 +114,6 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (getAllSelectorList().size() >= options.selectCountLimit) {
                         if (!isPositionSelector(position)) {
                             T_.show(mContext.getString(R.string.text_selected_limit));

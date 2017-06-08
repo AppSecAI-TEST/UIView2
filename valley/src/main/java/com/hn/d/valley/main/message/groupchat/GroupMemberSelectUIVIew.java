@@ -16,6 +16,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
+import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.SearchUserUIView;
 import com.hn.d.valley.service.GroupChatService;
 
@@ -93,7 +94,7 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
                             onUILoadDataEnd();
 
                             List<AbsContactItem> datas = new ArrayList();
-                            datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
+                            datas.add(new FuncItem<>("搜索", ItemTypes.SEARCH,new Action1<ILayout>() {
                                 @Override
                                 public void call(ILayout o) {
                                     mParentILayout.startIView(new SearchUserUIView());

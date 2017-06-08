@@ -565,7 +565,9 @@ public class UserDiscussItemControl {
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //T_.info(videoUrl);
                         if (!TextUtils.isEmpty(finalUrl)) {
-                            iLayout.startIView(new VideoPlayUIView(finalUrl, imageView.getDrawable(), OssHelper.getWidthHeightWithUrl(thumbUrl)));
+                            iLayout.startIView(new VideoPlayUIView(finalUrl,
+                                    RImageView.copyDrawable(imageView),
+                                    OssHelper.getWidthHeightWithUrl(thumbUrl)));
                         }
                         if (!isInDetail) {
                             updateDiscussReadCnt(discuss_id);

@@ -19,7 +19,10 @@ import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import io.realm.Realm;
 
@@ -37,6 +40,9 @@ import io.realm.Realm;
 public class SystemNotifyManager {
 
     private static String TAG = SystemNotifyManager.class.getSimpleName();
+
+    // temp values
+    private Map<String,BaseNotification> mNotificationMap = new HashMap<>();
 
     private SystemNotifyManager(){}
 
@@ -75,22 +81,21 @@ public class SystemNotifyManager {
 
         BaseNotification baseNotification = Json.from(content,BaseNotification.class);
         switch (baseNotification.getExtend_type()) {
-            case "group_announcement":
+            case SystemNotifyType.GROUP_ANNOUNCEMENT:
 
                 notifyAnnouncementUpdate(customNotification, content);
 
                 break;
-            case "new_discuss":
+            case SystemNotifyType.NEW_DISCUSS:
                 // 设置是否发送圈子提醒
                 if (MsgNotifySetting.instance().isCircleCNotify()) {
                     RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
                 }
-
                 break;
-            case "new_visitor":
+            case SystemNotifyType.NEW_VISITOR:
                 notifyNewVisitor();
                 break;
-            case "group_dismiss":
+            case SystemNotifyType.GROUP_DISMISS:
                 notifyGroupDisslove(customNotification, content);
                 break;
         }
@@ -102,7 +107,16 @@ public class SystemNotifyManager {
     }
 
     private void notifyAnnouncementUpdate(CustomNotification customNotification, String content) {
+        putNotification(customNotification.getSessionId(),Json.from(content,GroupAnnounceNotification.class));
         RBus.post(new AnnounceUpdateEvent(customNotification.getSessionId(), Json.from(content,GroupAnnounceNotification.class)));
+    }
+
+    private void putNotification(String key , BaseNotification notification) {
+        mNotificationMap.put(key,notification);
+    }
+
+    public BaseNotification checkForKey(String key) {
+        return mNotificationMap.get(key);
     }
 
     private void notifyNewVisitor() {

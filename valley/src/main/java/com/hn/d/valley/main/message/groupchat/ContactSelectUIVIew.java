@@ -8,6 +8,7 @@ import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
@@ -15,6 +16,8 @@ import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
+import com.hn.d.valley.main.friend.GroupBean;
+import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.SearchUserUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
+import rx.functions.Action2;
 import rx.functions.Action3;
 
 /**
@@ -30,6 +34,7 @@ import rx.functions.Action3;
  */
 public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 
+    private boolean onShowGroup;
 
     public ContactSelectUIVIew(BaseContactSelectAdapter.Options options) {
         super(options);
@@ -38,12 +43,17 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
     public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
                              List<String> uids/**默认选中*/,
                              Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
+        start(mLayout,options,uids,false,selectAction);
+    }
+
+    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
+                             List<String> uids/**默认选中*/,boolean onShowGroup,/*是否显示群聊funcitem*/
+                             Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
-
         ContactSelectUIVIew targetView = new ContactSelectUIVIew(options);
         targetView.setSelectAction(selectAction);
-
+        targetView.onShowGroup = onShowGroup;
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
@@ -116,12 +126,32 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         refreshLayout.setRefreshEnd();
 
         List<AbsContactItem> datas = new ArrayList();
-        datas.add(new FuncItem<>(mActivity.getString(R.string.search), new Action1<ILayout>() {
+
+        //转发等需要转发到群聊 需要添加群聊funcItem
+        if (onShowGroup) {
+            datas.add(new FuncItem<>("群聊", new Action1<ILayout>() {
+                @Override
+                public void call(ILayout layout) {
+                    //进入群聊
+                    MyGroupUIView.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE,1,true)
+                            , new Action2<GroupBean, RequestCallback>() {
+                                @Override
+                                public void call(GroupBean groupBean, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
+//                                    selectAction.call(mParentILayout,null,requestCallback);
+                                    // TODO: 2017/6/7 群聊选中
+                                }
+                            });
+                }
+            },R.drawable.group_chat_n));
+        }
+
+        datas.add(new FuncItem<>(mActivity.getString(R.string.search), ItemTypes.SEARCH, new Action1<ILayout>() {
             @Override
             public void call(ILayout o) {
                 mParentILayout.startIView(new SearchUserUIView());
             }
         }));
+
         for (FriendBean bean : beanList) {
             datas.add(new ContactItem(bean));
         }

@@ -2,7 +2,9 @@ package com.hn.d.valley.base.iview;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,14 +55,19 @@ public class ImagePagerUIView extends UIIViewImpl {
     private ValueAnimator mValueAnimator;
     private int mLastTranColor = Color.BLACK;
 
+    private IViewConfigCallback mIViewConfigCallback = new IViewConfigCallback() {
+    };
+    private ImagePageAdapter mImagePageAdapter;
+
     private ImagePagerUIView(ArrayList<ImageItem> imageItems, int startPosition) {
         mImageItems = imageItems;
         this.startPosition = startPosition;
     }
 
-    public static void start(ILayout iLayout, final View view, ArrayList<ImageItem> imageItems, int startPosition) {
+    public static ImagePagerUIView start(ILayout iLayout, final View view, ArrayList<ImageItem> imageItems, int startPosition) {
+        final ImagePagerUIView imagePagerUIView = new ImagePagerUIView(imageItems, startPosition);
         if (iLayout == null) {
-            return;
+            return imagePagerUIView;
         }
 
         int[] rt = new int[2];
@@ -72,20 +79,27 @@ public class ImagePagerUIView extends UIIViewImpl {
         float x = rt[0] + w / 2;
         float y = rt[1] + h / 2;
 
-        final ImagePagerUIView imagePagerUIView = new ImagePagerUIView(imageItems, startPosition);
         imagePagerUIView.mStartX = rt[0];
         imagePagerUIView.mStartY = rt[1];
         imagePagerUIView.mStartW = (int) w;
         imagePagerUIView.mStartH = (int) h;
         iLayout.startIView(imagePagerUIView, new UIParam(true).setHideLastIView(true /*false*/));
+
+        return imagePagerUIView;
+    }
+
+    public ImagePagerUIView setIViewConfigCallback(IViewConfigCallback IViewConfigCallback) {
+        mIViewConfigCallback = IViewConfigCallback;
+        mIViewConfigCallback.mImagePagerUIView = this;
+        return this;
     }
 
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
-        ImagePageAdapter mAdapter = new ImagePageAdapter(mActivity, mImageItems);
-        mMViewPager.setAdapter(mAdapter);
-        mAdapter.setOnExitListener(new DragPhotoView.OnExitListener() {
+        mImagePageAdapter = new ImagePageAdapter(mActivity, mImageItems);
+        mMViewPager.setAdapter(mImagePageAdapter);
+        mImagePageAdapter.setOnExitListener(new DragPhotoView.OnExitListener() {
             @Override
             public void onMoveTo(DragPhotoView view, float w, float h, float translateX, float translateY) {
                 showLastViewPattern();
@@ -113,7 +127,7 @@ public class ImagePagerUIView extends UIIViewImpl {
                 mMRootLayout.setBackgroundColor(mLastTranColor);
             }
         });
-        mAdapter.setPhotoViewClickListener(new ImagePageAdapter.PhotoViewClickListener() {
+        mImagePageAdapter.setPhotoViewClickListener(new ImagePageAdapter.PhotoViewClickListener() {
             @Override
             public void OnPhotoTapListener(View view, float v, float v1) {
                 animToFinish();
@@ -146,6 +160,8 @@ public class ImagePagerUIView extends UIIViewImpl {
             mValueAnimator = null;
         }
         fullscreen(false, true);
+
+        mIViewConfigCallback = null;
     }
 
     @Override
@@ -164,6 +180,8 @@ public class ImagePagerUIView extends UIIViewImpl {
 
         mMRootLayout.setClickable(true);
         container.addView(mMRootLayout, new ViewGroup.LayoutParams(-1, -1));
+
+        mIViewConfigCallback.onInflateBaseView(mMRootLayout, inflater);
         return container;
     }
 
@@ -295,5 +313,40 @@ public class ImagePagerUIView extends UIIViewImpl {
     @Override
     public Animation loadOtherExitAnimation() {
         return UIBaseView.createClipExitAnim(1f);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mIViewConfigCallback.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        mIViewConfigCallback.onViewShow(bundle);
+    }
+
+    public ImagePageAdapter getImagePageAdapter() {
+        return mImagePageAdapter;
+    }
+
+    /**
+     * 定制界面的Config
+     */
+    public static abstract class IViewConfigCallback {
+        public ImagePagerUIView mImagePagerUIView;
+
+        public void onInflateBaseView(final RelativeLayout containRootLayout, final LayoutInflater inflater) {
+
+        }
+
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        }
+
+        public void onViewShow(Bundle bundle) {
+
+        }
     }
 }

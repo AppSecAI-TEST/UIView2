@@ -11,7 +11,7 @@ package com.hn.d.valley.main.message.notify;
  * 修改备注：
  * Version: 1.0.0
  */
-public class SystemNotifyType {
+public interface SystemNotifyType {
 
     /**
      * 好友发了新动态
@@ -19,7 +19,7 @@ public class SystemNotifyType {
 
      new_discuss
      */
-    static final String NEW_DISCUSS = "new_discuss";
+    String NEW_DISCUSS = "new_discuss";
 
     /**
      * 新的访客
@@ -27,7 +27,7 @@ public class SystemNotifyType {
 
      new_visitor
      */
-    static final String NEW_VISITOR = "new_visitor";
+    String NEW_VISITOR = "new_visitor";
 
     /**
      * 群被迫解散
@@ -35,7 +35,7 @@ public class SystemNotifyType {
 
      group_dismiss
      */
-    static final String GROUP_DISMISS = "group_dismiss";
+    String GROUP_DISMISS = "group_dismiss";
 
     /**
      * 群主添加/修改群公告时发送
@@ -43,6 +43,6 @@ public class SystemNotifyType {
 
      group_announcement
      */
-    static final String GROUP_ANNOUNCEMENT = "group_announcement";
+    String GROUP_ANNOUNCEMENT = "group_announcement";
 
 }

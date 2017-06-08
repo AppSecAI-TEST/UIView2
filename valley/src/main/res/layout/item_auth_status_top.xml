@@ -45,7 +45,7 @@
         android:contentDescription="@string/is_circle"
         android:src="@drawable/default_avatar"/>
 
-    <com.hn.d.valley.widget.HnGlideImageView
+    <com.hn.d.valley.widget.HnAuthStatusView
         android:id="@+id/status_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -19,6 +19,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.rsa.RSA;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
@@ -70,6 +71,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class LoginUIView2 extends BaseContentUIView {
 
+    public static final String KEY_LOGIN_PHONE = "key_login_phone";
     private ExEditText mPhoneView;
     private ExEditText mPasswordView;
     private TextView mLoginView;
@@ -96,6 +98,14 @@ public class LoginUIView2 extends BaseContentUIView {
         //登录成功, 保存用户的头像
         Hawk.put(loginBean.getPhone(), loginBean.getAvatar());
         UserCache.instance().setLoginBean(loginBean);
+
+        if (ExEditText.isPhone(loginBean.getPhone())) {
+            //保存登录成功的手机号码
+            String oldPhone = Hawk.get(KEY_LOGIN_PHONE, "");
+            if (!oldPhone.contains(loginBean.getPhone())) {
+                Hawk.put(KEY_LOGIN_PHONE, oldPhone + "," + loginBean.getPhone());
+            }
+        }
 
         //2: 登录云信
         RNim.login(loginBean.getUid(), loginBean.getYx_token(),
@@ -219,6 +229,8 @@ public class LoginUIView2 extends BaseContentUIView {
         });
 
         mPhoneView = mViewHolder.v(R.id.phone_view);
+        mPhoneView.setInputTipTextList(RUtils.split(Hawk.get(KEY_LOGIN_PHONE, "")));
+
         mPasswordView = mViewHolder.v(R.id.password_view);
         mLoginView = mViewHolder.v(R.id.login_view);
 

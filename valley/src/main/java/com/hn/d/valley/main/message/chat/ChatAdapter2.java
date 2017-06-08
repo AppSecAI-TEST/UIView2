@@ -6,6 +6,7 @@ import android.view.View;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderVideo;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -28,21 +29,30 @@ import java.util.Set;
  */
 public class ChatAdapter2 extends BaseMultiAdapter<RBaseViewHolder> {
 
+    //viewtype
     private Map<Class<? extends MsgViewHolderBase>,Integer> vh2type;
 
+    //value
     private Map<String, Float> progresses; // 有文件传输，需要显示进度条的消息ID map
-
     private String messageId;
 
+    //ui status
+    private boolean mUIViewHasOnShow;
+
+    // ui observable
+    private MsgUIObservable mMsgUIObservable;
+
+    //listener
     private ViewHolderEventListener eventListener;
 
 
     public ChatAdapter2(RecyclerView recyclerView, List<IMMessage> data,RBaseViewHolder viewHolder, UIBaseView uIBaseView){
         super(recyclerView, data,viewHolder,uIBaseView);
 
+        mMsgUIObservable = new MsgUIObservable();
+
         progresses = new HashMap<>();
         timedItems = new HashSet<>();
-
 
         vh2type = new HashMap<>();
 
@@ -52,9 +62,7 @@ public class ChatAdapter2 extends BaseMultiAdapter<RBaseViewHolder> {
         for (Class<? extends MsgViewHolderBase> holder : holders) {
             addItemType(viewType, R.layout.item_chat_msg_base_layout, holder);
             vh2type.put(holder,viewType ++);
-
         }
-
     }
 
     public void setUuid(String messageId) {
@@ -89,6 +97,19 @@ public class ChatAdapter2 extends BaseMultiAdapter<RBaseViewHolder> {
 
     public ViewHolderEventListener getEventListener() {
         return eventListener;
+    }
+
+    public void onViewShow() {
+        mUIViewHasOnShow = true;
+        mMsgUIObservable.notifyOnViewShow();
+    }
+
+    public void registerUIObserver(MsgUIObserver observer) {
+        mMsgUIObservable.registerObserver(observer);
+    }
+
+    public void unregisterUIObserver(MsgUIObserver observer) {
+        mMsgUIObservable.unregisterObserver(observer);
     }
 
     public interface ViewHolderEventListener {
@@ -253,9 +274,14 @@ public class ChatAdapter2 extends BaseMultiAdapter<RBaseViewHolder> {
         return super.getItemCount();
     }
 
+    public void onViewHide() {
+        mUIViewHasOnShow = false;
+        mMsgUIObservable.notifyOnViewHide();
+    }
 
-
-
+    public boolean hasOnShow() {
+        return mUIViewHasOnShow;
+    }
 
 
 

@@ -1,9 +1,11 @@
 package com.hn.d.valley.main.me;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,8 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Action;
+import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
@@ -53,17 +57,23 @@ import com.hn.d.valley.main.me.sub.UserInfoSubUIView;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.main.message.session.SessionHelper;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
+import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.hn.d.valley.widget.HnLoading;
+import com.lzy.imagepicker.ImagePickerHelper;
+import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import rx.functions.Action0;
 import rx.subscriptions.CompositeSubscription;
 
@@ -100,6 +110,9 @@ public class UserDetailUIView2 extends BaseContentUIView {
      * 6	int	对方关注了我
      */
     private Integer relation = 0;//与用户之间的关系
+    private String mUserSetIco = "";//需要更换的用户头像
+    private HnGlideImageView mHnAvatarGlideImageView;
+    private CircleUIView mCircleUIView;
 
     public UserDetailUIView2(String to_uid) {
         this.to_uid = to_uid;
@@ -224,6 +237,10 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
     public static boolean isMe(String uid) {
         return TextUtils.equals(uid, UserCache.getUserAccount());
+    }
+
+    public boolean isMe() {
+        return TextUtils.equals(to_uid, UserCache.getUserAccount());
     }
 
     @Override
@@ -352,7 +369,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
         updateRelationship();
 
-        if (!isMe(to_uid)) {
+        if (!isMe()) {
             add(RRetrofit.create(UserService.class)
                     .visit(Param.buildMap("to_uid:" + to_uid))
                     .compose(Rx.transformer(String.class))
@@ -363,7 +380,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
     protected void updateRelationship() {
-        if (!isMe(to_uid)) {
+        if (!isMe()) {
             add(RRetrofit.create(ContactService.class)
                     .getRelationship(Param.buildMap("to_uid:" + to_uid))
                     .compose(Rx.transformer(Integer.class))
@@ -395,11 +412,11 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     userInfoSubUIView.bindParentILayout(mParentILayout);
                     return userInfoSubUIView;
                 } else if (position == 1) {
-                    CircleUIView circleUIView = new CircleUIView(mUserInfoBean.getUid());
-                    circleUIView.bindParentILayout(mParentILayout);
-                    circleUIView.setInSubUIView(true);
-                    circleUIView.setNeedRefresh(false);
-                    return circleUIView;
+                    mCircleUIView = new CircleUIView(mUserInfoBean.getUid());
+                    mCircleUIView.bindParentILayout(mParentILayout);
+                    mCircleUIView.setInSubUIView(true);
+                    mCircleUIView.setNeedRefresh(false);
+                    return mCircleUIView;
                 } else {
                     MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
                     myAlbumUIView.bindParentILayout(mParentILayout);
@@ -445,14 +462,15 @@ public class UserDetailUIView2 extends BaseContentUIView {
         mCommonTabLayout.setBackgroundResource(R.drawable.base_dark_border);
     }
 
-    private void initView(UserInfoBean bean) {
+    private void initView(final UserInfoBean bean) {
         mUserInfoBean = bean;
         final String is_auth = bean.getIs_auth();
 
-        HnGlideImageView hnGlideImageView = mViewHolder.v(R.id.user_ico_view);
-        hnGlideImageView.setImageThumbUrl(bean.getAvatar());
-        hnGlideImageView.setAuth(is_auth);
-        hnGlideImageView.setShowBorder(true);
+        mHnAvatarGlideImageView = mViewHolder.v(R.id.user_ico_view);
+        mHnAvatarGlideImageView.setImageThumbUrl(bean.getAvatar());
+        mHnAvatarGlideImageView.setAuth(is_auth);
+        mHnAvatarGlideImageView.setShowBorder(true);
+        mHnAvatarGlideImageView.setOnClickListener(createAvatarClickListener(mHnAvatarGlideImageView));
 
         setTitleString(mUserInfoBean.getUsername());
         //getUITitleBarContainer().setBackgroundColor(Color.TRANSPARENT);
@@ -470,7 +488,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             authTextView.setTextColor(Color.WHITE);
         }
 
-        if (isMe(to_uid)) {
+        if (isMe()) {
             authTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -488,6 +506,22 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     }
                 }
             });
+        } else {
+            authTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Integer integer = Integer.valueOf(is_auth);
+                    switch (integer) {
+                        case 1:
+                        case 2:
+                        case 3:
+                            mParentILayout.startIView(new AuthDetailUIView(mUserInfoBean));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
         }
 
         initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
@@ -499,11 +533,131 @@ public class UserDetailUIView2 extends BaseContentUIView {
         //语音介绍
         initVoiceView();
 
-        if (isMe(to_uid)) {
+        if (isMe()) {
             getUITitleBarContainer().showRightItem(1);
         } else {
             getUITitleBarContainer().showRightItem(0);
         }
+    }
+
+    /**
+     * 点击头像之后的事件处理,查看大图, 是自己可以修改头像
+     */
+    private View.OnClickListener createAvatarClickListener(final HnGlideImageView hnGlideImageView) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMe()) {
+                    ImagePagerUIView.start(mILayout, v,
+                            PhotoPager.getImageItems(mUserInfoBean.getAvatar(), hnGlideImageView.copyDrawable()), 0)
+                            .setIViewConfigCallback(new ImagePagerUIView.IViewConfigCallback() {
+                                @Override
+                                public void onInflateBaseView(RelativeLayout containRootLayout, LayoutInflater inflater) {
+                                    TextView changeAvatarView = new TextView(mActivity);
+                                    changeAvatarView.setText(R.string.change_avatar_text);
+                                    changeAvatarView.setTextColor(Color.WHITE);
+                                    ResUtil.setBgDrawable(changeAvatarView, SkinHelper.getRoundBorderSelector(Color.WHITE));
+                                    changeAvatarView.setGravity(Gravity.CENTER);
+
+                                    int offset = getDimensionPixelOffset(R.dimen.base_xxxhdpi);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-1,
+                                            getDimensionPixelOffset(R.dimen.base_item_size));
+                                    params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                                    params.setMargins(offset, 0, offset, 2 * offset);
+
+                                    containRootLayout.addView(changeAvatarView, params);
+
+                                    changeAvatarView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            ImagePickerHelper.startImagePicker(mActivity, true, true, true, false, 1);
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onActivityResult(int requestCode, int resultCode, Intent data) {
+                                    super.onActivityResult(requestCode, resultCode, data);
+                                    final ArrayList<String> images = ImagePickerHelper.getImages(mActivity, requestCode, resultCode, data);
+                                    if (!images.isEmpty()) {
+                                        mUserSetIco = images.get(0);
+
+                                        ArrayList<ImageItem> items = new ArrayList<>();
+                                        ImageItem imageItem = new ImageItem();
+                                        imageItem.placeholderDrawable = hnGlideImageView.copyDrawable();
+                                        imageItem.path = mUserSetIco;
+                                        items.add(imageItem);
+                                        mImagePagerUIView.getImagePageAdapter().resetData(items);
+
+                                        changeAvatar();
+                                    }
+                                }
+                            })
+                    ;
+                } else {
+                    ImagePagerUIView.start(mILayout, v,
+                            PhotoPager.getImageItems(mUserInfoBean.getAvatar(), hnGlideImageView.copyDrawable()), 0)
+                    ;
+                }
+            }
+        };
+    }
+
+    /**
+     * 更改头像
+     */
+    private void changeAvatar() {
+        new OssControl(new OssControl.OnUploadListener() {
+            @Override
+            public void onUploadStart() {
+                HnLoading.show(mILayout);
+            }
+
+            @Override
+            public void onUploadSucceed(List<String> list) {
+                final String avatarUrl = list.get(0);
+
+                add(RRetrofit.create(UserService.class)
+                        .editInfo(Param.buildMap("avatar:" + avatarUrl))
+                        .compose(Rx.transformer(UserInfoBean.class))
+                        .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+                            @Override
+                            public void onSucceed(UserInfoBean bean) {
+                                super.onSucceed(bean);
+                                mUserInfoBean = bean;
+                                UserCache.instance().setUserInfoBean(bean);
+                                T_.ok(getString(R.string.avatar_change_success));
+
+                                RRealm.exe(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        UserCache.setUserAvatar(avatarUrl);
+                                        UserCache.instance().getUserInfoBean().setAvatar(avatarUrl);
+                                    }
+                                });
+
+                                try {
+                                    mHnAvatarGlideImageView.setImageThumbUrl(avatarUrl);
+                                    mCircleUIView.loadData();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+                                super.onEnd(isError, isNoNetwork, e);
+                                HnLoading.hide();
+                            }
+                        }));
+            }
+
+            @Override
+            public void onUploadFailed(int code, String msg) {
+                T_.show(msg);
+                HnLoading.hide();
+            }
+        }).uploadCircleImg(mUserSetIco);
     }
 
     private void initVoiceView() {

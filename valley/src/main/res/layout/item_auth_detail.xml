@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_margin="@dimen/base_xhdpi">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/base_xxxhdpi">
+
+            <com.hn.d.valley.widget.HnGlideImageView
+                android:id="@+id/image_view"
+                android:layout_width="@dimen/base_70dpi"
+                android:layout_height="@dimen/base_70dpi"
+                android:contentDescription="@string/is_circle"
+                android:src="@drawable/default_avatar"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/user_name_view"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_xhdpi"
+                android:textSize="16sp"
+                tools:text="李一娜"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/auth_type_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_xhdpi"
+                android:tag="@string/auth_type_format"
+                android:textSize="12sp"
+                tools:text="娱乐明星"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/auth_des_view"
+                style="@style/DarkTextStyle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_xhdpi"
+                android:tag="@string/auth_des_format"
+                android:textSize="14sp"
+                tools:text="湖南电视台记者"/>
+
+        </LinearLayout>
+
+        <com.hn.d.valley.widget.HnAuthStatusView
+            android:id="@+id/auth_status_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/base_xhdpi"
+            android:rotation="45"
+            tools:src="@drawable/authentication"/>
+
+    </android.support.v7.widget.CardView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:background="@color/line_color"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/base_xhdpi"
+        android:drawableStart="@drawable/intro_icon"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/introduction_tip2"/>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/introduce_view"
+        style="@style/DarkTextStyle2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"/>
+
+</LinearLayout>

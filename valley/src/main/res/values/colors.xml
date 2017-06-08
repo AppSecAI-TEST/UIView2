@@ -27,6 +27,7 @@
     <color name="white_hint">#66ffffff</color>
 
     <color name="main_text_color_dark">#999999</color>
+    <color name="main_text_color_dark2">#666666</color>
     <color name="main_text_color_6666666">#666666</color>
     <color name="main_text_color">#333333</color>
     <color name="orange">#fbb03e</color>

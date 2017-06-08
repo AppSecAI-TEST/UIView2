@@ -8,23 +8,8 @@
     android:gravity="center_vertical"
     android:minHeight="55dip">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/base_xhdpi">
+    <include layout="@layout/item_sub_check_select" />
 
-        <com.hn.d.valley.widget.HnCheckBox
-            android:id="@+id/cb_friend_addfirend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/base_bg2_selector"
-            android:button="@drawable/check_selector"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:scaleType="centerInside" />
-    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/rl_content"

@@ -109,6 +109,16 @@ public class PhotoPager {
     }
 
     @NonNull
+    public static ArrayList<ImageItem> getImageItems(String s, final Drawable placeholderDrawable) {
+        final ArrayList<ImageItem> imageItems = new ArrayList<>();
+        final ImageItem imageItem = new ImageItem();
+        imageItem.url = s;
+        imageItem.placeholderDrawable = placeholderDrawable;
+        imageItems.add(imageItem);
+        return imageItems;
+    }
+
+    @NonNull
     public static ArrayList<ImageItem> getImageItems2(List<Luban.ImageItem> photos) {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
         for (Luban.ImageItem item : photos) {

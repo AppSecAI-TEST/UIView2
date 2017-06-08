@@ -37,6 +37,9 @@ import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
+import com.hn.d.valley.main.message.notify.BaseNotification;
+import com.hn.d.valley.main.message.notify.GroupAnnounceNotification;
+import com.hn.d.valley.main.message.notify.SystemNotifyManager;
 import com.hn.d.valley.main.message.redpacket.NewGroupRedPacketUIView;
 import com.hn.d.valley.main.message.session.AitHelper;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
@@ -129,6 +132,16 @@ public class GroupChatUIView extends ChatUIView2 {
         isVisible = true;
         if(!checkInGroup()){
             showNotice();
+        }
+
+        // 是否有群消息更新通知
+        BaseNotification notification = SystemNotifyManager.getInstance().checkForKey(mSessionId);
+        if (notification != null) {
+            GroupAnnounceNotification announce = (GroupAnnounceNotification) notification;
+            if (isVisible) {
+                mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),announce.getContent()));
+                tv_announce.setText(announce.getContent());
+            }
         }
     }
 
@@ -429,6 +442,7 @@ public class GroupChatUIView extends ChatUIView2 {
 
         if (isVisible) {
             mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
+
         }
 
         L.i(TAG,event.notification.getContent());

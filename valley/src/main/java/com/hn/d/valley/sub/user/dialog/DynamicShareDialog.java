@@ -137,7 +137,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
                 ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
-                        , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                        , null,true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                             @Override
                             public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
 

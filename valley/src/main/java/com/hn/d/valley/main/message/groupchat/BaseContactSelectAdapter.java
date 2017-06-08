@@ -40,7 +40,7 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        if (viewType == ItemTypes.FUNC) {
+        if (viewType == ItemTypes.SEARCH) {
             return R.layout.item_recent_search;
         }
         return R.layout.item_firends_addgroup_item;
@@ -110,6 +110,7 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
          * 是否默认选中
          */
         boolean isSelectUids = true;
+
 
         public Options() {
             this(MODEL_MULTI);

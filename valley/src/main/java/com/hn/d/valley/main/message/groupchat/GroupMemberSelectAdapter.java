@@ -34,7 +34,7 @@ public class GroupMemberSelectAdapter extends BaseContactSelectAdapter {
         if (bean == null) {
             return;
         }
-        if (getItemType(position) == ItemTypes.FUNC) {
+        if (getItemType(position) == ItemTypes.SEARCH) {
 
             final FuncItem item = (FuncItem) bean;
 

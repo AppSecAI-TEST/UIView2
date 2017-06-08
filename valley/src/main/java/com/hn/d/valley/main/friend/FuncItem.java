@@ -74,7 +74,7 @@ public class FuncItem<T> extends AbsContactItem {
     },R.drawable.new_friend);
 
 
-    static FuncItem groupMessage = new FuncItem<>("群聊", new Action1<ILayout>() {
+    public static FuncItem groupMessage = new FuncItem<>("群聊", new Action1<ILayout>() {
         @Override
         public void call(ILayout layout) {
             //进入群聊

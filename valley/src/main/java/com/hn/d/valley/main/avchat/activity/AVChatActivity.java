@@ -28,6 +28,7 @@ import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.utils.NetworkUtil;
 import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.KotterknifeKt;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.main.avchat.AVChatFloatEvent;
@@ -37,6 +38,7 @@ import com.hn.d.valley.main.avchat.AVChatSoundPlayer;
 import com.hn.d.valley.main.avchat.AVChatUI;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.main.avchat.receiver.PhoneCallStateObserver;
+import com.hn.d.valley.main.message.ExtensionFunticonsKt;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.utils.permissionCompat.SettingsCompat;
 import com.netease.nimlib.sdk.NIMClient;
@@ -106,11 +108,11 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
     private boolean isCallEstablished = false; // 电话是否接通
     private static boolean needFinish = true; // 若来电或去电未接通时，点击home。另外一方挂断通话。从最近任务列表恢复，则finish
     private boolean hasOnPause = false; // 是否暂停音视频
+    private boolean hasOnPermissionDenied = false;
 
     // notification
     private AVChatNotification notifier;
 
-    private Button movetoback;
 
     public static void launch(Activity context, String account, int callType, int source) {
         needFinish = false;
@@ -218,15 +220,6 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
 
     @Override
     protected void onCreateView() {
-//        movetoback = (Button) findViewById(R.id.btn_move_to_back);
-//        movetoback.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                L.d("AVChatSurface","movetoback");
-////                moveTaskToBack(false);
-//                HnUIMainActivity.launcher(AVChatActivity.this,true);
-//            }
-//        });
 
     }
 
@@ -269,6 +262,13 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
             hasOnPause = false;
             avChatUI.setHasOnStop(false);
         }
+
+        // 悬浮窗设置返回检测返回true 启动服务
+        if (SettingsCompat.canDrawOverlays(this) && hasOnPermissionDenied) {
+            hasOnPermissionDenied = false;
+            avChatUI.bindService();
+        }
+
     }
 
     @Override
@@ -563,6 +563,8 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
 //                    })
 //                    .showDialog(mLayout);
 
+        hasOnPermissionDenied = true;
+
         final AlertDialog.Builder builder =
                 new AlertDialog.Builder(this);
 
@@ -573,13 +575,14 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
                 SettingsCompat.manageDrawOverlays(AVChatActivity.this);
             }
         });
+
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
             }
         });
         builder.show();
-
     }
 
 

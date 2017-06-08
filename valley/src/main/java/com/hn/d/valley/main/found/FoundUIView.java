@@ -14,6 +14,7 @@ import com.hn.d.valley.main.found.sub.HotInformationUIView;
 import com.hn.d.valley.main.found.sub.ScanUIView;
 import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
+import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ import java.util.List;
  * Version: 1.0.0
  */
 public class FoundUIView extends BaseItemUIView {
+
+    public static final String GAME_URL = "http://222.189.228.182:88/webplat/";
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -103,7 +106,7 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.animal, getString(R.string.game), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        mParentILayout.startIView(new X5WebUIView(GAME_URL));
                     }
                 });
             }
