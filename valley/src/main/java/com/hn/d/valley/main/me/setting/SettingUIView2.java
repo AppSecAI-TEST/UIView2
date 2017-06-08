@@ -140,7 +140,8 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         items.add(new ViewItemInfo(mActivity.getString(R.string.feedback), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new X5WebUIView("http://www.baidu.com"));
+//                startIView(new X5WebUIView("http://www.baidu.com"));
+                startIView(new FeedBackUIView());
             }
         }));
 //        items.add(new ViewItemInfo(mActivity.getString(R.string.faq), new View.OnClickListener() {

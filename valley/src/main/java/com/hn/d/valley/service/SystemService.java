@@ -26,4 +26,17 @@ public interface SystemService {
      */
     @POST("system/customerService")
     Observable<ResponseBody> customerService(@QueryMap Map<String, String> map);
+
+    /**
+     *
+     参数名	必选	类型	说明
+     uid	是	int	用户id
+     content	是	string	详情
+     images	否	string	多张图片以英文，分割
+     contact	否	string	联系方式(手机号/QQ/微信)
+     * @param map
+     * @return
+     */
+    @POST("system/feedBack")
+    Observable<ResponseBody> feedBack(@QueryMap Map<String, String> map);
 }

@@ -714,6 +714,9 @@
     <string name="auth_des_format">恐龙谷认证: %1$s</string>
     <string name="change_avatar_text">更换头像</string>
     <string name="avatar_change_success">头像修改成功!</string>
+    <string name="text_feed_input_tip">请输入您的意见与反馈</string>
+    <string name="text_feedback_photo_tip">提供照片能让我们更快的帮您解决问题(选填)</string>
+    <string name="text_faedback_success">反馈成功!</string>
     <string name="about_klg">关于恐龙谷</string>
     <string name="jump_to_maker">去评分</string>
     <string name="call_to">致电客服</string>
