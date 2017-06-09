@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/base_xhdpi"
     android:paddingEnd="@dimen/base_xhdpi"
     android:paddingStart="@dimen/base_xhdpi">
 
@@ -13,7 +12,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_60dpi"
-        android:tag="Gv3"/>
+        android:tag="Gv4"/>
 
     <RelativeLayout
         android:gravity="center_vertical"
@@ -29,6 +28,7 @@
             android:textSize="@dimen/default_text_little_size"/>
 
         <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tv_iv_count"
             style="@style/DarkTextStyle"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="@dimen/base_hdpi"

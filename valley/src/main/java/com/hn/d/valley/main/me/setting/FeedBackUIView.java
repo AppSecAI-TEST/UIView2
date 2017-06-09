@@ -2,14 +2,17 @@ package com.hn.d.valley.main.me.setting;
 
 import android.content.Intent;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -17,6 +20,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RAddPhotoAdapter;
+import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
@@ -54,8 +58,9 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     private boolean isCancel;
 
+    //view
     private List<ExEditText> mCheckEditTexts = new ArrayList<>();
-
+    private TextView imageCount;
 
     public FeedBackUIView() {
 
@@ -165,6 +170,7 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     }
                 }));
                 mAddPhotoAdapter.attachRecyclerView(recyclerView);
+                imageCount = holder.tv(R.id.tv_iv_count);
             }
         }));
 
@@ -284,7 +290,13 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         }
         String filePath = images.get(0);
         mAddPhotoAdapter.addLastItemSafe(filePath);
-
+        imageCount.setText(SpannableStringUtils.getBuilder(mAddPhotoAdapter.getItemCount() + "")
+                .setForegroundColor(ContextCompat.getColor(mActivity,R.color.yellow_ffe2b1))
+                .append("/3").create());
     }
 
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+    }
 }
