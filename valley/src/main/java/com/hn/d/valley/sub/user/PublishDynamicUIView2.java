@@ -538,7 +538,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 if (isEmojiShow) {
                     imageView.setImageResource(R.drawable.icon_keyboard);
                 } else {
-                    imageView.setImageResource(R.drawable.expression_comments_n);
+                    imageView.setImageResource(R.drawable.expression_n);
                 }
             }
         });
