@@ -365,7 +365,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         T_.show(msg);
                         HnLoading.hide();
                     }
-                }).uploadCircleImg(files);
+                }).uploadCircleImg(files, true);
             } else if (mUserSetIco.startsWith("http")) {
                 startSave();
                 //startSave();
@@ -429,7 +429,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 HnLoading.hide();
             }
         });
-        mOssControl.uploadCircleImg(needUploadFiles);
+        mOssControl.uploadCircleImg(needUploadFiles, true);
     }
 
     private void checkAudioRecord() {

@@ -657,7 +657,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 T_.show(msg);
                 HnLoading.hide();
             }
-        }).uploadCircleImg(mUserSetIco);
+        }).uploadCircleImg(mUserSetIco, true);
     }
 
     private void initVoiceView() {

@@ -361,7 +361,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     public void onUploadFailed(int code, String msg) {
 
                     }
-                }).uploadCircleImg(reversePath);
+                }).uploadCircleImg(reversePath, true);
             }
 
             @Override

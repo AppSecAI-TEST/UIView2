@@ -106,9 +106,8 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
         mContentLayout.addView(mArrowView, arrowParam);
         mContentLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-2, -2));
 
-
         //int padding = (int) ResUtil.dpToPx(mActivity, 10);
-        RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(width, ((int) (density() * 400)));
+        RelativeLayout.LayoutParams contentParams = new RelativeLayout.LayoutParams(width, ((int) (density() * 260)));
         contentParams.leftMargin = ScreenUtil.screenWidth / 2 - width / 2;//clickViewRect.left - width / 4;
         mRootLayout.addView(mContentLayout, contentParams);
 

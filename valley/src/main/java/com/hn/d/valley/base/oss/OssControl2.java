@@ -37,6 +37,7 @@ public class OssControl2 {
     int type = uploadAvatorImg;
     OnUploadListener mUploadListener;
     boolean isCancel = false;
+    boolean isAvatar = false;
     private Subscription mSubscribe;
 
     public OssControl2(OnUploadListener uploadListener) {
@@ -44,11 +45,15 @@ public class OssControl2 {
     }
 
     public void uploadCircleImg(List<String> files) {
+        uploadCircleImg(files, false);
+    }
+
+    public void uploadCircleImg(List<String> files, boolean isAvatar) {
         if (files.isEmpty()) {
             mUploadListener.onUploadSucceed(files);
             return;
         }
-
+        this.isAvatar = isAvatar;
         needUploadList = files;
         index = 0;
         type = uploadCircleImg;
@@ -219,30 +224,58 @@ public class OssControl2 {
             @Override
             public void call(String s) {
                 if (TextUtils.isEmpty(s)) {
-                    mSubscribe = OssHelper.uploadCircleImg(needUploadPath)
-                            .subscribe(new BaseSingleSubscriber<String>() {
-                                @Override
-                                public void onSucceed(String s) {
-                                    if (BuildConfig.DEBUG) {
-                                        L.i(needUploadPath + " 上传成功至->" + s);
+                    if (isAvatar) {
+                        mSubscribe = OssHelper.uploadAvatorImg(needUploadPath)
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onSucceed(String s) {
+                                        if (BuildConfig.DEBUG) {
+                                            L.i(needUploadPath + " 上传成功至->" + s);
+                                        }
+                                        String circleUrl = OssHelper.getAvatorUrl(s);
+
+                                        OssHelper.saveUrl(needUploadPath, circleUrl);
+
+                                        uploadList.add(needUploadPath + "|" + circleUrl);
+                                        index++;
+                                        startUpload();
+
+                                        //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(needUploadPath), needUploadPath, circleUrl));
                                     }
-                                    String circleUrl = OssHelper.getCircleUrl(s);
 
-                                    OssHelper.saveUrl(needUploadPath, circleUrl);
+                                    @Override
+                                    public void onError(int code, String msg) {
+                                        super.onError(code, msg);
+                                        mUploadListener.onUploadFailed(code, msg);
+                                    }
+                                });
+                    } else {
+                        mSubscribe = OssHelper.uploadCircleImg(needUploadPath)
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onSucceed(String s) {
+                                        if (BuildConfig.DEBUG) {
+                                            L.i(needUploadPath + " 上传成功至->" + s);
+                                        }
+                                        String circleUrl = OssHelper.getCircleUrl(s);
 
-                                    uploadList.add(needUploadPath + "|" + circleUrl);
-                                    index++;
-                                    startUpload();
+                                        OssHelper.saveUrl(needUploadPath, circleUrl);
 
-                                    //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(needUploadPath), needUploadPath, circleUrl));
-                                }
+                                        uploadList.add(needUploadPath + "|" + circleUrl);
+                                        index++;
+                                        startUpload();
 
-                                @Override
-                                public void onError(int code, String msg) {
-                                    super.onError(code, msg);
-                                    mUploadListener.onUploadFailed(code, msg);
-                                }
-                            });
+                                        //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(needUploadPath), needUploadPath, circleUrl));
+                                    }
+
+                                    @Override
+                                    public void onError(int code, String msg) {
+                                        super.onError(code, msg);
+                                        mUploadListener.onUploadFailed(code, msg);
+                                    }
+                                });
+                    }
+
                 } else {
                     if (BuildConfig.DEBUG) {
                         L.i("秒传->" + s);
