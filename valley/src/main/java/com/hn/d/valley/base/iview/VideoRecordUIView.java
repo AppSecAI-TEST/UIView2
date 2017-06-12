@@ -343,7 +343,7 @@ public class VideoRecordUIView extends UIBaseView {
         seekBar.addOnProgressChangeListener(new RSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgress(int progress) {
-                mViewHolder.tv(R.id.seek_tip_view).setText(progress + "");
+                mViewHolder.tv(R.id.seek_tip_view).setText(progress + "%");
                 currentLevel = progress / 20;
                 magicBeautyFilter.setBeautyLevel(currentLevel);
             }

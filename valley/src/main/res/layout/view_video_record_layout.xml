@@ -65,7 +65,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="@dimen/base_xxxhdpi"
-            android:tag="%1$s%"
             android:text="0"
             android:textColor="@color/base_white"
             tools:text="999"/>
