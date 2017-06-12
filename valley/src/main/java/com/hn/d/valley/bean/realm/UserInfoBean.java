@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.angcyo.uiview.github.pickerview.DateDialog;
-import com.angcyo.uiview.github.pickerview.view.WheelTime;
 import com.angcyo.uiview.utils.file.FileUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
@@ -14,6 +13,8 @@ import java.util.Date;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+
+import static com.angcyo.uiview.github.pickerview.DateDialog.Date_FORMAT;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -485,7 +486,7 @@ public class UserInfoBean extends RealmObject {
     public String getCreatedTime() {
         String parse = null;
         try {
-            parse = WheelTime.Date_FORMAT.format(new Date(Long.valueOf(created) * 1000l));
+            parse = Date_FORMAT.format(new Date(Long.valueOf(created) * 1000l));
             return parse;
         } catch (NumberFormatException e) {
             e.printStackTrace();

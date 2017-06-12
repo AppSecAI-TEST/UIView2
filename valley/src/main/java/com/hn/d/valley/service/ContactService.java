@@ -134,4 +134,13 @@ public interface ContactService {
      */
     @POST("contact/blacklist")
     Observable<ResponseBody> blacklist(@QueryMap Map<String, String> map);
+
+    /**
+     *不让他看我的动态 不看他动态
+     参数名	必选	类型	说明
+     uid	是	int	用户id
+     type	是	int	1-不看他的动态 ;2-不允许看我动态
+     */
+    @POST("contact/specialList")
+    Observable<ResponseBody> specialList(@QueryMap Map<String, String> map);
 }

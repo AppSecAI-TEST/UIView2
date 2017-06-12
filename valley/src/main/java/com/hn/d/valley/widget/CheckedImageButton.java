@@ -34,6 +34,7 @@ public class CheckedImageButton extends ImageButton {
 
     public CheckedImageButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+//        setScaleType(ScaleType.FIT_XY);
     }
 
     public void setPaddingValue(int value) {

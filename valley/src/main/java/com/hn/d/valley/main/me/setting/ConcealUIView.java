@@ -76,12 +76,13 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setVisibility(View.GONE);
 
-                itemInfoLayout.setItemText("不让TA看我的动态");
+                itemInfoLayout.setItemText(mActivity.getString(R.string.text_not_allow_access_me));
                 itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
 
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        startIView(new SpecialListUIView(1));
                     }
                 });
 
@@ -95,12 +96,13 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setVisibility(View.GONE);
 
-                itemInfoLayout.setItemText("不看TA的动态");
+                itemInfoLayout.setItemText(mActivity.getString(R.string.text_not_see_other));
                 itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
 
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        startIView(new SpecialListUIView(1));
                     }
                 });
 

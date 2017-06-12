@@ -242,6 +242,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         public void slideOpen() {
             isEditable = true;
             mISlideHelper.slideOpen();
+            tv_selected.setText(String.format(getString(R.string.text_already_selected_item),0));
             animBottom(true);
         }
 

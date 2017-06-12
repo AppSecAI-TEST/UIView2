@@ -2,6 +2,7 @@ package com.hn.d.valley.main.other;
 
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
@@ -10,6 +11,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
@@ -46,6 +48,10 @@ public class KLJUIView extends BaseItemUIView {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
                 holder.v(R.id.text_view).setBackground(SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
+                HnGlideImageView iv = holder.v(R.id.iv_klj_logo);
+
+                iv.setImageUrl("http://avatorimg.klgwl.com/13/13915.png");
+
                 holder.v(R.id.text_view).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

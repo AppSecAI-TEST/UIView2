@@ -40,6 +40,8 @@ public interface CustomAttachmentType {
 
     int SHARE_DYNAMIC = 13;
 
+    int INVITE_UPLOAD = 14;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
@@ -72,5 +74,7 @@ public interface CustomAttachmentType {
     String HOTSPOTIFNO_MSG = "hot_news";
 
     String SHARE_DYNAMIC_MSG  = "dynamic";
+
+    String INVITE_UPLOAD_PHOTOS  = "invite_upload_photos";
 
 }

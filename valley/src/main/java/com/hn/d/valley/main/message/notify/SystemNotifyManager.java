@@ -116,7 +116,14 @@ public class SystemNotifyManager {
     }
 
     public BaseNotification checkForKey(String key) {
-        return mNotificationMap.get(key);
+        BaseNotification noti ;
+        if (mNotificationMap.containsKey(key)) {
+            noti = mNotificationMap.get(key);
+            mNotificationMap.remove(key);
+            return noti;
+        } else {
+            return null;
+        }
     }
 
     public void onAppQuit() {

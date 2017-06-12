@@ -58,7 +58,7 @@ public class ValleyApp extends RApplication {
         RRealm.init(this);
         FDown.init(this, false/*BuildConfig.DEBUG*/);
 
-        if (BuildConfig.SHOW_DEBUG) {
+        if (BuildConfig.DEBUG) {
             Takt.stock(this)
                     .seat(Seat.TOP_LEFT)
                     .play();

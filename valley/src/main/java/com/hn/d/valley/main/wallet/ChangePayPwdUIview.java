@@ -16,6 +16,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.PasscodeView;
 
 import org.json.JSONException;
@@ -41,6 +42,10 @@ import static com.hn.d.valley.main.wallet.WalletHelper.getTransformer;
  */
 public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>{
 
+    public static final int FIND_PAY_PWD = 0;
+    public static final int CHANGE_PAY_PWD = 1;
+    public static final int SET_PAY_PWD = 2;
+
     private RelativeLayout ll_container;
     TextView tv_change_pwd_tip;
     PasscodeView passcodeView;
@@ -53,19 +58,29 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
     private String verifyCode;
     private boolean findPayPwd = false;
+    private int pay_pwd_type = CHANGE_PAY_PWD;
 
     public ChangePayPwdUIview() {
 
     }
 
-    public ChangePayPwdUIview(boolean findPayPwd,String verifyCode) {
-        this.findPayPwd = findPayPwd;
+    public ChangePayPwdUIview(int pay_pwd_type,String verifyCode) {
+//        this.findPayPwd = findPayPwd;
         this.verifyCode = verifyCode;
+        this.pay_pwd_type = pay_pwd_type;
     }
 
     @Override
     protected TitleBarPattern getTitleBar() {
+        if (pay_pwd_type == CHANGE_PAY_PWD) {
+            return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_change_pay_pwd));
+        } else if (pay_pwd_type == FIND_PAY_PWD){
+            return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_find_paypwd));
+        } else if (pay_pwd_type == SET_PAY_PWD) {
+            return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_set_pay_pwd));
+        }
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_change_pay_pwd));
+
     }
 
     @Override
@@ -89,7 +104,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     }
                 },500);
 
-                if (findPayPwd) {
+                if (pay_pwd_type == FIND_PAY_PWD || pay_pwd_type == SET_PAY_PWD) {
                     tv_change_pwd_tip.setText(R.string.text_please_input_pwd);
                 }
 
@@ -97,7 +112,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     @Override
                     public void onPasscodeEntered(String passcode) {
 
-                        if (findPayPwd) {
+                        if (pay_pwd_type == FIND_PAY_PWD || pay_pwd_type == SET_PAY_PWD) {
                             newPwd = passcode;
                             passwordSet();
                             return;
@@ -127,7 +142,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
     private void passwordSet() {
         Map<String, String> buildInfoMap = null;
-        if (findPayPwd) {
+        if (pay_pwd_type == FIND_PAY_PWD || pay_pwd_type == SET_PAY_PWD) {
             buildInfoMap = Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + newPwd
                     , "verification_code:" + verifyCode,"phone:" + UserCache.instance().getLoginBean().getPhone());
         } else {
@@ -150,6 +165,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                             @Override
                             public void call(Object o) {
                                 finishIView();
+                                RBus.post(new WalletAccountUpdateEvent());
                                 T_.show("修改成功！");
                             }
                         });

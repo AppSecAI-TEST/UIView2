@@ -74,6 +74,9 @@ public class CityDialog extends UIIDialogImpl {
         mWheelView2 = mViewHolder.v(R.id.options2);
         mViewHolder.v(R.id.options3).setVisibility(View.GONE);
 
+        mWheelView1.setCyclic(false);
+        mWheelView2.setCyclic(false);
+
         mSubmitView = mViewHolder.v(com.angcyo.uiview.R.id.btnSubmit);
         checkId();
         mSubmitView.setOnClickListener(new View.OnClickListener() {

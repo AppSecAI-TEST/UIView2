@@ -29,6 +29,8 @@ import com.netease.nimlib.sdk.avchat.constant.AVChatVideoScalingType;
 import com.netease.nimlib.sdk.avchat.model.AVChatVideoRender;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 /**
  * 视频绘制管理
  */
@@ -225,7 +227,7 @@ public class AVChatSurface {
                 .load(userInfo.getAvatar())
                 .placeholder(R.drawable.avchat_call_bg)
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
-        builder.bitmapTransform(new GlideBlurTransformation(context))
+        builder.bitmapTransform(new BlurTransformation(context))
                     .into(largeSizePreviewCoverLayout);
     }
 

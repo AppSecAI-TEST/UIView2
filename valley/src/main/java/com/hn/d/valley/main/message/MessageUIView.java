@@ -84,7 +84,7 @@ public class MessageUIView extends BaseUIView {
                                 return;
                             case Constant.klj:
                                 SessionHelper.startSession(mParentILayout,Constant.klj,SessionTypeEnum.P2P);
-                                break;
+                                return;
                             case Constant.wallet:
                             case Constant.hot_news:
                                 SessionHelper.startSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType());

@@ -8,6 +8,7 @@ import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
+import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
@@ -74,6 +75,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.SHARE_DYNAMIC_MSG:
                     attachment = new DynamicDetailAttachment(json);
+                    break;
+                case CustomAttachmentType.INVITE_UPLOAD_PHOTOS:
+                    attachment = new InviteUploadProfileAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

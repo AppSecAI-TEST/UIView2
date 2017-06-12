@@ -18,6 +18,8 @@ import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
+
 /**
  * 音频管理器， 音频界面初始化和管理
  * Created by hzxuwen on 2015/4/24.
@@ -222,7 +224,7 @@ public class AVChatAudio implements View.OnClickListener{
                 .load(userInfo.getAvatar())
                 .placeholder(R.drawable.avchat_call_bg)
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
-        builder.bitmapTransform(new GlideBlurTransformation(context))
+        builder.bitmapTransform(new BlurTransformation(context))
                 .into(ivPreImg);
     }
 

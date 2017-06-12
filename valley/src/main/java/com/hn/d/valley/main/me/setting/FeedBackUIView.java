@@ -21,6 +21,7 @@ import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RAddPhotoAdapter;
 import com.angcyo.uiview.skin.ISkin;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
@@ -240,7 +241,7 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onUploadFailed(int code, String msg) {
                 HnLoading.hide();
             }
-        }).uploadCircleImg(mAddPhotoAdapter.getAllDatas());
+        }).uploadCircleImg(mAddPhotoAdapter.getAllDatas(),true);
     }
 
     private void onApplyNext(List<String> list) {
@@ -290,8 +291,8 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         }
         String filePath = images.get(0);
         mAddPhotoAdapter.addLastItemSafe(filePath);
-        imageCount.setText(SpannableStringUtils.getBuilder(mAddPhotoAdapter.getItemCount() + "")
-                .setForegroundColor(ContextCompat.getColor(mActivity,R.color.yellow_ffe2b1))
+        imageCount.setText(SpannableStringUtils.getBuilder(mAddPhotoAdapter.getItemCount() - 1 + "")
+                .setForegroundColor(SkinHelper.getSkin().getThemeSubColor())
                 .append("/3").create());
     }
 

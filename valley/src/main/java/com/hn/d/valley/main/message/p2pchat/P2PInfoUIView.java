@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
@@ -248,11 +249,13 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
         TextView tv_add_group = holder.tv(R.id.tv_add_group);
         FrameLayout layout_container_add = holder.v(R.id.layout_container_add);
         ImageView iv_user_detail = holder.imgV(R.id.iv_user_detail);
+        LinearLayout ll_user_detail = holder.v(R.id.ll_user_detail);
         tv_add_group.setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
         tv.setText(mUserInfo.getName());
         imageView.setImageUrl(mUserInfo.getAvatar());
-        iv_user_detail.setOnClickListener(new View.OnClickListener() {
+//        iv_user_detail.setOnClickListener();
+        ll_user_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mILayout.startIView(new UserDetailUIView2(mUserInfo.getAccount()));

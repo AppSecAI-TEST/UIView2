@@ -180,7 +180,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
             public void onUploadFailed(int code, String msg) {
 
             }
-        }).uploadCircleImg(mAddPhotoAdapter.getAllDatas());
+        }).uploadCircleImg(mAddPhotoAdapter.getAllDatas(),true);
     }
 
     private void onApplyNext(List<String> list) {

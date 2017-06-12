@@ -139,9 +139,9 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                             return;
                         }
                         if (SETPAYPWD.equals(type)) {
-                            replaceIView(new ChangePayPwdUIview());
+                            replaceIView(new ChangePayPwdUIview(ChangePayPwdUIview.SET_PAY_PWD,SetPayPwdUIView.this.code));
                         } else if (FINDPAYPWD.equals(type)) {
-                            replaceIView(new ChangePayPwdUIview(true,SetPayPwdUIView.this.code));
+                            replaceIView(new ChangePayPwdUIview(ChangePayPwdUIview.FIND_PAY_PWD,SetPayPwdUIView.this.code));
                         }
                     }
                 });

@@ -206,7 +206,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onSucceed(GroupDescBean bean) {
                         if (bean == null) {
-                            showContentLayout();
+                            showEmptyLayout();
                         } else {
                             mGroupDescBean = bean;
                             showContentLayout();
