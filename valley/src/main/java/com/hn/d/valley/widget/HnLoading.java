@@ -76,7 +76,8 @@ public class HnLoading extends UIIDialogImpl {
         FrameLayout frameLayout = new FrameLayout(mActivity);
 
         mLoadView = new View(mActivity);
-        mLoadView.setBackgroundResource(R.drawable.load_animation_list);
+//        mLoadView.setBackgroundResource(R.drawable.load_animation_list);
+        mLoadView.setBackgroundResource(R.drawable.load_animation_list2);
         //mLoadView.setBackgroundTintList(ColorStateList.valueOf(SkinHelper.getSkin().getThemeSubColor()));
 
         int size = (int) ResUtil.dpToPx(mActivity, 88);

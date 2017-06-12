@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -83,9 +84,10 @@ public class GPUImage {
         mGlSurfaceView = view;
         mGlSurfaceView.setEGLContextClientVersion(2);
         mGlSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
-        mGlSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);
+        //mGlSurfaceView.setEGLConfigChooser(5, 6, 5, 0, 16, 0);
+        mGlSurfaceView.getHolder().setFormat(PixelFormat.RGBA_8888);//RGBA_8888
         mGlSurfaceView.setRenderer(mRenderer);
-        mGlSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        mGlSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);//RENDERMODE_WHEN_DIRTY
         mGlSurfaceView.requestRender();
     }
 
@@ -115,8 +117,9 @@ public class GPUImage {
      * @param camera the camera
      */
     public void setUpCamera(final Camera camera) {
-        setUpCamera(camera, 0, false, false);
+        setUpCamera(camera, 0, false, false,false);
     }
+
 
     /**
      * Sets the up camera to be connected to GPUImage to get a filtered preview.
@@ -127,7 +130,7 @@ public class GPUImage {
      * @param flipVertical if the image should be flipped vertically
      */
     public void setUpCamera(final Camera camera, final int degrees, final boolean flipHorizontal,
-                            final boolean flipVertical) {
+                            final boolean flipVertical,final  boolean rotate) {
         mGlSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
             setUpCameraGingerbread(camera);
@@ -147,7 +150,7 @@ public class GPUImage {
                 rotation = Rotation.ROTATION_270;
                 break;
         }
-        mRenderer.setRotationCamera(rotation, flipHorizontal, flipVertical);
+        mRenderer.setRotationCamera(rotation, flipHorizontal, flipVertical,rotate);//not this
     }
 
     @TargetApi(11)
@@ -161,10 +164,15 @@ public class GPUImage {
      *
      * @param filter the new filter
      */
-    public void setFilter(final GPUImageFilter filter) {
+    public void setFilter(GPUImageFilter filter) {
         mFilter = filter;
         mRenderer.setFilter(mFilter);
         requestRender();
+    }
+
+    public void deleteFilter(){
+        if (mFilter!= null)
+            mFilter = null;
     }
 
     /**
@@ -206,8 +214,8 @@ public class GPUImage {
      *
      * @param rotation new rotation
      */
-    public void setRotation(Rotation rotation, boolean flipHorizontal, boolean flipVertical) {
-        mRenderer.setRotation(rotation, flipHorizontal, flipVertical);
+    public void setRotation(Rotation rotation, boolean flipHorizontal, boolean flipVertical,boolean rotate) {
+        mRenderer.setRotation(rotation, flipHorizontal, flipVertical,rotate);
     }
 
     /**
@@ -292,7 +300,7 @@ public class GPUImage {
 
         GPUImageRenderer renderer = new GPUImageRenderer(mFilter);
         renderer.setRotation(Rotation.NORMAL,
-                mRenderer.isFlippedHorizontally(), mRenderer.isFlippedVertically());
+                mRenderer.isFlippedHorizontally(), mRenderer.isFlippedVertically(),false);
         renderer.setScaleType(mScaleType);
         PixelBuffer buffer = new PixelBuffer(bitmap.getWidth(), bitmap.getHeight());
         buffer.setRenderer(renderer);

@@ -14,9 +14,6 @@ public class MediaMuxerWrapper {
     private static final boolean DEBUG = false;
     private static final String TAG = "MediaMuxerWrapper";
 
-    //private static final String DIR_NAME = "AVRecSample";
-    //private static final SimpleDateFormat mDateTimeFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
-
     private String mOutputPath;
     private final MediaMuxer mMediaMuxer;    // API >= 18
     private int mEncoderCount, mStatredCount;
@@ -153,35 +150,5 @@ public class MediaMuxerWrapper {
             if (DEBUG) Log.v(TAG,  "MediaMuxer force start");
         }
     }
-
-
-
-
-//**********************************************************************
-//**********************************************************************
-    /**
-     * generate output file
-     * @param type Environment.DIRECTORY_MOVIES / Environment.DIRECTORY_DCIM etc.
-     * @param ext .mp4(.m4a for audio) or .png
-     * @return return null when this app has no writing permission to external storage.
-     */
-    /*public static final File getCaptureFile(final String type, final String ext) {
-        final File dir = new File(Environment.getExternalStoragePublicDirectory(type), DIR_NAME);
-        Log.d(TAG, "path=" + dir.toString());
-        dir.mkdirs();
-        if (dir.canWrite()) {
-            return new File(dir, getDateTimeString() + ext);
-        }
-        return null;
-    }*/
-
-    /**
-     * get current date and time as String
-     * @return
-     */
-    /*private static final String getDateTimeString() {
-        final GregorianCalendar now = new GregorianCalendar();
-        return mDateTimeFormat.format(now.getTime());
-    }*/
 
 }

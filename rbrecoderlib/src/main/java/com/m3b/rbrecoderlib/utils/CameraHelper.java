@@ -107,4 +107,5 @@ public class CameraHelper {
         public int facing;
         public int orientation;
     }
+
 }

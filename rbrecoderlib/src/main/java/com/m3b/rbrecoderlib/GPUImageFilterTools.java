@@ -3,13 +3,29 @@ package com.m3b.rbrecoderlib;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.graphics.Rect;
-import android.opengl.Matrix;
-import android.text.Html;
+
+import com.m3b.rbrecoderlib.filters.GPUImageColorBalanceFilter;
+import com.m3b.rbrecoderlib.filters.GPUImageGrayscaleFilter;
+import com.m3b.rbrecoderlib.filters.GPUImageMonochromeFilter;
+import com.m3b.rbrecoderlib.filters.GPUImageRGBFilter;
+import com.m3b.rbrecoderlib.filters.GPUImageWhiteBalanceFilter;
+import com.m3b.rbrecoderlib.filters.MagiSkinWhitenFilter;
+import com.m3b.rbrecoderlib.filters.MagicAmaroFilter;
+import com.m3b.rbrecoderlib.filters.MagicBeautyFilter;
+import com.m3b.rbrecoderlib.filters.MagicBlackCatFilter;
+import com.m3b.rbrecoderlib.filters.MagicCalmFilter;
+import com.m3b.rbrecoderlib.filters.MagicCoolFilter;
+import com.m3b.rbrecoderlib.filters.MagicEmeraldFilter;
+import com.m3b.rbrecoderlib.filters.MagicEvergreenFilter;
+import com.m3b.rbrecoderlib.filters.MagicFairytaleFilter;
+import com.m3b.rbrecoderlib.filters.MagicLatteFilter;
+import com.m3b.rbrecoderlib.filters.MagicLomoFilter;
+import com.m3b.rbrecoderlib.filters.MagicN1977Filter;
+import com.m3b.rbrecoderlib.filters.MagicNostalgiaFilter;
+import com.m3b.rbrecoderlib.filters.MagicRomanceFilter;
+import com.m3b.rbrecoderlib.filters.MagicSierraFilter;
+import com.m3b.rbrecoderlib.filters.MagicSunsetFilter;
+import com.m3b.rbrecoderlib.filters.MagicWarmFilter;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,90 +33,31 @@ import java.util.List;
 
 public class GPUImageFilterTools {
     public static void showDialog(final Context context,
-            final OnGpuImageFilterChosenListener listener) {
+                                  final OnGpuImageFilterChosenListener listener) {
         final FilterList filters = new FilterList();
-        filters.addFilter("Text",FilterType.TEXT);
-        filters.addFilter("Logo",FilterType.LOGO);
-        filters.addFilter("Pappao",FilterType.PAOPAO);
-        filters.addFilter("Contrast", FilterType.CONTRAST);
-        filters.addFilter("Invert", FilterType.INVERT);
-        filters.addFilter("Pixelation", FilterType.PIXELATION);
-        filters.addFilter("Hue", FilterType.HUE);
-        filters.addFilter("Gamma", FilterType.GAMMA);
-        filters.addFilter("Brightness", FilterType.BRIGHTNESS);
-        filters.addFilter("Sepia", FilterType.SEPIA);
-        filters.addFilter("Grayscale", FilterType.GRAYSCALE);
-        filters.addFilter("Sharpness", FilterType.SHARPEN);
-        filters.addFilter("Sobel Edge Detection", FilterType.SOBEL_EDGE_DETECTION);
-        filters.addFilter("3x3 Convolution", FilterType.THREE_X_THREE_CONVOLUTION);
-        filters.addFilter("Emboss", FilterType.EMBOSS);
-        filters.addFilter("Posterize", FilterType.POSTERIZE);
-        filters.addFilter("Grouped filters", FilterType.FILTER_GROUP);
-        filters.addFilter("Saturation", FilterType.SATURATION);
-        filters.addFilter("Exposure", FilterType.EXPOSURE);
-        filters.addFilter("Highlight Shadow", FilterType.HIGHLIGHT_SHADOW);
-        filters.addFilter("Monochrome", FilterType.MONOCHROME);
-        filters.addFilter("Opacity", FilterType.OPACITY);
-        filters.addFilter("RGB", FilterType.RGB);
-        filters.addFilter("White Balance", FilterType.WHITE_BALANCE);
-        filters.addFilter("Vignette", FilterType.VIGNETTE);
-
-        filters.addFilter("Blend (Difference)", FilterType.BLEND_DIFFERENCE);
-        filters.addFilter("Blend (Source Over)", FilterType.BLEND_SOURCE_OVER);
-        filters.addFilter("Blend (Color Burn)", FilterType.BLEND_COLOR_BURN);
-        filters.addFilter("Blend (Color Dodge)", FilterType.BLEND_COLOR_DODGE);
-        filters.addFilter("Blend (Darken)", FilterType.BLEND_DARKEN);
-        filters.addFilter("Blend (Dissolve)", FilterType.BLEND_DISSOLVE);
-        filters.addFilter("Blend (Exclusion)", FilterType.BLEND_EXCLUSION);
-        filters.addFilter("Blend (Hard Light)", FilterType.BLEND_HARD_LIGHT);
-        filters.addFilter("Blend (Lighten)", FilterType.BLEND_LIGHTEN);
-        filters.addFilter("Blend (Add)", FilterType.BLEND_ADD);
-        filters.addFilter("Blend (Divide)", FilterType.BLEND_DIVIDE);
-        filters.addFilter("Blend (Multiply)", FilterType.BLEND_MULTIPLY);
-        filters.addFilter("Blend (Overlay)", FilterType.BLEND_OVERLAY);
-        filters.addFilter("Blend (Screen)", FilterType.BLEND_SCREEN);
-        filters.addFilter("Blend (Alpha)", FilterType.BLEND_ALPHA);
-        filters.addFilter("Blend (Color)", FilterType.BLEND_COLOR);
-        filters.addFilter("Blend (Hue)", FilterType.BLEND_HUE);
-        filters.addFilter("Blend (Saturation)", FilterType.BLEND_SATURATION);
-        filters.addFilter("Blend (Luminosity)", FilterType.BLEND_LUMINOSITY);
-        filters.addFilter("Blend (Linear Burn)", FilterType.BLEND_LINEAR_BURN);
-        filters.addFilter("Blend (Soft Light)", FilterType.BLEND_SOFT_LIGHT);
-        filters.addFilter("Blend (Subtract)", FilterType.BLEND_SUBTRACT);
-        filters.addFilter("Blend (Chroma Key)", FilterType.BLEND_CHROMA_KEY);
-        filters.addFilter("Blend (Normal)", FilterType.BLEND_NORMAL);
-
-        filters.addFilter("Lookup (Amatorka)", FilterType.LOOKUP_AMATORKA);
-        filters.addFilter("Gaussian Blur", FilterType.GAUSSIAN_BLUR);
-        filters.addFilter("Crosshatch", FilterType.CROSSHATCH);
-
-        filters.addFilter("Box Blur", FilterType.BOX_BLUR);
-        filters.addFilter("CGA Color Space", FilterType.CGA_COLORSPACE);
-        filters.addFilter("Dilation", FilterType.DILATION);
-        filters.addFilter("Kuwahara", FilterType.KUWAHARA);
-        filters.addFilter("RGB Dilation", FilterType.RGB_DILATION);
-        filters.addFilter("Sketch", FilterType.SKETCH);
-        filters.addFilter("Toon", FilterType.TOON);
-        filters.addFilter("Smooth Toon", FilterType.SMOOTH_TOON);
-        filters.addFilter("Halftone", FilterType.HALFTONE);
-
-        filters.addFilter("Bulge Distortion", FilterType.BULGE_DISTORTION);
-        filters.addFilter("Glass Sphere", FilterType.GLASS_SPHERE);
-        filters.addFilter("Haze", FilterType.HAZE);
-        filters.addFilter("Laplacian", FilterType.LAPLACIAN);
-        filters.addFilter("Non Maximum Suppression", FilterType.NON_MAXIMUM_SUPPRESSION);
-        filters.addFilter("Sphere Refraction", FilterType.SPHERE_REFRACTION);
-        filters.addFilter("Swirl", FilterType.SWIRL);
-        filters.addFilter("Weak Pixel Inclusion", FilterType.WEAK_PIXEL_INCLUSION);
-        filters.addFilter("False Color", FilterType.FALSE_COLOR);
-
-        filters.addFilter("Color Balance", FilterType.COLOR_BALANCE);
-
-        filters.addFilter("Levels Min (Mid Adjust)", FilterType.LEVELS_FILTER_MIN);
-
-        filters. addFilter("Bilateral Blur", FilterType.BILATERAL_BLUR);
-
-        filters.addFilter("Transform (2-D)", FilterType.TRANSFORM2D);
+        filters.addFilter("原画", FilterType.YUANHUA);
+        filters.addFilter("美颜", FilterType.BEAUTY);
+        filters.addFilter("美肤", FilterType.SKINWHITEN);
+        filters.addFilter("经典", FilterType.JINGDIAN);
+        filters.addFilter("月光", FilterType.CALM);
+        filters.addFilter("复古", FilterType.FUGU);
+        filters.addFilter("蔷薇", FilterType.N1977);
+        filters.addFilter("流年", FilterType.SIERRA);
+        filters.addFilter("童话", FilterType.FAIRYTALE);
+        filters.addFilter("粉嫩", FilterType.FENNEN);
+        filters.addFilter("浪漫", FilterType.ROMANCE);
+        filters.addFilter("梦幻", FilterType.EVERGREEN);
+        filters.addFilter("候鸟", FilterType.HOUNIAO);
+        filters.addFilter("薄荷", FilterType.EMERALD);
+        filters.addFilter("黑白", FilterType.HEIBAI);
+        filters.addFilter("慵懒", FilterType.LOMO);
+        filters.addFilter("黄昏", FilterType.SUNSET);
+        filters.addFilter("暮光", FilterType.COOL);
+        filters.addFilter("怀旧", FilterType.NOSTALGIA);
+        filters.addFilter("夕阳", FilterType.LATTE);
+        filters.addFilter("暖阳", FilterType.WARM);
+        filters.addFilter("淡雅", FilterType.DANYA);
+        filters.addFilter("哥特风", FilterType.GETEFENG);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -119,200 +76,110 @@ public class GPUImageFilterTools {
 
     private static GPUImageFilter createFilterForType(final Context context, final FilterType type) {
         switch (type) {
-            case TEXT:
-                RBTextFilter textfilter = new RBTextFilter();
-                CharSequence htmlText = Html.fromHtml("<font color=\"#7FFF0000\">红鸟网络</font><br/><b>@M3B</b>");
-                textfilter.setText(htmlText,  Color.WHITE, 30);
-                textfilter.setPostion(RBTextFilter.Gravity.RIGHT | RBTextFilter.Gravity.TOP, 100, 100);
-                return textfilter;
+            case YUANHUA:
+                GPUImageFilter yuanhuafilter = new GPUImageFilter();
+                return yuanhuafilter;
 
-            case LOGO:
-                RBLogoFilter logofilter = new RBLogoFilter(new Rect(400,400,800,800));
-                logofilter.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.hongbao));
-                return logofilter;
+            case BEAUTY:
+                MagicBeautyFilter magicBeautyFilter = new MagicBeautyFilter(context);
+                magicBeautyFilter.setBeautyLevel(3);
+                return magicBeautyFilter;
 
-            case PAOPAO:
-                RBPaopaoFilter paopoafilter = new RBPaopaoFilter(context);
-                return paopoafilter;
+            case SKINWHITEN:
+                MagiSkinWhitenFilter magiSkinWhitenFilter = new MagiSkinWhitenFilter(context);
+                return magiSkinWhitenFilter;
 
-            /*
-            case WATERMARK:
-                RBWatermarkFilter watermarkfilter = new RBWatermarkFilter();
-                CharSequence htmlText2 = Html.fromHtml("<font color=\"#7FFF0000\">红鸟网络</font><br/><b>@M3B</b>");
-                watermarkfilter.setText(htmlText2,  Color.WHITE, 30);
-                watermarkfilter.setPostion(RBTextFilter.Gravity.RIGHT | RBTextFilter.Gravity.TOP, 100, 100);
-                watermarkfilter.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.hongbao));
-                return  watermarkfilter;
-            */
 
-            case CONTRAST:
-                return new GPUImageContrastFilter(2.0f);
+            case JINGDIAN:
+                MagicAmaroFilter jingdianFilter = new MagicAmaroFilter(context);
+                return jingdianFilter;
 
-            case GAMMA:
-                return new GPUImageGammaFilter(2.0f);
-            case INVERT:
-                return new GPUImageColorInvertFilter();
+            case CALM:
+                MagicCalmFilter magicCalmFilter = new MagicCalmFilter(context);
+                return magicCalmFilter;
 
-            case PIXELATION:
-                return new GPUImagePixelationFilter();
-            case HUE:
-                return new GPUImageHueFilter(90.0f);
-            case BRIGHTNESS:
-                return new GPUImageBrightnessFilter(1.5f);
-            case GRAYSCALE:
-                return new GPUImageGrayscaleFilter();
-            case SEPIA:
-                return new GPUImageSepiaFilter();
-            case SHARPEN:
-                GPUImageSharpenFilter sharpness = new GPUImageSharpenFilter();
-                sharpness.setSharpness(2.0f);
-                return sharpness;
-            case SOBEL_EDGE_DETECTION:
-                return new GPUImageSobelEdgeDetection();
-            case THREE_X_THREE_CONVOLUTION:
-                GPUImage3x3ConvolutionFilter convolution = new GPUImage3x3ConvolutionFilter();
-                convolution.setConvolutionKernel(new float[] {
-                        -1.0f, 0.0f, 1.0f,
-                        -2.0f, 0.0f, 2.0f,
-                        -1.0f, 0.0f, 1.0f
-                });
-                return convolution;
-            case EMBOSS:
-                return new GPUImageEmbossFilter();
-            case POSTERIZE:
-                return new GPUImagePosterizeFilter();
-            case FILTER_GROUP:
-                List<GPUImageFilter> filters = new LinkedList<GPUImageFilter>();
-                filters.add(new GPUImageContrastFilter());
-                filters.add(new GPUImageDirectionalSobelEdgeDetectionFilter());
-                filters.add(new GPUImageGrayscaleFilter());
-                return new GPUImageFilterGroup(filters);
-            case SATURATION:
-                return new GPUImageSaturationFilter(1.0f);
-            case EXPOSURE:
-                return new GPUImageExposureFilter(0.0f);
-            case HIGHLIGHT_SHADOW:
-            	return new GPUImageHighlightShadowFilter(0.0f, 1.0f);
-            case MONOCHROME:
-            	return new GPUImageMonochromeFilter(1.0f, new float[]{0.6f, 0.45f, 0.3f, 1.0f});
-            case OPACITY:
-                return new GPUImageOpacityFilter(1.0f);
-            case RGB:
-                return new GPUImageRGBFilter(1.0f, 1.0f, 1.0f);
-            case WHITE_BALANCE:
-                return new GPUImageWhiteBalanceFilter(5000.0f, 0.0f);
-            case VIGNETTE:
-                PointF centerPoint = new PointF();
-                centerPoint.x = 0.5f;
-                centerPoint.y = 0.5f;
-                return new GPUImageVignetteFilter(centerPoint, new float[] {0.0f, 0.0f, 0.0f}, 0.3f, 0.75f);
-            case BLEND_DIFFERENCE:
-                return createBlendFilter(context, GPUImageDifferenceBlendFilter.class);
-            case BLEND_SOURCE_OVER:
-                return createBlendFilter(context, GPUImageSourceOverBlendFilter.class);
-            case BLEND_COLOR_BURN:
-                return createBlendFilter(context, GPUImageColorBurnBlendFilter.class);
-            case BLEND_COLOR_DODGE:
-                return createBlendFilter(context, GPUImageColorDodgeBlendFilter.class);
-            case BLEND_DARKEN:
-                return createBlendFilter(context, GPUImageDarkenBlendFilter.class);
-            case BLEND_DISSOLVE:
-                return createBlendFilter(context, GPUImageDissolveBlendFilter.class);
-            case BLEND_EXCLUSION:
-                return createBlendFilter(context, GPUImageExclusionBlendFilter.class);
-            case BLEND_HARD_LIGHT:
-                return createBlendFilter(context, GPUImageHardLightBlendFilter.class);
-            case BLEND_LIGHTEN:
-                return createBlendFilter(context, GPUImageLightenBlendFilter.class);
-            case BLEND_ADD:
-                return createBlendFilter(context, GPUImageAddBlendFilter.class);
-            case BLEND_DIVIDE:
-                return createBlendFilter(context, GPUImageDivideBlendFilter.class);
-            case BLEND_MULTIPLY:
-                return createBlendFilter(context, GPUImageMultiplyBlendFilter.class);
-            case BLEND_OVERLAY:
-                return createBlendFilter(context, GPUImageOverlayBlendFilter.class);
-            case BLEND_SCREEN:
-                return createBlendFilter(context, GPUImageScreenBlendFilter.class);
-            case BLEND_ALPHA:
-                return createBlendFilter(context, GPUImageAlphaBlendFilter.class);
-            case BLEND_COLOR:
-                return createBlendFilter(context, GPUImageColorBlendFilter.class);
-            case BLEND_HUE:
-                return createBlendFilter(context, GPUImageHueBlendFilter.class);
-            case BLEND_SATURATION:
-                return createBlendFilter(context, GPUImageSaturationBlendFilter.class);
-            case BLEND_LUMINOSITY:
-                return createBlendFilter(context, GPUImageLuminosityBlendFilter.class);
-            case BLEND_LINEAR_BURN:
-                return createBlendFilter(context, GPUImageLinearBurnBlendFilter.class);
-            case BLEND_SOFT_LIGHT:
-                return createBlendFilter(context, GPUImageSoftLightBlendFilter.class);
-            case BLEND_SUBTRACT:
-                return createBlendFilter(context, GPUImageSubtractBlendFilter.class);
-            case BLEND_CHROMA_KEY:
-                return createBlendFilter(context, GPUImageChromaKeyBlendFilter.class);
-            case BLEND_NORMAL:
-                return createBlendFilter(context, GPUImageNormalBlendFilter.class);
+            case FUGU:
+                GPUImageMonochromeFilter fuguFilter = new GPUImageMonochromeFilter(0.75F, new float[]{0.6F, 0.45F, 0.3F, 1.0F});
+                return fuguFilter;
 
-            case LOOKUP_AMATORKA:
-                GPUImageLookupFilter amatorka = new GPUImageLookupFilter();
-                amatorka.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.lookup_amatorka));
-                return amatorka;
-            case GAUSSIAN_BLUR:
-                return new GPUImageGaussianBlurFilter();
-            case CROSSHATCH:
-                return new GPUImageCrosshatchFilter();
+            case N1977:
+                MagicN1977Filter magicN1977Filter = new MagicN1977Filter(context);
+                return magicN1977Filter;
 
-            case BOX_BLUR:
-                return new GPUImageBoxBlurFilter();
-            case CGA_COLORSPACE:
-                return new GPUImageCGAColorspaceFilter();
-            case DILATION:
-                return new GPUImageDilationFilter();
-            case KUWAHARA:
-                return new GPUImageKuwaharaFilter();
-            case RGB_DILATION:
-                return new GPUImageRGBDilationFilter();
-            case SKETCH:
-                return new GPUImageSketchFilter();
-            case TOON:
-                return new GPUImageToonFilter();
-            case SMOOTH_TOON:
-                return new GPUImageSmoothToonFilter();
+            case SIERRA:
+                MagicSierraFilter magicSierraFilter = new MagicSierraFilter(context);
+                return magicSierraFilter;
 
-            case BULGE_DISTORTION:
-                return new GPUImageBulgeDistortionFilter();
-            case GLASS_SPHERE:
-                return new GPUImageGlassSphereFilter();
-            case HAZE:
-                return new GPUImageHazeFilter();
-            case LAPLACIAN:
-                return new GPUImageLaplacianFilter();
-            case NON_MAXIMUM_SUPPRESSION:
-                return new GPUImageNonMaximumSuppressionFilter();
-            case SPHERE_REFRACTION:
-                return new GPUImageSphereRefractionFilter();
-            case SWIRL:
-                return new GPUImageSwirlFilter();
-            case WEAK_PIXEL_INCLUSION:
-                return new GPUImageWeakPixelInclusionFilter();
-            case FALSE_COLOR:
-                return new GPUImageFalseColorFilter();
-            case COLOR_BALANCE:
-                return new GPUImageColorBalanceFilter();
-            case LEVELS_FILTER_MIN:
-                GPUImageLevelsFilter levelsFilter = new GPUImageLevelsFilter();
-                levelsFilter.setMin(0.0f, 3.0f, 1.0f);
-                return levelsFilter;
-            case HALFTONE:
-                return new GPUImageHalftoneFilter();
+            case FAIRYTALE:
+                MagicFairytaleFilter magicFairytaleFilter = new MagicFairytaleFilter(context);
+                return magicFairytaleFilter;
 
-            case BILATERAL_BLUR:
-                return new GPUImageBilateralFilter();
+            case FENNEN:
+                GPUImageRGBFilter fennenFilter = new GPUImageRGBFilter(1.0F, 0.72F, 0.75F);
+                return fennenFilter;
 
-            case TRANSFORM2D:
-                return new GPUImageTransformFilter();
+
+            case ROMANCE:
+                MagicRomanceFilter magicRomanceFilter = new MagicRomanceFilter(context);
+                return magicRomanceFilter;
+
+
+            case EVERGREEN:
+                MagicEvergreenFilter magicEvergreenFilter = new MagicEvergreenFilter(context);
+                return magicEvergreenFilter;
+
+            case HOUNIAO:
+                MagicBlackCatFilter houniaoFilter = new MagicBlackCatFilter(context);
+                return houniaoFilter;
+
+
+            case EMERALD:
+                MagicEmeraldFilter magicEmeraldFilter = new MagicEmeraldFilter(context);
+                return magicEmeraldFilter;
+
+
+            case HEIBAI:
+                GPUImageGrayscaleFilter gpuImageGrayscaleFilter = new GPUImageGrayscaleFilter();
+                return gpuImageGrayscaleFilter;
+
+            case LOMO:
+                MagicLomoFilter magicLomoFilter = new MagicLomoFilter(context);
+                return magicLomoFilter;
+
+
+            case SUNSET:
+                MagicSunsetFilter magicSunsetFilter = new MagicSunsetFilter(context);
+                return magicSunsetFilter;
+
+
+            case COOL:
+                MagicCoolFilter magicCoolFilter = new MagicCoolFilter(context);
+                return magicCoolFilter;
+
+
+            case NOSTALGIA:
+                MagicNostalgiaFilter magicNostalgiaFilter = new MagicNostalgiaFilter(context);
+                return magicNostalgiaFilter;
+
+            case LATTE:
+                MagicLatteFilter magicLatteFilter = new MagicLatteFilter(context);
+                return magicLatteFilter;
+
+
+            case WARM:
+                MagicWarmFilter magicWarmFilter = new MagicWarmFilter(context);
+                return magicWarmFilter;
+
+            case DANYA:
+                GPUImageWhiteBalanceFilter mWhiteBalanceFilter = new GPUImageWhiteBalanceFilter();
+                mWhiteBalanceFilter.setTemperature(3600F);
+                return mWhiteBalanceFilter;
+
+            case GETEFENG:
+                GPUImageColorBalanceFilter mColorBalanceFilter = new GPUImageColorBalanceFilter();
+                mColorBalanceFilter.setMidtones(new float[]{0.15F, 0.33F, 0.22F});
+                return mColorBalanceFilter;
+
 
             default:
                 throw new IllegalStateException("No filter of that type!");
@@ -320,28 +187,13 @@ public class GPUImageFilterTools {
 
     }
 
-    private static GPUImageFilter createBlendFilter(Context context, Class<? extends GPUImageTwoInputFilter> filterClass) {
-        try {
-            GPUImageTwoInputFilter filter = filterClass.newInstance();
-            filter.setBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.pao_024));
-            return filter;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+
+    private enum FilterType {
+        YUANHUA, JINGDIAN, FUGU, FENNEN, EMERALD, HOUNIAO, ANTIQUE, BLACKCAT, CALM, COOL, EVERGREEN, FAIRYTALE, LATTE, LOMO, N1977, ROMANCE, BEAUTY, SUNSET, CRAYON, SKETCH, SKINWHITEN, SIERRA, HEIBAI, NOSTALGIA, WARM, DANYA, GETEFENG
     }
 
     public interface OnGpuImageFilterChosenListener {
         void onGpuImageFilterChosenListener(GPUImageFilter filter);
-    }
-
-    private enum FilterType {
-        TEXT,LOGO,PAOPAO,CONTRAST, GRAYSCALE, SHARPEN, SEPIA, SOBEL_EDGE_DETECTION, THREE_X_THREE_CONVOLUTION, FILTER_GROUP, EMBOSS, POSTERIZE, GAMMA, BRIGHTNESS, INVERT, HUE, PIXELATION,
-        SATURATION, EXPOSURE, HIGHLIGHT_SHADOW, MONOCHROME, OPACITY, RGB, WHITE_BALANCE, VIGNETTE, TONE_CURVE, BLEND_COLOR_BURN, BLEND_COLOR_DODGE, BLEND_DARKEN, BLEND_DIFFERENCE,
-        BLEND_DISSOLVE, BLEND_EXCLUSION, BLEND_SOURCE_OVER, BLEND_HARD_LIGHT, BLEND_LIGHTEN, BLEND_ADD, BLEND_DIVIDE, BLEND_MULTIPLY, BLEND_OVERLAY, BLEND_SCREEN, BLEND_ALPHA,
-        BLEND_COLOR, BLEND_HUE, BLEND_SATURATION, BLEND_LUMINOSITY, BLEND_LINEAR_BURN, BLEND_SOFT_LIGHT, BLEND_SUBTRACT, BLEND_CHROMA_KEY, BLEND_NORMAL, LOOKUP_AMATORKA,
-        GAUSSIAN_BLUR, CROSSHATCH, BOX_BLUR, CGA_COLORSPACE, DILATION, KUWAHARA, RGB_DILATION, SKETCH, TOON, SMOOTH_TOON, BULGE_DISTORTION, GLASS_SPHERE, HAZE, LAPLACIAN, NON_MAXIMUM_SUPPRESSION,
-        SPHERE_REFRACTION, SWIRL, WEAK_PIXEL_INCLUSION, FALSE_COLOR, COLOR_BALANCE, LEVELS_FILTER_MIN, BILATERAL_BLUR, HALFTONE, TRANSFORM2D
     }
 
     private static class FilterList {

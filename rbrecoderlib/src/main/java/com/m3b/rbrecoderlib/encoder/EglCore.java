@@ -78,7 +78,7 @@ public final class EglCore {
 
         // Try to get a GLES3 context, if requested.
         if ((flags & FLAG_TRY_GLES3) != 0) {
-            //Log.d(TAG, "Trying GLES 3");
+            Log.d(TAG, "Trying GLES 3");
             EGLConfig config = getConfig(flags, 3);
             if (config != null) {
                 int[] attrib3_list = {
@@ -89,7 +89,7 @@ public final class EglCore {
                         attrib3_list, 0);
 
                 if (EGL14.eglGetError() == EGL14.EGL_SUCCESS) {
-                    //Log.d(TAG, "Got GLES 3 config");
+                    Log.d(TAG, "Got GLES 3 config");
                     mEGLConfig = config;
                     mEGLContext = context;
                     mGlVersion = 3;
@@ -141,11 +141,12 @@ public final class EglCore {
                 EGL14.EGL_GREEN_SIZE, 8,
                 EGL14.EGL_BLUE_SIZE, 8,
                 EGL14.EGL_ALPHA_SIZE, 8,
-                //EGL14.EGL_DEPTH_SIZE, 16,
-                //EGL14.EGL_STENCIL_SIZE, 8,
+                EGL14.EGL_DEPTH_SIZE, 16,
+                EGL14.EGL_STENCIL_SIZE, 8,
                 EGL14.EGL_RENDERABLE_TYPE, renderableType,
                 EGL14.EGL_NONE, 0,      // placeholder for recordable [@-3]
                 EGL14.EGL_NONE
+
         };
         if ((flags & FLAG_RECORDABLE) != 0) {
             attribList[attribList.length - 3] = EGL_RECORDABLE_ANDROID;

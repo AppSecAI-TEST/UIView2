@@ -1,5 +1,8 @@
 package com.hn.d.valley.base.iview;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -28,11 +31,14 @@ import com.m3b.rbrecoderlib.GPUImage;
 import com.m3b.rbrecoderlib.GPUImageFilter;
 import com.m3b.rbrecoderlib.GPUImageFilterGroup;
 import com.m3b.rbrecoderlib.GPUImageMovieWriter;
+import com.m3b.rbrecoderlib.filters.MagicBeautyFilter;
+import com.m3b.rbrecoderlib.filters.RBLogoFilter;
 import com.m3b.rbrecoderlib.utils.CameraHelper;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +48,9 @@ import rx.functions.Action1;
 import rx.functions.Action3;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static com.m3b.rbrecoderlib.Rotation.ROTATION_270;
+import static com.m3b.rbrecoderlib.Rotation.ROTATION_90;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -67,7 +76,7 @@ public class VideoRecordUIView extends UIIViewImpl {
     /**
      * 默认录像level
      */
-    GPUImageMovieWriter.Level DefaultLevel = GPUImageMovieWriter.Level.High;
+    GPUImageMovieWriter.Level DefaultLevel = GPUImageMovieWriter.Level.HIGH;
     private GPUImage mGPUImage;
     private OrientationEventListener mOrientationEventListener;
     private CameraHelper mCameraHelper;
@@ -76,6 +85,16 @@ public class VideoRecordUIView extends UIIViewImpl {
     private GPUImageFilter mFilter;
     private File mRecordFile;
     private RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean> mLoopAdapter;
+    private RBLogoFilter logofilter;
+    private GPUImageFilterGroup initFilter;
+    private boolean isBeautyed = false;
+    private boolean isSwitched = false;
+    private GPUImageFilter currentFilter;
+    private boolean needRotate = false;
+    private GPUImageFilterGroup filters;
+    private GPUImageFilterGroup newfilters;
+    private MagicBeautyFilter magicBeautyFilter;
+    private GLSurfaceView mGLSurfaceView;
 
     public VideoRecordUIView(Action3<UIIViewImpl, String, String> publishAction) {
         this.publishAction = publishAction;
@@ -135,13 +154,25 @@ public class VideoRecordUIView extends UIIViewImpl {
     public void onViewLoad() {
         super.onViewLoad();
         mGPUImage = new GPUImage(mActivity);
-        mGPUImage.setGLSurfaceView((GLSurfaceView) mViewHolder.v(R.id.surfaceView));
+        mGLSurfaceView = mViewHolder.v(R.id.surfaceView);
+        mGPUImage.setGLSurfaceView(mGLSurfaceView);
 
         mCameraHelper = new CameraHelper(mActivity);
         mCamera = new CameraLoader();
 
+
+        Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        logofilter = new RBLogoFilter(new Rect(100, 100, 100 + logo.getWidth(), 100 + logo.getHeight()));// left, top, right, bottom
+        logofilter.setBitmap(logo);
+// 实时美颜
+//        magicBeautyFilter = new MagicBeautyFilter(this);
+//        magicBeautyFilter.setBeautyLevel(5);
+
         mMovieWriter = new GPUImageMovieWriter();
-        mGPUImage.setFilter(mMovieWriter);
+        initFilter = new GPUImageFilterGroup();
+        initFilter.addFilter(logofilter);
+        initFilter.addFilter(mMovieWriter);
+        mGPUImage.setFilter(initFilter);
 
         rotationListener();
 
@@ -288,6 +319,11 @@ public class VideoRecordUIView extends UIIViewImpl {
     }
 
     @Override
+    public boolean onBackPressed() {
+        return !mIsRecording;
+    }
+
+    @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
         mCamera.onResume();
@@ -322,7 +358,6 @@ public class VideoRecordUIView extends UIIViewImpl {
         mMovieWriter.stopRecording();
     }
 
-
     /**
      * 是否有2个摄像头
      */
@@ -345,17 +380,74 @@ public class VideoRecordUIView extends UIIViewImpl {
                 || (filter != null && !mFilter.getClass().equals(filter.getClass()))) {
             mFilter = filter;
 
-            GPUImageFilterGroup filters = new GPUImageFilterGroup();
+            isSwitched = true;
+            currentFilter = filter;
+            //mFilter.destroy();//FIXME filter switch fuxking bug
+
+            if (mCamera.isCameraFont() && !needRotate) {
+                if (!isBeautyed)
+                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
+            }
+
+            needRotate = true;
+
+            filters = new GPUImageFilterGroup();
+            filters.addFilter(logofilter);
+
+            if (isBeautyed) {
+                newfilters.addFilter(magicBeautyFilter);
+                isBeautyed = true;
+            }
+
             filters.addFilter(mFilter);
             filters.addFilter(mMovieWriter);
 
-            //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_center_pause);
-            //LogoFilter logoFilter = new LogoFilter(bitmap,new Rect(100,100,200,200));
-            //filters.addFilter(logoFilter);
-
             mGPUImage.setFilter(filters);
+
         }
     }
+
+    /**
+     * 开启美颜
+     */
+    public void setBeautyed(boolean enable) {
+        isBeautyed = enable;
+        updatefilter();
+    }
+
+    private void updatefilter() {
+
+        if (mCamera.isCameraFont()) {
+            if (!isSwitched) {
+                if (isBeautyed)
+                    mGPUImage.setRotation(ROTATION_90, true, false, needRotate);
+                else
+                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
+            } else {
+                if (isBeautyed)
+                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
+                else
+                    mGPUImage.setRotation(ROTATION_90, true, false, needRotate);
+            }
+        }
+
+        needRotate = true;
+
+        newfilters = new GPUImageFilterGroup();
+        newfilters.addFilter(logofilter);
+
+        if (isBeautyed) {
+            newfilters.addFilter(magicBeautyFilter);
+            isBeautyed = true;
+        }
+
+        newfilters.addFilter(currentFilter);
+        newfilters.addFilter(mMovieWriter);
+
+        mGPUImage.setFilter(newfilters);
+
+    }
+
 
     /**
      * 旋转
@@ -382,10 +474,40 @@ public class VideoRecordUIView extends UIIViewImpl {
         mOrientationEventListener.enable();
     }
 
-    /**
-     * CameraLoader
-     */
-    private class CameraLoader {
+    //TODO FIX MEIZU bug
+    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
+        final double ASPECT_TOLERANCE = 0.1;
+        double targetRatio = (double) h / w;
+
+        if (sizes == null) return null;
+
+        Camera.Size optimalSize = null;
+        double minDiff = Double.MAX_VALUE;
+
+        int targetHeight = h;
+
+        for (Camera.Size size : sizes) {
+            double ratio = (double) size.width / size.height;
+            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
+            if (Math.abs(size.height - targetHeight) < minDiff) {
+                optimalSize = size;
+                minDiff = Math.abs(size.height - targetHeight);
+            }
+        }
+
+        if (optimalSize == null) {
+            minDiff = Double.MAX_VALUE;
+            for (Camera.Size size : sizes) {
+                if (Math.abs(size.height - targetHeight) < minDiff) {
+                    optimalSize = size;
+                    minDiff = Math.abs(size.height - targetHeight);
+                }
+            }
+        }
+        return optimalSize;
+    }
+
+    public class CameraLoader {
 
         private int mCurrentCameraId = 0;
         private Camera mCameraInstance;
@@ -401,6 +523,7 @@ public class VideoRecordUIView extends UIIViewImpl {
         public void switchCamera() {
             releaseCamera();
             mCurrentCameraId = (mCurrentCameraId + 1) % mCameraHelper.getNumberOfCameras();
+            mGLSurfaceView.requestLayout();
             setUpCamera(mCurrentCameraId);
         }
 
@@ -412,19 +535,30 @@ public class VideoRecordUIView extends UIIViewImpl {
             // TODO adjust by getting supportedPreviewSizes and then choosing
             // the best one for screen size (best fill screen)
 
+
+            Camera.Size optimalSize = getOptimalPreviewSize(mCameraInstance.getParameters().getSupportedPreviewSizes(), 720, 1280);
+            Log.d("### ActivtyMain", "w: " + optimalSize.width + " h: " + optimalSize.height);
+            parameters.setPreviewSize(optimalSize.width, optimalSize.height);
+
             if (parameters.getSupportedFocusModes().contains(
                     Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)) {
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             }
-            //parameters.setPreviewSize(640, 480);
             mCameraInstance.setParameters(parameters);
 
-            int orientation = mCameraHelper.getCameraDisplayOrientation(mActivity, mCurrentCameraId);
-            CameraHelper.CameraInfo2 cameraInfo = new CameraHelper.CameraInfo2();
-            mCameraHelper.getCameraInfo(mCurrentCameraId, cameraInfo);
-            boolean flipHorizontal = cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT;
+            int orientation = mCameraHelper.getCameraDisplayOrientation(
+                    mActivity, mCurrentCameraId);
 
-            mGPUImage.setUpCamera(mCameraInstance, orientation, flipHorizontal, false);
+            boolean flipHorizontal = isCameraFont();
+
+            if (flipHorizontal)//FIXME switch logo rorate bug
+                logofilter.updateIcon(true);
+            else
+                logofilter.updateIcon(false);
+
+            mGPUImage.setUpCamera(mCameraInstance, orientation, flipHorizontal, false, needRotate);
+            mGPUImage.setScaleType(GPUImage.ScaleType.CENTER_CROP);//FIXME some device swap camera size get smaller
+
         }
 
         /**
@@ -440,12 +574,19 @@ public class VideoRecordUIView extends UIIViewImpl {
             return c;
         }
 
+        public boolean isCameraFont() {
+            CameraHelper.CameraInfo2 cameraInfo = new CameraHelper.CameraInfo2();
+            mCameraHelper.getCameraInfo(mCurrentCameraId, cameraInfo);
+            return cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT;
+        }
+
         private void releaseCamera() {
-            mCameraInstance.setPreviewCallback(null);
-            mCameraInstance.release();
-            mCameraInstance = null;
+            if (mCameraInstance != null) {
+                mCameraInstance.setPreviewCallback(null);
+                mCameraInstance.stopPreview();
+                mCameraInstance.release();
+                mCameraInstance = null;
+            }
         }
     }
-
-
 }

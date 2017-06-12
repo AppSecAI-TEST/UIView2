@@ -456,4 +456,9 @@ public class GPUImageView extends FrameLayout {
     public interface OnPictureSavedListener {
         void onPictureSaved(Uri uri);
     }
+
+    public void reInitLayout() {
+        mGLSurfaceView.requestLayout();
+        mGPUImage.deleteImage();
+    }
 }

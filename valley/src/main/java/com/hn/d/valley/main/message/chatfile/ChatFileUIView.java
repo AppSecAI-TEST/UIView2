@@ -593,7 +593,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                             return;
                         }
                         mParentILayout.startIView(new VideoPlayUIView(chatFile.getPath(),
-                                imageView.getDrawable().getConstantState().newDrawable(),
+                                RImageView.copyDrawable(imageView),
                                 ((VideoFile) chatFile).genWidthAndHeight()));
                     }
                 });

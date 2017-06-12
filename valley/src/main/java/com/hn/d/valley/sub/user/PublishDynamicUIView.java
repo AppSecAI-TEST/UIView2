@@ -229,7 +229,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //点击预览全部图片
                         //startIView(new VideoPlayUIView(mVideoStatusInfo.videoThumbPath, mVideoStatusInfo.videoPath));
-                        startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoPath(), imageView.getDrawable(),
+                        startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoPath(), RImageView.copyDrawable(imageView),
                                 OssHelper.getWidthHeightWithUrl(mVideoStatusInfo.getVideoThumbPath())));
                     }
                 });

@@ -3,6 +3,7 @@ package com.m3b.rbrecoderlib;
 
 import android.annotation.SuppressLint;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -29,7 +30,6 @@ public class GPUImageFilterGroup extends GPUImageFilter {
     private final FloatBuffer mGLCubeBuffer;
     private final FloatBuffer mGLTextureBuffer;
     private final FloatBuffer mGLTextureFlipBuffer;
-
     /**
      * Instantiates a new GPUImageFilterGroup with no filters.
      */
@@ -49,6 +49,7 @@ public class GPUImageFilterGroup extends GPUImageFilter {
         } else {
             updateMergedFilters();
         }
+
 
         mGLCubeBuffer = ByteBuffer.allocateDirect(CUBE.length * 4)
                 .order(ByteOrder.nativeOrder())
@@ -160,6 +161,7 @@ public class GPUImageFilterGroup extends GPUImageFilter {
         }
     }
 
+
     /*
      * (non-Javadoc)
      * @see jp.co.cyberagent.android.gpuimage.GPUImageFilter#onDraw(int,
@@ -173,32 +175,64 @@ public class GPUImageFilterGroup extends GPUImageFilter {
         if (!isInitialized() || mFrameBuffers == null || mFrameBufferTextures == null) {
             return;
         }
+
+
         if (mMergedFilters != null) {
             int size = mMergedFilters.size();
             int previousTexture = textureId;
+            Log.d("$$$$","size: " +  size + " textureid: " + textureId);
             for (int i = 0; i < size; i++) {
                 GPUImageFilter filter = mMergedFilters.get(i);
                 boolean isNotLast = i < size - 1;
+
                 if (isNotLast) {
+                    GLES20.glViewport(0, 0, mOutputWidth, mOutputHeight);
                     GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
                     GLES20.glClearColor(0, 0, 0, 0);
                 }
 
+
+
                 if (i == 0) {
                     filter.onDraw(previousTexture, cubeBuffer, textureBuffer);
+                    Log.d("$$$$","1 - " +  previousTexture);
                 } else if (i == size - 1) {
-                    filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : mGLTextureBuffer);
+                    filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : textureBuffer);//flip
+                    //filter.onDraw(previousTexture, cubeBuffer, textureBuffer);//flip
+                    Log.d("$$$$","2 - " + previousTexture);
                 } else {
-                    filter.onDraw(previousTexture, mGLCubeBuffer, mGLTextureBuffer);
+                    filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : textureBuffer);
+                    //filter.onDraw(previousTexture, cubeBuffer, textureBuffer);
+                    Log.d("$$$$","3 - " + previousTexture);
                 }
+
 
                 if (isNotLast) {
                     GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
                     previousTexture = mFrameBufferTextures[i];
                 }
+
+
+                /*
+                if (isNotLast) {
+                    GLES20.glViewport(0, 0, mOutputWidth, mOutputHeight);
+                    GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, mFrameBuffers[i]);
+                    GLES20.glClearColor(0, 0, 0, 0);
+                    filter.onDraw(previousTexture, mGLCubeBuffer, mGLTextureBuffer);//mGLTextureBuffer);
+                    GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                    previousTexture = mFrameBufferTextures[i];
+                }else{
+                    GLES20.glViewport(0, 0, mOutputWidth, mOutputHeight);
+                    filter.onDraw(previousTexture, cubeBuffer, textureBuffer);
+                }
+                */
+
+
+
             }
         }
      }
+
 
     /**
      * Gets the filters.

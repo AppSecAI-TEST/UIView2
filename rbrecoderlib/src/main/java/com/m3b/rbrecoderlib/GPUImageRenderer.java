@@ -11,6 +11,7 @@ import android.hardware.Camera.PreviewCallback;
 import android.hardware.Camera.Size;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
+import android.util.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,6 +32,7 @@ import static com.m3b.rbrecoderlib.utils.TextureRotationUtil.TEXTURE_NO_ROTATION
 @TargetApi(11)
 public class GPUImageRenderer implements Renderer, PreviewCallback {
     public static final int NO_IMAGE = -1;
+
     static final float CUBE[] = {
             -1.0f, -1.0f,
             1.0f, -1.0f,
@@ -78,7 +80,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
         mGLTextureBuffer = ByteBuffer.allocateDirect(TEXTURE_NO_ROTATION.length * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
-        setRotation(Rotation.NORMAL, false, false);
+        setRotation(Rotation.NORMAL, false, false,false);
     }
 
     @Override
@@ -90,6 +92,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
 
     @Override
     public void onSurfaceChanged(final GL10 gl, final int width, final int height) {
+        Log.d("++++", "ononSurfaceChanged width:" + width + " height:" + height);
         mOutputWidth = width;
         mOutputHeight = height;
         GLES20.glViewport(0, 0, width, height);
@@ -136,17 +139,21 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
     @Override
     public void onPreviewFrame(final byte[] data, final Camera camera) {
         final Size previewSize = camera.getParameters().getPreviewSize();
+
         if (mGLRgbBuffer == null) {
             mGLRgbBuffer = IntBuffer.allocate(previewSize.width * previewSize.height);
         }
+
+
         if (mRunOnDraw.isEmpty()) {
             runOnDraw(new Runnable() {
                 @Override
                 public void run() {
-                    GPUImageNativeLibrary.YUVtoRBGA(data, previewSize.width, previewSize.height,
+                    GPUImageNativeLibrary.YUVtoRBGA(data, previewSize.width, previewSize.height,//YUVtoRBGA
                             mGLRgbBuffer.array());
-                    mGLTextureId = OpenGlUtils.loadTexture(mGLRgbBuffer, previewSize, mGLTextureId);
+                    mGLTextureId = OpenGLUtils2.loadTexture(mGLRgbBuffer, previewSize, mGLTextureId);
                     camera.addCallbackBuffer(data);
+
 
                     if (mImageWidth != previewSize.width) {
                         mImageWidth = previewSize.width;
@@ -156,6 +163,8 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
                 }
             });
         }
+
+        //Log.d("### GPUImageRenderer", "onPreviewFrame: " + previewSize.width + " " + previewSize.height);
     }
 
     public void setUpSurfaceTexture(final Camera camera) {
@@ -231,7 +240,7 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
                     mAddedPadding = 0;
                 }
 
-                mGLTextureId = OpenGlUtils.loadTexture(
+                mGLTextureId = OpenGLUtils2.loadTexture(
                         resizedBitmap != null ? resizedBitmap : bitmap, mGLTextureId, recycle);
                 if (resizedBitmap != null) {
                     resizedBitmap.recycle();
@@ -265,6 +274,8 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
 
         float ratio1 = outputWidth / mImageWidth;
         float ratio2 = outputHeight / mImageHeight;
+
+        Log.d("### GPUImageRenderer","mImageWidth: " + mImageWidth + " mImageHeight:" +mImageHeight);
         float ratioMax = Math.max(ratio1, ratio2);
         int imageWidthNew = Math.round(mImageWidth * ratioMax);
         int imageHeightNew = Math.round(mImageHeight * ratioMax);
@@ -278,11 +289,15 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
             float distHorizontal = (1 - 1 / ratioWidth) / 2;
             float distVertical = (1 - 1 / ratioHeight) / 2;
             textureCords = new float[]{
+                   // /*
                     addDistance(textureCords[0], distHorizontal), addDistance(textureCords[1], distVertical),
                     addDistance(textureCords[2], distHorizontal), addDistance(textureCords[3], distVertical),
                     addDistance(textureCords[4], distHorizontal), addDistance(textureCords[5], distVertical),
                     addDistance(textureCords[6], distHorizontal), addDistance(textureCords[7], distVertical),
+                    //*/
             };
+
+            Log.d("$$$$","mGLTextureBuffer");
         } else {
             cube = new float[]{
                     CUBE[0] / ratioHeight, CUBE[1] / ratioWidth,
@@ -303,19 +318,27 @@ public class GPUImageRenderer implements Renderer, PreviewCallback {
     }
 
     public void setRotationCamera(final Rotation rotation, final boolean flipHorizontal,
-                                  final boolean flipVertical) {
-        setRotation(rotation, flipVertical, flipHorizontal);
+                                  final boolean flipVertical,final boolean rotate) {
+        setRotation(rotation, flipVertical, flipHorizontal,rotate);
     }
 
     public void setRotation(final Rotation rotation) {
         mRotation = rotation;
+        Log.d("#####", " "+  mRotation);
         adjustImageScaling();
     }
 
     public void setRotation(final Rotation rotation,
-                            final boolean flipHorizontal, final boolean flipVertical) {
-        mFlipHorizontal = flipHorizontal;
-        mFlipVertical = flipVertical;
+                            final boolean flipHorizontal, final boolean flipVertical,final  boolean rotate) {
+        //mFlipHorizontal = flipHorizontal;
+        //mFlipVertical = flipVertical;
+        if(rotate) {
+            mFlipHorizontal = flipVertical;
+            mFlipVertical = flipHorizontal;
+        }else{
+            mFlipHorizontal = flipHorizontal;
+            mFlipVertical = flipVertical;
+        }
         setRotation(rotation);
     }
 

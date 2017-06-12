@@ -17,15 +17,7 @@
 package com.m3b.rbrecoderlib;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.graphics.PorterDuff;
 import android.opengl.GLES20;
-import android.support.annotation.ColorInt;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -50,7 +42,7 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
 
     public int mFilterSecondTextureCoordinateAttribute;
     public int mFilterInputTextureUniform2;
-    public int mFilterSourceTexture2 = OpenGlUtils.NO_TEXTURE;
+    public int mFilterSourceTexture2 = OpenGLUtils2.NO_TEXTURE;
     private ByteBuffer mTexture2CoordinatesBuffer;
     private Bitmap mBitmap;
 
@@ -88,12 +80,12 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
         }
         runOnDraw(new Runnable() {
             public void run() {
-                if (mFilterSourceTexture2 == OpenGlUtils.NO_TEXTURE) {
+                if (mFilterSourceTexture2 == OpenGLUtils2.NO_TEXTURE) {
                     if (bitmap == null || bitmap.isRecycled()) {
                         return;
                     }
                     GLES20.glActiveTexture(GLES20.GL_TEXTURE3);
-                    mFilterSourceTexture2 = OpenGlUtils.loadTexture(bitmap, OpenGlUtils.NO_TEXTURE, false);
+                    mFilterSourceTexture2 = OpenGLUtils2.loadTexture(bitmap, OpenGLUtils2.NO_TEXTURE, false);
                 }
             }
         });
@@ -115,7 +107,7 @@ public class GPUImageTwoInputFilter extends GPUImageFilter {
         GLES20.glDeleteTextures(1, new int[]{
                 mFilterSourceTexture2
         }, 0);
-        mFilterSourceTexture2 = OpenGlUtils.NO_TEXTURE;
+        mFilterSourceTexture2 = OpenGLUtils2.NO_TEXTURE;
     }
 
     @Override
