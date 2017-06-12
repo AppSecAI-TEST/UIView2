@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <android.opengl.GLSurfaceView
         android:id="@+id/surfaceView"
@@ -15,15 +18,105 @@
         android:layout_height="match_parent"
         android:tag="H"/>
 
-    <com.angcyo.uiview.widget.RecordButton
-        android:id="@+id/record_view"
-        style="@style/MainColorTextStyle"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+    <!--<com.angcyo.uiview.widget.RecordButton-->
+    <!--android:id="@+id/record_view"-->
+    <!--style="@style/MainColorTextStyle"-->
+    <!--android:layout_width="120dp"-->
+    <!--android:layout_height="120dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_margin="@dimen/base_xxhdpi"-->
+    <!--android:gravity="center"-->
+    <!--android:text="@string/record_tip"/>-->
+
+    <LinearLayout
+        android:id="@+id/pretty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_item_size"
+        android:background="@color/transparent_dark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/base_xxxhdpi"
+        android:paddingStart="@dimen/base_xxxhdpi"
+        android:visibility="gone"
+        tools:background="@color/base_red_dark"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pretty_tip"
+            android:textColor="@color/base_white"/>
+
+        <com.angcyo.uiview.widget.RSeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/base_xhdpi"
+            app:r_cur_progress="50"
+            app:r_thumb_color="@color/base_white"
+            app:r_thumb_type="CIRCLE"
+            app:r_track_bg_color="@color/base_white_tran2"
+            app:r_track_color="@color/base_white"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/seek_tip_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="@dimen/base_xxxhdpi"
+            android:tag="%1$s%"
+            android:text="0"
+            android:textColor="@color/base_white"
+            tools:text="999"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/base_xxhdpi"
-        android:gravity="center"
-        android:text="@string/record_tip"/>
+        android:background="@color/base_white">
+
+        <ImageView
+            android:id="@+id/lj_selector_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/base_xxxhdpi"
+            android:src="@drawable/lvjing_selector"/>
+
+        <ImageView
+            android:id="@+id/video_selector_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/base_xxxhdpi"
+            android:src="@drawable/bendishiping_selector"/>
+
+    </RelativeLayout>
+
+    <com.angcyo.uiview.viewgroup.ExpandRecordLayout
+        android:id="@+id/record_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:visibility="gone">
+
+        <com.angcyo.uiview.recycler.RRecyclerView
+            android:id="@+id/lj_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_100dpi"
+            android:background="@color/base_white"
+            android:tag="H"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@color/base_white"
+            android:src="@drawable/zhankai_shiping_lujing"/>
+
+    </com.angcyo.uiview.viewgroup.ExpandRecordLayout>
 
 </RelativeLayout>

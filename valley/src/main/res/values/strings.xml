@@ -723,4 +723,5 @@
     <string name="email_to">给我们发邮件</string>
     <string name="text_not_allow_access_me">不让TA看我的动态</string>
     <string name="text_not_see_other">不看TA的动态</string>
+    <string name="pretty_tip">美颜</string>
 </resources>

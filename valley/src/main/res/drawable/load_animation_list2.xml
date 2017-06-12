@@ -4,50 +4,50 @@
 
     <item
         android:drawable="@drawable/loading__1"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__2"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__3"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__4"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__5"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__6"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__7"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__8"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__9"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__10"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__11"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__12"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__13"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__14"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__15"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
     <item
         android:drawable="@drawable/loading__16"
-        android:duration="@integer/animation_list_time"/>
+        android:duration="@integer/animation_list_time2"/>
 </animation-list>

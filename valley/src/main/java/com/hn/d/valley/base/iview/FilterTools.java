@@ -1,7 +1,9 @@
 package com.hn.d.valley.base.iview;
 
 import android.content.Context;
+import android.graphics.Color;
 
+import com.hn.d.valley.R;
 import com.m3b.rbrecoderlib.GPUImageFilter;
 import com.m3b.rbrecoderlib.filters.GPUImageColorBalanceFilter;
 import com.m3b.rbrecoderlib.filters.GPUImageGrayscaleFilter;
@@ -157,29 +159,29 @@ public class FilterTools {
 
     public static List<FilterBean> createFilterList() {
         List<FilterBean> beanList = new ArrayList<>();
-        beanList.add(new FilterBean("原画", FilterType.YUANHUA));
-        beanList.add(new FilterBean("美颜", FilterType.BEAUTY));
-        beanList.add(new FilterBean("美肤", FilterType.SKINWHITEN));
-        beanList.add(new FilterBean("经典", FilterType.JINGDIAN));
-        beanList.add(new FilterBean("月光", FilterType.CALM));
-        beanList.add(new FilterBean("复古", FilterType.FUGU));
-        beanList.add(new FilterBean("蔷薇", FilterType.N1977));
-        beanList.add(new FilterBean("流年", FilterType.SIERRA));
-        beanList.add(new FilterBean("童话", FilterType.FAIRYTALE));
-        beanList.add(new FilterBean("粉嫩", FilterType.FENNEN));
-        beanList.add(new FilterBean("浪漫", FilterType.ROMANCE));
-        beanList.add(new FilterBean("梦幻", FilterType.EVERGREEN));
-        beanList.add(new FilterBean("候鸟", FilterType.HOUNIAO));
-        beanList.add(new FilterBean("薄荷", FilterType.EMERALD));
-        beanList.add(new FilterBean("黑白", FilterType.HEIBAI));
-        beanList.add(new FilterBean("慵懒", FilterType.LOMO));
-        beanList.add(new FilterBean("黄昏", FilterType.SUNSET));
-        beanList.add(new FilterBean("暮光", FilterType.COOL));
-        beanList.add(new FilterBean("怀旧", FilterType.NOSTALGIA));
-        beanList.add(new FilterBean("夕阳", FilterType.LATTE));
-        beanList.add(new FilterBean("暖阳", FilterType.WARM));
-        beanList.add(new FilterBean("淡雅", FilterType.DANYA));
-        beanList.add(new FilterBean("哥特风", FilterType.GETEFENG));
+        beanList.add(new FilterBean("原画", FilterType.YUANHUA, R.drawable.lj_1_yuanhua, Color.parseColor("#BFBFBF")));
+        beanList.add(new FilterBean("美颜", FilterType.BEAUTY, R.drawable.lj_2_meiyan, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("美肤", FilterType.SKINWHITEN, R.drawable.lj_3_meifu, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("经典", FilterType.JINGDIAN, R.drawable.lj_4_jingdian, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("月光", FilterType.CALM, R.drawable.lj_5_yueguang, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("复古", FilterType.FUGU, R.drawable.lj_6_fugu, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("蔷薇", FilterType.N1977, R.drawable.lj_7_qiangwei, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("流年", FilterType.SIERRA, R.drawable.lj_8_liunian, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("童话", FilterType.FAIRYTALE, R.drawable.lj_9_tonghua, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("粉嫩", FilterType.FENNEN, R.drawable.lj_10_fennen, Color.parseColor("#E55C5C")));
+        beanList.add(new FilterBean("浪漫", FilterType.ROMANCE, R.drawable.lj_11_langman, Color.parseColor("#B6B1DF")));
+        beanList.add(new FilterBean("梦幻", FilterType.EVERGREEN, R.drawable.lj_12_menghuan, Color.parseColor("#B6B1DF")));
+        beanList.add(new FilterBean("候鸟", FilterType.HOUNIAO, R.drawable.lj_13_houniao, Color.parseColor("#B6B1DF")));
+        beanList.add(new FilterBean("薄荷", FilterType.EMERALD, R.drawable.lj_14_pohe, Color.parseColor("#B6B1DF")));
+        beanList.add(new FilterBean("黑白", FilterType.HEIBAI, R.drawable.lj_15_heibai, Color.parseColor("#B38B96")));
+        beanList.add(new FilterBean("慵懒", FilterType.LOMO, R.drawable.lj_16_youlan, Color.parseColor("#6C73C7")));
+        beanList.add(new FilterBean("黄昏", FilterType.SUNSET, R.drawable.lj_17_huanghun, Color.parseColor("#6C73C7")));
+        beanList.add(new FilterBean("暮光", FilterType.COOL, R.drawable.lj_18_muguang, Color.parseColor("#6C73C7")));
+        beanList.add(new FilterBean("怀旧", FilterType.NOSTALGIA, R.drawable.lj_19_huaijiu, Color.parseColor("#6C73C7")));
+        beanList.add(new FilterBean("夕阳", FilterType.LATTE, R.drawable.lj_20_xiyang, Color.parseColor("#6C73C7")));
+        beanList.add(new FilterBean("暖阳", FilterType.WARM, R.drawable.lj_21_nuanyang, Color.parseColor("#6C73C7")));
+        beanList.add(new FilterBean("淡雅", FilterType.DANYA, R.drawable.lj_22_danya, Color.parseColor("#6C73C7")));
+        beanList.add(new FilterBean("哥特风", FilterType.GETEFENG, R.drawable.lj_23_getefeng, Color.parseColor("#6C73C7")));
         return beanList;
     }
 
@@ -191,10 +193,14 @@ public class FilterTools {
     public static class FilterBean {
         public String name;
         public FilterType type;
+        public int resId;
+        public int bgColor;
 
-        public FilterBean(String name, FilterType type) {
+        public FilterBean(String name, FilterType type, int resId, int bgColor) {
             this.name = name;
             this.type = type;
+            this.resId = resId;
+            this.bgColor = bgColor;
         }
 
         public GPUImageFilter createFilterForType(Context context) {

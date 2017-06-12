@@ -6,22 +6,31 @@ import android.graphics.Rect;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.github.utilcode.utils.FileUtils;
+import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RLoopRecyclerView;
+import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.view.UIIViewImpl;
-import com.angcyo.uiview.widget.RecordButton;
+import com.angcyo.uiview.viewgroup.ExpandRecordLayout;
+import com.angcyo.uiview.widget.RSeekBar;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
@@ -50,7 +59,6 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static com.m3b.rbrecoderlib.Rotation.ROTATION_270;
-import static com.m3b.rbrecoderlib.Rotation.ROTATION_90;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -63,15 +71,16 @@ import static com.m3b.rbrecoderlib.Rotation.ROTATION_90;
  * 修改备注：
  * Version: 1.0.0
  */
-public class VideoRecordUIView extends UIIViewImpl {
+public class VideoRecordUIView extends UIBaseView {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     public static final int MEDIA_TYPE_VOICE = 3;
     public boolean mIsRecording = false;
     int rotationRecord = 0;
-    RecordButton mRecordView;
+    //    RecordButton mRecordView;
     RLoopRecyclerView mLoopRecyclerView;
+    ExpandRecordLayout mRecordLayout;
     Action3<UIIViewImpl, String, String> publishAction;
     /**
      * 默认录像level
@@ -87,14 +96,16 @@ public class VideoRecordUIView extends UIIViewImpl {
     private RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean> mLoopAdapter;
     private RBLogoFilter logofilter;
     private GPUImageFilterGroup initFilter;
-    private boolean isBeautyed = false;
+    private boolean isBeautyed = true;
     private boolean isSwitched = false;
     private GPUImageFilter currentFilter;
     private boolean needRotate = false;
     private GPUImageFilterGroup filters;
-    private GPUImageFilterGroup newfilters;
     private MagicBeautyFilter magicBeautyFilter;
     private GLSurfaceView mGLSurfaceView;
+    private RModelAdapter mLjAdapter;
+    private View prettyLayout;
+    private int currentLevel = 0;
 
     public VideoRecordUIView(Action3<UIIViewImpl, String, String> publishAction) {
         this.publishAction = publishAction;
@@ -139,15 +150,77 @@ public class VideoRecordUIView extends UIIViewImpl {
     }
 
     @Override
-    protected View inflateBaseView(FrameLayout container, LayoutInflater inflater) {
-        return LayoutInflater.from(mActivity).inflate(R.layout.view_video_record_layout, container);
+    public void loadContentView(View rootView) {
+        super.loadContentView(rootView);
+        //mRecordView = v(R.id.record_view);
+        mRecordLayout = v(R.id.record_layout);
+        mLoopRecyclerView = v(R.id.loop_recycler_view);
     }
 
     @Override
-    public void loadContentView(View rootView) {
-        super.loadContentView(rootView);
-        mRecordView = v(R.id.record_view);
-        mLoopRecyclerView = v(R.id.loop_recycler_view);
+    protected TitleBarPattern getTitleBar() {
+        int offset = getDimensionPixelOffset(R.dimen.base_xhdpi);
+        return super.getTitleBar()
+                .setShowBackImageView(true)
+                .setTitleString("")
+                .setBackImageRes(R.drawable.quxiao_paishiping)
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.meiyan, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (prettyLayout.getVisibility() == View.GONE) {
+                            animShowPrettyLayout();
+                        } else {
+                            animHidePrettyLayout();
+                        }
+                    }
+                }).setRightMargin(offset))
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.no_flashlight, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mCamera.isCameraFont()) {
+                            //前置没有闪光灯
+                            return;
+                        }
+
+                        ImageView imageView = (ImageView) v;
+                        if (v.getTag() == null) {
+                            //打开闪光灯
+                            openFlashLight(imageView);
+                        } else {
+                            //关闭闪关灯
+                            closeFlashLight(imageView);
+                        }
+                        mCamera.toggleFlashLight();
+                    }
+                }).setRightMargin(offset))
+                .addRightItem(TitleBarPattern.buildImage(R.drawable.qiehuan_shexiangtou, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        switchCamera();
+                    }
+                }))
+                ;
+    }
+
+    protected void closeFlashLight(ImageView imageView) {
+        imageView.setImageResource(R.drawable.no_flashlight);
+        imageView.setTag(null);
+    }
+
+    protected void openFlashLight(ImageView imageView) {
+        imageView.setImageResource(R.drawable.flashlight);
+        imageView.setTag("on");
+    }
+
+    @Override
+    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        inflate(R.layout.view_video_record_layout);
+    }
+
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.CONTENT;
     }
 
     @Override
@@ -160,23 +233,134 @@ public class VideoRecordUIView extends UIIViewImpl {
         mCameraHelper = new CameraHelper(mActivity);
         mCamera = new CameraLoader();
 
-
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
         logofilter = new RBLogoFilter(new Rect(100, 100, 100 + logo.getWidth(), 100 + logo.getHeight()));// left, top, right, bottom
         logofilter.setBitmap(logo);
-// 实时美颜
-//        magicBeautyFilter = new MagicBeautyFilter(this);
-//        magicBeautyFilter.setBeautyLevel(5);
+
+        // 实时美颜
+        magicBeautyFilter = new MagicBeautyFilter(mActivity);
+        magicBeautyFilter.setBeautyLevel(currentLevel);
 
         mMovieWriter = new GPUImageMovieWriter();
         initFilter = new GPUImageFilterGroup();
         initFilter.addFilter(logofilter);
+        initFilter.addFilter(magicBeautyFilter);
         initFilter.addFilter(mMovieWriter);
         mGPUImage.setFilter(initFilter);
 
         rotationListener();
 
-        mRecordView.setOnRecordListener(new RecordButton.OnRecordListener() {
+        initRecordLayout();
+
+        final List<FilterTools.FilterBean> filterList = FilterTools.createFilterList();
+
+        mLoopAdapter = new RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean>(mActivity, filterList) {
+            @Override
+            protected int getItemLayoutId(int viewType) {
+                return R.layout.item_gpuiimage_filter;
+            }
+
+            @Override
+            public void onBindLoopViewHolder(RBaseViewHolder holder, int position, FilterTools.FilterBean bean) {
+                holder.tv(R.id.text_view).setText(bean.name);
+            }
+        };
+        mLoopRecyclerView.setAdapter(mLoopAdapter);
+        mLoopRecyclerView.setOnPageListener(new RLoopRecyclerView.OnPageListener() {
+            @Override
+            public void onPageSelector(int position) {
+                mLjAdapter.setSelectorPosition(position);
+                switchFilterTo(mLoopAdapter.getAllDatas().get(position).createFilterForType(mActivity));
+            }
+        });
+
+        mLoopRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    autoShow();
+                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                    autoHide();
+                }
+                return false;
+            }
+        });
+
+        //滤镜选择
+        mViewHolder.click(R.id.lj_selector_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRecordLayout.expandLayout(true);
+            }
+        });
+
+        //视频文件选择
+        mViewHolder.click(R.id.video_selector_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        //滤镜选择
+        RRecyclerView ljRecyclerView = mViewHolder.v(R.id.lj_recycler_view);
+        mLjAdapter = new RExBaseAdapter<String, FilterTools.FilterBean, String>(mActivity, filterList) {
+
+            @Override
+            protected int getItemLayoutId(int viewType) {
+                return R.layout.item_lj_layout;
+            }
+
+            @Override
+            protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, FilterTools.FilterBean bean) {
+                super.onBindModelView(model, isSelector, holder, position, bean);
+                holder.v(R.id.check_view).setVisibility(isSelector ? View.VISIBLE : View.INVISIBLE);
+                holder.v(R.id.check_view).setBackgroundColor(SkinHelper.getTranColor(bean.bgColor, 0x80));
+            }
+
+            @Override
+            protected void onBindDataView(RBaseViewHolder holder, final int posInData, final FilterTools.FilterBean dataBean) {
+                holder.imgV(R.id.image_view).setImageResource(dataBean.resId);
+                holder.tv(R.id.text_view).setText(dataBean.name);
+                holder.tv(R.id.text_view).setBackgroundColor(dataBean.bgColor);
+
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        setSelectorPosition(posInData);
+                        mLoopRecyclerView.scrollTo(posInData, false);
+                        switchFilterTo(dataBean.createFilterForType(mActivity));
+                    }
+                });
+            }
+        }.setModel(RModelAdapter.MODEL_SINGLE);
+        mLjAdapter.addSelectorPosition(0);//默认是原画
+        ljRecyclerView.setAdapter(mLjAdapter);
+
+        //美颜布局控制
+        prettyLayout = mViewHolder.v(R.id.pretty_layout);
+        RSeekBar seekBar = mViewHolder.v(R.id.seek_bar);
+        seekBar.addOnProgressChangeListener(new RSeekBar.OnProgressChangeListener() {
+            @Override
+            public void onProgress(int progress) {
+                mViewHolder.tv(R.id.seek_tip_view).setText(progress + "");
+                currentLevel = progress / 20;
+                magicBeautyFilter.setBeautyLevel(currentLevel);
+            }
+        });
+        seekBar.setCurProgress(50);
+    }
+
+    /**
+     * 录制按钮初始化
+     */
+    private void initRecordLayout() {
+        mRecordLayout.setListener(new ExpandRecordLayout.OnRecordListener() {
+            @Override
+            public void onRecording(int progress) {
+                L.i("call: onRecording([progress])-> " + progress);
+            }
+
             @Override
             public void onRecordStart() {
                 startRecord();
@@ -186,14 +370,14 @@ public class VideoRecordUIView extends UIIViewImpl {
             public void onRecordEnd(int progress) {
                 if (progress < 3) {
                     T_.error(getString(R.string.record_time_short));
-                    mRecordView.setEnabled(false);
+                    mRecordLayout.setEnabled(false);
                     stopRecord();
-                    ViewCompat.animate(mRecordView)
+                    ViewCompat.animate(mRecordLayout)
                             .alpha(1).setDuration(100)
                             .withEndAction(new Runnable() {
                                 @Override
                                 public void run() {
-                                    mRecordView.setEnabled(true);
+                                    mRecordLayout.setEnabled(true);
                                 }
                             }).start();
                 } else {
@@ -268,45 +452,19 @@ public class VideoRecordUIView extends UIIViewImpl {
                 }
             }
         });
-        mRecordView.setMaxProgress(getResources().getInteger(R.integer.max_video_record_length));
 
-        mLoopAdapter = new RLoopRecyclerView.LoopAdapter<FilterTools.FilterBean>(mActivity, FilterTools.createFilterList()) {
-            @Override
-            protected int getItemLayoutId(int viewType) {
-                return R.layout.item_gpuiimage_filter;
-            }
-
-            @Override
-            public void onBindLoopViewHolder(RBaseViewHolder holder, int position, FilterTools.FilterBean bean) {
-                holder.tv(R.id.text_view).setText(bean.name);
-            }
-        };
-        mLoopRecyclerView.setAdapter(mLoopAdapter);
-        mLoopRecyclerView.setOnPageListener(new RLoopRecyclerView.OnPageListener() {
-            @Override
-            public void onPageSelector(int position) {
-                switchFilterTo(mLoopAdapter.getAllDatas().get(position).createFilterForType(mActivity));
-            }
-        });
-
-        mLoopRecyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    autoShow();
-                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
-                    autoHide();
-                }
-                return false;
-            }
-        });
+        if (BuildConfig.DEBUG) {
+            mRecordLayout.setMaxTime(6);
+        } else {
+            mRecordLayout.setMaxTime(getResources().getInteger(R.integer.max_video_record_length));
+        }
     }
 
     void autoHide() {
         ViewCompat
                 .animate(mLoopRecyclerView)
                 .alpha(0f)
-                .setDuration(1000)
+                .setDuration(2000)
                 .start();
     }
 
@@ -315,6 +473,44 @@ public class VideoRecordUIView extends UIIViewImpl {
                 .animate(mLoopRecyclerView)
                 .alpha(1f)
                 .setDuration(100)
+                .start();
+    }
+
+    void animShowPrettyLayout() {
+        int height = prettyLayout.getMeasuredHeight();
+        Runnable action = new Runnable() {
+            @Override
+            public void run() {
+                prettyLayout.setVisibility(View.VISIBLE);
+                int measuredHeight = prettyLayout.getMeasuredHeight();
+                ViewCompat.setTranslationY(prettyLayout, -measuredHeight);
+                ViewCompat
+                        .animate(prettyLayout)
+                        .translationY(0)
+                        .setDuration(300)
+                        .start();
+            }
+        };
+        if (height == 0) {
+            prettyLayout.setVisibility(View.INVISIBLE);
+            prettyLayout.post(action);
+        } else {
+            action.run();
+        }
+    }
+
+    void animHidePrettyLayout() {
+        int height = prettyLayout.getMeasuredHeight();
+        ViewCompat
+                .animate(prettyLayout)
+                .translationY(-height)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        prettyLayout.setVisibility(View.GONE);
+                    }
+                })
+                .setDuration(300)
                 .start();
     }
 
@@ -370,6 +566,9 @@ public class VideoRecordUIView extends UIIViewImpl {
      */
     private void switchCamera() {
         mCamera.switchCamera();
+        if (mCamera.isCameraFont()) {
+            closeFlashLight((ImageView) getUITitleBarContainer().getRightView(1));
+        }
     }
 
     /**
@@ -384,21 +583,15 @@ public class VideoRecordUIView extends UIIViewImpl {
             currentFilter = filter;
             //mFilter.destroy();//FIXME filter switch fuxking bug
 
-            if (mCamera.isCameraFont() && !needRotate) {
-                if (!isBeautyed)
-                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
+            if (mCamera.isCameraFont()) {
+                mGPUImage.setRotation(ROTATION_270, true, false, true);
             }
 
-            needRotate = true;
 
             filters = new GPUImageFilterGroup();
             filters.addFilter(logofilter);
-
-            if (isBeautyed) {
-                newfilters.addFilter(magicBeautyFilter);
-                isBeautyed = true;
-            }
-
+            magicBeautyFilter.setBeautyLevel(currentLevel);
+            filters.addFilter(magicBeautyFilter);
             filters.addFilter(mFilter);
             filters.addFilter(mMovieWriter);
 
@@ -407,46 +600,46 @@ public class VideoRecordUIView extends UIIViewImpl {
         }
     }
 
-    /**
-     * 开启美颜
-     */
-    public void setBeautyed(boolean enable) {
-        isBeautyed = enable;
-        updatefilter();
-    }
-
-    private void updatefilter() {
-
-        if (mCamera.isCameraFont()) {
-            if (!isSwitched) {
-                if (isBeautyed)
-                    mGPUImage.setRotation(ROTATION_90, true, false, needRotate);
-                else
-                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
-            } else {
-                if (isBeautyed)
-                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
-                else
-                    mGPUImage.setRotation(ROTATION_90, true, false, needRotate);
-            }
-        }
-
-        needRotate = true;
-
-        newfilters = new GPUImageFilterGroup();
-        newfilters.addFilter(logofilter);
-
-        if (isBeautyed) {
-            newfilters.addFilter(magicBeautyFilter);
-            isBeautyed = true;
-        }
-
-        newfilters.addFilter(currentFilter);
-        newfilters.addFilter(mMovieWriter);
-
-        mGPUImage.setFilter(newfilters);
-
-    }
+//    /**
+//     * 开启美颜
+//     */
+//    public void setBeautyed(boolean enable) {
+//        isBeautyed = enable;
+//        updatefilter();
+//    }
+//
+//    private void updatefilter() {
+//
+//        if (mCamera.isCameraFont()) {
+//            if (!isSwitched) {
+//                if (isBeautyed)
+//                    mGPUImage.setRotation(ROTATION_90, true, false, needRotate);
+//                else
+//                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
+//            } else {
+//                if (isBeautyed)
+//                    mGPUImage.setRotation(ROTATION_270, true, false, needRotate);
+//                else
+//                    mGPUImage.setRotation(ROTATION_90, true, false, needRotate);
+//            }
+//        }
+//
+//        needRotate = true;
+//
+//        newfilters = new GPUImageFilterGroup();
+//        newfilters.addFilter(logofilter);
+//
+//        if (isBeautyed) {
+//            newfilters.addFilter(magicBeautyFilter);
+//            isBeautyed = true;
+//        }
+//
+//        newfilters.addFilter(currentFilter);
+//        newfilters.addFilter(mMovieWriter);
+//
+//        mGPUImage.setFilter(newfilters);
+//
+//    }
 
 
     /**
@@ -524,6 +717,10 @@ public class VideoRecordUIView extends UIIViewImpl {
             releaseCamera();
             mCurrentCameraId = (mCurrentCameraId + 1) % mCameraHelper.getNumberOfCameras();
             mGLSurfaceView.requestLayout();
+            if (isCameraFont() && isSwitched)
+                needRotate = false;
+            else
+                needRotate = true;
             setUpCamera(mCurrentCameraId);
         }
 
@@ -574,6 +771,9 @@ public class VideoRecordUIView extends UIIViewImpl {
             return c;
         }
 
+        /**
+         * 是否是前置
+         */
         public boolean isCameraFont() {
             CameraHelper.CameraInfo2 cameraInfo = new CameraHelper.CameraInfo2();
             mCameraHelper.getCameraInfo(mCurrentCameraId, cameraInfo);
@@ -587,6 +787,30 @@ public class VideoRecordUIView extends UIIViewImpl {
                 mCameraInstance.release();
                 mCameraInstance = null;
             }
+        }
+
+        public boolean toggleFlashLight() {
+            try {
+                Camera.Parameters parameters = mCameraInstance.getParameters();
+                List<String> flashModes = parameters.getSupportedFlashModes();
+                String flashMode = parameters.getFlashMode();
+                if (!Camera.Parameters.FLASH_MODE_TORCH.equals(flashMode)) {
+                    if (flashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        mCameraInstance.setParameters(parameters);
+                        return true;
+                    }
+                } else if (!Camera.Parameters.FLASH_MODE_OFF.equals(flashMode)) {
+                    if (flashModes.contains(Camera.Parameters.FLASH_MODE_OFF)) {
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        mCameraInstance.setParameters(parameters);
+                        return true;
+                    }
+                }
+            } catch (Exception e) {
+                return false;
+            }
+            return false;
         }
     }
 }
