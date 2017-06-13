@@ -6,9 +6,12 @@ import android.view.View;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.string.StringTextWatcher;
+import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupMemberBean;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action1;
+import rx.functions.Action2;
 import rx.functions.Action3;
 
 /**
@@ -67,6 +71,23 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
     @Override
     protected void buildAdapter() {
         mGroupAdapter = new GroupMemberSelectAdapter(mActivity, options);
+        mGroupAdapter.setAction(new Action2<Boolean,AbsContactItem>(){
+            @Override
+            public void call(Boolean aBoolean, AbsContactItem absContactItem) {
+                if (aBoolean) {
+                    UIDialog.build()
+                            .setDialogContent(mActivity.getString(R.string.text_is_change_owner))
+                            .setOkListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onSelected();
+                                }
+                            })
+                            .setCancelText(getString(R.string.cancel))
+                            .showDialog(mILayout);
+                }
+            }
+        });
     }
 
     @Override

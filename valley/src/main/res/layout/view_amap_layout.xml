@@ -5,55 +5,74 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
+        android:layout_weight="3"
         android:layout_height="0dp"
-        android:layout_weight="3">
+        android:orientation="vertical"
+        >
 
-        <com.hn.d.valley.widget.HnMapLayout
+        <include
+            android:id="@+id/layout_search_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            layout="@layout/item_recent_search"
+            />
 
-            <com.amap.api.maps.TextureMapView
-                android:id="@+id/map_view"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <com.hn.d.valley.widget.HnMapLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-        </com.hn.d.valley.widget.HnMapLayout>
+                android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/location_pin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/pin"/>
+                <com.amap.api.maps.TextureMapView
+                    android:id="@+id/map_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </com.hn.d.valley.widget.HnMapLayout>
 
-        <LinearLayout
-            android:id="@+id/location_info_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/location_pin"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/marker_info_bg"
-            android:orientation="vertical"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:visibility="visible">
+            <ImageView
+                android:id="@+id/location_pin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/pin"/>
 
-            <TextView
-                android:id="@+id/marker_address"
-                style="@style/WhiteColorTextStyle"/>
-        </LinearLayout>
+            <LinearLayout
+                android:id="@+id/location_info_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/location_pin"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/marker_info_bg"
+                android:orientation="vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:visibility="visible">
 
-        <Button
-            android:id="@+id/my_location"
-            android:layout_width="@dimen/base_title_bar_item_size"
-            android:layout_height="@dimen/base_title_bar_item_size"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/base_xxxhdpi"
-            android:layout_marginStart="@dimen/base_hdpi"
-            android:background="@drawable/btn_location_selector"/>
+                <TextView
+                    android:id="@+id/marker_address"
+                    style="@style/WhiteColorTextStyle"/>
+            </LinearLayout>
 
-    </RelativeLayout>
+            <Button
+                android:id="@+id/my_location"
+                android:layout_width="@dimen/base_title_bar_item_size"
+                android:layout_height="@dimen/base_title_bar_item_size"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/base_xxxhdpi"
+                android:layout_marginStart="@dimen/base_hdpi"
+                android:background="@drawable/btn_location_selector"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
 
     <RelativeLayout
         android:id="@+id/bottom_layout"

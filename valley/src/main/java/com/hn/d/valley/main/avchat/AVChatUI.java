@@ -1068,7 +1068,7 @@ public class AVChatUI implements AVChatUIListener {
     public void showAudioModeUI() {
         // 先检测悬浮窗权限设置
         if (!SettingsCompat.canDrawOverlays(mActivity)) {
-            aVChatListener.showPermissionCheckDialog();
+//            aVChatListener.showPermissionCheckDialog();
             return;
         }
         if (mFloatViewService != null) {

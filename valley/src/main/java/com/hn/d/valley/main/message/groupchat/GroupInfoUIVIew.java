@@ -81,7 +81,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setTitleString("聊天信息");
+        return super.getTitleBar().setTitleString(getString(R.string.text_chat_info));
     }
 
     /**
@@ -449,6 +449,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             }));
         }
 
+
         bindGroupOwnerFunc(items, line, left);
         jugeGroupOwner(items, line, left);
 
@@ -505,6 +506,40 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
     private void bindGroupOwnerFunc(List<ViewItemInfo> items, final int line, final int left) {
         if (isSelfAdmin) {
+
+            items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    final ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                    infoLayout.setItemText(mActivity.getString(R.string.text_group_update));
+                    infoLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mGroupDescBean != null && mGroupDescBean.canUpgrade()) {
+                                UIDialog.build()
+                                        .setDialogContent(String.format(mActivity.getString(R.string.text_group_upgrade_true_tip),mGroupDescBean.getTopMemberLimit()))
+                                        .setCancelText(getString(R.string.cancel))
+                                        .setOkText(getString(R.string.ok))
+                                        .setOkListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                upgradeGroup();
+                                            }
+                                        })
+                                        .showDialog(mILayout);
+                            } else {
+                                UIDialog.build()
+                                        .setOkText(mActivity.getString(R.string.text_i_known))
+                                        .setCancelText("")
+                                        .setDialogContent(String.format(mActivity.getString(R.string.text_group_upgrade_false_tip),mGroupDescBean.getTopMemberLimit()))
+                                        .showDialog(mILayout);
+                            }
+
+                        }
+                    });
+                }
+            }));
+
             items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
                 @Override
                 public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -538,6 +573,27 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         }
     }
 
+    private void upgradeGroup() {
+        add(RRetrofit.create(GroupChatService.class)
+                .upgrade(Param.buildMap("uid:" + UserCache.getUserAccount()
+                        , "gid:" + mGroupDescBean.getGid()))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String bean) {
+                        super.onSucceed(bean);
+                        finishIView();
+                        T_.info(mActivity.getString(R.string.text_upgrade_success));
+                    }
+
+                    @Override
+                    public void onNoNetwork() {
+                        super.onNoNetwork();
+                    }
+                }));
+
+    }
+
     private void dissolveGroup() {
         add(RRetrofit.create(GroupChatService.class)
                 .dissolve(Param.buildMap("uid:" + UserCache.getUserAccount()
@@ -569,7 +625,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             return;
         }
 
-        boolean isRawname = mGroupDescBean.getDefaultName().equals("");
+        boolean isRawname = mGroupDescBean.getName().equals("");
         final String currentName = isRawname ? mGroupDescBean.getDefaultName() : mGroupDescBean.getName();
         infoLayout.setItemDarkText(currentName);
         infoLayout.setOnClickListener(new View.OnClickListener() {

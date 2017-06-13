@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="75dp"
-    android:layout_marginTop="@dimen/base_xhdpi"
-    android:layout_marginBottom="@dimen/base_xhdpi"
+    android:paddingTop="@dimen/base_xhdpi"
+    android:paddingBottom="@dimen/base_xhdpi"
     android:layout_gravity="center_vertical"
     android:background="@drawable/base_bg_selector"
     android:orientation="horizontal"
@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/image_view"
-        android:layout_width="@dimen/base_60dpi"
-        android:layout_height="@dimen/base_75dpi"
+        android:layout_width="@dimen/base_75dpi"
+        android:layout_height="@dimen/base_55dpi"
         android:scaleType="fitXY"
         android:src="@drawable/zhanweitu_1" />
 

@@ -10,7 +10,7 @@
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/text_view"
         style="@style/MainTextStyle"
-        android:drawableLeft="@drawable/add_s"
+        android:drawableLeft="@drawable/add_black"
         android:drawablePadding="@dimen/base_xhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

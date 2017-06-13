@@ -197,7 +197,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/base_xhdpi"
             android:layout_marginStart="@dimen/base_xhdpi"
-            android:background="@color/white"
+            android:background="@drawable/base_white_round_bg"
             android:minHeight="@dimen/base_40dpi"
             android:visibility="gone">
 

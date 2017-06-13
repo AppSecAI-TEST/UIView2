@@ -23,6 +23,8 @@
         android:layout_height="@dimen/base_40dpi"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingEnd="@dimen/base_xhdpi"
         android:background="#60000000"
         android:gravity="center_vertical"
         android:textColor="@color/default_base_white"

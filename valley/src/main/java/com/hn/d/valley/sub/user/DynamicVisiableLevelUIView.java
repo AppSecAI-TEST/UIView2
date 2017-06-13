@@ -3,6 +3,7 @@ package com.hn.d.valley.sub.user;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,9 +23,11 @@ import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnCheckBox;
 import com.netease.nimlib.sdk.friend.model.Friend;
@@ -181,11 +184,9 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
 
         @Override
         protected void onBindGroupView(RBaseViewHolder holder, final int position, int indexInGroup) {
-//            ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-//            infoLayout.setItemText(section.getDes());
             TextView tv_name = holder.tv(R.id.username);
             TextView signature = holder.tv(R.id.signature);
-            tv_name.setText(section.getDes());
+            tv_name.setText(section.getLevel());
             signature.setText(section.getDes());
             holder.v(R.id.radio_view).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -218,6 +219,18 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         protected void onBindDataView(RBaseViewHolder holder, int position, int indexInData) {
             super.onBindDataView(holder, position, indexInData);
             TextView tv_name = holder.tv(R.id.text_view);
+
+            switch (SkinUtils.getSkin()) {
+                case SkinManagerUIView.SKIN_BLACK:
+                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity,R.drawable.add_black),null,null,null);
+                    break;
+                case SkinManagerUIView.SKIN_GREEN:
+                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity,R.drawable.add_green),null,null,null);
+                    break;
+                case SkinManagerUIView.SKIN_BLUE:
+                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity,R.drawable.add_blue),null,null,null);
+                    break;
+            }
             // 设置已添加 name
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -274,21 +287,30 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
      * 1-公开 2-私密 3-部分好友可见 4-不给谁看,5-仅好友可见】
      */
     public enum LevelType {
-        PUBLIC(1, ValleyApp.getApp().getResources().getString(R.string.text_public)),
-        PRIVATE(2, ValleyApp.getApp().getResources().getString(R.string.text_private)),
-        PARTIALLY_VISIABLE(3, ValleyApp.getApp().getResources().getString(R.string.text_partially_visiable)),
-        PARTIALLY_INVISIABLE(4, ValleyApp.getApp().getResources().getString(R.string.text_partially_invisiable)),
-        ONLY_FIRENDS_VISIABLE(5, ValleyApp.getApp().getResources().getString(R.string.text_only_friends_visiable));
+        PUBLIC(1, ValleyApp.getApp().getResources().getString(R.string.text_public),"所有人可见"),
+        PRIVATE(2, ValleyApp.getApp().getResources().getString(R.string.text_private),"仅自己可见"),
+        PARTIALLY_VISIABLE(3, ValleyApp.getApp().getResources().getString(R.string.text_partially_visiable),"选中的朋友可见"),
+        PARTIALLY_INVISIABLE(4, ValleyApp.getApp().getResources().getString(R.string.text_partially_invisiable),"选中的朋友不可见"),
+        ONLY_FIRENDS_VISIABLE(5, ValleyApp.getApp().getResources().getString(R.string.text_only_friends_visiable),"所有朋友可见");
 
 
         int id;
         String des;
+        String level;
 
-        LevelType(int id, String des) {
+        LevelType(int id, String level, String des) {
             this.id = id;
             this.des = des;
+            this.level = level;
         }
 
+        public String getLevel() {
+            return level;
+        }
+
+        public void setLevel(String level) {
+            this.level = level;
+        }
 
         static LevelType valueOf(int id) {
             switch (id) {

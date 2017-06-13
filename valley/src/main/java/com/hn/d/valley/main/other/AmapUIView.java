@@ -57,6 +57,7 @@ import rx.functions.Action1;
  */
 public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChangeListener/*, LocationSource, AMapLocationListener*/ {
 
+    //view
     TextureMapView mMapView;
     TextView mMarkerAddress;
     LinearLayout mLocationInfoLayout;
@@ -64,7 +65,12 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
     RRecyclerView mRecyclerView;
     EmptyView mEmptyView;
     RelativeLayout mBottomLayout;
+    RelativeLayout mSearchView;
+
+    //amap
     private AMap mMap;
+
+
     //    private OnLocationChangedListener mListener;
 //    private AMapLocationClient mLocationClient;
     private Action1<AmapBean> mBeanAction1;
@@ -107,11 +113,18 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
         mRecyclerView = v(R.id.recycler_view);
         mEmptyView = v(R.id.empty_view);
         mBottomLayout = v(R.id.bottom_layout);
+        mSearchView = v(R.id.layout_search_view);
 
         click(R.id.my_location, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onMyLocationClick();
+            }
+        });
+        mSearchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new SearchPOIUIView(mBeanAction1,mLastTarget));
             }
         });
 

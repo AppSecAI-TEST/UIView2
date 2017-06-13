@@ -197,7 +197,7 @@
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:textSize">@dimen/default_text_little_size</item>
         <item name="android:textColor">@color/main_text_color_dark</item>
         <item name="android:textColorHint">@color/base_text_color_dark</item>
     </style>
@@ -220,6 +220,7 @@
     <!--主要文本的样式-->
     <style name="MainTextStyle" parent="DarkTextStyle">
         <item name="android:textColor">@color/main_text_color</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
     </style>
 
     <!--地址文本样式-->

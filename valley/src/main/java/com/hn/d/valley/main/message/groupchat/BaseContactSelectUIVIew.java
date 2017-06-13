@@ -145,7 +145,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     }
 
 
-    private void onSelected() {
+    protected void onSelected() {
         if (selectAction != null) {
             if (mGroupAdapter.getSelectorData().size() == 0) {
                 T_.show("没有选择!");

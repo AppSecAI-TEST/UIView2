@@ -169,6 +169,15 @@ public interface GroupChatService {
     @POST("chat/topList")
     Observable<ResponseBody> topList(@QueryMap Map<String, String> map);
 
+    /**
+     * 升级群
+     参数名	必选	类型	说明
+     uid	是	int	用户id
+     gid	是	int	群id
+     */
+    @POST("group/upgrade")
+    Observable<ResponseBody> upgrade(@QueryMap Map<String, String> map);
+
 
 
 }

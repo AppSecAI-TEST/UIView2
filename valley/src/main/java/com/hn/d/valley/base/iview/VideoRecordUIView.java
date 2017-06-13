@@ -434,13 +434,13 @@ public class VideoRecordUIView extends UIBaseView {
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(mActivity, Uri.fromFile(videoFile));
-        if (videoTime < 0) {
+        if (videoTime <= 0) {
             videoTime = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
         }
-        if (videoWidth < 0) {
+        if (videoWidth <= 0) {
             videoWidth = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
         }
-        if (videoHeight < 0) {
+        if (videoHeight <= 0) {
             videoHeight = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
         }
         retriever.release();

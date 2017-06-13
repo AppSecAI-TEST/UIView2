@@ -20,7 +20,7 @@
 
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/tv_announcement_desc"
-                style="@style/DarkTextStyle"
+                style="@style/MainTextStyle"
                 android:layout_margin="@dimen/base_xhdpi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,12 +30,12 @@
         </LinearLayout>
     </com.hn.d.valley.widget.HnEmptyRefreshLayout>
 
-    <com.angcyo.uiview.widget.RTextView
+    <com.hn.d.valley.widget.HnButton
         android:id="@+id/command_item_view"
         style="@style/MainColorButtonStyle"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_item_size"
         android:visibility="gone"
-        android:text="编辑公告" />
+        android:text="@string/text_edit_announce" />
 </RelativeLayout>

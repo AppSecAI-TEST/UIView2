@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -123,22 +124,35 @@ public class EditGroupAnnounceUIView extends BaseUIView {
                                         value = mExEditText.string();
                                     }
 
-                                    add(RRetrofit.create(GroupChatService.class)
-                                            .setAnnouncement(Param.buildMap("an_id:" + an_id,"gid:" + gid,"content:" + value))
-                                            .compose(Rx.transformer(String.class))
-                                            .subscribe(new BaseSingleSubscriber<String>() {
+                                    final String finalValue = value;
+                                    UIDialog.build()
+                                            .setDialogContent(mActivity.getString(R.string.text_edit_announce_sure_tip))
+                                            .setOkText(getString(R.string.ok))
+                                            .setCancelText(getString(R.string.cancel))
+                                            .setOkListener(new View.OnClickListener() {
                                                 @Override
-                                                public void onError(int code, String msg) {
-                                                    super.onError(code, msg);
-                                                }
+                                                public void onClick(View v) {
+                                                    add(RRetrofit.create(GroupChatService.class)
+                                                            .setAnnouncement(Param.buildMap("an_id:" + an_id,"gid:" + gid,"content:" + finalValue))
+                                                            .compose(Rx.transformer(String.class))
+                                                            .subscribe(new BaseSingleSubscriber<String>() {
+                                                                @Override
+                                                                public void onError(int code, String msg) {
+                                                                    super.onError(code, msg);
+                                                                }
 
-                                                @Override
-                                                public void onSucceed(String beans) {
-                                                    loadData();
-                                                    finishIView(mIView);
+                                                                @Override
+                                                                public void onSucceed(String beans) {
+                                                                    loadData();
+                                                                    finishIView(mIView);
 
+                                                                }
+                                                            }));
                                                 }
-                                            }));
+                                            })
+                                            .showDialog(mILayout);
+
+
                                 }
                             }));
         }

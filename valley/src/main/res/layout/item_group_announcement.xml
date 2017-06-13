@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/base_ldpi"
-    android:paddingTop="@dimen/base_ldpi"
+    android:paddingTop="@dimen/base_25dpi"
     android:orientation="vertical">
 
     <TextView
@@ -22,12 +21,13 @@
         tools:text="上午 19:90"/>
 
     <RelativeLayout
-        android:background="@color/white"
-        android:paddingTop="@dimen/base_ldpi"
+        android:id="@+id/rl_content"
+        android:background="@drawable/base_white_round_bg"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/base_xhdpi_15"
         android:gravity="center"
         android:layout_below="@id/tv_time_view"
-        android:padding="@dimen/base_ldpi"
+        android:padding="@dimen/base_xhdpi_15"
         android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_marginRight="@dimen/base_xhdpi"
         android:layout_width="match_parent"
@@ -36,6 +36,8 @@
         <TextView
             android:id="@+id/tv_announcement_desc"
             tools:text="群公告啊"
+            style="@style/DarkTextStyle"
+            android:textColor="@color/main_text_color_dark2"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

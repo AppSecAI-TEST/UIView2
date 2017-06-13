@@ -95,8 +95,13 @@
                 android:visibility="invisible"
                 app:mv_backgroundColor="#FD481F"
                 app:mv_isRadiusHalfHeight="true"
-                app:mv_strokeColor="#ffffff"
-                app:mv_strokeWidth="1dp" />
+     />
+            <!--
+            去除msgview 白线
+                       app:mv_strokeColor="#ffffff"
+                app:mv_strokeWidth="1dp"
+            -->
+
         </LinearLayout>
 
     </LinearLayout>

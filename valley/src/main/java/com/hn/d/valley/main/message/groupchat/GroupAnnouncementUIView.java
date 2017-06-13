@@ -136,11 +136,12 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
             super.onBindDataView(holder, posInData, dataBean);
             TextView tv_time = holder.tv(R.id.tv_time_view);
             TextView tv_announce_desc = holder.tv(R.id.tv_announcement_desc);
+            View content = holder.v(R.id.rl_content);
 
             tv_announce_desc.setText(dataBean.getContent());
             tv_time.setText(TimeUtil.getTimeShowString(Long.parseLong(dataBean.getCreated()) * 1000, false));
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startIView(new EditGroupAnnounceUIView(gid,dataBean.getAn_id(),isAdmin));

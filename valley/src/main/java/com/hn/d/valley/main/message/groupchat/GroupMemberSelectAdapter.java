@@ -116,7 +116,7 @@ public class GroupMemberSelectAdapter extends BaseContactSelectAdapter {
                     if(action == null){
                         return;
                     }
-                    action.call(!isSelector,bean);
+                    action.call(selector,bean);
                 }
             };
 

@@ -1,5 +1,6 @@
 package com.hn.d.valley.bean;
 
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -19,6 +20,8 @@ public class GroupDescBean {
      * created : 1481610753
      * member_limit : 10
      * member_count : 5
+     *         "top_member_limit":"50",
+
      * nick :
      * default_nick : signature
      * push : 1
@@ -42,6 +45,8 @@ public class GroupDescBean {
     private String memberLimit;
     @SerializedName("member_count")
     private int memberCount;
+    @SerializedName("top_member_limit")
+    private String topMemberLimit;
     private String nick;
     @SerializedName("default_nick")
     private String defaultNick;
@@ -49,6 +54,11 @@ public class GroupDescBean {
     @SerializedName("user_avatar")
     private String userAatar;
     private int announcement;
+
+
+    public boolean canUpgrade() {
+        return Integer.valueOf(memberLimit) < Integer.valueOf(topMemberLimit);
+    }
 
     public String getGid() {
         return gid;
@@ -64,6 +74,14 @@ public class GroupDescBean {
 
     public void setYxGid(String yxGid) {
         this.yxGid = yxGid;
+    }
+
+    public String getTopMemberLimit() {
+        return topMemberLimit;
+    }
+
+    public void setTopMemberLimit(String topMemberLimit) {
+        this.topMemberLimit = topMemberLimit;
     }
 
     public String getDefaultName() {

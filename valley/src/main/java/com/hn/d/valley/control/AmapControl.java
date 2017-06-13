@@ -201,7 +201,11 @@ public class AmapControl implements LocationSource, AMapLocationListener {
      * 开始进行poi搜索(搜索附近的poi信息)
      */
     public static PoiSearch doSearchQuery(LatLng latLng, int currentPage, PoiSearch.OnPoiSearchListener listener) {
-        PoiSearch.Query query = new PoiSearch.Query("", "", "");// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+        return doSearchQuery(latLng,currentPage,listener,"");
+    }
+
+    public static PoiSearch  doSearchQuery(LatLng latLng, int currentPage , PoiSearch.OnPoiSearchListener listener,String queryStr ){
+        PoiSearch.Query query = new PoiSearch.Query(queryStr, "", "");// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(20);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
 
