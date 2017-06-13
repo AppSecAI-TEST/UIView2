@@ -163,7 +163,7 @@ public class GPUImageMovieWriter extends GPUImageFilter {
 
 
     public enum Level {
-        LOW(480, 680), MEDIUM(600, 800), HIGH(720, 1280), VERYHIGH(1080, 1920),LOW_CROP(480, 480), MEDIUM_CROP(600, 600), HIGH_CROP(720, 720), VERYHIGH_CROP(1080, 1080);
+        LOW(360, 640), MEDIUM(540, 960), HIGH(720, 1280), VERYHIGH(1080, 1920),LOW_CROP(480, 480), MEDIUM_CROP(600, 600), HIGH_CROP(720, 720), VERYHIGH_CROP(1080, 1080);
 
         private int width;
         private int height;

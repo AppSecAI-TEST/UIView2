@@ -1,9 +1,12 @@
 package com.hn.d.valley.base.iview;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.hardware.Camera;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +29,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.view.UIIViewImpl;
@@ -36,16 +40,22 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.widget.HnLoading;
+import com.lzy.imagepicker.ImageDataSource;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.ImagePickerHelper;
+import com.lzy.imagepicker.bean.ImageItem;
 import com.m3b.rbrecoderlib.GPUImage;
 import com.m3b.rbrecoderlib.GPUImageFilter;
 import com.m3b.rbrecoderlib.GPUImageFilterGroup;
 import com.m3b.rbrecoderlib.GPUImageMovieWriter;
+import com.m3b.rbrecoderlib.Rotation;
 import com.m3b.rbrecoderlib.filters.MagicBeautyFilter;
 import com.m3b.rbrecoderlib.filters.RBLogoFilter;
 import com.m3b.rbrecoderlib.utils.CameraHelper;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -57,8 +67,6 @@ import rx.functions.Action1;
 import rx.functions.Action3;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import static com.m3b.rbrecoderlib.Rotation.ROTATION_270;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -107,6 +115,8 @@ public class VideoRecordUIView extends UIBaseView {
     private View prettyLayout;
     private int currentLevel = 0;
 
+//    public static Observable
+
     public VideoRecordUIView(Action3<UIIViewImpl, String, String> publishAction) {
         this.publishAction = publishAction;
     }
@@ -147,6 +157,22 @@ public class VideoRecordUIView extends UIBaseView {
         }
 
         return mediaFile;
+    }
+
+    /**
+     * 保证执行的正确性
+     */
+    public static void handle(HandleCallback callback) {
+        int index = 0;
+        L.i("start--缩略图重命名");
+        while (!callback.onHandle(index) && index < 5) {
+            L.i("start--缩略图重命名:" + index);
+            index++;
+            try {
+                Thread.sleep(100);
+            } catch (Exception e) {
+            }
+        }
     }
 
     @Override
@@ -233,8 +259,9 @@ public class VideoRecordUIView extends UIBaseView {
         mCameraHelper = new CameraHelper(mActivity);
         mCamera = new CameraLoader();
 
-        Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
-        logofilter = new RBLogoFilter(new Rect(100, 100, 100 + logo.getWidth(), 100 + logo.getHeight()));// left, top, right, bottom
+        Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.shuiyin_1);
+        logofilter = new RBLogoFilter(new Rect(ScreenUtil.screenWidth - logo.getWidth() - 100,
+                100, ScreenUtil.screenWidth - 100, 100 + logo.getHeight()));// left, top, right, bottom
         logofilter.setBitmap(logo);
 
         // 实时美颜
@@ -298,7 +325,7 @@ public class VideoRecordUIView extends UIBaseView {
         mViewHolder.click(R.id.video_selector_view, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                ImagePickerHelper.startImagePicker(mActivity, false, false, 0, ImageDataSource.VIDEO);
             }
         });
 
@@ -385,70 +412,7 @@ public class VideoRecordUIView extends UIBaseView {
                     if (BuildConfig.DEBUG) {
                         T_.info(progress + " s" + mRecordFile.getAbsolutePath());
                     }
-                    final String parent = mRecordFile.getParent();
-
-                    final String newName = UUID.randomUUID().toString() + OssHelper.createVideoFileName(progress);
-                    final String thumbPath;
-                    if (rotationRecord == 0) {
-                        thumbPath = parent + File.separator + UUID.randomUUID().toString()
-                                + OssHelper.createImageFileName(DefaultLevel.getHeight(), DefaultLevel.getWidth());
-
-                    } else {
-                        thumbPath = parent + File.separator + UUID.randomUUID().toString()
-                                + OssHelper.createImageFileName(DefaultLevel.getHeight(), DefaultLevel.getWidth());
-                    }
-
-                    HnLoading.show(mParentILayout, false);
-                    Observable.just("")
-                            .delay(100, TimeUnit.MILLISECONDS)
-                            .map(new Func1<String, String>() {
-                                @Override
-                                public String call(String s) {
-                                    int index = 0;
-                                    L.i("start--视频截图");
-                                    while (!BitmapDecoder.extractThumbnail(mRecordFile.getAbsolutePath(), thumbPath) && index < 5) {
-                                        L.i("start--视频截图:" + index);
-                                        index++;
-                                        try {
-                                            Thread.sleep(100);
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                    L.i("视频截图完成:" + thumbPath);
-                                    return "";
-                                }
-                            })
-                            .delay(100, TimeUnit.MILLISECONDS)
-                            .map(new Func1<String, String>() {
-                                @Override
-                                public String call(String s) {
-                                    int index = 0;
-                                    L.i("start--视频重命名");
-                                    while (!FileUtils.rename(mRecordFile, newName) && index < 5) {
-                                        L.i("start--视频重命名:" + index);
-                                        index++;
-                                        try {
-                                            Thread.sleep(100);
-                                        } catch (Exception e) {
-                                        }
-                                    }
-                                    String videoPath = parent + File.separator + newName;
-                                    L.i("视频重命名完成:" + mRecordFile.getAbsolutePath() + "->" + videoPath);
-                                    return videoPath;
-                                }
-                            })
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Action1<String>() {
-                                @Override
-                                public void call(String s) {
-                                    //startIView(new VideoPlayUIView(thumbPath, s));
-                                    HnLoading.hide();
-//                                    replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(thumbPath, s), publishAction));
-                                    publishAction.call(VideoRecordUIView.this, thumbPath, s);
-                                }
-                            });
-
+                    fixVideoPath(mRecordFile.getAbsolutePath(), null, progress, DefaultLevel.getWidth(), DefaultLevel.getHeight(), rotationRecord);
                 }
             }
         });
@@ -458,6 +422,113 @@ public class VideoRecordUIView extends UIBaseView {
         } else {
             mRecordLayout.setMaxTime(getResources().getInteger(R.integer.max_video_record_length));
         }
+    }
+
+    /**
+     * 为视频添加时间命名, 为缩略图添加宽高
+     */
+    private void fixVideoPath(String videoPath, final File thumbFile, int videoTime /*秒*/, int videoWidth, int videoHeight, int rotationRecord) {
+        final VideoBean videoBean = new VideoBean();
+        videoBean.videoPath = videoPath;
+        final File videoFile = new File(videoPath);
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(mActivity, Uri.fromFile(videoFile));
+        if (videoTime < 0) {
+            videoTime = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
+        }
+        if (videoWidth < 0) {
+            videoWidth = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+        }
+        if (videoHeight < 0) {
+            videoHeight = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+        }
+        retriever.release();
+
+
+        final String newName = UUID.randomUUID().toString() + OssHelper.createVideoFileName(videoTime);
+        final String thumbPath, thumbName;
+
+
+        if (rotationRecord == 0) {
+            thumbName = UUID.randomUUID().toString()
+                    + OssHelper.createImageFileName(videoWidth, videoHeight);
+        } else {
+            thumbName = UUID.randomUUID().toString()
+                    + OssHelper.createImageFileName(videoHeight, videoWidth);
+        }
+
+        final String parent = videoFile.getParent();
+        thumbPath = parent + File.separator + thumbName;
+        videoBean.thumbPath = thumbPath;
+
+        HnLoading.show(mParentILayout, false);
+        Observable.just("")
+                .delay(100, TimeUnit.MILLISECONDS)
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        if (thumbFile == null || !thumbFile.exists()) {
+                            L.i("start--视频截图");
+                            handle(new HandleCallback() {
+                                @Override
+                                public boolean onHandle(int index) {
+                                    L.i("start--视频截图->" + index);
+                                    return BitmapDecoder.extractThumbnail(videoFile.getAbsolutePath(), thumbPath);
+                                }
+                            });
+                            L.i("视频截图完成:" + thumbPath);
+                        } else {
+                            L.i("start--缩略图重命名");
+                            handle(new HandleCallback() {
+                                @Override
+                                public boolean onHandle(int index) {
+                                    L.i("start--缩略图重命名:" + index);
+                                    return FileUtils.rename(thumbFile, thumbName);
+                                }
+                            });
+
+                            videoBean.thumbPath = thumbFile.getParent() + File.separator + thumbName;
+                            L.i("缩略图重命名完成:" + videoBean.thumbPath);
+                        }
+                        return "";
+                    }
+                })
+                .delay(100, TimeUnit.MILLISECONDS)
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        L.i("start--视频重命名");
+                        handle(new HandleCallback() {
+                            @Override
+                            public boolean onHandle(int index) {
+                                L.i("start--视频重命名:" + index);
+                                return FileUtils.rename(videoFile, newName);
+                            }
+                        });
+
+                        videoBean.videoPath = parent + File.separator + newName;
+                        ImagePicker.galleryAddPic(mActivity, new File(videoBean.videoPath));
+
+                        L.i("视频重命名完成: ->" + videoBean.videoPath);
+                        return videoBean.videoPath;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        //startIView(new VideoPlayUIView(thumbPath, s));
+                        HnLoading.hide();
+//                                    replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(thumbPath, s), publishAction));
+                        onPushAction(videoBean.thumbPath, videoBean.videoPath);
+                    }
+                });
+    }
+
+    private void onPushAction(String thumbPath, String videoPath) {
+        publishAction.call(VideoRecordUIView.this, thumbPath, videoPath);
     }
 
     void autoHide() {
@@ -540,6 +611,17 @@ public class VideoRecordUIView extends UIBaseView {
         super.onViewUnload();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ArrayList<ImageItem> items = ImagePickerHelper.getItems(mActivity, requestCode, resultCode, data);
+        if (items.size() > 0) {
+            ImageItem item = items.get(0);
+
+            fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+        }
+    }
+
     /**
      * 开始录制
      */
@@ -584,21 +666,21 @@ public class VideoRecordUIView extends UIBaseView {
             //mFilter.destroy();//FIXME filter switch fuxking bug
 
             if (mCamera.isCameraFont()) {
-                mGPUImage.setRotation(ROTATION_270, true, false, true);
+                mGPUImage.setRotation(Rotation.ROTATION_90, true, false, true);
             }
-
 
             filters = new GPUImageFilterGroup();
             filters.addFilter(logofilter);
+            filters.addFilter(mFilter);
             magicBeautyFilter.setBeautyLevel(currentLevel);
             filters.addFilter(magicBeautyFilter);
-            filters.addFilter(mFilter);
             filters.addFilter(mMovieWriter);
 
             mGPUImage.setFilter(filters);
 
         }
     }
+
 
 //    /**
 //     * 开启美颜
@@ -640,7 +722,6 @@ public class VideoRecordUIView extends UIBaseView {
 //        mGPUImage.setFilter(newfilters);
 //
 //    }
-
 
     /**
      * 旋转
@@ -700,6 +781,15 @@ public class VideoRecordUIView extends UIBaseView {
         return optimalSize;
     }
 
+    public interface HandleCallback {
+        boolean onHandle(int index);
+    }
+
+    private static class VideoBean {
+        public String thumbPath;
+        public String videoPath;
+    }
+
     public class CameraLoader {
 
         private int mCurrentCameraId = 0;
@@ -717,12 +807,13 @@ public class VideoRecordUIView extends UIBaseView {
             releaseCamera();
             mCurrentCameraId = (mCurrentCameraId + 1) % mCameraHelper.getNumberOfCameras();
             mGLSurfaceView.requestLayout();
-            if (isCameraFont() && isSwitched)
-                needRotate = false;
-            else
+            if (isCameraFont())
                 needRotate = true;
+            //else
+            //  needRotate = true;
             setUpCamera(mCurrentCameraId);
         }
+
 
         private void setUpCamera(final int id) {
             mCameraInstance = getCameraInstance(id);
@@ -732,8 +823,9 @@ public class VideoRecordUIView extends UIBaseView {
             // TODO adjust by getting supportedPreviewSizes and then choosing
             // the best one for screen size (best fill screen)
 
+            Camera.Size optimalSize = getOptimalPreviewSize(mCameraInstance.getParameters().getSupportedPreviewSizes(),
+                    DefaultLevel.getWidth(), DefaultLevel.getHeight());
 
-            Camera.Size optimalSize = getOptimalPreviewSize(mCameraInstance.getParameters().getSupportedPreviewSizes(), 720, 1280);
             Log.d("### ActivtyMain", "w: " + optimalSize.width + " h: " + optimalSize.height);
             parameters.setPreviewSize(optimalSize.width, optimalSize.height);
 

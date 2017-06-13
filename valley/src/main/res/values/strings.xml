@@ -723,5 +723,11 @@
     <string name="email_to">给我们发邮件</string>
     <string name="text_not_allow_access_me">不让TA看我的动态</string>
     <string name="text_not_see_other">不看TA的动态</string>
+    <string name="text_dynamic_visiable">权限设置</string>
+    <string name="text_public">公开</string>
+    <string name="text_private">私密</string>
+    <string name="text_partially_visiable">部分可见</string>
+    <string name="text_partially_invisiable">不给谁看</string>
+    <string name="text_only_friends_visiable">仅好友可见</string>
     <string name="pretty_tip">美颜</string>
 </resources>

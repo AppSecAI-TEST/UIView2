@@ -135,11 +135,15 @@ public class ValleyApp extends RApplication {
     }
 
     protected void clearFresco() {
-        if (Fresco.hasBeenInitialized()) {
-            ImagePipeline imagePipeline = Fresco.getImagePipeline();
-            if (imagePipeline != null) {
-                imagePipeline.clearMemoryCaches();
+        try {
+            if (Fresco.hasBeenInitialized()) {
+                ImagePipeline imagePipeline = Fresco.getImagePipeline();
+                if (imagePipeline != null) {
+                    imagePipeline.clearMemoryCaches();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -5,13 +5,13 @@ import android.annotation.SuppressLint;
 import android.opengl.GLES20;
 import android.util.Log;
 
+import com.m3b.rbrecoderlib.utils.TextureRotationUtil;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.m3b.rbrecoderlib.utils.TextureRotationUtil;
 
 import static com.m3b.rbrecoderlib.GPUImageRenderer.CUBE;
 import static com.m3b.rbrecoderlib.utils.TextureRotationUtil.TEXTURE_NO_ROTATION;
@@ -195,15 +195,15 @@ public class GPUImageFilterGroup extends GPUImageFilter {
 
                 if (i == 0) {
                     filter.onDraw(previousTexture, cubeBuffer, textureBuffer);
-                    Log.d("$$$$","1 - " +  previousTexture);
+//                    Log.d("$$$$","1 - " +  previousTexture);
                 } else if (i == size - 1) {
                     filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : textureBuffer);//flip
                     //filter.onDraw(previousTexture, cubeBuffer, textureBuffer);//flip
-                    Log.d("$$$$","2 - " + previousTexture);
+//                    Log.d("$$$$","2 - " + previousTexture);
                 } else {
-                    filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : textureBuffer);
-                    //filter.onDraw(previousTexture, cubeBuffer, textureBuffer);
-                    Log.d("$$$$","3 - " + previousTexture);
+//                    filter.onDraw(previousTexture, mGLCubeBuffer, (size % 2 == 0) ? mGLTextureFlipBuffer : textureBuffer);
+                    filter.onDraw(previousTexture, mGLCubeBuffer, textureBuffer);
+//                    Log.d("$$$$","3 - " + previousTexture);
                 }
 
 

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
@@ -60,6 +61,7 @@ import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
+import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.message.session.EmojiLayoutControl;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
@@ -84,6 +86,7 @@ import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Action2;
 import rx.functions.Action3;
 
 import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Options.DEFALUT_LIMIT;
@@ -117,6 +120,10 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private List<FriendBean> mFriendList = new ArrayList<>();
     private VideoStatusInfo mVideoStatusInfo;
     private PublishTaskRealm mPublishTaskRealm;
+
+    private List<String> visiableFriends = new ArrayList<>();//可见或不可见好友
+    private DynamicVisiableLevelUIView.LevelType levelType = DynamicVisiableLevelUIView.LevelType.PUBLIC;// 可见类型 默认公开
+
 
     /**
      * 发布动态
@@ -486,8 +493,23 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     }
 
     private void initVisibleView() {
-        TextView visibleView = mViewHolder.tv(R.id.visible_view);
-        visibleView.setText("公开");
+        final TextView visibleView = mViewHolder.tv(R.id.visible_view);
+        visibleView.setText(levelType.getDes());
+        visibleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new DynamicVisiableLevelUIView().setSelectionAction(new Action2<DynamicVisiableLevelUIView.LevelType, List<String>>() {
+                    @Override
+                    public void call(DynamicVisiableLevelUIView.LevelType levelType, List<String> strings) {
+                        L.d(PublishDynamicUIView2.class.getSimpleName(),"type : " + levelType.name() + " friends : " + strings.toString());
+                        PublishDynamicUIView2.this.levelType = levelType;
+                        PublishDynamicUIView2.this.visiableFriends = strings;
+                        visibleView.setText(levelType.getDes());
+
+                    }
+                }));
+            }
+        });
     }
 
     private void initAddressView() {
@@ -738,8 +760,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                     return "";
                                 }
                             }),
-                            "scan_type:1",
-                            "scan_user:")
+                            "scan_type:" + levelType.getId(),
+                            "scan_user:" + RUtils.connect(visiableFriends))
                     )
                     .compose(Rx.transformer(String.class))
                     .subscribe(new BaseSingleSubscriber<String>() {

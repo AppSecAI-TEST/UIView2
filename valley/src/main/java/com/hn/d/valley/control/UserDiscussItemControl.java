@@ -1415,7 +1415,13 @@ public class UserDiscussItemControl {
     }
 
     public static int getVideoTimeLong(String url) {
-        return Integer.parseInt(url.substring(0, url.lastIndexOf('.')).split("t_")[1]);
+        int videoTime = -1;
+        try {
+            videoTime = Integer.parseInt(url.substring(0, url.lastIndexOf('.')).split("t_")[1]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return videoTime;
     }
 
     public static void displayImage(final ImageView imageView, final String url,

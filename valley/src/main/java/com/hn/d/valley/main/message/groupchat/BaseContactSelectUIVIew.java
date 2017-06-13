@@ -15,6 +15,7 @@ import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
@@ -146,6 +147,10 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
     private void onSelected() {
         if (selectAction != null) {
+            if (mGroupAdapter.getSelectorData().size() == 0) {
+                T_.show("没有选择!");
+                return;
+            }
             selectAction.call(this, mGroupAdapter.getSelectorData(), new RequestCallback() {
                 @Override
                 public void onStart() {
