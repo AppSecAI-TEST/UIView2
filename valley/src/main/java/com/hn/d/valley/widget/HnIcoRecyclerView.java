@@ -8,15 +8,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RMaxAdapter;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
+import com.hn.d.valley.bean.realm.IcoInfoBean;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ import java.util.List;
  */
 public class HnIcoRecyclerView extends RRecyclerView {
 
-    private RMaxAdapter<IcoInfo> mMaxAdapter;
+    private RMaxAdapter<IcoInfoBean> mMaxAdapter;
 
     public HnIcoRecyclerView(Context context) {
         this(context, null);
@@ -43,7 +44,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
         super(context, attrs);
         setItemAnim(false);
         setTag("H");
-        mMaxAdapter = new RMaxAdapter<IcoInfo>(context) {
+        mMaxAdapter = new RMaxAdapter<IcoInfoBean>(context) {
 
             @Override
             protected int getItemLayoutId(int viewType) {
@@ -71,7 +72,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
             }
 
             @Override
-            protected void onBindView(RBaseViewHolder holder, int position, IcoInfo bean) {
+            protected void onBindView(RBaseViewHolder holder, int position, IcoInfoBean bean) {
                 int size = getSize();
                 DraweeViewUtil.resize((SimpleDraweeView) holder.tag("image"), bean.avatar, size, size);
             }
@@ -88,8 +89,8 @@ public class HnIcoRecyclerView extends RRecyclerView {
 
     public void remove(String avatar) {
         //迭代器删除多个数据会出现异常 因为数据源发生变化，删除一个没有问题
-        List<IcoInfo> icoInfos = getMaxAdapter().getAllDatas();
-        for(IcoInfo icon : icoInfos) {
+        List<IcoInfoBean> icoInfos = getMaxAdapter().getAllDatas();
+        for(IcoInfoBean icon : icoInfos) {
             if (icon.avatar.equals(avatar)) {
                 icoInfos.remove(icon);
                 break;
@@ -102,7 +103,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
         mMaxAdapter.setMaxCount(maxCount);
     }
 
-    public RMaxAdapter<IcoInfo> getMaxAdapter() {
+    public RMaxAdapter<IcoInfoBean> getMaxAdapter() {
         return mMaxAdapter;
     }
 
@@ -110,22 +111,5 @@ public class HnIcoRecyclerView extends RRecyclerView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         setAdapter(mMaxAdapter);
-    }
-
-    public static class IcoInfo {
-        //用户id
-        public String uid;
-        //用户头像
-        public String avatar;
-
-        public IcoInfo(String uid, String avatar) {
-            this.uid = uid;
-            this.avatar = avatar;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return TextUtils.equals(uid, ((IcoInfo) obj).uid);
-        }
     }
 }

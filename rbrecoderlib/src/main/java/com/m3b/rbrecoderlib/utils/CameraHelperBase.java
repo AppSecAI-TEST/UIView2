@@ -50,7 +50,7 @@ public class CameraHelperBase implements CameraHelperImpl {
 
     @Override
     public void getCameraInfo(final int cameraId, final CameraInfo2 cameraInfo) {
-        cameraInfo.facing = Camera.CameraInfo.CAMERA_FACING_BACK;
+        cameraInfo.facing = CameraInfo.CAMERA_FACING_BACK;
         cameraInfo.orientation = 90;
     }
 

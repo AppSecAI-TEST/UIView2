@@ -21,6 +21,8 @@ import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.realm.IcoInfoBean;
+import com.hn.d.valley.bean.realm.RelationDataBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
@@ -183,7 +185,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 View relationLayout = holder.v(R.id.relation_layout);
                 View relationLine = holder.v(R.id.relation_line);
 
-                UserInfoBean.RelationBean relation = mUserInfoBean.getRelation();
+                RelationDataBean relation = mUserInfoBean.getRelation();
                 if (relation != null && relation.getCount() > 0) {
                     relationLayout.setVisibility(View.VISIBLE);
                     relationLine.setVisibility(View.VISIBLE);
@@ -191,12 +193,18 @@ public class UserInfoSubUIView extends BaseItemUIView {
                     holder.tv(R.id.relation_count_view).setText(relation.getCount() + "");
 
                     //点赞列表
-                    List<HnIcoRecyclerView.IcoInfo> icoInfoList = relation.getList();
+                    List<IcoInfoBean> icoInfoList = relation.getList();
 
                     HnIcoRecyclerView icoRecyclerView = holder.v(R.id.ico_recycler_view);
                     icoRecyclerView.getMaxAdapter().resetData(icoInfoList);
 
                     relationLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mParentILayout.startIView(new RelationListUIView(mUserInfoBean.getUid()));
+                        }
+                    });
+                    icoRecyclerView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mParentILayout.startIView(new RelationListUIView(mUserInfoBean.getUid()));

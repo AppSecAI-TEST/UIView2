@@ -1,3 +1,5 @@
+
+
 package com.m3b.rbrecoderlib;
 
 import android.content.Context;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.IntBuffer;
+
+import static javax.microedition.khronos.opengles.GL10.GL_VERSION;
 
 public class OpenGLUtils2 {
 
@@ -74,15 +78,15 @@ public class OpenGLUtils2 {
         return textures[0];
     }
 
-    public static int loadTexture(final Context context, final String name) {
+    public static int loadTexture(final Context context, final String name){
         final int[] textureHandle = new int[1];
 
         GLES20.glGenTextures(1, textureHandle, 0);
 
-        if (textureHandle[0] != 0) {
+        if (textureHandle[0] != 0){
 
             // Read in the resource
-            final Bitmap bitmap = getImageFromAssetsFile(context, name);
+            final Bitmap bitmap = getImageFromAssetsFile(context,name);
 
             // Bind to the texture in OpenGL
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
@@ -99,7 +103,7 @@ public class OpenGLUtils2 {
             bitmap.recycle();
         }
 
-        if (textureHandle[0] == 0) {
+        if (textureHandle[0] == 0){
             throw new RuntimeException("Error loading texture.");
         }
 
@@ -164,7 +168,7 @@ public class OpenGLUtils2 {
         return min + (max - min) * fRandNum;
     }
 
-    public static String readShaderFromRawResource(final Context context, final int resourceId) {
+    public static String readShaderFromRawResource(final Context context,final int resourceId){
         final InputStream inputStream = context.getResources().openRawResource(
                 resourceId);
         final InputStreamReader inputStreamReader = new InputStreamReader(
@@ -175,26 +179,27 @@ public class OpenGLUtils2 {
         String nextLine;
         final StringBuilder body = new StringBuilder();
 
-        try {
-            while ((nextLine = bufferedReader.readLine()) != null) {
+        try{
+            while ((nextLine = bufferedReader.readLine()) != null){
                 body.append(nextLine);
                 body.append('\n');
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e){
             return null;
         }
         return body.toString();
     }
 
 
-    private static Bitmap getImageFromAssetsFile(Context context, String fileName) {
+    private static Bitmap getImageFromAssetsFile(Context context,String fileName){
         Bitmap image = null;
         AssetManager am = context.getResources().getAssets();
-        try {
+        try{
             InputStream is = am.open(fileName);
             image = BitmapFactory.decodeStream(is);
             is.close();
-        } catch (IOException e) {
+        }catch (IOException e){
             e.printStackTrace();
         }
         return image;

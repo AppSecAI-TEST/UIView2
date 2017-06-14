@@ -28,6 +28,7 @@ import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupInfoBean;
+import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
@@ -36,7 +37,6 @@ import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.SearchUserUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.utils.NetUtils;
-import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.hn.d.valley.widget.groupView.JoinBitmaps;
@@ -74,10 +74,10 @@ public class AddGroupChatUIView extends BaseUIView {
     private Action2<Boolean,ContactItem> action = new Action2<Boolean, ContactItem>() {
         @Override
         public void call(Boolean aBoolean, ContactItem item) {
-            HnIcoRecyclerView.IcoInfo icon ;
+            IcoInfoBean icon ;
             FriendBean bean = item.getFriendBean();
 //            if (aBoolean) {
-//                icon = new HnIcoRecyclerView.IcoInfo(bean.getUid(),bean.getAvatar());
+//                icon = new IcoInfoBean(bean.getUid(),bean.getAvatar());
 //                iconSelectedRv.getMaxAdapter().addLastItem(icon);
 //            }else {
 //                iconSelectedRv.remove(bean.getAvatar());

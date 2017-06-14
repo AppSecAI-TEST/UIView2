@@ -34,6 +34,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.service.DiscussService;
@@ -157,9 +158,9 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             if (like_users != null && !like_users.isEmpty()) {
                 likeUserControlLayout.setVisibility(View.VISIBLE);
 
-                List<HnIcoRecyclerView.IcoInfo> infos = new ArrayList<>();
+                List<IcoInfoBean> infos = new ArrayList<>();
                 for (LikeUserInfoBean infoBean : like_users) {
-                    infos.add(new HnIcoRecyclerView.IcoInfo(infoBean.getUid(), infoBean.getAvatar()));
+                    infos.add(new IcoInfoBean(infoBean.getUid(), infoBean.getAvatar()));
                 }
                 mIcoRecyclerView.getMaxAdapter().resetData(infos);
             }
@@ -168,16 +169,16 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 @Override
                 public void call(Boolean aBoolean) {
                     if (mIcoRecyclerView != null) {
-                        RMaxAdapter<HnIcoRecyclerView.IcoInfo> maxAdapter = mIcoRecyclerView.getMaxAdapter();
-                        HnIcoRecyclerView.IcoInfo icoInfo = new HnIcoRecyclerView.IcoInfo(UserCache.getUserAccount(),
+                        RMaxAdapter<IcoInfoBean> maxAdapter = mIcoRecyclerView.getMaxAdapter();
+                        IcoInfoBean IcoInfoBean = new IcoInfoBean(UserCache.getUserAccount(),
                                 UserCache.getUserAvatar());
                         int itemRawCount = Integer.parseInt(mDataListBean.getLike_cnt());
                         if (aBoolean) {
-                            maxAdapter.addLastItem(icoInfo);
+                            maxAdapter.addLastItem(IcoInfoBean);
                             itemRawCount++;
                             userCountView.setText(itemRawCount + "");
                         } else {
-                            maxAdapter.deleteItem(icoInfo);
+                            maxAdapter.deleteItem(IcoInfoBean);
                             itemRawCount--;
                             userCountView.setText(itemRawCount + "");
                         }

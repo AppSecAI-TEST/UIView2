@@ -489,7 +489,7 @@ public class GPUImage {
 
         private final Uri mUri;
 
-        public LoadImageUriTask(com.m3b.rbrecoderlib.GPUImage gpuImage, Uri uri) {
+        public LoadImageUriTask(GPUImage gpuImage, Uri uri) {
             super(gpuImage);
             mUri = uri;
         }
@@ -530,7 +530,7 @@ public class GPUImage {
 
         private final File mImageFile;
 
-        public LoadImageFileTask(com.m3b.rbrecoderlib.GPUImage gpuImage, File file) {
+        public LoadImageFileTask(GPUImage gpuImage, File file) {
             super(gpuImage);
             mImageFile = file;
         }
@@ -561,12 +561,12 @@ public class GPUImage {
 
     private abstract class LoadImageTask extends AsyncTask<Void, Void, Bitmap> {
 
-        private final com.m3b.rbrecoderlib.GPUImage mGPUImage;
+        private final GPUImage mGPUImage;
         private int mOutputWidth;
         private int mOutputHeight;
 
         @SuppressWarnings("deprecation")
-        public LoadImageTask(final com.m3b.rbrecoderlib.GPUImage gpuImage) {
+        public LoadImageTask(final GPUImage gpuImage) {
             mGPUImage = gpuImage;
         }
 

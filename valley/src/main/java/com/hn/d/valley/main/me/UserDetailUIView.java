@@ -32,6 +32,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.bean.realm.NewestDiscussPicBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
@@ -222,12 +223,12 @@ public class UserDetailUIView extends BaseContentUIView {
         }
 
         //动态
-        final RMaxAdapter<HnIcoRecyclerView.IcoInfo> maxAdapter = mIcoRecyclerView.getMaxAdapter();
+        final RMaxAdapter<IcoInfoBean> maxAdapter = mIcoRecyclerView.getMaxAdapter();
         maxAdapter.setMaxCount(3);
-        List<HnIcoRecyclerView.IcoInfo> infos = new ArrayList<>();
+        List<IcoInfoBean> infos = new ArrayList<>();
         for (NewestDiscussPicBean picBean : mUserInfoBean.getNewest_discuss_pic()) {
             if (3 == (picBean.getMedia_type())) {
-                infos.add(new HnIcoRecyclerView.IcoInfo(to_uid, picBean.getUrl()));
+                infos.add(new IcoInfoBean(to_uid, picBean.getUrl()));
             }
         }
 

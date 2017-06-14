@@ -95,7 +95,7 @@ public class CameraHelper {
         int result;
         CameraInfo2 info = new CameraInfo2();
         getCameraInfo(cameraId, info);
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+        if (info.facing == CameraInfo.CAMERA_FACING_FRONT) {
             result = (info.orientation + degrees) % 360;
         } else { // back-facing
             result = (info.orientation - degrees + 360) % 360;

@@ -3,21 +3,19 @@ package com.m3b.rbrecoderlib;
 import android.annotation.TargetApi;
 import android.opengl.EGL14;
 import android.opengl.GLES20;
+import android.util.Log;
 
-import com.m3b.rbrecoderlib.encoder.EglCore;
-import com.m3b.rbrecoderlib.encoder.MediaAudioEncoder;
-import com.m3b.rbrecoderlib.encoder.MediaEncoder;
-import com.m3b.rbrecoderlib.encoder.MediaMuxerWrapper;
-import com.m3b.rbrecoderlib.encoder.MediaVideoEncoder;
-import com.m3b.rbrecoderlib.encoder.WindowSurface;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
+
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLContext;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLSurface;
+
+import com.m3b.rbrecoderlib.encoder.*;
 
 @TargetApi(18)
 public class GPUImageMovieWriter extends GPUImageFilter {

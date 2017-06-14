@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import com.m3b.rbrecoderlib.GPUImageFilter;
 import com.m3b.rbrecoderlib.OpenGLUtils2;
@@ -14,6 +15,8 @@ import com.m3b.rbrecoderlib.utils.TextureRotationUtil;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import static android.R.attr.bitmap;
 
 /**
  * Created by m3b on 17/2/22.
@@ -75,19 +78,23 @@ public class RBLogoFilter extends GPUImageFilter {
         private Bitmap mBitmap;
 
         private int glImageRectLoc;
-        protected RectF iconRectF;
-        protected Rect iconRect;
+        protected RectF iconRectF = new RectF();
+        protected Rect iconRect = new Rect(0, 0, 0, 0);
 
         private int needRotate;
 
         private boolean needUpdate;
 
+        private boolean postionNeedUpdate = true;
 
-        public RBLogoFilter(Rect _rect) {
+        private int gravity;
+        private int verticalMargin;
+        private int horizontalMargin;
+
+
+        public RBLogoFilter() {
             this(LOGO_VERTEX_SHADER, LOGO_FRAGMENT_SHADER);
-            iconRectF = new RectF();
-            iconRect = _rect;
-            setRotation(Rotation.ROTATION_270, true, true);
+            setRotation(Rotation.NORMAL, false,false);
         }
 
         public RBLogoFilter(String vertexShader, String fragmentShader) {
@@ -120,6 +127,7 @@ public class RBLogoFilter extends GPUImageFilter {
             if (mBitmap == null) {
                 return;
             }
+            postionNeedUpdate = true;
             runOnDraw(new Runnable() {
                 public void run() {
                     if (mFilterSourceTexture2 == OpenGLUtils2.NO_TEXTURE) {
@@ -165,6 +173,10 @@ public class RBLogoFilter extends GPUImageFilter {
         protected void onDrawArraysPre() {
             GLES20.glEnableVertexAttribArray(mFilterSecondTextureCoordinateAttribute);
             GLES20.glActiveTexture(GLES20.GL_TEXTURE3);
+            if (postionNeedUpdate) {
+                updatePostion();
+                postionNeedUpdate = false;
+            }
             iconRectF.top = iconRect.top / (float) getOutputHeight();
             iconRectF.bottom = iconRect.bottom / (float) getOutputHeight();
             iconRectF.left = iconRect.left / (float) getOutputWidth();
@@ -174,7 +186,7 @@ public class RBLogoFilter extends GPUImageFilter {
             }else{
                 GLES20.glUniform1f(needRotate, 0.0f);
             }
-            //Log.d("gles","getOutputHeight():" + iconRectF.top + " getOutputWidth():" + iconRectF.left );
+            Log.d("gles","getOutputHeight():" + getOutputHeight() + " getOutputWidth():" + getOutputWidth() );
             GLES20.glUniform4f(glImageRectLoc,iconRectF.left, iconRectF.top, iconRectF.right, iconRectF.bottom);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mFilterSourceTexture2);
             GLES20.glUniform1i(mFilterInputTextureUniform2, 3);
@@ -199,6 +211,66 @@ public class RBLogoFilter extends GPUImageFilter {
         public void onInitialized() {
             super.onInitialized();
         }
+
+        public void setPostion(int gravity, int verticalMargin, int horizontalMargin) {
+            this.gravity = gravity;
+            if (this.verticalMargin != verticalMargin || this.horizontalMargin != horizontalMargin) {
+                this.verticalMargin = verticalMargin;
+                this.horizontalMargin = horizontalMargin;
+            }
+            postionNeedUpdate = true;
+        }
+
+
+        private void updatePostion() {
+            int v, h;
+            int top, bottom, left, right;
+            v = gravity & Gravity.VERTICAL_MASK;
+            h = gravity & Gravity.HORIZONTA_MASK;
+            switch (v) {
+                case Gravity.CENTER_VERTICAL:
+                    top = (getOutputHeight() - mBitmap.getHeight()) / 2;
+                    bottom = top + mBitmap.getHeight();
+                    break;
+                case Gravity.BOTTOM:
+                    bottom = getOutputHeight() - verticalMargin;
+                    top = bottom - mBitmap.getHeight();
+                    break;
+                case Gravity.TOP:
+                default:
+                    top = verticalMargin;
+                    bottom = verticalMargin + mBitmap.getHeight();
+                    break;
+            }
+            switch (h) {
+                case Gravity.CENTER_HORIZONTAL:
+                    left = (getOutputWidth() - mBitmap.getWidth()) / 2;
+                    right = left + mBitmap.getWidth();
+                    break;
+                case Gravity.RIGHT:
+                    right = getOutputWidth() - horizontalMargin;
+                    left = right - mBitmap.getWidth();
+                    break;
+                case Gravity.LEFT:
+                default:
+                    left = horizontalMargin;
+                    right = horizontalMargin + mBitmap.getWidth();
+                    break;
+            }
+            iconRect.set(left, top, right, bottom);
+        }
+
+        public class Gravity {
+            public static final int TOP = 0x0000;
+            public static final int BOTTOM = 0x0001;
+            public static final int CENTER_VERTICAL = 0x0010;
+            public static final int VERTICAL_MASK = 0x0011;
+            public static final int LEFT = 0x0000;
+            public static final int RIGHT = 0x0100;
+            public static final int CENTER_HORIZONTAL = 0x1000;
+            public static final int HORIZONTA_MASK = 0x1100;
+        }
+
 
 }
 

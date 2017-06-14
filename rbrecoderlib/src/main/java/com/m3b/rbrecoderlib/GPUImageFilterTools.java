@@ -1,31 +1,17 @@
 package com.m3b.rbrecoderlib;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.opengl.Matrix;
+import android.text.Html;
 
-import com.m3b.rbrecoderlib.filters.GPUImageColorBalanceFilter;
-import com.m3b.rbrecoderlib.filters.GPUImageGrayscaleFilter;
-import com.m3b.rbrecoderlib.filters.GPUImageMonochromeFilter;
-import com.m3b.rbrecoderlib.filters.GPUImageRGBFilter;
-import com.m3b.rbrecoderlib.filters.GPUImageWhiteBalanceFilter;
-import com.m3b.rbrecoderlib.filters.MagiSkinWhitenFilter;
-import com.m3b.rbrecoderlib.filters.MagicAmaroFilter;
-import com.m3b.rbrecoderlib.filters.MagicBeautyFilter;
-import com.m3b.rbrecoderlib.filters.MagicBlackCatFilter;
-import com.m3b.rbrecoderlib.filters.MagicCalmFilter;
-import com.m3b.rbrecoderlib.filters.MagicCoolFilter;
-import com.m3b.rbrecoderlib.filters.MagicEmeraldFilter;
-import com.m3b.rbrecoderlib.filters.MagicEvergreenFilter;
-import com.m3b.rbrecoderlib.filters.MagicFairytaleFilter;
-import com.m3b.rbrecoderlib.filters.MagicLatteFilter;
-import com.m3b.rbrecoderlib.filters.MagicLomoFilter;
-import com.m3b.rbrecoderlib.filters.MagicN1977Filter;
-import com.m3b.rbrecoderlib.filters.MagicNostalgiaFilter;
-import com.m3b.rbrecoderlib.filters.MagicRomanceFilter;
-import com.m3b.rbrecoderlib.filters.MagicSierraFilter;
-import com.m3b.rbrecoderlib.filters.MagicSunsetFilter;
-import com.m3b.rbrecoderlib.filters.MagicWarmFilter;
+import com.m3b.rbrecoderlib.filters.*;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,31 +19,32 @@ import java.util.List;
 
 public class GPUImageFilterTools {
     public static void showDialog(final Context context,
-                                  final OnGpuImageFilterChosenListener listener) {
+            final OnGpuImageFilterChosenListener listener) {
         final FilterList filters = new FilterList();
-        filters.addFilter("原画", FilterType.YUANHUA);
-        filters.addFilter("美颜", FilterType.BEAUTY);
-        filters.addFilter("美肤", FilterType.SKINWHITEN);
-        filters.addFilter("经典", FilterType.JINGDIAN);
-        filters.addFilter("月光", FilterType.CALM);
-        filters.addFilter("复古", FilterType.FUGU);
-        filters.addFilter("蔷薇", FilterType.N1977);
-        filters.addFilter("流年", FilterType.SIERRA);
-        filters.addFilter("童话", FilterType.FAIRYTALE);
-        filters.addFilter("粉嫩", FilterType.FENNEN);
-        filters.addFilter("浪漫", FilterType.ROMANCE);
-        filters.addFilter("梦幻", FilterType.EVERGREEN);
-        filters.addFilter("候鸟", FilterType.HOUNIAO);
-        filters.addFilter("薄荷", FilterType.EMERALD);
-        filters.addFilter("黑白", FilterType.HEIBAI);
-        filters.addFilter("慵懒", FilterType.LOMO);
-        filters.addFilter("黄昏", FilterType.SUNSET);
-        filters.addFilter("暮光", FilterType.COOL);
-        filters.addFilter("怀旧", FilterType.NOSTALGIA);
-        filters.addFilter("夕阳", FilterType.LATTE);
-        filters.addFilter("暖阳", FilterType.WARM);
-        filters.addFilter("淡雅", FilterType.DANYA);
-        filters.addFilter("哥特风", FilterType.GETEFENG);
+        filters.addFilter("原画",FilterType.YUANHUA);
+        filters.addFilter("美颜",FilterType.BEAUTY);
+        filters.addFilter("美肤",FilterType.SKINWHITEN);
+        filters.addFilter("经典",FilterType.JINGDIAN);
+        filters.addFilter("月光",FilterType.CALM);
+        filters.addFilter("复古",FilterType.FUGU);
+        filters.addFilter("蔷薇",FilterType.N1977);
+        filters.addFilter("流年",FilterType.SIERRA);
+        filters.addFilter("童话",FilterType.FAIRYTALE);
+        filters.addFilter("粉嫩",FilterType.FENNEN);
+        filters.addFilter("浪漫",FilterType.ROMANCE);
+        filters.addFilter("梦幻",FilterType.EVERGREEN);
+        filters.addFilter("候鸟",FilterType.HOUNIAO);
+        filters.addFilter("薄荷",FilterType.EMERALD);
+        filters.addFilter("黑白",FilterType.HEIBAI);
+        filters.addFilter("慵懒",FilterType.LOMO);
+        filters.addFilter("黄昏",FilterType.SUNSET);
+        filters.addFilter("暮光",FilterType.COOL);
+        filters.addFilter("怀旧",FilterType.NOSTALGIA);
+        filters.addFilter("夕阳",FilterType.LATTE);
+        filters.addFilter("暖阳",FilterType.WARM);
+        filters.addFilter("淡雅",FilterType.DANYA);
+        filters.addFilter("哥特风",FilterType.GETEFENG);
+
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -107,7 +94,7 @@ public class GPUImageFilterTools {
                 return magicN1977Filter;
 
             case SIERRA:
-                MagicSierraFilter magicSierraFilter = new MagicSierraFilter(context);
+                MagicSierraFilter magicSierraFilter =  new MagicSierraFilter(context);
                 return magicSierraFilter;
 
             case FAIRYTALE:
@@ -116,7 +103,7 @@ public class GPUImageFilterTools {
 
             case FENNEN:
                 GPUImageRGBFilter fennenFilter = new GPUImageRGBFilter(1.0F, 0.72F, 0.75F);
-                return fennenFilter;
+                return  fennenFilter;
 
 
             case ROMANCE:
@@ -130,7 +117,7 @@ public class GPUImageFilterTools {
 
             case HOUNIAO:
                 MagicBlackCatFilter houniaoFilter = new MagicBlackCatFilter(context);
-                return houniaoFilter;
+                return  houniaoFilter;
 
 
             case EMERALD:
@@ -144,7 +131,7 @@ public class GPUImageFilterTools {
 
             case LOMO:
                 MagicLomoFilter magicLomoFilter = new MagicLomoFilter(context);
-                return magicLomoFilter;
+                return  magicLomoFilter;
 
 
             case SUNSET:
@@ -188,12 +175,12 @@ public class GPUImageFilterTools {
     }
 
 
-    private enum FilterType {
-        YUANHUA, JINGDIAN, FUGU, FENNEN, EMERALD, HOUNIAO, ANTIQUE, BLACKCAT, CALM, COOL, EVERGREEN, FAIRYTALE, LATTE, LOMO, N1977, ROMANCE, BEAUTY, SUNSET, CRAYON, SKETCH, SKINWHITEN, SIERRA, HEIBAI, NOSTALGIA, WARM, DANYA, GETEFENG
-    }
-
     public interface OnGpuImageFilterChosenListener {
         void onGpuImageFilterChosenListener(GPUImageFilter filter);
+    }
+
+    private enum FilterType {
+        YUANHUA,JINGDIAN,FUGU,FENNEN,EMERALD,HOUNIAO,ANTIQUE,BLACKCAT,CALM,COOL,EVERGREEN,FAIRYTALE,LATTE,LOMO,N1977,ROMANCE,BEAUTY,SUNSET,CRAYON,SKETCH,SKINWHITEN,SIERRA,HEIBAI,NOSTALGIA,WARM,DANYA,GETEFENG
     }
 
     private static class FilterList {

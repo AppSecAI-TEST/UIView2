@@ -3,7 +3,6 @@ package com.hn.d.valley.base.iview;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -265,8 +264,9 @@ public class VideoRecordUIView extends UIBaseView {
         mCamera = new CameraLoader();
 
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.shuiyin_1);
-        logofilter = new RBLogoFilter(new Rect(DefaultLevel.getWidth() - logo.getWidth() - 100,
-                100, DefaultLevel.getWidth() - 100, 100 + logo.getHeight()));// left, top, right, bottom
+        logofilter = new RBLogoFilter();// left, top, right, bottom
+        logofilter.setBitmap(logo);
+        logofilter.setPostion(RBLogoFilter.Gravity.RIGHT | RBLogoFilter.Gravity.TOP, 100, 100);
         logofilter.setBitmap(logo);
 
         // 实时美颜
