@@ -6,6 +6,7 @@
               android:orientation="vertical">
 
     <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/title_view"
         style="@style/MainTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

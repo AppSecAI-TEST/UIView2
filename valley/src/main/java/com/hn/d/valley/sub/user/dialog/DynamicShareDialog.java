@@ -70,10 +70,14 @@ public class DynamicShareDialog extends UIIDialogImpl {
     protected void initDialogContentView() {
         super.initDialogContentView();
 
+        //标题
+        //mViewHolder.tv(R.id.title_view).setText(getString(R.string.dynamic_share_, mDataListBean.getAuthor()));
+
         //关注
         mViewHolder.v(R.id.follow_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finishDialog();
                 mSubscription.add(RRetrofit.create(UserService.class)
                         .attention(Param.buildMap("to_uid:" + mDataListBean.getUid()))
                         .compose(Rx.transformer(String.class))
@@ -103,6 +107,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
         mViewHolder.v(R.id.copy_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finishDialog();
                 ClipboardUtils.copyText(mDataListBean.getContent());
                 T_.show(getString(R.string.copy_tip));
             }
@@ -131,13 +136,16 @@ public class DynamicShareDialog extends UIIDialogImpl {
         ShareControl.shareDynamicControl(mActivity, mViewHolder,
                 mDataListBean.getUser_info().getAvatar(),
                 mDataListBean.getDiscuss_id(),
-                getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()), shareDes);
+                getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()),
+                shareDes, this);
 
-        mViewHolder.v(R.id.share_klg).setOnClickListener(new View.OnClickListener() {
+        //分享恐龙谷
+        mViewHolder.click(R.id.share_klg, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getILayout().finishIView(DynamicShareDialog.class);
                 ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
-                        , null,true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                        , null, true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                             @Override
                             public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
 
@@ -153,7 +161,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
                                 DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mDataListBean);
                                 DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
                                 IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
-                                msgService().sendMessage(message,false);
+                                msgService().sendMessage(message, false);
 
                             }
                         });

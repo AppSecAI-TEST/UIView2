@@ -4,38 +4,20 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.rsa.Spm;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.umeng.UM;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.friend.AbsContactItem;
-import com.hn.d.valley.main.friend.ContactItem;
-import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
-import com.hn.d.valley.main.message.attachment.DynamicDetailMsg;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
-import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
-import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.service.SocialService;
-import com.netease.nimlib.sdk.msg.MessageBuilder;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.util.List;
-
-import rx.functions.Action3;
-
-import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -106,36 +88,56 @@ public class ShareControl {
                                            final String itemId,
                                            final String shareTitle,
                                            final String shareDes) {
+        shareDynamicControl(activity, holder, userIco, itemId, shareTitle, shareDes, null);
+    }
+
+    public static void shareDynamicControl(final Activity activity,
+                                           RBaseViewHolder holder,
+                                           final String userIco,
+                                           final String itemId,
+                                           final String shareTitle,
+                                           final String shareDes,
+                                           final UIIDialogImpl dialog) {
         holder.v(R.id.share_wx).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.WEIXIN, userIco, itemId, shareTitle, shareDes);
+                if (dialog != null) {
+                    dialog.finishIView();
+                }
             }
         });
         holder.v(R.id.share_wxc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.WEIXIN_CIRCLE, userIco, itemId, shareTitle, shareDes);
+                if (dialog != null) {
+                    dialog.finishIView();
+                }
             }
         });
         holder.v(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.QQ, userIco, itemId, shareTitle, shareDes);
+                if (dialog != null) {
+                    dialog.finishIView();
+                }
             }
         });
         holder.v(R.id.share_qqz).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.QZONE, userIco, itemId, shareTitle, shareDes);
+                if (dialog != null) {
+                    dialog.finishIView();
+                }
             }
         });
 
     }
 
     private static void shareKlgDynamic(final ILayout layout, RBaseViewHolder holder) {
-
-
 
 
     }
