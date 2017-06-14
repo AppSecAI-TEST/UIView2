@@ -433,24 +433,33 @@ public class VideoRecordUIView extends UIBaseView {
         final File videoFile = new File(videoPath);
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(mActivity, Uri.fromFile(videoFile));
-        if (videoTime <= 0) {
-            videoTime = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
+        try {
+            retriever.setDataSource(mActivity, Uri.fromFile(videoFile));
+            if (videoTime <= 0) {
+                videoTime = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
+            }
+            if (videoWidth <= 0) {
+                videoWidth = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            }
+            if (videoHeight <= 0) {
+                videoHeight = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+            }
+            if (rotationRecord < 0) {
+                rotationRecord = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
+            }
+            L.i("videoTime:" + videoTime + " videoWidth:" + videoWidth + " videoHeight:" + videoHeight + " rotationRecord:" + rotationRecord);
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception ex) {
+                // Ignore failures while cleaning up.
+            }
         }
-        if (videoWidth <= 0) {
-            videoWidth = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-        }
-        if (videoHeight <= 0) {
-            videoHeight = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
-        }
-        retriever.release();
-
 
         final String newName = UUID.randomUUID().toString() + OssHelper.createVideoFileName(videoTime);
         final String thumbPath, thumbName;
 
-
-        if (rotationRecord == 0) {
+        if (rotationRecord == 0 || rotationRecord == 180) {
             thumbName = UUID.randomUUID().toString()
                     + OssHelper.createImageFileName(videoWidth, videoHeight);
         } else {
@@ -618,7 +627,7 @@ public class VideoRecordUIView extends UIBaseView {
         if (items.size() > 0) {
             ImageItem item = items.get(0);
 
-            fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+            fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, -1);
         }
     }
 
