@@ -49,6 +49,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="false"
+                        android:layout_marginEnd="@dimen/base_xhdpi"
                         android:textSize="@dimen/default_text_little_size"
                         android:visibility="visible"
                         tools:text="100/2000"/>
@@ -257,10 +258,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
-                    android:visibility="gone"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
-                    android:src="@drawable/icon_addgif"/>
+                    android:src="@drawable/icon_addgif"
+                    android:visibility="gone"/>
 
                 <com.hn.d.valley.widget.HnTopImageView
                     android:id="@+id/ico_top"
