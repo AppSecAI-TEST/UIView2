@@ -476,6 +476,17 @@ public class UserDetailUIView2 extends BaseContentUIView {
         //getUITitleBarContainer().setBackgroundColor(Color.TRANSPARENT);
         mViewHolder.fillView(mUserInfoBean);
 
+        //可见性图标控制
+        if (!isMe()) {
+            View startView = mViewHolder.v(R.id.visible_start_view);
+            View noseeHeView = mViewHolder.v(R.id.visible_nosee_he_view);
+            View noseeMeView = mViewHolder.v(R.id.visible_nosee_me_view);
+
+            startView.setVisibility(mUserInfoBean.getIs_star() == 1 ? View.VISIBLE : View.GONE);
+            noseeHeView.setVisibility(mUserInfoBean.getLook_his_discuss() == 0 ? View.VISIBLE : View.GONE);
+            noseeMeView.setVisibility(mUserInfoBean.getLook_my_discuss() == 0 ? View.VISIBLE : View.GONE);
+        }
+
         RTextView authTextView = mViewHolder.v(R.id.auth_desc_tview);
         //是否已认证【0-未认证，1-已认证，2-认证中-查看自己信息才会有，3-认证失败-查看自己信息才会有，以前没有认证成功过才会有该值】
         if ("1".equalsIgnoreCase(is_auth)) {

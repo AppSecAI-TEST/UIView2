@@ -18,7 +18,9 @@
             android:scaleType="centerCrop"
             android:src="@drawable/yonghuxiangqing_3"/>
 
+        <!--权限可见性控制-->
         <LinearLayout
+            android:id="@+id/visible_control_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/bg_view"
@@ -27,22 +29,31 @@
             android:orientation="horizontal"
             android:padding="@dimen/base_ldpi">
 
+            <!--是否是星标好友-->
             <ImageView
+                android:id="@+id/visible_start_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/star"/>
+                android:src="@drawable/star"
+                android:visibility="gone"/>
 
+            <!--不看我的动态-->
             <ImageView
+                android:id="@+id/visible_nosee_me_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/base_hdpi"
                 android:layout_marginStart="@dimen/base_hdpi"
-                android:src="@drawable/bukantade_icon"/>
+                android:src="@drawable/bugeitakan_icon"
+                android:visibility="gone"/>
 
+            <!--不看他的动态-->
             <ImageView
+                android:id="@+id/visible_nosee_he_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/bugeitakan_icon"/>
+                android:src="@drawable/bukantade_icon"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
