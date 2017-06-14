@@ -29,7 +29,6 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.view.UIIViewImpl;
@@ -116,6 +115,10 @@ public class VideoRecordUIView extends UIBaseView {
     private RModelAdapter mLjAdapter;
     private View prettyLayout;
     private int currentLevel = 0;
+    /**
+     * 是否包含logo
+     */
+    private boolean hasLogo = true;
 
 //    public static Observable
 
@@ -262,8 +265,8 @@ public class VideoRecordUIView extends UIBaseView {
         mCamera = new CameraLoader();
 
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.shuiyin_1);
-        logofilter = new RBLogoFilter(new Rect(ScreenUtil.screenWidth - logo.getWidth() - 100,
-                100, ScreenUtil.screenWidth - 100, 100 + logo.getHeight()));// left, top, right, bottom
+        logofilter = new RBLogoFilter(new Rect(DefaultLevel.getWidth() - logo.getWidth() - 100,
+                100, DefaultLevel.getWidth() - 100, 100 + logo.getHeight()));// left, top, right, bottom
         logofilter.setBitmap(logo);
 
         // 实时美颜
@@ -272,7 +275,9 @@ public class VideoRecordUIView extends UIBaseView {
 
         mMovieWriter = new GPUImageMovieWriter();
         initFilter = new GPUImageFilterGroup();
-        initFilter.addFilter(logofilter);
+        if (hasLogo) {
+            initFilter.addFilter(logofilter);
+        }
         initFilter.addFilter(magicBeautyFilter);
         initFilter.addFilter(mMovieWriter);
         mGPUImage.setFilter(initFilter);
@@ -689,7 +694,9 @@ public class VideoRecordUIView extends UIBaseView {
             }
 
             filters = new GPUImageFilterGroup();
-            filters.addFilter(logofilter);
+            if (hasLogo) {
+                filters.addFilter(logofilter);
+            }
             filters.addFilter(mFilter);
             magicBeautyFilter.setBeautyLevel(currentLevel);
             filters.addFilter(magicBeautyFilter);
@@ -826,7 +833,7 @@ public class VideoRecordUIView extends UIBaseView {
             releaseCamera();
             mCurrentCameraId = (mCurrentCameraId + 1) % mCameraHelper.getNumberOfCameras();
             mGLSurfaceView.requestLayout();
-            if (isCameraFont())
+            if (isCameraFont() && hasLogo)
                 needRotate = true;
             //else
             //  needRotate = true;
