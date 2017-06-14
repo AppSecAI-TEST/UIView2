@@ -68,6 +68,8 @@ import rx.functions.Action3;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+import static com.angcyo.uiview.viewgroup.ExpandRecordLayout.STATE_CLOSE;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -596,6 +598,10 @@ public class VideoRecordUIView extends UIBaseView {
 
     @Override
     public boolean onBackPressed() {
+        if (mRecordLayout.getState() != STATE_CLOSE) {
+            mRecordLayout.expandLayout(false);
+            return false;
+        }
         return !mIsRecording;
     }
 
@@ -626,8 +632,12 @@ public class VideoRecordUIView extends UIBaseView {
         ArrayList<ImageItem> items = ImagePickerHelper.getItems(mActivity, requestCode, resultCode, data);
         if (items.size() > 0) {
             ImageItem item = items.get(0);
-
-            fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, -1);
+            L.i("视频大小:" + item.size / 1024f + "Kb'");
+            if (item.size / 1024f > 50 * 1024) {
+                T_.ok("视频过大.");
+            } else {
+                fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, -1);
+            }
         }
     }
 
