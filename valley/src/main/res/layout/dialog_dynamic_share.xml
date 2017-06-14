@@ -107,7 +107,8 @@
             android:drawablePadding="@dimen/base_ldpi"
             android:drawableTop="@drawable/share_shouchang_selector"
             android:gravity="center"
-            android:text="@string/collect"/>
+            android:text="@string/collect"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/report_view"
@@ -130,6 +131,16 @@
             android:drawableTop="@drawable/share_fuzhi_selector"
             android:gravity="center"
             android:text="@string/copy"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

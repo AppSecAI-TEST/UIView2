@@ -204,9 +204,10 @@ public class UserInfoSubUIView extends BaseItemUIView {
                             mParentILayout.startIView(new RelationListUIView(mUserInfoBean.getUid()));
                         }
                     });
-                    icoRecyclerView.setOnClickListener(new View.OnClickListener() {
+
+                    icoRecyclerView.setOnItemClickListener(new HnIcoRecyclerView.OnItemClickListener() {
                         @Override
-                        public void onClick(View v) {
+                        public void onItemClick(RBaseViewHolder holder, int position, IcoInfoBean bean) {
                             mParentILayout.startIView(new RelationListUIView(mUserInfoBean.getUid()));
                         }
                     });

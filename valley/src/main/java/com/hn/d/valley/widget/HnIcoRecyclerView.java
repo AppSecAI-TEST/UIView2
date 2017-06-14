@@ -34,6 +34,7 @@ import java.util.List;
  */
 public class HnIcoRecyclerView extends RRecyclerView {
 
+    OnItemClickListener mOnItemClickListener;
     private RMaxAdapter<IcoInfoBean> mMaxAdapter;
 
     public HnIcoRecyclerView(Context context) {
@@ -72,9 +73,18 @@ public class HnIcoRecyclerView extends RRecyclerView {
             }
 
             @Override
-            protected void onBindView(RBaseViewHolder holder, int position, IcoInfoBean bean) {
+            protected void onBindView(final RBaseViewHolder holder, final int position, final IcoInfoBean bean) {
                 int size = getSize();
                 DraweeViewUtil.resize((SimpleDraweeView) holder.tag("image"), bean.avatar, size, size);
+
+                holder.itemView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnItemClickListener != null) {
+                            mOnItemClickListener.onItemClick(holder, position, bean);
+                        }
+                    }
+                });
             }
 
             private int getSize() {
@@ -90,7 +100,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
     public void remove(String avatar) {
         //迭代器删除多个数据会出现异常 因为数据源发生变化，删除一个没有问题
         List<IcoInfoBean> icoInfos = getMaxAdapter().getAllDatas();
-        for(IcoInfoBean icon : icoInfos) {
+        for (IcoInfoBean icon : icoInfos) {
             if (icon.avatar.equals(avatar)) {
                 icoInfos.remove(icon);
                 break;
@@ -112,4 +122,13 @@ public class HnIcoRecyclerView extends RRecyclerView {
         super.onAttachedToWindow();
         setAdapter(mMaxAdapter);
     }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(final RBaseViewHolder holder, int position, final IcoInfoBean bean);
+    }
+
 }

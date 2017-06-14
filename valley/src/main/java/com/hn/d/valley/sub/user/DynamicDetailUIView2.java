@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -165,6 +166,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 mIcoRecyclerView.getMaxAdapter().resetData(infos);
             }
 
+            //点赞按钮
             UserDiscussItemControl.bindLikeItemView(mSubscriptions, mViewHolder, mDataListBean, new Action1<Boolean>() {
                 @Override
                 public void call(Boolean aBoolean) {
@@ -222,10 +224,57 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             if (mDataListBean.isVoiceMediaType()) {
                 mViewHolder.v(R.id.bottom_forward_item).setVisibility(View.GONE);
             }
+
             mViewHolder.v(R.id.bottom_forward_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startIView(new PublishDynamicUIView2(mDataListBean));
+                }
+            });
+
+            //收藏按钮
+            initCollectView();
+        }
+    }
+
+    private void initCollectView() {
+        ImageView imageView = mViewHolder.v(R.id.collect_view);
+        if (mDataListBean.getIs_collect() == 1) {
+            imageView.setImageResource(R.drawable.share_shouchang_n);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    add(RRetrofit.create(SocialService.class)
+                            .unCollect(Param.buildMap("type:discuss", "item_id:" + mDataListBean.getDiscuss_id()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    super.onSucceed(bean);
+                                    T_.show(bean);
+                                    mDataListBean.setIs_collect(0);
+                                    initCollectView();
+                                }
+                            }));
+                }
+            });
+        } else {
+            imageView.setImageResource(R.drawable.share_shouchang_n);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    add(RRetrofit.create(SocialService.class)
+                            .collect(Param.buildMap("type:discuss", "item_id:" + mDataListBean.getDiscuss_id()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    super.onSucceed(bean);
+                                    T_.show(bean);
+                                    mDataListBean.setIs_collect(1);
+                                    initCollectView();
+                                }
+                            }));
                 }
             });
         }

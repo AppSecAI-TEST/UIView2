@@ -94,6 +94,7 @@ public class VideoRecordUIView extends UIBaseView {
      * 默认录像level
      */
     GPUImageMovieWriter.Level DefaultLevel = GPUImageMovieWriter.Level.HIGH;
+    long lastSwitchTime = 0l;
     private GPUImage mGPUImage;
     private OrientationEventListener mOrientationEventListener;
     private CameraHelper mCameraHelper;
@@ -114,12 +115,12 @@ public class VideoRecordUIView extends UIBaseView {
     private RModelAdapter mLjAdapter;
     private View prettyLayout;
     private int currentLevel = 0;
+
+//    public static Observable
     /**
      * 是否包含logo
      */
     private boolean hasLogo = true;
-
-//    public static Observable
 
     public VideoRecordUIView(Action3<UIIViewImpl, String, String> publishAction) {
         this.publishAction = publishAction;
@@ -226,7 +227,11 @@ public class VideoRecordUIView extends UIBaseView {
                 .addRightItem(TitleBarPattern.buildImage(R.drawable.qiehuan_shexiangtou, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        switchCamera();
+                        long timeMillis = System.currentTimeMillis();
+                        if (timeMillis - lastSwitchTime > 1 * 1000) {
+                            switchCamera();
+                        }
+                        lastSwitchTime = timeMillis;
                     }
                 }))
                 ;

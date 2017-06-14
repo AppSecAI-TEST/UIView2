@@ -39,6 +39,15 @@
             android:src="@drawable/forwarding_icon"/>
 
         <ImageView
+            android:id="@+id/collect_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base_ldpi"
+            android:background="@drawable/base_bg2_selector"
+            android:padding="@dimen/base_xhdpi"
+            android:src="@drawable/forwarding_icon"/>
+
+        <ImageView
             android:id="@+id/like_cnt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
