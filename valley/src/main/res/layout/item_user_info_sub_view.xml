@@ -16,6 +16,55 @@
         android:layout_margin="@dimen/base_xhdpi"/>
 
     <View
+        android:id="@+id/relation_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/relation_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/base_item_size"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_xhdpi"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/relation"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <com.hn.d.valley.widget.HnIcoRecyclerView
+                android:id="@+id/ico_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/relation_count_view"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="@string/relation_count_format"
+                android:text="6"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_line"
         android:layout_marginStart="@dimen/base_xhdpi"

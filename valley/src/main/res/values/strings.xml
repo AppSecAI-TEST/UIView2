@@ -131,6 +131,7 @@
     <string name="dynamic_detail">动态详情</string>
     <string name="detail">详情</string>
     <string name="like_title">点赞</string>
+    <string name="relation_title">共同关注</string>
     <string name="like_title_formater">点赞(%1$d)</string>
     <string name="publish_dynamic">发布动态</string>
     <string name="publish">发布</string>
@@ -740,4 +741,6 @@
     <string name="text_group_upgrade_true_tip">确定要将该群升级为 %1$s 人群</string>
     <string name="text_group_upgrade_false_tip">对不起,你当前等级最多支持 %1$s 人群</string>
     <string name="text_i_known">我知道了</string>
+    <string name="relation">关系</string>
+    <string name="relation_count_format">你们有%1$s位共同的关注的人</string>
 </resources>

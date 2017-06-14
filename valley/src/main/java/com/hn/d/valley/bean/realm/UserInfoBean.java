@@ -7,9 +7,11 @@ import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.utils.file.FileUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Date;
+import java.util.List;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -141,6 +143,13 @@ public class UserInfoBean extends RealmObject {
 
     private String website;
     private String cover;
+    /**
+     * newest_discuss_pic : []
+     * relation : {"count":2,"list":[{"avatar":"http://circleimg.klgwl.com/77500371484917281.776834","uid":"50037"},{"avatar":"http://avatorimg.klgwl.com/15019298316_1485330266.033782","uid":"60021"}]}
+     */
+
+    private RelationBean relation;
+
 
     /**
      * 是否有新的访客
@@ -591,5 +600,39 @@ public class UserInfoBean extends RealmObject {
 
     public boolean isMe() {
         return TextUtils.equals(uid, UserCache.getUserAccount());
+    }
+
+    public RelationBean getRelation() {
+        return relation;
+    }
+
+    public void setRelation(RelationBean relation) {
+        this.relation = relation;
+    }
+
+    public static class RelationBean {
+        /**
+         * count : 2
+         * list : [{"avatar":"http://circleimg.klgwl.com/77500371484917281.776834","uid":"50037"},{"avatar":"http://avatorimg.klgwl.com/15019298316_1485330266.033782","uid":"60021"}]
+         */
+
+        private int count;
+        private List<HnIcoRecyclerView.IcoInfo> list;
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public List<HnIcoRecyclerView.IcoInfo> getList() {
+            return list;
+        }
+
+        public void setList(List<HnIcoRecyclerView.IcoInfo> list) {
+            this.list = list;
+        }
     }
 }

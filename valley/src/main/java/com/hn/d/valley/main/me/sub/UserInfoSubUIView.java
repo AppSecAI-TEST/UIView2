@@ -26,7 +26,9 @@ import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.adapter.ImageAdapter;
+import com.hn.d.valley.sub.other.RelationListUIView;
 import com.hn.d.valley.utils.PhotoPager;
+import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
@@ -176,6 +178,31 @@ public class UserInfoSubUIView extends BaseItemUIView {
                         mParentILayout.startIView(new MoreInfoUIView(mUserInfoBean));
                     }
                 });
+
+                //共同关注的好友
+                View relationLayout = holder.v(R.id.relation_layout);
+                View relationLine = holder.v(R.id.relation_line);
+
+                UserInfoBean.RelationBean relation = mUserInfoBean.getRelation();
+                if (relation != null && relation.getCount() > 0) {
+                    relationLayout.setVisibility(View.VISIBLE);
+                    relationLine.setVisibility(View.VISIBLE);
+
+                    holder.tv(R.id.relation_count_view).setText(relation.getCount() + "");
+
+                    //点赞列表
+                    List<HnIcoRecyclerView.IcoInfo> icoInfoList = relation.getList();
+
+                    HnIcoRecyclerView icoRecyclerView = holder.v(R.id.ico_recycler_view);
+                    icoRecyclerView.getMaxAdapter().resetData(icoInfoList);
+
+                    relationLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mParentILayout.startIView(new RelationListUIView(mUserInfoBean.getUid()));
+                        }
+                    });
+                }
             }
         });
 

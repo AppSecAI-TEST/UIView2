@@ -136,11 +136,23 @@ public interface ContactService {
     Observable<ResponseBody> blacklist(@QueryMap Map<String, String> map);
 
     /**
-     *不让他看我的动态 不看他动态
-     参数名	必选	类型	说明
-     uid	是	int	用户id
-     type	是	int	1-不看他的动态 ;2-不允许看我动态
+     * 不让他看我的动态 不看他动态
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * type	是	int	1-不看他的动态 ;2-不允许看我动态
      */
     @POST("contact/specialList")
     Observable<ResponseBody> specialList(@QueryMap Map<String, String> map);
+
+    /**
+     * 共同关注用户列表
+     * <p>
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	需要查看的用户id
+     * page	否	int	第几页【不传就是所有数据全部返回】
+     * limit	否	int	页面显示的数量
+     */
+    @POST("contact/sameAttention")
+    Observable<ResponseBody> sameAttention(@QueryMap Map<String, String> map);
 }
