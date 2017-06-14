@@ -73,4 +73,10 @@ public interface DiscussService {
     @POST("discuss/top")
     Observable<ResponseBody> top(@QueryMap Map<String, String> map);
 
+    /**
+     * 获取动态可置顶条数
+     */
+    @POST("discuss/checkTop")
+    Observable<ResponseBody> checkTop(@QueryMap Map<String, String> map);
+
 }

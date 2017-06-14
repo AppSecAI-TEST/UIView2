@@ -16,6 +16,7 @@ import com.angcyo.library.okhttp.Ok;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
@@ -843,21 +844,35 @@ public class UserDiscussItemControl {
             topItemClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //置顶
-                    subscription.add(RRetrofit.create(DiscussService.class)
-                            .top(Param.buildMap("discuss_id:" + tBean.getDiscuss_id(), "is_top:1"))
-                            .compose(Rx.transformer(String.class))
-                            .subscribe(new BaseSingleSubscriber<String>() {
-                                @Override
-                                public void onSucceed(String bean) {
-                                    try {
-                                        T_.show(bean);
-                                        tBean.setIs_top("1");
-                                        bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
-                                    } catch (Exception e) {
-                                    }
-                                }
-                            }));
+                    subscription.add(TopControl.Companion.canTop().subscribe(new BaseSingleSubscriber<Boolean>() {
+                        @Override
+                        public void onSucceed(Boolean bean) {
+                            super.onSucceed(bean);
+                            if (bean) {
+                                //置顶
+                                subscription.add(RRetrofit.create(DiscussService.class)
+                                        .top(Param.buildMap("discuss_id:" + tBean.getDiscuss_id(), "is_top:1"))
+                                        .compose(Rx.transformer(String.class))
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+                                            @Override
+                                            public void onSucceed(String bean) {
+                                                try {
+                                                    T_.show(bean);
+                                                    tBean.setIs_top("1");
+                                                    bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
+                                                } catch (Exception e) {
+                                                }
+                                            }
+                                        }));
+                            } else {
+                                UIDialog.build().setDialogTitle(ValleyApp.getApp().getResources().getString(R.string.tip))
+                                        .setDialogContent(ValleyApp.getApp().getResources().getString(R.string.max_top_tip, TopControl.Companion.getTopBean().getTotal() + ""))
+                                        .setCancelText("").setOkText(ValleyApp.getApp().getResources().getString(R.string.known))
+                                        .setCanCanceledOnOutside(false)
+                                        .showDialog(iLayout);
+                            }
+                        }
+                    }));
                 }
             };
         }
@@ -1591,6 +1606,9 @@ public class UserDiscussItemControl {
      * 更新的动态的阅读数量
      */
     public static void updateDiscussReadCnt(final String item_id) {
+        if (TextUtils.isEmpty(item_id)) {
+            return;
+        }
         if (updateReadCountList.contains(item_id)) {
             return;
         }

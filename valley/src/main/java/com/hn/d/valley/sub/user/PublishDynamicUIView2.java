@@ -55,17 +55,17 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.control.TopControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.control.VideoStatusInfo;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
-import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
-import com.hn.d.valley.main.message.session.EmojiLayoutControl;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.message.session.EmojiLayoutControl;
 import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.SocialService;
@@ -302,7 +302,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
         initAddressView();
 
-        initVisibleView();
+        initVisibleView(mViewHolder.tv(R.id.visible_view2));
+        initVisibleView(mViewHolder.tv(R.id.visible_view));
 
         mSoftInputLayout = mViewHolder.v(R.id.soft_input_layout);
 
@@ -424,6 +425,11 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         //转发动态
         if (isForward()) {
             recyclerView.setVisibility(View.GONE);
+
+            mViewHolder.v(R.id.tag_view).setVisibility(View.GONE);
+            mViewHolder.v(R.id.allow_box_view).setVisibility(View.GONE);
+            mViewHolder.v(R.id.visible_view2).setVisibility(View.VISIBLE);
+
             mViewHolder.v(R.id.selector_control_layout).setVisibility(View.GONE);
             mViewHolder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
 
@@ -492,8 +498,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         return mPublishTaskRealm == null && mDynamicType.getValue() >= 6;
     }
 
-    private void initVisibleView() {
-        final TextView visibleView = mViewHolder.tv(R.id.visible_view);
+    private void initVisibleView(final TextView visibleView) {
+//        final TextView visibleView = mViewHolder.tv(R.id.visible_view);
         visibleView.setText(levelType.getDes());
         visibleView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -501,11 +507,10 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 startIView(new DynamicVisiableLevelUIView().setSelectionAction(new Action2<DynamicVisiableLevelUIView.LevelType, List<String>>() {
                     @Override
                     public void call(DynamicVisiableLevelUIView.LevelType levelType, List<String> strings) {
-                        L.d(PublishDynamicUIView2.class.getSimpleName(),"type : " + levelType.name() + " friends : " + strings.toString());
+                        L.d(PublishDynamicUIView2.class.getSimpleName(), "type : " + levelType.name() + " friends : " + strings.toString());
                         PublishDynamicUIView2.this.levelType = levelType;
                         PublishDynamicUIView2.this.visiableFriends = strings;
                         visibleView.setText(levelType.getDes());
-
                     }
                 }));
             }
@@ -560,7 +565,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 if (isEmojiShow) {
                     imageView.setImageResource(R.drawable.icon_keyboard);
                 } else {
-                    imageView.setImageResource(R.drawable.expression_n);
+                    imageView.setImageResource(R.drawable.biaoqing_fabudongtai_n);
                 }
             }
         });
@@ -618,13 +623,12 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
             }
         });
+        //置顶
         final HnTopImageView hnTopImageView = mViewHolder.v(R.id.ico_top);
         hnTopImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hnTopImageView.setTop(!hnTopImageView.isTop());
-
-                if (hnTopImageView.isTop() && !isShowTip) {
+                if (!isShowTip) {
                     UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
                             .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
                             .setCancelText("").setOkText(mActivity.getString(R.string.known))
@@ -633,6 +637,25 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                     if (!BuildConfig.DEBUG) {
                         isShowTip = true;
                     }
+                }
+                if (hnTopImageView.isTop()) {
+                    hnTopImageView.setTop(false);
+                } else {
+                    TopControl.Companion.canTop().subscribe(new BaseSingleSubscriber<Boolean>() {
+                        @Override
+                        public void onSucceed(Boolean bean) {
+                            super.onSucceed(bean);
+                            if (bean) {
+                                hnTopImageView.setTop(true);
+                            } else {
+                                UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
+                                        .setDialogContent(getString(R.string.max_top_tip, TopControl.Companion.getTopBean().getTotal() + ""))
+                                        .setCancelText("").setOkText(mActivity.getString(R.string.known))
+                                        .setCanCanceledOnOutside(false)
+                                        .showDialog(PublishDynamicUIView2.this);
+                            }
+                        }
+                    });
                 }
             }
         });

@@ -99,7 +99,8 @@
     <string name="fetch_tag_failed">标签获取失败!</string>
     <string name="known">知道了</string>
     <string name="tip">提示</string>
-    <string name="dynamic_top_tip">动态置顶是指该动态会在你的动态列表中始终排列在第一位展示, 每次动态置顶消耗5龙币</string>
+    <string name="dynamic_top_tip">动态置顶是指该动态会在你的动态列表中,始终排列在第一位展示!</string>
+    <string name="max_top_tip">你当前等级最多能置顶%1$s条动态,已达上限!</string>
     <string name="not_auth">未认证</string>
     <string name="auth_zcmr">职场名人</string>
     <string name="auth_ylmx">娱乐明星</string>

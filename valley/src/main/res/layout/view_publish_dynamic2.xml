@@ -215,7 +215,7 @@
                     android:tag="%1$s"
                     android:textColor="@color/base_mention_color"
                     android:textSize="@dimen/default_text_size10"
-                    tools:text="生活"/>
+                    tools:text="公开"/>
             </FrameLayout>
 
             <LinearLayout
@@ -251,7 +251,7 @@
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
                     android:background="@drawable/base_bg2_selector"
-                    android:src="@drawable/expression_n"/>
+                    android:src="@drawable/biaoqing_fabudongtai_n"/>
 
                 <ImageView
                     android:id="@+id/ico_gif"
@@ -277,16 +277,48 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"/>
 
-                <CheckBox
-                    android:id="@+id/allow_box_view"
-                    style="@style/DarkTextStyle"
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="@drawable/check_fabudongtai_selector"
-                    android:checked="true"
-                    android:paddingEnd="@dimen/base_xhdpi"
-                    android:paddingStart="@dimen/base_ldpi"
-                    android:text="@string/allow_download"/>
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical">
+
+                    <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/visible_view2"
+                        style="@style/DarkTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginBottom="@dimen/base_xhdpi"
+                        android:layout_marginEnd="@dimen/base_xhdpi"
+                        android:layout_marginStart="@dimen/base_xxhdpi"
+                        android:background="@drawable/base_tag_border_selector"
+                        android:drawableLeft="@drawable/partiallyvisible_fabudongtai"
+                        android:drawablePadding="@dimen/base_ldpi"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/base_ldpi"
+                        android:paddingEnd="@dimen/base_hdpi"
+                        android:paddingStart="@dimen/base_hdpi"
+                        android:paddingTop="@dimen/base_ldpi"
+                        android:tag="%1$s"
+                        android:textColor="@color/base_mention_color"
+                        android:textSize="@dimen/default_text_size10"
+                        android:visibility="gone"
+                        tools:text="公开"
+                        tools:visibility="visible"/>
+
+                    <CheckBox
+                        android:id="@+id/allow_box_view"
+                        style="@style/DarkTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/check_fabudongtai_selector"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:paddingEnd="@dimen/base_xhdpi"
+                        android:paddingStart="@dimen/base_ldpi"
+                        android:text="@string/allow_download"
+                        tools:visibility="gone"/>
+                </RelativeLayout>
 
             </LinearLayout>
 
