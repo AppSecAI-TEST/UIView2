@@ -141,6 +141,7 @@ public class MainControl {
                                         @Override
                                         public void onProgress(BaseDownloadTask task, int soFarBytes, int totalBytes, float progress) {
                                             super.onProgress(task, soFarBytes, totalBytes, progress);
+                                            dialog.setIncertitudeProgress(totalBytes == -1);
                                             dialog.setProgress((int) progress);
 
                                             //L.d("下载进度:" + task.getUrl() + ":" + VersionControl.INSTANCE.getTargetFile().getAbsolutePath() + " -> total:" + totalBytes + " :" + progress);
