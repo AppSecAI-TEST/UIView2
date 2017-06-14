@@ -164,6 +164,6 @@ public class MainControl {
         ProgressNotify.instance()
                 .setClickActivity(HnUIMainActivity.class)
                 .setTargetFilePath(VersionControl.INSTANCE.getTargetFile().getAbsolutePath())
-                .show("恐龙谷", R.drawable.logo, progress);
+                .show(ValleyApp.getApp().getResources().getString(R.string.app_name), R.drawable.logo, progress);
     }
 }

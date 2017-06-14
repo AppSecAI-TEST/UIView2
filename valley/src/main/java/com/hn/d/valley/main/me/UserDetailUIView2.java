@@ -3,6 +3,7 @@ package com.hn.d.valley.main.me;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -678,7 +679,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
     private void initVoiceView() {
-        LinearLayout controlLayout = mViewHolder.v(R.id.voice_control_layout);
+        final LinearLayout controlLayout = mViewHolder.v(R.id.voice_control_layout);
         final ImageView voicePlayView = mViewHolder.v(R.id.voice_play_view);
         final TextView voiceTimeView = mViewHolder.v(R.id.voice_time_view);
         voiceTimeView.setTextColor(SkinHelper.getSkin().getThemeSubColor());
@@ -686,7 +687,17 @@ public class UserDetailUIView2 extends BaseContentUIView {
         if (TextUtils.isEmpty(mUserInfoBean.getVoice_introduce())) {
             controlLayout.setVisibility(View.GONE);
         } else {
-            controlLayout.setVisibility(View.VISIBLE);
+            if (controlLayout.getVisibility() == View.GONE) {
+                controlLayout.setVisibility(View.INVISIBLE);
+                controlLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ViewCompat.setTranslationX(controlLayout, controlLayout.getMeasuredWidth());
+                        controlLayout.setVisibility(View.VISIBLE);
+                        ViewCompat.animate(controlLayout).translationX(0).setDuration(300).start();
+                    }
+                });
+            }
             mAudioPlayHelper.initPlayImageView(voicePlayView);
 
             voiceTimeView.setText(mUserInfoBean.getVoiceTime());
@@ -750,6 +761,20 @@ public class UserDetailUIView2 extends BaseContentUIView {
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
         if (viewShowCount > 1) {
+            add(RRetrofit.create(UserService.class)
+                    .userInfo(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(UserInfoBean.class))
+                    .subscribe(new RSubscriber<UserInfoBean>() {
+
+                        @Override
+                        public void onSucceed(UserInfoBean bean) {
+                            if (bean != null) {
+                                initView(bean);
+                            }
+                        }
+                    })
+            );
+
             if (mUserInfoBean != null) {
                 initView(mUserInfoBean);
             }

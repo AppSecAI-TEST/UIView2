@@ -21,6 +21,20 @@
         android:layout_marginStart="@dimen/base_xhdpi"
         android:background="@color/line_color"/>
 
+    <com.angcyo.uiview.widget.ItemSubInfoLayout
+        android:id="@+id/id_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/base_xhdpi"
+        app:item_text="@string/id"
+        tools:item_dark_text="888888"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"/>
+
     <!--年龄-->
     <com.angcyo.uiview.widget.ItemSubInfoLayout
         android:id="@+id/birthday_item"

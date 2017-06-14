@@ -146,24 +146,24 @@ public class MainUIView extends BaseUIView {
     private void resetTabLayoutIco(ArrayList<CustomTabEntity> tabs) {
         switch (SkinUtils.getSkin()) {
             case SkinManagerUIView.SKIN_BLUE:
-                tabs.get(0).setTabSelectedIcon(R.drawable.message_s_blue).setTabUnselectedIcon(R.drawable.message_n);
-                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_s_blue).setTabUnselectedIcon(R.drawable.konglonggu_n);
-                tabs.get(2).setTabSelectedIcon(R.drawable.found_s_blue).setTabUnselectedIcon(R.drawable.found_n);
-                tabs.get(3).setTabSelectedIcon(R.drawable.me_s_blue).setTabUnselectedIcon(R.drawable.me_n);
+                tabs.get(0).setTabSelectedIcon(R.drawable.message_blue_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_blue_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(2).setTabSelectedIcon(R.drawable.found_blue_s).setTabUnselectedIcon(R.drawable.found_black_n);
+                tabs.get(3).setTabSelectedIcon(R.drawable.me_blue_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             case SkinManagerUIView.SKIN_GREEN:
-                tabs.get(0).setTabSelectedIcon(R.drawable.message_s_green).setTabUnselectedIcon(R.drawable.message_n);
-                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_s_green).setTabUnselectedIcon(R.drawable.konglonggu_n);
-                tabs.get(2).setTabSelectedIcon(R.drawable.found_s_green).setTabUnselectedIcon(R.drawable.found_n);
-                tabs.get(3).setTabSelectedIcon(R.drawable.me_s_green).setTabUnselectedIcon(R.drawable.me_n);
+                tabs.get(0).setTabSelectedIcon(R.drawable.message_green_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_green_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(2).setTabSelectedIcon(R.drawable.found_green_s).setTabUnselectedIcon(R.drawable.found_black_n);
+                tabs.get(3).setTabSelectedIcon(R.drawable.me_green_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             default:
-                tabs.get(0).setTabSelectedIcon(R.drawable.message_s_black).setTabUnselectedIcon(R.drawable.message_n);
-                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_s_black).setTabUnselectedIcon(R.drawable.konglonggu_n);
-                tabs.get(2).setTabSelectedIcon(R.drawable.found_s_black).setTabUnselectedIcon(R.drawable.found_n);
-                tabs.get(3).setTabSelectedIcon(R.drawable.me_s_black).setTabUnselectedIcon(R.drawable.me_n);
+                tabs.get(0).setTabSelectedIcon(R.drawable.message_black_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_black_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(2).setTabSelectedIcon(R.drawable.found_black_s).setTabUnselectedIcon(R.drawable.found_black_n);
+                tabs.get(3).setTabSelectedIcon(R.drawable.me_black_s).setTabUnselectedIcon(R.drawable.me_black_n);
                 break;
         }
     }

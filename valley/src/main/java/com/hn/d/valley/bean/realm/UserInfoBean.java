@@ -379,6 +379,10 @@ public class UserInfoBean extends RealmObject {
         this.is_auth = is_auth;
     }
 
+    public boolean isAuth() {
+        return "1".equalsIgnoreCase(getIs_auth());
+    }
+
     public String getAuth_type() {
         return auth_type;
     }

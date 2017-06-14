@@ -154,6 +154,8 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 tv.setDefaultSKin(R.string.base_info);
                 //tv.setBackgroundColor(Color.RED);
 
+                holder.sub(R.id.id_item).setItemDarkText(mUserInfoBean.getUid());
+
                 if (TextUtils.isEmpty(mUserInfoBean.getSignature())) {
                     holder.sub(R.id.signature_item).setItemDarkText(getString(R.string.signature_empty_tip));
                 } else {
@@ -177,36 +179,38 @@ public class UserInfoSubUIView extends BaseItemUIView {
             }
         });
 
-        //人物介绍
-        items.add(new SingleItem(SingleItem.Type.TOP) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                RTextView tv = holder.v(R.id.tip_view);
-                tv.setDefaultSKin(R.string.base_introduce);
+        if (mUserInfoBean.isAuth()) {
+            //人物介绍
+            items.add(new SingleItem(SingleItem.Type.TOP) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
+                    RTextView tv = holder.v(R.id.tip_view);
+                    tv.setDefaultSKin(R.string.base_introduce);
 
-                String introduce = mUserInfoBean.getIntroduce();
-                if (TextUtils.isEmpty(introduce)) {
-                    holder.tv(R.id.text_view).setText(R.string.introduce_empty_tip);
-                } else {
-                    holder.tv(R.id.text_view).setText(introduce);
-                }
-
-                final String website = mUserInfoBean.getWebsite();
-                if (TextUtils.isEmpty(website)) {
-                    holder.v(R.id.more_info_view).setVisibility(View.GONE);
-                    holder.v(R.id.bottom_line_view).setVisibility(View.GONE);
-                } else {
-                    holder.v(R.id.more_info_view).setVisibility(View.VISIBLE);
-                    holder.v(R.id.bottom_line_view).setVisibility(View.VISIBLE);
-                }
-
-                holder.v(R.id.more_info_view).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mParentILayout.startIView(new X5WebUIView(website));
+                    String introduce = mUserInfoBean.getIntroduce();
+                    if (TextUtils.isEmpty(introduce)) {
+                        holder.tv(R.id.text_view).setText(R.string.introduce_empty_tip);
+                    } else {
+                        holder.tv(R.id.text_view).setText(introduce);
                     }
-                });
-            }
-        });
+
+                    final String website = mUserInfoBean.getWebsite();
+                    if (TextUtils.isEmpty(website)) {
+                        holder.v(R.id.more_info_view).setVisibility(View.GONE);
+                        holder.v(R.id.bottom_line_view).setVisibility(View.GONE);
+                    } else {
+                        holder.v(R.id.more_info_view).setVisibility(View.VISIBLE);
+                        holder.v(R.id.bottom_line_view).setVisibility(View.VISIBLE);
+                    }
+
+                    holder.v(R.id.more_info_view).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mParentILayout.startIView(new X5WebUIView(website));
+                        }
+                    });
+                }
+            });
+        }
     }
 }
