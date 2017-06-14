@@ -483,8 +483,14 @@ public class UserDetailUIView2 extends BaseContentUIView {
             authTextView.setBackgroundColor(Color.TRANSPARENT);
             authTextView.setTextColor(getColor(R.color.base_text_color_dark));
         } else {
+            int offset = getDimensionPixelOffset(R.dimen.base_hdpi);
+            authTextView.setPadding(offset, 0, offset, 0);
             authTextView.setText(R.string.not_auth);
-            authTextView.setBackground(SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
+            if (isMe()) {
+                authTextView.setBackground(ResUtil.createDrawable(getColor(R.color.orange), density()));
+            } else {
+                authTextView.setBackground(ResUtil.createDrawable(getColor(R.color.base_gray), density()));
+            }
             authTextView.setTextColor(Color.WHITE);
         }
 
