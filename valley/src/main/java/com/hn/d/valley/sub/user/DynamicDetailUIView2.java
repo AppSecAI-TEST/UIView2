@@ -85,8 +85,18 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     private ForwardListUIView mForwardListUIView;
     private Player.OnPlayListener mOnPlayListener;
 
+    /**
+     * 是否自动播放语音
+     */
+    private boolean autoPlayAudio = false;
+
     public DynamicDetailUIView2(String discuss_id) {
         this.discuss_id = discuss_id;
+    }
+
+    public DynamicDetailUIView2 setAutoPlayAudio(boolean autoPlayAudio) {
+        this.autoPlayAudio = autoPlayAudio;
+        return this;
     }
 
     @Override
@@ -290,13 +300,14 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     }
 
     private void initMediaLayout() {
+        View mediaControlLayout = mViewHolder.v(R.id.media_control_layout);
+        final HnVideoPlayView videoPlayView = (HnVideoPlayView) mediaControlLayout.findViewById(R.id.video_play_view);
+
         if (isAudioType()) {
-            View mediaControlLayout = mViewHolder.v(R.id.media_control_layout);
 
             RNineImageLayout mediaImageTypeView = (RNineImageLayout) mediaControlLayout.findViewById(R.id.media_image_view);
             HnPlayTimeView videoTimeView = (HnPlayTimeView) mediaControlLayout.findViewById(R.id.video_time_view);
             final HnVoiceTipView voiceTipView = (HnVoiceTipView) mediaControlLayout.findViewById(R.id.voice_tip_view);
-            final HnVideoPlayView videoPlayView = (HnVideoPlayView) mediaControlLayout.findViewById(R.id.video_play_view);
 
             videoTimeView.setTag(mDataListBean.getMediaValue()[1]);
             voiceTipView.setPlayTimeView(videoTimeView);
@@ -325,7 +336,8 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 null, null, mILayout, true);
 
         //WIFI 下自动播放语音
-        if (isAudioType() && NetworkStateReceiver.getNetType() == NetworkUtils.NetworkType.NETWORK_WIFI) {
+        if (isAudioType() && autoPlayAudio && NetworkStateReceiver.getNetType() == NetworkUtils.NetworkType.NETWORK_WIFI) {
+            videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE);
             Audio.instance().play(mDataListBean.getMediaValue()[1]);
         }
     }

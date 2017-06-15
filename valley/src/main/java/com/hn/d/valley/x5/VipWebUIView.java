@@ -29,6 +29,13 @@ public class VipWebUIView extends X5WebUIView {
     boolean isLogin = false;
     private String mToken;
 
+    Runnable loginRunnable = new Runnable() {
+        @Override
+        public void run() {
+            login(mWebView);
+        }
+    };
+
     public VipWebUIView() {
         super("http://wap.klgwl.com/user/rank");
     }
@@ -87,7 +94,8 @@ public class VipWebUIView extends X5WebUIView {
                                 if (BuildConfig.SHOW_DEBUG) {
                                     T_.ok("reload...");
                                 }
-                                login(mWebView);
+                                removeCallbacks(loginRunnable);
+                                postDelayed(loginRunnable, 1000);
                             }
                         }, "android");
                     }

@@ -368,7 +368,7 @@ public class UserDiscussItemControl {
         holder.v(R.id.forward_control_layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jumpToDynamicDetailUIView(iLayout, original_info.getDiscuss_id(), true, isInDetail);
+                jumpToDynamicDetailUIView(iLayout, original_info.getDiscuss_id(), true, isInDetail, false);
 
                 if (!isInDetail) {
                     updateDiscussReadCnt(original_info.getDiscuss_id());
@@ -665,7 +665,7 @@ public class UserDiscussItemControl {
                                 }
                             } else {
                                 if (!TextUtils.isEmpty(discuss_id)) {
-                                    jumpToDynamicDetailUIView(iLayout, discuss_id, false, isInDetail);
+                                    jumpToDynamicDetailUIView(iLayout, discuss_id, false, isInDetail, true);
                                 }
                             }
 
@@ -683,8 +683,8 @@ public class UserDiscussItemControl {
     }
 
     public static void jumpToDynamicDetailUIView(ILayout iLayout, String discuss_id,
-                                                 boolean isForward, boolean isInDetail) {
-        iLayout.startIView(new DynamicDetailUIView2(discuss_id));
+                                                 boolean isForward, boolean isInDetail, boolean autoPlayAudio) {
+        iLayout.startIView(new DynamicDetailUIView2(discuss_id).setAutoPlayAudio(autoPlayAudio));
         if (!isForward && !isInDetail) {
             updateDiscussReadCnt(discuss_id);
         }

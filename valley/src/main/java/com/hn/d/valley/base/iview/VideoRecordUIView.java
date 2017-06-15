@@ -192,6 +192,7 @@ public class VideoRecordUIView extends UIBaseView {
         int offset = getDimensionPixelOffset(R.dimen.base_xhdpi);
         return super.getTitleBar()
                 .setShowBackImageView(true)
+                .setFloating(true)
                 .setTitleString("")
                 .setBackImageRes(R.drawable.quxiao_paishiping)
                 .addRightItem(TitleBarPattern.buildImage(R.drawable.meiyan, new View.OnClickListener() {

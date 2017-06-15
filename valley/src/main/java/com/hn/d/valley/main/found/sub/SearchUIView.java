@@ -80,7 +80,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
             @Override
             public void onClick(View v) {
                 //iLayout.startIView(new DynamicDetailUIView2(discussId));
-                UserDiscussItemControl.jumpToDynamicDetailUIView(iLayout, discussId, false, false);
+                UserDiscussItemControl.jumpToDynamicDetailUIView(iLayout, discussId, false, false, false);
             }
         });
 

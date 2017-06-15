@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -28,7 +27,6 @@ import com.angcyo.uiview.widget.RTextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.control.MediaTypeControl;
@@ -330,7 +328,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 @Override
                 public void onClick(View v) {
                     //startIView(new DynamicDetailUIView2(customBean.getItem_id()));
-                    UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false);
+                    UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false, false);
                 }
             });
         }
