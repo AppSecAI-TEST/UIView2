@@ -22,6 +22,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.DraftControl;
+import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
@@ -547,6 +548,13 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     holder.tv(R.id.text_view).setText(AppUtils.getAppVersionName(mActivity) +
                             " by " + getString(R.string.build_time) +
                             " on " + getString(R.string.os_name));
+
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MainControl.checkVersion(mParentILayout);
+                        }
+                    });
                 }
             }));
         }

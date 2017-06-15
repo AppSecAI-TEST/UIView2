@@ -3,6 +3,7 @@ package com.hn.d.valley.main.found.sub;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -14,6 +15,7 @@ import com.angcyo.uiview.widget.RImageCheckView;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.lzy.imagepicker.ImagePickerHelper;
 
 import java.util.ArrayList;
@@ -125,9 +127,26 @@ public class ScanUIView extends BaseContentUIView implements QRCodeView.Delegate
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        T_.show(result);
-        VibrationUtils.vibrate(mActivity, 200);//震动
         mZxingView.startSpot();
+        if (TextUtils.isEmpty(result)) {
+            return;
+        }
+        //T_.show(result);
+        VibrationUtils.vibrate(mActivity, 200);//震动
+        if (result.contains("uid=")) {
+            //个人名片
+            try {
+                String[] split = result.split("uid=");
+                if (split.length >= 2) {
+                    replaceIView(new UserDetailUIView2(split[1]));
+                }
+            } catch (Exception e) {
+
+            }
+
+        } else if (result.contains("team=")) {
+
+        }
     }
 
     @Override

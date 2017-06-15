@@ -446,7 +446,11 @@ public class VideoRecordUIView extends UIBaseView {
 
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
-            retriever.setDataSource(mActivity, Uri.fromFile(videoFile));
+
+            if (videoTime <= 0 || videoWidth <= 0 || videoHeight <= 0 || rotationRecord < 0) {
+                retriever.setDataSource(mActivity, Uri.fromFile(videoFile));
+            }
+
             if (videoTime <= 0) {
                 videoTime = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)) / 1000;
             }

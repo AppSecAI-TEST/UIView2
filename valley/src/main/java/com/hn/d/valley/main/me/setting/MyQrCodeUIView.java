@@ -193,6 +193,28 @@ public class MyQrCodeUIView extends BaseContentUIView {
     }
 
 
+    /**
+     * 返回需要创建二维码的内容
+     */
+    protected String getQrCodeContent() {
+        return "个人名片:uid=" + UserCache.getUserAccount();
+    }
+
+    /**
+     * 二维码创建成功之后的回调, 可以用来本地缓存二维码
+     *
+     * @param bitmap 二维码图片
+     * @param avatar 头像本地地址
+     */
+    protected void onQrCodeCreateEnd(Bitmap bitmap, String avatar) {
+        String qrFilePath = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
+        AttachmentStore.saveBitmap(bitmap, qrFilePath, false);
+
+        RRealm.save(new QrCodeBean(UserCache.getUserAccount(), qrFilePath, avatar));
+
+        Hawk.put(MyQrCodeUIView.KEY_NEED_CREATE_QR, false);
+    }
+
     private void createQrCodeView(final HnGlideImageView imageView, final ImageView qrView) {
         Glide.with(mActivity)
                 .load(UserCache.getUserAvatar())
@@ -205,7 +227,7 @@ public class MyQrCodeUIView extends BaseContentUIView {
                         final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
                         AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
 
-                        createQrCode("个人名片:uid=" + UserCache.getUserAccount(),
+                        createQrCode(getQrCodeContent(),
                                 (int) ResUtil.dpToPx(mActivity, 200),
                                 SkinHelper.getSkin().getThemeSubColor(),
                                 cornerBitmap)
@@ -213,12 +235,7 @@ public class MyQrCodeUIView extends BaseContentUIView {
                                     @Override
                                     public void call(Bitmap bitmap) {
                                         qrView.setImageBitmap(bitmap);
-                                        String qrFilePath = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
-                                        AttachmentStore.saveBitmap(bitmap, qrFilePath, false);
-
-                                        RRealm.save(new QrCodeBean(UserCache.getUserAccount(), qrFilePath, avatar));
-
-                                        Hawk.put(MyQrCodeUIView.KEY_NEED_CREATE_QR, false);
+                                        onQrCodeCreateEnd(bitmap, avatar);
                                     }
                                 });
                     }
