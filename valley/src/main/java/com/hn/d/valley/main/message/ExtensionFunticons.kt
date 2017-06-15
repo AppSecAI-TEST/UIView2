@@ -4,6 +4,7 @@ import android.app.Activity
 import android.widget.ImageView
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.hn.d.valley.R
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -22,6 +23,10 @@ import com.bumptech.glide.Glide
     }
 
     fun ImageView.setImageUrl(url : String) {
-        Glide.with(context).load(url).into(this)
+        Glide.with(context)
+                .load(url)
+                .placeholder(R.drawable.default_avatar)
+                .error(R.drawable.default_avatar)
+                .into(this)
 
     }

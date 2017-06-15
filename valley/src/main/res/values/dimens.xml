@@ -16,4 +16,7 @@
     <dimen name="avatar_image_size_x_little">35dp</dimen>
     <dimen name="ico_size">20dp</dimen>
 
+    <dimen name="base_150dpi">150dp</dimen>
+
+
 </resources>

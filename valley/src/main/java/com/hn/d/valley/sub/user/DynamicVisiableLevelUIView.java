@@ -188,7 +188,8 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
             TextView signature = holder.tv(R.id.signature);
             tv_name.setText(section.getLevel());
             signature.setText(section.getDes());
-            holder.v(R.id.radio_view).setOnClickListener(new View.OnClickListener() {
+
+            View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     mGroupAdapter.setSelectorPosition(position);
@@ -212,7 +213,10 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
 
                     }
                 }
-            });
+            };
+
+            holder.v(R.id.radio_view).setOnClickListener(listener);
+            holder.itemView.setOnClickListener(listener);
         }
 
         @Override

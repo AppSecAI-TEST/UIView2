@@ -15,6 +15,7 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.message.session.SessionHelper;
+import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
@@ -110,6 +111,9 @@ public class ValleyApp extends RApplication {
 
         // 会话窗口的定制初始化。
         SessionHelper.init();
+
+        // 是否显示红包钱包等功能
+//        DynamicFuncManager2.instance().load();
 
         if (BuildConfig.DEBUG) {
 //            Stetho.initializeWithDefaults(this);

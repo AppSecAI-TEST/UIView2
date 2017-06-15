@@ -65,5 +65,11 @@ public interface SettingService {
      */
     @POST("setting/getSkin")
     Observable<ResponseBody> getSkin(@QueryMap Map<String, String> map);
+
+    /**
+     * app按钮及功能状态
+     */
+    @POST("app/setting")
+    Observable<ResponseBody> setting(@QueryMap Map<String, String> map);
 }
 

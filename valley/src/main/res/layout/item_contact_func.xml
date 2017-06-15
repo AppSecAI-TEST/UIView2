@@ -5,30 +5,31 @@
     android:id="@+id/item_root_layout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/base_75dpi"
-    android:paddingLeft="@dimen/base_xhdpi"
+    android:padding="@dimen/base_xhdpi_15"
     android:gravity="center_vertical"
     android:background="@drawable/base_white_bg_selector"
     >
 
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/iv_item_head"
-        android:layout_width="@dimen/avatar_image_size_little"
-        android:layout_height="@dimen/avatar_image_size_little"
+        android:layout_width="@dimen/base_45dpi"
+        android:layout_height="@dimen/base_45dpi"
         android:contentDescription="@string/is_circle"
         android:src="@drawable/default_avatar"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_marginLeft="@dimen/base_xhdpi"
+        android:layout_marginStart="@dimen/base_xhdpi"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_toRightOf="@id/iv_item_head">
+        android:layout_toEndOf="@id/iv_item_head">
 
         <TextView
             android:id="@+id/tv_friend_name"
             android:gravity="center_vertical"
             android:textSize="@dimen/default_text_size"
+            android:layout_marginTop="@dimen/base_dpi"
             android:textColor="@color/base_text_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +37,7 @@
 
         <TextView
             android:id="@+id/tv_func_desc"
-            android:layout_marginTop="@dimen/base_xhdpi_15"
+            android:layout_marginTop="@dimen/base_ldpi"
             android:gravity="center_vertical"
             android:textSize="@dimen/default_text_little_size"
             android:textColor="@color/default_base_bg_disable"

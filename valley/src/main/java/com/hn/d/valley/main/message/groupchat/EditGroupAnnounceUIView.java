@@ -17,6 +17,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.ISkin;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.UI;
@@ -38,14 +39,14 @@ import java.util.ArrayList;
 
 public class EditGroupAnnounceUIView extends BaseUIView {
 
-
-    HnGlideImageView ivItemHead;
-    TextView tvFriendName;
-    TextView tvFuncDesc;
-    RelativeLayout itemRootLayout;
-    RTextView tvAnnouncementDesc;
-    HnEmptyRefreshLayout refreshLayout;
-    RTextView commandItemView;
+    private HnGlideImageView ivItemHead;
+    private TextView tvFriendName;
+    private TextView tvFuncDesc;
+    private RelativeLayout itemRootLayout;
+    private RelativeLayout commandItem;
+    private RTextView tvAnnouncementDesc;
+    private HnEmptyRefreshLayout refreshLayout;
+    private RTextView commandItemView;
 
     private String gid;
     private String an_id;
@@ -61,14 +62,19 @@ public class EditGroupAnnounceUIView extends BaseUIView {
     protected TitleBarPattern getTitleBar() {
 
         ArrayList<TitleBarPattern.TitleBarItem> titleBarItems = new ArrayList<>();
-        titleBarItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.delete_search).setVisibility(View.GONE).setListener(new View.OnClickListener() {
+        titleBarItems.add(TitleBarPattern.TitleBarItem.build()
+                .setRes(R.drawable.delete_search)
+                .setVisibility(View.GONE).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteAnnounce();
             }
         }));
 
-        return super.getTitleBar().setShowBackImageView(true).setRightItems(titleBarItems);
+        return super.getTitleBar()
+                .setTitleString(mActivity.getString(R.string.text_announce_detail))
+                .setShowBackImageView(true)
+                .setRightItems(titleBarItems);
     }
 
 
@@ -90,11 +96,12 @@ public class EditGroupAnnounceUIView extends BaseUIView {
         itemRootLayout = v(R.id.item_root_layout);
         tvAnnouncementDesc = v(R.id.tv_announcement_desc);
         refreshLayout = v(R.id.refresh_layout);
-        commandItemView = v(R.id.command_item_view);
+        commandItemView = v(R.id.text_view);
+        commandItem = v(R.id.command_item_view);
 
         if(isAdmin) {
             getUITitleBarContainer().showRightItem(0);
-            commandItemView.setVisibility(View.VISIBLE);
+            commandItem.setVisibility(View.VISIBLE);
         }
 
         initView();
@@ -165,8 +172,12 @@ public class EditGroupAnnounceUIView extends BaseUIView {
             int maxCount = mActivity.getResources().getInteger(R.integer.signature_count);
             editText.setMaxLength(maxCount);
             editText.setGravity(Gravity.TOP);
-            UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
+            editText.setHint(R.string.text_please_edit_announce);
+            int padding = ScreenUtil.dip2px(15);
+            editText.setPadding(padding,padding,padding,padding);
+            UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_150dpi));
             final TextIndicator textIndicator = holder.v(R.id.single_text_indicator_view);
+            textIndicator.setMaxCount(maxCount);
             textIndicator.setVisibility(View.VISIBLE);
             editText.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -196,21 +207,37 @@ public class EditGroupAnnounceUIView extends BaseUIView {
     }
 
     private void deleteAnnounce() {
-        add(RRetrofit.create(GroupChatService.class)
-                .removeAnnouncement(Param.buildMap("gid:" + gid,"an_id:" + an_id))
-                .compose(Rx.transformer(String.class))
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
+        UIDialog.build()
+                .setDialogContent("确定删除此公告?")
+                .setOkListener(new View.OnClickListener() {
                     @Override
-                    public void onSucceed(String beans) {
-                        T_.show(mActivity.getString(R.string.text_delete_success));
-                        finishIView();
+                    public void onClick(View v) {
+                        add(RRetrofit.create(GroupChatService.class)
+                                .removeAnnouncement(Param.buildMap("gid:" + gid,"an_id:" + an_id))
+                                .compose(Rx.transformer(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onError(int code, String msg) {
+                                        super.onError(code, msg);
+                                    }
+
+                                    @Override
+                                    public void onSucceed(String beans) {
+                                        T_.show(mActivity.getString(R.string.text_delete_success));
+                                        finishIView();
+                                    }
+                                }));
                     }
-                }));
+                })
+                .setCancelListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                })
+                .showDialog(mILayout);
+
+
     }
 
 

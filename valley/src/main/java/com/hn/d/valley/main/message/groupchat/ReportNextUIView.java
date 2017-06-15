@@ -193,6 +193,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     @Override
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
+                        HnLoading.hide();
                         finishIView();
                         T_.info(mActivity.getString(R.string.text_resport_success));
                     }
@@ -200,6 +201,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     @Override
                     public void onNoNetwork() {
                         super.onNoNetwork();
+                        HnLoading.hide();
                     }
                 }));
     }

@@ -139,7 +139,8 @@ public class GroupChatUIView extends ChatUIView2 {
         if (notification != null) {
             GroupAnnounceNotification announce = (GroupAnnounceNotification) notification;
             if (isVisible) {
-                mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),announce.getContent()));
+//                mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),announce.getContent()));
+                mParentILayout.startIView(new GroupAnnnounceUpdateDialog(mSessionId,announce));
                 tv_announce.setText(announce.getContent());
             }
         }
@@ -441,8 +442,8 @@ public class GroupChatUIView extends ChatUIView2 {
         }
 
         if (isVisible) {
-            mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
-
+//            mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
+            mParentILayout.startIView(new GroupAnnnounceUpdateDialog(mSessionId,event.notification));
         }
 
         L.i(TAG,event.notification.getContent());

@@ -226,14 +226,14 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         @Override
         public void resetAllData(List<GroupMemberBean> allDatas) {
             //去除群成员中的群主 不会被踢出
-            List<GroupMemberBean> filterList = new ArrayList<>();
-            for (GroupMemberBean member : allDatas) {
-                if (member.getDefaultNick().equals(UserCache.instance().getUserInfoBean().getUsername())) {
-                    continue;
-                }
-                filterList.add(member);
-            }
-            super.resetAllData(filterList);
+//            List<GroupMemberBean> filterList = new ArrayList<>();
+//            for (GroupMemberBean member : allDatas) {
+//                if (member.getUserId().equals(UserCache.instance().getUserInfoBean().getUid())) {
+//                    continue;
+//                }
+//                filterList.add(member);
+//            }
+            super.resetAllData(allDatas);
         }
 
         @NonNull
@@ -281,6 +281,12 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
 
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
             checkBox.setTag(position);
+
+            // 群主不处理
+            if (bean.getUserId().equals(UserCache.getUserAccount())){
+                checkBox.setVisibility(View.INVISIBLE);
+                return;
+            }
 
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override

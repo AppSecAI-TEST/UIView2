@@ -36,7 +36,7 @@ public class NimUserInfoCache {
     private Observer<List<NimUserInfo>> userInfoUpdateObserver = new Observer<List<NimUserInfo>>() {
         @Override
         public void onEvent(List<NimUserInfo> users) {
-            L.i("userInfoUpdateObserver");
+            L.i("userInfoUpdateObserver : users " + users == null ? "null" : users.toString());
             if (users == null || users.isEmpty()) {
                 return;
             }

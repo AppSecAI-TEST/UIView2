@@ -500,7 +500,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
     private void initVisibleView(final TextView visibleView) {
 //        final TextView visibleView = mViewHolder.tv(R.id.visible_view);
-        visibleView.setText(levelType.getDes());
+        visibleView.setText(levelType.getLevel());
         visibleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -510,7 +510,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         L.d(PublishDynamicUIView2.class.getSimpleName(), "type : " + levelType.name() + " friends : " + strings.toString());
                         PublishDynamicUIView2.this.levelType = levelType;
                         PublishDynamicUIView2.this.visiableFriends = strings;
-                        visibleView.setText(levelType.getDes());
+                        visibleView.setText(levelType.getLevel());
                     }
                 }));
             }
@@ -564,6 +564,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
                 if (isEmojiShow) {
                     imageView.setImageResource(R.drawable.icon_keyboard);
+                    mEmojiLayoutControl.emotNotifiDataSetChanged();
                 } else {
                     imageView.setImageResource(R.drawable.biaoqing_fabudongtai_n);
                 }
@@ -573,6 +574,9 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //show emoji
+                mEmojiLayoutControl.showEmoji();
+
                 if (mSoftInputLayout.isEmojiShow()) {
                     mSoftInputLayout.showSoftInput(mInputView);
                 } else {

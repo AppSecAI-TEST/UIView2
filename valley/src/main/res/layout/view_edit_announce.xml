@@ -18,6 +18,10 @@
                 layout="@layout/item_contact_func"
                 />
 
+            <include
+                layout="@layout/item_divider_line"
+                />
+
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/tv_announcement_desc"
                 style="@style/MainTextStyle"
@@ -25,17 +29,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="@string/no_selector_report_tip" />
-
-
         </LinearLayout>
     </com.hn.d.valley.widget.HnEmptyRefreshLayout>
 
-    <com.hn.d.valley.widget.HnButton
+    <RelativeLayout
         android:id="@+id/command_item_view"
-        style="@style/MainColorButtonStyle"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_item_size"
-        android:visibility="gone"
-        android:text="@string/text_edit_announce" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+        android:padding="@dimen/base_xhdpi">
+
+        <com.hn.d.valley.widget.HnButton
+            android:id="@+id/text_view"
+            style="@style/WhiteColorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/base_item_size"
+            android:background="@drawable/main_color_bg_round_selector"
+            android:gravity="center"
+            android:minHeight="@dimen/base_item_size"
+            android:padding="@dimen/base_xhdpi"
+            android:text="@string/text_edit_announce"/>
+
+    </RelativeLayout>
+
+    <!--<com.hn.d.valley.widget.HnButton-->
+        <!--style="@style/MainColorButtonStyle"-->
+        <!--android:text="@string/text_edit_announce" />-->
 </RelativeLayout>

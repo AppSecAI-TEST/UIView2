@@ -12,6 +12,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.angcyo.uiview.utils.string.StringUtil;
+import com.angcyo.uiview.widget.RImageView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
@@ -217,7 +218,7 @@ public class MsgViewHolderVideo extends MsgViewHolderBase implements MsgUIObserv
     private void playVideo() {
         final VideoAttachment msgAttachment = (VideoAttachment) message.getAttachment();
         mUIBaseView.startIView(new VideoPlayUIView(((VideoAttachment) message.getAttachment()).getPath()
-                , null, new int[]{msgAttachment.getWidth(),msgAttachment.getHeight()}));
+                , RImageView.copyDrawable(draweeView), new int[]{msgAttachment.getWidth(),msgAttachment.getHeight()}));
     }
 
 //    private Observer<AttachmentProgress> attachmentProgressObserver = new Observer<AttachmentProgress>() {

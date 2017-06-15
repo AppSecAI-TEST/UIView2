@@ -11,11 +11,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
@@ -157,10 +159,12 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
     }
 
     private InputUIView.InputConfigCallback inputConfigCallback = new InputUIView.InputConfigCallback() {
+
+
         @Override
         public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
             return super.initTitleBar(titleBarPattern).setTitleString(mActivity.getString(R.string.text_publish_group_annonce))
-                    .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.finish),
+                    .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.publish),
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -169,22 +173,33 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
                                         value = mExEditText.string();
                                     }
 
-                                   add(RRetrofit.create(GroupChatService.class)
-                                            .setAnnouncement(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid,"content:" + value))
-                                            .compose(Rx.transformer(String.class))
-                                            .subscribe(new BaseSingleSubscriber<String>() {
+                                    final String finalValue = value;
+                                    UIDialog.build()
+                                            .setDialogContent(mActivity.getString(R.string.text_send_announce_tip))
+                                            .setOkText(getString(R.string.ok))
+                                            .setCancelText(getString(R.string.cancel))
+                                            .setOkListener(new View.OnClickListener() {
                                                 @Override
-                                                public void onError(int code, String msg) {
-                                                    super.onError(code, msg);
-                                                }
+                                                public void onClick(View v) {
+                                                    add(RRetrofit.create(GroupChatService.class)
+                                                            .setAnnouncement(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid,"content:" + finalValue))
+                                                            .compose(Rx.transformer(String.class))
+                                                            .subscribe(new BaseSingleSubscriber<String>() {
+                                                                @Override
+                                                                public void onError(int code, String msg) {
+                                                                    super.onError(code, msg);
+                                                                }
 
-                                                @Override
-                                                public void onSucceed(String beans) {
-                                                    loadData();
-                                                    finishIView(mIView);
+                                                                @Override
+                                                                public void onSucceed(String beans) {
+                                                                    loadData();
+                                                                    finishIView(mIView);
 
+                                                                }
+                                                            }));
                                                 }
-                                            }));
+                                            })
+                                            .showDialog(mILayout);
                                 }
                             }));
         }
@@ -197,8 +212,11 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
             int maxCount = mActivity.getResources().getInteger(R.integer.signature_count);
             editText.setMaxLength(maxCount);
             editText.setGravity(Gravity.TOP);
-            UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
+            int padding = ScreenUtil.dip2px(15);
+            editText.setPadding(padding,padding,padding,padding);
+            UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_150dpi));
             final TextIndicator textIndicator = holder.v(R.id.single_text_indicator_view);
+            textIndicator.setMaxCount(maxCount);
             textIndicator.setVisibility(View.VISIBLE);
             editText.addTextChangedListener(new TextWatcher() {
                 @Override

@@ -26,6 +26,7 @@ import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.main.me.setting.SettingUIView2;
 import com.hn.d.valley.main.me.sub.InviteFriendsUIDialog;
+import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.MyStatusUIView;
@@ -373,19 +374,23 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 });
             }
         }));
-        //我的钱包
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                initItemLayout(itemInfoLayout, R.string.my_wallet_tip, R.drawable.icon_wallet, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mParentILayout.startIView(new MyWalletUIView());
-                    }
-                });
-            }
-        }));
+
+
+        if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet()) {
+            //我的钱包
+            items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                    initItemLayout(itemInfoLayout, R.string.my_wallet_tip, R.drawable.icon_wallet, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mParentILayout.startIView(new MyWalletUIView());
+                        }
+                    });
+                }
+            }));
+        }
         //个性装扮
         items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
             @Override

@@ -1,7 +1,5 @@
 package com.hn.d.valley.main.message.session;
 
-import android.os.Build;
-
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.hn.d.valley.base.constant.Constant;
@@ -9,6 +7,7 @@ import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
+import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.main.other.KLJUIView;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -107,7 +106,12 @@ public class SessionHelper {
                     items.add(new AVChatCommandItem(AVChatType.VIDEO));
                     items.add(new LocationCommandItem());
                     items.add(new PersonalCardCommandItem());
-                    items.add(new RedPacketCommandItem());
+
+                    if (DynamicFuncManager2.instance().dynamicFuncResult != null) {
+                        if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet()) {
+                            items.add(new RedPacketCommandItem());
+                        }
+                    }
                     return items;
                 }
             };
