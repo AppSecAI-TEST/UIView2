@@ -15,7 +15,6 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.message.session.SessionHelper;
-import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
@@ -58,6 +57,8 @@ public class ValleyApp extends RApplication {
         super.onInit();
         RRealm.init(this);
         FDown.init(this, false/*BuildConfig.DEBUG*/);
+
+        UM.init(this, BuildConfig.DEBUG);
 
         if (BuildConfig.DEBUG) {
             Takt.stock(this)
@@ -123,8 +124,6 @@ public class ValleyApp extends RApplication {
         QbSdk.initX5Environment(getApplicationContext(), null);
 
         Audio.init(this);
-
-        UM.init(this, BuildConfig.DEBUG);
 
         UIBaseView.ENABLE_LAYOUT_CHANGE_ANIM = false;
 

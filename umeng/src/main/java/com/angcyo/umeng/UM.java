@@ -42,7 +42,7 @@ public class UM {
 
         Config.DEBUG = debug;
 
-        UMShareAPI.get(sApplication);
+        getUMShareAPI();
 
         initPlatformConfig();
 
@@ -70,21 +70,21 @@ public class UM {
      * 删除授权
      */
     public static void deleteAuth(Activity activity, SHARE_MEDIA platform, UMAuthListener listener) {
-        UMShareAPI.get(sApplication).deleteOauth(activity, platform, listener);
+        getUMShareAPI().deleteOauth(activity, platform, listener);
     }
 
     /**
      * 授权验证
      */
     public static void authVerify(Activity activity, SHARE_MEDIA platform, UMAuthListener listener) {
-        UMShareAPI.get(sApplication).doOauthVerify(activity, platform, listener);
+        getUMShareAPI().doOauthVerify(activity, platform, listener);
     }
 
     /**
      * 返回是否授权
      */
     public static boolean isAuthorize(Activity activity, SHARE_MEDIA platform) {
-        return UMShareAPI.get(sApplication).isAuthorize(activity, platform);
+        return getUMShareAPI().isAuthorize(activity, platform);
     }
 
     /**
@@ -95,7 +95,7 @@ public class UM {
      * 如果已授权, 会直接返回数据
      */
     public static void getPlatformInfo(Activity activity, SHARE_MEDIA platform, UMAuthListener listener) {
-        UMShareAPI.get(sApplication).getPlatformInfo(activity, platform, listener);
+        getUMShareAPI().getPlatformInfo(activity, platform, listener);
     }
 
     /**
@@ -205,11 +205,21 @@ public class UM {
     }
 
     public static void onActivityResult(int requestCode, int resultCode, Intent data) {
-        UMShareAPI.get(sApplication).onActivityResult(requestCode, resultCode, data);
+        if (getUMShareAPI() != null) {
+            getUMShareAPI().onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private static UMShareAPI getUMShareAPI() {
+        UMShareAPI umShareAPI = null;
+        if (sApplication != null) {
+            umShareAPI = UMShareAPI.get(sApplication);
+        }
+        return umShareAPI;
     }
 
     public static void onDestroy() {
-        UMShareAPI.get(sApplication).release();
+        getUMShareAPI().release();
     }
 
     /**

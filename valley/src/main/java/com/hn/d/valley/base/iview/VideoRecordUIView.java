@@ -66,7 +66,6 @@ import rx.functions.Action3;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-import static com.angcyo.uiview.viewgroup.ExpandRecordLayout.STATE_CLOSE;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -608,7 +607,7 @@ public class VideoRecordUIView extends UIBaseView {
 
     @Override
     public boolean onBackPressed() {
-        if (mRecordLayout.getState() != STATE_CLOSE) {
+        if (mRecordLayout.getState() != ExpandRecordLayout.STATE_CLOSE) {
             mRecordLayout.expandLayout(false);
             return false;
         }

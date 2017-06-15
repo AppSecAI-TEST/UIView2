@@ -36,7 +36,7 @@
             android:layout_marginLeft="@dimen/base_ldpi"
             android:background="@drawable/base_bg2_selector"
             android:padding="@dimen/base_xhdpi"
-            android:src="@drawable/forwarding_icon"/>
+            android:src="@drawable/forwarding_pinglun"/>
 
         <ImageView
             android:id="@+id/collect_view"
@@ -45,7 +45,7 @@
             android:layout_marginLeft="@dimen/base_ldpi"
             android:background="@drawable/base_bg2_selector"
             android:padding="@dimen/base_xhdpi"
-            android:src="@drawable/forwarding_icon"/>
+            android:src="@drawable/shouchang_pinglun_n"/>
 
         <ImageView
             android:id="@+id/like_cnt"
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/base_bg2_selector"
             android:padding="@dimen/base_xhdpi"
-            android:src="@drawable/love_icon_2_n"/>
+            android:src="@drawable/dianzan_pinglun_n"/>
     </LinearLayout>
 
     <com.angcyo.uiview.design.StickLayout2

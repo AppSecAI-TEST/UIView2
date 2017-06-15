@@ -69,12 +69,14 @@ import com.hn.d.valley.bean.ProvinceBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserControl;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.audio.AudioRecordPlayable;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.PathAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.UserService;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.Image;
@@ -206,6 +208,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         layoutPlayAudio = v(R.id.layoutPlayAudio);
         mTimer = v(R.id.timer);
         timpContainer = v(R.id.timer_tip_container);
+
+        updateRecordImageResource((ImageView) v(R.id.audio_tip_view));
     }
 
     @Override
@@ -221,7 +225,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar().addRightItem(TitleBarPattern.TitleBarItem
-                .build(mActivity.getResources().getString(R.string.finish), new View.OnClickListener() {
+                .build(mActivity.getResources().getString(R.string.save), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         onSaveInfo();
@@ -716,6 +720,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
+        //语音录制
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -758,31 +763,31 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
         //ID
-        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText("ID");
-                infoLayout.setRightDrawableRes(-1);
-                infoLayout.setItemDarkText(UserCache.getUserAccount());
-            }
-        }));
+//        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+//                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+//                infoLayout.setItemText("ID");
+//                infoLayout.setRightDrawableRes(-1);
+//                infoLayout.setItemDarkText(UserCache.getUserAccount());
+//            }
+//        }));
 
         //我的二维码
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText(mActivity.getResources().getString(R.string.my_qr_code));
-                infoLayout.setDarkDrawableRes(R.drawable.qr_code);
-                infoLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startIView(new MyQrCodeUIView());
-                    }
-                });
-            }
-        }));
+//        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+//                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+//                infoLayout.setItemText(mActivity.getResources().getString(R.string.my_qr_code));
+//                infoLayout.setDarkDrawableRes(R.drawable.qr_code);
+//                infoLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        startIView(new MyQrCodeUIView());
+//                    }
+//                });
+//            }
+//        }));
 
         //性别
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
@@ -826,14 +831,14 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
         //语音介绍
-        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                infoLayout.setItemText(mActivity.getString(R.string.audio_introduce_desc));
-                infoLayout.setItemDarkText(mActivity.getString(R.string.click_add_desc));
-            }
-        }));
+//        items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+//                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+//                infoLayout.setItemText(mActivity.getString(R.string.audio_introduce_desc));
+//                infoLayout.setItemDarkText(mActivity.getString(R.string.click_add_desc));
+//            }
+//        }));
         //个性签名
         items.add(ViewItemInfo.build(new ItemLineCallback(left, line) {
 
@@ -857,8 +862,10 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         final ImageView iv_audio_record = holder.imgV(R.id.iv_audio_record);
         final TextView tv_audio_record = holder.tv(R.id.tv_audio_record);
 
-        if (userInfoBean.getVoice_introduce() != null
-                && !TextUtils.isEmpty(userInfoBean.getVoice_introduce())) {
+        updateRecordImageResource(iv_audio_record);
+        updateRecordPlayEndResource(iv_play);
+
+        if (!TextUtils.isEmpty(userInfoBean.getVoice_introduce())) {
 
             String audioUrlAndTime = userInfoBean.getVoice_introduce();
 
@@ -898,12 +905,12 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void call(Boolean aBoolean) {
                 if (aBoolean) {
-                    record_layout.setBackgroundResource(R.drawable.recording_dise_s);
+                    updateRecordLayout(record_layout);
                     iv_audio_record.setImageResource(R.drawable.recording_2_s);
                     tv_audio_record.setTextColor(getResources().getColor(R.color.white));
                 } else {
                     record_layout.setBackgroundResource(R.drawable.recording_dise);
-                    iv_audio_record.setImageResource(R.drawable.recording_2_n);
+                    updateRecordImageResource(iv_audio_record);
                     tv_audio_record.setTextColor(getResources().getColor(R.color.main_text_color));
                 }
             }
@@ -919,7 +926,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 mPathAudioControl.startPlayAudioDelay(0, mAudioRecordPlayable, new BaseAudioControl.AudioControlListener() {
                     @Override
                     public void onAudioControllerReady(Playable playable) {
-                        iv_play.setImageResource(R.drawable.voice_playing_n);
+                        //iv_play.setImageResource(R.drawable.voice_playing_n);
+                        updateRecordPlayingResource(iv_play);
                         Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.base_rotate);
                         animation.setInterpolator(new LinearInterpolator());
                         animation.setRepeatMode(Animation.RESTART);
@@ -931,7 +939,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     @Override
                     public void onEndPlay(Playable playable) {
                         iv_play.clearAnimation();
-                        iv_play.setImageResource(R.drawable.dynamic_notification);
+                        //iv_play.setImageResource(R.drawable.dynamic_notification);
+                        updateRecordPlayEndResource(iv_play);
                     }
 
                     @Override
@@ -941,6 +950,62 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 });
             }
         });
+    }
+
+    private void updateRecordImageResource(final ImageView iv_audio_record) {
+        switch (SkinUtils.getSkin()) {
+            case SkinManagerUIView.SKIN_BLACK:
+                iv_audio_record.setImageResource(R.drawable.recording_2_n_black);
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                iv_audio_record.setImageResource(R.drawable.recording_2_n);
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                iv_audio_record.setImageResource(R.drawable.recording_2_n_blue);
+                break;
+        }
+    }
+
+    private void updateRecordPlayingResource(final ImageView iv_play) {
+        switch (SkinUtils.getSkin()) {
+            case SkinManagerUIView.SKIN_BLACK:
+                iv_play.setImageResource(R.drawable.near_voice_playing_black_s);
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                iv_play.setImageResource(R.drawable.near_voice_playing_s);
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                iv_play.setImageResource(R.drawable.near_voice_playing_blue_s);
+                break;
+        }
+    }
+
+    private void updateRecordPlayEndResource(final ImageView iv_play) {
+        switch (SkinUtils.getSkin()) {
+            case SkinManagerUIView.SKIN_BLUE:
+                iv_play.setImageResource(R.drawable.voice_playing_blue);
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                iv_play.setImageResource(R.drawable.voice_playing);
+                break;
+            default:
+                iv_play.setImageResource(R.drawable.voice_playing_black);
+                break;
+        }
+    }
+
+    private void updateRecordLayout(final View record_layout) {
+        switch (SkinUtils.getSkin()) {
+            case SkinManagerUIView.SKIN_BLACK:
+                record_layout.setBackgroundResource(R.drawable.recording_dise_s_black);
+                break;
+            case SkinManagerUIView.SKIN_GREEN:
+                record_layout.setBackgroundResource(R.drawable.recording_dise_s);
+                break;
+            case SkinManagerUIView.SKIN_BLUE:
+                record_layout.setBackgroundResource(R.drawable.recording_dise_s_blue);
+                break;
+        }
     }
 
     /**
@@ -1251,22 +1316,29 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
      */
     protected void bindBirthdayItem(RBaseViewHolder holder, final UserInfoBean userInfoBean) {
         final ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-        infoLayout.setItemText(mActivity.getString(R.string.birthday));
-        infoLayout.setItemDarkText(getBirthday(userInfoBean.getBirthday()));
+        infoLayout.setItemText(mActivity.getString(R.string.birthday2));
+        infoLayout.setItemDarkText(userInfoBean.getBirthday());
         infoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startIView(new DateDialog(new DateDialog.SimpleDateConfig() {
                     @Override
                     public void onDateSelector(WheelTime wheelTime) {
-                        final String time = wheelTime.getTime();
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(wheelTime.getSelectorYear());
+                        builder.append("-");
+                        builder.append(wheelTime.getSelectorMonth());
+                        builder.append("-");
+                        builder.append(wheelTime.getSelectorDay());
+                        final String time = builder.toString();
+
                         RRealm.exe(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
                                 userInfoBean.setBirthday(time);
                             }
                         });
-                        infoLayout.setItemDarkText(getBirthday(time));
+                        infoLayout.setItemDarkText(time);
 
 //                        add(RRetrofit.create(UserService.class)
 //                                .editInfo(Param.buildMap("birthday:" + time))

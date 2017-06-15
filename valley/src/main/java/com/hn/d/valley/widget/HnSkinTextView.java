@@ -9,7 +9,7 @@ import com.angcyo.uiview.skin.SkinHelper;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：主题文本颜色的文本View
  * 创建人员：Robi
  * 创建时间：2017/04/06 10:49
  * 修改人员：Robi
@@ -29,6 +29,8 @@ public class HnSkinTextView extends AppCompatTextView {
     }
 
     private void initView() {
-        setTextColor(SkinHelper.getSkin().getThemeColor());
+        if (!isInEditMode()) {
+            setTextColor(SkinHelper.getSkin().getThemeSubColor());
+        }
     }
 }

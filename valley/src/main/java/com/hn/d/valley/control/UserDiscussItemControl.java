@@ -119,7 +119,8 @@ public class UserDiscussItemControl {
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
         bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout, isInDetail);
         bindFavItemView(subscription, holder, dataListBean, isInDetail);
-        bindLikeItemView(subscription, holder, dataListBean, null, isInDetail);
+        bindLikeItemView(subscription, holder, dataListBean, new InitLikeViewCallback() {
+        }, isInDetail);
     }
 
     /**
@@ -1237,15 +1238,15 @@ public class UserDiscussItemControl {
                                      final ILikeData tBean,
                                      final CompositeSubscription subscription,
                                      final String type,
-                                     final Action1<Boolean> likeAction,
+                                     final InitLikeViewCallback likeAction,
                                      final boolean isInDetail) {
         final String uid = UserCache.getUserAccount();
 
         if (itemTextView instanceof HnItemTextView) {
-            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_s);
+            ((HnItemTextView) itemTextView).setLeftIco(likeAction.getLikeIcoRes());
             ((HnItemTextView) itemTextView).setText(tBean.getLikeCount());
         } else if (itemTextView instanceof ImageView) {
-            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_s);
+            ((ImageView) itemTextView).setImageResource(likeAction.getLikeIcoRes());
         }
 
 //        RxView.clicks(itemTextView)
@@ -1282,7 +1283,7 @@ public class UserDiscussItemControl {
 
                 if (likeAction != null) {
                     //取消点赞
-                    likeAction.call(false);
+                    likeAction.onLikeCall(false);
                 }
 
                 tBean.setIsLike(0);
@@ -1311,15 +1312,15 @@ public class UserDiscussItemControl {
                                        final ILikeData tBean,
                                        final CompositeSubscription subscription,
                                        final String type,
-                                       final Action1<Boolean> likeAction,
+                                       final InitLikeViewCallback likeAction,
                                        final boolean isInDetail) {
         final String uid = UserCache.getUserAccount();
 
         if (itemTextView instanceof HnItemTextView) {
-            ((HnItemTextView) itemTextView).setLeftIco(R.drawable.love_icon_n);
+            ((HnItemTextView) itemTextView).setLeftIco(likeAction.getUnLikeIcoRes());
             ((HnItemTextView) itemTextView).setText(tBean.getLikeCount());
         } else if (itemTextView instanceof ImageView) {
-            ((ImageView) itemTextView).setImageResource(R.drawable.love_icon_n);
+            ((ImageView) itemTextView).setImageResource(likeAction.getUnLikeIcoRes());
         }
 
 //        RxView.clicks(itemTextView)
@@ -1357,7 +1358,7 @@ public class UserDiscussItemControl {
 
                 if (likeAction != null) {
                     //点赞
-                    likeAction.call(true);
+                    likeAction.onLikeCall(true);
                 }
 
                 GoodView.build(itemTextView);
@@ -1389,7 +1390,7 @@ public class UserDiscussItemControl {
     public static void bindLikeItemView(final CompositeSubscription subscription,
                                         RBaseViewHolder holder,
                                         ILikeData tBean,
-                                        Action1<Boolean> likeAction,
+                                        InitLikeViewCallback likeAction,
                                         boolean isInDetail) {
 
         bindLikeItemView(subscription, holder, tBean, "discuss", likeAction, isInDetail);
@@ -1399,7 +1400,7 @@ public class UserDiscussItemControl {
                                         RBaseViewHolder holder,
                                         ILikeData tBean,
                                         String likeType,
-                                        Action1<Boolean> likeAction,
+                                        InitLikeViewCallback likeAction,
                                         boolean isInDetail) {
 
         View like_cnt = holder.v(R.id.like_cnt);
@@ -1630,4 +1631,33 @@ public class UserDiscussItemControl {
                     }
                 });
     }
+
+    public static abstract class InitLikeViewCallback {
+
+        /**
+         * 点赞之后的回调
+         *
+         * @param isLike 是否属于点赞状态
+         */
+        public void onLikeCall(boolean isLike) {
+
+        }
+
+
+        /**
+         * 点赞之后的图标
+         */
+        public int getLikeIcoRes() {
+            return R.drawable.dianzan_s;
+        }
+
+        /**
+         * 未点赞图标
+         */
+        public int getUnLikeIcoRes() {
+            return R.drawable.dianzan_n;
+        }
+    }
+
+
 }

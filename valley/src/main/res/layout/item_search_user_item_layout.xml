@@ -147,26 +147,28 @@
             android:paddingStart="@dimen/base_ldpi">
 
             <com.hn.d.valley.widget.HnItemTextView
-                android:id="@+id/like_cnt"
+                android:id="@+id/forward_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:drawableStart="@drawable/love_icon_n"
+                android:drawableStart="@drawable/forwarding"
                 tools:text="40"/>
+
 
             <com.hn.d.valley.widget.HnItemTextView
                 android:id="@+id/comment_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/base_xhdpi"
-                android:drawableStart="@drawable/comments_icon"
+                android:drawableStart="@drawable/comments"
                 tools:text="40"/>
 
+
             <com.hn.d.valley.widget.HnItemTextView
-                android:id="@+id/forward_cnt"
+                android:id="@+id/like_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/base_xhdpi"
-                android:drawableStart="@drawable/forwarding_icon"
+                android:drawableStart="@drawable/dianzan_n"
                 tools:text="40"/>
 
             <com.hn.d.valley.widget.HnItemTextView

@@ -55,7 +55,6 @@ import java.util.List;
 
 import rx.Observable;
 import rx.functions.Action0;
-import rx.functions.Action1;
 import rx.functions.Func2;
 
 /**
@@ -219,15 +218,15 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                     mIcoRecyclerView.getMaxAdapter().resetData(infos);
                 }
                 //点赞
-                UserDiscussItemControl.bindLikeItemView(mSubscriptions, holder, headerBean, new Action1<Boolean>() {
+                UserDiscussItemControl.bindLikeItemView(mSubscriptions, holder, headerBean, new UserDiscussItemControl.InitLikeViewCallback() {
                     @Override
-                    public void call(Boolean aBoolean) {
+                    public void onLikeCall(boolean isLike) {
                         if (mIcoRecyclerView != null) {
                             RMaxAdapter<IcoInfoBean> maxAdapter = mIcoRecyclerView.getMaxAdapter();
                             IcoInfoBean IcoInfoBean = new IcoInfoBean(UserCache.getUserAccount(),
                                     UserCache.getUserAvatar());
                             int itemRawCount;
-                            if (aBoolean) {
+                            if (isLike) {
                                 maxAdapter.addLastItem(IcoInfoBean);
                                 itemRawCount = maxAdapter.getItemRawCount();
                                 userCountView.setText(itemRawCount + "");

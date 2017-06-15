@@ -17,6 +17,7 @@ import com.angcyo.uiview.utils.file.AttachmentStore;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.bean.realm.QrCodeBean;
@@ -174,6 +175,9 @@ public class MyQrCodeUIView extends BaseContentUIView {
     }
 
     private boolean needCreateQrCode() {
+        if (BuildConfig.SHOW_DEBUG) {
+            return true;
+        }
         return Hawk.get(KEY_NEED_CREATE_QR, true);
     }
 
@@ -201,8 +205,8 @@ public class MyQrCodeUIView extends BaseContentUIView {
                         final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
                         AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
 
-                        createQrCode(encode("uid=" + UserCache.getUserAccount()),
-                                (int) ResUtil.dpToPx(mActivity, 300),
+                        createQrCode("个人名片:uid=" + UserCache.getUserAccount(),
+                                (int) ResUtil.dpToPx(mActivity, 200),
                                 SkinHelper.getSkin().getThemeSubColor(),
                                 cornerBitmap)
                                 .subscribe(new Action1<Bitmap>() {

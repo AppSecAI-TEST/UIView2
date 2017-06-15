@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action0;
-import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -185,15 +184,15 @@ public class ReplyListUIView extends BaseDynamicListUIView {
             mIcoRecyclerView.getMaxAdapter().resetData(infos);
         }
 
-        UserDiscussItemControl.bindLikeItemView(mSubscriptions, holder, commendBean, "comment", new Action1<Boolean>() {
+        UserDiscussItemControl.bindLikeItemView(mSubscriptions, holder, commendBean, "comment", new UserDiscussItemControl.InitLikeViewCallback() {
             @Override
-            public void call(Boolean aBoolean) {
+            public void onLikeCall(boolean isLike) {
                 if (mIcoRecyclerView != null) {
                     RMaxAdapter<IcoInfoBean> maxAdapter = mIcoRecyclerView.getMaxAdapter();
                     IcoInfoBean IcoInfoBean = new IcoInfoBean(UserCache.getUserAccount(),
                             UserCache.getUserAvatar());
                     int itemRawCount = Integer.parseInt(commendBean.getLike_cnt());
-                    if (aBoolean) {
+                    if (isLike) {
                         maxAdapter.addLastItem(IcoInfoBean);
                         itemRawCount++;
                         userCountView.setText(itemRawCount + "");

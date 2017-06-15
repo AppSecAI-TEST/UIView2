@@ -45,8 +45,8 @@ class RelationListUIView(val to_uid: String) : UserInfoRecyclerUIView() {
                         }
                     }
 
-                    override fun onEnd() {
-                        super.onEnd()
+                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: Throwable?) {
+                        super.onEnd(isError, isNoNetwork, e)
                         hideLoadView()
                     }
                 }))

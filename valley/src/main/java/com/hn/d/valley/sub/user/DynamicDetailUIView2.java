@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action0;
-import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -167,15 +166,15 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             }
 
             //点赞按钮
-            UserDiscussItemControl.bindLikeItemView(mSubscriptions, mViewHolder, mDataListBean, new Action1<Boolean>() {
+            UserDiscussItemControl.bindLikeItemView(mSubscriptions, mViewHolder, mDataListBean, new UserDiscussItemControl.InitLikeViewCallback() {
                 @Override
-                public void call(Boolean aBoolean) {
+                public void onLikeCall(boolean isLike) {
                     if (mIcoRecyclerView != null) {
                         RMaxAdapter<IcoInfoBean> maxAdapter = mIcoRecyclerView.getMaxAdapter();
                         IcoInfoBean IcoInfoBean = new IcoInfoBean(UserCache.getUserAccount(),
                                 UserCache.getUserAvatar());
                         int itemRawCount = Integer.parseInt(mDataListBean.getLike_cnt());
-                        if (aBoolean) {
+                        if (isLike) {
                             maxAdapter.addLastItem(IcoInfoBean);
                             itemRawCount++;
                             userCountView.setText(itemRawCount + "");
@@ -187,6 +186,16 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
 
                         likeUserControlLayout.setVisibility(itemRawCount > 0 ? View.VISIBLE : View.GONE);
                     }
+                }
+
+                @Override
+                public int getLikeIcoRes() {
+                    return R.drawable.dianzan_pinglun_s;
+                }
+
+                @Override
+                public int getUnLikeIcoRes() {
+                    return R.drawable.dianzan_pinglun_n;
                 }
             }, true);
 
@@ -240,7 +249,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     private void initCollectView() {
         ImageView imageView = mViewHolder.v(R.id.collect_view);
         if (mDataListBean.getIs_collect() == 1) {
-            imageView.setImageResource(R.drawable.share_shouchang_n);
+            imageView.setImageResource(R.drawable.shouchang_pinglun_n);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -259,7 +268,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 }
             });
         } else {
-            imageView.setImageResource(R.drawable.share_shouchang_n);
+            imageView.setImageResource(R.drawable.shouchang_pinglun_s);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
