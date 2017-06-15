@@ -45,6 +45,7 @@ import com.hn.d.valley.main.message.session.AitHelper;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.RedPacketCommandItem;
 import com.hn.d.valley.main.message.session.SessionCustomization;
+import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.service.GroupChatService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -163,12 +164,14 @@ public class GroupChatUIView extends ChatUIView2 {
     @Override
     protected List<CommandItemInfo> createCommandItems() {
         List<CommandItemInfo> list = super.createCommandItems();
-        list.add(new RedPacketCommandItem(){
-            @Override
-            protected void onClick() {
-                getContainer().mLayout.startIView(new NewGroupRedPacketUIView(mSessionId,mGroupDesc == null ? 0 :mGroupDesc.getMemberCount()));
-            }
-        });
+        if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet()) {
+            list.add(new RedPacketCommandItem() {
+                @Override
+                protected void onClick() {
+                    getContainer().mLayout.startIView(new NewGroupRedPacketUIView(mSessionId, mGroupDesc == null ? 0 : mGroupDesc.getMemberCount()));
+                }
+            });
+        }
         return list;
     }
 

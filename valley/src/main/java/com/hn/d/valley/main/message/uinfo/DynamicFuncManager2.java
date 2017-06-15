@@ -53,7 +53,7 @@ public class DynamicFuncManager2 {
                 .subscribe(new BaseSingleSubscriber<DynamicFuncResult>() {
                     @Override
                     public void onSucceed(DynamicFuncResult bean) {
-                        L.d(DynamicFuncManager2.class.getSimpleName(), bean.wallet + ".." + bean.isShowWallet());
+                        L.d(DynamicFuncManager2.class.getSimpleName(), bean.wallet + " .. " + bean.isShowWallet());
                         if (bean == null) {
                             return;
                         }

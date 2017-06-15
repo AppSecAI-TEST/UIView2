@@ -28,6 +28,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.main.message.groupchat.ReportNextUIView;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnLoading;
+import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.List;
 
@@ -50,9 +51,14 @@ public class ReportUIView extends BaseContentUIView {
     UserInfoBean mInfoBean;
 
     private GroupDescBean mGroupDesc;
+    private UserInfoProvider.UserInfo userInfo;
 
     public ReportUIView(UserInfoBean infoBean) {
         mInfoBean = infoBean;
+    }
+
+    public ReportUIView(UserInfoProvider.UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public ReportUIView(UserDiscussListBean.DataListBean dataBean) {
@@ -157,6 +163,8 @@ public class ReportUIView extends BaseContentUIView {
             return "discuss";
         } else if (mGroupDesc != null) {
             return "group";
+        } else if (userInfo != null) {
+            return "user";
         }
         return "";
     }
@@ -171,11 +179,13 @@ public class ReportUIView extends BaseContentUIView {
         } else {
             Tag tag = (Tag) checkView.getTag();
             if (mInfoBean != null) {
-                reportUser(tag);
+                reportUser(mInfoBean.getUid(),tag);
             } else if (mDataBean != null) {
                 reportDiscuss(tag);
             } else if (mGroupDesc != null) {
                 startIView(new ReportNextUIView(tag, mGroupDesc.getGid()));
+            }else if (userInfo != null) {
+                reportUser(userInfo.getAccount(),tag);
             }
         }
     }
@@ -184,9 +194,9 @@ public class ReportUIView extends BaseContentUIView {
     /**
      * 举报用户
      */
-    private void reportUser(Tag tag) {
+    private void reportUser(String account,Tag tag) {
         add(RRetrofit.create(SocialService.class)
-                .report(Param.buildMap("type:user", "item_id:" + mInfoBean.getUid(), "reason_id:" + tag.getId()))
+                .report(Param.buildMap("type:user", "item_id:" + account, "reason_id:" + tag.getId()))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new RSubscriber<String>() {
                     @Override

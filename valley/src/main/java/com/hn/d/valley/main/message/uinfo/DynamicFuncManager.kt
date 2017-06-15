@@ -1,6 +1,12 @@
 package com.hn.d.valley.main.message.uinfo
 
+import com.angcyo.uiview.net.RRetrofit
+import com.angcyo.uiview.net.Rx
+import com.hn.d.valley.R.id.to_uid
+import com.hn.d.valley.base.Param
+import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.realm.RRealm
+import com.hn.d.valley.service.SettingService
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -45,16 +51,16 @@ class DynamicFuncManager private constructor() {
     private fun fetchResult(): Result {
 
 
-//        RRetrofit.create(javaClass)
-//                .personal(Param.buildMap("to_uid:" + to_uid, "key:1002", "val:0"))
-//                .compose(Rx.transformer(javaClass<String>()))
-//                .subscribe(object : BaseSingleSubscriber<String>() {
-//
-//                    override fun onSucceed(bean: String) {
-//                    }
-//                }
+        RRetrofit.create(SettingService::class.java)
+                .personal(Param.buildMap("to_uid:" + to_uid, "key:1002", "val:0"))
+                .compose(Rx.transformer(String::class.java))
+                .subscribe(object : BaseSingleSubscriber<String>() {
 
-                        return Result ()
+                    override fun onSucceed(bean: String) {
+                    }
+
+                })
+        return Result()
     }
 
 

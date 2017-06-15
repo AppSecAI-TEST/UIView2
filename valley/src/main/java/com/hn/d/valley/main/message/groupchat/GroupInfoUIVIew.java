@@ -268,7 +268,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onClick(View v) {
 //                        mParentILayout.startIView(new GroupQrCodeUIView());
-                        GroupQrCodeUIView.start(mParentILayout,mSessionId,SessionTypeEnum.Team);
+                        GroupQrCodeUIView.start(mParentILayout,mSessionId,mGroupDescBean);
                     }
                 });
             }
@@ -546,10 +546,12 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                     infoLayout.setItemText(mActivity.getString(R.string.text_group_change_owner));
 
+                    final BaseContactSelectAdapter.Options option = new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE);
+                    option.showDialog = true;
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            GroupMemberSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                            GroupMemberSelectUIVIew.start(mParentILayout,option
                                     , null,mGroupDescBean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                         @Override
                                         public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, final RequestCallback requestCallback) {

@@ -44,6 +44,7 @@ import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.MessageUIView;
+import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.RecommendUser2UIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
@@ -336,6 +337,9 @@ public class MainUIView extends BaseUIView {
         MainControl.checkVersion(mILayout);
 
         SkinUtils.init(mActivity, mParentILayout);
+
+        DynamicFuncManager2.instance().load();
+
     }
 
     @Override

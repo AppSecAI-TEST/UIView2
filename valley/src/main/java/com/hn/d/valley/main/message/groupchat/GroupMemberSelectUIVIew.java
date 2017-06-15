@@ -74,7 +74,7 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
         mGroupAdapter.setAction(new Action2<Boolean,AbsContactItem>(){
             @Override
             public void call(Boolean aBoolean, AbsContactItem absContactItem) {
-                if (aBoolean) {
+                if (aBoolean && options.showDialog) {
                     UIDialog.build()
                             .setDialogContent(mActivity.getString(R.string.text_is_change_owner))
                             .setOkListener(new View.OnClickListener() {
@@ -85,6 +85,8 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
                             })
                             .setCancelText(getString(R.string.cancel))
                             .showDialog(mILayout);
+                } else {
+                    onSelected();
                 }
             }
         });

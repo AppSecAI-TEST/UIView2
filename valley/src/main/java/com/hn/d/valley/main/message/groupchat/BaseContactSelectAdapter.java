@@ -111,6 +111,11 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
          */
         boolean isSelectUids = true;
 
+        /**
+         * 是否显示dialog
+         */
+        boolean showDialog = false;
+
 
         public Options() {
             this(MODEL_MULTI);
@@ -129,6 +134,11 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
         }
 
         public Options(int mode, int limit,boolean showCheckBox,boolean isSelectUids) {
+            this(mode,limit,showCheckBox,isSelectUids,false);
+        }
+
+        public Options(int mode, int limit,boolean showCheckBox,boolean isSelectUids,boolean showDialog) {
+            this.showDialog = showDialog;
             this.mode = mode;
             this.selectCountLimit = limit;
             this.showCheckBox = showCheckBox;

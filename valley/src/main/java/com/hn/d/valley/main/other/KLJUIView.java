@@ -11,6 +11,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
+import com.hn.d.valley.main.me.setting.FeedBackUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.X5WebUIView;
 
@@ -55,7 +56,7 @@ public class KLJUIView extends BaseItemUIView {
                 holder.v(R.id.text_view).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new X5WebUIView("http://www.baidu.com"));
+                        startIView(new FeedBackUIView());
                     }
                 });
             }

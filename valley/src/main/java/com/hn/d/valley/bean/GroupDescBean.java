@@ -3,10 +3,12 @@ package com.hn.d.valley.bean;
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by hewking on 2017/3/14.
  */
-public class GroupDescBean {
+public class GroupDescBean implements Serializable {
 
     /**
      * gid : 24

@@ -12,12 +12,13 @@ import io.realm.RealmObject;
  * 修改时间：2017/06/14 18:53
  * 修改备注：
  * Version: 1.0.0
+ * how many roads must a man walk down
  */
 public class DynamicFuncResult extends RealmObject {
 
     //0-否 1-是
     //	显示钱包及红包功能
-    String wallet = "0";
+    String wallet = "1";
 
     public DynamicFuncResult(String wallet, String version) {
         this.wallet = wallet;
@@ -28,7 +29,7 @@ public class DynamicFuncResult extends RealmObject {
 
     //显示版本信息
     //	0-否 1-是
-    String version = "0";
+    String version = "1";
 
     public boolean isShowWallet() {
         return "1".equals(wallet);

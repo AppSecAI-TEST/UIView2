@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -52,7 +53,7 @@ class GroupAnnnounceUpdateDialog(sessionid : String ,notification : GroupAnnounc
 //    var user_detail : ItemInfoLayout? = null
     var tv_announcement : TextView? = null
     var btn_known : HnButton? = null
-    var rl_user_info : RRelativeLayout? = null
+    var rl_user_info : RelativeLayout? = null
 
     init {
         loadTeamInfo()
@@ -72,14 +73,15 @@ class GroupAnnnounceUpdateDialog(sessionid : String ,notification : GroupAnnounc
 //        user_detail = rootView.findViewById(R.id.info_user_detail) as ItemInfoLayout
         tv_announcement = rootView.findViewById(R.id.tv_announcement) as TextView
         btn_known = rootView.findViewById(R.id.text_view) as HnButton
-        rl_user_info = rootView.findViewById(R.id.info_user_detail) as RRelativeLayout
+        rl_user_info = rootView.findViewById(R.id.info_user_detail) as RelativeLayout
 
-        val user_ico : HnGlideImageView = rootView.findViewById(R.id.iv_user_ico) as HnGlideImageView
+        val user_ico : ImageView = rootView.findViewById(R.id.iv_user_ico) as ImageView
         val username : RTextView = rootView.findViewById(R.id.tv_username) as RTextView
         val time : RTextView = rootView.findViewById(R.id.tv_time) as RTextView
 
         user_ico.setImageUrl(notification.avatar)
 
+        title_info?.setLeftDrawPadding(15)
         title_info?.setOnClickListener {
             val bundle = Bundle()
             bundle.putString(GroupMemberUIVIew.GID, notification.gid)

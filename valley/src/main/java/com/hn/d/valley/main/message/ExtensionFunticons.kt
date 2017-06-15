@@ -3,8 +3,10 @@ package com.hn.d.valley.main.message
 import android.app.Activity
 import android.widget.ImageView
 import android.widget.Toast
+import com.angcyo.library.glide.GlideCircleTransform
 import com.bumptech.glide.Glide
 import com.hn.d.valley.R
+import com.hn.d.valley.ValleyApp
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -25,6 +27,7 @@ import com.hn.d.valley.R
     fun ImageView.setImageUrl(url : String) {
         Glide.with(context)
                 .load(url)
+                .transform(GlideCircleTransform(ValleyApp.getApp().applicationContext))
                 .placeholder(R.drawable.default_avatar)
                 .error(R.drawable.default_avatar)
                 .into(this)

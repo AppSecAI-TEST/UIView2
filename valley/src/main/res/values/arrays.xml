@@ -93,5 +93,22 @@
         <item>委屈</item>
     </string-array>
 
+    <string-array name="hn_sticker">
+        <item>加油</item>
+        <item>奋斗的一天开始了</item>
+        <item>鼓掌</item>
+        <item>你好</item>
+        <item>红包</item>
+        <item>惊呆了</item>
+        <item>冒泡</item>
+        <item>你很棒</item>
+        <item>酷</item>
+        <item>赞</item>
+        <item>求保养</item>
+        <item>谢谢</item>
+        <item>喂</item>
+        <item>笑</item>
+    </string-array>
+
 
 </resources>

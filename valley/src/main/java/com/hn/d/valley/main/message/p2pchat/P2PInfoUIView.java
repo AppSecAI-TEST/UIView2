@@ -15,7 +15,9 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.string.StringTextWatcher;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
@@ -44,9 +46,12 @@ import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action3;
+
+import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Options.DEFALUT_LIMIT;
 
 /**
  * Created by hewking on 2017/3/26.
@@ -127,10 +132,10 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,1);
+                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 1);
 
                         } else {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,0);
+                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 0);
                         }
 
                         RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
@@ -151,7 +156,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        SessionSettingDelegate.getInstance().setMessageNotify(mSessionId,isChecked,switchCompat);
+                        SessionSettingDelegate.getInstance().setMessageNotify(mSessionId, isChecked, switchCompat);
                     }
                 });
 
@@ -167,7 +172,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new ChatFileUIView(mSessionId,sessionType));
+                        mParentILayout.startIView(new ChatFileUIView(mSessionId, sessionType));
                     }
                 });
 
@@ -182,7 +187,7 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ChatRecordSearchUIView.start(mParentILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
+                        ChatRecordSearchUIView.start(mParentILayout, GlobalSearchUIView2.Options.sOptions, mSessionId, sessionType, new int[]{ItemTypes.MSG});
                     }
                 });
             }
@@ -213,8 +218,8 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new GroupReportUIView());
-//                        mParentILayout.startIView(new ReportUIView(mGroupDescBean));
+//                        mParentILayout.startIView(new GroupReportUIView());
+                        mParentILayout.startIView(new ReportUIView(mUserInfo));
 
                     }
                 });
@@ -264,14 +269,26 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
         layout_container_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new BaseContactSelectAdapter.Options());
-                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                    @Override
-                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
-                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView, absContactItems, requestCallback);
-                    }
-                });
-                mParentILayout.startIView(targetView);
+                List<String> selectedUser = new ArrayList<>();
+                selectedUser.add(mUserInfo.getAccount());
+                ContactSelectUIVIew.start(mILayout,
+                        new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_MULTI, DEFALUT_LIMIT, true),
+                        selectedUser, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                            @Override
+                            public void call(UIBaseRxView uiBaseRxView, List<AbsContactItem> list, RequestCallback callback) {
+                                TeamCreateHelper.createAndSavePhoto(uiBaseRxView, list, callback);
+
+                            }
+                        });
+
+//                ContactSelectUIVIew targetView = new ContactSelectUIVIew(new BaseContactSelectAdapter.Options());
+//                targetView.setSelectAction(new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+//                    @Override
+//                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+//                        TeamCreateHelper.createAndSavePhoto(uiBaseDataView, absContactItems, requestCallback);
+//                    }
+//                });
+//                mParentILayout.startIView(targetView);
             }
         });
     }

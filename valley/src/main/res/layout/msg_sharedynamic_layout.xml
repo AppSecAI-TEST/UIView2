@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/msg_card_layout"
-    android:layout_width="320dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:background="@drawable/base_white_round_bg"
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/base_xhdpi"
-            android:text="@string/about_me" />
+            tools:text="福建省登陆福建师大附近邻居分散精力放假阿桑德拉范德萨克劳福德撒娇发了阿桑打飞机撒旦联发科技圣诞快乐附近发送到将来房价的撒看来飞机立刻十大减肥" />
 
     </LinearLayout>
 

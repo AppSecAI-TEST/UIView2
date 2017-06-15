@@ -52,7 +52,7 @@ import rx.schedulers.Schedulers;
  * Version: 1.0.0
  */
 public class MyQrCodeUIView extends BaseContentUIView {
-    public static final java.lang.String KEY_NEED_CREATE_QR = "key_need_create_qr";
+    public static final String KEY_NEED_CREATE_QR = "key_need_create_qr";
     public static String QR_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCeLIMWjuXWrHn49cd3H1ZaDobjImmMsshQbT5gvF6hUxiCi4ubRsDVlqTuL8XUZvSRNYe9TfgsY2ITJWF27FezEBBVt8zMsCN4njBi9QN7V3/zJdtfNyuKY6qEK/0iYsOWZfxA3rplviQaM98fYZtBVBoef6bYqsQ9WjfjSiI5aQIDAQAB";
     public static String QR_PRIVATE_KEY = "MIICXAIBAAKBgQCeLIMWjuXWrHn49cd3H1ZaDobjImmMsshQbT5gvF6hUxiCi4ubRsDVlqTuL8XUZvSRNYe9TfgsY2ITJWF27FezEBBVt8zMsCN4njBi9QN7V3/zJdtfNyuKY6qEK/0iYsOWZfxA3rplviQaM98fYZtBVBoef6bYqsQ9WjfjSiI5aQIDAQABAoGAXrfPBBosPkJohBJCEO5+Gk2qrqczx6Jj2+2fNfR3QmntOndv8VsMLJsaRtvqvoesmqwQjeb73zDgURDIbZuX49yI/ePTMZiIF7NTq6wYonDi1zK4uPGOKN7yWNKyizft0L7VDiiqHOdG6EbosaLzeJBgfkM0W6TT0mmHx3OaBMUCQQDMgkQLbUfSTPsN4FPmhfo5XYBz9KuXExYbDhru2HKuQHCq3c5lRIzuGCoymVNK0abQ8qnlYumIS1HACQWUKqw3AkEAxf+y9x1R0YExTkApdrb4NqjgQpqp7iGIGaZLjUOypNtIj2il04lQkx80BdUep43z5/z6r/hkDCJWW4BJrde3XwJBAI0ozTbl81EheZiWYtMXXyQBegyPsXDR58w87DI4jM/iAuKtvyz/KBef7mCGnItkMrS/Cq4em/tLod3fXE5tNfkCQAQ9HBy0MPs2M9MEBp82/YtWBC8I1ph1eU9rQvTMPTfQRfZj/CDSMLplkZyKWnSl0lHmFYvM2n90ALtGvM0O8CsCQACg/gVssbETBwAd4KKQfPoy3zR4w85uOT+TmZU4sGrA3Jg6vDE1dr12zFKqgHCsbFmSOxuAEx2QykSJnwdc4RY=";
 
@@ -174,7 +174,7 @@ public class MyQrCodeUIView extends BaseContentUIView {
         }
     }
 
-    private boolean needCreateQrCode() {
+    protected boolean needCreateQrCode() {
         if (BuildConfig.SHOW_DEBUG) {
             return true;
         }
@@ -182,7 +182,7 @@ public class MyQrCodeUIView extends BaseContentUIView {
     }
 
 
-    private void setQrCodeView(final HnGlideImageView imageView, final ImageView qrView, String path, String avatar) {
+    protected void setQrCodeView(final HnGlideImageView imageView, final ImageView qrView, String path, String avatar) {
         Glide.with(mActivity)
                 .load(new File(path))
                 .into(qrView);

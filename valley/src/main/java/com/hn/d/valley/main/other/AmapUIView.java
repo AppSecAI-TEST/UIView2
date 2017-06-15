@@ -3,6 +3,7 @@ package com.hn.d.valley.main.other;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.ViewDragHelper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -114,6 +115,8 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
         mEmptyView = v(R.id.empty_view);
         mBottomLayout = v(R.id.bottom_layout);
         mSearchView = v(R.id.layout_search_view);
+
+        mSearchView.setGravity(Gravity.START);
 
         click(R.id.my_location, new View.OnClickListener() {
             @Override

@@ -16,7 +16,9 @@
 
     <com.angcyo.uiview.widget.ItemInfoLayout
         android:id="@+id/info_title"
-        style="@style/BaseItemInfoStyle" />
+        style="@style/BaseItemInfoStyle"
+        android:paddingLeft="@dimen/base_xhdpi_15"
+        android:paddingRight="@dimen/base_xhdpi_15"/>
 
     <View style="@style/BaseHLine" />
 
@@ -24,7 +26,7 @@
         <!--android:id="@+id/info_user_detail"-->
         <!--style="@style/BaseItemInfoStyle" />-->
 
-    <com.angcyo.uiview.viewgroup.RRelativeLayout
+    <RelativeLayout
         android:id="@+id/info_user_detail"
         android:gravity="center_vertical"
         android:paddingTop="@dimen/base_xhdpi"
@@ -33,34 +35,46 @@
         android:paddingEnd="@dimen/base_xhdpi_15"
         android:layout_width="match_parent"
         android:background="@drawable/base_bg_selector"
-        android:layout_height="@dimen/base_35dpi">
+        android:layout_height="@dimen/base_item_size">
+<!--
+        android:contentDescription="@string/is_circle2"
+-->
 
-        <com.hn.d.valley.widget.HnGlideImageView
-            android:id="@+id/iv_user_ico"
-            android:contentDescription="@string/is_circle2"
-            tools:src="@drawable/announcement_icon"
+        <LinearLayout
+            android:gravity="center_vertical"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_user_ico"
+                tools:src="@drawable/announcement_icon"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content" />
 
-        <com.angcyo.uiview.widget.RTextView
-            android:id="@+id/tv_username"
-            android:layout_marginStart="@dimen/base_ldpi"
-            android:layout_toEndOf="@id/iv_user_ico"
-            tools:text="家都大人"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/tv_username"
+                style="@style/DarkTextStyle"
+                android:layout_marginLeft="@dimen/base_ldpi"
+                tools:text="家都大人"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
 
         <com.angcyo.uiview.widget.RTextView
             android:id="@+id/tv_time"
+            style="@style/DarkTextStyle"
             tools:text="昨天"
-            android:textSize="10sp"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+        <!--android:layout_toRightOf="@id/iv_user_ico"-->
 
-    </com.angcyo.uiview.viewgroup.RRelativeLayout>
+
+
+    </RelativeLayout>
 
 
     <TextView
@@ -83,7 +97,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        android:padding="@dimen/base_xhdpi">
+        android:paddingTop="@dimen/base_xhdpi"
+        android:paddingBottom="@dimen/base_xhdpi"
+        android:paddingLeft="@dimen/base_xhdpi_15"
+        android:paddingRight="@dimen/base_xhdpi_15"
+        >
 
         <com.hn.d.valley.widget.HnButton
             android:id="@+id/text_view"

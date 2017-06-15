@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.hn.d.valley.emoji.StickerManager.CATEGORY_EXPRESSION;
+import static com.hn.d.valley.emoji.StickerManager.CATEGORY_HN;
 import static com.hn.d.valley.main.message.ChatAdapter.setImageSize;
 
 /**
@@ -62,9 +63,8 @@ public class MsgVHExpression extends MsgViewHolderBase {
 
         CustomExpressionMsg expressionMsg = expressionAttachment.getExpressionMsg();
         String chartlet = expressionMsg.getMsg();
-
         Glide.with(context)
-                .load(Uri.parse(StickerManager.getInstance().getStickerBitmapUri(CATEGORY_EXPRESSION
+                .load(Uri.parse(StickerManager.getInstance().getStickerBitmapUri(chartlet.contains("redbird")?CATEGORY_HN:CATEGORY_EXPRESSION
                         , chartlet)))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(draweeView);
