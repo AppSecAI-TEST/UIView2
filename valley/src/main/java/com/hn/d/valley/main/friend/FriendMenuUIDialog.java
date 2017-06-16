@@ -23,7 +23,7 @@ import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
-import com.hn.d.valley.main.found.sub.ScanUIView;
+import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
@@ -192,7 +192,7 @@ public class FriendMenuUIDialog extends UIIDialogImpl {
         items.add(new MenuPopUpWindow.MenuItem("扫一扫",R.drawable.saoyisao, new Action1<String>() {
             @Override
             public void call(String s) {
-                mLayout.startIView(new ScanUIView());
+                mLayout.startIView(new HnScanUIView());
                 finishDialog();
             }
         }));

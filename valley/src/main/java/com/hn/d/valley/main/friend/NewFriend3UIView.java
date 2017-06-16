@@ -9,7 +9,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.found.sub.ScanUIView;
+import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -91,7 +91,7 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new ScanUIView());
+                        mParentILayout.startIView(new HnScanUIView());
                     }
                 });
                 TextView tv_username = holder.tv(R.id.tv_friend_name);

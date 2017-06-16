@@ -16,7 +16,7 @@ import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
-import com.hn.d.valley.main.found.sub.ScanUIView;
+import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.NewFriend3UIView;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
@@ -114,7 +114,7 @@ public class MenuPopUpWindow extends PopupWindow implements View.OnClickListener
         items.add(new MenuItem("扫一扫",R.drawable.saoyisao, new Action1<String>() {
             @Override
             public void call(String s) {
-                mLayout.startIView(new ScanUIView());
+                mLayout.startIView(new HnScanUIView());
                 dismiss();
             }
         }));

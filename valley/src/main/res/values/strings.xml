@@ -751,4 +751,5 @@
     <string name="my_qrcode_tip">扫一扫上面的二维码图案, 加我好友</string>
     <string name="text_group_qrcode_tip">扫一扫上面的二维码图案,进群</string>
     <string name="text_add_s">加入</string>
+    <string name="scan_result_title">扫描结果</string>
 </resources>

@@ -259,7 +259,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     private void initCollectView() {
         ImageView imageView = mViewHolder.v(R.id.collect_view);
         if (mDataListBean.getIs_collect() == 1) {
-            imageView.setImageResource(R.drawable.shouchang_pinglun_n);
+            imageView.setImageResource(R.drawable.shouchang_pinglun_s);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -278,7 +278,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 }
             });
         } else {
-            imageView.setImageResource(R.drawable.shouchang_pinglun_s);
+            imageView.setImageResource(R.drawable.shouchang_pinglun_n);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

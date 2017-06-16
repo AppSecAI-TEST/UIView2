@@ -10,8 +10,8 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
+import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.found.sub.HotInformationUIView;
-import com.hn.d.valley.main.found.sub.ScanUIView;
 import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.x5.X5WebUIView;
@@ -82,7 +82,7 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.scan, getString(R.string.scan_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new ScanUIView());
+                        mParentILayout.startIView(new HnScanUIView());
                     }
                 });
             }

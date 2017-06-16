@@ -1,16 +1,7 @@
 package com.hn.d.valley.x5;
 
-import android.webkit.JavascriptInterface;
-
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.utils.T_;
-import com.hn.d.valley.BuildConfig;
-import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.service.UserService;
 import com.tencent.smtt.sdk.WebView;
 
 /**
@@ -37,7 +28,7 @@ public class VipWebUIView extends X5WebUIView {
     };
 
     public VipWebUIView() {
-        super("http://wap.klgwl.com/user/rank");
+        super("http://wap.klgwl.com/user/rank&to=" + UserCache.getUserAccount());
     }
 
     private static String createMethodParams(String... params) {
@@ -58,48 +49,48 @@ public class VipWebUIView extends X5WebUIView {
 
     @Override
     protected void onLoadUrl() {
-        add(RRetrofit.create(UserService.class)
-                .getToken(Param.buildMap())
-                .compose(Rx.transformer(String.class))
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onSucceed(String bean) {
-                        super.onSucceed(bean);
-                        mToken = bean;
-
-                        VipWebUIView.super.onLoadUrl();
-                        mWebView.addJavascriptInterface(new AndroidJs() {
-
-                            @JavascriptInterface
-                            public void onAndroid() {
-                                L.e("js call: onAndroid([])-> ");
-                                T_.show("onAndroid");
-                            }
-
-                            @JavascriptInterface
-                            public void onTest() {
-                                L.e("js call: onTest([])-> ");
-                                //T_.show("onTest");
-                                if (BuildConfig.SHOW_DEBUG) {
-                                    T_.ok("mWebView.reload...");
-                                }
-                                mWebView.reload();
-                            }
-
-                            @JavascriptInterface
-                            public void reload() {
-                                L.e("js call: reload([])-> ");
-                                //T_.show("onTest");
-                                //mWebView.reload();
-                                if (BuildConfig.SHOW_DEBUG) {
-                                    T_.ok("reload...");
-                                }
-                                removeCallbacks(loginRunnable);
-                                postDelayed(loginRunnable, 1000);
-                            }
-                        }, "android");
-                    }
-                }));
+//        add(RRetrofit.create(UserService.class)
+//                .getToken(Param.buildMap())
+//                .compose(Rx.transformer(String.class))
+//                .subscribe(new BaseSingleSubscriber<String>() {
+//                    @Override
+//                    public void onSucceed(String bean) {
+//                        super.onSucceed(bean);
+//                        mToken = bean;
+//
+//                        VipWebUIView.super.onLoadUrl();
+//                        mWebView.addJavascriptInterface(new AndroidJs() {
+//
+//                            @JavascriptInterface
+//                            public void onAndroid() {
+//                                L.e("js call: onAndroid([])-> ");
+//                                T_.show("onAndroid");
+//                            }
+//
+//                            @JavascriptInterface
+//                            public void onTest() {
+//                                L.e("js call: onTest([])-> ");
+//                                //T_.show("onTest");
+//                                if (BuildConfig.SHOW_DEBUG) {
+//                                    T_.ok("mWebView.reload...");
+//                                }
+//                                mWebView.reload();
+//                            }
+//
+//                            @JavascriptInterface
+//                            public void reload() {
+//                                L.e("js call: reload([])-> ");
+//                                //T_.show("onTest");
+//                                //mWebView.reload();
+//                                if (BuildConfig.SHOW_DEBUG) {
+//                                    T_.ok("reload...");
+//                                }
+//                                removeCallbacks(loginRunnable);
+//                                postDelayed(loginRunnable, 1000);
+//                            }
+//                        }, "android");
+//                    }
+//                }));
     }
 
     @Override

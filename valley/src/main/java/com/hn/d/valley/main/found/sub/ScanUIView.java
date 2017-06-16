@@ -35,6 +35,7 @@ import cn.bingoogolapple.qrcode.zxing.ZXingView;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class ScanUIView extends BaseContentUIView implements QRCodeView.Delegate {
     ZXingView mZxingView;
     RImageCheckView mLightSwitchView;
