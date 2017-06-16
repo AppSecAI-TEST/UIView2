@@ -55,7 +55,12 @@ class HnScanUIView : UIScanView() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onSelectorPhotoClick() {
+        super.onSelectorPhotoClick()
+        ImagePickerHelper.startImagePicker(mActivity, false, true, false, false, 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val images = ImagePickerHelper.getImages(mActivity, requestCode, resultCode, data)
         if (images.size > 0) {
