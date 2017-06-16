@@ -27,7 +27,7 @@
         android:id="@+id/image_view"
         android:layout_width="@dimen/base_60dpi"
         android:layout_height="@dimen/base_45dpi"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/zhanweitu_1" />
 
 </LinearLayout>

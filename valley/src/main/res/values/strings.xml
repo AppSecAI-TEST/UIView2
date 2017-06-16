@@ -614,7 +614,7 @@
     <string name="text_virbrate">震动</string>
     <string name="text_sound_virbrate_tip">当恐龙谷运行时,你可以设置是否需要声音或者振动.</string>
     <string name="text_friend_circle_dynamic_notify">朋友圈动态更新</string>
-    <string name="text_cirlcle_show_tip">关闭后,有朋友更新动态时,界面下面的\"首页\"切换按钮上不再出现红点提示.</string>
+    <string name="text_cirlcle_show_tip">关闭后,有好友更新动态时,界面下面的\"恐龙谷\"切换按钮上不再出现红点提示.</string>
     <string name="text_subscribe_redpacket_notify">订阅红包通知</string>
     <string name="text_redpacket_noti_tip">打开后,你将收到所有的红包通知!</string>
     <string name="text_man_ait_you">有人@你</string>
@@ -735,7 +735,7 @@
     <string name="pretty_tip">美颜</string>
     <string name="text_edit_announce">编辑公告</string>
     <string name="text_group_update">群升级</string>
-    <string name="text_is_change_owner">是否更改群主?</string>
+    <string name="text_is_change_owner">确定将群转让给TA?</string>
     <string name="text_edit_announce_sure_tip">编辑群公告将会通知所有群成员?</string>
     <string name="text_search_place">搜索地点</string>
     <string name="text_upgrade_success">升级成功!</string>
@@ -751,5 +751,9 @@
     <string name="my_qrcode_tip">扫一扫上面的二维码图案, 加我好友</string>
     <string name="text_group_qrcode_tip">扫一扫上面的二维码图案,进群</string>
     <string name="text_add_s">加入</string>
+    <string name="text_delete_audio_introduce">是否删除语音介绍?</string>
+    <string name="text_select_group_member">选择群成员</string>
     <string name="scan_result_title">扫描结果</string>
+    <string name="text_add_group">加入群聊</string>
+    <string name="text_id_had_copy_to_clipboard">ID已经复制到粘贴板啦~</string>
 </resources>

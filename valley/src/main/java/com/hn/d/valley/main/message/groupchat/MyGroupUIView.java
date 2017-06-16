@@ -186,7 +186,8 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
         @Override
         protected void onBindModelView(int model, final boolean isSelector, RBaseViewHolder holder, final int position, final GroupBean bean) {
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
-            checkBox.setVisibility(option.showCheckBox?View.VISIBLE:View.GONE);
+//            checkBox.setVisibility(option.showCheckBox?View.VISIBLE:View.GONE);
+            checkBox.setVisibility(View.GONE);
             if (!option.showCheckBox) {
                 return;
             }

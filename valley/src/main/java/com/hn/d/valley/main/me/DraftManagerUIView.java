@@ -110,7 +110,9 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
         } else {
             mRExBaseAdapter.setModel(RModelAdapter.MODEL_NORMAL);
         }
-        mViewHolder.v(R.id.control_layout).setVisibility(isInEditMode ? View.VISIBLE : View.GONE);
+        if (mLayoutState == LayoutState.CONTENT) {
+            mViewHolder.v(R.id.control_layout).setVisibility(isInEditMode ? View.VISIBLE : View.GONE);
+        }
         mRExBaseAdapter.notifyDataSetChanged();
     }
 
@@ -160,6 +162,8 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                         mRExBaseAdapter.setSelectorPosition(position, R.id.check_view);
                     }
                 });
+
+                holder.tv(R.id.retry_view).setVisibility(model == MODEL_NORMAL ? View.VISIBLE : View.GONE);
             }
 
             @Override
@@ -395,10 +399,12 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                     RModelAdapter.checkedButton(mViewHolder.cV(R.id.selector_all), false);
                 }
 
-                if (size == 0) {
-                    mViewHolder.tv(R.id.delete_view).setText(getString(R.string.delete_text));
-                } else {
-                    mViewHolder.tv(R.id.delete_view).setText(getString(R.string.delete_text_format, size));
+                if (mLayoutState == LayoutState.CONTENT) {
+                    if (size == 0) {
+                        mViewHolder.tv(R.id.delete_view).setText(getString(R.string.delete_text));
+                    } else {
+                        mViewHolder.tv(R.id.delete_view).setText(getString(R.string.delete_text_format, size));
+                    }
                 }
             }
         });
@@ -461,7 +467,12 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 } else {
                     showContentLayout();
                     getUITitleBarContainer().showRightItem(0);
-                    mRExBaseAdapter.resetAllData(taskRealms);
+                    if (mRExBaseAdapter.getItemCount() == 0) {
+                        mRExBaseAdapter.resetAllData(taskRealms);
+                    } else {
+                        mRExBaseAdapter.notifyDataSetChanged();
+                        mRExBaseAdapter.notifySelectorChange();
+                    }
                 }
             }
         });

@@ -6,6 +6,7 @@ import com.angcyo.uiview.github.utilcode.utils.VibrationUtils
 import com.angcyo.uiview.model.TitleBarPattern
 import com.hn.d.valley.R
 import com.hn.d.valley.main.me.UserDetailUIView2
+import com.hn.d.valley.main.me.setting.QrCodeAddGroupUIView
 import com.lzy.imagepicker.ImagePickerHelper
 
 /**
@@ -36,18 +37,26 @@ class HnScanUIView : UIScanView() {
                 val split = result.split("uid=".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
                 if (split.size >= 2) {
                     replaceIView(UserDetailUIView2(split[1]))
+                } else {
+                    replaceIView(ScanResultUIView(result))
                 }
             } catch (e: Exception) {
-
+                replaceIView(ScanResultUIView(result))
             }
 
         } else if (result.contains("team=")) {
             // 群名片
             try {
-
+                val split = result.split("team=".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+                if (split.size >= 2 && split[1].split(",".toRegex()).size == 3) {
+                    replaceIView(QrCodeAddGroupUIView(split[1]))
+                } else {
+                    replaceIView(ScanResultUIView(result))
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()
+                replaceIView(ScanResultUIView(result))
             }
         } else {
             //显示未识别的二维码结果界面

@@ -23,12 +23,12 @@ import com.hn.d.valley.main.message.mvp.Search.ISearchPresenter
  * Version: 1.0.0
  */
 
-class SearchPOIPresenter() : BasePresenter<IPOISearchView>(), IPOISearchPresenter{
-    override fun onSearch(latLng: LatLng, currentPage: Int, listener: PoiSearch.OnPoiSearchListener,query : String) {
-        if (TextUtils.isEmpty(query)) {
+class SearchPOIPresenter : BasePresenter<IPOISearchView>(), IPOISearchPresenter{
+    override fun onSearch(latLng: LatLng, currentPage: Int, listener: PoiSearch.OnPoiSearchListener?,query : String?,type : String?) {
+        if (query.isNullOrEmpty()) {
             return
         }
-        AmapControl.doSearchQuery(latLng,currentPage,listener,query)
+        AmapControl.doSearchQuery(latLng,currentPage,listener,query,type)
 
     }
 
@@ -36,7 +36,7 @@ class SearchPOIPresenter() : BasePresenter<IPOISearchView>(), IPOISearchPresente
 }
 
 interface IPOISearchPresenter : IBasePresenter<IPOISearchView> {
-    fun onSearch(latLng : LatLng, currentPage : Int, listener : PoiSearch.OnPoiSearchListener,query : String)
+    fun onSearch(latLng : LatLng, currentPage : Int, listener : PoiSearch.OnPoiSearchListener?,query : String?,type : String?)
 }
 
 interface IPOISearchView : IBaseView {

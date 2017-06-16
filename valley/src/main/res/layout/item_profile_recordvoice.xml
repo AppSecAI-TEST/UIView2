@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/base_white_bg_selector"
@@ -25,8 +26,8 @@
         <com.angcyo.uiview.widget.RTextView
             android:id="@+id/tv_record_second"
             android:visibility="gone"
-            android:text="10s"
-            android:textColor="@color/colorPrimary"
+            tools:text="10s"
+            android:textColor="@color/main_text_color_dark"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"

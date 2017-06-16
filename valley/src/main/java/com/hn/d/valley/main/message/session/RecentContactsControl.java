@@ -679,6 +679,7 @@ public class RecentContactsControl {
 
         private void showUnreadNum(RBaseViewHolder holder, RecentContact bean) {
             int unreadNum = bean.getUnreadCount() + UnreadMessageControl.getMessageUnreadCount(bean.getRecentMessageId());
+            L.d(TAG,"showUnreadNum unreadcount : " + bean.getUnreadCount() + " msgcount : " + unreadNum);
             UnreadMsgUtils.showUnreadNum((MsgView) holder.v(R.id.msg_num_view), unreadNum);
         }
 

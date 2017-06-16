@@ -56,7 +56,10 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar().setShowBackImageView(true).setTitleString("选择群成员");
+        if (!options.showCheckBox) {
+            return super.getTitleBar().setRightItems(null).setTitleString(getString(R.string.text_select_group_member));
+        }
+        return super.getTitleBar().setTitleString(getString(R.string.text_select_group_member));
     }
 
     @Override
@@ -96,6 +99,11 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
         loadData();
+    }
+
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
     }
 
     @Override

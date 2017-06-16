@@ -118,6 +118,9 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     LinearLayout layoutPlayAudio;
     Chronometer mTimer;
     LinearLayout timpContainer;
+    private ItemInfoLayout mUserIcoInfoLayout;
+    ImageView iv_play;
+
     private HnAddImageAdapter mHnAddImageAdapter;
     private List<Luban.ImageItem> mOldItems = new ArrayList<>();//原先的照片地址
     private List<Luban.ImageItem> mPhones = new ArrayList<>();//原先的照片地址用来adapter
@@ -133,7 +136,9 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     private boolean touched;
     private boolean started;
     private boolean cancelled;
-    private ItemInfoLayout mUserIcoInfoLayout;
+    private boolean audioPlaying;
+
+
     private View.OnTouchListener audioRecordListener = new View.OnTouchListener() {
 
         @Override
@@ -857,7 +862,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     private void bindAudioIntroduce(RBaseViewHolder holder, UserInfoBean userInfoBean) {
         final View record_layout = holder.v(R.id.record_layout);
-        final ImageView iv_play = holder.v(R.id.iv_play_audio);
+        iv_play = holder.v(R.id.iv_play_audio);
         final RTextView tv_record_second = holder.v(R.id.tv_record_second);
         final ImageView iv_audio_record = holder.imgV(R.id.iv_audio_record);
         final TextView tv_audio_record = holder.tv(R.id.tv_audio_record);
@@ -876,7 +881,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             if (voiceIntroduces.length == 2) {
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
-                tv_record_second.setText(Long.parseLong(voiceIntroduces[1]) + "″");
+                tv_record_second.setText(String.format("%d″", Long.parseLong(voiceIntroduces[1])));
                 mAudioRecordPlayable = new AudioRecordPlayable(voiceIntroduces[0], Long.parseLong(voiceIntroduces[1]));
             } else {
                 voiceIntroduces = audioUrlAndTime.split("_t_");
@@ -886,7 +891,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 if (voiceIntroduces.length == 2) {
                     iv_play.setVisibility(View.VISIBLE);
                     tv_record_second.setVisibility(View.VISIBLE);
-                    tv_record_second.setText(duration + "″");
+                    tv_record_second.setText(String.format("%s″", duration));
                     mAudioRecordPlayable = new AudioRecordPlayable(audioUrlAndTime, Long.parseLong(duration));
                 }
             }
@@ -897,7 +902,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void call() {
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
-                tv_record_second.setText(mAudioRecordPlayable.getDuration() / 1000 + "″");
+                tv_record_second.setText(String.format("%d″", mAudioRecordPlayable.getDuration() / 1000));
             }
         };
 
@@ -923,24 +928,23 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 if (mAudioRecordPlayable == null) {
                     return;
                 }
+
+                if (audioPlaying) {
+                    mPathAudioControl.stopAudio();
+                    onAudioEnd(iv_play);
+                    return;
+                }
+
                 mPathAudioControl.startPlayAudioDelay(0, mAudioRecordPlayable, new BaseAudioControl.AudioControlListener() {
                     @Override
                     public void onAudioControllerReady(Playable playable) {
                         //iv_play.setImageResource(R.drawable.voice_playing_n);
-                        updateRecordPlayingResource(iv_play);
-                        Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.base_rotate);
-                        animation.setInterpolator(new LinearInterpolator());
-                        animation.setRepeatMode(Animation.RESTART);
-                        animation.setRepeatCount(Animation.INFINITE);
-                        iv_play.setAnimation(animation);
-                        iv_play.startAnimation(animation);
+                        onAudioReady(iv_play);
                     }
 
                     @Override
                     public void onEndPlay(Playable playable) {
-                        iv_play.clearAnimation();
-                        //iv_play.setImageResource(R.drawable.dynamic_notification);
-                        updateRecordPlayEndResource(iv_play);
+                        onAudioEnd(iv_play);
                     }
 
                     @Override
@@ -950,6 +954,67 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 });
             }
         });
+
+        iv_play.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                UIDialog.build()
+                        .setDialogContent(getString(R.string.text_delete_audio_introduce))
+                        .setOkListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                iv_play.setVisibility(View.GONE);
+                                tv_record_second.setVisibility(View.GONE);
+                                mAudioRecordPlayable = null;
+                                RRealm.exe(new Realm.Transaction() {
+                                    @Override
+                                    public void execute(Realm realm) {
+                                        UserCache.instance().getUserInfoBean().setVoice_introduce("empty");
+                                    }
+                                });
+                                deleteAudoIntrod();
+                            }
+                        })
+                        .showDialog(mILayout);
+                return true;
+            }
+        });
+    }
+
+    private void deleteAudoIntrod() {
+        onAudioEnd(iv_play);
+        add(RRetrofit.create(UserService.class)
+                .editInfo(Param.buildMap("voice:empty" ))
+                .compose(Rx.transformer(UserInfoBean.class))
+                .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+                    @Override
+                    public void onSucceed(UserInfoBean bean) {
+                        super.onSucceed(bean);
+                        T_.show(getString(R.string.text_delete_success));
+                    }
+                }));
+    }
+
+    private void onAudioEnd(ImageView iv_play) {
+        audioPlaying = false;
+        iv_play.clearAnimation();
+        //iv_play.setImageResource(R.drawable.dynamic_notification);
+        updateRecordPlayEndResource(iv_play);
+    }
+
+    private void onAudioReady(ImageView iv_play) {
+        audioPlaying = true;
+        updateRecordPlayingResource(iv_play);
+        animRecordPlay(iv_play);
+    }
+
+    private void animRecordPlay(ImageView iv_play) {
+        Animation animation = AnimationUtils.loadAnimation(mActivity, R.anim.base_rotate);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatMode(Animation.RESTART);
+        animation.setRepeatCount(Animation.INFINITE);
+        iv_play.setAnimation(animation);
+        iv_play.startAnimation(animation);
     }
 
     private void updateRecordImageResource(final ImageView iv_audio_record) {

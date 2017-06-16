@@ -166,7 +166,7 @@ public class FriendMenuUIDialog extends UIIDialogImpl {
 
         List<MenuPopUpWindow.MenuItem> items = new ArrayList<>();
 
-        items.add(new MenuPopUpWindow.MenuItem("添加群聊",R.drawable.qunliao, new Action1<String>() {
+        items.add(new MenuPopUpWindow.MenuItem("发起群聊",R.drawable.qunliao, new Action1<String>() {
             @Override
             public void call(String s) {
                 ContactSelectUIVIew targetView = new ContactSelectUIVIew(new BaseContactSelectAdapter.Options());

@@ -216,6 +216,7 @@ public class MessageUIView extends BaseUIView {
 
     @Subscribe(tags = {@Tag(Constant.TAG_UPDATE_RECENT_CONTACTS)})
     public void onEvent(UpdateDataEvent event) {
+        L.d("messageuiview","onevent : " );
         mRecentContactsControl.setRefreshEnd();
         mRecentContactsControl.setRecentContact(RecentContactsCache.instance().getRecentContactList());
         MsgCache.notifyNoreadNum();

@@ -236,11 +236,20 @@ public class GroupChatUIView extends ChatUIView2 {
 
     private void animAit() {
         float start = 0;
-        float end = ScreenUtil.dip2px(95);
+        float end = ait_control_layout.getMeasuredWidth();
         ObjectAnimator animator = ObjectAnimator.ofFloat(ait_control_layout,"translationX",start,end);
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
+
+//        ait_control_layout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                ViewCompat.setTranslationX(ait_control_layout, ait_control_layout.getMeasuredWidth());
+//                ait_control_layout.setVisibility(View.VISIBLE);
+//                ViewCompat.animate(ait_control_layout).translationX(0).setDuration(300).start();
+//            }
+//        });
     }
 
     private boolean checkInGroup() {

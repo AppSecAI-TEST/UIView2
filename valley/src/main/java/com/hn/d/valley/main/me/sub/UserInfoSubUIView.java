@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -159,6 +160,13 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 //tv.setBackgroundColor(Color.RED);
 
                 holder.sub(R.id.id_item).setItemDarkText(mUserInfoBean.getUid());
+                holder.sub(R.id.id_item).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipboardUtils.copyText(mUserInfoBean.getUid());
+                        T_.show(getString(R.string.text_id_had_copy_to_clipboard));
+                    }
+                });
 
                 if (TextUtils.isEmpty(mUserInfoBean.getSignature())) {
                     holder.sub(R.id.signature_item).setItemDarkText(getString(R.string.signature_empty_tip));

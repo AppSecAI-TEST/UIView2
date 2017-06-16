@@ -73,11 +73,10 @@ public class GroupMemberSelectAdapter extends BaseContactSelectAdapter {
 
     @Override
     protected void onBindModelView(int model, final boolean isSelector, final RBaseViewHolder holder, final int position, final AbsContactItem bean) {
-
+        final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
+        checkBox.setVisibility(options.showCheckBox?View.VISIBLE:View.GONE);
         if (getItemType(position) == ItemTypes.GROUPMEMBER) {
-            final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
             checkBox.setTag(position);
-
             if (mSelectedUsers != null && mSelectedUsers.size() != 0) {
                 GroupMemberBean memberBean = ((GroupMemberItem)bean).getMemberBean();
                 if (mSelectedUsers.contains(memberBean.getUserId()) ){

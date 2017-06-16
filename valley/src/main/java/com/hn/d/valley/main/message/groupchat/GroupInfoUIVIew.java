@@ -548,6 +548,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
                     final BaseContactSelectAdapter.Options option = new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE);
                     option.showDialog = true;
+                    option.showCheckBox = false;
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

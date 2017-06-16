@@ -80,6 +80,7 @@ public class RecentContactsCache implements ICache {
 
             NimUserInfoCache.getInstance().fetchUserInfoFromRemote(users);
 
+            L.d(TAG,"post updatedataevent mRecentContactObserver");
             RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
 
             RBus.post(new LastContactsEvent(recentContacts.get(recentContacts.size() - 1)));

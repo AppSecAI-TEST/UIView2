@@ -43,6 +43,8 @@ import java.util.concurrent.TimeUnit;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
+import static com.hn.d.valley.control.AmapControl.POI_TYPE;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -79,6 +81,7 @@ public class SearchPOIUIView extends BaseUIView<IPOISearchPresenter> implements 
 
     //str
     private String query;
+    private String type = POI_TYPE;
 
     private int mCurrentPage = 1;
 
@@ -148,7 +151,7 @@ public class SearchPOIUIView extends BaseUIView<IPOISearchPresenter> implements 
             @Override
             public void onPoiLoadMore() {
                 mCurrentPage ++;
-                mPresenter.onSearch(latLng,mCurrentPage,onPoiSearchListener,query);
+                mPresenter.onSearch(latLng,mCurrentPage,onPoiSearchListener,query,type);
             }
         });
 
@@ -208,7 +211,7 @@ public class SearchPOIUIView extends BaseUIView<IPOISearchPresenter> implements 
                         } else {
                             query = charSequence.toString();
                             mCurrentPage = 1;
-                            mPresenter.onSearch(latLng,mCurrentPage,onPoiSearchListener,charSequence.toString());
+                            mPresenter.onSearch(latLng,mCurrentPage,onPoiSearchListener,charSequence.toString(),type);
                         }
                     }
                 });
@@ -237,7 +240,7 @@ public class SearchPOIUIView extends BaseUIView<IPOISearchPresenter> implements 
      * 开始搜索地点
      */
     public void onSearchTipClick() {
-        mPresenter.onSearch(latLng,1,onPoiSearchListener,query);
+        mPresenter.onSearch(latLng,1,onPoiSearchListener,query,type);
     }
 
 

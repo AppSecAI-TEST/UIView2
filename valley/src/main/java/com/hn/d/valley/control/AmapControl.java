@@ -66,6 +66,9 @@ import rx.functions.Func1;
  */
 public class AmapControl implements LocationSource, AMapLocationListener {
 
+    public static final String AMAP_TYPE = "010100|010101|010102|0503|0505|050900|0603|0604|070601|070603|070604|080601|0901|1001|120|140500|150104|150200|150500|1601|060100|060101|060102|060400|120000|150200|150500";
+    public static final String POI_TYPE = "01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|22|97|99";
+
     /**
      * 头像和背景偏移的距离
      */
@@ -201,11 +204,11 @@ public class AmapControl implements LocationSource, AMapLocationListener {
      * 开始进行poi搜索(搜索附近的poi信息)
      */
     public static PoiSearch doSearchQuery(LatLng latLng, int currentPage, PoiSearch.OnPoiSearchListener listener) {
-        return doSearchQuery(latLng,currentPage,listener,"");
+        return doSearchQuery(latLng,currentPage,listener,"",AMAP_TYPE);
     }
 
-    public static PoiSearch  doSearchQuery(LatLng latLng, int currentPage , PoiSearch.OnPoiSearchListener listener,String queryStr ){
-        PoiSearch.Query query = new PoiSearch.Query(queryStr, "", "");// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
+    public static PoiSearch  doSearchQuery(LatLng latLng, int currentPage , PoiSearch.OnPoiSearchListener listener,String queryStr, String type){
+        PoiSearch.Query query = new PoiSearch.Query(queryStr, type, "");// 第一个参数表示搜索字符串，第二个参数表示poi搜索类型，第三个参数表示poi搜索区域（空字符串代表全国）
         query.setPageSize(20);// 设置每页最多返回多少条poiitem
         query.setPageNum(currentPage);// 设置查第一页
 
