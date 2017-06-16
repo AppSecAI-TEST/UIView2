@@ -106,7 +106,7 @@ dependencies {
     compile project(':RLibrary:uiview')
     compile project(':RLibrary:imagepicker')
     //    compile project(':RLibrary:fragmentation')
-    compile project(':zxing')
+//    compile project(':zxing')
     compile project(':rbplayerlib')
     compile project(':rbrecoderlib')
     compile project(':RLibrary:rcode')

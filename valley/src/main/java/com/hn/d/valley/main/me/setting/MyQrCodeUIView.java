@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.rcode.QRCodeEncoder;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.rsa.Base64Utils;
 import com.angcyo.uiview.net.rsa.RSAUtils;
@@ -31,7 +32,6 @@ import com.orhanobut.hawk.Hawk;
 import java.io.File;
 import java.util.UUID;
 
-import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import rx.Observable;

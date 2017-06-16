@@ -1,6 +1,5 @@
 package com.hn.d.valley.main.message.groupchat;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,47 +13,26 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.net.rsa.Base64Utils;
-import com.angcyo.uiview.net.rsa.RSAUtils;
-import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.BmpUtil;
-import com.angcyo.uiview.utils.file.AttachmentStore;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.bean.realm.QrCodeBean;
-import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.GroupChatService;
-import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
-import java.util.UUID;
 
-import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
-import static com.hn.d.valley.main.me.setting.MyQrCodeUIView.QR_PRIVATE_KEY;
-import static com.hn.d.valley.main.me.setting.MyQrCodeUIView.QR_PUBLIC_KEY;
 import static com.hn.d.valley.main.message.groupchat.GroupInfoUIVIew.KEY_SESSION_ID;
-import static com.hn.d.valley.main.message.groupchat.GroupInfoUIVIew.KEY_SESSION_TYPE;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
