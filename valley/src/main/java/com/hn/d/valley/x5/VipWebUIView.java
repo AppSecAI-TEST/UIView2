@@ -47,8 +47,8 @@ public class VipWebUIView extends X5WebUIView {
         super.initWebView();
     }
 
-    @Override
-    protected void onLoadUrl() {
+//    @Override
+//    protected void onLoadUrl() {
 //        add(RRetrofit.create(UserService.class)
 //                .getToken(Param.buildMap())
 //                .compose(Rx.transformer(String.class))
@@ -91,7 +91,7 @@ public class VipWebUIView extends X5WebUIView {
 //                        }, "android");
 //                    }
 //                }));
-    }
+//    }
 
     @Override
     protected void onPageFinished(final WebView webView, String url) {
