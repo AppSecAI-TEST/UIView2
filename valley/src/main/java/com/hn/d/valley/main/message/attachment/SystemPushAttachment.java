@@ -30,6 +30,10 @@ public class SystemPushAttachment extends CustomAttachment {
 
     }
 
+    public SystemPush getSystemPush() {
+        return systemPush;
+    }
+
     @Override
     public String toJson(boolean send) {
         return Json.to(systemPush);

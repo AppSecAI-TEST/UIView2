@@ -52,6 +52,8 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Action3;
 
+import static com.hn.d.valley.emoji.StickerManager.CATEGORY_EXPRESSION;
+import static com.hn.d.valley.emoji.StickerManager.CATEGORY_HN;
 import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Options.DEFALUT_LIMIT;
 
 /**
@@ -67,7 +69,8 @@ import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Op
  */
 public class CommentInputDialog extends UIIDialogImpl {
 
-    public static final String GIF_BASE_URL = "http://circleimg.klgwl.com/gif/1/";
+    public static final String GIF_BASE_GIF_URL = "http://circleimg.klgwl.com/gif/1/";
+    public static final String GIF_BASE_HN_URL = "http://circleimg.klgwl.com/gif/2/";
 
     InputConfig mInputConfig;
     private EmojiLayoutControl mEmojiLayoutControl;
@@ -199,8 +202,15 @@ public class CommentInputDialog extends UIIDialogImpl {
                 Uri uri = Uri.parse(StickerManager.getInstance().getStickerBitmapUri(categoryName
                         , stickerName));
                 L.d(CommentInputDialog.class.getSimpleName(),"onStickerSelected " + stickerName);
-                gifUrl = GIF_BASE_URL + stickerName;
 
+                switch (categoryName) {
+                    case CATEGORY_EXPRESSION:
+                        gifUrl = GIF_BASE_GIF_URL + stickerName;
+                        break;
+                    case CATEGORY_HN:
+                        gifUrl = GIF_BASE_HN_URL + stickerName;
+                        break;
+                }
                 sendView.setEnabled(true);
 
                 initPreviewLayout(uri.getPath(),true);

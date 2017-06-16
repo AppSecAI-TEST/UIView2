@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.google.gson.annotations.SerializedName;
 
@@ -56,6 +58,14 @@ public class GroupDescBean implements Serializable {
     @SerializedName("user_avatar")
     private String userAatar;
     private int announcement;
+
+    public String getTrueName() {
+        if (!TextUtils.isEmpty(name)){
+            return name;
+        } else {
+            return defaultName;
+        }
+    }
 
 
     public boolean canUpgrade() {

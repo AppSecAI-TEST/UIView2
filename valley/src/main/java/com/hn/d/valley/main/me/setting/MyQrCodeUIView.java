@@ -201,6 +201,13 @@ public class MyQrCodeUIView extends BaseContentUIView {
     }
 
     /**
+     * 返回需要创建的图片地址
+     */
+    protected String getQRImgUrl() {
+        return UserCache.getUserAvatar();
+    }
+
+    /**
      * 二维码创建成功之后的回调, 可以用来本地缓存二维码
      *
      * @param bitmap 二维码图片
@@ -215,9 +222,9 @@ public class MyQrCodeUIView extends BaseContentUIView {
         Hawk.put(MyQrCodeUIView.KEY_NEED_CREATE_QR, false);
     }
 
-    private void createQrCodeView(final HnGlideImageView imageView, final ImageView qrView) {
+    protected void createQrCodeView(final HnGlideImageView imageView, final ImageView qrView) {
         Glide.with(mActivity)
-                .load(UserCache.getUserAvatar())
+                .load(getQRImgUrl())
                 .asBitmap()
                 .into(new SimpleTarget<Bitmap>() {
                     @Override

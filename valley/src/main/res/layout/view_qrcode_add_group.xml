@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/base_40dpi"
+    android:paddingEnd="@dimen/base_xxhdpi"
+    android:paddingStart="@dimen/base_xxhdpi"
+    android:paddingTop="@dimen/base_40dpi">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_white_round_bg_5x"
+        android:orientation="vertical"
+        android:padding="@dimen/base_xxhdpi">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="200dp">
+
+            <ImageView
+                android:id="@+id/qr_code_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="centerInside"
+                android:visibility="visible"
+                tools:src="@drawable/zhanweitu_1"/>
+        </RelativeLayout>
+
+        <com.hn.d.valley.widget.HnButton
+            android:id="@+id/tv_qrcode_tip"
+            style="@style/MainTextStyle"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi_15"
+            android:gravity="center"
+            android:text="@string/text_add_s"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

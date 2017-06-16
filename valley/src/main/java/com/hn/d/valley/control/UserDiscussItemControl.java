@@ -1445,6 +1445,16 @@ public class UserDiscussItemControl {
         displayImage(imageView, url, width, height, true, imageSize);
     }
 
+    public static void displayImage(final ImageView imageView, final String url) {
+        displayImage(imageView, url, -1, -1, true, Integer.MAX_VALUE);
+    }
+
+    /**
+     * @param height
+     * @param width     当宽高有一个小于0时, 则不会调用OSS 的 {@link OssHelper#getImageThumb(String, int, int)}方法
+     * @param imageSize 如果size为1时, 会使用 {@link android.widget.ImageView.ScaleType#FIT_XY},
+     *                  否则使用{@link android.widget.ImageView.ScaleType#CENTER_CROP}
+     */
     public static void displayImage(final ImageView imageView, final String url,
                                     final int width, final int height,
                                     final boolean noGif, final int imageSize) {
@@ -1530,7 +1540,7 @@ public class UserDiscussItemControl {
 
     public static void displayJpeg(final ImageView imageView, final String url, final int width, final int height, final int imageSize) {
         Glide.with(imageView.getContext())
-                .load(OssHelper.getImageThumb(url, width, height))
+                .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
                 .asBitmap()
                 .placeholder(R.drawable.zhanweitu_1)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

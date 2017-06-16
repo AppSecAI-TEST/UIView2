@@ -45,6 +45,7 @@ import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
+import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
@@ -495,6 +496,8 @@ public class RecentContactsControl {
             return ((HotSpotInfoAttachment) attachment).getHotSpotInfo().getMsg();
         } else if (attachment instanceof DynamicDetailAttachment) {
             return ((DynamicDetailAttachment) attachment).getDynamicMsg().getMsg();
+        } else if (attachment instanceof SystemPushAttachment.SingleTextSPAttachment) {
+            return ((SystemPushAttachment) attachment).getSystemPush().getMsg();
         }
         return "[自定义消息]";
     }

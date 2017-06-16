@@ -131,7 +131,7 @@ public class ScanUIView extends BaseContentUIView implements QRCodeView.Delegate
         if (TextUtils.isEmpty(result)) {
             return;
         }
-        //T_.show(result);
+        T_.show(result);
         VibrationUtils.vibrate(mActivity, 200);//震动
         if (result.contains("uid=")) {
             //个人名片
@@ -145,7 +145,13 @@ public class ScanUIView extends BaseContentUIView implements QRCodeView.Delegate
             }
 
         } else if (result.contains("team=")) {
+            // 群名片
+            try {
 
+
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

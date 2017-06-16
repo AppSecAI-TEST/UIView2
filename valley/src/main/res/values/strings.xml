@@ -749,4 +749,6 @@
     <string name="relation">关系</string>
     <string name="relation_count_format">你们有%1$s位共同的关注的人</string>
     <string name="my_qrcode_tip">扫一扫上面的二维码图案, 加我好友</string>
+    <string name="text_group_qrcode_tip">扫一扫上面的二维码图案,进群</string>
+    <string name="text_add_s">加入</string>
 </resources>

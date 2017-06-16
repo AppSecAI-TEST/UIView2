@@ -11,20 +11,16 @@
     android:paddingStart="@dimen/base_xhdpi">
 
     <com.angcyo.uiview.widget.RTextView
-        style="@style/DarkTextStyle"
-        android:text="@string/text_report_profile"/>
-
-    <com.angcyo.uiview.widget.RTextView
-        style="@style/DarkTextStyle"
+        style="@style/MainTextStyle"
         android:layout_marginBottom="@dimen/base_hdpi"
         android:layout_marginTop="@dimen/base_hdpi"
         android:text="@string/text_report_tip"
-        android:textSize="@dimen/default_text_little_size"/>
+        />
 
     <com.angcyo.uiview.recycler.RRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_60dpi"
-        android:tag="Gv3"/>
+        android:tag="Gv4"/>
 
 </LinearLayout>

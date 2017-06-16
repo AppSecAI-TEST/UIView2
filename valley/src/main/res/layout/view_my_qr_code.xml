@@ -95,6 +95,7 @@
         </RelativeLayout>
 
         <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tv_qrcode_tip"
             style="@style/DarkTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

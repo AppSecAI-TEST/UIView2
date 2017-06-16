@@ -202,51 +202,60 @@ public class GroupQrCodeUIView extends MyQrCodeUIView {
         //imageView.setImageUrl(UserCache.getUserAvatar());
         LinearLayout layout = mViewHolder.v(R.id.layout_status);
         layout.setVisibility(View.GONE);
-//
-//        HnGenderView genderView = mViewHolder.v(R.id.grade);
-//        genderView.setGender(userInfoBean.getSex(), userInfoBean.getGrade());
-//
-//        View authView = mViewHolder.v(R.id.auth);
-//        authView.setVisibility("1".equalsIgnoreCase(userInfoBean.getIs_auth()) ? View.VISIBLE : View.INVISIBLE);
+
         mViewHolder.tv(R.id.create_qr_tip).setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
         qrView = mViewHolder.v(R.id.qr_code_view);
+        userName = mViewHolder.v(R.id.username);
+        mViewHolder.tv(R.id.tv_qrcode_tip).setText(R.string.text_group_qrcode_tip);
+
+        userName.setText(mGroupDescBean.getTrueName());
 
 //        loadGroupInfo();
     }
 
-
-    private void createQrCodeView(final HnGlideImageView imageView, final ImageView qrView) {
-        Glide.with(mActivity)
-                .load(mGroupDescBean.getDefaultAvatar())
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        Bitmap cornerBitmap = BmpUtil.getRoundedCornerBitmap(resource, 1000);
-                        imageView.setImageBitmap(cornerBitmap);
-                        final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
-                        AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
-
-                        createQrCode(encode("team=" + mGroupDescBean.getYxGid()),
-                                (int) ResUtil.dpToPx(mActivity, 300),
-                                SkinHelper.getSkin().getThemeSubColor(),
-                                cornerBitmap)
-                                .subscribe(new Action1<Bitmap>() {
-                                    @Override
-                                    public void call(Bitmap bitmap) {
-                                        qrView.setImageBitmap(bitmap);
-                                        String qrFilePath = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
-                                        AttachmentStore.saveBitmap(bitmap, qrFilePath, false);
-                                        userName = mViewHolder.v(R.id.username);
-                                        userName.setText(mGroupDescBean.getDefaultName());
-
-                                        RRealm.save(new QrCodeBean(mGroupDescBean.getYxGid(), qrFilePath, avatar));
-                                        Hawk.put(KEY_NEED_CREATE_GROUP_QR, false);
-
-                                    }
-                                });
-                    }
-                });
+    @Override
+    protected String getQrCodeContent() {
+        String code = String.format("群名片:team=%s,%s,%s",mGroupDescBean.getGid(),UserCache.getUserAccount(),mGroupDescBean.getYxGid());
+        return code;
     }
+
+    @Override
+    protected String getQRImgUrl() {
+        return mGroupDescBean.getDefaultAvatar();
+    }
+
+//    private void createQrCodeView(final HnGlideImageView imageView, final ImageView qrView) {
+//        Glide.with(mActivity)
+//                .load(mGroupDescBean.getDefaultAvatar())
+//                .asBitmap()
+//                .into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                        Bitmap cornerBitmap = BmpUtil.getRoundedCornerBitmap(resource, 1000);
+//                        imageView.setImageBitmap(cornerBitmap);
+//                        final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
+//                        AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
+//
+//                        String code = String.format("群名片:team=%s,%s,%s",UserCache.getUserAccount(),mGroupDescBean.getGid(),mGroupDescBean.getYxGid());
+//
+//                        createQrCode(encode(code),
+//                                (int) ResUtil.dpToPx(mActivity, 300),
+//                                SkinHelper.getSkin().getThemeSubColor(),
+//                                cornerBitmap)
+//                                .subscribe(new Action1<Bitmap>() {
+//                                    @Override
+//                                    public void call(Bitmap bitmap) {
+//                                        qrView.setImageBitmap(bitmap);
+//                                        String qrFilePath = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
+//                                        AttachmentStore.saveBitmap(bitmap, qrFilePath, false);
+//
+//                                        RRealm.save(new QrCodeBean(mGroupDescBean.getYxGid(), qrFilePath, avatar));
+//                                        Hawk.put(KEY_NEED_CREATE_GROUP_QR, false);
+//
+//                                    }
+//                                });
+//                    }
+//                });
+//    }
 }

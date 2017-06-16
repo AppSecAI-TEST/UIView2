@@ -109,9 +109,11 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 //                .placeholder(R.drawable.zhanweitu_1)
 //                .into(imageView);
 
-        UserDiscussItemControl.displayImage(imageView, url,
-                imageView.getMeasuredWidth(), imageView.getMeasuredHeight(),
-                true, Integer.MAX_VALUE);
+        UserDiscussItemControl.displayImage(imageView, url);
+
+//        UserDiscussItemControl.displayImage(imageView, url,
+//                imageView.getMeasuredWidth(), imageView.getMeasuredHeight(),
+//                true, Integer.MAX_VALUE);
     }
 
     @Override
