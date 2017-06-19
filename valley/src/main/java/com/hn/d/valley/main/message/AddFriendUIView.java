@@ -18,6 +18,7 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
+import com.hn.d.valley.main.friend.AddressBookUI2View;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.sub.adapter.UserInfoClickAdapter;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
