@@ -74,10 +74,10 @@ public class InviteFriendsUIDialog extends UIIDialogImpl {
     protected void share(SHARE_MEDIA shareMedia) {
         UM.shareWeb(mActivity,
                 shareMedia,
-                "http://wap.klgwl.com/Download",
+                "http://wap.klgwl.com/Downloads/share",
                 R.drawable.logo,
-                getString(R.string.share_title),
                 getString(R.string.app_name),
+                getString(R.string.share_title),
                 "",
                 new UMShareListener() {
                     @Override
