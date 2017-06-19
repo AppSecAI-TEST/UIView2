@@ -34,12 +34,14 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
@@ -71,6 +73,7 @@ import com.lzy.imagepicker.ImagePickerHelper;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,16 +94,16 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class UserDetailUIView2 extends BaseContentUIView {
 
+    public static final int TYPE_CHANGE_ICO = 1;
+    public static final int TYPE_CHANGE_BG_PHOTO = 2;
     boolean isFollower = false;
     TextView mCommandItemView;
     private String to_uid;
     private CommonTabLayout mCommonTabLayout;
     private UIViewPager mViewPager;
     private UserInfoBean mUserInfoBean;
-
     private AudioPlayHelper mAudioPlayHelper;
     private Action0 mOnFinishAction;
-
     /**
      * 0	int	普通陌生人【没有拉黑情况】
      * 1	int	双方拉黑
@@ -114,6 +117,11 @@ public class UserDetailUIView2 extends BaseContentUIView {
     private String mUserSetIco = "";//需要更换的用户头像
     private HnGlideImageView mHnAvatarGlideImageView;
     private CircleUIView mCircleUIView;
+    /**
+     * 改变头像, 还是改变背景
+     */
+    private int changeType = TYPE_CHANGE_ICO;
+
 
     public UserDetailUIView2(String to_uid) {
         this.to_uid = to_uid;
@@ -467,6 +475,10 @@ public class UserDetailUIView2 extends BaseContentUIView {
         mUserInfoBean = bean;
         final String is_auth = bean.getIs_auth();
 
+        //背景墙
+        initBgView();
+
+        //头像的更改
         mHnAvatarGlideImageView = mViewHolder.v(R.id.user_ico_view);
         mHnAvatarGlideImageView.setImageThumbUrl(bean.getAvatar());
         mHnAvatarGlideImageView.setAuth(is_auth);
@@ -559,6 +571,37 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
     /**
+     * 背景墙
+     */
+    private void initBgView() {
+        ImageView bgImageView = mViewHolder.v(R.id.bg_view);
+        String photos = mUserInfoBean.getPhotos();
+        if (TextUtils.isEmpty(photos)) {
+            bgImageView.setImageResource(R.drawable.yonghuxiangqing_3);
+        } else {
+            Glide.with(mActivity)
+                    .load(RUtils.split(photos).get(0))
+                    .into(bgImageView);
+        }
+        if (isMe()) {
+            bgImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UIBottomItemDialog.build()
+                            .addItem(getString(R.string.change_bg_photos_title), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    changeType = TYPE_CHANGE_BG_PHOTO;
+                                    ImagePickerHelper.startImagePicker(mActivity, true, true, false, false, 1);
+                                }
+                            })
+                            .showDialog(UserDetailUIView2.this);
+                }
+            });
+        }
+    }
+
+    /**
      * 点击头像之后的事件处理,查看大图, 是自己可以修改头像
      */
     private View.OnClickListener createAvatarClickListener(final HnGlideImageView hnGlideImageView) {
@@ -588,6 +631,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                     changeAvatarView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            changeType = TYPE_CHANGE_ICO;
                                             ImagePickerHelper.startImagePicker(mActivity, true, true, true, false, 1);
                                         }
                                     });
@@ -636,7 +680,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 final String avatarUrl = list.get(0);
 
                 add(RRetrofit.create(UserService.class)
-                        .editInfo(Param.buildMap("avatar:" + avatarUrl))
+                        .editInfo(Param.buildMap((changeType == TYPE_CHANGE_BG_PHOTO ? "photos:" : "avatar:") + avatarUrl))
                         .compose(Rx.transformer(UserInfoBean.class))
                         .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
                             @Override
@@ -644,19 +688,28 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                 super.onSucceed(bean);
                                 mUserInfoBean = bean;
                                 UserCache.instance().setUserInfoBean(bean);
-                                T_.ok(getString(R.string.avatar_change_success));
+
+                                if (changeType == TYPE_CHANGE_ICO) {
+                                    T_.ok(getString(R.string.avatar_change_success));
+                                }
 
                                 RRealm.exe(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
-                                        UserCache.setUserAvatar(avatarUrl);
-                                        UserCache.instance().getUserInfoBean().setAvatar(avatarUrl);
+                                        if (changeType == TYPE_CHANGE_ICO) {
+                                            UserCache.setUserAvatar(avatarUrl);
+                                            UserCache.instance().getUserInfoBean().setAvatar(avatarUrl);
+                                        } else if (changeType == TYPE_CHANGE_BG_PHOTO) {
+                                            UserCache.instance().getUserInfoBean().setPhotos(avatarUrl);
+                                        }
                                     }
                                 });
 
                                 try {
-                                    mHnAvatarGlideImageView.setImageThumbUrl(avatarUrl);
-                                    mCircleUIView.loadData();
+                                    if (changeType == TYPE_CHANGE_ICO) {
+                                        mHnAvatarGlideImageView.setImageThumbUrl(avatarUrl);
+                                        mCircleUIView.loadData();
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -756,6 +809,21 @@ public class UserDetailUIView2 extends BaseContentUIView {
         startIView(new UserDetailMoreUIView(mUserInfoBean, relation));
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        final ArrayList<String> images = ImagePickerHelper.getImages(mActivity, requestCode, resultCode, data);
+        if (!images.isEmpty()) {
+            if (changeType == TYPE_CHANGE_BG_PHOTO) {
+                ImageView bgImageView = mViewHolder.v(R.id.bg_view);
+                mUserSetIco = images.get(0);
+                Glide.with(mActivity)
+                        .load(new File(mUserSetIco))
+                        .into(bgImageView);
+                changeAvatar();
+            }
+        }
+    }
 
     @Override
     public void onViewShow(long viewShowCount) {

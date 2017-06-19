@@ -756,4 +756,5 @@
     <string name="scan_result_title">扫描结果</string>
     <string name="text_add_group">加入群聊</string>
     <string name="text_id_had_copy_to_clipboard">ID已经复制到粘贴板啦~</string>
+    <string name="change_bg_photos_title">更换背景</string>
 </resources>

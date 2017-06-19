@@ -75,6 +75,7 @@ class AdUIView : BaseContentUIView() {
     override fun initOnShowContentLayout() {
         super.initOnShowContentLayout()
         val adProgressBar: JumpAdProgressBar = mViewHolder.v(R.id.ad_progress_bar)
+        adProgressBar.start()
         adProgressBar.setOnJumpListener {
             finishIView(this@AdUIView, false)
         }
