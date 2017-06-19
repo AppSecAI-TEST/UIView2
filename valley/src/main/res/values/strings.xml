@@ -757,4 +757,7 @@
     <string name="text_add_group">加入群聊</string>
     <string name="text_id_had_copy_to_clipboard">ID已经复制到粘贴板啦~</string>
     <string name="change_bg_photos_title">更换背景</string>
+    <string name="save_error">保存失败.</string>
+    <string name="save_to_phone">保存至手机</string>
+    <string name="save_to_phone_format">保存至:%1$s</string>
 </resources>

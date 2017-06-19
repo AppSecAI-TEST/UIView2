@@ -1,19 +1,26 @@
 package com.hn.d.valley.main.me.setting;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.rcode.QRCodeEncoder;
+import com.angcyo.uiview.Root;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.rsa.Base64Utils;
 import com.angcyo.uiview.net.rsa.RSAUtils;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.BmpUtil;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.file.AttachmentStore;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -27,6 +34,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.lzy.imagepicker.ImagePicker;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -55,6 +63,11 @@ public class MyQrCodeUIView extends BaseContentUIView {
     public static final String KEY_NEED_CREATE_QR = "key_need_create_qr";
     public static String QR_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCeLIMWjuXWrHn49cd3H1ZaDobjImmMsshQbT5gvF6hUxiCi4ubRsDVlqTuL8XUZvSRNYe9TfgsY2ITJWF27FezEBBVt8zMsCN4njBi9QN7V3/zJdtfNyuKY6qEK/0iYsOWZfxA3rplviQaM98fYZtBVBoef6bYqsQ9WjfjSiI5aQIDAQAB";
     public static String QR_PRIVATE_KEY = "MIICXAIBAAKBgQCeLIMWjuXWrHn49cd3H1ZaDobjImmMsshQbT5gvF6hUxiCi4ubRsDVlqTuL8XUZvSRNYe9TfgsY2ITJWF27FezEBBVt8zMsCN4njBi9QN7V3/zJdtfNyuKY6qEK/0iYsOWZfxA3rplviQaM98fYZtBVBoef6bYqsQ9WjfjSiI5aQIDAQABAoGAXrfPBBosPkJohBJCEO5+Gk2qrqczx6Jj2+2fNfR3QmntOndv8VsMLJsaRtvqvoesmqwQjeb73zDgURDIbZuX49yI/ePTMZiIF7NTq6wYonDi1zK4uPGOKN7yWNKyizft0L7VDiiqHOdG6EbosaLzeJBgfkM0W6TT0mmHx3OaBMUCQQDMgkQLbUfSTPsN4FPmhfo5XYBz9KuXExYbDhru2HKuQHCq3c5lRIzuGCoymVNK0abQ8qnlYumIS1HACQWUKqw3AkEAxf+y9x1R0YExTkApdrb4NqjgQpqp7iGIGaZLjUOypNtIj2il04lQkx80BdUep43z5/z6r/hkDCJWW4BJrde3XwJBAI0ozTbl81EheZiWYtMXXyQBegyPsXDR58w87DI4jM/iAuKtvyz/KBef7mCGnItkMrS/Cq4em/tLod3fXE5tNfkCQAQ9HBy0MPs2M9MEBp82/YtWBC8I1ph1eU9rQvTMPTfQRfZj/CDSMLplkZyKWnSl0lHmFYvM2n90ALtGvM0O8CsCQACg/gVssbETBwAd4KKQfPoy3zR4w85uOT+TmZU4sGrA3Jg6vDE1dr12zFKqgHCsbFmSOxuAEx2QykSJnwdc4RY=";
+
+    /**
+     * 本地QR文件路径
+     */
+    private String mQrFilePath;
 
     public static Observable<Bitmap> createQrCode(final String date, final int size, final int color, final Bitmap logo) {
         return Observable
@@ -120,7 +133,7 @@ public class MyQrCodeUIView extends BaseContentUIView {
 
     @Override
     protected int getTitleResource() {
-        return R.string.my_qr_code;
+        return R.string.my_code;
     }
 
     @Override
@@ -166,12 +179,39 @@ public class MyQrCodeUIView extends BaseContentUIView {
                         if (!new File(path).exists() || !new File(avatar).exists()) {
                             createQrCodeView(imageView, qrView);
                         } else {
+                            mQrFilePath = path;
                             setQrCodeView(imageView, qrView, path, avatar);
                         }
                     }
                 }
             });
         }
+
+        qrView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (!TextUtils.isEmpty(mQrFilePath)) {
+                    final File file = new File(mQrFilePath);
+                    if (file.exists()) {
+                        UIBottomItemDialog.build()
+                                .addItem(getString(R.string.save_to_phone), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        File toFile = new File(Root.getAppExternalFolder("images"), Root.createFileName(".jpeg"));
+                                        if (FileUtils.copyFile(file, toFile)) {
+                                            ImagePicker.galleryAddPic(mActivity, toFile);
+                                            T_.ok(getString(R.string.save_to_phone_format, toFile.getAbsolutePath()));
+                                        } else {
+                                            T_.error(getString(R.string.save_error));
+                                        }
+                                    }
+                                })
+                                .showDialog(MyQrCodeUIView.this);
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     protected boolean needCreateQrCode() {
@@ -214,10 +254,10 @@ public class MyQrCodeUIView extends BaseContentUIView {
      * @param avatar 头像本地地址
      */
     protected void onQrCodeCreateEnd(Bitmap bitmap, String avatar) {
-        String qrFilePath = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
-        AttachmentStore.saveBitmap(bitmap, qrFilePath, false);
+        mQrFilePath = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
+        AttachmentStore.saveBitmap(bitmap, mQrFilePath, false);
 
-        RRealm.save(new QrCodeBean(UserCache.getUserAccount(), qrFilePath, avatar));
+        RRealm.save(new QrCodeBean(UserCache.getUserAccount(), mQrFilePath, avatar));
 
         Hawk.put(MyQrCodeUIView.KEY_NEED_CREATE_QR, false);
     }
@@ -236,7 +276,7 @@ public class MyQrCodeUIView extends BaseContentUIView {
 
                         createQrCode(getQrCodeContent(),
                                 (int) ResUtil.dpToPx(mActivity, 200),
-                                SkinHelper.getSkin().getThemeSubColor(),
+                                Color.BLACK /*SkinHelper.getSkin().getThemeSubColor()*/,
                                 cornerBitmap)
                                 .subscribe(new Action1<Bitmap>() {
                                     @Override
