@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.user.dialog;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -18,6 +19,8 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.control.ShareControl;
+import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.control.VoiceStatusInfo;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
@@ -124,17 +127,35 @@ public class DynamicShareDialog extends UIIDialogImpl {
         //分享
         String mediaType = mDataListBean.getMedia_type();
         String shareDes = getString(R.string.share);
+        String thumbUrl = mDataListBean.getUser_info().getAvatar();
+        List<String> mediaList = mDataListBean.getMediaList();
         if (DynamicType.isImage(mediaType)) {
             shareDes = getString(R.string.share_image);
+            if (mediaList.size() > 0) {
+                thumbUrl = mediaList.get(0);
+            }
         } else if (DynamicType.isText(mediaType)) {
             shareDes = getString(R.string.share_text);
         } else if (DynamicType.isVideo(mediaType)) {
             shareDes = getString(R.string.share_video);
+            if (mediaList.size() > 0) {
+                String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
+                if (!TextUtils.isEmpty(s)) {
+                    thumbUrl = s;
+                }
+
+            }
         } else if (DynamicType.isVoice(mediaType)) {
             shareDes = getString(R.string.share_voice);
+            if (mediaList.size() > 0) {
+                String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
+                if (!TextUtils.isEmpty(s) && !VoiceStatusInfo.NOPIC.equalsIgnoreCase(s)) {
+                    thumbUrl = s;
+                }
+            }
         }
         ShareControl.shareDynamicControl(mActivity, mViewHolder,
-                mDataListBean.getUser_info().getAvatar(),
+                thumbUrl,
                 mDataListBean.getDiscuss_id(),
                 getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()),
                 shareDes, this);

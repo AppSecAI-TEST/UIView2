@@ -183,7 +183,7 @@ public class UM {
         UMWeb web = new UMWeb(url);
         web.setTitle(title);//标题
         //缩略图
-        if (thumbImage == null) {
+        if (thumbImage != null) {
             web.setThumb(thumbImage);
         }
         web.setDescription(des);//描述

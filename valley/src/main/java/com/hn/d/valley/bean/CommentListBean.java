@@ -2,6 +2,9 @@ package com.hn.d.valley.bean;
 
 import android.text.TextUtils;
 
+import com.angcyo.uiview.utils.RUtils;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -124,6 +127,7 @@ public class CommentListBean {
         private String to_user_id;
         private String is_first_level;
         private String to_user_username;
+        private List<String> mediaList = new ArrayList<>();
 
         public boolean isHot() {
             return isHot;
@@ -335,6 +339,12 @@ public class CommentListBean {
 
         public void setTo_user_username(String to_user_username) {
             this.to_user_username = to_user_username;
+        }
+
+        public List<String> getMediaList() {
+            mediaList.clear();
+            mediaList.addAll(RUtils.split(getImages()));
+            return mediaList;
         }
 
         public static class ReplyListBean {

@@ -456,6 +456,24 @@ public class UserDiscussItemControl {
     }
 
     /**
+     * 从url中, 读取视频缩略图和时间参数
+     */
+    public static String[] getVideoParams(String url) {
+        String[] result = new String[]{"", ""};
+        if (TextUtils.isEmpty(url)) {
+            return result;
+        }
+
+        try {
+            String[] split = url.split("\\?");
+            result[0] = split[0];
+            result[1] = split[1];
+        } catch (Exception e) {
+        }
+        return result;
+    }
+
+    /**
      * 设置媒体信息
      */
     public static void initMediaLayout(String mediaType, final List<String> medias,
@@ -538,20 +556,20 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setDrawMask(false);
                 //DraweeViewUtil.setDraweeViewRes(mediaImageTypeView, R.drawable.video_release);
 
-                String[] split = url.split("\\?");
-                final String thumbUrl = split[0];
-                String videoUrl = "";
+                String[] videoParams = getVideoParams(url);
+                final String thumbUrl = videoParams[0];
+                final String videoUrl = videoParams[1];
+
                 try {
-                    videoUrl = split[1];
                     videoTimeView.setText(getVideoTime(videoUrl));
                 } catch (Exception e) {
                     videoTimeView.setText("error");
                 }
-                final String finalUrl = videoUrl;
+
                 mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
-                        return OssHelper.getImageThumbSize2(thumbUrl);
+                        return OssHelper.getImageThumbSize2(videoUrl);
                     }
 
                     @Override
@@ -566,8 +584,8 @@ public class UserDiscussItemControl {
                     @Override
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //T_.info(videoUrl);
-                        if (!TextUtils.isEmpty(finalUrl)) {
-                            iLayout.startIView(new VideoPlayUIView(finalUrl,
+                        if (!TextUtils.isEmpty(videoUrl)) {
+                            iLayout.startIView(new VideoPlayUIView(videoUrl,
                                     RImageView.copyDrawable(imageView),
                                     OssHelper.getWidthHeightWithUrl(thumbUrl)));
                         }
@@ -584,12 +602,10 @@ public class UserDiscussItemControl {
                 voiceTipView.setVisibility(View.VISIBLE);
                 mediaImageTypeView.setDrawMask(true);
 
-                String[] split = url.split("\\?");
-                String thumbUrl = "";
-                String videoUrl = "";
+                String[] split = getVideoParams(url);
+                String thumbUrl = split[0];
+                String videoUrl = split[1];
                 try {
-                    thumbUrl = split[0];
-                    videoUrl = split[1];
                     videoTimeView.setText(getVideoTime(videoUrl));
                 } catch (Exception e) {
                     videoTimeView.setText("error");
@@ -1414,6 +1430,10 @@ public class UserDiscussItemControl {
     }
 
     public static String getVideoTime(int time) {
+        if (time <= 0) {
+            return "";
+        }
+
         final int videoTime = time;
         int min = videoTime / 60;
         int second = videoTime % 60;
