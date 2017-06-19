@@ -2,6 +2,7 @@ package com.hn.d.valley.main.me;
 
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.github.utilcode.utils.AppUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
@@ -19,6 +22,8 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AdsControl;
@@ -30,6 +35,7 @@ import com.hn.d.valley.main.me.sub.InviteFriendsUIDialog;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
@@ -554,6 +560,29 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         public void onClick(View v) {
                             //MainControl.checkVersion(mParentILayout);
                             AdsControl.INSTANCE.updateAds();
+
+                            //{"phone":"18770090887,18770080909","name":"张三，李四"}
+
+//                            RRetrofit.create(ContactService.class)
+//                                    .phoneUser2(new PhonesBody("{\"phone\":\"18770090887,18770080909\",\"name\":\"张三，李四\"}"))
+//                                    .compose(Rx.transformer(String.class))
+//                                    .subscribe(new BaseSingleSubscriber<String>() {
+//                                        @Override
+//                                        public void onSucceed(String bean) {
+//                                            super.onSucceed(bean);
+//                                        }
+//                                    });
+
+                            RRetrofit.create(ContactService.class)
+                                    .phoneUser3(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:{\"phone\":\"18770090887,18770080909\",\"name\":\"张三，李四\"}"
+                                            , "phone_model:" + Build.MODEL, "device_id:" + Build.DEVICE))
+                                    .compose(Rx.transformer(String.class))
+                                    .subscribe(new BaseSingleSubscriber<String>() {
+                                        @Override
+                                        public void onSucceed(String bean) {
+                                            super.onSucceed(bean);
+                                        }
+                                    });
                         }
                     });
                 }

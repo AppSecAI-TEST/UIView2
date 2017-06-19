@@ -3,7 +3,11 @@ package com.hn.d.valley.service;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import retrofit2.http.Body;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -155,4 +159,19 @@ public interface ContactService {
      */
     @POST("contact/sameAttention")
     Observable<ResponseBody> sameAttention(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * phones	是	string	json字符串-手机号集合【每个手机号，联系人姓名以,分割；如{"phone":"18770090887,18770080909","name":"张三，李四"}】
+     * phone_model	是	string	手机型号 如华为荣耀6， vivo R9 ，iphone 5s
+     * device_id	是	string	登录手机设备号-手机唯一标识码
+     */
+    @Headers("Content-type: multipart/form-data")
+    @POST("contact/phoneUser")
+    Observable<ResponseBody> phoneUser2(@Body PhonesBody phonesBody);
+
+    @FormUrlEncoded
+    @POST("contact/phoneUser")
+    Observable<ResponseBody> phoneUser3(@FieldMap Map<String, String> map);
 }

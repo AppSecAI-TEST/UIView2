@@ -75,7 +75,7 @@ public class InviteFriendsUIDialog extends UIIDialogImpl {
         UM.shareWeb(mActivity,
                 shareMedia,
                 "http://wap.klgwl.com/Downloads/share",
-                R.drawable.logo,
+                R.drawable.logo_20170525,
                 getString(R.string.app_name),
                 getString(R.string.share_title),
                 "",
