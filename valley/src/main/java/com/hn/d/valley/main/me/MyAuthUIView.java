@@ -1,6 +1,5 @@
 package com.hn.d.valley.main.me;
 
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -9,8 +8,6 @@ import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.utilcode.utils.IDCardUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -252,7 +249,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     editText.setMaxLines(5);
                     editText.setGravity(Gravity.TOP);
                     UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
-                    mOtherEditTexts.add(editText);
+                    //mOtherEditTexts.add(editText);
                 }
             }));
 
@@ -271,7 +268,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
                     ExEditText editText = holder.v(R.id.edit_text_view);
                     editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-                    mOtherEditTexts.add(editText);
+                    //mOtherEditTexts.add(editText);
                 }
             }));
 
@@ -294,17 +291,17 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                                 }
                             }
 
-                            if (checkEmpty(mOtherEditTexts.get(0))) {
-                                return;
-                            }
-
-                            if (!TextUtils.isEmpty(mOtherEditTexts.get(1).string())) {
-                                //如果不为空,则检测网址是否正确
-                                if (!RUtils.isHttpUrl(mOtherEditTexts.get(1).string())) {
-                                    T_.error(getString(R.string.url_error_tip));
-                                    return;
-                                }
-                            }
+//                            if (checkEmpty(mOtherEditTexts.get(0))) {
+//                                return;
+//                            }
+//
+//                            if (!TextUtils.isEmpty(mOtherEditTexts.get(1).string())) {
+//                                //如果不为空,则检测网址是否正确
+//                                if (!RUtils.isHttpUrl(mOtherEditTexts.get(1).string())) {
+//                                    T_.error(getString(R.string.url_error_tip));
+//                                    return;
+//                                }
+//                            }
 
                             ExEditText editText = mCheckEditTexts.get(1);
                             if (!BuildConfig.DEBUG && !"YES".equalsIgnoreCase(IDCardUtil.IDCardValidate(editText.string()))) {

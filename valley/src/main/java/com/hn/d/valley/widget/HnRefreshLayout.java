@@ -1,6 +1,7 @@
 package com.hn.d.valley.widget;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -42,7 +43,7 @@ public class HnRefreshLayout extends RefreshLayout {
 
         public HnTopView(Context context) {
             super(context);
-            setBackgroundResource(R.drawable.refresh_animation_list);
+            setBackgroundResource(R.drawable.refresh_animation_list2);
         }
 
         @Override
@@ -50,6 +51,34 @@ public class HnRefreshLayout extends RefreshLayout {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             int size = (int) ResUtil.dpToPx(getResources(), 60);
             setMeasuredDimension(size, size);
+        }
+
+        @Override
+        public void setBackgroundDrawable(Drawable background) {
+            super.setBackgroundDrawable(background);
+        }
+
+        @Override
+        public void setBackground(Drawable background) {
+            super.setBackground(background);
+        }
+
+        @Override
+        protected void dispatchDraw(Canvas canvas) {
+            super.dispatchDraw(canvas);
+        }
+
+        @Override
+        public void draw(Canvas canvas) {
+            Drawable background = getBackground();
+            if (background != null) {
+                int cx = getMeasuredWidth() / 2;
+                int cy = getMeasuredHeight() / 2;
+                int w = background.getIntrinsicWidth() / 2;
+                int h = background.getIntrinsicHeight() / 2;
+                background.setBounds(cx - w, cy - h, cx + w, cy + h);
+            }
+            super.draw(canvas);
         }
 
         @Override

@@ -31,7 +31,7 @@ public abstract class BaseContentUIView extends UIContentView {
     @Override
     protected View inflateNonetLayout(FrameLayout baseRootLayout, LayoutInflater inflater) {
         View view = inflater.inflate(R.layout.no_network_layout, baseRootLayout);
-        initNonetButtonDrawable(view);
+        initBaseNonetLayout(view);
         return view;
     }
 

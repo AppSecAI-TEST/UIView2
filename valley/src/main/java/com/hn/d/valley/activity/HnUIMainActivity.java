@@ -14,6 +14,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.bean.event.SwipeEvent;
+import com.hn.d.valley.control.AdsControl;
 import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.MainUIView;
@@ -125,6 +126,7 @@ public class HnUIMainActivity extends BaseActivity {
     private void showMainUIView() {
         startIView(new MainUIView());
         MainControl.checkCrash(mLayout);
+        AdsControl.INSTANCE.checkAds(mLayout);
     }
 
     @Override

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:drawable="@drawable/refresh_1"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_2"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_3"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_4"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_5"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_6"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_7"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_8"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_9"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_10"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_11"
+        android:duration="@integer/animation_list_time2"/>
+    <item
+        android:drawable="@drawable/refresh_12"
+        android:duration="@integer/animation_list_time2"/>
+</animation-list>
