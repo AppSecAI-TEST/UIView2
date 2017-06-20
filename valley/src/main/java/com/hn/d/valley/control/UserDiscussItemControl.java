@@ -1421,6 +1421,15 @@ public class UserDiscussItemControl {
 
         View like_cnt = holder.v(R.id.like_cnt);
 
+        if (likeAction == null) {
+            likeAction = new InitLikeViewCallback() {
+                @Override
+                public void onLikeCall(boolean isLike) {
+                    super.onLikeCall(isLike);
+                }
+            };
+        }
+
         if (tBean.getIsLike() == 1) {
             //是否点赞
             initLikeView(like_cnt, tBean, subscription, likeType, likeAction, isInDetail);

@@ -166,25 +166,29 @@ public class CommentListUIView extends BaseDynamicListUIView {
                         @Override
                         public void onSucceed(CommentListBean bean) {
                             super.onSucceed(bean);
-                            if (bean != null && bean.getHot_list() != null && !bean.getHot_list().isEmpty()) {
-                                List<CommentListBean.DataListBean> datas = new ArrayList<>();
-                                for (CommentListBean.DataListBean b : bean.getHot_list()) {
-                                    b.setDiscuss_id(discuss_id);
-                                    b.setHot(true);
-                                }
-                                datas.addAll(bean.getHot_list());
-
-                                if (bean.getData_list() != null) {
-                                    for (CommentListBean.DataListBean b : bean.getData_list()) {
+                            if (bean == null) {
+                                onUILoadDataEnd(null);
+                            } else {
+                                if (bean.getHot_list() != null && !bean.getHot_list().isEmpty()) {
+                                    List<CommentListBean.DataListBean> datas = new ArrayList<>();
+                                    for (CommentListBean.DataListBean b : bean.getHot_list()) {
                                         b.setDiscuss_id(discuss_id);
-                                        if (!bean.getHot_list().contains(b)) {
-                                            datas.add(b);
+                                        b.setHot(true);
+                                    }
+                                    datas.addAll(bean.getHot_list());
+
+                                    if (bean.getData_list() != null) {
+                                        for (CommentListBean.DataListBean b : bean.getData_list()) {
+                                            b.setDiscuss_id(discuss_id);
+                                            if (!bean.getHot_list().contains(b)) {
+                                                datas.add(b);
+                                            }
                                         }
                                     }
+                                    onUILoadDataEnd(datas);
+                                } else {
+                                    onUILoadDataEnd(bean.getData_list());
                                 }
-                                onUILoadDataEnd(datas);
-                            } else {
-                                onUILoadDataEnd(null);
                             }
                         }
                     }));
