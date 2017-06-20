@@ -75,7 +75,7 @@ public class HotInformationUIView extends BaseContentUIView {
                     @Override
                     public void call(List<String> list) {
                         mMyTypeList = list;
-                        mViewPager.getAdapter().notifyDataSetChanged();
+                        resetViewPagerAdapter();
                         mSlidTabLayout.setViewPager(mViewPager);
                         mViewPager.setCurrentItem(0);
                     }
@@ -161,6 +161,10 @@ public class HotInformationUIView extends BaseContentUIView {
         };
         mViewPager.addOnPageChangeListener(mPageChangeListener);
 
+        resetViewPagerAdapter();
+    }
+
+    private void resetViewPagerAdapter() {
         mViewPager.setAdapter(new UIPagerAdapter() {
             @Override
             protected IView getIView(int position) {

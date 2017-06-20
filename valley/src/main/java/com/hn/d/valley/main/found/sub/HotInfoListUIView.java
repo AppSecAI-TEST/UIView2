@@ -17,6 +17,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextImageLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
@@ -25,6 +26,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.HotInfoListBean;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -58,7 +60,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         this.classify = classify;
     }
 
-    public static void initTextImageLayout(final RBaseViewHolder holder, String text, List<String> images) {
+    public static void initTextImageLayout(final RBaseViewHolder holder, String text, final List<String> images, final boolean isVideo) {
         RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
         textImageLayout.setConfigCallback(new RTextImageLayout.ConfigCallback() {
             @Override
@@ -67,8 +69,9 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
 
             @Override
-            public void onCreateImageView(ImageView imageView) {
+            public void onCreateImageView(RImageView imageView) {
                 imageView.setImageResource(R.drawable.zhanweitu_1);
+                imageView.setPlayDrawable(isVideo ? R.drawable.image_picker_play : -1);
             }
 
             @Override
@@ -79,7 +82,8 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
 
             @Override
-            public void displayImage(ImageView imageView, String url) {
+            public void displayImage(RImageView imageView, String url) {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 HotInfoListUIView.displayImage(imageView, url);
                 L.i("RTextImageLayout: displayImage([imageView, url])-> " + url);
             }
@@ -112,7 +116,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
         });
 
-        initTextImageLayout(holder, dataBean.getTitle(), RUtils.split(dataBean.getImgs(), ";"));
+        initTextImageLayout(holder, dataBean.getTitle(), RUtils.split(dataBean.getImgs(), ";"), "video".equalsIgnoreCase(dataBean.getType()));
     }
 
     public static void displayImage(ImageView imageView, String url) {
@@ -184,7 +188,8 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         L.e("call: onUILoadData([page])-> " + classify);
         add(RRetrofit
                 .create(NewsService.class)
-                .abstract_(Param.buildInfoMap("classify:" + classify, "random:0", "amount:" + Constant.DEFAULT_PAGE_DATA_COUNT, "lastid:" + lastId))
+                .abstract_(Param.buildInfoMap("classify:" + classify, "random:0", "uid:" + UserCache.getUserAccount(),
+                        "amount:" + Constant.DEFAULT_PAGE_DATA_COUNT, "lastid:" + lastId))
                 .compose(Rx.transformerList(HotInfoListBean.class))
                 .subscribe(new BaseSingleSubscriber<List<HotInfoListBean>>() {
 
@@ -202,6 +207,19 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                     public void onEnd() {
                         super.onEnd();
                         onUILoadDataFinish();
+                    }
+
+                    @Override
+                    public void onEnd(boolean isError, int errorCode, boolean isNoNetwork, Throwable e) {
+                        super.onEnd(isError, errorCode, isNoNetwork, e);
+                        if (isError) {
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loadData();
+                                }
+                            });
+                        }
                     }
                 })
         );

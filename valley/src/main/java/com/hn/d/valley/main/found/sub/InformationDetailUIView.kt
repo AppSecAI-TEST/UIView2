@@ -2,8 +2,10 @@ package com.hn.d.valley.main.found.sub
 
 import android.view.LayoutInflater
 import android.view.View
+import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import com.angcyo.library.utils.L
 import com.angcyo.uiview.design.StickLayout2
 import com.angcyo.uiview.github.goodview.GoodView
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout
@@ -12,6 +14,7 @@ import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
+import com.angcyo.uiview.utils.RUtils
 import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.view.IView
 import com.angcyo.uiview.widget.EmptyView
@@ -20,6 +23,8 @@ import com.angcyo.uiview.widget.viewpager.UIViewPager
 import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseContentUIView
 import com.hn.d.valley.base.Param
+import com.hn.d.valley.base.iview.ImagePagerUIView
+import com.hn.d.valley.base.iview.VideoPlayUIView
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.ILikeData
 import com.hn.d.valley.bean.InformationDetailBean
@@ -27,7 +32,9 @@ import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.service.NewsService
 import com.hn.d.valley.sub.user.sub.CommentInputDialog
 import com.hn.d.valley.sub.user.sub.CommentListUIView
+import com.hn.d.valley.utils.PhotoPager
 import com.hn.d.valley.widget.HnItemTextView
+import com.hn.d.valley.x5.AndroidJs
 import com.hn.d.valley.x5.X5WebView
 import com.tencent.smtt.sdk.WebSettings
 import com.tencent.smtt.sdk.WebView
@@ -117,6 +124,7 @@ class InformationDetailUIView(var detailId: String) : BaseContentUIView() {
     lateinit var loadView: EmptyView
     lateinit var tabControlLayout: View
     lateinit var webView: X5WebView
+    lateinit var stickLayout2: StickLayout2
     lateinit var detailBean: InformationDetailBean
     var mCommentListUIView: CommentListUIView? = null
 
@@ -129,7 +137,7 @@ class InformationDetailUIView(var detailId: String) : BaseContentUIView() {
         loadView = mViewHolder.v(R.id.load_view)
         tabControlLayout = mViewHolder.v(R.id.tab_control_layout)
 
-        val stickLayout2: StickLayout2 = mViewHolder.v(R.id.stick_layout)
+        stickLayout2 = mViewHolder.v(R.id.stick_layout)
         stickLayout2.setEdgeScroll(true)
 
         mTabLayout.setItemNoBackground(true)
@@ -183,9 +191,11 @@ class InformationDetailUIView(var detailId: String) : BaseContentUIView() {
         webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
         webView.onWebViewListener = object : X5WebView.OnWebViewListener {
             override fun onPageFinished(webView: WebView?, url: String?) {
+                L.e("call: onPageFinished -> ")
             }
 
             override fun onProgressChanged(webView: WebView?, progress: Int) {
+                L.e("call: onProgressChanged -> $progress")
                 if (progress > 40) {
                     loadView.visibility = View.GONE
                 }
@@ -205,6 +215,21 @@ class InformationDetailUIView(var detailId: String) : BaseContentUIView() {
             override fun onReceivedTitle(webView: WebView?, title: String?) {
             }
         }
+
+        webView.addJavascriptInterface(object : AndroidJs {
+            @JavascriptInterface
+            fun onImageClick(images: String, position: Int) {
+                //T_.show("$position $images")
+                ImagePagerUIView.start(mParentILayout, stickLayout2, PhotoPager.getImageItems(RUtils.split(images)), position)
+            }
+
+            @JavascriptInterface
+            fun onVideoClick(thumbUrl: String, videoUrl: String) {
+                //T_.show("$thumbUrl $videoUrl")
+                startIView(VideoPlayUIView(thumbUrl, videoUrl))
+            }
+
+        }, "android")
     }
 
     private fun initViewPager() {

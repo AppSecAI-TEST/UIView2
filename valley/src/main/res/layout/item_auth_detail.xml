@@ -49,10 +49,11 @@
                 style="@style/DarkTextStyle2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/base_xhdpi"
+                android:layout_margin="@dimen/base_xhdpi"
+                android:gravity="center_horizontal"
                 android:tag="@string/auth_des_format"
                 android:textSize="14sp"
-                tools:text="湖南电视台记者"/>
+                tools:text="湖南电视台记者湖南电视台记者湖南电视台记者湖南电视台记者湖南电视台记者"/>
 
         </LinearLayout>
 

@@ -31,8 +31,10 @@
             android:id="@+id/job_view"
             style="@style/DarkTextStyle"
             android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/base_xhdpi"
             android:layout_marginTop="@dimen/base_xhdpi"
-            tools:text="阿里巴巴网络技术有限公司"/>
+            android:gravity="center_horizontal"
+            tools:text="阿里巴巴网络技术有限公司阿里巴巴网络技术有限公司阿里巴巴网络技术有限公司"/>
 
     </LinearLayout>
 

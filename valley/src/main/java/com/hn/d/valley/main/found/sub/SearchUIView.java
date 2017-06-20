@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
@@ -27,6 +26,7 @@ import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextImageLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -102,7 +102,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                     }
 
                     @Override
-                    public void onCreateImageView(ImageView imageView) {
+                    public void onCreateImageView(RImageView imageView) {
                         imageView.setImageResource(R.drawable.zhanweitu_1);
                     }
 
@@ -114,7 +114,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                     }
 
                     @Override
-                    public void displayImage(ImageView imageView, String url) {
+                    public void displayImage(RImageView imageView, String url) {
                         HotInfoListUIView.displayImage(imageView, url);
                     }
                 });
@@ -138,7 +138,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         }
 
                         @Override
-                        public void onCreateImageView(ImageView imageView) {
+                        public void onCreateImageView(RImageView imageView) {
                             imageView.setImageResource(R.drawable.zhanweitu_1);
                         }
 
@@ -150,7 +150,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         }
 
                         @Override
-                        public void displayImage(ImageView imageView, String url) {
+                        public void displayImage(RImageView imageView, String url) {
                             HotInfoListUIView.displayImage(imageView, url);
                         }
                     });

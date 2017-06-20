@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.design.IWebView;
 import com.angcyo.uiview.utils.RUtils;
 import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
@@ -37,7 +38,7 @@ import java.util.Map;
 //import com.tencent.smtt.sdk.WebStorage;
 //import com.tencent.smtt.sdk.WebViewDatabase;
 
-public class X5WebView extends WebView {
+public class X5WebView extends WebView implements IWebView {
     public static final int FILE_CHOOSER = 0;
     private static boolean isSmallWebViewDisplayed = false;
     RelativeLayout.LayoutParams layoutParams;
@@ -546,6 +547,16 @@ public class X5WebView extends WebView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+    }
+
+    @Override
+    public int getWebViewContentHeight() {
+        return getContentHeight();
+    }
+
+    @Override
+    public int getWebViewVerticalScrollRange() {
+        return computeVerticalScrollRange();
     }
 
     public interface OnWebViewListener {
