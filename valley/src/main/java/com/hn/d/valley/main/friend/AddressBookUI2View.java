@@ -1,9 +1,12 @@
 package com.hn.d.valley.main.friend;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.utilcode.utils.StringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -53,6 +57,7 @@ import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -167,7 +172,45 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
+        if (Build.VERSION.SDK_INT >=23 ) {
+            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
+                checkPermissionDialog();
+                return;
+            }
+        }
         startLoad();
+    }
+
+    private void checkPermissionDialog() {
+        UIDialog.build()
+                .setDialogContent(getString(R.string.text_requet_contact_permission))
+                .setOkText(getString(R.string.ok))
+                .setCancelText(getString(R.string.cancel))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 获取权限
+                        new RxPermissions(mActivity)
+                        .request(Manifest.permission.READ_CONTACTS)
+                        .subscribe(new BaseSingleSubscriber<Boolean>() {
+                            @Override
+                            public void onSucceed(Boolean bean) {
+                                super.onSucceed(bean);
+                                if (bean) {
+                                    startLoad();
+                                } else {
+                                    finishIView();
+                                }
+                            }
+                        });                    }
+                })
+                .setCancelListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        finishIView();
+                    }
+                })
+                .showDialog(mParentILayout);
     }
 
     private void startLoad() {
@@ -353,8 +396,8 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     WrapPhoneContactItem wrapContact = (WrapPhoneContactItem) dataBean;
                     final PhoneUser phoneUser = wrapContact.getPhoneUser();
 
-                    username.setText(phoneUser.getUsername());
-                    signature.setText(phoneUser.getSignature());
+                    username.setText(wrapContact.getContactsInfo().name);
+                    signature.setText(String.format("恐龙谷:%s", phoneUser.getUsername()));
                     image_view.setImageUrl(phoneUser.getAvatar());
 
                     String titleString = "";
@@ -427,7 +470,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     final PhoneContactItem item = (PhoneContactItem) dataBean;
 
                     username.setText(item.getContactsInfo().name);
-                    signature.setText("手机号:" + item.getContactsInfo().phone);
+                    signature.setText(String.format("手机号:%s", item.getContactsInfo().phone));
 
                     follow_image_view.setImageResource(R.drawable.quyaoqing);
                     follow_image_view.setOnClickListener(new View.OnClickListener() {
@@ -440,7 +483,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     Glide.with(mActivity)
                             .load(ContactsPickerHelper.getPhotoByte(mActivity, item.getContactsInfo().contactId))
                             .transform(new GlideCircleTransform(mActivity))
-                            .placeholder(R.drawable.default_avatar)
+                            .placeholder(R.drawable.defauit_avatar_contact)
                             .into(holder.imgV(R.id.image_view));
                 }
 
@@ -536,7 +579,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                 .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
                 .append("wap.klgwl.com/user/register?spm=")
                 .append(encodeInfo)
-                .append(" 注册吧");
+                .append(" 下载吧");
 
         RUtils.sendSMS(mActivity, sb.toString(), item.getContactsInfo().phone);
     }

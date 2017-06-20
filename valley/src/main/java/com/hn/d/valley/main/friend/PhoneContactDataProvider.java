@@ -25,7 +25,13 @@ public class PhoneContactDataProvider implements IDataResource.IDataProvider {
     public List<AbsContactItem> provide() {
         List<ContactsPickerHelper.ContactsInfo> contactsInfos = ContactsPickerHelper.getContactsList(ValleyApp.getApp().getApplicationContext());
         ArrayList<AbsContactItem> datas = new ArrayList<>(contactsInfos.size());
+        int i = 0;
         for (ContactsPickerHelper.ContactsInfo info : contactsInfos) {
+            if (i++ > 20) {
+                break;
+            }
+            info.phone = "18888888883";
+
             datas.add(new PhoneContactItem(info));
         }
         return datas;

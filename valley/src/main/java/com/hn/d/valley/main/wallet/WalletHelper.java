@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.wallet;
 
+import android.view.View;
+
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
@@ -11,6 +13,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 
 import org.json.JSONException;
@@ -176,5 +179,23 @@ public class WalletHelper {
             }
         };
     }
+
+    public static void  showBindPhoneDialog(final ILayout layout,String content , String ok,String cancel) {
+        UIDialog.build()
+                .setDialogContent(content)
+                .setOkText(ok)
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 先判断是否绑定手机
+                        if (!UserCache.instance().isBindPhone()) {
+                            layout.startIView(new BindPhoneUIView());
+                        }
+                    }
+                })
+                .setCancelText(cancel)
+                .showDialog(layout);
+    }
+
 
 }

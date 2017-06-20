@@ -124,6 +124,11 @@ public class UserCache {
         return mLoginBean;
     }
 
+    public boolean isBindPhone() {
+        LoginBean loginBean = UserCache.instance().getLoginBean();
+        return !TextUtils.isEmpty(loginBean.getPhone());
+    }
+
     /**
      * 缓存用户信息
      */

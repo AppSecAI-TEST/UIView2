@@ -186,8 +186,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     @Override
                     public void onClick(View v) {
                         // 先判断是否绑定手机
-                        LoginBean loginBean = UserCache.instance().getLoginBean();
-                        if (TextUtils.isEmpty(loginBean.getPhone())) {
+                        if (!UserCache.instance().isBindPhone()) {
                             startIView(new BindPhoneUIView());
                             T_.show(mActivity.getString(R.string.text_unselected_phonenumber));
                         } else {

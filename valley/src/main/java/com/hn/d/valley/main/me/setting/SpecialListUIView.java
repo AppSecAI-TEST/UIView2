@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.me.setting;
 
+import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.ListModel;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
@@ -67,7 +69,7 @@ public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean>{
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(ContactService.class)
-                .specialList(Param.buildMap("page:" + page,"type:" + this.type))
+                .specialList(Param.buildMap("uid:" + UserCache.getUserAccount(),"page:" + page,"type:" + this.type))
                 .compose(Rx.transformer(SpecialUserList.class))
                 .subscribe(new SingleRSubscriber<SpecialUserList>(this) {
                     @Override

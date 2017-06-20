@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.friend;
 
+import android.support.annotation.DrawableRes;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -12,8 +13,11 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
+
+import static com.hn.d.valley.control.ShareControl.shareDynamic;
 
 /**
  * Created by hewking on 2017/3/22.
@@ -79,9 +83,8 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 TextView tv_username = holder.tv(R.id.tv_friend_name);
                 ImageView imgv = holder.imgV(R.id.iv_item_head);
                 TextView tv_desc = holder.tv(R.id.tv_func_desc);
-                tv_username.setText(R.string.text_context);
-                tv_desc.setText("扫描二维码图片");
-                imgv.setImageResource(R.drawable.tongxunlu_haoyou);
+                bindItemView(holder,"扫描二维码图片",getString(R.string.text_context),R.drawable.tongxunlu_haoyou);
+
             }
         }));
 
@@ -94,16 +97,47 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                         mParentILayout.startIView(new HnScanUIView());
                     }
                 });
-                TextView tv_username = holder.tv(R.id.tv_friend_name);
-                ImageView imgv = holder.imgV(R.id.iv_item_head);
-                TextView tv_desc = holder.tv(R.id.tv_func_desc);
-                tv_desc.setText("添加或邀请通讯录的好友");
-                tv_username.setText("扫一扫");
-                imgv.setImageResource(R.drawable.shaoyishao);
+                bindItemView(holder,getString(R.string.text_add_invite_contact_friend)
+                        ,getString(R.string.text_saoyisao),R.drawable.shaoyishao);
+            }
+        }));
+
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, 1) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        shareDynamic(mActivity, SHARE_MEDIA.WEIXIN, userIco, itemId, shareTitle, shareDes);
+                    }
+                });
+                bindItemView(holder,"邀请微信好友","微信好友",R.drawable.shaoyishao);
+            }
+        }));
+
+        items.add(ViewItemInfo.build(new ItemLineCallback(left, 1) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mParentILayout.startIView(new HnScanUIView());
+                    }
+                });
+                bindItemView(holder,"邀请QQ好友","QQ好友",R.drawable.shaoyishao);
             }
         }));
 
 
+    }
+
+    private void bindItemView(RBaseViewHolder holder, String title, String desc , @DrawableRes int res) {
+        TextView tv_username = holder.tv(R.id.tv_friend_name);
+        ImageView imgv = holder.imgV(R.id.iv_item_head);
+        TextView tv_desc = holder.tv(R.id.tv_func_desc);
+        tv_desc.setText(title);
+        tv_username.setText(desc);
+        imgv.setImageResource(res);
     }
 
     @Override

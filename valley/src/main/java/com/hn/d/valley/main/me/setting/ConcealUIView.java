@@ -11,6 +11,9 @@ import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.List;
 
+import static com.hn.d.valley.main.me.setting.SpecialListUIView.NOT_ACCESS_OTHER;
+import static com.hn.d.valley.main.me.setting.SpecialListUIView.NOT_ALLOW_ACCESS_ME;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -82,7 +85,7 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new SpecialListUIView(1));
+                        startIView(new SpecialListUIView(NOT_ALLOW_ACCESS_ME));
                     }
                 });
 
@@ -102,7 +105,7 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new SpecialListUIView(1));
+                        startIView(new SpecialListUIView(NOT_ACCESS_OTHER));
                     }
                 });
 

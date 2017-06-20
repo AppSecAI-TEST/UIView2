@@ -145,7 +145,7 @@ public interface ContactService {
      * uid	是	int	用户id
      * type	是	int	1-不看他的动态 ;2-不允许看我动态
      */
-    @POST("contact/specialList")
+    @POST("contact/special")
     Observable<ResponseBody> specialList(@QueryMap Map<String, String> map);
 
     /**

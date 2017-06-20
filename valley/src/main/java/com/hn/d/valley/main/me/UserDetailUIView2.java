@@ -20,6 +20,7 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.design.StickLayout;
 import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
@@ -53,6 +54,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.home.circle.CircleUIView;
+import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.me.sub.UserDetailMoreUIView;
@@ -60,6 +62,7 @@ import com.hn.d.valley.main.me.sub.UserInfoSubUIView;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
 import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.main.message.session.SessionHelper;
+import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserService;
@@ -522,6 +525,12 @@ public class UserDetailUIView2 extends BaseContentUIView {
             authTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // 先判断是否绑定手机
+                    if (!UserCache.instance().isBindPhone()) {
+                        WalletHelper.showBindPhoneDialog(mParentILayout,getString(R.string.text_not_bind_phone)
+                                ,getString(R.string.ok),getString(R.string.cancel));
+                        return;
+                    }
                     Integer integer = Integer.valueOf(is_auth);
                     switch (integer) {
                         case 1:
@@ -569,6 +578,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
             getUITitleBarContainer().showRightItem(0);
         }
     }
+
+
 
     /**
      * 背景墙

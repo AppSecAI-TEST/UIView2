@@ -756,6 +756,10 @@
     <string name="scan_result_title">扫描结果</string>
     <string name="text_add_group">加入群聊</string>
     <string name="text_id_had_copy_to_clipboard">ID已经复制到粘贴板啦~</string>
+    <string name="text_not_bind_phone">未绑定手机,请绑定手机!</string>
+    <string name="text_requet_contact_permission">获取访问通讯录权限?</string>
+    <string name="text_add_invite_contact_friend">添加或邀请通讯录的好友</string>
+    <string name="text_saoyisao">扫一扫</string>
     <string name="change_bg_photos_title">更换背景</string>
     <string name="save_error">保存失败.</string>
     <string name="save_to_phone">保存至手机</string>
