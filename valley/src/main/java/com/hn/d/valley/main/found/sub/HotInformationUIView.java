@@ -165,6 +165,7 @@ public class HotInformationUIView extends BaseContentUIView {
             @Override
             protected IView getIView(int position) {
                 final HotInfoListUIView uiView = new HotInfoListUIView(mMyTypeList.get(position));
+                uiView.bindParentILayout(mILayout);
                 return uiView;
             }
 

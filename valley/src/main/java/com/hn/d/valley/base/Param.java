@@ -15,11 +15,9 @@ import com.orhanobut.hawk.Hawk;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -103,8 +101,6 @@ public class Param {
             /*资讯API支持*/
             signList.add("e_type=RSA");
             result.put("e_type", "RSA");
-
-
         } else {
             /*版本信息*/
             String versionName = RUtils.getAppVersionName(ValleyApp.getApp());

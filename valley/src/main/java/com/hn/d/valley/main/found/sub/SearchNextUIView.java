@@ -487,7 +487,7 @@ public class SearchNextUIView extends BaseContentUIView {
             /**资讯item*/
             @Override
             protected void onBindFooterView(RBaseViewHolder holder, int posInFooter, HotInfoListBean footerBean) {
-                HotInfoListUIView.initItem(holder, footerBean);
+                HotInfoListUIView.initItem(mParentILayout, holder, footerBean);
                 holder.v(R.id.delete_view).setVisibility(View.GONE);
 //                if (posInFooter == 0) {
 //                    holder.v(R.id.tip_layout).setVisibility(View.VISIBLE);

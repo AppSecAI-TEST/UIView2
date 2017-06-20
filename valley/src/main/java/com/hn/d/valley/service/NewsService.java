@@ -35,4 +35,65 @@ public interface NewsService {
      */
     @GET("news/abstract")
     Observable<ResponseBody> abstract_(@QueryMap Map<String, String> map);
+
+    /**
+     * 获取资讯详情
+     * 参数名	必选	类型	说明
+     * id	是	int64	资讯id，必须唯一正确
+     * uid	否	int	用户id，提供用户id则可以获取是否收藏等信息
+     */
+    @GET("news/detail")
+    Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * id	是	int64	资讯id
+     */
+    @GET("news/collect")
+    Observable<ResponseBody> collect(@QueryMap Map<String, String> map);
+
+    @GET("news/uncollect")
+    Observable<ResponseBody> uncollect(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * type	是	string	操作类别【comment表示给评论点赞、reply表示给回复点赞】
+     * id	是	int64	评论或者回复的ID
+     * uid	是	int	参与点赞的用户ID
+     */
+    @GET("news/like")
+    Observable<ResponseBody> like(@QueryMap Map<String, String> map);
+
+    @GET("news/unlike")
+    Observable<ResponseBody> unlike(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * type	是	string	操作类型【new表示评论资讯、comment表示回复评论】
+     * id	是	int64	资讯或者评论的唯一id标识
+     * uid	是	int	参与评论或者回复的用户id
+     * content	是	string	评论或者回复的具体内容
+     */
+    @GET("news/reply")
+    Observable<ResponseBody> reply(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * type	是	string	获取的列表类型【new表示拉取资讯的回复列表、comment表示拉取评论的回复列表】
+     * uid	是	int	用户id
+     * id	是	int64	资讯或者评论的唯一标识ID
+     * amount	否	int	数量
+     * lastid	否	int64	上一次列表中的最小id，没有则从最新开始
+     */
+    @GET("news/replylist")
+    Observable<ResponseBody> replylist(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * type	是	string	操作类型【new表示删除资讯、comment表示删除评论、reply表示删除回复】
+     * id	是	int64	需要删除的资讯、回复、评论的id
+     */
+    @GET("news/delete")
+    Observable<ResponseBody> delete(@QueryMap Map<String, String> map);
 }

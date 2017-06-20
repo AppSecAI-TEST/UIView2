@@ -48,7 +48,7 @@ import java.util.List;
  */
 public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.DataListBean> {
 
-    ListType mListType;
+    protected ListType mListType;
 
     public BaseDynamicListUIView(ListType listType) {
         mListType = listType;
@@ -94,9 +94,18 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, final CommentListBean.DataListBean dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
-                initItemLayout(holder, dataBean, mListType == ListType.COMMENT_TYPE ? "comment" : "", posInData);
+                if (mListType == ListType.INFO_COMMENT_TYPE) {
+                    //资讯评论列表
+                    initInfoItemLayout(holder, dataBean, posInData);
+                } else {
+                    initItemLayout(holder, dataBean, mListType == ListType.COMMENT_TYPE ? "comment" : "", posInData);
+                }
             }
         };
+    }
+
+    protected void initInfoItemLayout(RBaseViewHolder holder, final CommentListBean.DataListBean dataBean, int posInData) {
+
     }
 
     protected boolean isMe(String to_uid) {
@@ -344,6 +353,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
     public enum ListType {
         FORWARD_TYPE,//转发列表
         COMMENT_TYPE,//评论列表
+        INFO_COMMENT_TYPE,//资讯评论列表
         REPLY_TYPE//回复列表
     }
 }

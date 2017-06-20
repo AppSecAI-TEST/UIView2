@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -87,7 +88,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         textImageLayout.setImages(images);
     }
 
-    public static void initItem(final RBaseViewHolder holder, HotInfoListBean dataBean) {
+    public static void initItem(final ILayout iLayout, final RBaseViewHolder holder, final HotInfoListBean dataBean) {
         //holder.fillView(dataBean);
         String author = dataBean.getAuthor();
         if (TextUtils.isEmpty(author)) {
@@ -107,7 +108,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                iLayout.startIView(new InformationDetailUIView(String.valueOf(dataBean.getId())));
             }
         });
 
@@ -170,7 +171,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, HotInfoListBean dataBean) {
-                initItem(holder, dataBean);
+                initItem(mParentILayout, holder, dataBean);
             }
         };
         baseAdapter.setEnableLoadMore(true);

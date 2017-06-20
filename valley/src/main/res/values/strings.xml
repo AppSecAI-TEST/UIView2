@@ -765,4 +765,7 @@
     <string name="save_to_phone">保存至手机</string>
     <string name="save_to_phone_format">保存至:%1$s</string>
     <string name="information_klg">恐龙谷资讯</string>
+    <string name="information_detail_title">资讯详情</string>
+    <string name="collect_success">收藏成功</string>
+    <string name="uncollect_success">取消收藏成功</string>
 </resources>

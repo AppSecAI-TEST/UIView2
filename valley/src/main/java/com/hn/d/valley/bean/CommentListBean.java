@@ -128,6 +128,31 @@ public class CommentListBean {
         private String is_first_level;
         private String to_user_username;
         private List<String> mediaList = new ArrayList<>();
+        /**
+         * 资讯评论 相关字段
+         * id : 11
+         * uid : 60006
+         * itemid : 2709
+         * type : comment
+         * reply_cnt : 0
+         * like_cnt : 0
+         * report_cnt : 0
+         * status : 1
+         * created : 1486627369
+         * is_official : 0
+         * is_hot : 0
+         * sex : 1
+         * grade : 1
+         */
+
+        private String id;
+        private int itemid;
+        private String type;
+        private int report_cnt;
+        private int status;
+        private int is_official;
+        private int is_hot;
+
 
         public boolean isHot() {
             return isHot;
@@ -251,7 +276,12 @@ public class CommentListBean {
 
         @Override
         public boolean equals(Object obj) {
-            return TextUtils.equals(comment_id, ((DataListBean) obj).comment_id);
+            if (TextUtils.isEmpty(id)) {
+                return TextUtils.equals(comment_id, ((DataListBean) obj).comment_id);
+            } else {
+                //资讯使用id判断
+                return TextUtils.equals(id, ((DataListBean) obj).id);
+            }
         }
 
         public String getDiscuss_id() {
@@ -306,6 +336,9 @@ public class CommentListBean {
             if ("reply".equalsIgnoreCase(type)) {
                 return getReply_id();
             }
+            if ("info_comment".equalsIgnoreCase(type)) {
+                return getId();
+            }
             return getDiscuss_id();
         }
 
@@ -345,6 +378,62 @@ public class CommentListBean {
             mediaList.clear();
             mediaList.addAll(RUtils.split(getImages()));
             return mediaList;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public int getItemid() {
+            return itemid;
+        }
+
+        public void setItemid(int itemid) {
+            this.itemid = itemid;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public int getReport_cnt() {
+            return report_cnt;
+        }
+
+        public void setReport_cnt(int report_cnt) {
+            this.report_cnt = report_cnt;
+        }
+
+        public int getStatus() {
+            return status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
+
+        public int getIs_official() {
+            return is_official;
+        }
+
+        public void setIs_official(int is_official) {
+            this.is_official = is_official;
+        }
+
+        public int getIs_hot() {
+            return is_hot;
+        }
+
+        public void setIs_hot(int is_hot) {
+            this.is_hot = is_hot;
         }
 
         public static class ReplyListBean {

@@ -138,6 +138,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
         mIcoRecyclerView = mViewHolder.v(R.id.like_user_recycler_view);
         likeUserControlLayout = mViewHolder.v(R.id.like_users_layout);
 
+        mTabLayout.setItemNoBackground(true);
         StickLayout2 stickLayout2 = mViewHolder.v(R.id.stick_layout);
         stickLayout2.setEdgeScroll(true);
 
@@ -388,9 +389,17 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             @Override
             public CharSequence getPageTitle(int position) {
                 if (position == 0) {
-                    return getString(R.string.comment) + " " + mDataListBean.getComment_cnt();
+                    String comment_cnt = mDataListBean.getComment_cnt();
+                    if (Integer.valueOf(comment_cnt) <= 0) {
+                        return getString(R.string.comment);
+                    }
+                    return getString(R.string.comment) + " " + comment_cnt;
                 }
-                return getString(R.string.forward) + " " + mDataListBean.getForward_cnt();
+                String forward_cnt = mDataListBean.getForward_cnt();
+                if (Integer.valueOf(forward_cnt) <= 0) {
+                    return getString(R.string.forward);
+                }
+                return getString(R.string.forward) + " " + forward_cnt;
             }
         });
     }
