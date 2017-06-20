@@ -21,9 +21,12 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.control.HotTagsControl;
 import com.hn.d.valley.service.NewsService;
 
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -38,7 +41,7 @@ import java.util.List;
  */
 public class HotInformationUIView extends BaseContentUIView {
 
-    List<String> mTypeList;
+    List<String> mAllTypeList, mMyTypeList;
     SlidingTabLayout mSlidTabLayout;
     UIViewPager mViewPager;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
@@ -64,6 +67,21 @@ public class HotInformationUIView extends BaseContentUIView {
         super.initOnShowContentLayout();
         mSlidTabLayout = v(R.id.slid_tab_layout);
         mViewPager = v(R.id.view_pager);
+
+        click(R.id.add_tag_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new HotTagsManageUIView(mAllTypeList).setTagsAction1(new Action1<List<String>>() {
+                    @Override
+                    public void call(List<String> list) {
+                        mMyTypeList = list;
+                        mViewPager.getAdapter().notifyDataSetChanged();
+                        mSlidTabLayout.setViewPager(mViewPager);
+                        mViewPager.setCurrentItem(0);
+                    }
+                }));
+            }
+        });
 
         initViewPager();
         initTabLayout();
@@ -95,7 +113,8 @@ public class HotInformationUIView extends BaseContentUIView {
                         if (bean == null || bean.isEmpty()) {
                             showEmptyLayout();
                         } else {
-                            mTypeList = bean;
+                            mAllTypeList = bean;
+                            mMyTypeList = HotTagsControl.INSTANCE.getMyTags(mAllTypeList);
                             showContentLayout();
                         }
                     }
@@ -145,18 +164,18 @@ public class HotInformationUIView extends BaseContentUIView {
         mViewPager.setAdapter(new UIPagerAdapter() {
             @Override
             protected IView getIView(int position) {
-                final HotInfoListUIView uiView = new HotInfoListUIView(mTypeList.get(position));
+                final HotInfoListUIView uiView = new HotInfoListUIView(mMyTypeList.get(position));
                 return uiView;
             }
 
             @Override
             public int getCount() {
-                return mTypeList.size();
+                return mMyTypeList.size();
             }
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return mTypeList.get(position);
+                return mMyTypeList.get(position);
             }
         });
     }
@@ -165,5 +184,9 @@ public class HotInformationUIView extends BaseContentUIView {
     public void onSkinChanged(ISkin skin) {
         super.onSkinChanged(skin);
         mSlidTabLayout.setTextSelectColor(skin.getThemeSubColor());
+        mSlidTabLayout.setIndicatorHeight(getDimensionPixelOffset(R.dimen.base_line));
+        mSlidTabLayout.setIndicatorColor(skin.getThemeSubColor());
+        mSlidTabLayout.setIndicatorStyle(SlidingTabLayout.STYLE_NORMAL);
+        mSlidTabLayout.setIndicatorWidthEqualTitle(true);
     }
 }

@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.home.recommend;
+package com.hn.d.valley.main.found.sub;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -14,9 +14,9 @@ import com.angcyo.uiview.github.item.touch.helper.ChannelEntity;
 import com.angcyo.uiview.github.item.touch.helper.ItemDragHelperCallback;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.R;
-import com.hn.d.valley.bean.realm.Tag;
-import com.hn.d.valley.control.TagsControl;
+import com.hn.d.valley.control.HotTagsControl;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
 import java.util.ArrayList;
@@ -25,34 +25,18 @@ import java.util.List;
 import rx.functions.Action1;
 
 /**
- * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
- * 项目名称：
- * 类的描述：标签管理
- * 创建人员：Robi
- * 创建时间：2017/02/23 11:23
- * 修改人员：Robi
- * 修改时间：2017/02/23 11:23
- * 修改备注：
- * Version: 1.0.0
+ * 热点资讯, 标签管理
  */
-@Deprecated
-public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
+public class HotTagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
-    List<Tag> mAllTag, mMyTag, mOtherTag;
+    List<String> mAllTag, mMyTag, mOtherTag;
     boolean isChanged = false;
-    Action1<List<Tag>> mTagsAction1;
+    Action1<List<String>> mTagsAction1;
 
-    public TagsManageUIView(List<Tag> allTag, Action1<List<Tag>> tagsAction1) {
+    public HotTagsManageUIView(List<String> allTag) {
         mAllTag = allTag;
-        mMyTag = new ArrayList<>();
-        mOtherTag = new ArrayList<>();
-        mTagsAction1 = tagsAction1;
-    }
-
-    @Override
-    public void onViewLoad() {
-        super.onViewLoad();
-        TagsControl.initMyTags(mAllTag, mMyTag, mOtherTag);
+        mMyTag = HotTagsControl.INSTANCE.getMyTags(mAllTag);
+        mOtherTag = HotTagsControl.INSTANCE.getOtherTags(mAllTag, mMyTag);
     }
 
     @Override
@@ -63,6 +47,11 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     @Override
     protected int getItemLayoutId(int viewType) {
         return R.layout.item_recycler_view;
+    }
+
+    public HotTagsManageUIView setTagsAction1(Action1<List<String>> tagsAction1) {
+        mTagsAction1 = tagsAction1;
+        return this;
     }
 
     @Override
@@ -93,7 +82,8 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     @Override
                     public void onFinish(String ids) {
                         isChanged = true;
-                        TagsControl.setMyTagString(ids);
+                        mMyTag = RUtils.split(ids);
+                        HotTagsControl.INSTANCE.setMyTagsString(ids);
                     }
                 });
                 ((GridLayoutManager) recyclerView.getLayoutManager()).setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -118,10 +108,10 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
         }));
     }
 
-    List<ChannelEntity> get(List<Tag> tags) {
+    List<ChannelEntity> get(List<String> tags) {
         List<ChannelEntity> entity = new ArrayList<>();
-        for (Tag g : tags) {
-            entity.add(new ChannelEntity(g.getId(), g.getName()));
+        for (String tag : tags) {
+            entity.add(new ChannelEntity(tag, tag));
         }
         return entity;
     }
@@ -130,9 +120,7 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     public void onViewUnload() {
         super.onViewUnload();
         if (isChanged && mTagsAction1 != null) {
-            List<Tag> tags = new ArrayList<>();
-            TagsControl.initMyTags(mAllTag, tags);
-            mTagsAction1.call(tags);
+            mTagsAction1.call(mMyTag);
         }
     }
 }

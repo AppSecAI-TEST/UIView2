@@ -10,8 +10,8 @@
 
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/image_view"
-        android:layout_width="@dimen/base_xxhdpi"
-        android:layout_height="@dimen/base_xxhdpi"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:contentDescription="@string/is_circle"
         android:src="@drawable/default_avatar"/>
 

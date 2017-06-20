@@ -2,6 +2,7 @@ package com.hn.d.valley.main.found.sub;
 
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RTextImageLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
@@ -31,7 +33,7 @@ import java.util.List;
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：
+ * 类的描述：资讯列表
  * 创建人员：Robi
  * 创建时间：2017/03/23 11:06
  * 修改人员：Robi
@@ -72,7 +74,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             public void onCreateTextView(TextView textView) {
                 textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
+                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_size16));
             }
 
             @Override
@@ -86,9 +88,18 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
     }
 
     public static void initItem(final RBaseViewHolder holder, HotInfoListBean dataBean) {
-        holder.fillView(dataBean);
+        //holder.fillView(dataBean);
+        String author = dataBean.getAuthor();
+        if (TextUtils.isEmpty(author)) {
+            author = ValleyApp.getApp().getString(R.string.information_klg);
+        }
+        holder.tv(R.id.author_view).setText(author);
 
-        holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getDate() * 1000, true));
+        int reply_cnt = dataBean.getReply_cnt();
+        holder.tv(R.id.reply_cnt_view).setText(reply_cnt + "");
+        holder.tv(R.id.reply_cnt_view).setVisibility(reply_cnt <= 0 ? View.GONE : View.VISIBLE);
+
+        holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getDate() * 1000, false));
 
         HnGlideImageView imageView = holder.v(R.id.image_view);
         imageView.setImageUrl(dataBean.getLogo());
@@ -169,6 +180,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
+        L.e("call: onUILoadData([page])-> " + classify);
         add(RRetrofit
                 .create(NewsService.class)
                 .abstract_(Param.buildInfoMap("classify:" + classify, "random:0", "amount:" + Constant.DEFAULT_PAGE_DATA_COUNT, "lastid:" + lastId))

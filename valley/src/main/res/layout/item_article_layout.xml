@@ -52,7 +52,7 @@
             android:id="@+id/media_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/base_xhdpi"
+            android:layout_marginBottom="@dimen/base_hdpi"
             android:layout_marginTop="@dimen/base_xhdpi">
 
             <com.angcyo.uiview.widget.RTextImageLayout
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/play_redianzixun"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/video_time_view"
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|bottom"
                 android:layout_marginEnd="@dimen/base_ldpi"
-                android:visibility="invisible"
+                android:visibility="gone"
                 tools:text="00:07"/>
 
         </FrameLayout>
