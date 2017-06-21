@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.design.IWebView;
 import com.angcyo.uiview.utils.RUtils;
 import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
@@ -274,6 +275,10 @@ public class X5WebView extends WebView implements IWebView {
     @SuppressLint("SetJavaScriptEnabled")
     public X5WebView(Context arg0, AttributeSet arg1) {
         super(arg0, arg1);
+        if (isInEditMode()) {
+            return;
+        }
+
         this.setWebViewClientExtension(new X5WebViewEventHandler(this));// 配置X5webview的事件处理
         this.setWebViewClient(client);
         this.setWebChromeClient(chromeClient);
@@ -347,7 +352,6 @@ public class X5WebView extends WebView implements IWebView {
         webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
         //webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
         webSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
-
         // this.getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
         // settings 的设计
 
@@ -542,6 +546,14 @@ public class X5WebView extends WebView implements IWebView {
 
     public boolean isStopInTop() {
         return isStopInTop;
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int measuredWidth = getMeasuredWidth();
+        int measuredHeight = getMeasuredHeight();
+        L.e("call: onMeasure([widthMeasureSpec, heightMeasureSpec])-> " + measuredWidth + " " + measuredHeight);
     }
 
     @Override

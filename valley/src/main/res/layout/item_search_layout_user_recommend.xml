@@ -8,13 +8,37 @@
     android:background="@color/white"
     android:padding="@dimen/base_xhdpi">
 
-    <com.angcyo.uiview.widget.RTextView
-        android:id="@+id/tip_view"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/tip_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/base_hdpi"
-        android:text="@string/user_ecommend_tip"
-        app:r_left_width="2dp"/>
+        android:background="@drawable/base_bg_selector"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/base_xhdpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_xhdpi"
+        android:visibility="visible">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tip_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/base_hdpi"
+            android:text="@string/user_ecommend_tip"
+            app:r_left_width="2dp"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tv_more"
+            style="@style/DarkTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableEnd="@drawable/next"
+            android:gravity="end"
+            android:text="@string/more"/>
+
+    </LinearLayout>
 
     <com.angcyo.uiview.recycler.RRecyclerView
         android:id="@+id/recycler_view"

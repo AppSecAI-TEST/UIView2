@@ -1,5 +1,9 @@
 package com.hn.d.valley.bean;
 
+import com.angcyo.uiview.utils.RUtils;
+
+import java.util.List;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -38,6 +42,12 @@ public class HotInfoListBean {
     private String imgs;
     private int reply_cnt;
     private String logo;
+    /**
+     * date : 1486405080
+     * media :
+     */
+
+    private String media;
 
     public int getId() {
         return id;
@@ -107,6 +117,10 @@ public class HotInfoListBean {
         return imgs;
     }
 
+    public List<String> getImgsList() {
+        return RUtils.split(getImgs());
+    }
+
     public void setImgs(String imgs) {
         this.imgs = imgs;
     }
@@ -125,5 +139,13 @@ public class HotInfoListBean {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getMedia() {
+        return media;
+    }
+
+    public void setMedia(String media) {
+        this.media = media;
     }
 }

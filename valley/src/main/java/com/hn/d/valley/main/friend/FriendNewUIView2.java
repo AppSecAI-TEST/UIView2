@@ -94,9 +94,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
     }
 
     private List<LikeUserInfoBean> CustomMessage2LikeUserInfo(List<CustomMessageBean> datas) {
-
         List<LikeUserInfoBean> list = new ArrayList<>();
-
         for(CustomMessageBean bean : datas) {
             list.add(bean.convert());
         }

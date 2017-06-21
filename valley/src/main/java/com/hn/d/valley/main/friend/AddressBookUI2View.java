@@ -138,8 +138,8 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 //                                        } else {
                                 if (mContacts != null) {
                                     List<AbsContactItem> datas = new ArrayList<>();
-                                    for (Iterator<AbsContactItem> it = mContacts.iterator(); it.hasNext(); ) {
-                                        PhoneContactItem item = (PhoneContactItem) it.next();
+                                    for (AbsContactItem mContact : mContacts) {
+                                        PhoneContactItem item = (PhoneContactItem) mContact;
                                         boolean hit = ContactSearch.hitContactInfo(item.getContactsInfo(), new TextQuery(et_search.getText().toString()));
                                         if (!hit) {
                                             continue;
@@ -256,7 +256,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     private void checkPhoneMatch(final List<AbsContactItem> absContactItems) {
         String phones = buildJsonParam(absContactItems);
         RRetrofit.create(ContactService.class)
-                .phoneUser(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:" + phones
+                .phoneUser3(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:" + phones
                         , "phone_model:" + Build.MODEL, "device_id:" + Build.DEVICE))
                 .compose(Rx.transformer(PhoneUserList.class))
                 .subscribe(new BaseSingleSubscriber<PhoneUserList>() {
@@ -572,7 +572,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                 .append("_invite_")
                 .append(TimeUtil.getNowDatetime());
 
-        String encodeInfo = RSA.encodeInfo(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
+        String encodeInfo = RSA.encode(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
         sb = new StringBuilder();
         sb.append("【恐龙谷】")
                 .append(UserCache.getUserAccount())

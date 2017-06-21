@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
@@ -24,7 +25,9 @@ import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.PlaceholderView;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextImageLayout;
@@ -37,9 +40,12 @@ import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.UserRecommendBean;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.main.me.setting.UserRecommendUIView;
 import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.service.NewsService;
+import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
@@ -108,14 +114,20 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
 
                     @Override
                     public void onCreateTextView(TextView textView) {
-                        textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
+                        textView.setMaxLines(3);
+                        textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.contact_letter_idx_bg));
                         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                                holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
+                                holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_size18));
                     }
 
                     @Override
                     public void displayImage(RImageView imageView, String url) {
                         HotInfoListUIView.displayImage(imageView, url);
+                    }
+
+                    @Override
+                    public boolean isVideoType() {
+                        return false;
                     }
                 });
 
@@ -152,6 +164,11 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         @Override
                         public void displayImage(RImageView imageView, String url) {
                             HotInfoListUIView.displayImage(imageView, url);
+                        }
+
+                        @Override
+                        public boolean isVideoType() {
+                            return false;
                         }
                     });
                     textImageLayout.setImage(thumbUrl);
@@ -276,7 +293,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 holder.v(R.id.tip_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        mParentILayout.startIView(new HotInformationUIView());
                     }
                 });
             }
@@ -291,9 +308,31 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                             startIView(new SearchNextUIView());
                         }
                     });
+
+                    RelativeLayout root_layout = holder.v(R.id.root_layout);
+                    switch (SkinUtils.getSkin()) {
+                        case SkinManagerUIView.SKIN_BLACK:
+                            root_layout.setBackgroundResource(R.drawable.pic_shouyishou_2_black);
+                            break;
+                        case SkinManagerUIView.SKIN_GREEN:
+                            root_layout.setBackgroundResource(R.drawable.pic_shouyishou_2_green);
+                            break;
+                        case SkinManagerUIView.SKIN_BLUE:
+                            root_layout.setBackgroundResource(R.drawable.pic_shouyishou_2_blue);
+                            break;
+                    }
+
                 } else {
                     RTextView tv = holder.v(R.id.tip_view);
                     tv.setDefaultSKin(R.string.user_ecommend_tip);
+                    RTextView tv_more = holder.v(R.id.tv_more);
+
+                    tv_more.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startIView(new UserRecommendUIView());
+                        }
+                    });
 
                     RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
                     if (mDecor == null) {
@@ -313,6 +352,12 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 if (posInData == 0) {
                     holder.v(R.id.tip_layout).setVisibility(View.VISIBLE);
                     tv.setDefaultSKin(R.string.new_discuss_tip);
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    });
                 } else {
                     holder.v(R.id.tip_layout).setVisibility(View.GONE);
                 }
@@ -429,7 +474,17 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
         @Override
         protected void onBindView(RBaseViewHolder holder, int position, final UserRecommendBean bean) {
             holder.tv(R.id.username_view).setText(bean.getUsername());
-            holder.tv(R.id.fans_count_view).setText(bean.getFans_count() + "");
+//            holder.tv(R.id.fans_count_view).setText(bean.getFans_count() + "");
+            TextView tv_title = holder.tv(R.id.tv_title);
+            TextView tv_focus = holder.tv(R.id.tv_focus);
+
+            tv_title.setText(String.format("%s %s", bean.getCompany(), bean.getJob()));
+
+            tv_focus.setBackground(ResUtil.generateRoundBorderDrawable(mActivity.getResources().getDimensionPixelOffset(R.dimen.little_round_radius),
+                    mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line),
+                    SkinHelper.getSkin().getThemeSubColor(),
+                    SkinHelper.getSkin().getThemeSubColor()));
+            tv_focus.setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
             HnGlideImageView imageView = holder.v(R.id.image_view);
             imageView.setImageUrl(bean.getAvatar());

@@ -331,7 +331,7 @@
     <string name="text_context">通讯录好友</string>
     <string name="user_ecommend_tip">名人推荐</string>
     <string name="new_hot_info_tip">最新资讯</string>
-    <string name="new_discuss_tip">最新动态</string>
+    <string name="new_discuss_tip">最热动态</string>
     <string name="more">更多</string>
     <string name="search_history_tip">搜索历史</string>
     <string name="search_hotword_tip">热门搜索</string>
@@ -764,6 +764,8 @@
     <string name="save_error">保存失败.</string>
     <string name="save_to_phone">保存至手机</string>
     <string name="save_to_phone_format">保存至:%1$s</string>
+    <string name="text_tocus">关注</string>
+    <string name="text_user_recommend">名人推荐</string>
     <string name="information_klg">恐龙谷资讯</string>
     <string name="information_detail_title">资讯详情</string>
     <string name="collect_success">收藏成功</string>

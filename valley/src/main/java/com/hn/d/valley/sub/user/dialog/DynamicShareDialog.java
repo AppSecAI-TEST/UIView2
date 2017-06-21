@@ -17,10 +17,12 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.control.ShareControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.control.VoiceStatusInfo;
+import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
@@ -57,10 +59,17 @@ import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 public class DynamicShareDialog extends UIIDialogImpl {
     UserDiscussListBean.DataListBean mDataListBean;
     CompositeSubscription mSubscription;
+    HotInfoListBean mHotInfoListBean;
 
     public DynamicShareDialog(UserDiscussListBean.DataListBean dataListBean,
                               CompositeSubscription subscription) {
         mDataListBean = dataListBean;
+        mSubscription = subscription;
+    }
+
+    public DynamicShareDialog(HotInfoListBean dataListBean,
+                              CompositeSubscription subscription) {
+        mHotInfoListBean = dataListBean;
         mSubscription = subscription;
     }
 
@@ -76,45 +85,6 @@ public class DynamicShareDialog extends UIIDialogImpl {
         //标题
         //mViewHolder.tv(R.id.title_view).setText(getString(R.string.dynamic_share_, mDataListBean.getAuthor()));
 
-        //关注
-        mViewHolder.v(R.id.follow_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishDialog();
-                mSubscription.add(RRetrofit.create(UserService.class)
-                        .attention(Param.buildMap("to_uid:" + mDataListBean.getUid()))
-                        .compose(Rx.transformer(String.class))
-                        .subscribe(new BaseSingleSubscriber<String>() {
-
-                            @Override
-                            public void onSucceed(String bean) {
-                                T_.show(getString(R.string.handle_success));
-                            }
-                        }));
-            }
-        });
-
-        //收藏/取消收藏
-        initCollectView();
-
-        //举报
-        mViewHolder.v(R.id.report_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishDialog();
-                mParentILayout.startIView(new ReportUIView(mDataListBean));
-            }
-        });
-
-        //复制
-        mViewHolder.v(R.id.copy_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finishDialog();
-                ClipboardUtils.copyText(mDataListBean.getContent());
-                T_.show(getString(R.string.copy_tip));
-            }
-        });
 
         //取消
         mViewHolder.v(R.id.cancel_view).setOnClickListener(new View.OnClickListener() {
@@ -124,71 +94,172 @@ public class DynamicShareDialog extends UIIDialogImpl {
             }
         });
 
-        //分享
-        String mediaType = mDataListBean.getMedia_type();
-        String shareDes = getString(R.string.share);
-        String thumbUrl = mDataListBean.getUser_info().getAvatar();
-        List<String> mediaList = mDataListBean.getMediaList();
-        if (DynamicType.isImage(mediaType)) {
-            shareDes = getString(R.string.share_image);
-            if (mediaList.size() > 0) {
-                thumbUrl = mediaList.get(0);
-            }
-        } else if (DynamicType.isText(mediaType)) {
-            shareDes = getString(R.string.share_text);
-        } else if (DynamicType.isVideo(mediaType)) {
-            shareDes = getString(R.string.share_video);
-            if (mediaList.size() > 0) {
-                String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
-                if (!TextUtils.isEmpty(s)) {
-                    thumbUrl = s;
-                }
+        //动态分享
+        if (mDataListBean != null) {
+            //关注
+            mViewHolder.v(R.id.follow_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishDialog();
+                    mSubscription.add(RRetrofit.create(UserService.class)
+                            .attention(Param.buildMap("to_uid:" + mDataListBean.getUid()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
 
-            }
-        } else if (DynamicType.isVoice(mediaType)) {
-            shareDes = getString(R.string.share_voice);
-            if (mediaList.size() > 0) {
-                String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
-                if (!TextUtils.isEmpty(s) && !VoiceStatusInfo.NOPIC.equalsIgnoreCase(s)) {
-                    thumbUrl = s;
-                }
-            }
-        }
-        ShareControl.shareDynamicControl(mActivity, mViewHolder,
-                thumbUrl,
-                mDataListBean.getDiscuss_id(),
-                getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()),
-                shareDes, this);
-
-        //分享恐龙谷
-        mViewHolder.click(R.id.share_klg, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getILayout().finishIView(DynamicShareDialog.class);
-                ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
-                        , null, true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                            @Override
-                            public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
-
-                                requestCallback.onSuccess("");
-
-                                ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                                FriendBean friendBean = contactItem.getFriendBean();
-                                SessionTypeEnum type = SessionTypeEnum.P2P;
-                                // 暂时 size > 1 判断 team
-                                if (absContactItems.size() > 1) {
-                                    type = SessionTypeEnum.Team;
+                                @Override
+                                public void onSucceed(String bean) {
+                                    T_.show(getString(R.string.handle_success));
                                 }
-                                DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mDataListBean);
-                                DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
-                                IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
-                                msgService().sendMessage(message, false);
+                            }));
+                }
+            });
 
-                            }
-                        });
+            //收藏/取消收藏
+            initCollectView();
+
+            //举报
+            mViewHolder.v(R.id.report_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishDialog();
+                    mParentILayout.startIView(new ReportUIView(mDataListBean));
+                }
+            });
+
+            //复制
+            mViewHolder.v(R.id.copy_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishDialog();
+                    ClipboardUtils.copyText(mDataListBean.getContent());
+                    T_.show(getString(R.string.copy_tip));
+                }
+            });
+
+            //分享
+            String mediaType = mDataListBean.getMedia_type();
+            String shareDes = getString(R.string.share);
+            String thumbUrl = mDataListBean.getUser_info().getAvatar();
+            List<String> mediaList = mDataListBean.getMediaList();
+            if (DynamicType.isImage(mediaType)) {
+                shareDes = getString(R.string.share_image);
+                if (mediaList.size() > 0) {
+                    thumbUrl = mediaList.get(0);
+                }
+            } else if (DynamicType.isText(mediaType)) {
+                shareDes = getString(R.string.share_text);
+            } else if (DynamicType.isVideo(mediaType)) {
+                shareDes = getString(R.string.share_video);
+                if (mediaList.size() > 0) {
+                    String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
+                    if (!TextUtils.isEmpty(s)) {
+                        thumbUrl = s;
+                    }
+
+                }
+            } else if (DynamicType.isVoice(mediaType)) {
+                shareDes = getString(R.string.share_voice);
+                if (mediaList.size() > 0) {
+                    String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
+                    if (!TextUtils.isEmpty(s) && !VoiceStatusInfo.NOPIC.equalsIgnoreCase(s)) {
+                        thumbUrl = s;
+                    }
+                }
             }
-        });
+            ShareControl.shareDynamicControl(mActivity, mViewHolder,
+                    thumbUrl,
+                    mDataListBean.getDiscuss_id(),
+                    getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()),
+                    shareDes, this);
 
+            //分享恐龙谷
+            mViewHolder.click(R.id.share_klg, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getILayout().finishIView(DynamicShareDialog.class);
+                    ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                            , null, true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                                @Override
+                                public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+
+                                    requestCallback.onSuccess("");
+
+                                    ContactItem contactItem = (ContactItem) absContactItems.get(0);
+                                    FriendBean friendBean = contactItem.getFriendBean();
+                                    SessionTypeEnum type = SessionTypeEnum.P2P;
+                                    // 暂时 size > 1 判断 team
+                                    if (absContactItems.size() > 1) {
+                                        type = SessionTypeEnum.Team;
+                                    }
+                                    DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mDataListBean);
+                                    DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
+                                    IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
+                                    msgService().sendMessage(message, false);
+
+                                }
+                            });
+                }
+            });
+        }
+
+        //资讯分享
+        if (mHotInfoListBean != null) {
+
+            final String detailUrl = InformationDetailUIView.Companion.getDetailUrl(mHotInfoListBean.getId());
+
+            //复制
+            mViewHolder.v(R.id.copy_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishDialog();
+                    ClipboardUtils.copyText(detailUrl);
+                    T_.show(getString(R.string.copy_tip));
+                }
+            });
+
+            //举报
+            mViewHolder.v(R.id.follow_view).setVisibility(View.INVISIBLE);
+
+            mViewHolder.v(R.id.report_view).setVisibility(View.INVISIBLE);
+            mViewHolder.v(R.id.report_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishDialog();
+                    //mParentILayout.startIView(new ReportUIView(mDataListBean));
+                }
+            });
+
+            //分享
+            String mediaType = mHotInfoListBean.getType();
+            String shareDes = mHotInfoListBean.getTitle();
+            String thumbIco = mHotInfoListBean.getLogo();
+            List<String> mediaList = mHotInfoListBean.getImgsList();
+
+            if ("picture".equalsIgnoreCase(mediaType)) {
+                if (mediaList.size() > 0) {
+                    thumbIco = mediaList.get(0);
+                }
+            } else if ("article".equalsIgnoreCase(mediaType)) {
+            } else if ("video".equalsIgnoreCase(mediaType)) {
+                if (mediaList.size() > 0) {
+                    thumbIco = mediaList.get(0);
+                }
+                String videoUrl = mHotInfoListBean.getMedia();
+            } else if ("voice".equalsIgnoreCase(mediaType)) {
+                if (mediaList.size() > 0) {
+                    String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
+                    if (!TextUtils.isEmpty(s) && !VoiceStatusInfo.NOPIC.equalsIgnoreCase(s)) {
+                        thumbIco = s;
+                    }
+                }
+            }
+
+            ShareControl.shareHotInfoControl(mActivity, mViewHolder,
+                    thumbIco,
+                    detailUrl,
+                    mHotInfoListBean.getAuthor(),
+                    shareDes, this);
+        }
     }
 
     private void initCollectView() {

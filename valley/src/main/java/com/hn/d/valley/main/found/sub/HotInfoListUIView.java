@@ -16,6 +16,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextImageLayout;
@@ -51,11 +52,6 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
      */
     String classify;
 
-    /**
-     * 最小id, 用来分页
-     */
-    String lastId = "";
-
     public HotInfoListUIView(String classify) {
         this.classify = classify;
     }
@@ -65,6 +61,9 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         textImageLayout.setConfigCallback(new RTextImageLayout.ConfigCallback() {
             @Override
             public int[] getImageSize(int position) {
+                if (isVideo) {
+                    return new int[]{-1, (int) (ScreenUtil.density * 100)};
+                }
                 return null;
             }
 
@@ -86,6 +85,11 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 HotInfoListUIView.displayImage(imageView, url);
                 L.i("RTextImageLayout: displayImage([imageView, url])-> " + url);
+            }
+
+            @Override
+            public boolean isVideoType() {
+                return isVideo;
             }
         });
         textImageLayout.setText(text);
@@ -112,7 +116,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iLayout.startIView(new InformationDetailUIView(String.valueOf(dataBean.getId())));
+                iLayout.startIView(new InformationDetailUIView(dataBean));
             }
         });
 
@@ -189,7 +193,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         add(RRetrofit
                 .create(NewsService.class)
                 .abstract_(Param.buildInfoMap("classify:" + classify, "random:0", "uid:" + UserCache.getUserAccount(),
-                        "amount:" + Constant.DEFAULT_PAGE_DATA_COUNT, "lastid:" + lastId))
+                        "amount:" + Constant.DEFAULT_PAGE_DATA_COUNT, "lastid:" + last_id))
                 .compose(Rx.transformerList(HotInfoListBean.class))
                 .subscribe(new BaseSingleSubscriber<List<HotInfoListBean>>() {
 
@@ -198,7 +202,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                         if (bean == null || bean.isEmpty()) {
 
                         } else {
-                            lastId = String.valueOf(bean.get(bean.size() - 1).getId());
+                            last_id = String.valueOf(bean.get(bean.size() - 1).getId());
                             onUILoadDataEnd(bean);
                         }
                     }

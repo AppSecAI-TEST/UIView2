@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 
 import com.umeng.analytics.MobclickAgent;
@@ -125,6 +126,17 @@ public class UM {
             UMImage umThumb = new UMImage(activity, thumbRes);
             umImage.setThumb(umThumb);
         }
+        new ShareAction(activity)
+                .setPlatform(shareMedia)
+                .withMedia(umImage)
+                .setCallback(listener)
+                .share();
+    }
+
+    public static void shareImage(Activity activity, SHARE_MEDIA shareMedia,
+                                  Bitmap bitmap,
+                                  UMShareListener listener) {
+        UMImage umImage = new UMImage(activity, bitmap);
         new ShareAction(activity)
                 .setPlatform(shareMedia)
                 .withMedia(umImage)

@@ -89,6 +89,28 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/copy_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="@dimen/base_ldpi"
+            android:drawableTop="@drawable/share_fuzhi_selector"
+            android:gravity="center"
+            android:text="@string/copy"/>
+
+        <TextView
+            android:id="@+id/report_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawablePadding="@dimen/base_ldpi"
+            android:drawableTop="@drawable/share_jubao_selector"
+            android:gravity="center"
+            android:text="@string/report"/>
+
+        <TextView
             android:id="@+id/follow_view"
             style="@style/DarkTextStyle"
             android:layout_width="0dp"
@@ -111,27 +133,6 @@
             android:text="@string/collect"
             android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/report_view"
-            style="@style/DarkTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawablePadding="@dimen/base_ldpi"
-            android:drawableTop="@drawable/share_jubao_selector"
-            android:gravity="center"
-            android:text="@string/report"/>
-
-        <TextView
-            android:id="@+id/copy_view"
-            style="@style/DarkTextStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:drawablePadding="@dimen/base_ldpi"
-            android:drawableTop="@drawable/share_fuzhi_selector"
-            android:gravity="center"
-            android:text="@string/copy"/>
 
         <View
             android:layout_width="0dp"

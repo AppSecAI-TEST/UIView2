@@ -18,6 +18,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import java.util.List;
 
 import static com.hn.d.valley.control.ShareControl.shareDynamic;
+import static com.hn.d.valley.control.ShareControl.shareQrcode;
 
 /**
  * Created by hewking on 2017/3/22.
@@ -108,10 +109,10 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        shareDynamic(mActivity, SHARE_MEDIA.WEIXIN, userIco, itemId, shareTitle, shareDes);
+                        shareQrcode(mActivity,SHARE_MEDIA.WEIXIN);
                     }
                 });
-                bindItemView(holder,"邀请微信好友","微信好友",R.drawable.shaoyishao);
+                bindItemView(holder,"邀请微信好友","微信好友",R.drawable.weixin_tianjiahaoyou);
             }
         }));
 
@@ -121,10 +122,10 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new HnScanUIView());
+                        shareQrcode(mActivity,SHARE_MEDIA.QQ);
                     }
                 });
-                bindItemView(holder,"邀请QQ好友","QQ好友",R.drawable.shaoyishao);
+                bindItemView(holder,"邀请QQ好友","QQ好友",R.drawable.qq_tianjiahaoyou);
             }
         }));
 

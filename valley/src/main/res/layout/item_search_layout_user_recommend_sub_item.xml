@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="120dp"
     android:layout_height="wrap_content"
@@ -15,22 +14,25 @@
 
         <com.hn.d.valley.widget.HnGlideImageView
             android:id="@+id/image_view"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:scaleType="centerCrop"
+            android:layout_width="@dimen/avatar_image_size_little"
+            android:layout_height="@dimen/avatar_image_size_little"
+            android:contentDescription="@string/is_circle2"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:scaleType="centerInside"
+            android:layout_centerHorizontal="true"
             android:src="@drawable/zhanweitu_1"/>
 
-        <com.angcyo.uiview.widget.RTextView
-            android:id="@+id/fans_count_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@color/default_base_tran_dark2"
-            android:drawableEnd="@drawable/yonghu_fensi"
-            android:padding="@dimen/base_ldpi"
-            android:textColor="@color/white"
-            android:textSize="@dimen/default_text_size10"
-            tools:text="测试文本"/>
+        <!--<com.angcyo.uiview.widget.RTextView-->
+            <!--android:id="@+id/fans_count_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:background="@color/default_base_tran_dark2"-->
+            <!--android:drawableEnd="@drawable/yonghu_fensi"-->
+            <!--android:padding="@dimen/base_ldpi"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/default_text_size10"-->
+            <!--tools:text="测试文本"/>-->
 
         <com.angcyo.uiview.widget.RTextView
             android:id="@+id/username_view"
@@ -43,5 +45,36 @@
             android:ellipsize="end"
             android:maxLines="1"
             tools:text="测试文本"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tv_title"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/base_ldpi"
+            android:padding="@dimen/base_ldpi"
+            android:paddingLeft="@dimen/base_xhdpi"
+            android:paddingRight="@dimen/base_xhdpi"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="测试文本"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tv_focus"
+            style="@style/DarkTextStyle"
+            android:layout_width="@dimen/base_80dpi"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:gravity="center"
+            android:paddingTop="@dimen/base_ldpi"
+            android:paddingBottom="@dimen/base_ldpi"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/text_tocus"/>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>

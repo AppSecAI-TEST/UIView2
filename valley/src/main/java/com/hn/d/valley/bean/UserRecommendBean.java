@@ -39,6 +39,25 @@ public class UserRecommendBean {
     private String company;
     private int fans_count;
 
+    public LikeUserInfoBean convert() {
+
+
+        LikeUserInfoBean userInfo = new LikeUserInfoBean();
+
+        userInfo.setAvatar(getAvatar());
+        userInfo.setUid(getUid());
+        userInfo.setUsername(getUsername());
+        userInfo.setAuth_type(getAuth_type());
+        userInfo.setIs_auth(getIs_auth());
+        userInfo.setSex(getSex());
+//        userInfo.setGrade(g);
+        userInfo.setSignature(String.format("%s %s %s ",company,job,true_name));
+
+        return userInfo;
+
+
+    }
+
     public String getUid() {
         return uid;
     }
