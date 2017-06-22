@@ -36,15 +36,18 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseRecyclerUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.oss.OssHelper;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.UserRecommendBean;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.me.setting.UserRecommendUIView;
 import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.service.NewsService;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnGlideImageView;
 
@@ -156,7 +159,8 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
 
                         @Override
                         public void onCreateTextView(TextView textView) {
-                            textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
+                            textView.setMaxLines(3);
+                            textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.contact_letter_idx_bg));
                             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                                     holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
                         }
@@ -476,15 +480,34 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
             holder.tv(R.id.username_view).setText(bean.getUsername());
 //            holder.tv(R.id.fans_count_view).setText(bean.getFans_count() + "");
             TextView tv_title = holder.tv(R.id.tv_title);
-            TextView tv_focus = holder.tv(R.id.tv_focus);
+            final TextView tv_focus = holder.tv(R.id.tv_focus);
 
             tv_title.setText(String.format("%s %s", bean.getCompany(), bean.getJob()));
 
             tv_focus.setBackground(ResUtil.generateRoundBorderDrawable(mActivity.getResources().getDimensionPixelOffset(R.dimen.little_round_radius),
                     mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line),
-                    SkinHelper.getSkin().getThemeSubColor(),
-                    SkinHelper.getSkin().getThemeSubColor()));
+                    ContextCompat.getColor(mActivity, R.color.base_text_color_dark) , SkinHelper.getSkin().getThemeSubColor()));
+
             tv_focus.setTextColor(SkinHelper.getSkin().getThemeSubColor());
+
+            tv_focus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    RRetrofit.create(UserService.class)
+                            .attention(Param.buildMap("to_uid:" + bean.getUid()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    super.onSucceed(bean);
+                                    tv_focus.setEnabled(false);
+                                    tv_focus.setText(R.string.text_had_focused);
+                                    tv_focus.setTextColor(ContextCompat.getColor(mActivity, R.color.base_text_color_dark));
+                                }
+                            });
+
+                }
+            });
 
             HnGlideImageView imageView = holder.v(R.id.image_view);
             imageView.setImageUrl(bean.getAvatar());

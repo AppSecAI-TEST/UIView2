@@ -16,7 +16,7 @@
             android:id="@+id/image_view"
             android:layout_width="@dimen/avatar_image_size_little"
             android:layout_height="@dimen/avatar_image_size_little"
-            android:contentDescription="@string/is_circle2"
+            android:contentDescription="@string/is_circle"
             android:layout_marginTop="@dimen/base_xhdpi"
             android:scaleType="centerInside"
             android:layout_centerHorizontal="true"

@@ -48,9 +48,9 @@ public class UserRecommendBean {
         userInfo.setUid(getUid());
         userInfo.setUsername(getUsername());
         userInfo.setAuth_type(getAuth_type());
-        userInfo.setIs_auth(getIs_auth());
+//        userInfo.setIs_auth(getIs_auth());
         userInfo.setSex(getSex());
-//        userInfo.setGrade(g);
+        userInfo.setGrade("3");
         userInfo.setSignature(String.format("%s %s %s ",company,job,true_name));
 
         return userInfo;

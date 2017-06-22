@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.design.IWebView;
 import com.angcyo.uiview.utils.RUtils;
 import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
@@ -553,7 +552,7 @@ public class X5WebView extends WebView implements IWebView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int measuredWidth = getMeasuredWidth();
         int measuredHeight = getMeasuredHeight();
-        L.e("call: onMeasure([widthMeasureSpec, heightMeasureSpec])-> " + measuredWidth + " " + measuredHeight);
+        //L.e("call: onMeasure([widthMeasureSpec, heightMeasureSpec])-> " + measuredWidth + " " + measuredHeight);
     }
 
     @Override
