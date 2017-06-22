@@ -1515,6 +1515,10 @@ public class UserDiscussItemControl {
 //        ImagePicker.getInstance().getImageLoader().displayImage((Activity) imageView.getContext(),
 //                "", "", OssHelper.getImageThumb(url, width, height), imageView, 0, 0);
 
+        if (imageView instanceof RImageView) {
+            ((RImageView) imageView).setShowGifTip(false);
+        }
+
         File file = new File(url);
         if (file.exists()) {
             boolean isGif = "GIF".equalsIgnoreCase(ImageUtils.getImageType(file));
@@ -1593,6 +1597,10 @@ public class UserDiscussItemControl {
     }
 
     public static void displayJpeg(final ImageView imageView, final String url, final int width, final int height, final int imageSize) {
+        if (imageView instanceof RImageView) {
+            ((RImageView) imageView).setShowGifTip(false);
+        }
+
         Glide.with(imageView.getContext())
                 .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
                 .asBitmap()

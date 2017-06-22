@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.hn.d.valley.widget.groupView.HnFragmentLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -10,7 +11,8 @@
     <com.angcyo.uiview.widget.RNineImageLayout
         android:id="@+id/media_image_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        app:r_paddingRight="@dimen/base_50dpi"/>
 
     <!--视频播放按钮-->
     <com.hn.d.valley.widget.HnVideoPlayView
@@ -62,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:src="@drawable/key"
         android:visibility="gone"
         tools:text="00:07"/>
