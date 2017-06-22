@@ -42,6 +42,7 @@ import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
 import com.hn.d.valley.sub.user.dialog.DynamicShareDialog;
+import com.hn.d.valley.sub.user.sub.BaseDynamicListUIView;
 import com.hn.d.valley.sub.user.sub.CommentInputDialog;
 import com.hn.d.valley.sub.user.sub.CommentListUIView;
 import com.hn.d.valley.sub.user.sub.ForwardListUIView;
@@ -370,6 +371,19 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                     if (mCommentListUIView == null) {
                         mCommentListUIView = new CommentListUIView(mDataListBean.getDiscuss_id());
                         mCommentListUIView.bindParentILayout(mParentILayout);
+                        mCommentListUIView.setOnCommentListener(new BaseDynamicListUIView.OnCommentListener() {
+                            @Override
+                            public void onComment() {
+                                mDataListBean.setComment_cnt(String.valueOf(Integer.parseInt(mDataListBean.getComment_cnt()) + 1));
+                                mTabLayout.updateTabTitle();
+                            }
+
+                            @Override
+                            public void onDeleteComment() {
+                                mDataListBean.setComment_cnt(String.valueOf(Integer.parseInt(mDataListBean.getComment_cnt()) - 1));
+                                mTabLayout.updateTabTitle();
+                            }
+                        });
                     }
                     return mCommentListUIView;
                 }
@@ -483,6 +497,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                     public void onSucceed(String bean) {
                         T_.show(bean);
                         if (mCommentListUIView != null) {
+                            mCommentListUIView.onComment();
                             mCommentListUIView.loadData();
                             mCommentListUIView.scrollToTop();
                         }

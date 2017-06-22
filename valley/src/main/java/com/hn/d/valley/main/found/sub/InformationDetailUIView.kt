@@ -123,6 +123,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
                 }.setVisibility(View.GONE))
     }
 
+    /**分享对话框*/
     private fun showShareDialog() {
         startIView(DynamicShareDialog(hotInfoBean, mSubscriptions))
     }
@@ -333,6 +334,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
 
                     override fun onSucceed(bean: String) {
                         //T_.show(bean)
+                        mCommentListUIView?.onComment()
                         mCommentListUIView?.loadData()
                         mCommentListUIView?.scrollToTop()
                     }

@@ -50,6 +50,9 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
 
     protected ListType mListType;
 
+    OnCommentListener mOnCommentListener;
+
+
     public BaseDynamicListUIView(ListType listType) {
         mListType = listType;
     }
@@ -209,6 +212,12 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                             @Override
                             public void onClick(View v) {
                                 mRExBaseAdapter.deleteItem(dataBean);
+                                if (mOnCommentListener != null) {
+                                    mOnCommentListener.onDeleteComment();
+                                }
+                                if (mRExBaseAdapter.isItemEmpty()) {
+                                    onUILoadDataEnd(null);
+                                }
                                 add(RRetrofit.create(SocialService.class)
                                         .removeComment(Param.buildMap("type:" + (mListType == ListType.REPLY_TYPE ? "reply" : "comment"),
                                                 "item_id:" + (mListType == ListType.REPLY_TYPE ? dataBean.getReply_id() : dataBean.getComment_id())))
@@ -342,6 +351,19 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         }
     }
 
+    public void setOnCommentListener(OnCommentListener onCommentListener) {
+        mOnCommentListener = onCommentListener;
+    }
+
+    /**
+     * 发布成功调用
+     */
+    public void onComment() {
+        if (mOnCommentListener != null) {
+            mOnCommentListener.onComment();
+        }
+    }
+
     protected String getUserId() {
         return "";
     }
@@ -355,5 +377,19 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         COMMENT_TYPE,//评论列表
         INFO_COMMENT_TYPE,//资讯评论列表
         REPLY_TYPE//回复列表
+    }
+
+
+    public interface OnCommentListener {
+
+        /**
+         * 发布评论的回调
+         */
+        void onComment();
+
+        /**
+         * 删除评论的回调
+         */
+        void onDeleteComment();
     }
 }

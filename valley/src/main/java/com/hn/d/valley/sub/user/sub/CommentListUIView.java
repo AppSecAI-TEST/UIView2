@@ -45,6 +45,7 @@ public class CommentListUIView extends BaseDynamicListUIView {
 
     String discuss_id;
 
+
     public CommentListUIView(String discuss_id) {
         this(discuss_id, false);
     }
@@ -110,6 +111,12 @@ public class CommentListUIView extends BaseDynamicListUIView {
                             @Override
                             public void onClick(View v) {
                                 mRExBaseAdapter.deleteItem(dataBean);
+                                if (mOnCommentListener != null) {
+                                    mOnCommentListener.onDeleteComment();
+                                }
+                                if (mRExBaseAdapter.isItemEmpty()) {
+                                    onUILoadDataEnd(null);
+                                }
                                 add(RRetrofit.create(NewsService.class)
                                         .delete(Param.buildInfoMap("type:comment", "id:" + dataBean.getId()))
                                         .compose(Rx.transformer(String.class))
