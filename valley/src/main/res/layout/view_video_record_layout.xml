@@ -73,7 +73,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="170dp"
         android:layout_alignParentBottom="true"
         android:background="@color/base_white">
 
@@ -101,13 +101,17 @@
         android:id="@+id/record_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:visibility="gone">
+        app:r_expand_record_circle_max_offset="@dimen/base_45dpi"
+        app:r_expand_record_circle_max_radius="@dimen/base_40dpi"
+        app:r_expand_record_default_state="STATE_CLOSE"
+        tools:visibility="visible">
 
         <com.angcyo.uiview.recycler.RRecyclerView
             android:id="@+id/lj_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/base_100dpi"
+            android:layout_height="140dp"
             android:background="@color/base_white"
+            android:paddingTop="@dimen/base_xxxhdpi"
             android:tag="H"/>
 
         <ImageView
