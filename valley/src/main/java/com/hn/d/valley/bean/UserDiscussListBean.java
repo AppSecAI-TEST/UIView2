@@ -304,6 +304,10 @@ public class UserDiscussListBean {
             this.share_original_type = share_original_type;
         }
 
+        public boolean isForwardInformation() {
+            return "news".equalsIgnoreCase(getShare_original_type());
+        }
+
         public OriginalInfo getOriginal_info() {
             return original_info;
         }
@@ -555,6 +559,7 @@ public class UserDiscussListBean {
 
         public static class OriginalInfo {
 
+            boolean isForwardInformation = false;
             /**
              * status : 1
              * discuss_id : 180
@@ -574,6 +579,82 @@ public class UserDiscussListBean {
             private String content;
             private String username;
             private String avatar;
+            /**
+             * content : 转发资讯
+             * title : 习近平今天会见了特兰普
+             * news_id : 1002
+             * media : http://circleimg.klgwl.com/11.jpg
+             * media_type : 3
+             * logo : http://circleimg.klgwl.com/11.jpg
+             * author : 头条新闻
+             */
+
+            private String title;
+            private String news_id;
+            private String logo;
+            private String author;
+
+            public String getInformationVideoUrl() {
+                try {
+                    String media = getMedia();
+                    return media.substring(media.lastIndexOf('?') + 1, media.length());
+                } catch (Exception e) {
+                    return media;
+                }
+            }
+
+            public String getInformationVideoThumbUrl() {
+                try {
+                    String media = getMedia();
+                    return media.substring(0, media.lastIndexOf('?'));
+                } catch (Exception e) {
+                    return media;
+                }
+            }
+
+            public boolean isInformationVideoType() {
+                return "2".equalsIgnoreCase(getMedia_type()) || "video".equalsIgnoreCase(getMedia_type());
+            }
+
+            public boolean isForwardInformation() {
+                return isForwardInformation;
+            }
+
+            public void setForwardInformation(boolean forwardInformation) {
+                isForwardInformation = forwardInformation;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getNews_id() {
+                return news_id;
+            }
+
+            public void setNews_id(String news_id) {
+                this.news_id = news_id;
+            }
+
+            public String getLogo() {
+                return logo;
+            }
+
+            public void setLogo(String logo) {
+                this.logo = logo;
+            }
+
+            public String getAuthor() {
+                return author;
+            }
+
+            public void setAuthor(String author) {
+                this.author = author;
+            }
 
             public String getStatus() {
                 return status;
@@ -600,7 +681,10 @@ public class UserDiscussListBean {
             }
 
             public String getMedia() {
-                return media;
+                if (TextUtils.isEmpty(media)) {
+                    return "";
+                }
+                return media.replaceAll(";", ",");
             }
 
             public void setMedia(String media) {

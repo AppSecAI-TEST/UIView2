@@ -240,6 +240,9 @@ public class DynamicShareDialog extends UIIDialogImpl {
                     thumbIco = mediaList.get(0);
                 }
             } else if ("article".equalsIgnoreCase(mediaType)) {
+                if (mediaList.size() > 0) {
+                    thumbIco = mediaList.get(0);
+                }
             } else if ("video".equalsIgnoreCase(mediaType)) {
                 if (mediaList.size() > 0) {
                     thumbIco = mediaList.get(0);

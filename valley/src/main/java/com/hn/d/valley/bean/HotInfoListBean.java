@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
 import com.angcyo.uiview.utils.RUtils;
 
 import java.util.List;
@@ -48,6 +50,33 @@ public class HotInfoListBean {
      */
 
     private String media;
+
+    public static HotInfoListBean from(UserDiscussListBean.DataListBean.OriginalInfo originalInfo) {
+        HotInfoListBean bean;
+        String media = originalInfo.getMedia();
+        if (originalInfo.isInformationVideoType()) {
+            bean = HotInfoListBean.from(Integer.parseInt(originalInfo.getNews_id()), originalInfo.getAuthor(),
+                    originalInfo.getMedia_type(), originalInfo.getLogo(), originalInfo.getTitle(),
+                    originalInfo.getInformationVideoThumbUrl(), originalInfo.getInformationVideoUrl());
+        } else {
+            bean = HotInfoListBean.from(Integer.parseInt(originalInfo.getNews_id()), originalInfo.getAuthor(),
+                    originalInfo.getMedia_type(), originalInfo.getLogo(), originalInfo.getTitle(),
+                    media, "");
+        }
+        return bean;
+    }
+
+    public static HotInfoListBean from(int id, String author, String type, String logo, String title, String imgs, String videoUrl) {
+        HotInfoListBean bean = new HotInfoListBean();
+        bean.setId(id);
+        bean.setAuthor(author);
+        bean.setTitle(title);
+        bean.setType(type);
+        bean.setLogo(logo);
+        bean.setImgs(imgs);
+        bean.setMedia(videoUrl);
+        return bean;
+    }
 
     public int getId() {
         return id;
@@ -114,15 +143,18 @@ public class HotInfoListBean {
     }
 
     public String getImgs() {
-        return imgs;
-    }
-
-    public List<String> getImgsList() {
-        return RUtils.split(getImgs());
+        if (TextUtils.isEmpty(imgs)) {
+            return "";
+        }
+        return imgs.replaceAll(";", ",");
     }
 
     public void setImgs(String imgs) {
         this.imgs = imgs;
+    }
+
+    public List<String> getImgsList() {
+        return RUtils.split(getImgs());
     }
 
     public int getReply_cnt() {

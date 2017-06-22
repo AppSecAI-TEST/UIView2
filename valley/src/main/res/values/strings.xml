@@ -136,6 +136,7 @@
     <string name="publish_dynamic">发布动态</string>
     <string name="publish">发布</string>
     <string name="forward_dynamic">转发动态</string>
+    <string name="forward_information">转发资讯</string>
     <string name="forward">转发</string>
     <string name="forward_format">转发 %1$s</string>
     <string name="fans_title">粉丝</string>

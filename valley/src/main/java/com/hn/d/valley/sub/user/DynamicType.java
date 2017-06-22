@@ -7,7 +7,8 @@ import android.text.TextUtils;
  */
 public enum DynamicType {
     TEXT(1)/*纯文本*/, VIDEO(2)/*视频*/, IMAGE(3)/*图文*/, VOICE(4)/*语音*/, PACKET(5)/*红包*/,
-    FORWARD_TEXT(6)/*转发纯文本*/, FORWARD_VIDEO(7)/*转发视频*/, FORWARD_IMAGE(8)/*转发图文*/, FORWARD_VOICE(9)/*转发语音*/, FORWARD_PACKET(10)/*转发红包*/;
+    FORWARD_TEXT(6)/*转发纯文本*/, FORWARD_VIDEO(7)/*转发视频*/, FORWARD_IMAGE(8)/*转发图文*/, FORWARD_VOICE(9)/*转发语音*/, FORWARD_PACKET(10)/*转发红包*/,
+    FORWARD_INFORMATION(11)/*转发资讯*/;
 
     int type;
 

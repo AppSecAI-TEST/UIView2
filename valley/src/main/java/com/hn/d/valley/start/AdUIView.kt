@@ -41,6 +41,10 @@ class AdUIView : BaseContentUIView() {
         inflate(R.layout.view_ad_layout)
     }
 
+    override fun onBackPressed(): Boolean {
+        return false
+    }
+
     override fun canTryCaptureView(): Boolean {
         return false
     }

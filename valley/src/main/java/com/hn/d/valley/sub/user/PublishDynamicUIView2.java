@@ -28,6 +28,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.Json;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
@@ -47,6 +48,7 @@ import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.AmapBean;
@@ -58,6 +60,7 @@ import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.control.TopControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.control.VideoStatusInfo;
+import com.hn.d.valley.control.VoiceStatusInfo;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
@@ -108,6 +111,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     Action0 mPublishAction;
     UserDiscussListBean.DataListBean mDataListBean;
     String mContent;
+    ForwardInformationBean mForwardInformationBean;
     private HnAddImageAdapter2 mAddImageAdapter2;
     private List<Luban.ImageItem> photos = new ArrayList<>();
     private List<Tag> mSelectorTags = new ArrayList<>();
@@ -119,6 +123,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private List<String> atUsers = new ArrayList<>();//@的用户
     private List<FriendBean> mFriendList = new ArrayList<>();
     private VideoStatusInfo mVideoStatusInfo;
+    private HotInfoListBean mHotInfoListBean;
     private PublishTaskRealm mPublishTaskRealm;
 
     private List<String> visiableFriends = new ArrayList<>();//可见或不可见好友
@@ -162,6 +167,27 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         mDynamicType = DynamicType.VIDEO;
     }
 
+
+    /**
+     * 转发资讯
+     */
+    public PublishDynamicUIView2(HotInfoListBean hotInfoListBean) {
+        mHotInfoListBean = hotInfoListBean;
+        mDynamicType = DynamicType.FORWARD_INFORMATION;
+
+        mForwardInformationBean = new ForwardInformationBean();
+        mForwardInformationBean.setAuthor(mHotInfoListBean.getAuthor());
+        mForwardInformationBean.setLogo(mHotInfoListBean.getLogo());
+        if ("video".equalsIgnoreCase(mHotInfoListBean.getType())) {
+            mForwardInformationBean.setMedia(mHotInfoListBean.getImgs() + "?" + mHotInfoListBean.getMedia());
+        } else {
+            mForwardInformationBean.setMedia(mHotInfoListBean.getImgs());
+        }
+        mForwardInformationBean.setMedia_type(mHotInfoListBean.getType());
+        mForwardInformationBean.setNews_id(String.valueOf(mHotInfoListBean.getId()));
+        mForwardInformationBean.setTitle(mHotInfoListBean.getTitle());
+    }
+
     public PublishDynamicUIView2(PublishTaskRealm taskRealm) {
         mPublishTaskRealm = taskRealm;
         mContent = taskRealm.getShowContent2();
@@ -193,6 +219,9 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
     @Override
     public boolean onBackPressed() {
+        if (isForwardInformation()) {
+            return true;
+        }
         boolean backPressed = mSoftInputLayout.requestBackPressed();
         if (backPressed) {
             if (!mInputView.isEmpty() || mAddImageAdapter2.getAllDatas().size() > 0 || mVideoStatusInfo != null) {
@@ -225,19 +254,33 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         return backPressed;
     }
 
+    private boolean isForwardInformation() {
+        return mDynamicType == DynamicType.FORWARD_INFORMATION;
+    }
+
+    @Override
+    protected String getTitleString() {
+        if (isForwardInformation()) {
+            return getString(R.string.forward_information);
+        }
+        return isForward() ? getString(R.string.forward_dynamic) : getString(R.string.publish_dynamic);
+    }
+
     @Override
     protected TitleBarPattern getTitleBar() {
         return super.getTitleBar()
-                .setTitleString(isForward() ? mActivity.getString(R.string.forward_dynamic) : mActivity.getString(R.string.publish_dynamic))
                 .setShowBackImageView(true)
                 .addRightItem(TitleBarPattern.TitleBarItem.build(R.drawable.send_forward_dynamic_n, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mInputView.isEmpty()) {
-                            mInputView.error();
-                            return;
+                            if (isForward()) {
+                                mInputView.setText(getContent(mInputView.string()));
+                            } else {
+                                mInputView.error();
+                                return;
+                            }
                         }
-
 
                         checkDynamicType();
                         Action.publishAction();
@@ -439,7 +482,45 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             contentView.setFoldString("");
             contentView.setMaxShowLine(3);
 
-            if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
+            if (isForwardInformation()) {
+                //转发资讯
+                String mediaType = mHotInfoListBean.getType();
+                String shareDes = mHotInfoListBean.getTitle();
+                String thumbIco = mHotInfoListBean.getLogo();
+                List<String> mediaList = mHotInfoListBean.getImgsList();
+
+                imageView.setContentDescription(getString(R.string.is_circle));
+                if ("picture".equalsIgnoreCase(mediaType)) {
+                    if (mediaList.size() > 0) {
+                        thumbIco = mediaList.get(0);
+                        imageView.setContentDescription("");
+                    }
+                } else if ("article".equalsIgnoreCase(mediaType)) {
+                    if (mediaList.size() > 0) {
+                        thumbIco = mediaList.get(0);
+                        imageView.setContentDescription("");
+                    }
+                } else if ("video".equalsIgnoreCase(mediaType)) {
+                    if (mediaList.size() > 0) {
+                        thumbIco = mediaList.get(0);
+                        imageView.setContentDescription("");
+                    }
+                    String videoUrl = mHotInfoListBean.getMedia();
+                } else if ("voice".equalsIgnoreCase(mediaType)) {
+                    if (mediaList.size() > 0) {
+                        String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];
+                        if (!TextUtils.isEmpty(s) && !VoiceStatusInfo.NOPIC.equalsIgnoreCase(s)) {
+                            thumbIco = s;
+                            imageView.setContentDescription("");
+                        }
+                    }
+                }
+                //头像, 图片, 视频缩略图
+                imageView.setImageUrl(thumbIco, false);
+                mViewHolder.tv(R.id.username).setText(mHotInfoListBean.getAuthor());
+                contentView.setText(shareDes);
+
+            } else if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
                 //不是转发的动态
                 if (mDynamicType == DynamicType.FORWARD_TEXT) {
                     imageView.setContentDescription(getString(R.string.is_circle));
@@ -484,6 +565,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 content = getString(R.string.forward_video_tip);
             } else if (mDynamicType == DynamicType.FORWARD_VOICE) {
                 content = getString(R.string.forward_voice_tip);
+            } else if (mDynamicType == DynamicType.FORWARD_INFORMATION) {
+                content = getString(R.string.forward_information);
             } else {
                 content = getString(R.string.forward_tip);
             }
@@ -607,6 +690,10 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     }
 
     private void initControlLayout() {
+
+        if (isForwardInformation()) {
+            mViewHolder.v(R.id.ico_at).setVisibility(View.GONE);
+        }
 
         mViewHolder.v(R.id.ico_pic).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -763,30 +850,24 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 PublishControl.instance().startPublish();
             }
         } else {
-            //转发动态, 不需要再后台进行
+            //转发动态,转发资讯 ,不需要再后台进行
             HnLoading.show(mParentILayout);
             String item_id;
-            if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
-                item_id = mDataListBean.getDiscuss_id();
+            if (isForwardInformation()) {
+                item_id = String.valueOf(mHotInfoListBean.getId());
             } else {
-                item_id = mDataListBean.getOriginal_info().getDiscuss_id();
+                if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
+                    item_id = mDataListBean.getDiscuss_id();
+                } else {
+                    item_id = mDataListBean.getOriginal_info().getDiscuss_id();
+                }
             }
             add(RRetrofit.create(SocialService.class)
                     .forward(Param.buildMap(
-                            "type:discuss",
+                            "type:" + (isForwardInformation() ? "news" : "discuss"),
                             "item_id:" + item_id,
                             "is_top:" + hnTopImageView.isTop(),
-                            "content:" + mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
-                                @Override
-                                public String userId(String userName) {
-                                    for (FriendBean bean : mFriendList) {
-                                        if (TextUtils.equals(userName, bean.getTrueName())) {
-                                            return bean.getUid();
-                                        }
-                                    }
-                                    return "";
-                                }
-                            }),
+                            "content:" + getForwardContent(),
                             "scan_type:" + levelType.getId(),
                             "scan_user:" + RUtils.connect(visiableFriends))
                     )
@@ -806,6 +887,27 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         }
                     }));
         }
+    }
+
+    /**
+     * 获取转发内容
+     */
+    private String getForwardContent() {
+        if (isForwardInformation()) {
+            mForwardInformationBean.setContent(mInputView.string());
+            return Json.to(mForwardInformationBean);
+        }
+        return mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
+            @Override
+            public String userId(String userName) {
+                for (FriendBean bean : mFriendList) {
+                    if (TextUtils.equals(userName, bean.getTrueName())) {
+                        return bean.getUid();
+                    }
+                }
+                return "";
+            }
+        });
     }
 
     @NonNull
@@ -942,5 +1044,83 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //        }
     }
 
+    /**
+     * 转发资讯的bean
+     */
+    public static class ForwardInformationBean {
 
+        /**
+         * content : 转发资讯
+         * title : 习近平今天会见了特兰普
+         * news_id : 1002
+         * media : http://circleimg.klgwl.com/11.jpg
+         * media_type : 3
+         * logo : http://circleimg.klgwl.com/11.jpg
+         * author : 头条新闻
+         */
+
+        private String content;
+        private String title;
+        private String news_id;
+        private String media;
+        private String media_type;
+        private String logo;
+        private String author;
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getNews_id() {
+            return news_id;
+        }
+
+        public void setNews_id(String news_id) {
+            this.news_id = news_id;
+        }
+
+        public String getMedia() {
+            return media;
+        }
+
+        public void setMedia(String media) {
+            this.media = media;
+        }
+
+        public String getMedia_type() {
+            return media_type;
+        }
+
+        public void setMedia_type(String media_type) {
+            this.media_type = media_type;
+        }
+
+        public String getLogo() {
+            return logo;
+        }
+
+        public void setLogo(String logo) {
+            this.logo = logo;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+    }
 }

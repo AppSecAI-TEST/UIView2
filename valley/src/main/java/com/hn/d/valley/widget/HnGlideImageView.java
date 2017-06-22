@@ -201,6 +201,10 @@ public class HnGlideImageView extends AppCompatImageView {
     }
 
     public void setImageUrl(final String url) {
+        setImageUrl(url, true);
+    }
+
+    public void setImageUrl(final String url, final boolean thumb) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -233,7 +237,7 @@ public class HnGlideImageView extends AppCompatImageView {
                     File file = new File(url);
                     DrawableTypeRequest<? extends Serializable> builder = Glide.with(getContext())
                             .load(file.exists() ? file :
-                                    OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()));
+                                    (thumb ? OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()) : url));
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }

@@ -150,6 +150,7 @@
                 android:id="@+id/forward_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/base_xhdpi"
                 android:drawableStart="@drawable/forwarding"
                 tools:text="40"/>
 
@@ -158,16 +159,15 @@
                 android:id="@+id/comment_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/base_xhdpi"
+                android:layout_marginEnd="@dimen/base_xhdpi"
                 android:drawableStart="@drawable/comments"
                 tools:text="40"/>
-
 
             <com.hn.d.valley.widget.HnItemTextView
                 android:id="@+id/like_cnt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/base_xhdpi"
+                android:layout_marginEnd="@dimen/base_xhdpi"
                 android:drawableStart="@drawable/dianzan_n"
                 tools:text="40"/>
 

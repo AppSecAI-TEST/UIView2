@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.found.sub
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.JavascriptInterface
@@ -31,6 +32,7 @@ import com.hn.d.valley.bean.ILikeData
 import com.hn.d.valley.bean.InformationDetailBean
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.service.NewsService
+import com.hn.d.valley.sub.user.PublishDynamicUIView2
 import com.hn.d.valley.sub.user.dialog.DynamicShareDialog
 import com.hn.d.valley.sub.user.sub.CommentInputDialog
 import com.hn.d.valley.sub.user.sub.CommentListUIView
@@ -160,6 +162,18 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
         initWebView()
 
         getDetail()
+    }
+
+    override fun onViewShow(bundle: Bundle?) {
+        super.onViewShow(bundle)
+        webView.onResume()
+        webView.resumeTimers()
+    }
+
+    override fun onViewHide() {
+        super.onViewHide()
+        webView.onPause()
+        webView.pauseTimers()
     }
 
     /**收藏按钮*/
@@ -319,6 +333,8 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
                 }
             }))
         }
+
+        click(R.id.bottom_forward_item) { startIView(PublishDynamicUIView2(hotInfoBean /*detailBean*/)) }
     }
 
 

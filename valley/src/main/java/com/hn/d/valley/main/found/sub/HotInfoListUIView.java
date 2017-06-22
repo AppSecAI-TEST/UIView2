@@ -82,7 +82,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 
             @Override
             public void displayImage(RImageView imageView, String url) {
-                imageView.setPlayDrawable(null);
+                imageView.setShowGifTip(false);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 HotInfoListUIView.displayImage(imageView, url);
                 L.i("RTextImageLayout: displayImage([imageView, url])-> " + url);
