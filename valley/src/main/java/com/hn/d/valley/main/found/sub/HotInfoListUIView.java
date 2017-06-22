@@ -15,7 +15,6 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
-import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RImageView;
@@ -121,7 +120,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
         });
 
-        initTextImageLayout(holder, dataBean.getTitle(), RUtils.split(dataBean.getImgs(), ";"), "video".equalsIgnoreCase(dataBean.getType()));
+        initTextImageLayout(holder, dataBean.getTitle(), dataBean.getImgsList(), "video".equalsIgnoreCase(dataBean.getType()));
     }
 
     public static void displayImage(ImageView imageView, String url) {
@@ -161,6 +160,16 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
     @Override
     protected boolean isLoadInViewPager() {
         return true;
+    }
+
+    @Override
+    public void loadData() {
+        loadTime = System.currentTimeMillis();
+        page = 1;
+        //last_id = "";
+        hasNext = true;
+        onCancel();//刷新数据,取消之前的加载更多请求
+        onUILoadData(getPage());
     }
 
     @Override

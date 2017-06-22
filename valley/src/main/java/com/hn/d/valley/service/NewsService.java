@@ -96,4 +96,17 @@ public interface NewsService {
      */
     @GET("news/delete")
     Observable<ResponseBody> delete(@QueryMap Map<String, String> map);
+
+    @GET("news/collectcount")
+    Observable<ResponseBody> collectcount(@QueryMap Map<String, String> map);
+
+    /**
+     * 获取已经收藏的资讯列表，默认10条，按收藏时间排序
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * lastid	否	int64	上一次数据中的最小id，用于分页，0表示从最新开始，默认0
+     * amount	否	int	个数，默认10
+     */
+    @GET("news/collectlist")
+    Observable<ResponseBody> collectlist(@QueryMap Map<String, String> map);
 }

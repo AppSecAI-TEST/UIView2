@@ -52,7 +52,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     protected int next = 1;//下一页
     protected long loadTime = 0;//加载数据的时间
     protected boolean hasNext = true;//是否有下一页
-    protected String last_id, first_id = "";//动态的id, 第一个和最后一个
+    protected String last_id = "", first_id = "";//动态的id, 第一个和最后一个
     protected RSoftInputLayout mRootSoftInputLayout;
 
     public static void initEmpty(final RBaseViewHolder viewHolder, boolean isEmpty, String tip) {

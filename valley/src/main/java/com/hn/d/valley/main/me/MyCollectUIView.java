@@ -4,14 +4,16 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -62,7 +64,7 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         if (mHotItemLayout != null) {
                             for (UserDiscussListBean model : bean) {
                                 if (TextUtils.equals(model.getType(), "news")) {
-                                    mHotItemLayout.setItemDarkText(model.getData_count() + "");
+
                                 } else if (TextUtils.equals(model.getType(), "discuss")) {
                                     mStatusItemLayout.setItemDarkText(model.getData_count() + "");
                                 }
@@ -74,6 +76,19 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     public void onEnd() {
                         super.onEnd();
                         hideLoadView();
+                    }
+                }));
+
+        add(RRetrofit.create(NewsService.class)
+                .collectcount(Param.buildInfoMap("uid:" + UserCache.getUserAccount()))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new RSubscriber<String>() {
+                    @Override
+                    public void onSucceed(final String bean) {
+                        super.onSucceed(bean);
+                        if (mHotItemLayout != null) {
+                            mHotItemLayout.setItemDarkText(bean);
+                        }
                     }
                 }));
     }
@@ -105,7 +120,7 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 mHotItemLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        T_.show("开发中...");
+                        startIView(new MyCollectInformationUIView());
                     }
                 });
             }

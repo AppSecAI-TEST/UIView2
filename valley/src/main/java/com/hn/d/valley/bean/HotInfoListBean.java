@@ -66,6 +66,24 @@ public class HotInfoListBean {
         return bean;
     }
 
+    public static HotInfoListBean from(UserDiscussListBean.DataListBean dataListBean) {
+        HotInfoListBean bean;
+//        String media = dataListBean.getMedia();
+//        if (originalInfo.isInformationVideoType()) {
+//            bean = HotInfoListBean.from(Integer.parseInt(originalInfo.getNews_id()), originalInfo.getAuthor(),
+//                    originalInfo.getMedia_type(), originalInfo.getLogo(), originalInfo.getTitle(),
+//                    originalInfo.getInformationVideoThumbUrl(), originalInfo.getInformationVideoUrl());
+//        } else {
+//            bean = HotInfoListBean.from(Integer.parseInt(originalInfo.getNews_id()), originalInfo.getAuthor(),
+//                    originalInfo.getMedia_type(), originalInfo.getLogo(), originalInfo.getTitle(),
+//                    media, "");
+//        }
+        bean = HotInfoListBean.from(Integer.parseInt(dataListBean.getNews_id()), dataListBean.getAuthor(),
+                dataListBean.getMedia_type(), dataListBean.getUser_info().getAvatar(), dataListBean.getContent(),
+                dataListBean.getMedia(), "");
+        return bean;
+    }
+
     public static HotInfoListBean from(int id, String author, String type, String logo, String title, String imgs, String videoUrl) {
         HotInfoListBean bean = new HotInfoListBean();
         bean.setId(id);

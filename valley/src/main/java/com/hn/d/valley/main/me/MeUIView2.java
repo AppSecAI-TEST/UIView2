@@ -36,6 +36,7 @@ import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
@@ -65,14 +66,18 @@ import io.realm.RealmResults;
  */
 public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
+    private List<String> mPhotos = new ArrayList<>();
+    private int mDrawPadding;
+    /**
+     * 收藏的资讯数量
+     */
+    private int mCollectCount = 0;
     Runnable refreshRunnable = new Runnable() {
         @Override
         public void run() {
             loadUserData();
         }
     };
-    private List<String> mPhotos = new ArrayList<>();
-    private int mDrawPadding;
 
     static void resize(View view, int size, int margin) {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -144,6 +149,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
     @Override
     public void onViewShow(long viewShowCount) {
         super.onViewShow(viewShowCount);
+        loadCollectCount();
         if (viewShowCount >= 1) {
             mRExBaseAdapter.notifyItemRangeChanged(1, 5);
         }
@@ -161,6 +167,21 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         }
                     }
                 });
+
+        loadCollectCount();
+    }
+
+    private void loadCollectCount() {
+        add(RRetrofit.create(NewsService.class)
+                .collectcount(Param.buildInfoMap("uid:" + UserCache.getUserAccount()))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new RSubscriber<String>() {
+                    @Override
+                    public void onSucceed(final String bean) {
+                        super.onSucceed(bean);
+                        mCollectCount = Integer.parseInt(bean);
+                    }
+                }));
     }
 
     @Override
@@ -329,7 +350,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 if (userInfoBean != null) {
-                    itemInfoLayout.setItemDarkText(userInfoBean.getCollect_count() + "");
+                    itemInfoLayout.setItemDarkText((userInfoBean.getCollect_count() + mCollectCount) + "");
                 }
 
                 initItemLayout(itemInfoLayout, R.string.my_collect_tip, R.drawable.icon_collection, new View.OnClickListener() {
