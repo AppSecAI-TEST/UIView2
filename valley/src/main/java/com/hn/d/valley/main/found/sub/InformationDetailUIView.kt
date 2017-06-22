@@ -204,12 +204,12 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
         webView.onWebViewListener = object : X5WebView.OnWebViewListener {
             override fun onPageFinished(webView: WebView?, url: String?) {
                 L.e("call: onPageFinished -> ")
-                L.e("onPageFinished_1 测量高度:" + webView?.measuredHeight + " 内容高度:" + webView?.contentHeight + " Range:" + webView?.computeVerticalScrollRange())
-
-                webView?.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
-
-                L.e("onPageFinished_2 测量高度:" + webView?.measuredHeight + " 内容高度:" + webView?.contentHeight + " Range:" + webView?.computeVerticalScrollRange())
+//                L.e("onPageFinished_1 测量高度:" + webView?.measuredHeight + " 内容高度:" + webView?.contentHeight + " Range:" + webView?.computeVerticalScrollRange())
+//
+//                webView?.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+//                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
+//
+//                L.e("onPageFinished_2 测量高度:" + webView?.measuredHeight + " 内容高度:" + webView?.contentHeight + " Range:" + webView?.computeVerticalScrollRange())
 
                 postDelayed({ invokeJs("showImg") }, 1000)
             }
@@ -217,11 +217,11 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
             override fun onProgressChanged(webView: WebView?, progress: Int) {
                 L.e("call: onProgressChanged -> $progress")
 
-                L.e("onPageFinished__$progress 测量高度:" + webView?.measuredHeight +
-                        " 内容高度:" + webView?.contentHeight +
-                        " Range:" + webView?.computeVerticalScrollRange() +
-                        " "
-                )
+//                L.e("onPageFinished__$progress 测量高度:" + webView?.measuredHeight +
+//                        " 内容高度:" + webView?.contentHeight +
+//                        " Range:" + webView?.computeVerticalScrollRange() +
+//                        " "
+//                )
 
 //                invokeJs("window.android.bodyHeight", "'test'")
 //                invokeJs("window.android.bodyHeight", "document.getElementsByTagName('html')[0].scrollHeight)")
