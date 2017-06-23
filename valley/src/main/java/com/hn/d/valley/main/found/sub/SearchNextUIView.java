@@ -566,7 +566,7 @@ public class SearchNextUIView extends BaseContentUIView {
                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            mILayout.startIView(new MoreSearchUIView(curSearchText));
                         }
                     });
                 } else {
