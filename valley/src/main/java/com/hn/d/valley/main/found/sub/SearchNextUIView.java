@@ -30,6 +30,7 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
@@ -86,6 +87,7 @@ public class SearchNextUIView extends BaseContentUIView {
             SearchResultBean.DynamicsBeanX.DynamicsBean,
             HotInfoListBean> mSearchAdapter;
     private RExItemDecoration mSearchItemDecoration;
+    private String curSearchText = "";
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -194,6 +196,8 @@ public class SearchNextUIView extends BaseContentUIView {
     }
 
     private void searchText(String text, boolean add) {
+        curSearchText = text;
+
         if (add) {
             SearchHistoryRealm searchHistoryRealm = new SearchHistoryRealm(text, System.currentTimeMillis());
 
@@ -440,6 +444,13 @@ public class SearchNextUIView extends BaseContentUIView {
             @Override
             protected void onBindHeaderView(RBaseViewHolder holder, int posInHeader, LikeUserInfoBean headerBean) {
                 UserInfoAdapter.initUserItem(holder, headerBean, mILayout);
+                UserInfoAdapter.initSignatureItem(holder.tv(R.id.signature), headerBean);
+
+                RTextView nameView = holder.v(R.id.username);
+                RTextView signView = holder.v(R.id.signature);
+                nameView.setHighlightWord(curSearchText);
+                signView.setHighlightWord(curSearchText);
+
                 holder.v(R.id.follow_image_view).setVisibility(View.GONE);
 
                 resetLayout(holder);

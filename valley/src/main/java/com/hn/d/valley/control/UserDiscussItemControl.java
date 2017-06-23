@@ -1601,7 +1601,7 @@ public class UserDiscussItemControl {
             ((RImageView) imageView).setShowGifTip(false);
         }
 
-        Glide.with(imageView.getContext())
+        Glide.with(ValleyApp.getApp())
                 .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
                 .asBitmap()
                 .placeholder(R.drawable.zhanweitu_1)

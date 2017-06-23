@@ -62,6 +62,7 @@
                 android:textColor="@color/main_text_color"
                 android:textColorHint="@color/main_text_color_dark"
                 app:r_left_text="@string/sex_tip"
+                app:r_left_text_offset="@dimen/base_ldpi"
                 app:r_left_text_color="@color/base_text_color_dark"/>
 
             <ImageView
@@ -97,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:contentDescription="register"
                 android:layout_marginRight="@dimen/base_hdpi"
                 android:button="@drawable/password_zhuce_checkbox_selector"/>
 

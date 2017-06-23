@@ -9,7 +9,7 @@
     android:orientation="horizontal"
     android:padding="@dimen/base_xhdpi">
 
-    <ImageView
+    <com.hn.d.valley.widget.HnSearchMoreImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/gengduo_shousuo"/>

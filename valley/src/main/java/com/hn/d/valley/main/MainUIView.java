@@ -39,6 +39,7 @@ import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
+import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
 import com.hn.d.valley.main.me.MeUIView2;
@@ -71,7 +72,7 @@ import rx.functions.Action0;
  * 修改备注：
  * Version: 1.0.0
  */
-public class MainUIView extends BaseUIView {
+public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynamicListAction {
 
     protected long startAnimTime = DEFAULT_ANIM_TIME;
     CommonTabLayout mBottomNavLayout;
@@ -481,6 +482,14 @@ public class MainUIView extends BaseUIView {
 
             resetTabLayoutIco(mBottomNavLayout.getTabEntitys());
             mBottomNavLayout.updateTabStyles();
+        }
+    }
+
+    @Override
+    public void onJumpToDynamicListAction() {
+        mBottomNavLayout.setCurrentTab(1);
+        if (mHomeUIView != null) {
+            mHomeUIView.onJumpToDynamicListAction();
         }
     }
 }

@@ -10,6 +10,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
+import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.found.sub.HotInformationUIView;
 import com.hn.d.valley.main.found.sub.SearchUIView;
@@ -94,7 +95,8 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.search, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new SearchUIView());
+                        MainUIView uiView = (MainUIView) mParentILayout.getIViewWith(MainUIView.class);
+                        mParentILayout.startIView(new SearchUIView().setJumpToDynamicListAction(uiView));
                     }
                 });
             }

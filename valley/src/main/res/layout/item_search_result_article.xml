@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <com.angcyo.uiview.widget.RTextView
@@ -43,6 +44,7 @@
         android:background="@drawable/base_bg_selector"
         android:drawableStart="@drawable/search_xuanzhelianxiren"
         android:padding="@dimen/base_xhdpi"
+        tools:visibility="visible"
         android:visibility="gone"/>
 
 </LinearLayout>

@@ -540,4 +540,14 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         }
     }
 
+    public void onJumpToDynamicListAction() {
+        if (mHomeNavLayout != null) {
+            mHomeNavLayout.setCurrentTab(1);
+
+            if (mRecommendUIView3 != null) {
+                mRecommendUIView3.scrollToTop();
+                mRecommendUIView3.loadData();
+            }
+        }
+    }
 }

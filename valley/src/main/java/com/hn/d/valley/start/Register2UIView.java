@@ -300,6 +300,13 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     }
 
     @Override
+    public void onRequestError(int code, @NonNull String msg) {
+        super.onRequestError(code, msg);
+        HnLoading.hide();
+        T_.error(getString(R.string.register_error_tip));
+    }
+
+    @Override
     public void onRegisterSuccess(B bean) {
 //        finishIView(mRegisterIView, false, true);
 //        finishIView(this, false, true);

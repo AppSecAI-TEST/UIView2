@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -41,6 +42,7 @@ import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.UserRecommendBean;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.me.setting.UserRecommendUIView;
@@ -71,6 +73,11 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
         UserDiscussListBean.DataListBean, HotInfoListBean> {
 
     private RBaseItemDecoration mDecor;
+
+    /**
+     * 请求跳转到广场
+     */
+    private OnJumpToDynamicListAction jumpToDynamicListAction;
 
     public static void updateMediaLayout(final UserDiscussListBean.DataListBean dataListBean, final ILayout iLayout, final RBaseViewHolder holder) {
         updateMediaLayout(dataListBean.getContent(), dataListBean.getDiscuss_id(), dataListBean.getMedia(), dataListBean.getMedia_type(),
@@ -184,6 +191,11 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 videoPlayView.setVisibility(View.INVISIBLE);
             }
         }
+    }
+
+    public SearchUIView setJumpToDynamicListAction(OnJumpToDynamicListAction jumpToDynamicListAction) {
+        this.jumpToDynamicListAction = jumpToDynamicListAction;
+        return this;
     }
 
     @Override
@@ -355,12 +367,6 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 if (posInData == 0) {
                     holder.v(R.id.tip_layout).setVisibility(View.VISIBLE);
                     tv.setDefaultSKin(R.string.new_discuss_tip);
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
                 } else {
                     holder.v(R.id.tip_layout).setVisibility(View.GONE);
                 }
@@ -384,7 +390,10 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                 holder.v(R.id.tip_layout).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        mParentILayout.finishAllWithKeep(UILayoutImpl.getIViewList(MainUIView.class), false, null);
+                        if (jumpToDynamicListAction != null) {
+                            jumpToDynamicListAction.onJumpToDynamicListAction();
+                        }
                     }
                 });
 
@@ -447,6 +456,10 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         L.e(throwable.getMessage());
                     }
                 }));
+    }
+
+    public interface OnJumpToDynamicListAction {
+        void onJumpToDynamicListAction();
     }
 
     public static class TopBean {
