@@ -363,24 +363,41 @@ public class SearchNextUIView extends BaseContentUIView {
         mNormalDecoration = new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
             @Override
             public void getItemOffsets(Rect outRect, int position) {
+                int offset = getDimensionPixelOffset(R.dimen.base_line);
+
                 if (position != 0 && position < mHistoryRealmList.size()) {
-                    outRect.top = getDimensionPixelOffset(R.dimen.base_line);
+                    outRect.top = offset;
                 } else if (position == mHistoryRealmList.size()) {
                     outRect.top = getDimensionPixelOffset(R.dimen.base_xhdpi);
                 } else if (position == mHistoryRealmList.size() + 1 || position == mHistoryRealmList.size() + 2) {
-                    outRect.top = getDimensionPixelOffset(R.dimen.base_line);
+                    outRect.top = offset;
+                }
+
+                if (position > mHistoryRealmList.size() && (position - 1 - mHistoryRealmList.size()) % 2 == 1) {
+                    outRect.left = offset;
                 }
             }
 
             @Override
             public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+                int left = offsetRect.left;
+
                 if (position == mHistoryRealmList.size()) {
                     paint.setColor(getColor(R.color.chat_bg_color));
                 } else {
                     paint.setColor(getColor(R.color.line_color));
                 }
+
                 offsetRect.set(0, itemView.getTop() - offsetRect.top, itemView.getRight(), itemView.getTop());
                 canvas.drawRect(offsetRect, paint);
+
+                if (position > mHistoryRealmList.size() && (position - 1 - mHistoryRealmList.size()) % 2 == 1) {
+                    int offset = getDimensionPixelOffset(R.dimen.base_xhdpi);
+                    paint.setColor(getColor(R.color.line_color));
+                    offsetRect.set(itemView.getLeft() - left, itemView.getTop() + offset,
+                            itemView.getLeft(), itemView.getBottom() - offset);
+                    canvas.drawRect(offsetRect, paint);
+                }
             }
         });
         mRecyclerView.addItemDecoration(mNormalDecoration);
