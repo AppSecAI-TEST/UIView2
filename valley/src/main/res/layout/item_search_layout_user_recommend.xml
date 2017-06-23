@@ -15,8 +15,6 @@
         android:background="@drawable/base_bg_selector"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/base_xhdpi"
-        android:paddingEnd="@dimen/base_xhdpi"
-        android:paddingStart="@dimen/base_xhdpi"
         android:paddingTop="@dimen/base_xhdpi"
         android:visibility="visible">
 

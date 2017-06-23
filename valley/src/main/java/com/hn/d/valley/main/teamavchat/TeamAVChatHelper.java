@@ -90,33 +90,33 @@ public class TeamAVChatHelper {
         @Override
         public void onEvent(CustomNotification customNotification) {
             try {
-//                JSONObject jsonObject = parseContentJson(customNotification);
-//                // 收到群视频邀请
-//                if (isTeamAVChatInvite(jsonObject)) {
-//                    final String roomName = jsonObject.getString(KEY_RID);
-//                    final String teamId = jsonObject.getString(KEY_TID);
-//                    JSONArray accountArray = jsonObject.getJSONArray(KEY_MEMBER);
-//                    final ArrayList<String> accounts = new ArrayList<>();
-//                    final String teamName = jsonObject.getString(KEY_TNAME);
-//                    if (accountArray != null) {
-//                        for (Object o : accountArray) {
-//                            accounts.add((String) o);
-//                        }
-//                    }
-//
-//                    // 接收到群视频邀请，启动来点界面
-//                    L.i("receive team video chat notification " + teamId + " room " + roomName);
-//                    if (isTeamAVChatting || AVChatProfile.getInstance().isAVChatting()) {
-//                        L.i("cancel launch team av chat isTeamAVChatting = " + isTeamAVChatting);
-//                        T_.show("正在进行视频通话");
-//                        return;
-//                    }
-//                    L.i("isSyncComplete = " + isSyncComplete);
-//                    if (isSyncComplete || !checkOfflineOutTime(customNotification)) {
-//                        isTeamAVChatting = true;
-//                        launchActivity(teamId, roomName, accounts, teamName);
-//                    }
-//                }
+                JSONObject jsonObject = parseContentJson(customNotification);
+                // 收到群视频邀请
+                if (isTeamAVChatInvite(jsonObject)) {
+                    final String roomName = jsonObject.getString(KEY_RID);
+                    final String teamId = jsonObject.getString(KEY_TID);
+                    JSONArray accountArray = jsonObject.getJSONArray(KEY_MEMBER);
+                    final ArrayList<String> accounts = new ArrayList<>();
+                    final String teamName = jsonObject.getString(KEY_TNAME);
+                    if (accountArray != null) {
+                        for ( int i = 0 ; i < accountArray.length() ; i++) {
+                            accounts.add(accountArray.optString(i));
+                        }
+                    }
+
+                    // 接收到群视频邀请，启动来点界面
+                    L.i("receive team video chat notification " + teamId + " room " + roomName);
+                    if (isTeamAVChatting || AVChatProfile.getInstance().isAVChatting()) {
+                        L.i("cancel launch team av chat isTeamAVChatting = " + isTeamAVChatting);
+                        T_.show("正在进行视频通话");
+                        return;
+                    }
+                    L.i("isSyncComplete = " + isSyncComplete);
+                    if (isSyncComplete || !checkOfflineOutTime(customNotification)) {
+                        isTeamAVChatting = true;
+                        launchActivity(teamId, roomName, accounts, teamName);
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -125,20 +125,20 @@ public class TeamAVChatHelper {
 
 
     private void launchActivity(final String teamId, final String roomName, final ArrayList<String> accounts, final String teamName) {
-//        Runnable r = new Runnable() {
-//            @Override
-//            public void run() {
-//                // 欢迎界面正在运行，则等MainActivity启动之后再启动，否则直接启动 TeamAVChatActivity
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                // 欢迎界面正在运行，则等MainActivity启动之后再启动，否则直接启动 TeamAVChatActivity
 //                if (!UserCache.isMainTaskLaunching()) {
 //                    TeamAVChatActivity.startActivity(ValleyApp.getApp(), true, teamId, roomName, accounts, teamName);
 //                } else {
-//                    L.i("launch TeamAVChatActivity delay for WelComeActivity is Launching");
-//                    launchActivity(teamId, roomName, accounts, teamName);
+                    L.i("launch TeamAVChatActivity delay for WelComeActivity is Launching");
+                    launchActivity(teamId, roomName, accounts, teamName);
 //                }
-//            }
-//        };
-//
-//        Handlers.sharedHandler(DemoCache.getContext()).postDelayed(r, 200);
+            }
+        };
+
+        Handlers.sharedHandler(ValleyApp.getApp()).postDelayed(r, 200);
     }
 
     private Observer<LoginSyncStatus> loginSyncStatusObserver = new Observer<LoginSyncStatus>() {

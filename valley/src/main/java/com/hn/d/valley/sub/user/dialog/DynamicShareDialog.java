@@ -262,6 +262,35 @@ public class DynamicShareDialog extends UIIDialogImpl {
                     detailUrl,
                     mHotInfoListBean.getAuthor(),
                     shareDes, this);
+
+            //分享恐龙谷
+            mViewHolder.click(R.id.share_klg, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getILayout().finishIView(DynamicShareDialog.class);
+                    ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                            , null, true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                                @Override
+                                public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+
+                                    requestCallback.onSuccess("");
+
+                                    ContactItem contactItem = (ContactItem) absContactItems.get(0);
+                                    FriendBean friendBean = contactItem.getFriendBean();
+                                    SessionTypeEnum type = SessionTypeEnum.P2P;
+                                    // 暂时 size > 1 判断 team
+                                    if (absContactItems.size() > 1) {
+                                        type = SessionTypeEnum.Team;
+                                    }
+                                    DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mHotInfoListBean);
+                                    DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
+                                    IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
+                                    msgService().sendMessage(message, false);
+
+                                }
+                            });
+                }
+            });
         }
     }
 

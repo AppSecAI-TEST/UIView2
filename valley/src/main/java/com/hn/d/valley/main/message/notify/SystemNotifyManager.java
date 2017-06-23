@@ -10,6 +10,7 @@ import com.hn.d.valley.bean.event.GroupDissolveEvent;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.control.AdsControl;
 import com.hn.d.valley.main.me.setting.MsgNotifySetting;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RBus;
@@ -79,26 +80,31 @@ public class SystemNotifyManager {
             return;
         }
 
-        BaseNotification baseNotification = Json.from(content,BaseNotification.class);
-        switch (baseNotification.getExtend_type()) {
-            case SystemNotifyType.GROUP_ANNOUNCEMENT:
-
-                notifyAnnouncementUpdate(customNotification, content);
-
-                break;
-            case SystemNotifyType.NEW_DISCUSS:
-                // 设置是否发送圈子提醒
-                if (MsgNotifySetting.instance().isCircleCNotify()) {
-                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
-                }
-                break;
-            case SystemNotifyType.NEW_VISITOR:
-                notifyNewVisitor();
-                break;
-            case SystemNotifyType.GROUP_DISMISS:
-                notifyGroupDisslove(customNotification, content);
-                break;
-        }
+//        BaseNotification baseNotification = Json.from(content,BaseNotification.class);
+//        switch (baseNotification.getExtend_type()) {
+//            case SystemNotifyType.GROUP_ANNOUNCEMENT:
+//
+//                notifyAnnouncementUpdate(customNotification, content);
+//
+//                break;
+//            case SystemNotifyType.NEW_DISCUSS:
+//                // 设置是否发送圈子提醒
+//                if (MsgNotifySetting.instance().isCircleCNotify()) {
+//                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
+//                }
+//                break;
+//            case SystemNotifyType.NEW_VISITOR:
+//                notifyNewVisitor();
+//                break;
+//            case SystemNotifyType.GROUP_DISMISS:
+//                notifyGroupDisslove(customNotification, content);
+//                break;
+//            case SystemNotifyType.ADS_UPDATE:
+//                AdsControl.INSTANCE.updateAds();
+//                break;
+//            default:
+//
+//        }
 
     }
 

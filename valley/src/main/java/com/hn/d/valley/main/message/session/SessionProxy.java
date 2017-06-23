@@ -16,4 +16,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 public interface SessionProxy {
     // 发送消息
     boolean sendMessage(IMMessage msg);
+
+
+
 }

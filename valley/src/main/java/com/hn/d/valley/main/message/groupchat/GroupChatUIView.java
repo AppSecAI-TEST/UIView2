@@ -45,11 +45,14 @@ import com.hn.d.valley.main.message.session.AitHelper;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.RedPacketCommandItem;
 import com.hn.d.valley.main.message.session.SessionCustomization;
+import com.hn.d.valley.main.message.session.TeamAVChatCommandItem;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
+import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
 import com.hn.d.valley.service.GroupChatService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
+import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.MemberPushOption;
@@ -161,6 +164,8 @@ public class GroupChatUIView extends ChatUIView2 {
         ait_control_layout = v(R.id.ait_control_layout);
     }
 
+    TeamAVChatCommandItem avChatAction;
+
     @Override
     protected List<CommandItemInfo> createCommandItems() {
         List<CommandItemInfo> list = super.createCommandItems();
@@ -172,6 +177,10 @@ public class GroupChatUIView extends ChatUIView2 {
                 }
             });
         }
+        // 定制加号点开后可以包含的操作， 默认已经有图片，视频等消息了
+        avChatAction = new TeamAVChatCommandItem(AVChatType.VIDEO);
+        TeamAVChatHelper.sharedInstance().registerObserver(true);
+        list.add(avChatAction);
         return list;
     }
 
@@ -329,6 +338,7 @@ public class GroupChatUIView extends ChatUIView2 {
                         public void onSucceed(GroupDescBean bean) {
                             if (bean != null) {
                                 mGroupDesc = bean;
+                                avChatAction.setGid(mGroupDesc.getGid());
                                 loadAnnounce(bean);
                                 initMentionListener(bean);
                             }

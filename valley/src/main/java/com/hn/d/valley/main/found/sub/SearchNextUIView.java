@@ -108,11 +108,15 @@ public class SearchNextUIView extends BaseContentUIView {
             @Override
             public void execute(Realm realm) {
                 mHistoryRealmList = new ArrayList<>();
-                mHistoryRealmList.add(new SearchHistoryRealm());//空的占位数据bean
                 RealmResults<SearchHistoryRealm> results = realm.where(SearchHistoryRealm.class)
                         .equalTo("uid", UserCache.getUserAccount()).findAll();
 
-                for (int i = results.size() - 1; i >= 0; i--) {
+                int size = results.size();
+                if (size > 0) {
+                    mHistoryRealmList.add(new SearchHistoryRealm());//空的占位数据bean
+                }
+
+                for (int i = size - 1; i >= 0; i--) {
                     if (IsMax()) {
                         break;
                     }
@@ -200,7 +204,11 @@ public class SearchNextUIView extends BaseContentUIView {
                     mHistoryRealmList.remove(mHistoryRealmList.size() - 1);
                 }
 
+                if (mHistoryRealmList.size() == 0) {
+                    mHistoryRealmList.add(0, new SearchHistoryRealm());
+                }
                 mHistoryRealmList.add(1, searchHistoryRealm);
+
                 mNormalAdapter.resetHeaderData(mHistoryRealmList);
                 mNormalAdapter.notifyDataSetChanged();
             }

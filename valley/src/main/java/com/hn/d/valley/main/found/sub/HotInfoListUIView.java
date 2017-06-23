@@ -29,6 +29,7 @@ import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.service.NewsService;
+import com.hn.d.valley.widget.HnExTextView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
@@ -55,8 +56,22 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         this.classify = classify;
     }
 
-    public static void initTextImageLayout(final RBaseViewHolder holder, String text, final List<String> images, final boolean isVideo) {
+    public static void initTextImageLayout(final RBaseViewHolder holder, final String text, final List<String> images, final boolean isVideo) {
         RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
+        textImageLayout.setConfigTextView(new RTextImageLayout.ConfigTextView() {
+            @Override
+            public TextView onCreateTextView(TextView textView) {
+                if (textView == null) {
+                    return new HnExTextView(holder.getContext());
+                }
+                textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_size16));
+                return textView;
+            }
+
+        });
+        textImageLayout.setText(text);
         textImageLayout.setConfigCallback(new RTextImageLayout.ConfigCallback() {
             @Override
             public int[] getImageSize(int position) {
@@ -73,13 +88,6 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
 
             @Override
-            public void onCreateTextView(TextView textView) {
-                textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.main_text_color));
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_size16));
-            }
-
-            @Override
             public void displayImage(RImageView imageView, String url) {
                 imageView.setShowGifTip(false);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -92,7 +100,6 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                 return isVideo;
             }
         });
-        textImageLayout.setText(text);
         textImageLayout.setImages(images);
     }
 

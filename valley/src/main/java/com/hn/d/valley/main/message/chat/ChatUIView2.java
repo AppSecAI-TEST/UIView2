@@ -159,6 +159,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     }
 
     /**
+     *
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */

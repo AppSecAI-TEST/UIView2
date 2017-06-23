@@ -14,6 +14,10 @@ package com.hn.d.valley.bean;
 public class UserRecommendBean {
 
     /**
+     * 是否已关注
+     */
+    public boolean isAttention = false;
+    /**
      * uid : 50002
      * username : 和尚挑水
      * true_name : 范冰冰
@@ -51,7 +55,7 @@ public class UserRecommendBean {
 //        userInfo.setIs_auth(getIs_auth());
         userInfo.setSex(getSex());
         userInfo.setGrade("3");
-        userInfo.setSignature(String.format("%s %s %s ",company,job,true_name));
+        userInfo.setSignature(String.format("%s %s %s ", company, job, true_name));
 
         return userInfo;
 

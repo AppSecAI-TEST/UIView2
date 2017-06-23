@@ -8,12 +8,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.uiview.utils.BmpUtil;
+import com.angcyo.uiview.widget.CircleImageView;
 import com.bumptech.glide.BitmapTypeRequest;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.DrawableTypeRequest;
@@ -37,7 +37,7 @@ import java.io.Serializable;
  * 修改备注：
  * Version: 1.0.0
  */
-public class HnGlideImageView extends AppCompatImageView {
+public class HnGlideImageView extends CircleImageView {
     Drawable authDrawable;
     boolean isAuth;//是否显示认证图标
     boolean isAttached;
@@ -45,7 +45,7 @@ public class HnGlideImageView extends AppCompatImageView {
     private boolean showBorder;//是否显示白色边框
 
     public HnGlideImageView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public HnGlideImageView(Context context, AttributeSet attrs) {

@@ -5,32 +5,44 @@
     android:background="@color/main_text_color">
 
     <com.hn.d.valley.widget.HnGlideImageView
-        android:id="@+id/received_call_tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="50dip"
+        android:id="@+id/iv_icon_head"
+        android:layout_width="115dp"
+        android:layout_height="115dp"
+        android:layout_marginTop="50dip"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/is_circle"
         android:layout_centerHorizontal="true"
         android:src="@drawable/default_avatar"/>
+
+    <TextView
+        android:id="@+id/received_call_tip"
+        android:layout_below="@id/iv_icon_head"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/base_xhdpi_15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:text="@string/text_avchat_invite_chat"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp"
         android:orientation="horizontal"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:baselineAligned="false">
 
         <LinearLayout
-            android:id="@+id/ll_avaudio_logout"
+            android:id="@+id/ll_refuse"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="10dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -44,21 +56,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="挂断"
+                android:text="@string/text_hangup"
                 />
 
         </LinearLayout>
 
 
         <LinearLayout
-            android:id="@+id/ll_avaudio_receive"
+            android:id="@+id/ll_receive"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="10dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="wrap_content"

@@ -45,4 +45,11 @@ public interface SystemNotifyType {
      */
     String GROUP_ANNOUNCEMENT = "group_announcement";
 
+    /**
+     *简要描述：
+     广告更新
+     ads_update
+     */
+    String ADS_UPDATE = "ads_update";
+
 }

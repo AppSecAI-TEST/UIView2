@@ -40,7 +40,6 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.UserRecommendBean;
-import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
@@ -49,6 +48,7 @@ import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.skin.SkinUtils;
+import com.hn.d.valley.widget.HnExTextView;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
@@ -83,7 +83,21 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
         final View videoPlayView = holder.v(R.id.video_play_view);
         final TextView videoTimeView = holder.v(R.id.video_time_view);
         RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
-        textImageLayout.setText(content);
+        textImageLayout.setConfigTextView(new RTextImageLayout.ConfigTextView() {
+            @Override
+            public TextView onCreateTextView(TextView textView) {
+                if (textView == null) {
+                    return new HnExTextView(holder.getContext());
+                }
+                textView.setMaxLines(3);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                        holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_size18));
+                return textView;
+            }
+        });
+        textImageLayout.setText(content);//设置显示的内容
+
+        //MoonUtil.show(ValleyApp.getApp(), textImageLayout.getTextView(), content);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,13 +129,6 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         imageView.setImageResource(R.drawable.zhanweitu_1);
                     }
 
-                    @Override
-                    public void onCreateTextView(TextView textView) {
-                        textView.setMaxLines(3);
-                        textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.contact_letter_idx_bg));
-                        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                                holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_size18));
-                    }
 
                     @Override
                     public void displayImage(RImageView imageView, String url) {
@@ -158,21 +165,13 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         }
 
                         @Override
-                        public void onCreateTextView(TextView textView) {
-                            textView.setMaxLines(3);
-                            textView.setTextColor(ContextCompat.getColor(holder.getContext(), R.color.contact_letter_idx_bg));
-                            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                                    holder.getContext().getResources().getDimensionPixelOffset(R.dimen.default_text_little_size));
-                        }
-
-                        @Override
                         public void displayImage(RImageView imageView, String url) {
                             HotInfoListUIView.displayImage(imageView, url);
                         }
 
                         @Override
                         public boolean isVideoType() {
-                            return false;
+                            return true;
                         }
                     });
                     textImageLayout.setImage(thumbUrl);
@@ -486,7 +485,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
 
             tv_focus.setBackground(ResUtil.generateRoundBorderDrawable(mActivity.getResources().getDimensionPixelOffset(R.dimen.little_round_radius),
                     mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line),
-                    ContextCompat.getColor(mActivity, R.color.base_text_color_dark) , SkinHelper.getSkin().getThemeSubColor()));
+                    ContextCompat.getColor(mActivity, R.color.base_text_color_dark), SkinHelper.getSkin().getThemeSubColor()));
 
             tv_focus.setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
@@ -508,6 +507,16 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
 
                 }
             });
+
+            if (bean.isAttention) {
+                tv_focus.setEnabled(false);
+                tv_focus.setText(R.string.text_had_focused);
+                tv_focus.setTextColor(ContextCompat.getColor(mActivity, R.color.base_text_color_dark));
+            } else {
+                tv_focus.setEnabled(true);
+                tv_focus.setText(R.string.text_tocus);
+                tv_focus.setTextColor(SkinHelper.getSkin().getThemeSubColor());
+            }
 
             HnGlideImageView imageView = holder.v(R.id.image_view);
             imageView.setImageUrl(bean.getAvatar());

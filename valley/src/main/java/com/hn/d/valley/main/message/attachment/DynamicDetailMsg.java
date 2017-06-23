@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.attachment;
 
+import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 
 /**
@@ -44,7 +45,7 @@ public class DynamicDetailMsg extends BaseCustomMsg{
         detailMsg.media_type = dataListBean.getMedia_type();
         detailMsg.username = dataListBean.getUser_info().getUsername();
         detailMsg.item_id = dataListBean.getDiscuss_id();
-        detailMsg.apnsText = String.format("分享了 %s 的动态",detailMsg.username);
+        detailMsg.apnsText = String.format("%s 的动态",detailMsg.username);
         detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
 
         if (dataListBean.isImageMediaType()) {
@@ -67,6 +68,18 @@ public class DynamicDetailMsg extends BaseCustomMsg{
         return detailMsg;
     }
 
+    public static DynamicDetailMsg create(HotInfoListBean dataListBean) {
+        DynamicDetailMsg detailMsg = new DynamicDetailMsg();
+        detailMsg.avatar = dataListBean.getLogo();
+        detailMsg.media_type = dataListBean.getType();
+        detailMsg.username = dataListBean.getAuthor();
+        detailMsg.item_id = String.valueOf(dataListBean.getId());
+        detailMsg.apnsText = dataListBean.getAuthor();
+        detailMsg.msg = dataListBean.getTitle();
+        detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
+        return detailMsg;
+    }
+
     public boolean isImageMediaType() {
         return "3".equalsIgnoreCase(getMedia_type());
     }
@@ -81,6 +94,10 @@ public class DynamicDetailMsg extends BaseCustomMsg{
 
     public boolean isTextMediaType() {
         return "1".equalsIgnoreCase(getMedia_type());
+    }
+
+    public boolean isArticle() {
+        return "article".equalsIgnoreCase(getMedia_type());
     }
 
     public String getAvatar() {

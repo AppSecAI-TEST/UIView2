@@ -20,7 +20,6 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.design.StickLayout;
 import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
-import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
@@ -39,6 +38,7 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
@@ -54,7 +54,6 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.home.circle.CircleUIView;
-import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.me.sub.UserDetailMoreUIView;
@@ -527,8 +526,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 public void onClick(View v) {
                     // 先判断是否绑定手机
                     if (!UserCache.instance().isBindPhone()) {
-                        WalletHelper.showBindPhoneDialog(mParentILayout,getString(R.string.text_not_bind_phone)
-                                ,getString(R.string.ok),getString(R.string.cancel));
+                        WalletHelper.showBindPhoneDialog(mParentILayout, getString(R.string.text_not_bind_phone)
+                                , getString(R.string.ok), getString(R.string.cancel));
                         return;
                     }
                     Integer integer = Integer.valueOf(is_auth);
@@ -580,7 +579,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
 
-
     /**
      * 背景墙
      */
@@ -592,6 +590,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         } else {
             Glide.with(mActivity)
                     .load(RUtils.split(photos).get(0))
+                    .placeholder(RImageView.copyDrawable(bgImageView))
                     .into(bgImageView);
         }
         if (isMe()) {
@@ -712,6 +711,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                             UserCache.instance().getUserInfoBean().setAvatar(avatarUrl);
                                         } else if (changeType == TYPE_CHANGE_BG_PHOTO) {
                                             UserCache.instance().getUserInfoBean().setPhotos(avatarUrl);
+                                            initBgView();
                                         }
                                     }
                                 });

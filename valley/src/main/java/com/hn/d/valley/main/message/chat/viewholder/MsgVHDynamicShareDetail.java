@@ -95,7 +95,6 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
         if (detailMsg.isImageMediaType()) {
             videoPlayView.setVisibility(View.INVISIBLE);
 
-
         } else if (detailMsg.isVoiceMediaType()) {
             videoPlayView.setVisibility(View.VISIBLE);
             videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE);
@@ -115,6 +114,10 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
         } else if (detailMsg.isTextMediaType()) {
             videoPlayView.setVisibility(View.GONE);
             iv_content.setVisibility(View.GONE);
+        } else if (detailMsg.isArticle()) {
+            videoPlayView.setVisibility(View.GONE);
+            iv_content.setImageResource(R.drawable.zixun_morentu);
+            return;
         }
 
         Glide.with(context)
