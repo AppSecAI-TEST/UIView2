@@ -480,7 +480,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             mViewHolder.tv(R.id.username).setTextColor(SkinHelper.getSkin().getThemeSubColor());
             RExTextView contentView = mViewHolder.v(R.id.content);
             contentView.setFoldString("");
-            contentView.setMaxShowLine(3);
+            contentView.setMaxShowLine(2);
 
             if (isForwardInformation()) {
                 //转发资讯

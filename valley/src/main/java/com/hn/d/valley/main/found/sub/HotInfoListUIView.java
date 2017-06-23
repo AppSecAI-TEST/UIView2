@@ -19,6 +19,7 @@ import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextImageLayout;
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.BaseRecyclerUIView;
@@ -103,7 +104,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         textImageLayout.setImages(images);
     }
 
-    public static void initItem(final ILayout iLayout, final RBaseViewHolder holder, final HotInfoListBean dataBean) {
+    public static void initItem(final ILayout iLayout, final RBaseViewHolder holder, final HotInfoListBean dataBean, String highlightWord) {
         //holder.fillView(dataBean);
         String author = dataBean.getAuthor();
         if (TextUtils.isEmpty(author)) {
@@ -128,6 +129,14 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         });
 
         initTextImageLayout(holder, dataBean.getTitle(), dataBean.getImgsList(), "video".equalsIgnoreCase(dataBean.getType()));
+
+        if (!TextUtils.isEmpty(highlightWord)){
+            RTextImageLayout textImageLayout = holder.v(R.id.text_image_layout);
+            TextView textView = textImageLayout.getTextView();
+            if (textView instanceof RTextView) {
+                ((RTextView) textView).setHighlightWord(highlightWord);
+            }
+        }
     }
 
     public static void displayImage(ImageView imageView, String url) {
@@ -196,7 +205,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, HotInfoListBean dataBean) {
-                initItem(mParentILayout, holder, dataBean);
+                initItem(mParentILayout, holder, dataBean, "");
             }
         };
         baseAdapter.setEnableLoadMore(true);

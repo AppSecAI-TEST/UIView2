@@ -21,23 +21,23 @@ public class SearchResultBean {
      * dynamics : {"words":["我"],"dynamics":[{"id":804,"user_id":50017,"content":"进ink明明ink您快也快也快也快也快我咯我就下咯也快","media_type":3,"media":"http://circleimg.klgwl.com/47500171485226191.286038","created":1485226259,"username":"丰大哥","grade":3,"avatar":"http://circleimg.klgwl.com/36500171484136425.555554","sex":1,"is_auth":1},{"id":1987,"user_id":60008,"content":"说的太他妈的经典了！重要！","media_type":3,"media":"http://circleimg.klgwl.com/600045940_s_510.0x382.0","created":1489045940,"username":"王法苏","grade":1,"avatar":"http://avatorimg.klgwl.com/15888779855","sex":1,"is_auth":1}]}
      */
 
-    private NewsBeanX news;
-    private DynamicsBeanX dynamics;
+    private NewsBean news;
+    private DynamicsBean dynamics;
     private List<LikeUserInfoBean> users;
 
-    public NewsBeanX getNews() {
+    public NewsBean getNews() {
         return news;
     }
 
-    public void setNews(NewsBeanX news) {
+    public void setNews(NewsBean news) {
         this.news = news;
     }
 
-    public DynamicsBeanX getDynamics() {
+    public DynamicsBean getDynamics() {
         return dynamics;
     }
 
-    public void setDynamics(DynamicsBeanX dynamics) {
+    public void setDynamics(DynamicsBean dynamics) {
         this.dynamics = dynamics;
     }
 
@@ -47,165 +47,5 @@ public class SearchResultBean {
 
     public void setUsers(List<LikeUserInfoBean> users) {
         this.users = users;
-    }
-
-    public static class NewsBeanX {
-        private List<String> words;
-        private List<HotInfoListBean> news;
-
-        public List<String> getWords() {
-            return words;
-        }
-
-        public void setWords(List<String> words) {
-            this.words = words;
-        }
-
-        public List<HotInfoListBean> getNews() {
-            return news;
-        }
-
-        public void setNews(List<HotInfoListBean> news) {
-            this.news = news;
-        }
-    }
-
-    public static class DynamicsBeanX {
-        private List<String> words;
-        private List<DynamicsBean> dynamics;
-
-        public List<String> getWords() {
-            return words;
-        }
-
-        public void setWords(List<String> words) {
-            this.words = words;
-        }
-
-        public List<DynamicsBean> getDynamics() {
-            return dynamics;
-        }
-
-        public void setDynamics(List<DynamicsBean> dynamics) {
-            this.dynamics = dynamics;
-        }
-
-        public static class DynamicsBean {
-            /**
-             * id : 804
-             * user_id : 50017
-             * content : 进ink明明ink您快也快也快也快也快我咯我就下咯也快
-             * media_type : 3
-             * media : http://circleimg.klgwl.com/47500171485226191.286038
-             * created : 1485226259
-             * username : 丰大哥
-             * grade : 3
-             * avatar : http://circleimg.klgwl.com/36500171484136425.555554
-             * sex : 1
-             * is_auth : 1
-             */
-
-            private String id;
-            private String user_id;
-            private String content;
-            private String media_type;
-            private String media;
-            private long created;
-            private String username;
-            private String grade;
-            private String avatar;
-            private String sex;
-            private String is_auth;
-
-            public String getId() {
-                return id;
-            }
-
-            public void setId(String id) {
-                this.id = id;
-            }
-
-            public String getUser_id() {
-                return user_id;
-            }
-
-            public void setUser_id(String user_id) {
-                this.user_id = user_id;
-            }
-
-            public String getGrade() {
-                return grade;
-            }
-
-            public void setGrade(String grade) {
-                this.grade = grade;
-            }
-
-            public void setSex(String sex) {
-                this.sex = sex;
-            }
-
-            public void setIs_auth(String is_auth) {
-                this.is_auth = is_auth;
-            }
-
-            public String getContent() {
-                return content;
-            }
-
-            public void setContent(String content) {
-                this.content = content;
-            }
-
-            public String getMedia_type() {
-                return media_type;
-            }
-
-            public void setMedia_type(String media_type) {
-                this.media_type = media_type;
-            }
-
-            public String getMedia() {
-                return media;
-            }
-
-            public void setMedia(String media) {
-                this.media = media;
-            }
-
-            public long getCreated() {
-                return created;
-            }
-
-            public void setCreated(long created) {
-                this.created = created;
-            }
-
-            public String getUsername() {
-                return username;
-            }
-
-            public void setUsername(String username) {
-                this.username = username;
-            }
-
-
-
-            public String getAvatar() {
-                return avatar;
-            }
-
-            public void setAvatar(String avatar) {
-                this.avatar = avatar;
-            }
-
-            public String getSex() {
-                return sex;
-            }
-
-            public String getIs_auth() {
-                return is_auth;
-            }
-        }
     }
 }

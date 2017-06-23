@@ -27,7 +27,6 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.widget.IShowState;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RTextView;
@@ -43,7 +42,6 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.SearchService;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.adapter.UserInfoAdapter;
-import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +82,7 @@ public class SearchNextUIView extends BaseContentUIView {
     private GridLayoutManager mNormalLayoutManager;
     private GridLayoutManager mSearchLayoutManager;
     private RExBaseAdapter<LikeUserInfoBean,
-            SearchResultBean.DynamicsBeanX.DynamicsBean,
+            LikeUserInfoBean,
             HotInfoListBean> mSearchAdapter;
     private RExItemDecoration mSearchItemDecoration;
     private String curSearchText = "";
@@ -405,9 +403,7 @@ public class SearchNextUIView extends BaseContentUIView {
 
         /**搜索结果配置*/
         mSearchLayoutManager = new GridLayoutManager(mActivity, 1);
-        mSearchAdapter = new RExBaseAdapter<LikeUserInfoBean,
-                SearchResultBean.DynamicsBeanX.DynamicsBean,
-                HotInfoListBean>(mActivity) {
+        mSearchAdapter = new RExBaseAdapter<LikeUserInfoBean, LikeUserInfoBean, HotInfoListBean>(mActivity) {
             @Override
             protected int getItemLayoutId(int viewType) {
                 if (viewType == TYPE_HEADER) {
@@ -416,7 +412,9 @@ public class SearchNextUIView extends BaseContentUIView {
                 if (viewType == LAST_ITEM_TYPE) {
                     return R.layout.item_search_result_search_last;
                 }
-//                if (viewType == TYPE_DATA) {
+                if (viewType == TYPE_DATA) {
+                    return R.layout.item_search_result_user;
+                }
                 return R.layout.item_search_result_article;
 //                }
 //                return super.getItemLayoutId(viewType);
@@ -480,7 +478,7 @@ public class SearchNextUIView extends BaseContentUIView {
                     holder.tv(R.id.tip_more_view).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            mILayout.startIView(new MoreUserUIView(curSearchText));
                         }
                     });
                 }
@@ -488,20 +486,22 @@ public class SearchNextUIView extends BaseContentUIView {
 
             /**动态*/
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, SearchResultBean.DynamicsBeanX.DynamicsBean dataBean) {
-                SearchUIView.updateMediaLayout(dataBean.getContent(), dataBean.getId(), dataBean.getMedia(), dataBean.getMedia_type(),
-                        mILayout, holder);
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
+                MoreDynamicsUIView.Companion.initDynamicsItemLayout(holder, dataBean, mILayout, curSearchText);
 
-                HnGlideImageView imageView = holder.v(R.id.image_view);
-                imageView.setImageThumbUrl(dataBean.getAvatar());
-                imageView.setAuth("1".equalsIgnoreCase(dataBean.getIs_auth()));
-
-                holder.tv(R.id.author_view).setText(dataBean.getUsername());
-                holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000, true));
-
-                holder.v(R.id.cnt_control_layout).setVisibility(View.GONE);
-                holder.v(R.id.delete_view).setVisibility(View.GONE);
-
+//                SearchUIView.updateMediaLayout(dataBean.getContent(), dataBean.getId(), dataBean.getMedia(), dataBean.getMedia_type(),
+//                        mILayout, holder);
+//
+//                HnGlideImageView imageView = holder.v(R.id.image_view);
+//                imageView.setImageThumbUrl(dataBean.getAvatar());
+//                imageView.setAuth("1".equalsIgnoreCase(dataBean.getIs_auth()));
+//
+//                holder.tv(R.id.author_view).setText(dataBean.getUsername());
+//                holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000, true));
+//
+//                holder.v(R.id.cnt_control_layout).setVisibility(View.GONE);
+//                holder.v(R.id.delete_view).setVisibility(View.GONE);
+//
                 resetLayout(holder);
                 if (posInData == 0) {
                     holder.tv(R.id.tip_view).setText(R.string.status);
@@ -514,7 +514,7 @@ public class SearchNextUIView extends BaseContentUIView {
                     holder.tv(R.id.tip_more_view).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            mILayout.startIView(new MoreDynamicsUIView(curSearchText));
                         }
                     });
                 }
@@ -523,7 +523,7 @@ public class SearchNextUIView extends BaseContentUIView {
             /**资讯item*/
             @Override
             protected void onBindFooterView(RBaseViewHolder holder, int posInFooter, HotInfoListBean footerBean) {
-                HotInfoListUIView.initItem(mParentILayout, holder, footerBean);
+                HotInfoListUIView.initItem(mParentILayout, holder, footerBean, curSearchText);
                 holder.v(R.id.delete_view).setVisibility(View.GONE);
 //                if (posInFooter == 0) {
 //                    holder.v(R.id.tip_layout).setVisibility(View.VISIBLE);
@@ -552,14 +552,14 @@ public class SearchNextUIView extends BaseContentUIView {
                     holder.tv(R.id.tip_more_view).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-
+                            mILayout.startIView(new MoreInformationUIView(curSearchText));
                         }
                     });
                 }
             }
 
             @Override
-            protected void onBindCommonView(RBaseViewHolder holder, int position, SearchResultBean.DynamicsBeanX.DynamicsBean bean) {
+            protected void onBindCommonView(RBaseViewHolder holder, int position, LikeUserInfoBean bean) {
                 if (holder.getItemViewType() == LAST_ITEM_TYPE) {
                     holder.tv(R.id.search_word_view).setText(mEditText.getText());
                     holder.tv(R.id.search_word_view).setTextColor(SkinHelper.getSkin().getThemeColor());

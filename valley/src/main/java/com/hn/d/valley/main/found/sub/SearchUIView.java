@@ -294,7 +294,7 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
             /**最新资讯item*/
             @Override
             protected void onBindFooterView(RBaseViewHolder holder, int posInFooter, HotInfoListBean footerBean) {
-                HotInfoListUIView.initItem(mParentILayout, holder, footerBean);
+                HotInfoListUIView.initItem(mParentILayout, holder, footerBean, "");
                 holder.v(R.id.delete_view).setVisibility(View.GONE);
                 RTextView tv = holder.v(R.id.tip_text_view);
                 if (posInFooter == 0) {

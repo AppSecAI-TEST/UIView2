@@ -109,6 +109,21 @@ public class LikeUserInfoBean {
 
     private String content;
     private String discuss_id;
+    /**
+     * 搜一搜动态结果bean
+     * id : 1218
+     * user_id : 60006
+     * media_type : 3
+     * media : http://circleimg.klgwl.com/910131bf-bc1f-44d1-8e69-fa4044c54346
+     * created : 1486945675
+     * grade : 0
+     * sex : 0
+     * is_auth : 1
+     */
+
+    private int user_id;
+    private int media_type;
+    private String media;
 
 
     public String getAvatar() {
@@ -399,5 +414,29 @@ public class LikeUserInfoBean {
 
     public void setDiscuss_id(String discuss_id) {
         this.discuss_id = discuss_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getMedia_type() {
+        return media_type;
+    }
+
+    public void setMedia_type(int media_type) {
+        this.media_type = media_type;
+    }
+
+    public String getMedia() {
+        return media;
+    }
+
+    public void setMedia(String media) {
+        this.media = media;
     }
 }
