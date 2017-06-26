@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_root_layout"
     android:layout_width="match_parent"
@@ -110,16 +111,49 @@
                     tools:visibility="visible">
 
                     <!--转发动态的内容-->
-                    <com.hn.d.valley.widget.HnExTextView
-                        android:id="@+id/forward_content_ex_view"
-                        style="@style/MainTextStyle"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:gravity="center_vertical"
-                        android:lineSpacingExtra="4dp"
-                        android:minHeight="@dimen/base_25dpi"
-                        tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
+                        android:orientation="horizontal">
+
+                        <com.angcyo.uiview.widget.RImageView
+                            android:id="@+id/forward_information_image_view"
+                            android:layout_width="@dimen/base_60dpi"
+                            android:layout_height="@dimen/base_60dpi"
+                            android:layout_marginEnd="@dimen/base_xhdpi"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/zhanweitu_1"
+                            android:visibility="gone"
+                            tools:visibility="visible"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <com.hn.d.valley.widget.HnExTextView
+                                android:id="@+id/forward_content_ex_view"
+                                style="@style/MainTextStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:lineSpacingExtra="4dp"
+                                android:minHeight="@dimen/base_25dpi"
+                                tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
+
+                            <com.angcyo.uiview.widget.ImageTextView
+                                android:id="@+id/image_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_marginTop="@dimen/base_ldpi"
+                                android:visibility="gone"
+                                app:r_image_size="@dimen/base_xxhdpi"
+                                app:r_text_offset="@dimen/base_ldpi"
+                                tools:visibility="visible"/>
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <!--转发动态的图片/视频/语音显示-->
                     <include

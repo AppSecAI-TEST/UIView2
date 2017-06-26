@@ -571,7 +571,7 @@ public class UserDiscussListBean {
              * avatar : http://avatorimg.klgwl.com/18617036401
              */
 
-            private String status;
+            private String status = "1";
             private String discuss_id;
             private String uid;
             private String media;

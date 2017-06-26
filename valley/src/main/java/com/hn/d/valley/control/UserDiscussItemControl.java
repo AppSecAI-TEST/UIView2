@@ -26,7 +26,9 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.ImageTextView;
 import com.angcyo.uiview.widget.RExTextView;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RNineImageLayout;
@@ -368,6 +370,21 @@ public class UserDiscussItemControl {
             //贴子正常
             dynamicStateTipView.setVisibility(View.GONE);
             forwardContentLayout.setVisibility(View.VISIBLE);
+
+            holder.v(R.id.forward_control_layout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (original_info.isForwardInformation()) {
+                        iLayout.startIView(new InformationDetailUIView(HotInfoListBean.from(original_info)));
+                    } else {
+                        jumpToDynamicDetailUIView(iLayout, original_info.getDiscuss_id(), true, isInDetail, false);
+
+                        if (!isInDetail) {
+                            updateDiscussReadCnt(original_info.getDiscuss_id());
+                        }
+                    }
+                }
+            });
         } else {
             //帖子异常
             dynamicStateTipView.setVisibility(View.VISIBLE);
@@ -377,6 +394,8 @@ public class UserDiscussItemControl {
             } else {
                 dynamicStateTipView.setText(R.string.dynamic_shield_tip);
             }
+
+            holder.v(R.id.forward_control_layout).setOnClickListener(null);
         }
 
         if (original_info.isForwardInformation()) {
@@ -400,25 +419,74 @@ public class UserDiscussItemControl {
             exTextView.setMaxShowLine(6);
         }
 
-        holder.v(R.id.forward_control_layout).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (original_info.isForwardInformation()) {
-                    iLayout.startIView(new InformationDetailUIView(HotInfoListBean.from(original_info)));
-                } else {
-                    jumpToDynamicDetailUIView(iLayout, original_info.getDiscuss_id(), true, isInDetail, false);
-
-                    if (!isInDetail) {
-                        updateDiscussReadCnt(original_info.getDiscuss_id());
-                    }
-                }
-            }
-        });
+        //图片, 视频处理
+        RImageView forwardInformationImageView = (RImageView) holder.v(R.id.forward_control_layout).findViewById(R.id.forward_information_image_view);
+        ImageTextView forwardAuthorView = (ImageTextView) holder.v(R.id.forward_control_layout).findViewById(R.id.image_text_view);
 
         final List<String> medias = RUtils.split(original_info.getMedia());
-        initMediaLayout(original_info.getMedia_type(), medias,
-                holder.v(R.id.forward_media_control_layout),
-                iLayout, isInDetail, original_info.isForwardInformation());
+        String media_type = original_info.getMedia_type();
+
+        if (original_info.isForwardInformation()) {
+            //转发资讯
+            forwardInformationImageView.setVisibility(View.VISIBLE);
+            forwardAuthorView.setVisibility(View.VISIBLE);
+            holder.v(R.id.forward_media_control_layout).setVisibility(View.GONE);
+            forwardInformationImageView.setShowGifTip(false);
+            forwardInformationImageView.setPlayDrawable(null);
+
+            //资讯作者
+            String author = original_info.getAuthor();
+            if (TextUtils.isEmpty(author)) {
+                forwardAuthorView.setShowText(holder.getContext().getString(R.string.information_klg));
+            } else {
+                forwardAuthorView.setShowText(author);
+            }
+
+            //资讯logo
+            String logo = original_info.getLogo();
+            if (TextUtils.isEmpty(logo)) {
+                forwardAuthorView.getImageView().setImageResource(R.drawable.logo_20170525);
+            } else {
+                forwardAuthorView.getImageView().setTag(R.id.tag_url, logo);
+                UserDiscussItemControl.displayImage(forwardAuthorView.getImageView(), logo, 0, 0, true, 9);
+            }
+
+            if (medias.isEmpty()) {
+                forwardInformationImageView.setImageResource(R.drawable.zhuanfa_zhixun_zhanweitu);
+            } else if ("picture".equalsIgnoreCase(media_type) || DynamicType.isImage(media_type)) {
+                String url = medias.get(0);
+                forwardInformationImageView.setTag(R.id.tag_url, url);
+                if (YImageControl.isYellowImage(url)) {
+                    YImageControl.showYellowImageXiao(forwardInformationImageView);
+                } else {
+                    UserDiscussItemControl.displayImage(forwardInformationImageView, url, 0, 0, true, 9);
+                }
+            } else if ("video".equalsIgnoreCase(media_type) || DynamicType.isVideo(media_type)) {
+                forwardInformationImageView.setPlayDrawable(R.drawable.image_picker_play);
+
+                String url = medias.get(0);
+                String[] videoParams = getVideoParams(url);
+                final String thumbUrl = videoParams[0];
+                final String videoUrl = videoParams[1];
+                forwardInformationImageView.setTag(R.id.tag_url, thumbUrl);
+                if (YImageControl.isYellowImage(thumbUrl)) {
+                    YImageControl.showYellowImageXiao(forwardInformationImageView);
+                } else {
+                    UserDiscussItemControl.displayImage(forwardInformationImageView, thumbUrl, 0, 0, true, 9);
+                }
+            } else {
+                forwardInformationImageView.setImageResource(R.drawable.zhuanfa_zhixun_zhanweitu);
+            }
+        } else {
+            //转发动态
+            forwardInformationImageView.setVisibility(View.GONE);
+            forwardAuthorView.setVisibility(View.GONE);
+            holder.v(R.id.forward_media_control_layout).setVisibility(View.VISIBLE);
+
+            initMediaLayout(media_type, medias,
+                    holder.v(R.id.forward_media_control_layout),
+                    iLayout, isInDetail, original_info.isForwardInformation());
+        }
     }
 
     /**
@@ -610,7 +678,8 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
-                        return OssHelper.getImageThumbSize2(thumbUrl);
+                        //return OssHelper.getImageThumbSize2(thumbUrl);
+                        return new int[]{(int) (250 * ScreenUtil.density), (int) (150 * ScreenUtil.density)};
                     }
 
                     @Override
