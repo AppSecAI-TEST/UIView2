@@ -41,7 +41,7 @@ public class HotTagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
 
     @Override
     protected int getTitleResource() {
-        return R.string.tags_manage_title;
+        return R.string.hot_tags_manage_title;
     }
 
     @Override
@@ -77,6 +77,8 @@ public class HotTagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                 helper.attachToRecyclerView(recyclerView);
 
                 final ChannelAdapter adapter = new ChannelAdapter(mActivity, helper, get(mMyTag), get(mOtherTag));
+                adapter.setMyTagTitle(getString(R.string.my_channel_tip));
+                adapter.setOtherTagTitle(getString(R.string.other_channel_tip));
                 adapter.setOnDragCallback(dragCallback);
                 adapter.setOnFinishListener(new ChannelAdapter.OnFinishListener() {
                     @Override

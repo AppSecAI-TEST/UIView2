@@ -224,6 +224,7 @@
     <string name="my_code">我的名片</string>
     <string name="create_qr_tip">二维码生成中...</string>
     <string name="tags_manage_title">标签管理</string>
+    <string name="hot_tags_manage_title">频道管理</string>
     <string name="signature_empty_tip">此人很懒, 什么也没有留下.</string>
     <string name="address_empty_tip">此人很懒, 什么也没有留下.</string>
     <string name="introduce_empty_tip">此人很懒, 什么也没有留下.</string>
@@ -789,4 +790,6 @@
     <string name="text_record_life_and_share_life">记录生活点滴,分享生活印记</string>
     <string name="register_error_tip">注册失败, 请重试!</string>
     <string name="save_draft_tip">是否保存草稿?</string>
+    <string name="my_channel_tip">我的频道</string>
+    <string name="other_channel_tip">推荐频道</string>
 </resources>
