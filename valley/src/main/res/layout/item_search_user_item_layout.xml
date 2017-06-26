@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_root_layout"
     android:layout_width="match_parent"
@@ -28,6 +27,7 @@
         android:orientation="vertical"
         android:paddingStart="@dimen/base_60dpi">
 
+        <!--动态内容-->
         <com.hn.d.valley.widget.HnExTextView
             android:id="@+id/content_ex_view"
             style="@style/MainTextStyle"
@@ -41,6 +41,7 @@
             android:minHeight="@dimen/base_25dpi"
             tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
 
+        <!--动态标签-->
         <com.hn.d.valley.widget.HnTagsNameTextView
             android:id="@+id/tags_name"
             android:layout_width="match_parent"
@@ -50,6 +51,7 @@
             android:paddingTop="@dimen/base_ldpi"
             tools:text="广东 深圳"/>
 
+        <!--动态图片/视频/语音展示-->
         <RelativeLayout
             android:id="@+id/media_control_layout"
             android:layout_width="match_parent"
@@ -79,7 +81,9 @@
                 tools:text="99"/>
         </RelativeLayout>
 
+        <!--转发动态控制-->
         <LinearLayout
+            android:id="@+id/forward_control_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
@@ -87,36 +91,56 @@
             android:paddingEnd="@dimen/base_xhdpi"
             android:paddingStart="@dimen/base_xhdpi">
 
-            <!--转发动态-->
-            <com.angcyo.uiview.viewgroup.RLinearLayout
-                android:id="@+id/forward_control_layout"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/base_bg_selector"
-                android:orientation="vertical"
+                android:background="@color/forward_bg_color"
                 android:paddingBottom="@dimen/base_ldpi"
+                android:paddingEnd="@dimen/base_ldpi"
                 android:paddingStart="@dimen/base_ldpi"
-                android:paddingTop="@dimen/base_hdpi"
-                app:r_background="@color/forward_bg_color">
+                android:paddingTop="@dimen/base_hdpi">
 
-                <com.hn.d.valley.widget.HnExTextView
-                    android:id="@+id/forward_content_ex_view"
-                    style="@style/MainTextStyle"
+                <!--转发动态-->
+                <com.angcyo.uiview.viewgroup.RLinearLayout
+                    android:id="@+id/forward_content_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/base_bg_selector"
+                    android:orientation="vertical"
+                    tools:visibility="visible">
+
+                    <!--转发动态的内容-->
+                    <com.hn.d.valley.widget.HnExTextView
+                        android:id="@+id/forward_content_ex_view"
+                        style="@style/MainTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:gravity="center_vertical"
+                        android:lineSpacingExtra="4dp"
+                        android:minHeight="@dimen/base_25dpi"
+                        tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
+
+                    <!--转发动态的图片/视频/语音显示-->
+                    <include
+                        android:id="@+id/forward_media_control_layout"
+                        layout="@layout/item_media_layout"
+                        android:paddingEnd="@dimen/base_xxxhdpi"
+                        android:paddingTop="@dimen/base_ldpi"/>
+
+                </com.angcyo.uiview.viewgroup.RLinearLayout>
+
+                <TextView
+                    android:id="@+id/dynamic_state_tip_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:lineSpacingExtra="4dp"
-                    android:minHeight="@dimen/base_25dpi"
-                    tools:text="阿萨德浪费空间撒代理费进来撒地方记录的撒娇发来撒地方叫撒代理费经理的萨芬空间撒老地方"/>
+                    android:drawableLeft="@drawable/annotation"
+                    android:drawablePadding="@dimen/base_xhdpi"
+                    android:padding="@dimen/base_xhdpi"
+                    android:visibility="gone"
+                    tools:text="@string/dynamic_delete_tip"/>
 
-                <include
-                    android:id="@+id/forward_media_control_layout"
-                    layout="@layout/item_media_layout"
-                    android:paddingEnd="@dimen/base_xxxhdpi"
-                    android:paddingTop="@dimen/base_ldpi"/>
-
-            </com.angcyo.uiview.viewgroup.RLinearLayout>
+            </RelativeLayout>
 
             <!--<com.angcyo.uiview.widget.RTextView-->
             <!--android:id="@+id/copy_info_view"-->

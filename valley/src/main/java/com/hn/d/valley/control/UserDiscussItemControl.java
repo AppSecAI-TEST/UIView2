@@ -221,6 +221,7 @@ public class UserDiscussItemControl {
         //标签处理
         HnTagsNameTextView tagsNameTextView = holder.v(R.id.tags_name);
         tagsNameTextView.setTags(dataListBean.getTags_name());
+        tagsNameTextView.setVisibility(View.GONE);//不需要标签啦, 星期一 2017-6-26
 
         //图片视频处理
         updateMediaLayout(dataListBean, iLayout, holder, isInDetail);
@@ -359,7 +360,24 @@ public class UserDiscussItemControl {
                                           final ILayout iLayout,
                                           final boolean isInDetail) {
         holder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
+        View forwardContentLayout = holder.v(R.id.forward_content_layout);
         HnExTextView exTextView = holder.v(R.id.forward_content_ex_view);
+        TextView dynamicStateTipView = holder.v(R.id.dynamic_state_tip_view);
+
+        if ("1".equalsIgnoreCase(original_info.getStatus())) {
+            //贴子正常
+            dynamicStateTipView.setVisibility(View.GONE);
+            forwardContentLayout.setVisibility(View.VISIBLE);
+        } else {
+            //帖子异常
+            dynamicStateTipView.setVisibility(View.VISIBLE);
+            forwardContentLayout.setVisibility(View.GONE);
+            if ("2".equalsIgnoreCase(original_info.getStatus())) {
+                dynamicStateTipView.setText(R.string.dynamic_delete_tip);
+            } else {
+                dynamicStateTipView.setText(R.string.dynamic_shield_tip);
+            }
+        }
 
         if (original_info.isForwardInformation()) {
             exTextView.setText(original_info.getTitle());
@@ -1601,7 +1619,7 @@ public class UserDiscussItemControl {
         }
     }
 
-    public static void  displayJpeg(final ImageView imageView, final String url, final int width, final int height, final int imageSize) {
+    public static void displayJpeg(final ImageView imageView, final String url, final int width, final int height, final int imageSize) {
 //        if (imageView instanceof RImageView) {
 //            ((RImageView) imageView).setShowGifTip(false);
 //        }
