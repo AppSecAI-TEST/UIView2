@@ -1,5 +1,6 @@
 package com.hn.d.valley.base.iview;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -831,7 +832,16 @@ public class VideoRecordUIView extends UIBaseView {
         private Camera mCameraInstance;
 
         public void onResume() {
-            setUpCamera(mCurrentCameraId);
+            mActivity.checkPermissions(new String[]{Manifest.permission.CAMERA}, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean aBoolean) {
+                    if (aBoolean) {
+                        setUpCamera(mCurrentCameraId);
+                    } else {
+                        finishIView();
+                    }
+                }
+            });
         }
 
         public void onPause() {
@@ -846,7 +856,16 @@ public class VideoRecordUIView extends UIBaseView {
                 needRotate = true;
             //else
             //  needRotate = true;
-            setUpCamera(mCurrentCameraId);
+            mActivity.checkPermissions(new String[]{Manifest.permission.CAMERA}, new Action1<Boolean>() {
+                @Override
+                public void call(Boolean aBoolean) {
+                    if (aBoolean) {
+                        setUpCamera(mCurrentCameraId);
+                    } else {
+                        finishIView();
+                    }
+                }
+            });
         }
 
 

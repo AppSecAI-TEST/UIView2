@@ -520,7 +520,7 @@
     <string name="text_not_immedately_bind">立即解绑</string>
     <string name="text_send_you_a_packet">给你发了一个红包</string>
     <string name="text_red_packet_expore">红包已过期</string>
-    <string name="text_rp_rule">红包规则</string>
+    <string name="text_rp_rule">红包规则 </string>
     <string name="text_group_num">本群共%d人</string>
     <string name="text_unbind_alipay">解绑支付宝</string>
     <string name="text_balance_more_zero">当前红包余额大于0元</string>
@@ -786,5 +786,7 @@
     <string name="t_avchat_push_content">正在呼叫您</string>
     <string name="t_avchat_create_room_fail">创建房间失败</string>
     <string name="t_avchat_not_start_with_less_member">无法发起,人数少于2人</string>
+    <string name="text_record_life_and_share_life">记录生活点滴,分享生活印记</string>
     <string name="register_error_tip">注册失败, 请重试!</string>
+    <string name="save_draft_tip">是否保存草稿?</string>
 </resources>

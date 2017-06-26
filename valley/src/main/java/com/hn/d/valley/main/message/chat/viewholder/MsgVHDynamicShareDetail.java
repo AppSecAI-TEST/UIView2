@@ -7,12 +7,16 @@ import android.widget.TextView;
 
 import com.angcyo.library.glide.GlideBlurTransformation;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.Json;
 import com.angcyo.uiview.widget.RImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.JsonSyntaxException;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.oss.OssHelper;
+import com.hn.d.valley.bean.HotInfoListBean;
+import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
@@ -117,6 +121,21 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
         } else if (detailMsg.isArticle()) {
             videoPlayView.setVisibility(View.GONE);
             iv_content.setImageResource(R.drawable.zixun_morentu);
+            try{
+                final HotInfoListBean bean;
+                bean = Json.from(detailMsg.getMsg(), HotInfoListBean.class);
+                tv_pc_name.setText(bean.getTitle());
+                pc_layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mUIBaseView.startIView(new InformationDetailUIView(bean));
+                    }
+                });
+            }catch (JsonSyntaxException e) {
+                pc_layout.setOnClickListener(null);
+                tv_pc_name.setText(detailMsg.getMsg());
+
+            }
             return;
         }
 

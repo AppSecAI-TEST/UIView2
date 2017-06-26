@@ -3,11 +3,14 @@ package com.hn.d.valley.control;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RRetrofit;
@@ -267,13 +270,14 @@ public class ShareControl {
     ) {
         String userCardSpm = RSA.encode(createUserCardSpm(UserCache.getUserAccount()));
         final String h5_url = String.format("%s/user?to=%s&spm=%s", WAP_URL, UserCache.getUserAccount(), userCardSpm);
-        final View rootView = mActivity.getLayoutInflater().inflate(R.layout.view_my_qr_code, null);
+        final View rootView = mActivity.getLayoutInflater().inflate(R.layout.view_share_qr_code, null);
 
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
         final HnGlideImageView imageView = (HnGlideImageView) rootView.findViewById(R.id.image_view);
         HnGenderView genderView = (HnGenderView) rootView.findViewById(R.id.grade);
         TextView userName = (TextView) rootView.findViewById(R.id.username);
         final ImageView qrView = (ImageView) rootView.findViewById(R.id.qr_code_view);
+        final LinearLayout ll_share_root = (LinearLayout) rootView.findViewById(R.id.ll_share_root);
 
         imageView.setAuth(userInfoBean.getIs_auth());
         genderView.setGender(userInfoBean.getSex(), userInfoBean.getGrade());
@@ -287,8 +291,8 @@ public class ShareControl {
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                         Bitmap cornerBitmap = BmpUtil.getRoundedCornerBitmap(resource, 1000);
                         imageView.setImageBitmap(cornerBitmap);
-                        final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
-                        AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
+//                        final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
+//                        AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
 
                         createQrCode(h5_url,
                                 (int) ResUtil.dpToPx(mActivity, 200),
@@ -298,7 +302,7 @@ public class ShareControl {
                                     @Override
                                     public void call(Bitmap bitmap) {
                                         qrView.setImageBitmap(bitmap);
-                                        onQrCodeCreateEnd(mActivity, convertViewToBitmap(rootView), shareMedia);
+                                        onQrCodeCreateEnd(mActivity, convertViewToBitmap(ll_share_root), shareMedia);
                                     }
                                 });
                     }
@@ -307,11 +311,41 @@ public class ShareControl {
     }
 
     public static Bitmap convertViewToBitmap(View view) {
+        L.d("convertViewToBitmap ; width : " + view.getMeasuredWidth() + "height : " + view.getMeasuredHeight());
         view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                 , View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        L.d("convertViewToBitmap after ; width : " + view.getMeasuredWidth() + "height : " + view.getMeasuredHeight());
         view.buildDrawingCache();
         return view.getDrawingCache();
+    }
+
+    /**
+     * 根据指定的view截图
+     *
+     * @param v 要截图的view
+     * @return Bitmap
+     */
+    public static Bitmap getViewBitmap(View v) {
+        if (null == v) {
+            return null;
+        }
+        v.setDrawingCacheEnabled(true);
+        v.buildDrawingCache();
+        if (Build.VERSION.SDK_INT >= 11) {
+            v.measure(View.MeasureSpec.makeMeasureSpec(v.getWidth(), View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(v.getHeight(), View.MeasureSpec.EXACTLY));
+            v.layout((int) v.getX(), (int) v.getY(), (int) v.getX() + v.getMeasuredWidth(), (int) v.getY() + v.getMeasuredHeight());
+        } else {
+            v.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(v.getDrawingCache(), 0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+        v.setDrawingCacheEnabled(false);
+        v.destroyDrawingCache();
+        return bitmap;
     }
 
     // 发送到qq / 微信

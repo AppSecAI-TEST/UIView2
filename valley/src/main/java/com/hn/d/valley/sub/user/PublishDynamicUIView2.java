@@ -18,7 +18,6 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
-import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -225,10 +224,36 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         boolean backPressed = mSoftInputLayout.requestBackPressed();
         if (backPressed) {
             if (!mInputView.isEmpty() || mAddImageAdapter2.getAllDatas().size() > 0 || mVideoStatusInfo != null) {
-                UIItemDialog.build()
-                        .addItem(getString(R.string.save_draft), new View.OnClickListener() {
+//                UIItemDialog.build()
+//                        .addItem(getString(R.string.save_draft), new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                RRealm.exe(new Realm.Transaction() {
+//                                    @Override
+//                                    public void execute(Realm realm) {
+//                                        if (mPublishTaskRealm != null) {
+//                                            mPublishTaskRealm.deleteFromRealm();
+//                                        }
+//                                        PublishTaskRealm.save(getPublishTaskRealm());
+//                                        finishIView(PublishDynamicUIView2.this, new UIParam(true, true, false));
+//                                    }
+//                                });
+//                            }
+//                        })
+//                        .addItem(getString(R.string.no_save), new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                finishIView(PublishDynamicUIView2.this, new UIParam(true, true, false));
+//                            }
+//                        })
+//                        .showDialog(mParentILayout);
+
+                UIDialog.build().setDialogContent(getString(R.string.save_draft_tip))
+                        .setOkText(getString(R.string.save))
+                        .setCancelText(getString(R.string.no_save))
+                        .setOkClick(new UIDialog.OnDialogClick() {
                             @Override
-                            public void onClick(View v) {
+                            public void onDialogClick(UIDialog dialog, View clickView) {
                                 RRealm.exe(new Realm.Transaction() {
                                     @Override
                                     public void execute(Realm realm) {
@@ -241,9 +266,9 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                 });
                             }
                         })
-                        .addItem(getString(R.string.no_save), new View.OnClickListener() {
+                        .setCancelClick(new UIDialog.OnDialogClick() {
                             @Override
-                            public void onClick(View v) {
+                            public void onDialogClick(UIDialog dialog, View clickView) {
                                 finishIView(PublishDynamicUIView2.this, new UIParam(true, true, false));
                             }
                         })

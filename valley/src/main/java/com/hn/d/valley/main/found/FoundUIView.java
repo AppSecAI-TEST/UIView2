@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.found;
 
+import android.Manifest;
 import android.graphics.Rect;
 import android.view.View;
 
@@ -18,6 +19,8 @@ import com.hn.d.valley.main.home.nearby.NearbyUIView;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -48,6 +51,8 @@ public class FoundUIView extends BaseItemUIView {
 
     @Override
     protected void createItems(List<SingleItem> items) {
+
+        //热点资讯
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
@@ -59,13 +64,25 @@ public class FoundUIView extends BaseItemUIView {
                 });
             }
         });
+
+        //附近的人
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
                 baseInitItem(holder, R.drawable.invite_friends, getString(R.string.nearby_perple), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new NearbyUIView());
+                        mActivity.checkPermissions(new String[]{
+                                        Manifest.permission.ACCESS_FINE_LOCATION,
+                                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                                new Action1<Boolean>() {
+                                    @Override
+                                    public void call(Boolean aBoolean) {
+                                        if (aBoolean) {
+                                            mParentILayout.startIView(new NearbyUIView());
+                                        }
+                                    }
+                                });
                     }
                 });
             }
@@ -83,7 +100,17 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.scan, getString(R.string.scan_title), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new HnScanUIView());
+                        mActivity.checkPermissions(new String[]{
+                                        Manifest.permission.CAMERA
+                                },
+                                new Action1<Boolean>() {
+                                    @Override
+                                    public void call(Boolean aBoolean) {
+                                        if (aBoolean) {
+                                            mParentILayout.startIView(new HnScanUIView());
+                                        }
+                                    }
+                                });
                     }
                 });
             }

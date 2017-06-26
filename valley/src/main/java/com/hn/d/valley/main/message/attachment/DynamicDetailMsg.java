@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.attachment;
 
+import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 
@@ -75,7 +76,8 @@ public class DynamicDetailMsg extends BaseCustomMsg{
         detailMsg.username = dataListBean.getAuthor();
         detailMsg.item_id = String.valueOf(dataListBean.getId());
         detailMsg.apnsText = dataListBean.getAuthor();
-        detailMsg.msg = dataListBean.getTitle();
+//        detailMsg.msg = dataListBean.getTitle();
+        detailMsg.msg = Json.to(dataListBean);
         detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
         return detailMsg;
     }

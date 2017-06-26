@@ -43,12 +43,12 @@
 
         <com.hn.d.valley.widget.HnGlideImageView
             android:id="@+id/iv_audio_head"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="75dp"
-            android:minWidth="75dp"
+            android:layout_width="115dp"
+            android:layout_height="115dp"
+            android:minHeight="115dp"
+            android:minWidth="115dp"
             android:padding="10dp"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             android:contentDescription="@string/is_circle2"
             android:src="@drawable/default_avatar" />
 

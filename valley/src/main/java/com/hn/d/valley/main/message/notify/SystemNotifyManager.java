@@ -80,31 +80,34 @@ public class SystemNotifyManager {
             return;
         }
 
-//        BaseNotification baseNotification = Json.from(content,BaseNotification.class);
-//        switch (baseNotification.getExtend_type()) {
-//            case SystemNotifyType.GROUP_ANNOUNCEMENT:
-//
-//                notifyAnnouncementUpdate(customNotification, content);
-//
-//                break;
-//            case SystemNotifyType.NEW_DISCUSS:
-//                // 设置是否发送圈子提醒
-//                if (MsgNotifySetting.instance().isCircleCNotify()) {
-//                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
-//                }
-//                break;
-//            case SystemNotifyType.NEW_VISITOR:
-//                notifyNewVisitor();
-//                break;
-//            case SystemNotifyType.GROUP_DISMISS:
-//                notifyGroupDisslove(customNotification, content);
-//                break;
-//            case SystemNotifyType.ADS_UPDATE:
-//                AdsControl.INSTANCE.updateAds();
-//                break;
-//            default:
-//
-//        }
+        BaseNotification baseNotification = Json.from(content,BaseNotification.class);
+        if (TextUtils.isEmpty(baseNotification.getExtend_type())) {
+            return;
+        }
+        switch (baseNotification.getExtend_type()) {
+            case SystemNotifyType.GROUP_ANNOUNCEMENT:
+
+                notifyAnnouncementUpdate(customNotification, content);
+
+                break;
+            case SystemNotifyType.NEW_DISCUSS:
+                // 设置是否发送圈子提醒
+                if (MsgNotifySetting.instance().isCircleCNotify()) {
+                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
+                }
+                break;
+            case SystemNotifyType.NEW_VISITOR:
+                notifyNewVisitor();
+                break;
+            case SystemNotifyType.GROUP_DISMISS:
+                notifyGroupDisslove(customNotification, content);
+                break;
+            case SystemNotifyType.ADS_UPDATE:
+                AdsControl.INSTANCE.updateAds();
+                break;
+            default:
+
+        }
 
     }
 

@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -49,7 +50,18 @@ public class UserRecommendUIView extends SingleRecyclerUIView<LikeUserInfoBean> 
 
     @Override
     protected TitleBarPattern getTitleBar() {
+//        ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
+//        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_suaixuan)).setListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showMoreDialog();
+//            }
+//        }));
         return super.getTitleBar().setTitleString(getString(R.string.text_user_recommend));
+    }
+
+    private void showMoreDialog() {
+
     }
 
     @Override

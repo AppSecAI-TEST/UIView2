@@ -1103,9 +1103,11 @@ public class UserDiscussItemControl {
                 @Override
                 public void onClick(View v) {
                     iLayout.startIView(UIBottomItemDialog.build()
+                            .setShowCancelButton(false)
                             .addItem(topItem)
                             .addItem(favItem)
-                            .addItem(deleteItem));
+                            .addItem(deleteItem)
+                    );
                 }
             };
         } else {
@@ -1114,6 +1116,7 @@ public class UserDiscussItemControl {
                 @Override
                 public void onClick(View v) {
                     iLayout.startIView(UIBottomItemDialog.build()
+                            .setShowCancelButton(false)
                             .addItem(followItem)
                             .addItem(favItem)
                             .addItem(notSeeItem)
@@ -1569,7 +1572,7 @@ public class UserDiscussItemControl {
                                                 if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
                                                     return;
                                                 }
-                                                //imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                                 imageView.setImageDrawable(resource);
                                                 resource.start();
                                             }
@@ -1627,7 +1630,7 @@ public class UserDiscussItemControl {
                         //自动根据图片的长宽差, 选择缩放类型
                         if (width == 0 && height == 0) {
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        } else if (imageSize <= 1 || abs < Math.min(w / 4, h / 4)) {
+                        } else if (imageSize <= 1 /*|| abs < Math.min(w / 4, h / 4)*/) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         } else {
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

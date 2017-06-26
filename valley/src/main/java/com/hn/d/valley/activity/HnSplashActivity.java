@@ -1,5 +1,6 @@
 package com.hn.d.valley.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -106,6 +107,15 @@ public class HnSplashActivity extends BaseActivity {
 //                });
 
         checkPermissions();
+    }
+
+    @Override
+    protected String[] needPermissions() {
+        return new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_WIFI_STATE
+        };
     }
 
     @Override

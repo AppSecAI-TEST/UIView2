@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.home;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -412,6 +413,8 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     public void onClick() {
         //发布动态
         UIItemDialog.build()
+                .setShowCancelButton(false)
+                .setUseFullItem(true)
                 .addItem(getString(R.string.publish_image_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -423,22 +426,43 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .addItem(getString(R.string.publish_video_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Action.publishAction_Video();
-                        mParentILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
-                            @Override
-                            public void call(UIIViewImpl iView, String path, String s) {
-                                iView.replaceIView(new PublishDynamicUIView2(new VideoStatusInfo(path, s))
-                                        .setPublishAction(getPublishAction())
-                                );
-                            }
-                        }));
+                        mActivity.checkPermissions(new String[]{
+                                        Manifest.permission.CAMERA,
+                                        Manifest.permission.RECORD_AUDIO},
+                                new Action1<Boolean>() {
+                                    @Override
+                                    public void call(Boolean aBoolean) {
+                                        if (aBoolean) {
+                                            Action.publishAction_Video();
+                                            mParentILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
+                                                @Override
+                                                public void call(UIIViewImpl iView, String path, String s) {
+                                                    iView.replaceIView(new PublishDynamicUIView2(new VideoStatusInfo(path, s))
+                                                            .setPublishAction(getPublishAction())
+                                                    );
+                                                }
+                                            }));
+                                        }
+                                    }
+                                });
                     }
                 })
                 .addItem(getString(R.string.publish_voice), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Action.publishAction_Audio();
-                        mParentILayout.startIView(new PublishVoiceDynamicUIView().setPublishAction(getPublishAction()));
+
+                        mActivity.checkPermissions(new String[]{
+                                        Manifest.permission.RECORD_AUDIO},
+                                new Action1<Boolean>() {
+                                    @Override
+                                    public void call(Boolean aBoolean) {
+                                        if (aBoolean) {
+                                            Action.publishAction_Audio();
+                                            mParentILayout.startIView(new PublishVoiceDynamicUIView().setPublishAction(getPublishAction()));
+                                        }
+                                    }
+                                });
+
                     }
                 })
                 .showDialog(mParentILayout);

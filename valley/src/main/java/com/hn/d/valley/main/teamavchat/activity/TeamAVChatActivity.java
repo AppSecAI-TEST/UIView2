@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -117,7 +118,8 @@ public class TeamAVChatActivity extends StyleActivity {
     private RRecyclerView recyclerView;
     private TeamAVChatAdapter adapter;
     private List<TeamAVChatItem> data;
-    private View voiceMuteButton;
+//    private View voiceMuteButton;
+    private  AVChatVideoRender render;
 
     // TIMER
     private Timer timer;
@@ -257,6 +259,8 @@ public class TeamAVChatActivity extends StyleActivity {
     private void findLayouts() {
         callLayout = findViewById(R.id.team_avchat_call_layout);
         surfaceLayout = findViewById(R.id.team_avchat_surface_layout);
+        render = (AVChatVideoRender) findViewById(R.id.render_avchat);
+        render.setVisibility(View.GONE);
 //        voiceMuteButton = findViewById(R.id.avchat_shield_user);
     }
 
@@ -341,16 +345,17 @@ public class TeamAVChatActivity extends StyleActivity {
         timerText = (TextView) surfaceLayout.findViewById(R.id.timer_text);
 
         // 控制按钮
-        ViewGroup settingLayout = (ViewGroup) surfaceLayout.findViewById(R.id.avchat_setting_layout);
+        ViewGroup settingLayout = (ViewGroup) surfaceLayout.findViewById(R.id.ll_controler);
         for (int i = 0; i < settingLayout.getChildCount(); i++) {
             View v = settingLayout.getChildAt(i);
-            if (v instanceof RelativeLayout) {
-                ViewGroup vp = (ViewGroup) v;
-                if (vp.getChildCount() == 1) {
-                    vp.getChildAt(0).setOnClickListener(settingBtnClickListener);
-                }
+            if (v instanceof LinearLayout) {
+//                ViewGroup vp = (ViewGroup) v;
+//                if (vp.getChildCount() == 2) {
+                    v.setOnClickListener(settingBtnClickListener);
+//                }
             }
         }
+        surfaceLayout.findViewById(R.id.ll_hangup).setOnClickListener(settingBtnClickListener);
 
         // 音视频权限检查
         checkPermission();
@@ -498,6 +503,7 @@ public class TeamAVChatActivity extends StyleActivity {
     private void startLocalPreview() {
         if (data.size() > 1 && data.get(0).account.equals(UserCache.getUserAccount())) {
             AVChatVideoRender surfaceView = getAvChatVideoRender(0);
+//            AVChatVideoRender surfaceView = render;
             if (surfaceView != null) {
                 AVChatManager.getInstance().setupLocalVideoRender(surfaceView, false, AVChatVideoScalingType.SCALE_ASPECT_FIT);
                 AVChatManager.getInstance().startVideoPreview();
@@ -607,7 +613,7 @@ public class TeamAVChatActivity extends StyleActivity {
                 for (TeamAVChatItem item : data) {
                     if (item.type == TYPE_DATA && item.state == TeamAVChatItem.STATE.STATE_WAITING) {
                         item.state = TeamAVChatItem.STATE.STATE_END;
-//                        adapter.notifyItemChanged(index);
+                        adapter.notifyItemChanged(index);
                     }
                     index++;
                 }
@@ -681,15 +687,15 @@ public class TeamAVChatActivity extends StyleActivity {
                     // 切换前后摄像头
                     AVChatManager.getInstance().switchCamera();
                     break;
-//                case R.id.avchat_enable_video:
-//                    // 视频
-//                    AVChatManager.getInstance().muteLocalVideo(videoMute = !videoMute);
-//                    // 发送控制指令
-//                    byte command = videoMute ? AVChatControlCommand.NOTIFY_VIDEO_OFF : AVChatControlCommand.NOTIFY_VIDEO_ON;
-//                    AVChatManager.getInstance().sendControlCommand(chatId, command, null);
-////                    v.setBackgroundResource(videoMute ? R.drawable.t_avchat_camera_mute_selector : R.drawable.t_avchat_camera_selector);
-//                    updateSelfItemVideoState(!videoMute);
-//                    break;
+                case R.id.ll_open_carema:
+                    // 视频
+                    AVChatManager.getInstance().muteLocalVideo(videoMute = !videoMute);
+                    // 发送控制指令
+                    byte command = videoMute ? AVChatControlCommand.NOTIFY_VIDEO_OFF : AVChatControlCommand.NOTIFY_VIDEO_ON;
+                    AVChatManager.getInstance().sendControlCommand(chatId, command, null);
+//                    v.setBackgroundResource(videoMute ? R.drawable.t_avchat_camera_mute_selector : R.drawable.t_avchat_camera_selector);
+                    updateSelfItemVideoState(!videoMute);
+                    break;
 //                case R.id.avchat_enable_audio:
 //                    // 麦克风开关
 //                    AVChatManager.getInstance().muteLocalAudio(microphoneMute = !microphoneMute);
@@ -700,15 +706,15 @@ public class TeamAVChatActivity extends StyleActivity {
 //                    AVChatManager.getInstance().setSpeaker(speakerMode = !speakerMode);
 ////                    v.setBackgroundResource(speakerMode ? R.drawable.t_avchat_speaker_selector : R.drawable.t_avchat_speaker_mute_selector);
 //                    break;
-//                case R.id.avchat_shield_user:
-//                    // 屏蔽用户音频
-//                    disableUserAudio();
-//                    break;
-//                case R.id.hangup:
-//                    // 挂断
-//                    hangup();
-//                    finish();
-//                    break;
+                case R.id.ll_mute:
+                    // 屏蔽用户音频
+                    disableUserAudio();
+                    break;
+                case R.id.ll_hangup:
+                    // 挂断
+                    hangup();
+                    finish();
+                    break;
             }
         }
     };
@@ -722,8 +728,8 @@ public class TeamAVChatActivity extends StyleActivity {
                 break;
             }
         }
-        voiceMuteButton.setEnabled(enable);
-        voiceMuteButton.invalidate();
+//        voiceMuteButton.setEnabled(enable);
+//        voiceMuteButton.invalidate();
     }
 
     private void disableUserAudio() {
@@ -807,7 +813,7 @@ public class TeamAVChatActivity extends StyleActivity {
     private void checkPermission() {
         List<String> lackPermissions = AVChatManager.getInstance().checkPermission(TeamAVChatActivity.this);
         if (lackPermissions.isEmpty()) {
-//            onBasicPermissionSuccess();
+            onBasicPermissionSuccess();
         } else {
             String[] permissions = new String[lackPermissions.size()];
             for (int i = 0; i < lackPermissions.size(); i++) {
@@ -825,17 +831,14 @@ public class TeamAVChatActivity extends StyleActivity {
 //        MPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
-//    @OnMPermissionGranted(BASIC_PERMISSION_REQUEST_CODE)
-//    public void onBasicPermissionSuccess() {
-//        onPermissionChecked();
-//    }
+    public void onBasicPermissionSuccess() {
+        onPermissionChecked();
+    }
 
-//    @OnMPermissionDenied(BASIC_PERMISSION_REQUEST_CODE)
-//    @OnMPermissionNeverAskAgain(BASIC_PERMISSION_REQUEST_CODE)
-//    public void onBasicPermissionFailed() {
-//        Toast.makeText(this, "音视频通话所需权限未全部授权，部分功能可能无法正常运行！", Toast.LENGTH_SHORT).show();
-//        onPermissionChecked();
-//    }
+    public void onBasicPermissionFailed() {
+        Toast.makeText(this, "音视频通话所需权限未全部授权，部分功能可能无法正常运行！", Toast.LENGTH_SHORT).show();
+        onPermissionChecked();
+    }
 
     /**
      * ************************************ helper ***************************************

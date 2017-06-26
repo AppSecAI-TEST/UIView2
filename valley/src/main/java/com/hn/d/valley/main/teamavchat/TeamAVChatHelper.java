@@ -64,19 +64,19 @@ public class TeamAVChatHelper {
         return json.toString();
     }
 
-    private JSONObject parseContentJson(CustomNotification notification) {
-//        if (notification != null) {
-//            String content = notification.getContent();
-//            return JSONObject.parseObject(content);
-//        }
+    private JSONObject parseContentJson(CustomNotification notification) throws JSONException {
+        if (notification != null) {
+            String content = notification.getContent();
+            return new JSONObject(content);
+        }
         return null;
     }
 
     private boolean isTeamAVChatInvite(JSONObject json) {
-//        if (json != null) {
-//            int id = json.getInteger(KEY_ID);
-//            return id == ID;
-//        }
+        if (json != null) {
+            int id = json.optInt(KEY_ID);
+            return id == ID;
+        }
         return false;
     }
 
@@ -114,7 +114,9 @@ public class TeamAVChatHelper {
                     L.i("isSyncComplete = " + isSyncComplete);
                     if (isSyncComplete || !checkOfflineOutTime(customNotification)) {
                         isTeamAVChatting = true;
-                        launchActivity(teamId, roomName, accounts, teamName);
+//                        launchActivity(teamId, roomName, accounts, teamName);
+                          TeamAVChatActivity.startActivity(ValleyApp.getApp(), true, teamId, roomName, accounts, teamName);
+
                     }
                 }
             } catch (Exception e) {
@@ -133,7 +135,7 @@ public class TeamAVChatHelper {
 //                    TeamAVChatActivity.startActivity(ValleyApp.getApp(), true, teamId, roomName, accounts, teamName);
 //                } else {
                     L.i("launch TeamAVChatActivity delay for WelComeActivity is Launching");
-                    launchActivity(teamId, roomName, accounts, teamName);
+//                    launchActivity(teamId, roomName, accounts, teamName);
 //                }
             }
         };

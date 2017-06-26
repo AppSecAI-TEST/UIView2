@@ -1,11 +1,13 @@
 package com.hn.d.valley.main.me.setting;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -97,6 +99,8 @@ import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Action2;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -118,9 +122,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     LinearLayout layoutPlayAudio;
     Chronometer mTimer;
     LinearLayout timpContainer;
-    private ItemInfoLayout mUserIcoInfoLayout;
     ImageView iv_play;
-
+    private ItemInfoLayout mUserIcoInfoLayout;
     private HnAddImageAdapter mHnAddImageAdapter;
     private List<Luban.ImageItem> mOldItems = new ArrayList<>();//原先的照片地址
     private List<Luban.ImageItem> mPhones = new ArrayList<>();//原先的照片地址用来adapter
@@ -138,34 +141,48 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     private boolean cancelled;
     private boolean audioPlaying;
 
+    private boolean haveAudioPermission = false;
+
 
     private View.OnTouchListener audioRecordListener = new View.OnTouchListener() {
 
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                touched = true;
-                initAudioRecord();
-                onStartAudioRecord();
-                over_layout.setVisibility(View.VISIBLE);
-            } else if (event.getAction() == MotionEvent.ACTION_CANCEL
-                    || event.getAction() == MotionEvent.ACTION_UP) {
-                touched = false;
-                onEndAudioRecord(isCancelled(layoutPlayAudio, event));
-                over_layout.setVisibility(View.GONE);
-            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                // 不允许recyclerview 处理滑动事件
-                mRecyclerView.requestDisallowInterceptTouchEvent(true);
-                touched = false;
-                boolean isCancel = isCancelled(layoutPlayAudio, event);
-                if (isCancel) {
-                    timpContainer.setBackgroundResource(R.drawable.nim_cancel_record_red_bg);
-                } else {
-                    timpContainer.setBackgroundResource(0);
+        public boolean onTouch(View v, final MotionEvent event) {
+            if (haveAudioPermission) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    touched = true;
+                    initAudioRecord();
+                    onStartAudioRecord();
+                    over_layout.setVisibility(View.VISIBLE);
+                } else if (event.getAction() == MotionEvent.ACTION_CANCEL
+                        || event.getAction() == MotionEvent.ACTION_UP) {
+                    touched = false;
+                    onEndAudioRecord(isCancelled(layoutPlayAudio, event));
+                    over_layout.setVisibility(View.GONE);
+                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    // 不允许recyclerview 处理滑动事件
+                    mRecyclerView.requestDisallowInterceptTouchEvent(true);
+                    touched = false;
+                    boolean isCancel = isCancelled(layoutPlayAudio, event);
+                    if (isCancel) {
+                        timpContainer.setBackgroundResource(R.drawable.nim_cancel_record_red_bg);
+                    } else {
+                        timpContainer.setBackgroundResource(0);
+                    }
+                    cancelAudioRecord(isCancel);
                 }
-                cancelAudioRecord(isCancel);
+            } else {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    mActivity.checkPermissions(new String[]{
+                                    Manifest.permission.RECORD_AUDIO},
+                            new Action1<Boolean>() {
+                                @Override
+                                public void call(Boolean aBoolean) {
+                                    haveAudioPermission = aBoolean;
+                                }
+                            });
+                }
             }
-
             return true;
         }
     };
@@ -507,6 +524,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
+        haveAudioPermission = ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.RECORD_AUDIO) == PERMISSION_GRANTED;
         ImagePickerHelper.clearAllSelectedImages();
     }
 
@@ -984,7 +1002,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     private void deleteAudoIntrod() {
         onAudioEnd(iv_play);
         add(RRetrofit.create(UserService.class)
-                .editInfo(Param.buildMap("voice:empty" ))
+                .editInfo(Param.buildMap("voice:empty"))
                 .compose(Rx.transformer(UserInfoBean.class))
                 .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
                     @Override
