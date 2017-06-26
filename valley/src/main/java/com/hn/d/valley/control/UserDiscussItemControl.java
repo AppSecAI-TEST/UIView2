@@ -1570,6 +1570,7 @@ public class UserDiscussItemControl {
                                                     return;
                                                 }
                                                 if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+                                                    imageView.setImageResource(R.drawable.zhanweitu_1);
                                                     return;
                                                 }
                                                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -1579,6 +1580,7 @@ public class UserDiscussItemControl {
                                         });
                             } else {
                                 if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+                                    imageView.setImageResource(R.drawable.zhanweitu_1);
                                     return;
                                 }
                                 if (imageView instanceof RImageView) {
@@ -1599,10 +1601,10 @@ public class UserDiscussItemControl {
         }
     }
 
-    public static void displayJpeg(final ImageView imageView, final String url, final int width, final int height, final int imageSize) {
-        if (imageView instanceof RImageView) {
-            ((RImageView) imageView).setShowGifTip(false);
-        }
+    public static void  displayJpeg(final ImageView imageView, final String url, final int width, final int height, final int imageSize) {
+//        if (imageView instanceof RImageView) {
+//            ((RImageView) imageView).setShowGifTip(false);
+//        }
 
         Glide.with(ValleyApp.getApp())
                 .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)

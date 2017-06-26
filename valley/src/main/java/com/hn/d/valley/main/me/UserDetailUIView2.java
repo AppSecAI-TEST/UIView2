@@ -597,7 +597,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
             bgImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UIBottomItemDialog.build()
+                    UIItemDialog.build()
+                            .setShowCancelButton(false)
                             .addItem(getString(R.string.change_bg_photos_title), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -605,6 +606,18 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                     ImagePickerHelper.startImagePicker(mActivity, true, true, false, false, 1);
                                 }
                             })
+                            .setItemConfig(new UIItemDialog.ItemConfig() {
+                                @Override
+                                public void onCreateItem(TextView itemView) {
+                                    itemView.setTextColor(getColor(R.color.base_text_color));
+                                }
+
+                                @Override
+                                public void onLoadContent(LinearLayout contentLayout) {
+                                    contentLayout.setBackgroundResource(R.drawable.base_white_round_little_shape);
+                                }
+                            })
+                            .setGravity(Gravity.CENTER)
                             .showDialog(UserDetailUIView2.this);
                 }
             });

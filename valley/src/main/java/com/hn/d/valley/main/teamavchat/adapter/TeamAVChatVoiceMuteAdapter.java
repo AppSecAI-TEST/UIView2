@@ -38,7 +38,7 @@
 //    }
 //
 //    @Override
-//    public Object getItem(int position) {
+//    public Object createItem(int position) {
 //        return items == null ? null : items.get(position);
 //    }
 //
@@ -64,7 +64,7 @@
 //            viewHolder = (ViewHolder) convertView.getTag();
 //        }
 //
-//        TeamAVChatVoiceMuteItem item = (TeamAVChatVoiceMuteItem) getItem(position);
+//        TeamAVChatVoiceMuteItem item = (TeamAVChatVoiceMuteItem) createItem(position);
 //        viewHolder.avatarImage.loadBuddyAvatar(item.getAccount());
 //        viewHolder.nickNameText.setText(item.getDisplayName());
 //        if (!item.isMute()) {

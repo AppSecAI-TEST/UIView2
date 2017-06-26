@@ -762,7 +762,7 @@
     <string name="text_requet_contact_permission">获取访问通讯录权限?</string>
     <string name="text_add_invite_contact_friend">添加或邀请通讯录的好友</string>
     <string name="text_saoyisao">扫一扫</string>
-    <string name="change_bg_photos_title">更换背景</string>
+    <string name="change_bg_photos_title">更换背景图片</string>
     <string name="save_error">保存失败.</string>
     <string name="save_to_phone">保存至手机</string>
     <string name="save_to_phone_format">保存至:%1$s</string>

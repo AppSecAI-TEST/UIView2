@@ -48,7 +48,7 @@
 //            @Override
 //            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                //
-//                TeamAVChatVoiceMuteItem item = (TeamAVChatVoiceMuteItem) adapter.getItem(position);
+//                TeamAVChatVoiceMuteItem item = (TeamAVChatVoiceMuteItem) adapter.createItem(position);
 //                if (item == null) {
 //                    return;
 //                }
