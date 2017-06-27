@@ -612,12 +612,12 @@ public class UserDetailUIView2 extends BaseContentUIView {
      */
     private void initBgView() {
         ImageView bgImageView = mViewHolder.v(R.id.bg_view);
-        String photos = mUserInfoBean.getPhotos();
-        if (TextUtils.isEmpty(photos)) {
+        String cover = mUserInfoBean.getCover();
+        if (TextUtils.isEmpty(cover)) {
             bgImageView.setImageResource(R.drawable.yonghuxiangqing_3);
         } else {
             Glide.with(mActivity)
-                    .load(RUtils.split(photos).get(0))
+                    .load(RUtils.split(cover).get(0))
                     .placeholder(RImageView.copyDrawable(bgImageView))
                     .into(bgImageView);
         }
@@ -751,7 +751,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                             UserCache.setUserAvatar(avatarUrl);
                                             UserCache.instance().getUserInfoBean().setAvatar(avatarUrl);
                                         } else if (changeType == TYPE_CHANGE_BG_PHOTO) {
-                                            UserCache.instance().getUserInfoBean().setPhotos(avatarUrl);
+                                            UserCache.instance().getUserInfoBean().setCover(avatarUrl);
                                             initBgView();
                                         }
                                     }
