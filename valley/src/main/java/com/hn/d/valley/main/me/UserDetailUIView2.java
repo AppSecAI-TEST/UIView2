@@ -546,7 +546,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         case 1:
                         case 2:
                         case 3:
-                            mParentILayout.startIView(new MyAuthStatusUIView(integer));
+                            mParentILayout.startIView(new MyAuthStatusUIView(integer).setLastAuthInfoBean(mLastAuthInfoBean));
                             break;
                         default:
                             Action.authAction();

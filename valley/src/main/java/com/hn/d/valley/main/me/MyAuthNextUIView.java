@@ -28,6 +28,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.LastAuthInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.AuthService;
@@ -55,16 +56,23 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
 
     FileType mFileType;
     AuthInfo mAuthInfo;
+    LastAuthInfoBean mLastAuthInfoBean;
     private RAddPhotoAdapter mAddPhotoAdapter;
     private ImageView mFrontImageView;
     private ImageView mReverseImageView;
     private ExEditText mEditText;
-
     private String frontPath, reversePath, frontUrl, reverseUrl;
     private boolean isCancel;
 
     public MyAuthNextUIView(AuthInfo authInfo) {
         mAuthInfo = authInfo;
+    }
+
+    public MyAuthNextUIView setLastAuthInfoBean(LastAuthInfoBean lastAuthInfoBean) {
+        mLastAuthInfoBean = lastAuthInfoBean;
+        frontUrl = mLastAuthInfoBean.getCard_front();
+        reverseUrl = mLastAuthInfoBean.getCard_back();
+        return this;
     }
 
     @Override
@@ -232,6 +240,9 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     }
                 });
 
+                displayImage(mFrontImageView, frontUrl);
+                displayImage(mReverseImageView, reverseUrl);
+
             }
         }));
 
@@ -270,7 +281,8 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                             return;
                         }
 
-                        if (TextUtils.isEmpty(frontPath) || TextUtils.isEmpty(reversePath)) {
+                        if ((TextUtils.isEmpty(frontPath) && TextUtils.isEmpty(frontUrl)) ||
+                                (TextUtils.isEmpty(reversePath) && TextUtils.isEmpty(reverseUrl))) {
                             T_.error(getString(R.string.upload_card_tip2));
                             return;
                         }
@@ -312,7 +324,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
             }
         });
 
-        new OssControl(new OssControl.OnUploadListener() {
+        OssControl ossControl = new OssControl(new OssControl.OnUploadListener() {
             @Override
             public void onUploadStart() {
 
@@ -324,7 +336,7 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 if (isCancel) {
                     return;
                 }
-                new OssControl(new OssControl.OnUploadListener() {
+                OssControl ossControl1 = new OssControl(new OssControl.OnUploadListener() {
                     @Override
                     public void onUploadStart() {
 
@@ -354,26 +366,43 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                             public void onUploadFailed(int code, String msg) {
 
                             }
-                        }).uploadCircleImg(mAddPhotoAdapter.getAllDatas());
+                        }).uploadCircleImg(mAddPhotoAdapter.getAllDatas(), true);
                     }
 
                     @Override
                     public void onUploadFailed(int code, String msg) {
 
                     }
-                }).uploadCircleImg(reversePath, true);
+                });
+                if (TextUtils.isEmpty(reverseUrl)) {
+                    ossControl1.uploadCircleImg(reversePath, true);
+                } else {
+                    ossControl1.getUploadListener().onUploadSucceed(getUrlList(reverseUrl));
+                }
             }
+
 
             @Override
             public void onUploadFailed(int code, String msg) {
 
             }
-        }).uploadCircleImg(frontPath);
+        });
+        if (TextUtils.isEmpty(frontUrl)) {
+            ossControl.uploadCircleImg(frontPath, true);
+        } else {
+            ossControl.getUploadListener().onUploadSucceed(getUrlList(frontUrl));
+        }
+    }
+
+    private List<String> getUrlList(String url) {
+        List<String> urls = new ArrayList<>();
+        urls.add(url);
+        return urls;
     }
 
     private void onApplyNext(List<String> list) {
         add(RRetrofit.create(AuthService.class)
-                .apply(Param.buildMap("type:" + (mAuthInfo.mType.getId() + 1),
+                .apply(Param.buildMap("type:" + mAuthInfo.mType.getId(),
                         "true_name:" + mAuthInfo.baseInfo.get(0),
                         "id_card:" + mAuthInfo.baseInfo.get(1),
                         "company:" + mAuthInfo.baseInfo.get(2),
@@ -406,6 +435,9 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     }
 
     private void displayImage(ImageView imageView, String filePath) {
+        if (TextUtils.isEmpty(filePath)) {
+            return;
+        }
         Glide.with(imageView.getContext())
                 .load(filePath)
                 .placeholder(R.drawable.zhanweitu_1)

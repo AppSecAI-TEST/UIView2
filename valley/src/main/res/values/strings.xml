@@ -796,5 +796,7 @@
     <string name="other_channel_tip">推荐频道</string>
     <string name="dynamic_delete_tip">抱歉,原贴已被用户删除.</string>
     <string name="dynamic_shield_tip">抱歉,原贴已被屏蔽.</string>
+    <string name="recertification_tip">重新认证</string>
+    <string name="modify_authentication_tip">修改认证</string>
 
 </resources>

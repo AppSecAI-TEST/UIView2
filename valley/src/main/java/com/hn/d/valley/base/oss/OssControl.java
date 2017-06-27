@@ -46,6 +46,10 @@ public class OssControl {
         mUploadListener = uploadListener;
     }
 
+    public OnUploadListener getUploadListener() {
+        return mUploadListener;
+    }
+
     /**
      * 检查路径是否已经上传成功过
      */

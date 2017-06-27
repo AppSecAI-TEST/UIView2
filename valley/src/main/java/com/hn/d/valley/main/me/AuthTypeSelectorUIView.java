@@ -81,7 +81,7 @@ public class AuthTypeSelectorUIView extends ItemRecyclerUIView<ItemRecyclerUIVie
         };
         baseAdapter.setModel(RModelAdapter.MODEL_SINGLE);
         if (mAuthType != null) {
-            baseAdapter.setSelectorPosition(mAuthType.getId());
+            baseAdapter.setSelectorPosition(Integer.parseInt(mAuthType.getId()) - 1);
         }
         baseAdapter.addOnModelChangeListener(new RModelAdapter.OnModelChangeListener() {
             @Override
@@ -93,7 +93,7 @@ public class AuthTypeSelectorUIView extends ItemRecyclerUIView<ItemRecyclerUIVie
             public void onSelectorChange(List<Integer> selectorList) {
                 //T_.show("选中:" + selectorList.get(0));
                 finishIView();
-                selectorTypeAction.call(MyAuthUIView.AuthType.valueOf(selectorList.get(0)));
+                selectorTypeAction.call(MyAuthUIView.AuthType.from(selectorList.get(0) + 1));
             }
         });
         return baseAdapter;

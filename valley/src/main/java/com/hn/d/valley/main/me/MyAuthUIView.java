@@ -1,8 +1,10 @@
 package com.hn.d.valley.main.me;
 
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.container.UIParam;
@@ -14,6 +16,7 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.bean.LastAuthInfoBean;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -35,6 +38,7 @@ import rx.functions.Action1;
  */
 public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
+    LastAuthInfoBean mLastAuthInfoBean = new LastAuthInfoBean();
     /**
      * 认证类别【1-职场名人，2-娱乐明星，3-体育人物，4-政府人员】
      */
@@ -44,13 +48,14 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
      * 选中的行业
      */
     private Tag mSelectorTag;
-
     //需要检查是否为空的Edit
     private List<ExEditText> mCheckEditTexts = new ArrayList<>();
     //不需要检查为空的Edit
     private List<ExEditText> mOtherEditTexts = new ArrayList<>();
     //其他Item布局
     private ItemInfoLayout mInfoLayout;
+
+    private TextView nameView, idCardView, companyView, jobView;
 
     public static boolean checkEmpty(ExEditText view) {
         if (view.isEmpty()) {
@@ -59,6 +64,11 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             return true;
         }
         return false;
+    }
+
+    public MyAuthUIView setLastAuthInfoBean(LastAuthInfoBean lastAuthInfoBean) {
+        mLastAuthInfoBean = lastAuthInfoBean;
+        return this;
     }
 
     @Override
@@ -87,6 +97,11 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     public void onViewCreate(View rootView, UIParam param) {
         super.onViewCreate(rootView, param);
         mAuthType = AuthType.ZCMR;//默认职称名人
+        if (mLastAuthInfoBean != null) {
+            mAuthType = AuthType.from(Integer.parseInt(mLastAuthInfoBean.getType()));
+
+            mSelectorTag = new Tag(mLastAuthInfoBean.getIndustry_id(), mLastAuthInfoBean.getIndustry());
+        }
     }
 
     /**
@@ -197,6 +212,8 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                     editText.setMaxLength(4);
 
+                    nameView = editText;
+                    editText.setText(mLastAuthInfoBean.getTrue_name());
                     mCheckEditTexts.add(editText);
                 }
             }));
@@ -210,6 +227,8 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                     editText.setIsPhone(true, 18);
 
+                    idCardView = editText;
+                    editText.setText(mLastAuthInfoBean.getId_card());
                     mCheckEditTexts.add(editText);
                 }
             }));
@@ -248,6 +267,8 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     editText.setMaxLines(5);
                     editText.setGravity(Gravity.TOP);
                     UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
+
+                    editText.setText(mLastAuthInfoBean.getIntroduce());
                     mOtherEditTexts.add(editText);
                 }
             }));
@@ -267,6 +288,8 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
                     ExEditText editText = holder.v(R.id.edit_text_view);
                     editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+                    editText.setText(mLastAuthInfoBean.getWebsite());
                     mOtherEditTexts.add(editText);
                 }
             }));
@@ -309,11 +332,11 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                                 editText.setError(getString(R.string.error_id_card_tip));
                                 return;
                             }
-                            if (mSelectorTag == null) {
+                            if (!isSelectorTag()) {
                                 Anim.band(mInfoLayout);
                                 return;
                             }
-                            startIView(new MyAuthNextUIView(makeAuthInfo()));
+                            startIView(new MyAuthNextUIView(makeAuthInfo()).setLastAuthInfoBean(mLastAuthInfoBean));
                         }
                     });
                 }
@@ -321,12 +344,33 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         }
     }
 
+    /**
+     * 是否选择了行业
+     */
+    private boolean isSelectorTag() {
+        if (mSelectorTag == null) {
+            return false;
+        }
+        if (TextUtils.isEmpty(mSelectorTag.getId()) || TextUtils.isEmpty(mSelectorTag.getName())) {
+            return false;
+        }
+        return true;
+    }
+
     private MyAuthNextUIView.AuthInfo makeAuthInfo() {
         List<String> baseInfo = new ArrayList<>();
-        for (ExEditText editText : mCheckEditTexts) {
-            baseInfo.add(editText.string());
+//        for (ExEditText editText : mCheckEditTexts) {
+//            baseInfo.add(editText.string());
+//        }
+        try {
+            baseInfo.add(String.valueOf(nameView.getText()));
+            baseInfo.add(String.valueOf(idCardView.getText()));
+            baseInfo.add(String.valueOf(companyView.getText()));
+            baseInfo.add(String.valueOf(jobView.getText()));
+        } catch (Exception e) {
+
         }
-        return new MyAuthNextUIView.AuthInfo(baseInfo, mSelectorTag == null ? "" : mSelectorTag.getId(),
+        return new MyAuthNextUIView.AuthInfo(baseInfo, mSelectorTag.getId(),
                 mOtherEditTexts.get(0).string(), mOtherEditTexts.get(1).string(), mAuthType);
     }
 
@@ -352,6 +396,8 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                         }));
                     }
                 });
+
+                holder.tv(R.id.industry_view).setText(mLastAuthInfoBean.getIndustry());
             }
         }));
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
@@ -361,6 +407,8 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
+                companyView = editText;
+                editText.setText(mLastAuthInfoBean.getCompany());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -371,6 +419,8 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
+                jobView = editText;
+                editText.setText(mLastAuthInfoBean.getJob());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -398,6 +448,9 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
 
+                companyView = editText;
+
+                editText.setText(mLastAuthInfoBean.getCompany());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -407,7 +460,9 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 holder.tv(R.id.input_tip_view).setText(R.string.occupation_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                jobView = editText;
 
+                editText.setText(mLastAuthInfoBean.getJob());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -423,7 +478,9 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 holder.tv(R.id.input_tip_view).setText(R.string.organization_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                companyView = editText;
 
+                editText.setText(mLastAuthInfoBean.getCompany());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -433,7 +490,9 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 holder.tv(R.id.input_tip_view).setText(R.string.job_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                jobView = editText;
 
+                editText.setText(mLastAuthInfoBean.getJob());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -449,7 +508,9 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 holder.tv(R.id.input_tip_view).setText(R.string.item_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                companyView = editText;
 
+                editText.setText(mLastAuthInfoBean.getCompany());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -459,7 +520,9 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 holder.tv(R.id.input_tip_view).setText(R.string.job_tip);
                 ExEditText editText = holder.v(R.id.edit_text_view);
                 editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+                jobView = editText;
 
+                editText.setText(mLastAuthInfoBean.getJob());
                 mCheckEditTexts.add(editText);
             }
         }));
@@ -469,10 +532,10 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
      * 认证类型
      */
     public enum AuthType {
-        ZCMR(0, ValleyApp.getApp().getResources().getString(R.string.auth_zcmr)),
-        YLMX(1, ValleyApp.getApp().getResources().getString(R.string.auth_ylmx)),
-        TYRW(2, ValleyApp.getApp().getResources().getString(R.string.auth_tyrw)),
-        ZFRY(3, ValleyApp.getApp().getResources().getString(R.string.auth_zfry));
+        ZCMR(1, ValleyApp.getApp().getResources().getString(R.string.auth_zcmr)),
+        YLMX(2, ValleyApp.getApp().getResources().getString(R.string.auth_ylmx)),
+        TYRW(3, ValleyApp.getApp().getResources().getString(R.string.auth_tyrw)),
+        ZFRY(4, ValleyApp.getApp().getResources().getString(R.string.auth_zfry));
 
         int id;
         String des;
@@ -482,23 +545,23 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             this.des = des;
         }
 
-        static AuthType valueOf(int id) {
+        static AuthType from(int id) {
             switch (id) {
-                case 0:
-                    return ZCMR;
                 case 1:
-                    return YLMX;
+                    return ZCMR;
                 case 2:
-                    return TYRW;
+                    return YLMX;
                 case 3:
+                    return TYRW;
+                case 4:
                     return ZFRY;
                 default:
-                    return null;
+                    return ZCMR;
             }
         }
 
-        public int getId() {
-            return id;
+        public String getId() {
+            return String.valueOf(id);
         }
 
         public String getDes() {

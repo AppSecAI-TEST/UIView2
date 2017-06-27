@@ -38,7 +38,7 @@ class AuthDetailUIView(val userBean: UserInfoBean) : BaseItemUIView() {
                 avatarView.setAuth(userBean.is_auth)
 
                 holder.tv(R.id.user_name_view).text = userBean.username
-                holder.tv(R.id.auth_type_view).text = MyAuthUIView.AuthType.valueOf(userBean.auth_type.toInt()).des
+                holder.tv(R.id.auth_type_view).text = MyAuthUIView.AuthType.from(userBean.auth_type.toInt()).des
                 holder.tv(R.id.auth_des_view).text = userBean.auth_desc
 
                 val authStatusView: HnAuthStatusView = holder.v(R.id.auth_status_view)

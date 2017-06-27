@@ -180,8 +180,8 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
         int lastYear = -1, lastMonth = -1;
 
 //                            if (lastGroup != null) {
-//                                lastYear = Integer.valueOf(lastGroup.year);
-//                                lastMonth = Integer.valueOf(lastGroup.month);
+//                                lastYear = Integer.from(lastGroup.year);
+//                                lastMonth = Integer.from(lastGroup.month);
 //                            }
 
         List<AlbumGroup> groups = new ArrayList<>();

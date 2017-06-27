@@ -32,22 +32,22 @@ public class LastAuthInfoBean {
      * check_reason :
      */
 
-    private String type;
-    private String true_name;
-    private String id_card;
-    private String phone;
-    private String card_front;
-    private String card_back;
-    private String website;
-    private String introduce;
-    private String proof;
-    private String industry;
-    private String industry_id;
-    private String company;
-    private String job;
-    private String description;
-    private String status;
-    private String check_reason;
+    private String type = "1"; //默认的认证类型
+    private String true_name = "";
+    private String id_card = "";
+    private String phone = "";
+    private String card_front = "";
+    private String card_back = "";
+    private String website = "";
+    private String introduce = "";
+    private String proof = "";
+    private String industry = "";
+    private String industry_id = "";
+    private String company = "";
+    private String job = "";
+    private String description = "";
+    private String status = "";
+    private String check_reason = "";
 
     public String getType() {
         return type;

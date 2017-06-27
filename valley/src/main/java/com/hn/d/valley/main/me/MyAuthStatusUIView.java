@@ -18,6 +18,7 @@ import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.AuthDetailBean;
+import com.hn.d.valley.bean.LastAuthInfoBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.AuthService;
@@ -41,9 +42,15 @@ public class MyAuthStatusUIView extends BaseItemUIView {
 
     AuthDetailBean mAuthDetailBean;
     int auth_type;
+    LastAuthInfoBean mLastAuthInfoBean;
 
     public MyAuthStatusUIView(int auth_type) {
         this.auth_type = auth_type;
+    }
+
+    public MyAuthStatusUIView setLastAuthInfoBean(LastAuthInfoBean lastAuthInfoBean) {
+        mLastAuthInfoBean = lastAuthInfoBean;
+        return this;
     }
 
     @Override
@@ -93,18 +100,18 @@ public class MyAuthStatusUIView extends BaseItemUIView {
         }
         if (auth_type == 3) {
             return super.getTitleBar()
-                    .addRightItem(TitleBarPattern.buildText("重新认证", new View.OnClickListener() {
+                    .addRightItem(TitleBarPattern.buildText(getString(R.string.recertification_tip), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            replaceIView(new MyAuthUIView());
+                            replaceIView(new MyAuthUIView().setLastAuthInfoBean(mLastAuthInfoBean));
                         }
                     }));
         }
         return super.getTitleBar()
-                .addRightItem(TitleBarPattern.buildText("修改认证", new View.OnClickListener() {
+                .addRightItem(TitleBarPattern.buildText(getString(R.string.modify_authentication_tip), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        replaceIView(new MyAuthUIView());
+                        replaceIView(new MyAuthUIView().setLastAuthInfoBean(mLastAuthInfoBean));
                     }
                 }));
     }
