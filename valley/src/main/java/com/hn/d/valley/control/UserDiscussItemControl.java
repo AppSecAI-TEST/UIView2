@@ -167,7 +167,7 @@ public class UserDiscussItemControl {
             }
         }
 
-        /**头像*/
+        /*头像*/
         final HnGlideImageView avatarView = holder.v(R.id.avatar);
         avatarView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -540,7 +540,7 @@ public class UserDiscussItemControl {
     /**
      * 动态是否置顶
      */
-    private static void showTopView(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
+    public static void showTopView(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
         holder.v(R.id.top_image_view).setVisibility("1".equalsIgnoreCase(dataListBean.getIs_top()) ? View.VISIBLE : View.GONE);
     }
 
@@ -688,7 +688,7 @@ public class UserDiscussItemControl {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
                             UserDiscussItemControl.displayImage(imageView, url,
-                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, true, imageSize);
+                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, true, 9);
                         }
                     }
 
@@ -935,7 +935,7 @@ public class UserDiscussItemControl {
                                                final Action1<UserDiscussListBean.DataListBean> commandAction,
                                                final ILayout iLayout, final boolean isInDetail) {
         //是否置顶
-        showTopView(holder, tBean);
+        //showTopView(holder, tBean);//只在用户详情里面,显示置顶
 
         View commandItemView = holder.v(R.id.command_item_view);
         final String uid = UserCache.getUserAccount();

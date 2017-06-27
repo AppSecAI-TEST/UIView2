@@ -100,6 +100,10 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                         UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(), false, false, false);
                     }
                 }, getILayout());
+
+                if (isInSubUIView) {
+                    UserDiscussItemControl.showTopView(holder, dataBean);
+                }
             }
 
             @Override

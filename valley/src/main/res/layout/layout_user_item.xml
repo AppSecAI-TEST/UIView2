@@ -129,6 +129,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/base_xxxhdpi"
+        tools:visibility="visible"
         android:src="@drawable/icon_zhiding"
         android:visibility="gone"/>
 
