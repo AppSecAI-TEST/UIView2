@@ -21,7 +21,6 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.BmpUtil;
 import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.utils.file.AttachmentStore;
 import com.angcyo.umeng.UM;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -36,9 +35,6 @@ import com.hn.d.valley.widget.HnGenderView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-
-import java.io.File;
-import java.util.UUID;
 
 import rx.functions.Action1;
 
@@ -115,7 +111,7 @@ public class ShareControl {
                                            final String itemId,
                                            final String shareTitle,
                                            final String shareDes) {
-        shareDynamicControl(activity, holder, userIco, itemId, shareTitle, shareDes, null);
+        shareDynamicControl(activity, holder, userIco, itemId, shareTitle, shareDes, null, true);
     }
 
     public static void shareDynamicControl(final Activity activity,
@@ -124,10 +120,11 @@ public class ShareControl {
                                            final String itemId,
                                            final String shareTitle,
                                            final String shareDes,
-                                           final UIIDialogImpl dialog) {
-        holder.v(R.id.share_wx).setOnClickListener(new View.OnClickListener() {
+                                           final UIIDialogImpl dialog,
+                                           boolean canShare) {
+        holder.v(R.id.share_wx).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.WEIXIN, userIco, itemId, shareTitle, shareDes);
                 if (dialog != null) {
                     dialog.finishIView();
@@ -136,9 +133,9 @@ public class ShareControl {
         });
 
 
-        holder.v(R.id.share_wxc).setOnClickListener(new View.OnClickListener() {
+        holder.v(R.id.share_wxc).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.WEIXIN_CIRCLE, userIco, itemId, shareTitle, shareDes);
                 if (dialog != null) {
 
@@ -147,18 +144,18 @@ public class ShareControl {
 
             }
         });
-        holder.v(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
+        holder.v(R.id.share_qq).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.QQ, userIco, itemId, shareTitle, shareDes);
                 if (dialog != null) {
                     dialog.finishIView();
                 }
             }
         });
-        holder.v(R.id.share_qqz).setOnClickListener(new View.OnClickListener() {
+        holder.v(R.id.share_qqz).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareDynamic(activity, SHARE_MEDIA.QZONE, userIco, itemId, shareTitle, shareDes);
                 if (dialog != null) {
                     dialog.finishIView();
@@ -177,10 +174,11 @@ public class ShareControl {
                                            final String url,
                                            final String shareTitle,
                                            final String shareDes,
-                                           final UIIDialogImpl dialog) {
-        holder.v(R.id.share_wx).setOnClickListener(new View.OnClickListener() {
+                                           final UIIDialogImpl dialog,
+                                           boolean canShare) {
+        holder.v(R.id.share_wx).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareHotInfo(activity, SHARE_MEDIA.WEIXIN, userIco, url, shareTitle, shareDes);
                 if (dialog != null) {
                     dialog.finishIView();
@@ -189,9 +187,9 @@ public class ShareControl {
         });
 
 
-        holder.v(R.id.share_wxc).setOnClickListener(new View.OnClickListener() {
+        holder.v(R.id.share_wxc).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareHotInfo(activity, SHARE_MEDIA.WEIXIN_CIRCLE, userIco, url, shareTitle, shareDes);
                 if (dialog != null) {
 
@@ -200,18 +198,18 @@ public class ShareControl {
 
             }
         });
-        holder.v(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
+        holder.v(R.id.share_qq).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareHotInfo(activity, SHARE_MEDIA.QQ, userIco, url, shareTitle, shareDes);
                 if (dialog != null) {
                     dialog.finishIView();
                 }
             }
         });
-        holder.v(R.id.share_qqz).setOnClickListener(new View.OnClickListener() {
+        holder.v(R.id.share_qqz).setOnClickListener(new ShareClickListener(canShare) {
             @Override
-            public void onClick(View v) {
+            public void onShareClick(View v) {
                 shareHotInfo(activity, SHARE_MEDIA.QZONE, userIco, url, shareTitle, shareDes);
                 if (dialog != null) {
                     dialog.finishIView();
@@ -482,4 +480,26 @@ public class ShareControl {
     private static class Holder {
         static ShareControl instance = new ShareControl();
     }
+
+    public static class ShareClickListener implements View.OnClickListener {
+        boolean canShare = true;
+
+        public ShareClickListener(boolean canShare) {
+            this.canShare = canShare;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (canShare) {
+                onShareClick(v);
+            } else {
+                T_.error(v.getResources().getString(R.string.cant_share_tip));
+            }
+        }
+
+        public void onShareClick(View view) {
+
+        }
+    }
+
 }

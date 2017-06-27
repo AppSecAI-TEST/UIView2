@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.control.PublishTaskRealm;
+import com.hn.d.valley.sub.user.DynamicType;
 
 import java.util.List;
 
@@ -133,7 +134,7 @@ public class UserDiscussListBean {
          * scan_type : 1
          */
 
-        private String scan_type;
+        private String scan_type = "1";
         /**
          * status : 1
          */
@@ -163,6 +164,13 @@ public class UserDiscussListBean {
          */
 
         private String allow_download;
+        /**
+         * package_id :
+         * is_recommend : 1
+         */
+
+        private String package_id;
+        private String is_recommend;
 
 
         public DataListBean() {
@@ -226,6 +234,13 @@ public class UserDiscussListBean {
             }
 
             return split;
+        }
+
+        /**
+         * 是否可以转发
+         */
+        public boolean canForward() {
+            return "1".equalsIgnoreCase(scan_type);
         }
 
         public List<String> getMediaList() {
@@ -557,6 +572,22 @@ public class UserDiscussListBean {
             return TextUtils.equals(uuid, ((DataListBean) obj).uuid);
         }
 
+        public String getPackage_id() {
+            return package_id;
+        }
+
+        public void setPackage_id(String package_id) {
+            this.package_id = package_id;
+        }
+
+        public String getIs_recommend() {
+            return is_recommend;
+        }
+
+        public void setIs_recommend(String is_recommend) {
+            this.is_recommend = is_recommend;
+        }
+
         public static class OriginalInfo {
 
             boolean isForwardInformation = false;
@@ -610,6 +641,14 @@ public class UserDiscussListBean {
                 } catch (Exception e) {
                     return media;
                 }
+            }
+
+            public boolean isPicture() {
+                return "picture".equalsIgnoreCase(media_type) || DynamicType.isImage(media_type);
+            }
+
+            public boolean isVideo() {
+                return "video".equalsIgnoreCase(media_type) || DynamicType.isVideo(media_type);
             }
 
             public boolean isInformationVideoType() {

@@ -13,9 +13,9 @@
         style="@style/DarkTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="70dp"
+        android:minWidth="80dp"
         android:visibility="visible"
-        tools:text="测试文本"/>
+        tools:text="测试文本**"/>
 
     <com.angcyo.uiview.widget.ExEditText
         android:id="@+id/edit_text_view"

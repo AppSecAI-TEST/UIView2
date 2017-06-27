@@ -153,7 +153,6 @@ public class UserDiscussItemControl {
         }
         holder.tv(R.id.comment_cnt).setText(dataListBean.getComment_cnt());
 
-
         //时间
         TextView showTimeView = holder.v(R.id.show_time);
         showTimeView.setVisibility(View.VISIBLE);
@@ -187,7 +186,6 @@ public class UserDiscussItemControl {
         } else {
             genderView.setVisibility(View.GONE);
         }
-
 
         //内容
         HnExTextView hnExTextView = holder.v(R.id.content_ex_view);
@@ -267,7 +265,6 @@ public class UserDiscussItemControl {
 //
             //语音动态不允许转发
             forwardView.setVisibility("4".equalsIgnoreCase(dataListBean.getMedia_type()) ? View.GONE : View.VISIBLE);
-
 //            if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
 //                //自己的动态不允许转发
 //                forwardView.setClickable(false);
@@ -279,12 +276,16 @@ public class UserDiscussItemControl {
                 @Override
                 public void onClick(View v) {
 
-                    if (dataListBean.isForwardInformation()) {
-                        iLayout.startIView(new PublishDynamicUIView2(HotInfoListBean.from(dataListBean.getOriginal_info())));
-                    } else if (TextUtils.isEmpty(dataListBean.uuid)) {
-                        iLayout.startIView(new PublishDynamicUIView2(dataListBean));
+                    if (dataListBean.canForward()) {
+                        if (dataListBean.isForwardInformation()) {
+                            iLayout.startIView(new PublishDynamicUIView2(HotInfoListBean.from(dataListBean.getOriginal_info())));
+                        } else if (TextUtils.isEmpty(dataListBean.uuid)) {
+                            iLayout.startIView(new PublishDynamicUIView2(dataListBean));
+                        } else {
+                            T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
+                        }
                     } else {
-                        T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
+                        T_.error(holder.itemView.getResources().getString(R.string.cant_forward_tip));
                     }
                 }
             });
@@ -453,7 +454,7 @@ public class UserDiscussItemControl {
 
             if (medias.isEmpty()) {
                 forwardInformationImageView.setImageResource(R.drawable.zhuanfa_zhixun_zhanweitu);
-            } else if ("picture".equalsIgnoreCase(media_type) || DynamicType.isImage(media_type)) {
+            } else if (original_info.isPicture()) {
                 String url = medias.get(0);
                 forwardInformationImageView.setTag(R.id.tag_url, url);
                 if (YImageControl.isYellowImage(url)) {
@@ -461,7 +462,7 @@ public class UserDiscussItemControl {
                 } else {
                     UserDiscussItemControl.displayImage(forwardInformationImageView, url, 0, 0, true, 9);
                 }
-            } else if ("video".equalsIgnoreCase(media_type) || DynamicType.isVideo(media_type)) {
+            } else if (original_info.isVideo()) {
                 forwardInformationImageView.setPlayDrawable(R.drawable.image_picker_play);
 
                 String url = medias.get(0);

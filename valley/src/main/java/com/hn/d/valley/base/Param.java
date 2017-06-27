@@ -83,7 +83,6 @@ public class Param {
     public static Map<String, String> map(Map<String, String> map, boolean isInfo) {
         Map<String, String> result = new HashMap<>();
         List<String> signList = new ArrayList<>();
-
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String value = entry.getValue();
             String key = entry.getKey();
@@ -92,7 +91,6 @@ public class Param {
                 signList.add(key + "=" + value);
             }
         }
-
         long time = System.currentTimeMillis() / 1000;
         if (isInfo) {
             signList.add("timestamp=" + time);
@@ -119,25 +117,19 @@ public class Param {
             signList.add("lang=" + getLang());
             result.put("lang", String.valueOf(getLang()));
         }
-
         Collections.sort(signList);
-
         StringBuilder builder = new StringBuilder();
         for (String s : signList) {
             builder.append(s);
             builder.append("&");
         }
-
         String signString;
-
         if (isInfo) {
             signString = RSA.encodeInfo(safe(builder)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
         } else {
             signString = RSA.encode(safe(builder));
         }
-
         result.put("sign", signString);
-
         if (isInfo) {
         } else {
             result.put("sign_type", "RSA");
@@ -196,8 +188,8 @@ public class Param {
             }
         }
             /*资讯API支持*/
-            signList.add("e_type=RSA");
-            result.put("e_type", "RSA");
+        signList.add("e_type=RSA");
+        result.put("e_type", "RSA");
         Collections.sort(signList);
 
         StringBuilder builder = new StringBuilder();
@@ -208,13 +200,12 @@ public class Param {
 
         String signString;
 
-            signString = RSA.encodeInfo(safe(builder)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
+        signString = RSA.encodeInfo(safe(builder)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
 
         result.put("sign", signString);
 
         return result;
     }
-
 
 
     /**

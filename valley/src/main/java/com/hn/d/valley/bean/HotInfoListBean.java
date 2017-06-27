@@ -3,6 +3,7 @@ package com.hn.d.valley.bean;
 import android.text.TextUtils;
 
 import com.angcyo.uiview.utils.RUtils;
+import com.hn.d.valley.sub.user.DynamicType;
 
 import java.util.List;
 
@@ -96,6 +97,18 @@ public class HotInfoListBean {
         return bean;
     }
 
+    public boolean isPicture() {
+        return "picture".equalsIgnoreCase(type) || DynamicType.isImage(type);
+    }
+
+    public boolean isText() {
+        return "article".equalsIgnoreCase(type) || DynamicType.isText(type);
+    }
+
+    public boolean isVideo() {
+        return "video".equalsIgnoreCase(type) || DynamicType.isVideo(type);
+    }
+
     public int getId() {
         return id;
     }
@@ -173,6 +186,24 @@ public class HotInfoListBean {
 
     public List<String> getImgsList() {
         return RUtils.split(getImgs());
+    }
+
+    public String getInformationVideoUrl() {
+        try {
+            String media = getImgs();
+            return media.substring(media.lastIndexOf('?') + 1, media.length());
+        } catch (Exception e) {
+            return media;
+        }
+    }
+
+    public String getInformationVideoThumbUrl() {
+        try {
+            String media = getImgs();
+            return media.substring(0, media.lastIndexOf('?'));
+        } catch (Exception e) {
+            return media;
+        }
     }
 
     public int getReply_cnt() {

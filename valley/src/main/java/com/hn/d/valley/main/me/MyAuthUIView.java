@@ -77,7 +77,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         } else if (viewType == 10) {
             return R.layout.item_button_view;
         } else if (viewType == 104) {
-            return R.layout.item_info_layout;
+            return R.layout.item_industry_layout;
 
         }
         return R.layout.item_input_view;
@@ -208,8 +208,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     holder.tv(R.id.input_tip_view).setText(R.string.id_card_tip);
                     ExEditText editText = holder.v(R.id.edit_text_view);
                     editText.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-                    editText.setMaxLength(18);
-                    editText.setInputType(EditorInfo.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                    editText.setIsPhone(true, 18);
 
                     mCheckEditTexts.add(editText);
                 }
@@ -249,7 +248,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     editText.setMaxLines(5);
                     editText.setGravity(Gravity.TOP);
                     UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
-                    //mOtherEditTexts.add(editText);
+                    mOtherEditTexts.add(editText);
                 }
             }));
 
@@ -268,7 +267,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
                     ExEditText editText = holder.v(R.id.edit_text_view);
                     editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-                    //mOtherEditTexts.add(editText);
+                    mOtherEditTexts.add(editText);
                 }
             }));
 
@@ -337,7 +336,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     private void zcmr(List<ViewItemInfo> items) {
         items.add(ViewItemInfo.build(new ItemLineCallback(mBaseOffsetSize, mBaseLineSize) {
             @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+            public void onBindView(final RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 mInfoLayout = holder.v(R.id.item_info_layout);
                 mInfoLayout.setItemText(getString(R.string.industries_tip));
                 mInfoLayout.getTextView().setTextColor(getColor(R.color.main_text_color_dark));
@@ -348,7 +347,7 @@ public class MyAuthUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                             @Override
                             public void call(Tag tag) {
                                 mSelectorTag = tag;
-                                mInfoLayout.setItemDarkText(tag.getName());
+                                holder.tv(R.id.industry_view).setText(tag.getName());
                             }
                         }));
                     }

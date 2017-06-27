@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.angcyo.uiview.widget.ItemInfoLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_info_layout"
+    style="@style/DefaultItemInfoStyle">
+
+    <TextView
+        android:id="@+id/industry_view"
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="80dp"
+        tools:text="测试文本"/>
+
+</com.angcyo.uiview.widget.ItemInfoLayout>

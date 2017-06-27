@@ -50,6 +50,7 @@ import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.LastAuthInfoBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.helper.AudioPlayHelper;
@@ -63,6 +64,7 @@ import com.hn.d.valley.main.message.audio.Playable;
 import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.service.AuthService;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.InputUIView;
@@ -100,6 +102,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     public static final int TYPE_CHANGE_BG_PHOTO = 2;
     boolean isFollower = false;
     TextView mCommandItemView;
+    LastAuthInfoBean mLastAuthInfoBean;
     private String to_uid;
     private CommonTabLayout mCommonTabLayout;
     private UIViewPager mViewPager;
@@ -123,7 +126,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
      * 改变头像, 还是改变背景
      */
     private int changeType = TYPE_CHANGE_ICO;
-
 
     public UserDetailUIView2(String to_uid) {
         this.to_uid = to_uid;
@@ -387,6 +389,9 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     .subscribe(new BaseSingleSubscriber<String>() {
 
                     }));
+        } else {
+            //获取最后一次认证的信息
+            getLastAuthInfo();
         }
     }
 
@@ -405,7 +410,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     }));
         }
     }
-
 
     private void initViewPager() {
         mViewPager.setOffscreenPageLimit(2);
@@ -505,15 +509,22 @@ public class UserDetailUIView2 extends BaseContentUIView {
         RTextView authTextView = mViewHolder.v(R.id.auth_desc_tview);
         //是否已认证【0-未认证，1-已认证，2-认证中-查看自己信息才会有，3-认证失败-查看自己信息才会有，以前没有认证成功过才会有该值】
         if ("1".equalsIgnoreCase(is_auth)) {
+            //已认证
             authTextView.setText(bean.getAuth_desc());
             authTextView.setBackgroundColor(Color.TRANSPARENT);
             authTextView.setTextColor(getColor(R.color.base_text_color_dark));
         } else {
+            //未认证,认证中,认证失败
             int offset = getDimensionPixelOffset(R.dimen.base_hdpi);
             authTextView.setPadding(offset, 0, offset, 0);
             authTextView.setText(R.string.not_auth);
             if (isMe()) {
                 authTextView.setBackground(ResUtil.createDrawable(getColor(R.color.orange), density()));
+                if ("2".equalsIgnoreCase(is_auth)) {
+                    authTextView.setText(R.string.auth_ing);
+                } else if ("3".equalsIgnoreCase(is_auth)) {
+                    authTextView.setText(R.string.auth_error);
+                }
             } else {
                 authTextView.setBackground(ResUtil.createDrawable(getColor(R.color.base_gray), density()));
             }
@@ -576,6 +587,23 @@ public class UserDetailUIView2 extends BaseContentUIView {
         } else {
             getUITitleBarContainer().showRightItem(0);
         }
+    }
+
+    /**
+     * 最后一次认证失败的资料信息信息
+     */
+    private void getLastAuthInfo() {
+        add(RRetrofit.create(AuthService.class)
+                .lastInfo(Param.buildMap())
+                .compose(Rx.transformer(LastAuthInfoBean.class))
+                .subscribe(new RSubscriber<LastAuthInfoBean>() {
+
+                    @Override
+                    public void onSucceed(LastAuthInfoBean bean) {
+                        mLastAuthInfoBean = bean;
+                    }
+                })
+        );
     }
 
 

@@ -279,6 +279,8 @@
     <string name="image_text">图文</string>
     <string name="publish_video_tip">发布视频</string>
     <string name="publishing_tip">动态还未发布完成...</string>
+    <string name="cant_forward_tip">权限限制, 不允许转发.</string>
+    <string name="cant_share_tip">权限限制, 不允许分享.</string>
     <string name="me">我</string>
     <string name="data_tip">主页</string>
     <string name="my_auth_title">我的身份</string>

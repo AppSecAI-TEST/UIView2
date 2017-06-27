@@ -61,6 +61,8 @@ public class DynamicShareDialog extends UIIDialogImpl {
     CompositeSubscription mSubscription;
     HotInfoListBean mHotInfoListBean;
 
+    boolean canShare = true;
+
     public DynamicShareDialog(UserDiscussListBean.DataListBean dataListBean,
                               CompositeSubscription subscription) {
         mDataListBean = dataListBean;
@@ -71,6 +73,11 @@ public class DynamicShareDialog extends UIIDialogImpl {
                               CompositeSubscription subscription) {
         mHotInfoListBean = dataListBean;
         mSubscription = subscription;
+    }
+
+    public DynamicShareDialog setCanShare(boolean canShare) {
+        this.canShare = canShare;
+        return this;
     }
 
     @Override
@@ -131,6 +138,10 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 @Override
                 public void onClick(View v) {
                     finishDialog();
+                    if (!canShare) {
+                        T_.error(getString(R.string.cant_share_tip));
+                        return;
+                    }
                     ClipboardUtils.copyText(mDataListBean.getContent());
                     T_.show(getString(R.string.copy_tip));
                 }
@@ -170,12 +181,17 @@ public class DynamicShareDialog extends UIIDialogImpl {
                     thumbUrl,
                     mDataListBean.getDiscuss_id(),
                     getString(R.string.share_dynamic_format, mDataListBean.getUser_info().getUsername()),
-                    shareDes, this);
+                    shareDes, this, canShare);
 
             //分享恐龙谷
             mViewHolder.click(R.id.share_klg, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (!canShare) {
+                        finishDialog();
+                        T_.error(getString(R.string.cant_share_tip));
+                        return;
+                    }
                     getILayout().finishIView(DynamicShareDialog.class);
                     ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
                             , null, true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
@@ -212,6 +228,10 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 @Override
                 public void onClick(View v) {
                     finishDialog();
+                    if (!canShare) {
+                        T_.error(getString(R.string.cant_share_tip));
+                        return;
+                    }
                     ClipboardUtils.copyText(detailUrl);
                     T_.show(getString(R.string.copy_tip));
                 }
@@ -261,7 +281,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
                     thumbIco,
                     detailUrl,
                     mHotInfoListBean.getAuthor(),
-                    shareDes, this);
+                    shareDes, this, canShare);
 
             //分享恐龙谷
             mViewHolder.click(R.id.share_klg, new View.OnClickListener() {

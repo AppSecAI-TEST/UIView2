@@ -33,6 +33,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.realm.IcoInfoBean;
@@ -116,7 +117,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     }
 
     private void showShareDialog() {
-        startIView(new DynamicShareDialog(mDataListBean, mSubscriptions));
+        startIView(new DynamicShareDialog(mDataListBean, mSubscriptions).setCanShare(mDataListBean != null && mDataListBean.canForward()));
     }
 
     @NonNull
@@ -249,7 +250,15 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             mViewHolder.v(R.id.bottom_forward_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new PublishDynamicUIView2(mDataListBean));
+                    if (mDataListBean.canForward()) {
+                        if (mDataListBean.isForwardInformation()) {
+                            startIView(new PublishDynamicUIView2(HotInfoListBean.from(mDataListBean.getOriginal_info())));
+                        } else {
+                            startIView(new PublishDynamicUIView2(mDataListBean));
+                        }
+                    } else {
+                        T_.error(getString(R.string.cant_forward_tip));
+                    }
                 }
             });
 

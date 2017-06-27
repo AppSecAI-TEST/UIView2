@@ -177,7 +177,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         mForwardInformationBean = new ForwardInformationBean();
         mForwardInformationBean.setAuthor(mHotInfoListBean.getAuthor());
         mForwardInformationBean.setLogo(mHotInfoListBean.getLogo());
-        if ("video".equalsIgnoreCase(mHotInfoListBean.getType())) {
+        if (hotInfoListBean.isVideo()) {
             mForwardInformationBean.setMedia(mHotInfoListBean.getImgs() + "?" + mHotInfoListBean.getMedia());
         } else {
             mForwardInformationBean.setMedia(mHotInfoListBean.getImgs());
@@ -515,22 +515,30 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 List<String> mediaList = mHotInfoListBean.getImgsList();
 
                 imageView.setContentDescription(getString(R.string.is_circle));
-                if ("picture".equalsIgnoreCase(mediaType)) {
+                if (mHotInfoListBean.isPicture()) {
                     if (mediaList.size() > 0) {
                         thumbIco = mediaList.get(0);
                         imageView.setContentDescription("");
                     }
-                } else if ("article".equalsIgnoreCase(mediaType)) {
+                } else if (mHotInfoListBean.isText()) {
                     if (mediaList.size() > 0) {
                         thumbIco = mediaList.get(0);
                         imageView.setContentDescription("");
                     }
-                } else if ("video".equalsIgnoreCase(mediaType)) {
+                } else if (mHotInfoListBean.isVideo()) {
                     if (mediaList.size() > 0) {
                         thumbIco = mediaList.get(0);
                         imageView.setContentDescription("");
                     }
                     String videoUrl = mHotInfoListBean.getMedia();
+                    if (TextUtils.isEmpty(videoUrl)) {
+                        //从动态列表里面转发的
+                        thumbIco = mHotInfoListBean.getInformationVideoThumbUrl();
+                        videoUrl = mHotInfoListBean.getInformationVideoUrl();
+                    } else {
+                        //从资讯详情转发的
+
+                    }
                 } else if ("voice".equalsIgnoreCase(mediaType)) {
                     if (mediaList.size() > 0) {
                         String s = UserDiscussItemControl.getVideoParams(mediaList.get(0))[0];

@@ -49,4 +49,7 @@ public interface AuthService {
      */
     @POST("auth/detail")
     Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
+
+    @POST("auth/lastInfo")
+    Observable<ResponseBody> lastInfo(@QueryMap Map<String, String> map);
 }
