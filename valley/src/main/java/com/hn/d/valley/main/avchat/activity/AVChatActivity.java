@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.StyleActivity;
 import com.angcyo.uiview.utils.NetworkUtil;
+import com.angcyo.uiview.utils.T;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.avchat.AVChatNotification;
@@ -485,7 +486,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
      */
     private void outgoingCalling() {
         if (!NetworkUtil.isNetAvailable(AVChatActivity.this)) { // 网络不可用
-//            Toast.makeText(this, R.string.network_is_not_available, Toast.LENGTH_SHORT).show();
+            T_.show(getString(R.string.no_network));
             finish();
             return;
         }

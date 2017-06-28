@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message.session;
 
 import android.app.Activity;
 
+import com.angcyo.uiview.base.UILayoutActivity;
 import com.angcyo.uiview.container.ILayout;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
@@ -18,13 +19,13 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
  */
 public class Container {
 
-    public final Activity activity;
+    public final UILayoutActivity activity;
     public final String account;
     public final SessionTypeEnum sessionType;
     public final SessionProxy proxy;
     public final ILayout mLayout;
 
-    public Container(Activity activity, String account, SessionTypeEnum sessionType,ILayout layout, SessionProxy proxy) {
+    public Container(UILayoutActivity activity, String account, SessionTypeEnum sessionType, ILayout layout, SessionProxy proxy) {
         this.activity = activity;
         this.account = account;
         this.sessionType = sessionType;

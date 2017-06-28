@@ -95,8 +95,10 @@ public class AVChatSurface {
             smallSizePreviewCoverImg = (ImageView) surfaceRoot.findViewById(R.id.smallSizePreviewCoverImg);
 
             int width = ScreenUtil.screenWidth / 4;
-            int height = (int) (width * (ScreenUtil.screenWidth * 1.0f / ScreenUtil.screenWidth));
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width,height);
+            int height = (int) (width / (ScreenUtil.screenWidth * 1.0f / ScreenUtil.screenHeight));
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) smallSizePreviewFrameLayout.getLayoutParams();
+            params.width = width;
+            params.height = height;
             smallSizePreviewFrameLayout.setLayoutParams(params);
 
             smallSizePreviewFrameLayout.setOnTouchListener(touchListener);

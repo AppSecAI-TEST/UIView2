@@ -99,7 +99,7 @@ android {
 }
 
 
-def nim_ver = "3.7.0"
+def nim_ver = "3.8.0"
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')

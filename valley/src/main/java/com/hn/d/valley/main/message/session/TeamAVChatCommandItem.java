@@ -22,7 +22,7 @@ import com.hn.d.valley.main.message.groupchat.GroupMemberSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
 import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
-import com.hn.d.valley.main.teamavchat.activity.TeamAVChatActivity;
+import com.hn.d.valley.main.teamavchat.test.teamavchat.activity.TeamAVChatActivity;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.avchat.AVChatCallback;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
@@ -123,8 +123,8 @@ public class TeamAVChatCommandItem extends AVChatCommandItem {
                                             accounts.add(member.getMemberBean().getUserId());
                                         }
                                         //自己添加第一个位置
-                                        accounts.add(0,UserCache.getUserAccount());
-                                        if (accounts.size() < 2) {
+//                                        accounts.add(0,UserCache.getUserAccount());
+                                        if (accounts.size() < 1) {
                                             onSelectedAccountFail();
                                         }
                                         onSelectedAccountsResult(accounts);

@@ -9,7 +9,7 @@ import com.angcyo.uiview.utils.TimeUtil;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.AVChatProfile;
-import com.hn.d.valley.main.teamavchat.activity.TeamAVChatActivity;
+import com.hn.d.valley.main.teamavchat.test.teamavchat.activity.TeamAVChatActivity;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
@@ -154,7 +154,7 @@ public class TeamAVChatHelper {
     public boolean checkOfflineOutTime(CustomNotification notification) {
         // 时间差在45s内，考虑本地时间误差，条件适当放宽
         long time = TimeUtil.currentTimeMillis() - notification.getTime();
-//        LogUtil.ui("rev offline team AVChat request time = " + time);
+        L.i("rev offline team AVChat request time = " + time);
         return time > OFFLINE_EXPIRY || time < -OFFLINE_EXPIRY;
     }
 

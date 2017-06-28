@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.session;
 
+import android.Manifest;
 import android.content.Intent;
 
 import com.hn.d.valley.R;
@@ -9,6 +10,8 @@ import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 //import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
 import com.hn.d.valley.main.message.avchat.ui.AVChatUIVIew2;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
+
+import rx.functions.Action1;
 
 import static com.hn.d.valley.main.avchat.activity.AVChatActivity.FROM_INTERNAL;
 import static com.hn.d.valley.main.avchat.activity.AVChatActivity.PREVIEW_REQUESTCODE;
@@ -44,7 +47,18 @@ public class AVChatCommandItem extends CommandItemInfo {
     protected void onClick() {
 //        AVChatUIVIew2.start(getContainer().mLayout,getContainer().account, AVChatType.VIDEO.getValue(),FROM_INTERNAL);
 //        AVChatDelegete.getInstance().bind(getContainer().activity);
-        AVChatActivity.launch(getContainer().activity,getContainer().account,chatType.getValue(),FROM_INTERNAL);
+        getContainer().activity.checkPermissions(new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO},
+                new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            AVChatActivity.launch(getContainer().activity,getContainer().account,chatType.getValue(),FROM_INTERNAL);
+                        }
+                    }
+                });
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.angcyo.uiview.utils.ScreenUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.message.attachment.HotSpotInfo;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
@@ -65,7 +66,7 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
 
     @Override
     protected void bindContentView() {
-        HotSpotInfoAttachment hotSpotInfoAttachment = (HotSpotInfoAttachment) message.getAttachment();
+        final HotSpotInfoAttachment hotSpotInfoAttachment = (HotSpotInfoAttachment) message.getAttachment();
         if (hotSpotInfoAttachment == null)  {
             return;
         }
@@ -89,7 +90,7 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
             }
 
             @Override
-            protected void onBindView(RBaseViewHolder holder, int position, HotSpotInfo.NewsBean news) {
+            protected void onBindView(RBaseViewHolder holder, int position, final HotSpotInfo.NewsBean news) {
                 ImageView imageView = holder.imgV(R.id.image_view);
                 TextView desc = holder.tv(R.id.tv_desc);
 
@@ -111,7 +112,7 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        mUIBaseView.startIView(new X5WebUIView(bean.get("link")));
+                        mUIBaseView.startIView(new InformationDetailUIView(String.valueOf(news.getId())));
                     }
                 });
             }

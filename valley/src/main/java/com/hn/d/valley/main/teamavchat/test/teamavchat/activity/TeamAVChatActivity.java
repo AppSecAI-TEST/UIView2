@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.teamavchat.activity;
+package com.hn.d.valley.main.teamavchat.test.teamavchat.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,32 +7,30 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.StyleActivity;
-import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
-import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.AVChatSoundPlayer;
 import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
 import com.hn.d.valley.main.teamavchat.TeamAVChatNotification;
-import com.hn.d.valley.main.teamavchat.adapter.TeamAVChatAdapter;
-import com.hn.d.valley.main.teamavchat.module.SimpleAVChatStateObserver;
-import com.hn.d.valley.main.teamavchat.module.TeamAVChatItem;
-import com.hn.d.valley.start.SpaceItemDecoration;
-import com.hn.d.valley.widget.HnGlideImageView;
+import com.hn.d.valley.main.teamavchat.test.teamavchat.adapter.TeamAVChatAdapter;
+import com.hn.d.valley.main.teamavchat.test.teamavchat.module.SimpleAVChatStateObserver;
+import com.hn.d.valley.main.teamavchat.test.teamavchat.module.TeamAVChatItem;
+import com.lzy.imagepicker.adapter.ImageViewHolder;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -59,12 +57,11 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.hn.d.valley.main.teamavchat.module.TeamAVChatItem.TYPE.TYPE_DATA;
+import static com.hn.d.valley.main.teamavchat.test.teamavchat.module.TeamAVChatItem.TYPE.TYPE_DATA;
 
 
 /**
  * 多人音视频界面：包含音视频通话界面和接受拒绝界面
- * Created by huangjun on 2017/5/3.
  * <p>互动直播/多人会议视频通话流程示例
  * <ol>
  * <li>主播或者管理员创建房间 {@link AVChatManager#createRoom(String, String, AVChatCallback)}。 创建房间仅仅是在服务器预留一个房间名，房间未使用时有效期为30天，使用后的房间在所有用户退出后回收。</li>
@@ -92,7 +89,6 @@ public class TeamAVChatActivity extends StyleActivity {
     private static final String KEY_ROOM_ID = "roomid";
     private static final String KEY_ACCOUNTS = "accounts";
     private static final String KEY_TNAME = "teamName";
-    private static final String KEY_HOSTNAME = "host";
     private static final int AUTO_REJECT_CALL_TIMEOUT = 45 * 1000;
     private static final int CHECK_RECEIVED_CALL_TIMEOUT = 45 * 1000;
     private static final int MAX_SUPPORT_ROOM_USERS_COUNT = 9;
@@ -105,7 +101,6 @@ public class TeamAVChatActivity extends StyleActivity {
     private boolean receivedCall;
     private boolean destroyRTC;
     private String teamName;
-    private String host;
 
     // CONTEXT
     private Handler mainHandler;
@@ -115,11 +110,11 @@ public class TeamAVChatActivity extends StyleActivity {
     private View surfaceLayout;
 
     // VIEW
-    private RRecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private TeamAVChatAdapter adapter;
     private List<TeamAVChatItem> data;
+    private ImageView iv_scale;
 //    private View voiceMuteButton;
-    private  AVChatVideoRender render;
 
     // TIMER
     private Timer timer;
@@ -153,6 +148,7 @@ public class TeamAVChatActivity extends StyleActivity {
         context.startActivity(intent);
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,8 +157,6 @@ public class TeamAVChatActivity extends StyleActivity {
             finish();
             return;
         }
-
-        L.i(TAG, "TeamAVChatActivity onCreate, savedInstanceState=" + savedInstanceState);
 
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.team_avchat_activity);
@@ -180,7 +174,6 @@ public class TeamAVChatActivity extends StyleActivity {
     protected void onCreateView() {
 
     }
-
 
     @Override
     protected void onPause() {
@@ -206,7 +199,6 @@ public class TeamAVChatActivity extends StyleActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        L.i(TAG, "TeamAVChatActivity onDestroy");
 
         needFinish = true;
         if (timer != null) {
@@ -232,7 +224,7 @@ public class TeamAVChatActivity extends StyleActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        L.i(TAG, "TeamAVChatActivity onSaveInstanceState");
+
     }
 
     /**
@@ -250,16 +242,12 @@ public class TeamAVChatActivity extends StyleActivity {
         teamId = intent.getStringExtra(KEY_TEAM_ID);
         accounts = (ArrayList<String>) intent.getSerializableExtra(KEY_ACCOUNTS);
         teamName = intent.getStringExtra(KEY_TNAME);
-        host = accounts.get(0);//第一个位置
-        L.i(TAG, "onIntent, roomId=" + roomId + ", teamId=" + teamId
-                + ", receivedCall=" + receivedCall + ", accounts=" + accounts.size() + ", teamName = " + teamName);
     }
 
     private void findLayouts() {
         callLayout = findViewById(R.id.team_avchat_call_layout);
         surfaceLayout = findViewById(R.id.team_avchat_surface_layout);
-        render = (AVChatVideoRender) findViewById(R.id.render_avchat);
-        render.setVisibility(View.GONE);
+        iv_scale = (ImageView) findViewById(R.id.iv_scale);
 //        voiceMuteButton = findViewById(R.id.avchat_shield_user);
     }
 
@@ -292,17 +280,12 @@ public class TeamAVChatActivity extends StyleActivity {
      */
     private void showReceivedCallLayout() {
         callLayout.setVisibility(View.VISIBLE);
-
-        HnGlideImageView iv_head = (HnGlideImageView) callLayout.findViewById(R.id.iv_icon_head);
-        String avatar = NimUserInfoCache.getInstance().getUserInfo(host).getAvatar();
-        iv_head.setImageThumbUrl(avatar);
-
         // 提示
         TextView textView = (TextView) callLayout.findViewById(R.id.received_call_tip);
         if (teamName == null) {
             teamName = TeamDataCache.getInstance().getTeamName(teamId);
         }
-        textView.setText(String.format("%s 的视频通话", teamName));
+        textView.setText(teamName + " 的视频通话");
 
         // 播放铃声
         AVChatSoundPlayer.instance().play(AVChatSoundPlayer.RingerTypeEnum.RING);
@@ -337,23 +320,16 @@ public class TeamAVChatActivity extends StyleActivity {
     private void showSurfaceLayout() {
         // 列表
         surfaceLayout.setVisibility(View.VISIBLE);
-        recyclerView = (RRecyclerView) surfaceLayout.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) surfaceLayout.findViewById(R.id.recycler_view);
         initRecyclerView();
 
         // 通话计时
         timerText = (TextView) surfaceLayout.findViewById(R.id.timer_text);
 
         // 控制按钮
-        ViewGroup settingLayout = (ViewGroup) surfaceLayout.findViewById(R.id.ll_controler);
-        for (int i = 0; i < settingLayout.getChildCount(); i++) {
-            View v = settingLayout.getChildAt(i);
-            if (v instanceof LinearLayout) {
-//                ViewGroup vp = (ViewGroup) v;
-//                if (vp.getChildCount() == 2) {
-                    v.setOnClickListener(settingBtnClickListener);
-//                }
-            }
-        }
+        surfaceLayout.findViewById(R.id.iv_open_carema).setOnClickListener(settingBtnClickListener);
+        surfaceLayout.findViewById(R.id.iv_mute).setOnClickListener(settingBtnClickListener);
+        surfaceLayout.findViewById(R.id.iv_hand_free).setOnClickListener(settingBtnClickListener);
         surfaceLayout.findViewById(R.id.ll_hangup).setOnClickListener(settingBtnClickListener);
 
         // 音视频权限检查
@@ -372,7 +348,6 @@ public class TeamAVChatActivity extends StyleActivity {
         // rtc init
         AVChatManager.getInstance().enableRtc();
         AVChatManager.getInstance().enableVideo();
-        L.i(TAG, "start rtc done");
 
         // state observer
         if (stateObserver != null) {
@@ -404,7 +379,6 @@ public class TeamAVChatActivity extends StyleActivity {
             }
         };
         AVChatManager.getInstance().observeAVChatState(stateObserver, true);
-        L.i(TAG, "observe rtc state done");
 
         // notification observer
         if (notificationObserver != null) {
@@ -432,29 +406,24 @@ public class TeamAVChatActivity extends StyleActivity {
             @Override
             public void onSuccess(AVChatData data) {
                 chatId = data.getChatId();
-                L.i(TAG, "join room success, roomId=" + roomId + ", chatId=" + chatId);
             }
 
             @Override
             public void onFailed(int code) {
                 onJoinRoomFailed(code, null);
-                L.i(TAG, "join room failed, code=" + code + ", roomId=" + roomId);
             }
 
             @Override
             public void onException(Throwable exception) {
                 onJoinRoomFailed(-1, exception);
-                L.i(TAG, "join room failed, e=" + exception.getMessage() + ", roomId=" + roomId);
             }
         });
-        L.i(TAG, "start join room, roomId=" + roomId);
     }
 
     private void onJoinRoomSuccess() {
         startTimer();
         startLocalPreview();
         startTimerForCheckReceivedCall();
-        L.i(TAG, "team avchat running..." + ", roomId=" + roomId);
     }
 
     private void onJoinRoomFailed(int code, Throwable e) {
@@ -469,7 +438,7 @@ public class TeamAVChatActivity extends StyleActivity {
         int index = getItemIndex(account);
         if (index >= 0) {
             TeamAVChatItem item = data.get(index);
-            AVChatVideoRender surfaceView = getAvChatVideoRender(index);
+            AVChatVideoRender surfaceView = adapter.getViewHolderSurfaceView(item);
             if (surfaceView != null) {
                 item.state = TeamAVChatItem.STATE.STATE_PLAYING;
                 item.videoLive = true;
@@ -479,11 +448,6 @@ public class TeamAVChatActivity extends StyleActivity {
         }
         updateAudioMuteButtonState();
 
-        L.i(TAG, "on user joined, account=" + account);
-    }
-
-    private AVChatVideoRender getAvChatVideoRender(int index) {
-        return adapter.getViewHolderSurfaceView(index);
     }
 
     public void onAVChatUserLeave(String account) {
@@ -496,13 +460,11 @@ public class TeamAVChatActivity extends StyleActivity {
         }
         updateAudioMuteButtonState();
 
-        L.i(TAG, "on user leave, account=" + account);
     }
 
     private void startLocalPreview() {
         if (data.size() > 1 && data.get(0).account.equals(UserCache.getUserAccount())) {
-            AVChatVideoRender surfaceView = getAvChatVideoRender(0);
-//            AVChatVideoRender surfaceView = render;
+            AVChatVideoRender surfaceView = adapter.getViewHolderSurfaceView(data.get(0));
             if (surfaceView != null) {
                 AVChatManager.getInstance().setupLocalVideoRender(surfaceView, false, AVChatVideoScalingType.SCALE_ASPECT_FIT);
                 AVChatManager.getInstance().startVideoPreview();
@@ -574,7 +536,6 @@ public class TeamAVChatActivity extends StyleActivity {
         }
 
         destroyRTC = true;
-        L.i(TAG, "destroy rtc & leave room, roomId=" + roomId);
     }
 
     /**
@@ -682,33 +643,33 @@ public class TeamAVChatActivity extends StyleActivity {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.avchat_switch_camera:
-                    // 切换前后摄像头
-                    AVChatManager.getInstance().switchCamera();
-                    break;
-                case R.id.ll_open_carema:
+//                case R.id.ll_open_carema:
+//                    // 切换前后摄像头
+//                    AVChatManager.getInstance().switchCamera();
+//                    break;
+                case R.id.iv_open_carema:
                     // 视频
                     AVChatManager.getInstance().muteLocalVideo(videoMute = !videoMute);
                     // 发送控制指令
                     byte command = videoMute ? AVChatControlCommand.NOTIFY_VIDEO_OFF : AVChatControlCommand.NOTIFY_VIDEO_ON;
                     AVChatManager.getInstance().sendControlCommand(chatId, command, null);
-//                    v.setBackgroundResource(videoMute ? R.drawable.t_avchat_camera_mute_selector : R.drawable.t_avchat_camera_selector);
+                    v.setBackgroundResource(videoMute ? R.drawable.dakaishiping_qun_s : R.drawable.dakaishiping_qun_n);
                     updateSelfItemVideoState(!videoMute);
                     break;
-//                case R.id.avchat_enable_audio:
-//                    // 麦克风开关
-//                    AVChatManager.getInstance().muteLocalAudio(microphoneMute = !microphoneMute);
-////                    v.setBackgroundResource(microphoneMute ? R.drawable.t_avchat_microphone_mute_selector : R.drawable.t_avchat_microphone_selector);
-//                    break;
-//                case R.id.avchat_volume:
-//                    // 听筒扬声器切换
-//                    AVChatManager.getInstance().setSpeaker(speakerMode = !speakerMode);
-////                    v.setBackgroundResource(speakerMode ? R.drawable.t_avchat_speaker_selector : R.drawable.t_avchat_speaker_mute_selector);
-//                    break;
-                case R.id.ll_mute:
-                    // 屏蔽用户音频
-                    disableUserAudio();
+                case R.id.iv_mute:
+                    // 麦克风开关
+                    AVChatManager.getInstance().muteLocalAudio(microphoneMute = !microphoneMute);
+                    v.setBackgroundResource(microphoneMute ? R.drawable.jingyin_qun_s : R.drawable.jingyin_qun_n);
                     break;
+                case R.id.iv_hand_free:
+                    // 听筒扬声器切换
+                    AVChatManager.getInstance().setSpeaker(speakerMode = !speakerMode);
+                    v.setBackgroundResource(speakerMode ? R.drawable.mianti_qun_s : R.drawable.mianti_qun_n);
+                    break;
+//                case R.id.ll_mute:
+//                    // 屏蔽用户音频
+//                    disableUserAudio();
+//                    break;
                 case R.id.ll_hangup:
                     // 挂断
                     hangup();
@@ -764,11 +725,12 @@ public class TeamAVChatActivity extends StyleActivity {
 
     private void initRecyclerView() {
         // 确认数据源,自己放在首位
-        data = new ArrayList<>(accounts.size());
+        data = new ArrayList<>(accounts.size() + 1);
         for (String account : accounts) {
             if (account.equals(UserCache.getUserAccount())) {
                 continue;
             }
+
             data.add(new TeamAVChatItem(TYPE_DATA, teamId, account));
         }
 
@@ -790,19 +752,10 @@ public class TeamAVChatActivity extends StyleActivity {
         recyclerView.setLayoutParams(layoutParams);
 
         // RecyclerView
-        adapter = new TeamAVChatAdapter(this, data);
-        adapter.attachRecyclerView(recyclerView);
+        adapter = new TeamAVChatAdapter(recyclerView, data);
         recyclerView.setAdapter(adapter);
-
-//        ViewGroup.LayoutParams layoutParams = recyclerView.getLayoutParams();
-//        layoutParams.width = ScreenUtil.screenWidth;
-//
-//        int itemHeight = layoutParams.width / 3;
-//        layoutParams.height = itemHeight * 3;
-//        recyclerView.setLayoutParams(layoutParams);
-
-//        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-//        recyclerView.addItemDecoration(new SpaceItemDecoration(ScreenUtil.dip2px(1)));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+//        recyclerView.addItemDecoration(new SpacingDecoration(ScreenUtil.dip2px(1), ScreenUtil.dip2px(1), true));
     }
 
     private int getItemIndex(final String account) {
@@ -844,10 +797,13 @@ public class TeamAVChatActivity extends StyleActivity {
 //        MPermission.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
     }
 
+//    @OnMPermissionGranted(BASIC_PERMISSION_REQUEST_CODE)
     public void onBasicPermissionSuccess() {
         onPermissionChecked();
     }
 
+//    @OnMPermissionDenied(BASIC_PERMISSION_REQUEST_CODE)
+//    @OnMPermissionNeverAskAgain(BASIC_PERMISSION_REQUEST_CODE)
     public void onBasicPermissionFailed() {
         Toast.makeText(this, "音视频通话所需权限未全部授权，部分功能可能无法正常运行！", Toast.LENGTH_SHORT).show();
         onPermissionChecked();

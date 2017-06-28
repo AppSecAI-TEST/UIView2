@@ -1,4 +1,4 @@
-package com.hn.d.valley.main.message.chat.viewholder;
+    package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;

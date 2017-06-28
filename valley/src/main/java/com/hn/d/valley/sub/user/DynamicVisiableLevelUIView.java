@@ -4,13 +4,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RGroupAdapter;
 import com.angcyo.uiview.recycler.adapter.RGroupData;
@@ -18,6 +22,7 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
+import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.bean.FriendBean;
@@ -30,6 +35,7 @@ import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnCheckBox;
+import com.hn.d.valley.widget.HnEmptyRefreshLayout;
 import com.netease.nimlib.sdk.friend.model.Friend;
 
 import java.util.ArrayList;
@@ -97,10 +103,29 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
     }
 
     @Override
+    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+        mRootSoftInputLayout = new RSoftInputLayout(mActivity);
+        mRefreshLayout = new HnEmptyRefreshLayout(mActivity);
+        mRecyclerView = new RRecyclerView(mActivity);
+        mRecyclerView.setHasFixedSize(true);
+        mRefreshLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-1, -1));
+        //baseContentLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
+        mRootSoftInputLayout.addView(mRefreshLayout, new ViewGroup.LayoutParams(-1, -1));
+        baseContentLayout.addView(mRootSoftInputLayout, new ViewGroup.LayoutParams(-1, -1));
+    }
+
+    @Override
+    protected void initRecyclerView() {
+        super.initRecyclerView();
+        mRExBaseAdapter.setEnableLoadMore(false);
+    }
+
+    @Override
     protected RExBaseAdapter<String, SubSection, String> initRExBaseAdapter() {
         mGroupAdapter = new VisiableLevelAdpater(mActivity);
         return mGroupAdapter;
     }
+
 
     private class VisiableLevelAdpater extends RGroupAdapter<String,SubSection,String> {
 
@@ -128,6 +153,9 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
                 if (isSelector && bean != null) {
                     mCurrentType = bean.section;
                     mCurrentSelectedFriend = bean.atUsers;
+                    if (mCurrentSelectedFriend.size() == 0) {
+                        mCurrentType = LevelType.PUBLIC;
+                    }
                 }
             }
         }
@@ -258,7 +286,6 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         }
 
         private void processSelectedData(List<AbsContactItem> list) {
-
             atUsers.clear();
             mFriendList.clear();
             for (AbsContactItem item : list) {

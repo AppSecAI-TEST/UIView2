@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.session;
 
+import android.Manifest;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
@@ -12,6 +13,7 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.io.File;
 
+import rx.functions.Action1;
 import rx.functions.Action3;
 
 /**
@@ -37,28 +39,44 @@ public class VideoCommandItem extends CommandItemInfo {
 
     @Override
     protected void onClick() {
-        //视频
-        getContainer().mLayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
-            @Override
-            public void call(UIIViewImpl view, String s, String s2) {
 
-                view.finishIView();
+        getContainer().activity.checkPermissions(new String[]{
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.RECORD_AUDIO},
+                new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        if (aBoolean) {
 
-                File file = new File(s2);
-                if (!file.exists()) {
-                    return;
-                }
+                            //视频
+                            getContainer().mLayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
+                                @Override
+                                public void call(UIIViewImpl view, String s, String s2) {
 
-                MediaPlayer mediaPlayer = getVideoMediaPlayer(file);
-                long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
-                int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
-                int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
-                String md5 = MD5.getStreamMD5(s2);
-                IMMessage message = MessageBuilder.createVideoMessage(getContainer().account, getContainer().sessionType, file, duration, width, height, md5);
-                getContainer().proxy.sendMessage(message);
+                                    view.finishIView();
 
-            }
-        }));
+                                    File file = new File(s2);
+                                    if (!file.exists()) {
+                                        return;
+                                    }
+
+                                    MediaPlayer mediaPlayer = getVideoMediaPlayer(file);
+                                    long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
+                                    int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
+                                    int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
+                                    String md5 = MD5.getStreamMD5(s2);
+                                    IMMessage message = MessageBuilder.createVideoMessage(getContainer().account, getContainer().sessionType, file, duration, width, height, md5);
+                                    getContainer().proxy.sendMessage(message);
+
+                                }
+                            }));
+
+                        } else {
+
+                        }
+                    }
+                });
+
     }
 
     /**

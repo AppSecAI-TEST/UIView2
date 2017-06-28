@@ -55,7 +55,20 @@ import rx.subscriptions.CompositeSubscription
  * 修改备注：
  * Version: 1.0.0
  */
-class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIView() {
+class InformationDetailUIView : BaseContentUIView {
+
+    var id: String
+    var hotInfoBean: HotInfoListBean? = null
+
+    constructor(hotInfoBean: HotInfoListBean) {
+        this.id = hotInfoBean.id.toString()
+        this.hotInfoBean = hotInfoBean
+    }
+
+    constructor(id: String) {
+        this.id = id
+    }
+
 
     companion object {
         fun getDetailUrl(id: String) = "http://news.klgwl.com/wap/news/$id"
@@ -127,6 +140,10 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
 
     /**分享对话框*/
     private fun showShareDialog() {
+        if (hotInfoBean != null) {
+        } else {
+            hotInfoBean = HotInfoListBean.from(detailBean)
+        }
         startIView(DynamicShareDialog(hotInfoBean, mSubscriptions))
     }
 
@@ -183,7 +200,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
             imageView.setImageResource(R.drawable.shouchang_pinglun_s)
             imageView.setOnClickListener {
                 add(RRetrofit.create(NewsService::class.java)
-                        .uncollect(Param.buildInfoMap("id:" + hotInfoBean.id, "uid:" + UserCache.getUserAccount()))
+                        .uncollect(Param.buildInfoMap("id:" + id, "uid:" + UserCache.getUserAccount()))
                         .compose(Rx.transformer(String::class.java))
                         .subscribe(object : BaseSingleSubscriber<String>() {
                             override fun onSucceed(bean: String?) {
@@ -198,7 +215,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
             imageView.setImageResource(R.drawable.shouchang_pinglun_n)
             imageView.setOnClickListener {
                 add(RRetrofit.create(NewsService::class.java)
-                        .collect(Param.buildInfoMap("id:" + hotInfoBean.id, "uid:" + UserCache.getUserAccount()))
+                        .collect(Param.buildInfoMap("id:" + id, "uid:" + UserCache.getUserAccount()))
                         .compose(Rx.transformer(String::class.java))
                         .subscribe(object : BaseSingleSubscriber<String>() {
                             override fun onSucceed(bean: String?) {
@@ -214,7 +231,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
 
     private fun initWebView() {
         showLoadView()
-        webView.loadUrl(getDetailUrl(hotInfoBean.id.toString()))
+        webView.loadUrl(getDetailUrl(id))
         webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
         webView.onWebViewListener = object : X5WebView.OnWebViewListener {
             override fun onPageFinished(webView: WebView?, url: String?) {
@@ -295,7 +312,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
     private fun initViewPager() {
         mUiViewPager.adapter = object : UIPagerAdapter() {
             override fun getIView(position: Int): IView {
-                mCommentListUIView = CommentListUIView(hotInfoBean.id.toString(), true)
+                mCommentListUIView = CommentListUIView(id, true)
                 mCommentListUIView?.bindParentILayout(mParentILayout)
                 return mCommentListUIView!!
             }
@@ -343,7 +360,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
      */
     private fun comment(content: String?) {
         add(RRetrofit.create(NewsService::class.java)
-                .reply(Param.buildInfoMap("type:new", "content:" + content, "id:" + hotInfoBean.id, "uid:" + UserCache.getUserAccount()))
+                .reply(Param.buildInfoMap("type:new", "content:" + content, "id:" + id, "uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformer(String::class.java))
                 .doOnSubscribe { showLoadView() }
                 .subscribe(object : BaseSingleSubscriber<String>() {
@@ -366,7 +383,7 @@ class InformationDetailUIView(var hotInfoBean: HotInfoListBean) : BaseContentUIV
     private fun getDetail() {
         add(RRetrofit
                 .create(NewsService::class.java)
-                .detail(Param.buildInfoMap("meta:1", "id:" + hotInfoBean.id, "uid:" + UserCache.getUserAccount()))
+                .detail(Param.buildInfoMap("meta:1", "id:" + id, "uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformer(InformationDetailBean::class.java))
                 .subscribe(object : BaseSingleSubscriber<InformationDetailBean>() {
                     override fun onSucceed(bean: InformationDetailBean?) {

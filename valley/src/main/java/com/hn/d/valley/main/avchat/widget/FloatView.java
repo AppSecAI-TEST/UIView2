@@ -11,14 +11,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
@@ -54,7 +52,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     private AVChatVideoRender micro_preview_render;
     private ImageView smallSizePreviewCoverImg;
     private ImageView iv_max_sclae;
-    private ImageView iv_audio_flag;
+    private View ll_audio_flag;
 
     private float mTouchStartX;
     private float mTouchStartY;
@@ -128,7 +126,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         smallSizePreviewCoverImg = (ImageView) view.findViewById(R.id.smallSizePreviewCoverImg);
         ll_micro_preview = (LinearLayout) view.findViewById(R.id.ll_micro_preview);
         iv_max_sclae = (ImageView) view.findViewById(R.id.iv_max_sclae);
-        iv_audio_flag = (ImageView) view.findViewById(R.id.iv_audio_flag);
+        ll_audio_flag = view.findViewById(R.id.iv_audio_flag);
 
         int width = mScreenWidth / 4;
         int height = (int) (width * (mScreenHeight * 1.0f / mScreenWidth));
@@ -352,17 +350,18 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         }
     }
 
+
     private void showVideoUI() {
         small_size_preview.setVisibility(VISIBLE);
         ll_micro_preview.setVisibility(VISIBLE);
         iv_max_sclae.setVisibility(VISIBLE);
         smallSizePreviewCoverImg.setVisibility(VISIBLE);
-        iv_audio_flag.setVisibility(GONE);
+        ll_audio_flag.setVisibility(GONE);
 
     }
 
     private void showAudioUI() {
-        iv_audio_flag.setVisibility(VISIBLE);
+        ll_audio_flag.setVisibility(VISIBLE);
         small_size_preview.setVisibility(GONE);
         ll_micro_preview.setVisibility(GONE);
         iv_max_sclae.setVisibility(GONE);

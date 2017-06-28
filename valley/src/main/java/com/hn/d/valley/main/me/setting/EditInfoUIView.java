@@ -208,6 +208,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         mOldParams.mSignature = userInfoBean.getSignature();
         mOldParams.pName = userInfoBean.getProvince_name();
         mOldParams.cName = userInfoBean.getCity_name();
+        mOldParams.voice_introduce = userInfoBean.getVoice_introduce();
     }
 
     // 滑动到指定view区域取消录音判断
@@ -1556,6 +1557,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         public String mSignature;
         public String pName;
         public String cName;
+        public String voice_introduce;
 
         public boolean isChanged(UserInfoBean userInfoBean) {
             boolean changed = false;
@@ -1602,6 +1604,9 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 return changed;
             }
             if (!TextUtils.equals(mSignature, userInfoBean.getSignature())) {
+                changed = true;
+                return changed;
+            } else if (mAudioRecordPlayable != null) {
                 changed = true;
                 return changed;
             }

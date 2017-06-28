@@ -10,7 +10,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="Gv3"
+        android:tag="Gv1"
         android:layout_marginTop="0dp" />
 
     <TextView
@@ -19,8 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/recycler_view"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/base_xxhdpi"
-        android:layout_marginBottom="@dimen/base_xxhdpi"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:layout_marginBottom="@dimen/base_xhdpi"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="@dimen/default_text_size"
@@ -36,7 +36,9 @@
         <LinearLayout
             android:id="@+id/ll_controler"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            >
 
             <LinearLayout
                 android:id="@+id/ll_open_carema"
@@ -45,22 +47,24 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="10dp"
+                android:paddingLeft="@dimen/base_xhdpi"
+                android:paddingRight="@dimen/base_xhdpi"
+
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/iv_open_carema"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="@string/empty"
-                    android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/dakaishiping_qun_n" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/text_av_receive"
+                    android:text="@string/text_open_camera"
                     android:textColor="@color/white" />
             </LinearLayout>
 
@@ -71,21 +75,23 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="10dp"
+                android:paddingLeft="@dimen/base_xhdpi"
+                android:paddingRight="@dimen/base_xhdpi"
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/iv_mute"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="@string/empty"
-                    android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/jingyin_yuyinliaotian_n" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_xhdpi"
                     android:text="@string/text_mute"
                     android:textColor="@color/white" />
             </LinearLayout>
@@ -97,15 +103,16 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="10dp"
+                android:paddingLeft="@dimen/base_xhdpi"
+                android:paddingRight="@dimen/base_xhdpi"
                 android:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/iv_hand_free"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:contentDescription="@string/empty"
-                    android:padding="10dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/mianti_qun_n" />
 
@@ -127,7 +134,9 @@
             android:layout_centerHorizontal="true"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="10dp"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:paddingLeft="@dimen/base_xhdpi"
+            android:paddingRight="@dimen/base_xhdpi"
             android:visibility="visible">
 
         <ImageView
@@ -135,18 +144,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:contentDescription="@string/empty"
-            android:padding="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/avchat_cancel_selector" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi"
             android:text="接听"
             android:textColor="@color/white" />
         </LinearLayout>
 
 
     </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_scale"
+        android:layout_margin="@dimen/base_xxhdpi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#1a282a21"
+        android:visibility="visible"
+        android:src="@drawable/fangdasuoxiao_shipingliaotian"
+        />
 
 </RelativeLayout>

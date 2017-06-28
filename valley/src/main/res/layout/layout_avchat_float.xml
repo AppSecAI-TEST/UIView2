@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/small_size_preview_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="18dp">
+    android:paddingRight="16dp"
+    android:paddingTop="18dp">
 
     <LinearLayout
         android:id="@+id/small_size_preview"
@@ -12,7 +13,7 @@
         android:layout_height="match_parent"
         android:background="@color/transparent"
         android:orientation="vertical"
-        android:visibility="gone" >
+        android:visibility="gone">
 
         <com.netease.nimlib.sdk.avchat.model.AVChatVideoRender
             android:id="@+id/small_preview_render"
@@ -24,10 +25,10 @@
 
     <LinearLayout
         android:id="@+id/ll_micro_preview"
-        android:visibility="visible"
-        android:layout_gravity="end|top"
         android:layout_width="20dp"
-        android:layout_height="30dp">
+        android:layout_height="30dp"
+        android:layout_gravity="end|top"
+        android:visibility="visible">
 
         <com.netease.nimlib.sdk.avchat.model.AVChatVideoRender
             android:id="@+id/micro_preview_render"
@@ -37,10 +38,10 @@
 
     <ImageView
         android:id="@+id/iv_max_sclae"
-        android:layout_margin="@dimen/base_ldpi"
-        android:src="@drawable/fangdasuoxiao_shipingliaotian_2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_ldpi"
+        android:src="@drawable/fangdasuoxiao_shipingliaotian_2" />
 
     <ImageView
         android:id="@+id/smallSizePreviewCoverImg"
@@ -50,11 +51,30 @@
         android:src="@drawable/avchat_close_video_send"
         android:visibility="visible" />
 
-    <ImageView
+    <LinearLayout
         android:id="@+id/iv_audio_flag"
-        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:src="@drawable/yuyingzhong_yuyingliaotian"
-        android:visibility="gone" />
+        android:background="@drawable/base_white_round_bg"
+        android:elevation="@dimen/base_ldpi">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:src="@drawable/yuyingzhong_yuyingliaotian"
+            android:visibility="visible" />
+
+        <TextView
+            tools:text="4:00"
+            android:layout_margin="@dimen/base_xhdpi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
 </FrameLayout>

@@ -4,16 +4,25 @@ import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.UI;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
+import com.hn.d.valley.cache.TeamDataCache;
+import com.hn.d.valley.main.message.search.DefaultUserInfoProvider;
 import com.hn.d.valley.main.teamavchat.module.TeamAVChatItem;
 import com.netease.nimlib.sdk.avchat.model.AVChatVideoRender;
+import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.List;
+
+import static android.view.View.GONE;
 
 /**
  * Created by huangjun on 2017/5/4.
@@ -69,56 +78,57 @@ public class TeamAVChatAdapter extends RBaseAdapter<TeamAVChatItem>{
 
         if (getItemType(position) == VIEW_TYPE_DATA) {
             int itemSize = getItemSize();
-            UI.setViewHeight(holder.itemView, itemSize);
+//            UI.setViewHeight(holder.itemView, itemSize);
 
-//            ImageView iv_icon_head = holder.imgV(R.id.iv_icon_head);
+            ImageView iv_icon_head = holder.imgV(R.id.iv_icon_head);
             AVChatVideoRender render = holder.v(R.id.render_avchat);
-//            TextView tv_avchat_tip = holder.tv(R.id.tv_avchat_tip);
-//            ImageView iv_audio_tip = holder.imgV(R.id.iv_audio_tip);
-//            ImageView iv_avchat_loading = holder.imgV(R.id.iv_avchat_loading);
+            TextView tv_avchat_tip = holder.tv(R.id.tv_avchat_tip);
+            ImageView iv_audio_tip = holder.imgV(R.id.iv_audio_tip);
+            ImageView iv_avchat_loading = holder.imgV(R.id.iv_avchat_loading);
 
 //        nickNameText.setText(TeamDataCache.getInstance().getDisplayNameWithoutMe(data.teamId, data.account));
 
-//            final UserInfoProvider.UserInfo userInfo = DefaultUserInfoProvider.getInstance().getUserInfo(data.account);
-//            final int defaultResId = R.drawable.default_avatar;
-//            final String thumbUrl = userInfo.getAvatar();
-//            Glide.with(mContext)
-//                    .load(thumbUrl).asBitmap().centerCrop()
-//                    .placeholder(defaultResId)
-//                    .error(defaultResId)
-////                .override(DEFAULT_AVATAR_THUMB_SIZE, DEFAULT_AVATAR_THUMB_SIZE)
-//                    .into(iv_icon_head);
-//
-//            if (data.state == TeamAVChatItem.STATE.STATE_WAITING) {
-//                // 等待接听
-//                Glide.with(mContext)
-//                        .load(R.drawable.t_avchat_loading).asGif()
-//                        .into(iv_avchat_loading);
-//                iv_avchat_loading.setVisibility(View.VISIBLE);
-//                render.setVisibility(View.GONE);
+            final UserInfoProvider.UserInfo userInfo = DefaultUserInfoProvider.getInstance().getUserInfo(data.account);
+            final int defaultResId = R.drawable.default_avatar;
+            final String thumbUrl = userInfo.getAvatar();
+            Glide.with(mContext)
+                    .load(thumbUrl).asBitmap().centerCrop()
+                    .placeholder(defaultResId)
+                    .error(defaultResId)
+//                .override(DEFAULT_AVATAR_THUMB_SIZE, DEFAULT_AVATAR_THUMB_SIZE)
+                    .into(iv_icon_head);
+
+            if (data.state == TeamAVChatItem.STATE.STATE_WAITING) {
+                // 等待接听
+                Glide.with(mContext)
+                        .load(R.drawable.t_avchat_loading).asGif()
+                        .into(iv_avchat_loading);
+                iv_avchat_loading.setVisibility(View.VISIBLE);
+                render.setVisibility(GONE);
+                tv_avchat_tip.setVisibility(GONE);
+            } else if (data.state == TeamAVChatItem.STATE.STATE_PLAYING) {
+                // 正在通话
+                iv_icon_head.setVisibility(GONE);
+                iv_avchat_loading.setVisibility(GONE);
+                render.setVisibility(data.videoLive ? View.VISIBLE : View.INVISIBLE); // 有视频流才需要SurfaceView
+                L.d("TeamAVChatAdapter","videolive : " + data.videoLive);
 //                tv_avchat_tip.setVisibility(GONE);
-//            } else if (data.state == TeamAVChatItem.STATE.STATE_PLAYING) {
-//                // 正在通话
-//                iv_icon_head.setVisibility(GONE);
-//                iv_avchat_loading.setVisibility(GONE);
-//                render.setVisibility(data.videoLive ? View.VISIBLE : View.INVISIBLE); // 有视频流才需要SurfaceView
-//                L.d("TeamAVChatAdapter","videolive : " + data.videoLive);
-//                tv_avchat_tip.setVisibility(GONE);
-//            } else if (data.state == TeamAVChatItem.STATE.STATE_END || data.state == TeamAVChatItem.STATE.STATE_HANGUP) {
-//                // 未接听/挂断
-//                iv_icon_head.setVisibility(View.VISIBLE);
-//                iv_avchat_loading.setVisibility(GONE);
-//                render.setVisibility(GONE);
-//                tv_avchat_tip.setVisibility(View.VISIBLE);
-//                tv_avchat_tip.setText(data.state == TeamAVChatItem.STATE.STATE_HANGUP ? R.string.text_had_hangup : R.string.avchat_no_pick_up);
-//            }
-//
-//            updateVolume(data.volume);
-//            if (data.volume > 0.1) {
-//                iv_audio_tip.setVisibility(View.VISIBLE);
-//            } else {
-//                iv_audio_tip.setVisibility(GONE);
-//            }
+                tv_avchat_tip.setText("正在通话");
+            } else if (data.state == TeamAVChatItem.STATE.STATE_END || data.state == TeamAVChatItem.STATE.STATE_HANGUP) {
+                // 未接听/挂断
+                iv_icon_head.setVisibility(View.VISIBLE);
+                iv_avchat_loading.setVisibility(GONE);
+                render.setVisibility(GONE);
+                tv_avchat_tip.setVisibility(View.VISIBLE);
+                tv_avchat_tip.setText(data.state == TeamAVChatItem.STATE.STATE_HANGUP ? R.string.text_had_hangup : R.string.avchat_no_pick_up);
+            }
+
+            updateVolume(data.volume);
+            if (data.volume > 0.1) {
+                iv_audio_tip.setVisibility(View.VISIBLE);
+            } else {
+                iv_audio_tip.setVisibility(GONE);
+            }
 
         }
 
@@ -126,11 +136,11 @@ public class TeamAVChatAdapter extends RBaseAdapter<TeamAVChatItem>{
 
     public TeamAVChatAdapter attachRecyclerView(RecyclerView recyclerView) {
         layoutManager = recyclerView.getLayoutManager();
-        if (layoutManager instanceof GridLayoutManager) {
-            int spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
-            mItemCountLine = spanCount;
-            UI.setViewHeight(recyclerView, getItemSize() * spanCount);
-        }
+//        if (layoutManager instanceof GridLayoutManager) {
+//            int spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
+//            mItemCountLine = spanCount;
+//            UI.setViewHeight(recyclerView, getItemSize() * spanCount);
+//        }
         return this;
     }
 
@@ -155,6 +165,7 @@ public class TeamAVChatAdapter extends RBaseAdapter<TeamAVChatItem>{
 
 
     public void updateVolumeBar(TeamAVChatItem item) {
+
 //        if (item.volume > 0.1) {
 //            iv_audio_tip.setVisibility(View.VISIBLE);
 //        } else {

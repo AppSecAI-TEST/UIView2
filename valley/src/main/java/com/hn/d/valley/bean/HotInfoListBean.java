@@ -85,6 +85,11 @@ public class HotInfoListBean {
         return bean;
     }
 
+    public static HotInfoListBean from(InformationDetailBean bean){
+        return from(bean.getId(),bean.getAuthor(),bean.getType(),bean
+        .getLogo(),bean.getTitle(),bean.getImages(),bean.getImages());
+    }
+
     public static HotInfoListBean from(int id, String author, String type, String logo, String title, String imgs, String videoUrl) {
         HotInfoListBean bean = new HotInfoListBean();
         bean.setId(id);

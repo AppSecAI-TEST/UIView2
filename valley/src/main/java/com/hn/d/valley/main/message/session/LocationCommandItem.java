@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.session;
 
+import android.Manifest;
 import android.view.View;
 
 import com.hn.d.valley.R;
@@ -33,16 +34,28 @@ public class LocationCommandItem extends CommandItemInfo {
 
     @Override
     protected void onClick() {
-        //位置
-        getContainer().mLayout.startIView(new AmapUIView(new Action1<AmapBean>() {
-            @Override
-            public void call(AmapBean bean) {
-                if (bean == null) {
-                    return;
-                }
-                IMMessage locationMessage = MessageBuilder.createLocationMessage(getContainer().account, getContainer().sessionType, bean.latitude, bean.longitude, bean.address);
-                getContainer().proxy.sendMessage(locationMessage);
-            }
-        }, null, null, true));
+        getContainer().activity.checkPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            //位置
+                            getContainer().mLayout.startIView(new AmapUIView(new Action1<AmapBean>() {
+                                @Override
+                                public void call(AmapBean bean) {
+                                    if (bean == null) {
+                                        return;
+                                    }
+                                    IMMessage locationMessage = MessageBuilder.createLocationMessage(getContainer().account, getContainer().sessionType, bean.latitude, bean.longitude, bean.address);
+                                    getContainer().proxy.sendMessage(locationMessage);
+                                }
+                            }, null, null, true));
+                        }
+                    }
+                });
+
+
     }
 }

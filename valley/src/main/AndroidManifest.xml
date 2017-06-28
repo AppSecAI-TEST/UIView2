@@ -146,6 +146,15 @@
 
         </activity>
 
+        <activity android:name=".main.teamavchat.test.teamavchat.activity.TeamAVChatActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="com.hn.d.valley.avchat"
+            android:windowSoftInputMode="adjustResize"
+            />
+
         <service
             android:name=".main.avchat.AVFloatViewService"
             android:exported="false" />
