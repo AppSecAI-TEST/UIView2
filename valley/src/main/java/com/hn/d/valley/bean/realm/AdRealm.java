@@ -26,6 +26,15 @@ public class AdRealm extends RealmObject {
     private String content_type;
     private String title;
     private String value;
+    private String filePath;
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public String getImage() {
         return image;

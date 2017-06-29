@@ -62,7 +62,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
                     hierarchy.setRoundingParams(RoundingParams.asCircle());
                 }
                 hierarchy.setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP);
-                hierarchy.setPlaceholderImage(R.drawable.default_avatar, ScalingUtils.ScaleType.CENTER_CROP);
+                hierarchy.setPlaceholderImage(R.drawable.defauit_avatar_contact, ScalingUtils.ScaleType.CENTER_CROP);
                 simpleDraweeView.setTag("image");
 
                 int size = getSize();

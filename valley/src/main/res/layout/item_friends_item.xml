@@ -22,7 +22,7 @@
         style="@style/UserLittleIcoStyle"
         android:layout_width="@dimen/avatar_image_size_x_little"
         android:layout_height="@dimen/avatar_image_size_x_little"
-        android:src="@drawable/default_avatar"
+        android:src="@drawable/defauit_avatar_contact"
         android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"

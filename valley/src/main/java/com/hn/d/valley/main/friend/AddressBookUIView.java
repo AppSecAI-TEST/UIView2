@@ -336,7 +336,7 @@ public class AddressBookUIView extends SingleRecyclerUIView<AbsContactItem> {
                 Glide.with(mActivity)
                         .load(ContactsPickerHelper.getPhotoByte(mActivity, item.getContactsInfo().contactId))
                         .transform(new GlideCircleTransform(mActivity))
-                        .placeholder(R.drawable.default_avatar)
+                        .placeholder(R.drawable.defauit_avatar_contact)
                         .into(holder.imgV(R.id.image_view));
             }
 

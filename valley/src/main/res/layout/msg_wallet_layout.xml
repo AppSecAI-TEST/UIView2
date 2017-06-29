@@ -25,7 +25,7 @@
             android:layout_marginStart="@dimen/base_xhdpi"
             android:contentDescription="@string/is_circle"
             android:scaleType="centerCrop"
-            android:src="@drawable/default_avatar" />
+            android:src="@drawable/defauit_avatar_contact" />
 
         <TextView
             android:id="@+id/tv_pc_name"

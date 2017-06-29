@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/base_xhdpi"
-        android:src="@drawable/default_avatar"
+        android:src="@drawable/defauit_avatar_contact"
         android:layout_gravity="center_vertical"
         android:scaleType="centerCrop"
         android:visibility="gone"

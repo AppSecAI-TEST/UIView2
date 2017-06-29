@@ -389,7 +389,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
                             public void onLoadStarted(Drawable placeholder) {
                                 super.onLoadStarted(placeholder);
                                 marker.setIcon(BitmapDescriptorFactory.fromBitmap(
-                                        BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
+                                        BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.defauit_avatar_contact,
                                                 mMarkerWidth, mMarkerHeight,
                                                 R.drawable.touxiang_kuang_n, mMarkerWidth)
                                 ));
@@ -421,7 +421,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 
     public Marker addMarks(LatLng latLng, LikeUserInfoBean infoBean) {
         final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
-                .icon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
+                .icon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.defauit_avatar_contact,
                         mMarkerWidth, mMarkerHeight,
                         R.drawable.touxiang_kuang_n, mMarkerWidth))));
 
@@ -433,7 +433,7 @@ public class AmapControl implements LocationSource, AMapLocationListener {
 
     public Marker addMarks(LatLng latLng, String url) {
         final Marker marker = map.addMarker(new MarkerOptions().position(latLng)
-                .icon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.default_avatar,
+                .icon(BitmapDescriptorFactory.fromBitmap(BmpUtil.getRoundedCornerBitmap(mContext, R.drawable.defauit_avatar_contact,
                         mMarkerWidth, mMarkerHeight,
                         R.drawable.touxiang_kuang_n, mMarkerWidth))));
 

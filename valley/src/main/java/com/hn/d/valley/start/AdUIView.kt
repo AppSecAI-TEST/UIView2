@@ -1,7 +1,9 @@
 package com.hn.d.valley.start
 
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -15,6 +17,7 @@ import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseContentUIView
 import com.hn.d.valley.control.AdsControl
 import com.hn.d.valley.x5.X5WebUIView
+import java.io.File
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -56,12 +59,18 @@ class AdUIView : BaseContentUIView() {
         val adList = AdsControl.getAdList()
 
         viewPager.adapter = object : ImageAdapter() {
-            override fun initImageView(imageView: ImageView, position: Int) {
+            override fun initImageView(rootLayout: RelativeLayout?, imageView: ImageView, position: Int) {
                 imageView.setImageDrawable(ColorDrawable(getColor(R.color.base_placeholder_color)))
-                Glide.with(mActivity)
-                        .load(adList[position].image)
-                        .dontAnimate()
-                        .into(imageView)
+
+                val filePath = adList[position].filePath
+                if (!TextUtils.isEmpty(filePath) && File(filePath).exists()) {
+                    imageView.setImageDrawable(BitmapDrawable(resources, filePath))
+                } else {
+                    Glide.with(mActivity)
+                            .load(adList[position].filePath)
+                            .dontAnimate()
+                            .into(imageView)
+                }
 
                 if (RExTextView.isWebUrl(adList[position].value)) {
                     imageView.setOnClickListener {

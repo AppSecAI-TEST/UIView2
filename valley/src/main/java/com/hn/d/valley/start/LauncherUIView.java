@@ -33,7 +33,7 @@ public class LauncherUIView extends BaseContentUIView {
         mViewPager.setAdapter(new ImageAdapter() {
 
             @Override
-            protected void initImageView(ImageView imageView, int position) {
+            protected void initImageView(RelativeLayout rootLayout, ImageView imageView, int position) {
                 if (position == 0) {
                     imageView.setImageResource(R.drawable.guide_1);
                 } else if (position == 1) {

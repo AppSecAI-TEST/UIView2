@@ -154,7 +154,7 @@ public class HnGlideImageView extends CircleImageView {
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }
-                    builder.error(R.drawable.default_avatar);
+                    builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(new SimpleTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -179,7 +179,7 @@ public class HnGlideImageView extends CircleImageView {
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }
-                    builder.error(R.drawable.default_avatar);
+                    builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(HnGlideImageView.this);
                 }
 
@@ -226,7 +226,7 @@ public class HnGlideImageView extends CircleImageView {
                     if (getDrawable() != null) {
                         builder.placeholder(getDrawable());
                     }
-                    builder.error(R.drawable.default_avatar);
+                    builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(HnGlideImageView.this);
                 }
             });

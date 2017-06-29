@@ -92,12 +92,6 @@ object AdsControl {
                         if (bean == null || bean.data_count == 0) {
                         } else {
                             size = bean.data_count
-
-                            RRealm.exe {
-                                it.where(AdRealm::class.java).findAll().deleteAllFromRealm()
-                                it.copyToRealm(bean.data_list)
-                            }
-
                             downloadAd(bean.data_list)
                         }
                     }
@@ -111,16 +105,23 @@ object AdsControl {
 
     /**下载广告资源*/
     private fun downloadAd(ads: List<AdRealm>) {
-        ads.map {
-            L.e("call: 下载广告页 -> Ads: ${it.image}")
+        ads.map { adRealm ->
+            L.e("call: 下载广告页 -> Ads: ${adRealm.image}")
             Glide.with(ValleyApp.getApp())
-                    .load(it.image)
+                    .load(adRealm.image)
                     .downloadOnly(object : SimpleTarget<File>() {
                         override fun onResourceReady(resource: File?, glideAnimation: GlideAnimation<in File>?) {
                             L.e("call: 广告页下载完成 -> Ads: ${resource?.absolutePath}")
+
+                            adRealm.filePath = resource?.absolutePath
+
                             count++
                             if (count == size) {
                                 //广告加载完成
+                                RRealm.exe {
+                                    it.where(AdRealm::class.java).findAll().deleteAllFromRealm()
+                                    it.copyToRealm(ads)
+                                }
                                 setIsShowAd(false)
                             }
                         }

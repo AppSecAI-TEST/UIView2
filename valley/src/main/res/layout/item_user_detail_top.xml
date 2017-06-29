@@ -64,7 +64,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="170dp"
             android:contentDescription="@string/is_circle"
-            android:src="@drawable/default_avatar"/>
+            android:src="@drawable/defauit_avatar_contact"/>
 
         <!--语音介绍布局-->
         <LinearLayout
