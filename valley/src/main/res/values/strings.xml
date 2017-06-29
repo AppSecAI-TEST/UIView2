@@ -799,5 +799,7 @@
     <string name="dynamic_shield_tip">抱歉,原贴已被屏蔽.</string>
     <string name="recertification_tip">重新认证</string>
     <string name="modify_authentication_tip">修改认证</string>
+    <string name="save_image">保存图片</string>
+    <string name="relay_image">发送给好友</string>
 
 </resources>

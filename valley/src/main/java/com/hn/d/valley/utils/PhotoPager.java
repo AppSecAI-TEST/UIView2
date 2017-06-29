@@ -56,7 +56,7 @@ public class PhotoPager {
     }
 
     @NonNull
-    public static ArrayList<ImageItem> getImageItems(List<String> photos, List<RImageView> imageList) {
+    public static ArrayList<ImageItem> getImageItems(List<String> photos, List<RImageView> imageList, final boolean allowDownload) {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
 
         for (int i = 0; i < photos.size(); i++) {
@@ -67,7 +67,7 @@ public class PhotoPager {
 
             final ImageItem imageItem = new ImageItem();
             imageItem.url = s;
-
+            imageItem.canSave = allowDownload;
             if (imageList.size() > i) {
                 imageItem.placeholderDrawable = imageList.get(i).copyDrawable();
             }

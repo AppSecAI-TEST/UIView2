@@ -45,6 +45,7 @@ import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.iview.RelayPhotoLongClickListener;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -119,7 +120,7 @@ public class UserDiscussItemControl {
                                 UserDiscussListBean.DataListBean dataListBean,
                                 final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
                                 final ILayout iLayout, boolean isInDetail) {
-        initItem(holder, dataListBean, itemRootAction, iLayout, isInDetail);
+        initItem(holder, dataListBean, itemRootAction, iLayout, isInDetail, "1".equalsIgnoreCase(dataListBean.getAllow_download()));
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
         bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout, isInDetail);
         bindFavItemView(subscription, holder, dataListBean, isInDetail);
@@ -131,7 +132,7 @@ public class UserDiscussItemControl {
      * @see com.hn.d.valley.main.home.UserDiscussAdapter
      */
     public static void initItem(final RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
-                                final Action0 itemRootAction, final ILayout iLayout, boolean isInDetail) {
+                                final Action0 itemRootAction, final ILayout iLayout, boolean isInDetail, final boolean allowDownload) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
 
         //holder.fillView(dataListBean, true);
@@ -224,7 +225,7 @@ public class UserDiscussItemControl {
         tagsNameTextView.setVisibility(View.GONE);//不需要标签啦, 星期一 2017-6-26
 
         //图片视频处理
-        updateMediaLayout(dataListBean, iLayout, holder, isInDetail);
+        updateMediaLayout(dataListBean, iLayout, holder, isInDetail, allowDownload);
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
 
@@ -314,7 +315,7 @@ public class UserDiscussItemControl {
 //                        .create();
 //            }
 //            infoView.setText(stringBuilder);
-            initForwardLayout(holder, originalInfo, iLayout, isInDetail);
+            initForwardLayout(holder, originalInfo, iLayout, isInDetail, allowDownload);
         } else {
             holder.v(R.id.forward_control_layout).setVisibility(View.GONE);
         }
@@ -361,7 +362,7 @@ public class UserDiscussItemControl {
     private static void initForwardLayout(RBaseViewHolder holder,
                                           final UserDiscussListBean.DataListBean.OriginalInfo original_info,
                                           final ILayout iLayout,
-                                          final boolean isInDetail) {
+                                          final boolean isInDetail, final boolean allowDownload) {
         holder.v(R.id.forward_control_layout).setVisibility(View.VISIBLE);
         View forwardContentLayout = holder.v(R.id.forward_content_layout);
         HnExTextView exTextView = holder.v(R.id.forward_content_ex_view);
@@ -486,7 +487,7 @@ public class UserDiscussItemControl {
 
             initMediaLayout(media_type, medias,
                     holder.v(R.id.forward_media_control_layout),
-                    iLayout, isInDetail, original_info.isForwardInformation());
+                    iLayout, isInDetail, original_info.isForwardInformation(), allowDownload);
         }
     }
 
@@ -547,21 +548,22 @@ public class UserDiscussItemControl {
 
     private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean,
                                           final ILayout iLayout, RBaseViewHolder holder,
-                                          boolean isInDetail) {
+                                          boolean isInDetail, final boolean allowDownload) {
         final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
 //        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
 
         final List<String> medias = RUtils.split(dataListBean.getMedia());
-        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, iLayout, isInDetail, dataListBean.getDiscuss_id(), false);
+        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, iLayout, isInDetail, dataListBean.getDiscuss_id(), false, allowDownload);
     }
 
     public static void initMediaLayout(String mediaType, final List<String> medias,
                                        View mediaControlLayout,
                                        final ILayout iLayout,
                                        final boolean isInDetail,
-                                       final boolean isFromInformation) {
-        initMediaLayout(mediaType, medias, mediaControlLayout, iLayout, isInDetail, "", isFromInformation);
+                                       final boolean isFromInformation,
+                                       final boolean allowDownload) {
+        initMediaLayout(mediaType, medias, mediaControlLayout, iLayout, isInDetail, "", isFromInformation, allowDownload);
     }
 
     /**
@@ -589,7 +591,8 @@ public class UserDiscussItemControl {
                                        final ILayout iLayout,
                                        final boolean isInDetail,
                                        final String discuss_id,
-                                       final boolean isFromInformation) {
+                                       final boolean isFromInformation,
+                                       final boolean allowDownload) {
 
         if (mediaControlLayout == null) {
             return;
@@ -647,7 +650,8 @@ public class UserDiscussItemControl {
                     public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
                         //点击预览全部图片
                         ImagePagerUIView.start(iLayout, imageView,
-                                PhotoPager.getImageItems(medias, imageList), index);
+                                PhotoPager.getImageItems(medias, imageList, allowDownload), index)
+                                .setPhotoViewLongClickListener(new RelayPhotoLongClickListener(iLayout));
 
                         if (!isInDetail) {
                             updateDiscussReadCnt(discuss_id);

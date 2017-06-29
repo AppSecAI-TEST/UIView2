@@ -276,7 +276,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                     RUtils.split(dataBean.getImages()),
                     mediaControlLayout,
                     mParentILayout,
-                    true, false
+                    true, false, true
             );
         } else {
             mediaControlLayout.setVisibility(View.GONE);

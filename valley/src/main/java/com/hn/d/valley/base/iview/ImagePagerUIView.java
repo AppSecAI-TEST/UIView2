@@ -4,8 +4,11 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +20,30 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.widget.DragPhotoView;
+import com.angcyo.uiview.Root;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.resources.AnimUtil;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
+import com.angcyo.uiview.widget.viewpager.TextIndicator;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.hn.d.valley.R;
+import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.adapter.ImagePageAdapter;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.view.ViewPagerFixed;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -46,6 +61,8 @@ public class ImagePagerUIView extends UIIViewImpl {
 
     //动画开始 坐标x,y 和宽高
     protected int mStartX, mStartY, mStartW, mStartH;
+    IndicatorStyle mIndicatorStyle = IndicatorStyle.CIRCLE;
+    ImagePageAdapter.PhotoViewLongClickListener photoViewLongClickListener = null;
     private ArrayList<ImageItem> mImageItems;
     private ViewPagerFixed mMViewPager;
     private PinchCircleIndicator mMCircleIndicator;
@@ -54,10 +71,10 @@ public class ImagePagerUIView extends UIIViewImpl {
     private int startPosition = 0;
     private ValueAnimator mValueAnimator;
     private int mLastTranColor = Color.BLACK;
-
     private IViewConfigCallback mIViewConfigCallback = new IViewConfigCallback() {
     };
     private ImagePageAdapter mImagePageAdapter;
+    private TextIndicator mTextIndicator;
 
     private ImagePagerUIView(ArrayList<ImageItem> imageItems, int startPosition) {
         mImageItems = imageItems;
@@ -91,6 +108,11 @@ public class ImagePagerUIView extends UIIViewImpl {
     public ImagePagerUIView setIViewConfigCallback(IViewConfigCallback IViewConfigCallback) {
         mIViewConfigCallback = IViewConfigCallback;
         mIViewConfigCallback.mImagePagerUIView = this;
+        return this;
+    }
+
+    public ImagePagerUIView setIndicatorStyle(IndicatorStyle indicatorStyle) {
+        mIndicatorStyle = indicatorStyle;
         return this;
     }
 
@@ -133,7 +155,9 @@ public class ImagePagerUIView extends UIIViewImpl {
                 animToFinish();
             }
         });
+        setPhotoViewLongClickListener(photoViewLongClickListener);
         mMCircleIndicator.setViewPager(mMViewPager);
+        mTextIndicator.setupViewPager(mMViewPager);
         mMViewPager.setCurrentItem(startPosition);
     }
 
@@ -169,6 +193,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         mMRootLayout = new RelativeLayout(mActivity);
         mMViewPager = new ViewPagerFixed(mActivity);
         mMCircleIndicator = new PinchCircleIndicator(mActivity);
+        mTextIndicator = new TextIndicator(mActivity);
 
         RelativeLayout.LayoutParams indicatorParams = new RelativeLayout.LayoutParams(-2, -2);
         indicatorParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -177,6 +202,18 @@ public class ImagePagerUIView extends UIIViewImpl {
 
         mMRootLayout.addView(mMViewPager, new ViewGroup.LayoutParams(-1, -1));
         mMRootLayout.addView(mMCircleIndicator, indicatorParams);
+
+        indicatorParams = new RelativeLayout.LayoutParams(-2, -2);
+        indicatorParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        indicatorParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        int marginTop = getDimensionPixelOffset(R.dimen.base_xhdpi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            marginTop += getDimensionPixelOffset(R.dimen.status_bar_height);
+        }
+        indicatorParams.setMargins(0, marginTop, 0, 0);
+        mTextIndicator.setTextColor(Color.WHITE);
+        mTextIndicator.setAutoHide(false);
+        mMRootLayout.addView(mTextIndicator, indicatorParams);
 
         mMRootLayout.setClickable(true);
         container.addView(mMRootLayout, new ViewGroup.LayoutParams(-1, -1));
@@ -192,7 +229,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         showLastViewPattern();
 
         isToFinish = true;
-        mMCircleIndicator.setVisibility(View.GONE);
+        hideIndicator();
         mMCircleIndicator.setAlpha(0);
         AnimUtil.startArgb(mMRootLayout, mLastTranColor, Color.TRANSPARENT, UIIViewImpl.DEFAULT_ANIM_TIME);
         ViewCompat.animate(mMViewPager).alpha(0).scaleX(0.2f).scaleY(0.2f)
@@ -215,15 +252,15 @@ public class ImagePagerUIView extends UIIViewImpl {
     }
 
     private void hideLastViewPattern() {
-        try {
-            getILayout().getViewPatternAtLast(1).mView.setVisibility(View.GONE);
-        } catch (Exception e) {
-        }
+//        try {
+//            getILayout().getViewPatternAtLast(1).mView.setVisibility(View.GONE);
+//        } catch (Exception e) {
+//        }
     }
 
     @Deprecated
     private void startAnimation() {
-        mMCircleIndicator.setVisibility(View.GONE);
+        hideIndicator();
         mValueAnimator = AnimUtil.startArgb(mMRootLayout, Color.TRANSPARENT, Color.BLACK, UIIViewImpl.DEFAULT_ANIM_TIME);
         final int screenWidth = ResUtil.getScreenWidth(mActivity);
         final int screenHeight = ResUtil.getScreenHeight(mActivity);
@@ -244,7 +281,7 @@ public class ImagePagerUIView extends UIIViewImpl {
             @Override
             public void onAnimationEnd(Animator animation) {
                 if (mImageItems.size() > 1) {
-                    mMCircleIndicator.setVisibility(View.VISIBLE);
+                    showIndicator();
                 }
             }
 
@@ -331,6 +368,37 @@ public class ImagePagerUIView extends UIIViewImpl {
         return mImagePageAdapter;
     }
 
+    private void showIndicator() {
+        hideIndicator();
+        switch (mIndicatorStyle) {
+            case CIRCLE:
+                mMCircleIndicator.setVisibility(View.VISIBLE);
+                break;
+            case TEXT:
+                mTextIndicator.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void hideIndicator() {
+        mMCircleIndicator.setVisibility(View.INVISIBLE);
+        mTextIndicator.setVisibility(View.INVISIBLE);
+    }
+
+    public void setPhotoViewLongClickListener(ImagePageAdapter.PhotoViewLongClickListener listener) {
+        photoViewLongClickListener = listener;
+        if (mImagePageAdapter != null) {
+            mImagePageAdapter.setPhotoViewLongClickListener(photoViewLongClickListener);
+        }
+    }
+
+    /**
+     * 指示器的样式
+     */
+    public enum IndicatorStyle {
+        NONE, TEXT, CIRCLE
+    }
+
     /**
      * 定制界面的Config
      */
@@ -349,4 +417,56 @@ public class ImagePagerUIView extends UIIViewImpl {
 
         }
     }
+
+    /**
+     * 用来保存图片的监听事件
+     */
+    public static class SavePhotoLongClickListener implements ImagePageAdapter.PhotoViewLongClickListener {
+        ILayout mILayout;
+
+        public SavePhotoLongClickListener(ILayout ILayout) {
+            mILayout = ILayout;
+        }
+
+        @Override
+        public void onLongClickListener(PhotoView photoView, int position, final ImageItem item) {
+            if (item != null && item.canSave) {
+                UIBottomItemDialog.build()
+                        .addItem(mILayout.getLayout().getContext().getString(R.string.save_image), createSaveClickListener(item))
+                        .showDialog(mILayout);
+            }
+        }
+
+        @NonNull
+        protected View.OnClickListener createSaveClickListener(final ImageItem item) {
+            return new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!TextUtils.isEmpty(item.path) && new File(item.path).exists()) {
+                        saveImageFile(new File(item.path));
+                    } else {
+                        Glide.with(mILayout.getLayout().getContext().getApplicationContext())
+                                .load(item.url)
+                                .downloadOnly(new SimpleTarget<File>() {
+                                    @Override
+                                    public void onResourceReady(File resource, GlideAnimation<? super File> glideAnimation) {
+                                        saveImageFile(resource);
+                                    }
+                                });
+                    }
+                }
+            };
+        }
+
+        protected void saveImageFile(File file) {
+            File toFile = new File(Root.getAppExternalFolder("images"), Root.createFileName(".jpeg"));
+            if (FileUtils.copyFile(file, toFile)) {
+                ImagePicker.galleryAddPic(mILayout.getLayout().getContext(), toFile);
+                T_.ok(mILayout.getLayout().getContext().getString(R.string.save_to_phone_format, toFile.getAbsolutePath()));
+            } else {
+                T_.error(mILayout.getLayout().getContext().getString(R.string.save_error));
+            }
+        }
+    }
+
 }

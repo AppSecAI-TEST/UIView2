@@ -354,7 +354,9 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
                         ImagePagerUIView.start(mParentILayout,
                                 imageView,
                                 PhotoPager.getImageItems(getAllPhotos(), imageView.copyDrawable(), photoStartIndex),
-                                photoStartIndex);
+                                photoStartIndex)
+                                .setIndicatorStyle(ImagePagerUIView.IndicatorStyle.TEXT)
+                                .setPhotoViewLongClickListener(new ImagePagerUIView.SavePhotoLongClickListener(mParentILayout));
                     }
                 });
             } else if ("2".equalsIgnoreCase(albumBean.media_type)) {
