@@ -801,5 +801,7 @@
     <string name="modify_authentication_tip">修改认证</string>
     <string name="save_image">保存图片</string>
     <string name="relay_image">发送给好友</string>
+    <string name="no_like_tip">可选理由, 精准屏蔽</string>
+    <string name="no_like">不感兴趣</string>
 
 </resources>

@@ -291,6 +291,7 @@ class InformationDetailUIView : BaseContentUIView {
                 //T_.show("$position $images")
                 L.i("call: onImageClick $position $images -> ")
                 ImagePagerUIView.start(mParentILayout, stickLayout2, PhotoPager.getImageItems(RUtils.split(images)), position)
+                        .setPhotoViewLongClickListener(ImagePagerUIView.SavePhotoLongClickListener(mParentILayout))
             }
 
             @JavascriptInterface

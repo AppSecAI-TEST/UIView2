@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/base_hdpi">
+    android:paddingBottom="@dimen/base_hdpi"
+    tools:background="@color/base_red_d85940">
 
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/image_view"
@@ -71,7 +72,9 @@
         android:id="@+id/delete_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/cancel"
+        android:background="@drawable/base_bg2_selector"
+        android:padding="@dimen/base_ldpi"
+        android:src="@drawable/search_delete"
         android:visibility="gone"/>
 
 </LinearLayout>

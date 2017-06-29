@@ -51,6 +51,12 @@ public class HotInfoListBean {
      */
 
     private String media;
+    /**
+     * date : 1486405080
+     * recommend : 1
+     */
+
+    private int recommend;
 
     public static HotInfoListBean from(UserDiscussListBean.DataListBean.OriginalInfo originalInfo) {
         HotInfoListBean bean;
@@ -85,9 +91,9 @@ public class HotInfoListBean {
         return bean;
     }
 
-    public static HotInfoListBean from(InformationDetailBean bean){
-        return from(bean.getId(),bean.getAuthor(),bean.getType(),bean
-        .getLogo(),bean.getTitle(),bean.getImages(),bean.getImages());
+    public static HotInfoListBean from(InformationDetailBean bean) {
+        return from(bean.getId(), bean.getAuthor(), bean.getType(), bean
+                .getLogo(), bean.getTitle(), bean.getImages(), bean.getImages());
     }
 
     public static HotInfoListBean from(int id, String author, String type, String logo, String title, String imgs, String videoUrl) {
@@ -170,6 +176,10 @@ public class HotInfoListBean {
         this.tags = tags;
     }
 
+    public List<String> getTagList() {
+        return RUtils.split(getTags(), ";");
+    }
+
     public String getType() {
         return type;
     }
@@ -233,5 +243,13 @@ public class HotInfoListBean {
 
     public void setMedia(String media) {
         this.media = media;
+    }
+
+    public int getRecommend() {
+        return recommend;
+    }
+
+    public void setRecommend(int recommend) {
+        this.recommend = recommend;
     }
 }
