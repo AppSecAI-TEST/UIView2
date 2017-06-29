@@ -48,7 +48,7 @@ public class TeamAVChatItemViewHolder2 extends TeamAVChatItemViewHolderBase {
         volumeBar = holder.getView(R.id.avchat_volume);
     }
 
-    protected void refresh(final TeamAVChatItem data) {
+    protected void refresh(final TeamAVChatItem data , int position) {
         nickNameText.setText(TeamDataCache.getInstance().getDisplayNameWithoutMe(data.teamId, data.account));
 
         final UserInfoProvider.UserInfo userInfo = NimUserInfoCache.getInstance().getUserInfo(data.account);

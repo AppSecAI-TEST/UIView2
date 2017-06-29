@@ -22,7 +22,6 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * 音频管理器， 音频界面初始化和管理
- * Created by hzxuwen on 2015/4/24.
  */
 public class AVChatAudio implements View.OnClickListener{
     // constant
@@ -377,6 +376,23 @@ public class AVChatAudio implements View.OnClickListener{
     }
 
     /**
+     * 获取通话时间
+     * @return 秒
+     */
+    public static int getCountTime(Chronometer time) {
+        try {
+            return Integer.parseInt(time.getContentDescription().toString().split(" ")[0]);
+        }catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int getCountTime() {
+        return getCountTime(time);
+    }
+
+    /**
      * 视频切换为音频时，禁音与扬声器按钮状态
      * @param muteOn
      * @param speakerOn
@@ -431,7 +447,7 @@ public class AVChatAudio implements View.OnClickListener{
 
     private void backToMain() {
         HnUIMainActivity.launch(context.getApplicationContext());
-        manager.showAudioModeUI();
+        manager.showAudioModeUI(getCountTime(time));
     }
 
     public void closeSession(int exitCode){

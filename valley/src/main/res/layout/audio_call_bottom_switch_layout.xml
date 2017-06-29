@@ -37,16 +37,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="@string/text_switch_to_av_video"
+                tools:text="@string/text_switch_to_av_video"
                  />
 
         </LinearLayout>
 
         <Chronometer
             android:id="@+id/tv_avaudio_time"
-            android:text="1:22"
+            tools:text="1:22"
             android:gravity="bottom"
             android:padding="10dp"
+            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:layout_alignBottom="@id/ll_avaudio_audiotovideo"
             android:layout_width="wrap_content"

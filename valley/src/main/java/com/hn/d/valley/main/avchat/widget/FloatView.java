@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -12,9 +13,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.T_;
@@ -52,6 +55,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     private AVChatVideoRender micro_preview_render;
     private ImageView smallSizePreviewCoverImg;
     private ImageView iv_max_sclae;
+    private Chronometer tv_audio_tip;
     private View ll_audio_flag;
 
     private float mTouchStartX;
@@ -127,6 +131,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         ll_micro_preview = (LinearLayout) view.findViewById(R.id.ll_micro_preview);
         iv_max_sclae = (ImageView) view.findViewById(R.id.iv_max_sclae);
         ll_audio_flag = view.findViewById(R.id.iv_audio_flag);
+        tv_audio_tip = (Chronometer) view.findViewById(R.id.tv_audio_tip);
 
         int width = mScreenWidth / 4;
         int height = (int) (width * (mScreenHeight * 1.0f / mScreenWidth));
@@ -234,7 +239,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
                         && Math.abs(mTouchStartY - mMoveStartY) > 3) {
                     mDraging = true;
                     // 更新浮动窗口位置参数
-                    mWmParams.x = (int) (mScreenWidth - (x - mTouchStartX));
+                    mWmParams.x = (int) (mScreenWidth - (x - mTouchStartX)) - getWidth();
                     mWmParams.y = (int) (y - mTouchStartY);
                     mWindowManager.updateViewLayout(this, mWmParams);
                     return false;
@@ -332,6 +337,21 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         }
     }
 
+    public void setAudioTip(String text) {
+        if (ll_audio_flag.getVisibility() == VISIBLE) {
+            tv_audio_tip.stop();
+            tv_audio_tip.setText(text);
+        }
+    }
+
+    /**
+     * @param time 秒
+     */
+    public void startChronometer(int time) {
+        tv_audio_tip.setBase(SystemClock.elapsedRealtime() - time * 1000);
+        tv_audio_tip.start();
+    }
+
     public void showAudio() {
         if (!init){
             //先检测悬浮窗权限
@@ -357,6 +377,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
         iv_max_sclae.setVisibility(VISIBLE);
         smallSizePreviewCoverImg.setVisibility(VISIBLE);
         ll_audio_flag.setVisibility(GONE);
+        tv_audio_tip.stop();
 
     }
 

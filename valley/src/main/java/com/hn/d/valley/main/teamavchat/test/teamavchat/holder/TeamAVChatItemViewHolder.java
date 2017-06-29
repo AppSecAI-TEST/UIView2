@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.teamavchat.test.teamavchat.holder;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,6 +38,7 @@ public class TeamAVChatItemViewHolder extends TeamAVChatItemViewHolderBase {
     private TextView stateText;
     private ImageView iv_avchat_loading;
     private ImageView iv_audio_tip;
+    private View contentView;
 
 
     public TeamAVChatItemViewHolder(BaseMultiItemFetchLoadAdapter adapter) {
@@ -44,6 +46,7 @@ public class TeamAVChatItemViewHolder extends TeamAVChatItemViewHolderBase {
     }
 
     protected void inflate(final BaseViewHolder holder) {
+        contentView = holder.convertView;
         avatarImage = holder.getView(R.id.avatar_image);
         loadingImage = holder.getView(R.id.loading_image);
         surfaceView = holder.getView(R.id.surface);
@@ -53,7 +56,13 @@ public class TeamAVChatItemViewHolder extends TeamAVChatItemViewHolderBase {
 
     }
 
-    protected void refresh(final TeamAVChatItem data) {
+    protected void refresh(final TeamAVChatItem data,int position) {
+
+        if (position % 2 == 1) {
+            contentView.setBackgroundResource(R.color.black_2D2D2E);
+        } else {
+            contentView.setBackgroundResource(R.color.black_2D2D2E);
+        }
 
         final UserInfoProvider.UserInfo userInfo = NimUserInfoCache.getInstance().getUserInfo(data.account);
         final int defaultResId = R.drawable.default_avatar;

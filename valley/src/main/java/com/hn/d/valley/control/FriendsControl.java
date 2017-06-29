@@ -199,9 +199,14 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
     public static void sort(List<AbsContactItem> items) {
+//        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
         Collections.sort(items, new Comparator<AbsContactItem>() {
             @Override
             public int compare(AbsContactItem o1, AbsContactItem o2) {
+
+//                if (o1.getGroupText().equals(o1.getGroupText())) {
+//                    return 0;
+//                }
 
                 if (o1.getGroupText().equals("")) {
                     return -1;

@@ -238,7 +238,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             btn_crashout.setEnabled(false);
         }
 
-        tv_balance.setText("￥ " + mAccount.getMoney() / 100f);
+        tv_balance.setText(String.format("￥ %s", mAccount.getMoney() / 100f));
         btn_recharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

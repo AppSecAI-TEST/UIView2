@@ -1,10 +1,16 @@
 package com.hn.d.valley.main.teamavchat.test.teamavchat.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,23 +19,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.StyleActivity;
 import com.angcyo.uiview.utils.ScreenUtil;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.avchat.AVChatSoundPlayer;
+import com.hn.d.valley.main.avchat.AVFloatViewService;
+import com.hn.d.valley.main.avchat.activity.AVChatActivity;
+import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
 import com.hn.d.valley.main.teamavchat.TeamAVChatNotification;
 import com.hn.d.valley.main.teamavchat.test.teamavchat.adapter.TeamAVChatAdapter;
 import com.hn.d.valley.main.teamavchat.test.teamavchat.module.SimpleAVChatStateObserver;
 import com.hn.d.valley.main.teamavchat.test.teamavchat.module.TeamAVChatItem;
+import com.hn.d.valley.start.SpacingDecoration;
+import com.hn.d.valley.utils.permissionCompat.SettingsCompat;
 import com.lzy.imagepicker.adapter.ImageViewHolder;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -44,6 +59,7 @@ import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 import com.netease.nimlib.sdk.avchat.constant.AVChatUserRole;
 import com.netease.nimlib.sdk.avchat.constant.AVChatVideoCropRatio;
 import com.netease.nimlib.sdk.avchat.constant.AVChatVideoScalingType;
+import com.netease.nimlib.sdk.avchat.model.AVChatCommonEvent;
 import com.netease.nimlib.sdk.avchat.model.AVChatControlEvent;
 import com.netease.nimlib.sdk.avchat.model.AVChatData;
 import com.netease.nimlib.sdk.avchat.model.AVChatParameters;
@@ -57,6 +73,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.hn.d.valley.main.avchat.AVChatAudio.getCountTime;
 import static com.hn.d.valley.main.teamavchat.test.teamavchat.module.TeamAVChatItem.TYPE.TYPE_DATA;
 
 
@@ -117,9 +134,9 @@ public class TeamAVChatActivity extends StyleActivity {
 //    private View voiceMuteButton;
 
     // TIMER
-    private Timer timer;
+//    private Timer timer;
     private int seconds;
-    private TextView timerText;
+    private Chronometer timerText;
     private Runnable autoRejectTask;
 
     // CONTROL STATE
@@ -132,6 +149,7 @@ public class TeamAVChatActivity extends StyleActivity {
     private Observer<AVChatControlEvent> notificationObserver;
 
     private static boolean needFinish = true;
+    private boolean hasOnPermissionDenied = false;
 
     private TeamAVChatNotification notifier;
 
@@ -146,6 +164,14 @@ public class TeamAVChatActivity extends StyleActivity {
         intent.putExtra(KEY_ACCOUNTS, accounts);
         intent.putExtra(KEY_TNAME, teamName);
         context.startActivity(intent);
+    }
+
+    public static void startActivity(Context ctx) {
+        needFinish = false;
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setClass(ctx,TeamAVChatActivity.class);
+        ctx.startActivity(intent);
     }
 
 
@@ -167,7 +193,49 @@ public class TeamAVChatActivity extends StyleActivity {
         showViews();
         setChatting(true);
 
+        //检测悬浮窗权限 如果有启动
+        if (SettingsCompat.canDrawOverlays(this)) {
+            //启动悬浮窗service
+            bindService();
+        } else {
+            new Handler(getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showPermissionCheckDialog();
+                }
+            }, 3000);
+        }
+
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(userStatusObserver, true);
+    }
+
+    public void showPermissionCheckDialog() {
+        hasOnPermissionDenied = true;
+
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(this);
+
+        builder.setMessage("打开悬浮窗权限");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SettingsCompat.manageDrawOverlays(TeamAVChatActivity.this);
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.show();
+    }
+
+    //启动悬浮窗进入 singletask 模式调用
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override
@@ -188,6 +256,12 @@ public class TeamAVChatActivity extends StyleActivity {
         // 禁止自动锁屏
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // 悬浮窗设置返回检测返回true 启动服务
+        if (SettingsCompat.canDrawOverlays(this) && hasOnPermissionDenied) {
+            hasOnPermissionDenied = false;
+            bindService();
+        }
     }
 
     @Override
@@ -201,9 +275,11 @@ public class TeamAVChatActivity extends StyleActivity {
         super.onDestroy();
 
         needFinish = true;
-        if (timer != null) {
-            timer.cancel();
-        }
+//        if (timer != null) {
+//            timer.cancel();
+//        }
+
+        destroy();
 
         if (stateObserver != null) {
             AVChatManager.getInstance().observeAVChatState(stateObserver, false);
@@ -285,7 +361,7 @@ public class TeamAVChatActivity extends StyleActivity {
         if (teamName == null) {
             teamName = TeamDataCache.getInstance().getTeamName(teamId);
         }
-        textView.setText(teamName + " 的视频通话");
+        textView.setText(String.format("%s 的视频通话", teamName));
 
         // 播放铃声
         AVChatSoundPlayer.instance().play(AVChatSoundPlayer.RingerTypeEnum.RING);
@@ -324,7 +400,7 @@ public class TeamAVChatActivity extends StyleActivity {
         initRecyclerView();
 
         // 通话计时
-        timerText = (TextView) surfaceLayout.findViewById(R.id.timer_text);
+        timerText = (Chronometer) surfaceLayout.findViewById(R.id.timer_text);
 
         // 控制按钮
         surfaceLayout.findViewById(R.id.iv_open_carema).setOnClickListener(settingBtnClickListener);
@@ -332,8 +408,35 @@ public class TeamAVChatActivity extends StyleActivity {
         surfaceLayout.findViewById(R.id.iv_hand_free).setOnClickListener(settingBtnClickListener);
         surfaceLayout.findViewById(R.id.ll_hangup).setOnClickListener(settingBtnClickListener);
 
+        // 开启悬浮窗
+        iv_scale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HnUIMainActivity.launch(TeamAVChatActivity.this);
+                showAudioModeUI(getCountTime(timerText));
+            }
+        });
+
         // 音视频权限检查
         checkPermission();
+    }
+
+    /**
+     * 显示语音悬浮图标
+     */
+    public void showAudioModeUI(int countTime) {
+        // 先检测悬浮窗权限设置
+        if (!SettingsCompat.canDrawOverlays(this)) {
+            return;
+        }
+        if (mFloatViewService != null) {
+            mFloatViewService.showAudioUI();
+            if (countTime == 0) {
+                mFloatViewService.setAudioTip(getString(R.string.text_wait_receiving));
+            } else {
+                mFloatViewService.startChronometer(countTime);
+            }
+        }
     }
 
     private void onPermissionChecked() {
@@ -458,6 +561,9 @@ public class TeamAVChatActivity extends StyleActivity {
             item.volume = 0;
             adapter.notifyItemChanged(index);
         }
+
+        checkAllHangUp();
+
         updateAudioMuteButtonState();
 
     }
@@ -543,27 +649,29 @@ public class TeamAVChatActivity extends StyleActivity {
      */
 
     private void startTimer() {
-        timer = new Timer();
-        timer.schedule(timerTask, 0, 1000);
-        timerText.setText("00:00");
+        timerText.setBase(SystemClock.elapsedRealtime());
+        timerText.start();
+//        timer = new Timer();
+//        timer.schedule(timerTask, 0, 1000);
+//        timerText.setText("00:00");
     }
 
-    private TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            seconds++;
-            int m = seconds / 60;
-            int s = seconds % 60;
-            final String time = String.format(Locale.CHINA, "%02d:%02d", m, s);
-
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    timerText.setText(time);
-                }
-            });
-        }
-    };
+//    private TimerTask timerTask = new TimerTask() {
+//        @Override
+//        public void run() {
+//            seconds++;
+//            int m = seconds / 60;
+//            int s = seconds % 60;
+//            final String time = String.format(Locale.CHINA, "%02d:%02d", m, s);
+//
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    timerText.setText(time);
+//                }
+//            });
+//        }
+//    };
 
     private void startTimerForCheckReceivedCall() {
         mainHandler.postDelayed(new Runnable() {
@@ -604,12 +712,14 @@ public class TeamAVChatActivity extends StyleActivity {
 
     /*
      * 除了所有人都没接通，其他情况不做自动挂断
+     * 和已挂断
      */
     private void checkAllHangUp() {
         for (TeamAVChatItem item : data) {
             if (item.account != null &&
                     !item.account.equals(UserCache.getUserAccount()) &&
-                    item.state != TeamAVChatItem.STATE.STATE_END) {
+                    item.state != TeamAVChatItem.STATE.STATE_END &&
+                    item.state != TeamAVChatItem.STATE.STATE_HANGUP) {
                 return;
             }
         }
@@ -755,7 +865,7 @@ public class TeamAVChatActivity extends StyleActivity {
         adapter = new TeamAVChatAdapter(recyclerView, data);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-//        recyclerView.addItemDecoration(new SpacingDecoration(ScreenUtil.dip2px(1), ScreenUtil.dip2px(1), true));
+        recyclerView.addItemDecoration(new SpacingDecoration(ScreenUtil.dip2px(1), ScreenUtil.dip2px(1), true));
     }
 
     private int getItemIndex(final String account) {
@@ -831,4 +941,70 @@ public class TeamAVChatActivity extends StyleActivity {
             }
         }
     };
+
+    private AVFloatViewService mFloatViewService;
+
+
+    /**
+     * 悬浮窗服务
+     */
+    public void bindService() {
+        try {
+            Intent intent = new Intent(this, AVFloatViewService.class);
+            startService(intent);
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * 销毁
+     */
+    public void destroy() {
+        try {
+            stopService(new Intent(this, AVFloatViewService.class));
+            unbindService(mServiceConnection);
+        } catch (Exception e) {
+        }
+    }
+
+    public void setFloatActionListener(View.OnClickListener listener) {
+        if (mFloatViewService != null) {
+            mFloatViewService.setActionListener(listener);
+        }
+    }
+
+    /**
+     * 连接到Service
+     */
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mFloatViewService = ((AVFloatViewService.FloatServiceBinder) iBinder).getService();
+            L.d(TAG, "onServiceConnected " + mFloatViewService);
+
+            setFloatActionListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    hideFloatingView();
+                    // 正在进行语音通话
+                    startActivity(TeamAVChatActivity.this.getApplicationContext());
+                }
+            });
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mFloatViewService = null;
+        }
+    };
+
+    /**
+     * 隐藏悬浮图标
+     */
+    public void hideFloatingView() {
+        if (mFloatViewService != null) {
+            mFloatViewService.hideFloat();
+        }
+    }
 }

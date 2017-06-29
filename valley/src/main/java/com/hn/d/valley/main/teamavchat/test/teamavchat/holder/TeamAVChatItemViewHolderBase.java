@@ -19,10 +19,10 @@ abstract class TeamAVChatItemViewHolderBase extends RecyclerViewHolder<BaseMulti
     @Override
     public void convert(final BaseViewHolder holder, TeamAVChatItem data, int position, boolean isScrolling) {
         inflate(holder);
-        refresh(data);
+        refresh(data,position);
     }
 
     protected abstract void inflate(final BaseViewHolder holder);
 
-    protected abstract void refresh(final TeamAVChatItem data);
+    protected abstract void refresh(final TeamAVChatItem data,int position);
 }

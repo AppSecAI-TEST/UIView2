@@ -55,6 +55,18 @@ public class AVFloatViewService extends Service {
         }
     }
 
+    public void setAudioTip(String text) {
+        if (mFloatView != null) {
+            mFloatView.setAudioTip(text);
+        }
+    }
+
+    public void startChronometer(int seconds) {
+        if (mFloatView != null) {
+            mFloatView.startChronometer(seconds);
+        }
+    }
+
     public void showAudioUI() {
         if (mFloatView != null) {
             mFloatView.showAudio();

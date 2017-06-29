@@ -13,7 +13,7 @@
         android:tag="Gv1"
         android:layout_marginTop="0dp" />
 
-    <TextView
+    <Chronometer
         android:id="@+id/timer_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -151,7 +151,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/base_xhdpi"
-            android:text="接听"
+            android:text="@string/text_hangup"
             android:textColor="@color/white" />
         </LinearLayout>
 
@@ -160,7 +160,7 @@
 
     <ImageView
         android:id="@+id/iv_scale"
-        android:layout_margin="@dimen/base_xxhdpi"
+        android:padding="@dimen/base_xxhdpi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#1a282a21"

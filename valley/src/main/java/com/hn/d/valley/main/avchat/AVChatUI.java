@@ -255,7 +255,6 @@ public class AVChatUI implements AVChatUIListener {
         avChatAudio = new AVChatAudio(mActivity, root.findViewById(R.id.avchat_audio_layout), this, this);
         avChatVideo = new AVChatVideo(mActivity, root.findViewById(R.id.avchat_video_layout), this, this);
         avChatSurface = new AVChatSurface(mActivity, this, root.findViewById(R.id.avchat_surface_layout));
-
         return true;
     }
 
@@ -387,7 +386,7 @@ public class AVChatUI implements AVChatUIListener {
                 break;
             case AUDIO:
                 if (hasOnStop) {
-                    showAudioModeUI();
+                    showAudioModeUI(avChatAudio.getCountTime());
                 }
                 break;
             default:
@@ -908,6 +907,11 @@ public class AVChatUI implements AVChatUIListener {
             avChatSurface.localVideoOn();
             isClosedCamera = false;
         }
+
+        // 非视频聊天显示悬浮窗
+        if(hasOnStop) {
+            showFloatingView();
+        }
     }
 
     /**
@@ -923,6 +927,11 @@ public class AVChatUI implements AVChatUIListener {
         avChatAudio.onVideoToAudio(AVChatManager.getInstance().isLocalAudioMuted(),
                 AVChatManager.getInstance().speakerEnabled(),
                 isRecording, recordWarning);
+
+        // 非视频聊天显示悬浮窗
+        if(hasOnStop) {
+            showAudioModeUI(avChatAudio.getCountTime());
+        }
     }
 
     public void peerVideoOff() {
@@ -936,7 +945,7 @@ public class AVChatUI implements AVChatUIListener {
     public void onHomeKey() {
         if (callingState == CallStateEnum.AUDIO) {
             HnUIMainActivity.launch(mActivity.getApplicationContext());
-            showAudioModeUI();
+            showAudioModeUI(avChatAudio.getCountTime());
         } else {
             HnUIMainActivity.launch(mActivity.getApplicationContext());
             showFloatingView();
@@ -1065,7 +1074,7 @@ public class AVChatUI implements AVChatUIListener {
     /**
      * 显示语音悬浮图标
      */
-    public void showAudioModeUI() {
+    public void showAudioModeUI(int countTime) {
         // 先检测悬浮窗权限设置
         if (!SettingsCompat.canDrawOverlays(mActivity)) {
 //            aVChatListener.showPermissionCheckDialog();
@@ -1073,6 +1082,11 @@ public class AVChatUI implements AVChatUIListener {
         }
         if (mFloatViewService != null) {
             mFloatViewService.showAudioUI();
+            if (countTime == 0) {
+                mFloatViewService.setAudioTip(mActivity.getString(R.string.text_wait_receiving));
+            } else {
+                mFloatViewService.startChronometer(countTime);
+            }
         }
     }
 

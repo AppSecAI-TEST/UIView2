@@ -91,10 +91,10 @@ public class CommentInputDialog extends UIIDialogImpl {
         mInputConfig = inputConfig;
     }
 
-    @Override
-    public boolean canCanceledOnOutside() {
-        return false;
-    }
+//    @Override
+//    public boolean canCanceledOnOutside() {
+//        return true;
+//    }
 
     @Override
     protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
@@ -103,7 +103,8 @@ public class CommentInputDialog extends UIIDialogImpl {
 
     @Override
     public boolean onBackPressed() {
-        return mSoftInputLayout.requestBackPressed();
+        return super.onBackPressed();
+//        return mSoftInputLayout.requestBackPressed();
     }
 
     @Override
@@ -113,11 +114,11 @@ public class CommentInputDialog extends UIIDialogImpl {
             mOssControl.setCancel(true);
         }
     }
-
-    @Override
-    public boolean canDoubleCancel() {
-        return true;
-    }
+//
+//    @Override
+//    public boolean canDoubleCancel() {
+//        return false;
+//    }
 
     @Override
     protected void initDialogContentView() {
@@ -129,18 +130,21 @@ public class CommentInputDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
                 //finishDialog();
-                mSoftInputLayout.requestBackPressed();
-            }
-        });
-
-        RGestureDetector.onDoubleTap(mViewHolder.v(R.id.content_layout), new RGestureDetector.OnDoubleTapListener() {
-            @Override
-            public void onDoubleTap() {
-                if (mSoftInputLayout.requestBackPressed()) {
+//                if (mSoftInputLayout.requestBackPressed()){
+                    mSoftInputLayout.requestBackPressed();
                     finishDialog();
-                }
+//                }
             }
         });
+//
+//        RGestureDetector.onDoubleTap(mViewHolder.v(R.id.content_layout), new RGestureDetector.OnDoubleTapListener() {
+//            @Override
+//            public void onDoubleTap() {
+//                if (mSoftInputLayout.requestBackPressed()) {
+//                    finishDialog();
+//                }
+//            }
+//        });
 
         //输入框
         ExEditText exEditText = mViewHolder.v(R.id.input_view);
