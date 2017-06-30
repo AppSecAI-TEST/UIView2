@@ -3,7 +3,10 @@ package com.hn.d.valley.service;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
 
@@ -117,6 +120,7 @@ public interface NewsService {
      * id	是	int64	资讯、评论或者回复的id
      * content	是	string	反馈的内容，具体格式见下
      */
-    @GET("news/feedback")
-    Observable<ResponseBody> feedback(@QueryMap Map<String, String> map);
+    @FormUrlEncoded
+    @POST("news/feedback")
+    Observable<ResponseBody> feedback(@FieldMap Map<String, String> map);
 }

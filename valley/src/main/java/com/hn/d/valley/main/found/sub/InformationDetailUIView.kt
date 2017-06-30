@@ -1,24 +1,36 @@
 package com.hn.d.valley.main.found.sub
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.angcyo.library.utils.L
 import com.angcyo.uiview.design.StickLayout2
+import com.angcyo.uiview.dialog.UIItemDialog
 import com.angcyo.uiview.github.goodview.GoodView
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout
 import com.angcyo.uiview.github.tablayout.TabLayoutUtil
+import com.angcyo.uiview.kotlin.v
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
+import com.angcyo.uiview.resources.ResUtil
+import com.angcyo.uiview.skin.SkinHelper
 import com.angcyo.uiview.utils.RUtils
 import com.angcyo.uiview.utils.T_
+import com.angcyo.uiview.utils.UI
 import com.angcyo.uiview.view.IView
 import com.angcyo.uiview.widget.EmptyView
+import com.angcyo.uiview.widget.RFlowLayout
+import com.angcyo.uiview.widget.RTextCheckView
+import com.angcyo.uiview.widget.RTextView
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter
 import com.angcyo.uiview.widget.viewpager.UIViewPager
 import com.hn.d.valley.R
@@ -40,8 +52,8 @@ import com.hn.d.valley.utils.PhotoPager
 import com.hn.d.valley.widget.HnItemTextView
 import com.hn.d.valley.x5.AndroidJs
 import com.hn.d.valley.x5.X5WebView
-import com.tencent.smtt.sdk.WebSettings
 import com.tencent.smtt.sdk.WebView
+import rx.functions.Action0
 import rx.subscriptions.CompositeSubscription
 
 /**
@@ -59,6 +71,7 @@ class InformationDetailUIView : BaseContentUIView {
 
     var id: String
     var hotInfoBean: HotInfoListBean? = null
+    lateinit var detailBean: InformationDetailBean
 
     constructor(hotInfoBean: HotInfoListBean) {
         this.id = hotInfoBean.id.toString()
@@ -73,6 +86,9 @@ class InformationDetailUIView : BaseContentUIView {
     companion object {
         fun getDetailUrl(id: String) = "http://news.klgwl.com/wap/news/$id"
         fun getDetailUrl(id: Int) = "http://news.klgwl.com/wap/news/$id"
+
+        fun getDetailShareUrl(id: String) = "http://news.klgwl.com/wap/news/share/$id"
+        fun getDetailShareUrl(id: Int) = "http://news.klgwl.com/wap/news/share/$id"
 
         fun initLikeView(subscriptions: CompositeSubscription, viewHolder: RBaseViewHolder, type: String, data: ILikeData) {
             val likeView: View = viewHolder.v(R.id.like_cnt)
@@ -89,7 +105,7 @@ class InformationDetailUIView : BaseContentUIView {
                         likeView.text = data.likeCount
                     }
                     subscriptions.add(RRetrofit.create(NewsService::class.java)
-                            .unlike(Param.buildMap("type:comment", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
+                            .unlike(Param.buildInfoMap("type:comment", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
                             .compose(Rx.transformer(String::class.java))
                             .subscribe(object : BaseSingleSubscriber<String>() {
                                 override fun onSucceed(bean: String?) {
@@ -140,6 +156,14 @@ class InformationDetailUIView : BaseContentUIView {
 
     /**分享对话框*/
     private fun showShareDialog() {
+//        if (BuildConfig.SHOW_DEBUG) {
+//            webView.clearFormData()
+//            webView.clearCache(true)
+//            webView.clearDisappearingChildren()
+//            webView.reload()
+//
+//            return
+//        }
         if (hotInfoBean != null) {
         } else {
             hotInfoBean = HotInfoListBean.from(detailBean)
@@ -157,13 +181,15 @@ class InformationDetailUIView : BaseContentUIView {
     lateinit var tabControlLayout: View
     lateinit var webView: X5WebView
     lateinit var stickLayout2: StickLayout2
-    lateinit var detailBean: InformationDetailBean
     var mCommentListUIView: CommentListUIView? = null
+//    lateinit var webLayout: FrameLayout
 
     override fun initOnShowContentLayout() {
         super.initOnShowContentLayout()
-
+//        webLayout = mViewHolder.v(R.id.web_contain_layout)
         webView = mViewHolder.v(R.id.web_view)
+//        webView = X5WebView(mActivity)
+//        webLayout.addView(webView, -1, -2)
         mTabLayout = mViewHolder.v(R.id.tab_layout)
         mUiViewPager = mViewHolder.v(R.id.view_pager)
         loadView = mViewHolder.v(R.id.load_view)
@@ -179,6 +205,65 @@ class InformationDetailUIView : BaseContentUIView {
         initWebView()
 
         getDetail()
+    }
+
+    private fun initLikeView() {
+        val likeView: RTextView = mViewHolder.v(R.id.like_view)
+        val noLikeView: RTextView = mViewHolder.v(R.id.no_like_view)
+
+        likeView.visibility = View.VISIBLE
+        noLikeView.visibility = View.VISIBLE
+
+        val line = getDimensionPixelOffset(R.dimen.base_line)
+
+        //喜欢按钮
+        likeView.text = detailBean.like.toString()
+        if (detailBean.like_or_tread == 1) {
+            //喜欢
+            likeView.setLeftIco(R.drawable.dianzan_s)
+            likeView.setTextColor(Color.parseColor("#FC6B38"))
+            UI.setBackgroundDrawable(likeView, ResUtil.createDrawable(Color.parseColor("#FC6B38"), Color.TRANSPARENT, line, 10000f))
+
+            likeView.setOnClickListener(null)
+        } else {
+            //不喜欢, 未操作
+            likeView.setLeftIco(R.drawable.dianzan_n)
+            likeView.setTextColor(Color.parseColor("#333333"))
+            UI.setBackgroundDrawable(likeView, ResUtil.createDrawable(getColor(R.color.line_color), Color.TRANSPARENT, line, 10000f))
+
+            likeView.setOnClickListener {
+                detailBean.like_or_tread = 1
+                detailBean.like++
+
+                initLikeView()
+            }
+        }
+
+        //不喜欢按钮
+        UI.setBackgroundDrawable(noLikeView, ResUtil.createDrawable(getColor(R.color.line_color), Color.TRANSPARENT, line, 10000f))
+        noLikeView.setOnClickListener {
+            //            val dialog = UIItemDialog.build()
+//                    .setUseFullItem(true)
+//                    .setShowCancelButton(false)
+//                    .setDialogTitle(getString(R.string.not_like))
+//
+//
+//            dialog.showDialog(mParentILayout)
+            mParentILayout.startIView(NoLikeDialog())
+        }
+    }
+
+
+    private fun initTagsLayout() {
+        val flowLayout: RFlowLayout = mViewHolder.v(R.id.flow_layout)
+        val tagList = detailBean.tagList
+        if (tagList != null && tagList.isNotEmpty()) {
+            tagList.map {
+                flowLayout.addTagTextView(it)
+            }
+        } else {
+            flowLayout.visibility = View.GONE
+        }
     }
 
     override fun onViewShow(bundle: Bundle?) {
@@ -232,7 +317,8 @@ class InformationDetailUIView : BaseContentUIView {
     private fun initWebView() {
         showLoadView()
         webView.loadUrl(getDetailUrl(id))
-        webView.settings.cacheMode = WebSettings.LOAD_DEFAULT
+        //webView.settings.cacheMode = WebSettings.LOAD_NO_CACHE
+        webView.settings.useWideViewPort = false
         webView.onWebViewListener = object : X5WebView.OnWebViewListener {
             override fun onPageFinished(webView: WebView?, url: String?) {
                 L.e("call: onPageFinished -> ")
@@ -242,7 +328,6 @@ class InformationDetailUIView : BaseContentUIView {
 //                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED))
 //
 //                L.e("onPageFinished_2 测量高度:" + webView?.measuredHeight + " 内容高度:" + webView?.contentHeight + " Range:" + webView?.computeVerticalScrollRange())
-
                 postDelayed({ invokeJs("showImg") }, 1000)
             }
 
@@ -355,7 +440,6 @@ class InformationDetailUIView : BaseContentUIView {
         click(R.id.bottom_forward_item) { startIView(PublishDynamicUIView2(hotInfoBean /*detailBean*/)) }
     }
 
-
     /**
      * 发布评论
      */
@@ -392,6 +476,8 @@ class InformationDetailUIView : BaseContentUIView {
                             detailBean = bean
 
                             initControlLayout()
+                            initTagsLayout()
+                            initLikeView()
 
                             uiTitleBarContainer.showRightItem(0)
                         }
@@ -406,4 +492,103 @@ class InformationDetailUIView : BaseContentUIView {
                 })
         )
     }
+
+    /**选中不喜欢的位置*/
+    val noLikePositionSet = hashSetOf<Int>()
+
+    /**资讯不喜欢对话框*/
+    private inner class NoLikeDialog : UIItemDialog() {
+        init {
+            setDialogTitle(this@InformationDetailUIView.getString(R.string.not_like))
+            setUseFullItem(true)
+            setShowCancelButton(false)
+        }
+
+        override fun inflateItem() {
+            //per.inflateItem()
+
+            mItemContentLayout.dividerPadding = getDimensionPixelOffset(R.dimen.base_40dpi)
+
+            detailBean.tagList.mapIndexed { index, string ->
+                LayoutInflater.from(mActivity).inflate(R.layout.no_like_selector_item, mItemContentLayout)
+                val view = mItemContentLayout.getChildAt(index)
+                val textView: RTextCheckView = view.v(R.id.text_view)
+                val cancelView: TextView = view.v(R.id.cancel_view)
+
+                textView.gravity = Gravity.LEFT
+                textView.setTextColor(ResUtil.generateTextColor(Color.parseColor("#CCCCCC"),
+                        Color.parseColor("#CCCCCC"),
+                        Color.parseColor("#333333")))
+
+                textView.text = getString(R.string.no_like_format2, string)
+                cancelView.setTextColor(SkinHelper.getSkin().themeSubColor)
+
+                textView.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        textView.text = getString(R.string.is_no_like_format2, string)
+                        cancelView.visibility = View.VISIBLE
+                        noLikePositionSet.add(index)
+                    } else {
+                        textView.text = getString(R.string.no_like_format2, string)
+                        cancelView.visibility = View.GONE
+                        noLikePositionSet.remove(index)
+                    }
+                }
+
+                textView.isChecked = noLikePositionSet.contains(index)
+            }
+
+            val okTextView = TextView(mActivity)
+            okTextView.text = getString(R.string.ok)
+            okTextView.gravity = Gravity.CENTER
+            okTextView.setTextColor(SkinHelper.getSkin().themeSubColor)
+            okTextView.setOnClickListener {
+                finishDialog()
+
+                val builder = StringBuilder()
+                if (noLikePositionSet.isEmpty()) {
+                    builder.append(detailBean.id)
+                    builder.append(";")
+
+                    T_.show(getString(R.string.modify_successed))
+                } else {
+                    noLikePositionSet.forEach {
+                        builder.append(detailBean.tagList[it])
+                        builder.append(";")
+                    }
+                    T_.show(getString(R.string.no_like_successed_tip))
+                }
+
+                icFeedback = true
+                add(RRetrofit
+                        .create(NewsService::class.java)
+                        .feedback(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),
+                                "id:" + detailBean.id, "content:" + RUtils.safe(builder)))
+                        .compose(Rx.transformer(String::class.java))
+                        .subscribe(object : BaseSingleSubscriber<String>() {
+
+                        })
+                )
+            }
+
+            mItemContentLayout.addView(okTextView,
+                    ViewGroup.LayoutParams(-1, getDimensionPixelOffset(R.dimen.base_item_size)))
+        }
+
+        override fun createItem(info: ItemInfo): View {
+            return super.createItem(info)
+        }
+    }
+
+    /**选择不喜欢之后的回调*/
+    var noLikeAction: Action0? = null
+    var icFeedback = false
+
+    override fun onViewUnload() {
+        super.onViewUnload()
+        if (icFeedback && noLikePositionSet.isNotEmpty()) {
+            noLikeAction?.call()
+        }
+    }
 }
+

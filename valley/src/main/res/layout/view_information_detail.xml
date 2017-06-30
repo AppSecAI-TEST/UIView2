@@ -64,11 +64,86 @@
         android:layout_above="@id/bottom_layout">
 
         <!--用户详情, 头部-->
-        <com.hn.d.valley.x5.X5WebView
-            android:id="@+id/web_view"
+        <!-- <com.hn.d.valley.x5.X5WebView
+             android:id="@+id/web_view"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:minHeight="300dp"/>-->
+        <LinearLayout
+            android:id="@+id/web_contain_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="300dp"/>
+            android:orientation="vertical">
+
+            <com.hn.d.valley.x5.X5WebView
+                android:id="@+id/web_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="300dp"/>
+
+            <com.angcyo.uiview.widget.RFlowLayout
+                android:id="@+id/flow_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/base_xxhdpi"
+                android:layout_marginEnd="@dimen/base_xhdpi"
+                android:layout_marginStart="@dimen/base_xhdpi"
+                android:layout_marginTop="@dimen/base_xxhdpi"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/like_view"
+                    style="@style/MainTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/base_xhdpi"
+                    android:drawableStart="@drawable/dianzan_n"
+                    android:gravity="center"
+                    android:minWidth="@dimen/base_100dpi"
+                    android:paddingBottom="@dimen/base_ldpi"
+                    android:paddingEnd="@dimen/base_xxhdpi"
+                    android:paddingStart="@dimen/base_xxhdpi"
+                    android:paddingTop="@dimen/base_ldpi"
+                    android:visibility="invisible"
+                    tools:background="@drawable/base_line_border_selector"
+                    tools:text="2000"/>
+
+                <Space
+                    android:layout_width="55dp"
+                    android:layout_height="wrap_content"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/no_like_view"
+                    style="@style/MainTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/base_xhdpi"
+                    android:drawableStart="@drawable/icon_dislike_n"
+                    android:gravity="center"
+                    android:minWidth="@dimen/base_100dpi"
+                    android:paddingBottom="@dimen/base_ldpi"
+                    android:paddingEnd="@dimen/base_xxhdpi"
+                    android:paddingStart="@dimen/base_xxhdpi"
+                    android:paddingTop="@dimen/base_ldpi"
+                    android:text="@string/not_like"
+                    android:visibility="invisible"
+                    tools:background="@drawable/base_line_border_selector"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/base_ldpi"
+                android:layout_marginTop="@dimen/base_xhdpi"
+                android:background="@color/chat_bg_color"/>
+
+        </LinearLayout>
 
         <!--内容部分-->
         <com.angcyo.uiview.widget.viewpager.UIViewPager
@@ -85,12 +160,6 @@
             android:orientation="vertical"
             android:visibility="invisible"
             tools:visibility="visible">
-
-            <View
-                android:id="@+id/line2"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/base_ldpi"
-                android:background="@color/chat_bg_color"/>
 
             <com.angcyo.uiview.github.tablayout.SlidingTabLayout
                 android:id="@+id/tab_layout"
@@ -119,11 +188,11 @@
 
     </com.angcyo.uiview.design.StickLayout2>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/base_toast_shadow_height"
-        android:layout_above="@id/bottom_layout"
-        android:background="@drawable/base_shadow_shape_top"/>
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="@dimen/base_toast_shadow_height"-->
+    <!--android:layout_above="@id/bottom_layout"-->
+    <!--android:background="@drawable/base_shadow_shape_top"/>-->
 
     <com.angcyo.uiview.widget.EmptyView
         android:id="@+id/load_view"

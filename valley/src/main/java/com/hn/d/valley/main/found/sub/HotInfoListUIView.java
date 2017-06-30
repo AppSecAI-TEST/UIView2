@@ -38,6 +38,8 @@ import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
 
+import rx.functions.Action0;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -210,6 +212,21 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             protected void onBindDataView(RBaseViewHolder holder, final int posInData, final HotInfoListBean dataBean) {
                 initItem(mParentILayout, holder, dataBean, "");
 
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        InformationDetailUIView informationDetailUIView = new InformationDetailUIView(dataBean);
+                        informationDetailUIView.setNoLikeAction(new Action0() {
+                            @Override
+                            public void call() {
+                                deleteItem(posInData);
+                            }
+                        });
+                        mParentILayout.startIView(informationDetailUIView);
+                    }
+                });
+
+
                 holder.v(R.id.delete_view).setVisibility(View.VISIBLE);
                 holder.click(R.id.delete_view, new View.OnClickListener() {
                     @Override
@@ -219,13 +236,30 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                                 .layout(R.layout.information_no_like_layout)
                                 .onInitWindow(new UIWindow.OnInitWindow() {
                                     @Override
-                                    public void onInitWindow(final UIWindow window, RBaseViewHolder viewHolder) {
+                                    public void onInitWindow(final UIWindow window, final RBaseViewHolder viewHolder) {
                                         final RFlowLayout flowLayout = viewHolder.v(R.id.flow_layout);
-                                        flowLayout.addCheckTextView(getString(R.string.no_like_1));
-                                        flowLayout.addCheckTextView(getString(R.string.no_like_2));
+                                        View.OnClickListener checkListener = new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                List<String> checkedTextList = flowLayout.getCheckedTextList();
+
+                                                RTextView tipView = viewHolder.v(R.id.tip_view);
+                                                if (checkedTextList.isEmpty()) {
+                                                    viewHolder.tv(R.id.not_like).setText(getString(R.string.no_like));
+                                                    tipView.setText(getString(R.string.no_like_tip));
+                                                } else {
+                                                    viewHolder.tv(R.id.not_like).setText(getString(R.string.ok));
+                                                    tipView.setText(getString(R.string.no_like_tip_format, checkedTextList.size()));
+                                                    tipView.setHighlightWord(String.valueOf(checkedTextList.size()));
+                                                }
+                                            }
+                                        };
+
+                                        flowLayout.addCheckTextView(getString(R.string.no_like_1)).setOnClickListener(checkListener);;
+                                        flowLayout.addCheckTextView(getString(R.string.no_like_2)).setOnClickListener(checkListener);;
 
                                         for (String text : dataBean.getTagList()) {
-                                            flowLayout.addCheckTextView(getString(R.string.no_like_format, text));
+                                            flowLayout.addCheckTextView(getString(R.string.no_like_format, text)).setOnClickListener(checkListener);
                                         }
 
                                         viewHolder.click(R.id.not_like, new View.OnClickListener() {

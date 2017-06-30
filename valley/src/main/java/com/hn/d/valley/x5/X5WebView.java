@@ -3,6 +3,8 @@ package com.hn.d.valley.x5;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Message;
 import android.support.v4.view.MotionEventCompat;
@@ -14,6 +16,9 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.design.IWebView;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.ScreenUtil;
+import com.angcyo.uiview.utils.T_;
+import com.hn.d.valley.BuildConfig;
 import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
 import com.tencent.smtt.export.external.interfaces.JsPromptResult;
@@ -43,6 +48,7 @@ public class X5WebView extends WebView implements IWebView {
     private static boolean isSmallWebViewDisplayed = false;
     RelativeLayout.LayoutParams layoutParams;
     TextView title;
+    Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private String resourceUrl = "";
     private WebView smallWebView;
     private boolean isClampedY = true;
@@ -306,10 +312,6 @@ public class X5WebView extends WebView implements IWebView {
         setBackgroundColor(85621);
     }
 
-    public static void setSmallWebViewEnabled(boolean enabled) {
-        isSmallWebViewDisplayed = enabled;
-    }
-
 //    @Override
 //    protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
 //        boolean ret = super.drawChild(canvas, child, drawingTime);
@@ -331,6 +333,10 @@ public class X5WebView extends WebView implements IWebView {
 //        return ret;
 //    }
 
+    public static void setSmallWebViewEnabled(boolean enabled) {
+        isSmallWebViewDisplayed = enabled;
+    }
+
     private void initWebViewSettings() {
         WebSettings webSetting = this.getSettings();
         webSetting.setJavaScriptEnabled(true);
@@ -350,7 +356,7 @@ public class X5WebView extends WebView implements IWebView {
         // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
         webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
         //webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webSetting.setCacheMode(WebSettings.LOAD_NORMAL);
         // this.getSettingsExtension().setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);//extension
         // settings 的设计
 
@@ -553,11 +559,33 @@ public class X5WebView extends WebView implements IWebView {
         int measuredWidth = getMeasuredWidth();
         int measuredHeight = getMeasuredHeight();
         //L.e("call: onMeasure([widthMeasureSpec, heightMeasureSpec])-> " + measuredWidth + " " + measuredHeight);
+        if (measuredHeight > 50_00_00) {
+//            reload();
+            if (BuildConfig.SHOW_DEBUG) {
+                T_.show("[内容]正在重新加载...");
+            }
+        }
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
+        boolean result = super.drawChild(canvas, child, drawingTime);
+        if (BuildConfig.SHOW_DEBUG) {
+            canvas.save();
+            mPaint.setTextSize(30f);
+            mPaint.setColor(Color.RED);
+
+            int top = 0;
+            if (getParent() instanceof View) {
+                top = ((View) getParent()).getScrollY();
+            }
+
+            canvas.drawText("contentHeight:" + getContentHeight(), 10, top + 300, mPaint);
+            canvas.drawText("measureHeight:" + getMeasuredHeight(), 10, top + 600, mPaint);
+            canvas.drawText("screenHeight:" + ScreenUtil.screenHeight, 10, top + 900, mPaint);
+            canvas.restore();
+        }
+        return result;
     }
 
     @Override

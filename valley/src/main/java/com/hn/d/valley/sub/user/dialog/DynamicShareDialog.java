@@ -221,7 +221,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
         //资讯分享
         if (mHotInfoListBean != null) {
 
-            final String detailUrl = InformationDetailUIView.Companion.getDetailUrl(mHotInfoListBean.getId());
+            final String detailUrl = InformationDetailUIView.Companion.getDetailShareUrl(mHotInfoListBean.getId());
 
             //复制
             mViewHolder.v(R.id.copy_view).setOnClickListener(new View.OnClickListener() {

@@ -641,8 +641,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                 }
 
                                 @Override
-                                public void onLoadContent(LinearLayout contentLayout) {
-                                    contentLayout.setBackgroundResource(R.drawable.base_white_round_little_shape);
+                                public void onLoadContent(UIItemDialog dialog, RBaseViewHolder viewHolder) {
+                                    viewHolder.v(R.id.item_content_layout).setBackgroundResource(R.drawable.base_white_round_little_shape);
                                 }
                             })
                             .setGravity(Gravity.CENTER)

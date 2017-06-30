@@ -2,7 +2,6 @@ package com.hn.d.valley.main.me;
 
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -23,7 +22,6 @@ import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AdsControl;
@@ -35,7 +33,6 @@ import com.hn.d.valley.main.me.sub.InviteFriendsUIDialog;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
@@ -594,16 +591,18 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //                                        }
 //                                    });
 
-                            RRetrofit.create(ContactService.class)
-                                    .phoneUser3(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:{\"phone\":\"18770090887,18770080909\",\"name\":\"张三，李四\"}"
-                                            , "phone_model:" + Build.MODEL, "device_id:" + Build.DEVICE))
-                                    .compose(Rx.transformer(String.class))
-                                    .subscribe(new BaseSingleSubscriber<String>() {
-                                        @Override
-                                        public void onSucceed(String bean) {
-                                            super.onSucceed(bean);
-                                        }
-                                    });
+//                            RRetrofit.create(ContactService.class)
+//                                    .phoneUser3(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:{\"phone\":\"18770090887,18770080909\",\"name\":\"张三，李四\"}"
+//                                            , "phone_model:" + Build.MODEL, "device_id:" + Build.DEVICE))
+//                                    .compose(Rx.transformer(String.class))
+//                                    .subscribe(new BaseSingleSubscriber<String>() {
+//                                        @Override
+//                                        public void onSucceed(String bean) {
+//                                            super.onSucceed(bean);
+//                                        }
+//                                    });
+
+                            int i = 1 / 0;
                         }
                     });
                 }

@@ -42,7 +42,7 @@
     <!--聊天背景颜色-->
     <color name="chat_bg_color">#F0F0F5</color>
     <!--转发动态背景色-->
-    <color name="forward_bg_color">#F4F4F4</color>
+    <color name="forward_bg_color">#F9F9F9</color>
 
     <color name="yellow_ffe2b1">#FFE2B1</color>
     <color name="yellow_fccd82">#FCCD82</color>

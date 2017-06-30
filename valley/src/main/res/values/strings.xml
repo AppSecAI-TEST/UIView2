@@ -814,10 +814,18 @@
     <string name="text_account_not_set">账户未设置</string>
     <string name="text_account_incorrect">账户不对</string>
     <string name="no_like_tip">可选理由, 精准屏蔽</string>
+    <string name="no_like_tip_format">已选%1$d个理由</string>
     <string name="no_like">不感兴趣</string>
     <string name="no_like_1">看过了</string>
     <string name="no_like_2">内容太水</string>
     <string name="no_like_format">不想看: %1$s</string>
     <string name="no_like_">不想看: </string>
+    <string name="not_like">不喜欢</string>
+    <string name="no_like_format2">减少 不想看: %1$s 的内容</string>
+    <string name="is_no_like_format2">已减少 不想看: %1$s 的内容</string>
+    <string name="no_like2_">减少 不想看: </string>
+    <string name="cancel_2">撤销</string>
+    <string name="modify_successed">修改成功.</string>
+    <string name="no_like_successed_tip">已减少相关内容推送.</string>
 
 </resources>

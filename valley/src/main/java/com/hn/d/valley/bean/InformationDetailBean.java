@@ -1,5 +1,9 @@
 package com.hn.d.valley.bean;
 
+import com.angcyo.uiview.utils.RUtils;
+
+import java.util.List;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -173,6 +177,10 @@ public class InformationDetailBean implements ILikeData {
 
     public void setView(int view) {
         this.view = view;
+    }
+
+    public List<String> getTagList() {
+        return RUtils.split(getTags(), ";");
     }
 
     public int getLike() {
