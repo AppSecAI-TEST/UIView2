@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.attachment;
 
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
@@ -46,7 +48,7 @@ public class DynamicDetailMsg extends BaseCustomMsg{
         detailMsg.media_type = dataListBean.getMedia_type();
         detailMsg.username = dataListBean.getUser_info().getUsername();
         detailMsg.item_id = dataListBean.getDiscuss_id();
-        detailMsg.apnsText = String.format("%s 的动态",detailMsg.username);
+        detailMsg.apnsText = detailMsg.username;
         detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
 
         if (dataListBean.isImageMediaType()) {

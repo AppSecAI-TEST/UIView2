@@ -37,6 +37,7 @@ import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderPushText;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderRedPacket;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderText;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderTip;
+import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderUnknown;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderVideo;
 import com.netease.nimlib.sdk.avchat.model.AVChatAttachment;
 import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
@@ -102,7 +103,7 @@ public class MsgViewHolderFactory {
 //        if (tipMsgViewHolder != null) {
 //            list.add(tipMsgViewHolder);
 //        }
-//        list.add(MsgViewHolderUnknown.class);
+        list.add(MsgViewHolderUnknown.class);
         list.add(MsgViewHolderText.class);
         list.add(MsgViewHolderTip.class);
         // 语音转发viewholder
@@ -130,8 +131,8 @@ public class MsgViewHolderFactory {
                     }
                 }
             }
-//            return viewHolder == null ? MsgViewHolderUnknown.class : viewHolder;
-            return viewHolder == null ? MsgViewHolderText.class : viewHolder;
+            return viewHolder == null ? MsgViewHolderUnknown.class : viewHolder;
+//            return viewHolder == null ? MsgViewHolderText.class : viewHolder;
         }
     }
 

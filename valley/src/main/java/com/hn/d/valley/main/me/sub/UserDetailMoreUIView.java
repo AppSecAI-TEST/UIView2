@@ -190,8 +190,8 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                 ShareControl.shareCardControl(mActivity, holder,
                         mUserInfoBean.getAvatar(),
                         mUserInfoBean.getUid(),
-                        mUserInfoBean.getUsername() + "的恐龙谷首页",
-                        mUserInfoBean.getUsername() + "的恐龙谷首页\n" + "粉丝数: " + mUserInfoBean.getFans_count());
+                        mUserInfoBean.getUsername() + "的恐龙谷主页",
+                        mUserInfoBean.getUsername() + "的恐龙谷主页\n" + "粉丝数: " + mUserInfoBean.getFans_count());
             }
         });
 

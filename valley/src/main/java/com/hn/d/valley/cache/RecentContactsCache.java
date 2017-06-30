@@ -104,6 +104,8 @@ public class RecentContactsCache implements ICache {
 //            }
 //
 //            mRecentContactList.add(r);
+            L.d(RecentContactsCache.class.getSimpleName(),"unreadcount " + r.getUnreadCount());
+
             if (r.getSessionType() == SessionTypeEnum.Team && cacheMessages.get(r.getContactId()) != null) {
                 AitHelper.setRecentContactAited(r, cacheMessages.get(r.getContactId()));
             }

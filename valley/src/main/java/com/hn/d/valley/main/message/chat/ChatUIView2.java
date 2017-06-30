@@ -331,7 +331,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     mChatControl.scrollToEnd();
 //                    mCommandLayoutControl.fixHeight(height);
                     mCommandLayoutControl.init();
-                    mEmojiLayoutControl.emotNotifiDataSetChanged();
+//                    post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mEmojiLayoutControl.emotNotifiDataSetChanged();
+//                        }
+//                    });
 //                    mRecyclerView.requestLayout();
 //                    mRecyclerView.getLayoutManager().requestLayout();
                 }
@@ -590,7 +595,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        mChatControl.onLoad(mSessionId);
+        mChatControl.onLoad(mSessionId,sessionType);
     }
 
     @Override
@@ -753,6 +758,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
         switch (view.getId()) {
             case R.id.message_expression_view:
+//                post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mEmojiLayoutControl.emotNotifiDataSetChanged();
+//                    }
+//                });
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
                     SkinUtils.setKeyboardView(mMessageExpressionView);

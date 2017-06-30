@@ -20,8 +20,8 @@ android {
         applicationId "com.hn.d.valley"
         minSdkVersion Integer.parseInt(rootProject.M_SDK)
         targetSdkVersion Integer.parseInt(rootProject.T_SDK)
-        versionCode 44
-        versionName "1.0.42_R1"
+        versionCode 45
+        versionName "1.0.43_R1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         resValue "string", "build_time", build_time
@@ -116,7 +116,7 @@ dependencies {
     compile project(':audiocache')
 
     compile 'org.jsoup:jsoup:1.10.2'
-    compile 'com.sdsmdg.harjot:materialshadows:1.1.0'
+//    compile 'com.sdsmdg.harjot:materialshadows:1.1.0'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 

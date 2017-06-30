@@ -52,39 +52,32 @@
         android:src="@drawable/avchat_close_video_send"
         android:visibility="visible" />
 
-    <com.sdsmdg.harjot.materialshadows.MaterialShadowViewWrapper
+
+    <LinearLayout
+        android:id="@+id/iv_audio_flag"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/base_white_round_bg"
-        app:shadowOffsetX="-15"
-        app:shadowOffsetY="30"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/iv_audio_flag"
-            android:layout_width="70dp"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:paddingTop="@dimen/base_xhdpi"
+            android:scaleType="centerCrop"
+            android:src="@drawable/yuyingzhong_yuyingliaotian"
+            android:visibility="visible" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/base_xhdpi"
-                android:scaleType="centerCrop"
-                android:src="@drawable/yuyingzhong_yuyingliaotian"
-                android:visibility="visible" />
+        <Chronometer
+            android:id="@+id/tv_audio_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/base_xhdpi"
+            android:textColor="#0db209"
+            tools:text="4:00" />
 
-            <Chronometer
-                android:id="@+id/tv_audio_tip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/base_xhdpi"
-                android:textColor="#0db209"
-                tools:text="4:00" />
-
-        </LinearLayout>
-
-    </com.sdsmdg.harjot.materialshadows.MaterialShadowViewWrapper>
+    </LinearLayout>
 
 
 </FrameLayout>

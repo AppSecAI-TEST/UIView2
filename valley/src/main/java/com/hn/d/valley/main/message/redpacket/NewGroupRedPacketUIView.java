@@ -185,6 +185,9 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                     @Override
                     public void afterTextChanged(Editable s) {
                         String value = etMoney.getText().toString();
+                        if (TextUtils.isEmpty(value)) {
+                            return;
+                        }
                         boolean enable = value.length() > 0;
                         tv_cursor.setVisibility(!enable ? View.VISIBLE : View.GONE);
                         if (TextUtils.isEmpty(value) || TextUtils.isEmpty(et_count.getText().toString())) {

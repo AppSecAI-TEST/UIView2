@@ -21,8 +21,8 @@
 
         <com.hn.d.valley.widget.HnGlideImageView
             android:id="@+id/iv_item_head"
-            android:layout_width="@dimen/avatar_image_size_x_little"
-            android:layout_height="@dimen/avatar_image_size_x_little"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
             android:layout_marginStart="@dimen/base_xhdpi"
             android:contentDescription="@string/is_circle"
             android:scaleType="centerCrop"
@@ -33,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/base_xhdpi"
+            android:textSize="@dimen/default_text_size"
             android:gravity="center_vertical"
             android:padding="@dimen/base_ldpi"
             android:text="@string/str_text_pd" />
@@ -57,8 +58,8 @@
 
             <com.angcyo.uiview.widget.RImageView
                 android:id="@+id/iv_item_content"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
+                android:layout_width="@dimen/base_45dpi"
+                android:layout_height="@dimen/base_45dpi"
                 android:scaleType="centerCrop"
                 android:src="@drawable/default_avatar" />
 
@@ -78,7 +79,11 @@
             android:id="@+id/tv_pc_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/base_xhdpi"
+            android:paddingStart="@dimen/base_xhdpi_5"
+            android:paddingEnd="@dimen/base_xhdpi_5"
+            android:textSize="@dimen/default_text_size"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             android:maxLines="2"
             android:ellipsize="end"
             tools:text="福建省登陆福建师大附近邻居分散精力放假阿桑德拉范德萨克劳福德撒娇发了阿桑打飞机撒旦联发科技圣诞快乐附近发送到将来房价的撒看来飞机立刻十大减肥" />

@@ -71,8 +71,6 @@ public class VideoCommandItem extends CommandItemInfo {
                                 }
                             }));
 
-                        } else {
-
                         }
                     }
                 });

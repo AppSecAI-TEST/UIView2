@@ -183,6 +183,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.itemView.setPadding(0,0,0,0);
                 TextView tv_tip = holder.tv(R.id.text_view);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tv_tip.getLayoutParams();
                 params.gravity = Gravity.CENTER_HORIZONTAL;
@@ -217,13 +218,15 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
     private void cashoutRequest() {
         String money = et_money.getText().toString();
-
+        if (TextUtils.isEmpty(money)) {
+            return;
+        }
         add(RRetrofit.create(WalletService.class)
                 .cashoutRequest(Param.buildInfoMap(
                         "uid:" + UserCache.getUserAccount(),
                         "type:" + 0,
                         "account:" + WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0],
-                        "money:" + money))
+                        "money:" + (int)(Float.valueOf(money) * 100)))
                 .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -237,6 +240,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     public void onError(int code, String msg) {
                         super.onError(code, msg);
                         HnLoading.hide();
+                        finishIView();
                     }
 
                     @Override

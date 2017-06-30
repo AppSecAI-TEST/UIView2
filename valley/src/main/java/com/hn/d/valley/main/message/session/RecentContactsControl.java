@@ -41,10 +41,13 @@ import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
+import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
+import com.hn.d.valley.main.message.attachment.RefundMsg;
+import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
@@ -498,6 +501,10 @@ public class RecentContactsControl {
             return ((DynamicDetailAttachment) attachment).getDynamicMsg().getMsg();
         } else if (attachment instanceof SystemPushAttachment.SingleTextSPAttachment) {
             return ((SystemPushAttachment) attachment).getSystemPush().getMsg();
+        } else if (attachment instanceof RefundMsgAttachment) {
+            return ((RefundMsgAttachment)attachment).getRefundMsg().getMsg();
+        } else if (attachment instanceof InviteUploadProfileAttachment) {
+            return ((InviteUploadProfileAttachment)attachment).getInviteUploadMsg().getMsg();
         }
         return "[自定义消息]";
     }

@@ -6,7 +6,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.glide.GlideBlurTransformation;
+import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.Json;
 import com.angcyo.uiview.widget.RImageView;
 import com.bumptech.glide.DrawableRequestBuilder;
@@ -85,7 +87,11 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
         final DynamicDetailMsg detailMsg = shareDynaAttachment.getDynamicMsg();
         tv_pc_name.setText(detailMsg.getMsg());
         imageView.setImageUrl(detailMsg.getAvatar());
-        msgPcLayout.setText(detailMsg.getApnsText());
+//        msgPcLayout.setText(detailMsg.getApnsText());
+        msgPcLayout.setText(SpannableStringUtils.getBuilder(detailMsg.getApnsText())
+                .append("的动态")
+                .setForegroundColor(SkinHelper.getSkin().getThemeDarkColor())
+                .create());
 
         String thumbUrl = detailMsg.getPicture();
 

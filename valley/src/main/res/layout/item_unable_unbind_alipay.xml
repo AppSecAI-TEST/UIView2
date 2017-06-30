@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:background="@color/default_base_white"
         android:orientation="vertical"
-        android:paddingEnd="@dimen/base_xhdpi"
-        android:paddingStart="@dimen/base_xhdpi">
+        android:padding="@dimen/base_xhdpi"
+    >
 
 
         <TextView

@@ -124,7 +124,7 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/zhanweitu_1"
                             android:visibility="gone"
-                            tools:visibility="visible"/>
+                            tools:visibility="visible" />
 
                         <LinearLayout
                             android:layout_width="wrap_content"

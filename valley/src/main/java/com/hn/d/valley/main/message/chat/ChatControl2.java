@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat;
 
 import android.app.Activity;
+import android.content.pm.PackageInstaller;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -52,6 +53,8 @@ import java.util.Map;
 import rx.functions.Action2;
 import rx.functions.Action3;
 
+import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -72,6 +75,7 @@ public class ChatControl2 {
     public RBaseViewHolder mViewHolder;
 
     String mSessionId = "";
+    SessionTypeEnum sessionType;
 
     Activity mActivity;
 
@@ -98,8 +102,9 @@ public class ChatControl2 {
     }
 
 
-    public void onLoad(String sessionId) {
+    public void onLoad(String sessionId, SessionTypeEnum type) {
         this.mSessionId = sessionId;
+        this.sessionType = type;
         onUnload();
         registerObservers(true);
     }
@@ -168,6 +173,7 @@ public class ChatControl2 {
         }
         updateReceipt(messages);
         mChatAdapter.deleteItem(messageItem, isRelocateTime);
+
     }
 
     public void updateReceipt(final List<IMMessage> messages) {
@@ -449,6 +455,7 @@ public class ChatControl2 {
         service.observeAttachmentProgress(attachmentProgressObserver, register);
         service.observeRevokeMessage(revokeMessageObserver, register);
         service.observeReceiveMessage(incomingMessageObserver, register);
+//        service.observeMessageReceipt(messageReceiptObserver, register);
 
 
         if (register) {
@@ -534,8 +541,18 @@ public class ChatControl2 {
                     RBus.post(new LastMessageEvent(message));
                 }
             }
+
+//            msgService().clearUnreadCount(mSessionId,sessionType);
+
+            sendMsgReceipt(); // 发送已读回执
+
         }
     };
+
+    private void sendMsgReceipt() {
+
+    }
+
     Observer<IMMessage> mMessageObserver = new Observer<IMMessage>() {
         @Override
         public void onEvent(IMMessage imMessage) {
