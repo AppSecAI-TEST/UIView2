@@ -6,6 +6,7 @@ import android.view.View;
 import com.angcyo.uiview.utils.media.ImageUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.iview.RelayPhotoLongClickListener;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.ChatControl2;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
@@ -88,7 +89,8 @@ public class MsgViewHolderPicture extends MsgViewHolderBase {
             @Override
             public void onClick(View v) {
                 final ChatControl2.Images images = getAllImageMessage(message);
-                ImagePagerUIView.start(mUIBaseView.getILayout(), v, images.images, images.positon);
+                ImagePagerUIView.start(mUIBaseView.getILayout(), v, images.images, images.positon)
+                        .setPhotoViewLongClickListener(new RelayPhotoLongClickListener(mUIBaseView.getILayout()));
             }
         });
 

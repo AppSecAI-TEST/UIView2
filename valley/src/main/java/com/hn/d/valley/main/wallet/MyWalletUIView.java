@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -76,10 +77,10 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        loadAccount();
+        loadAccount(false);
     }
 
-    private void loadAccount() {
+    private void loadAccount(final boolean isUpdate) {
         WalletHelper.getInstance().fetchWallet(new RequestCallback<WalletAccount>() {
             @Override
             public void onStart() {
@@ -90,7 +91,11 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onSuccess(WalletAccount walletAccount) {
                 hideLoadView();
                 mAccount = walletAccount;
-                showContentLayout();
+                if (isUpdate) {
+                    getRExBaseAdapter().notifyDataSetChanged();
+                } else {
+                    showContentLayout();
+                }
             }
 
             @Override
@@ -276,6 +281,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     @Subscribe
     public void onEvent(WalletAccountUpdateEvent event) {
-        loadAccount();
+        L.d("C","onevent walletupdate ");
+        loadAccount(true);
     }
 }

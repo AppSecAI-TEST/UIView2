@@ -23,6 +23,7 @@ import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.main.message.redpacket.PayUIDialog;
 import com.hn.d.valley.main.message.redpacket.ThirdPayUIDialog;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
@@ -99,7 +100,7 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(2 * top) {
+        items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 button = holder.v(R.id.btn_send);
@@ -118,7 +119,8 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         startIView(new ThirdPayUIDialog(new Action1() {
                             @Override
                             public void call(Object o) {
-
+                                RBus.post(new WalletAccountUpdateEvent());
+                                RechargeUIView.this.finishIView();
                             }
                         },params, ThirdPayUIDialog.ALIPAY,0));
                     }
@@ -129,6 +131,7 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                holder.itemView.setPadding(0,0,0,0);
                 TextView tv_tip = holder.tv(R.id.text_view);
 
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tv_tip.getLayoutParams();

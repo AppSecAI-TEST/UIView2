@@ -109,4 +109,14 @@ public interface NewsService {
      */
     @GET("news/collectlist")
     Observable<ResponseBody> collectlist(@QueryMap Map<String, String> map);
+
+    /**
+     * 该接口接收用户不喜欢的反馈
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * id	是	int64	资讯、评论或者回复的id
+     * content	是	string	反馈的内容，具体格式见下
+     */
+    @GET("news/feedback")
+    Observable<ResponseBody> feedback(@QueryMap Map<String, String> map);
 }

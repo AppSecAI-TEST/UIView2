@@ -9,19 +9,37 @@
     android:orientation="vertical"
     >
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/base_ldpi"
-        android:ellipsize="middle"
+    <LinearLayout
+        android:orientation="horizontal"
         android:gravity="center"
-        android:maxLength="@integer/name_show_count"
-        android:maxLines="1"
-        android:tag="title"
-        android:textColor="@color/default_base_white"
-        android:textSize="@dimen/base_title_size"
-        tools:text="标题"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_ldpi"
+            android:ellipsize="middle"
+            android:gravity="center"
+            android:maxEms="@integer/name_show_count"
+            android:maxLines="1"
+            android:tag="title"
+            android:textColor="@color/default_base_white"
+            android:textSize="@dimen/base_title_size"
+            tools:text="标题"/>
+
+        <ImageView
+            android:id="@+id/iv_show_disturbing"
+            android:src="@drawable/top_no_disturbing"
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/base_ldpi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
 
     <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/cb_show"

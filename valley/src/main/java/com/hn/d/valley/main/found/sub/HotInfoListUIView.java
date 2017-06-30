@@ -1,14 +1,11 @@
 package com.hn.d.valley.main.found.sub;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
@@ -19,13 +16,11 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
-import com.angcyo.uiview.resources.ResUtil;
-import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RFlowLayout;
 import com.angcyo.uiview.widget.RImageView;
-import com.angcyo.uiview.widget.RTextCheckView;
 import com.angcyo.uiview.widget.RTextImageLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -212,7 +207,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
 
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, final HotInfoListBean dataBean) {
+            protected void onBindDataView(RBaseViewHolder holder, final int posInData, final HotInfoListBean dataBean) {
                 initItem(mParentILayout, holder, dataBean, "");
 
                 holder.v(R.id.delete_view).setVisibility(View.VISIBLE);
@@ -224,14 +219,45 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                                 .layout(R.layout.information_no_like_layout)
                                 .onInitWindow(new UIWindow.OnInitWindow() {
                                     @Override
-                                    public void onInitWindow(RBaseViewHolder viewHolder) {
-                                        RFlowLayout flowLayout = viewHolder.v(R.id.flow_layout);
-                                        flowLayout.addView(noLikeItemView("看过了"));
-                                        flowLayout.addView(noLikeItemView("内容太水"));
+                                    public void onInitWindow(final UIWindow window, RBaseViewHolder viewHolder) {
+                                        final RFlowLayout flowLayout = viewHolder.v(R.id.flow_layout);
+                                        flowLayout.addCheckTextView(getString(R.string.no_like_1));
+                                        flowLayout.addCheckTextView(getString(R.string.no_like_2));
 
                                         for (String text : dataBean.getTagList()) {
-                                            flowLayout.addView(noLikeItemView("不想看: " + text));
+                                            flowLayout.addCheckTextView(getString(R.string.no_like_format, text));
                                         }
+
+                                        viewHolder.click(R.id.not_like, new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                deleteItem(posInData);
+
+                                                List<String> checkedTextList = flowLayout.getCheckedTextList();
+
+                                                StringBuilder content = new StringBuilder();
+                                                if (checkedTextList.isEmpty()) {
+                                                    content.append(dataBean.getId());
+                                                    content.append(";");
+                                                } else {
+                                                    for (String tag : checkedTextList) {
+                                                        content.append(tag.replaceAll(getString(R.string.no_like_), "").trim());
+                                                        content.append(";");
+                                                    }
+                                                }
+
+                                                window.finishIView();
+
+                                                add(RRetrofit
+                                                        .create(NewsService.class)
+                                                        .feedback(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),
+                                                                "id:" + dataBean.getId(), "content:" + RUtils.safe(content)))
+                                                        .compose(Rx.transformer(String.class))
+                                                        .subscribe(new BaseSingleSubscriber<String>() {
+                                                        })
+                                                );
+                                            }
+                                        });
                                     }
                                 })
                                 .show(mParentILayout, (int) (1 * density()));
@@ -241,30 +267,6 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
         };
         baseAdapter.setEnableLoadMore(true);
         return baseAdapter;
-    }
-
-    private RTextCheckView noLikeItemView(String text) {
-        RTextCheckView textView = new RTextCheckView(mActivity);
-        textView.setText(text);
-        textView.setGravity(Gravity.CENTER);
-
-        int lineSize = getDimensionPixelOffset(R.dimen.base_line);
-        int radius = getDimensionPixelOffset(R.dimen.little_round_radius);
-        int offset = getDimensionPixelOffset(R.dimen.base_xxhdpi);
-        textView.setPadding(offset, offset / 4, offset, offset / 4);
-        textView.setTag("");
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-2, -2);
-        params.rightMargin = offset / 2;
-        params.topMargin = radius;
-        params.bottomMargin = radius;
-        textView.setLayoutParams(params);
-
-        textView.setBackground(ResUtil.selectorChecked(
-                ResUtil.createDrawable(getColor(R.color.line_color), Color.TRANSPARENT, lineSize, radius),
-                ResUtil.createDrawable(SkinHelper.getSkin().getThemeTranColor(0x80), radius)
-        ));
-        return textView;
     }
 
     @Override

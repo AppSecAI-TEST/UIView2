@@ -11,6 +11,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.io.File;
@@ -37,9 +38,9 @@ import static com.lzy.imagepicker.ImagePickerHelper.REQUEST_CODE;
  * 修改备注：
  * Version: 1.0.0
  */
-public class ImageCommandItem extends CommandItemInfo{
+public class ImageCommandItem extends CommandItemInfo {
 
-    public ImageCommandItem(){
+    public ImageCommandItem() {
         this(R.drawable.zhaopian_xiaoxi, "图片");
     }
 
@@ -81,10 +82,9 @@ public class ImageCommandItem extends CommandItemInfo{
         }
     }
 
-    private void sendPictureAndGif(ArrayList<String> strings) {
+    public static IMMessage makePicAndGifMsg(String path, String account, SessionTypeEnum sessionType) {
         //发送图片和gif图
         boolean isGif = false;
-        String path = strings.get(0);
         File file = new File(path);
 
         try {
@@ -95,14 +95,14 @@ public class ImageCommandItem extends CommandItemInfo{
                 isGif = true;
             }
             is.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         if (isGif) {
             IMMessage gifMessage =
-                    MessageBuilder.createFileMessage(getContainer().account, getContainer().sessionType, file, FileUtil.getFileNameNoEx(path));
-            Map<String,Object> remoteExtension =  new HashMap<>();
+                    MessageBuilder.createFileMessage(account, sessionType, file, FileUtil.getFileNameNoEx(path));
+            Map<String, Object> remoteExtension = new HashMap<>();
             String size = null;
             int[] bounds = null;
             bounds = BitmapDecoder.decodeBound(new File(path));
@@ -110,15 +110,20 @@ public class ImageCommandItem extends CommandItemInfo{
                 size = "{" + bounds[0] + "," + bounds[1] + "}";
             }
 
-            remoteExtension.put("size",size);
-            remoteExtension.put("extend_type","gifTypeImage");
+            remoteExtension.put("size", size);
+            remoteExtension.put("extend_type", "gifTypeImage");
             gifMessage.setRemoteExtension(remoteExtension);
-            getContainer().proxy.sendMessage(gifMessage);
-
+            return gifMessage;
         } else {
             IMMessage imageMessage =
-                    MessageBuilder.createImageMessage(getContainer().account, getContainer().sessionType, new File(strings.get(0)));
-            getContainer().proxy.sendMessage(imageMessage);
+                    MessageBuilder.createImageMessage(account, sessionType, new File(path));
+            return imageMessage;
         }
+    }
+
+    private void sendPictureAndGif(ArrayList<String> strings) {
+        //发送图片和gif图
+        String path = strings.get(0);
+        getContainer().proxy.sendMessage(makePicAndGifMsg(path, getContainer().account, getContainer().sessionType));
     }
 }

@@ -432,7 +432,7 @@ public class TeamAVChatActivity extends StyleActivity {
         if (mFloatViewService != null) {
             mFloatViewService.showAudioUI();
             if (countTime == 0) {
-                mFloatViewService.setAudioTip(getString(R.string.text_wait_receiving));
+                mFloatViewService.setAudioTip(getString(R.string.text_wait_receive));
             } else {
                 mFloatViewService.startChronometer(countTime);
             }
@@ -763,7 +763,7 @@ public class TeamAVChatActivity extends StyleActivity {
                     // 发送控制指令
                     byte command = videoMute ? AVChatControlCommand.NOTIFY_VIDEO_OFF : AVChatControlCommand.NOTIFY_VIDEO_ON;
                     AVChatManager.getInstance().sendControlCommand(chatId, command, null);
-                    v.setBackgroundResource(videoMute ? R.drawable.dakaishiping_qun_s : R.drawable.dakaishiping_qun_n);
+                    v.setBackgroundResource(videoMute ? R.drawable.dakaishiping_qun_n : R.drawable.dakaishiping_qun_s);
                     updateSelfItemVideoState(!videoMute);
                     break;
                 case R.id.iv_mute:
@@ -774,7 +774,7 @@ public class TeamAVChatActivity extends StyleActivity {
                 case R.id.iv_hand_free:
                     // 听筒扬声器切换
                     AVChatManager.getInstance().setSpeaker(speakerMode = !speakerMode);
-                    v.setBackgroundResource(speakerMode ? R.drawable.mianti_qun_s : R.drawable.mianti_qun_n);
+                    v.setBackgroundResource(speakerMode ? R.drawable.mianti_qun_n : R.drawable.mianti_qun_s);
                     break;
 //                case R.id.ll_mute:
 //                    // 屏蔽用户音频

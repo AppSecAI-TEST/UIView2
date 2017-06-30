@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -66,6 +67,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -76,14 +78,16 @@ import rx.functions.Action3;
 /**
  * Created by hewking on 2017/3/10.
  */
-public class GroupChatUIView extends ChatUIView2 {
+public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdatelistener {
 
     public static final String TAG = GroupChatUIView.class.getSimpleName();
 
 
-    View layout;
-    TextView tv_announce;
-    LinearLayout ait_control_layout;
+    //view
+    private View layout;
+    private TextView tv_announce;
+    private LinearLayout ait_control_layout;
+    private ImageView iv_show_disturbing;
     private CheckBox cb_show;
     private TextView tv_title;
     private LinearLayout ll_switch;
@@ -98,13 +102,12 @@ public class GroupChatUIView extends ChatUIView2 {
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-
         rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_chat_messages_icon).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
                 if (team != null && team.isMyTeam()) {
-                    GroupInfoUIVIew.start(mParentILayout,mSessionId,sessionType);
+                    GroupInfoUIVIew.start(mParentILayout, mSessionId, sessionType, GroupChatUIView.this);
                 } else {
                     T_.info(mActivity.getString(R.string.team_invalid_tip));
                 }
@@ -118,7 +121,7 @@ public class GroupChatUIView extends ChatUIView2 {
                 .setOnInitTitleLayout(new TitleBarPattern.SingleTitleInit() {
                     @Override
                     public void onInitLayout(RTitleCenterLayout parent) {
-                        L.e("GroupChatUIView","getTitlebar");
+                        L.e("GroupChatUIView", "getTitlebar");
                         LinearLayout layout = (LinearLayout) LayoutInflater.from(mActivity)
                                 .inflate(R.layout.item_switch_annoncement, parent)
                                 .findViewById(R.id.ll_titlebar);
@@ -126,6 +129,7 @@ public class GroupChatUIView extends ChatUIView2 {
                         ll_switch = layout;
                         cb_show = (CheckBox) parent.findViewById(R.id.cb_show);
                         tv_title = (TextView) parent.findViewById(R.id.tv_title);
+                        iv_show_disturbing = (ImageView) parent.findViewById(R.id.iv_show_disturbing);
                     }
                 });
     }
@@ -134,7 +138,7 @@ public class GroupChatUIView extends ChatUIView2 {
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
         isVisible = true;
-        if(!checkInGroup()){
+        if (!checkInGroup()) {
             showNotice();
         }
 
@@ -144,7 +148,7 @@ public class GroupChatUIView extends ChatUIView2 {
             GroupAnnounceNotification announce = (GroupAnnounceNotification) notification;
             if (isVisible) {
 //                mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),announce.getContent()));
-                mParentILayout.startIView(new GroupAnnnounceUpdateDialog(mSessionId,announce));
+                mParentILayout.startIView(new GroupAnnnounceUpdateDialog(mSessionId, announce));
                 tv_announce.setText(announce.getContent());
             }
         }
@@ -179,7 +183,6 @@ public class GroupChatUIView extends ChatUIView2 {
         }
         // 定制加号点开后可以包含的操作， 默认已经有图片，视频等消息了
         avChatAction = new TeamAVChatCommandItem(AVChatType.VIDEO);
-        TeamAVChatHelper.sharedInstance().registerObserver(true);
         list.add(avChatAction);
         return list;
     }
@@ -194,6 +197,11 @@ public class GroupChatUIView extends ChatUIView2 {
                     + "(" + mGroupDesc.getMemberCount() + ")");
         } else {
             tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId));
+        }
+
+        Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
+        if (team != null && team.isMyTeam()) {
+            iv_show_disturbing.setVisibility(team.mute() ? View.VISIBLE : View.GONE);
         }
 
         ll_switch.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +228,7 @@ public class GroupChatUIView extends ChatUIView2 {
                     });
                     IMMessage target = aitList.get(0);
                     int index = mChatControl.containTarget(target);
-                    if ( index != -1) {
+                    if (index != -1) {
                         mChatControl.scrollToTarget(index);
                     } else {
                         fetchAnchorAndScrollTo(target);
@@ -235,9 +243,9 @@ public class GroupChatUIView extends ChatUIView2 {
             layout.setVisibility(View.VISIBLE);
         }
 
-        float start = show? ScreenUtil.dip2px(- 40):0;
-        float end = show?0:ScreenUtil.dip2px(- 40);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(layout,"translationY",start,end);
+        float start = show ? ScreenUtil.dip2px(-40) : 0;
+        float end = show ? 0 : ScreenUtil.dip2px(-40);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(layout, "translationY", start, end);
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
@@ -246,7 +254,7 @@ public class GroupChatUIView extends ChatUIView2 {
     private void animAit() {
         float start = 0;
         float end = ait_control_layout.getMeasuredWidth();
-        ObjectAnimator animator = ObjectAnimator.ofFloat(ait_control_layout,"translationX",start,end);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ait_control_layout, "translationX", start, end);
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
@@ -311,20 +319,20 @@ public class GroupChatUIView extends ChatUIView2 {
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType , IMMessage anchor, Set<IMMessage> aitMessages,SessionCustomization customization) {
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType, IMMessage anchor, Set<IMMessage> aitMessages, SessionCustomization customization) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
-        bundle.putSerializable(KEY_ANCHOR,anchor);
+        bundle.putSerializable(KEY_ANCHOR, anchor);
         bundle.putSerializable(KEY_AITMESSAGES, (Serializable) aitMessages);
-        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION,customization);
+        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION, customization);
         mLayout.startIView(new GroupChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
-        if(checkInGroup()) {
+        if (checkInGroup()) {
             add(RRetrofit.create(GroupChatService.class)
                     .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
                     .compose(Rx.transformer(GroupDescBean.class))
@@ -386,7 +394,7 @@ public class GroupChatUIView extends ChatUIView2 {
         mInputView.setOnMentionInputListener(new ExEditText.OnMentionInputListener() {
             @Override
             public void onMentionCharacterInput() {
-                GroupMemberSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null,bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                GroupMemberSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null, bean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                     @Override
                     public void call(UIBaseRxView uiBaseRxView, List<AbsContactItem> items, RequestCallback callback) {
                         if (items.size() == 0) {
@@ -465,10 +473,10 @@ public class GroupChatUIView extends ChatUIView2 {
 
         if (isVisible) {
 //            mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),event.notification.getContent()));
-            mParentILayout.startIView(new GroupAnnnounceUpdateDialog(mSessionId,event.notification));
+            mParentILayout.startIView(new GroupAnnnounceUpdateDialog(mSessionId, event.notification));
         }
 
-        L.i(TAG,event.notification.getContent());
+        L.i(TAG, event.notification.getContent());
 
     }
 
@@ -478,9 +486,9 @@ public class GroupChatUIView extends ChatUIView2 {
             return;
         }
 
-        mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_group_dissolove),event.notification.getMsg()));
+        mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_group_dissolove), event.notification.getMsg()));
 
-        L.i(TAG,event.notification.getMsg());
+        L.i(TAG, event.notification.getMsg());
     }
 
 
@@ -501,5 +509,28 @@ public class GroupChatUIView extends ChatUIView2 {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onGroupMemebeerChanged() {
+
+    }
+
+    @Override
+    public void onGroupNameChanged(String name) {
+        tv_title.setText(String.format(Locale.CANADA,"%s(%d)", name, mGroupDesc.getMemberCount()));
+    }
+
+    @Override
+    public void onGroupTop() {
+
+    }
+
+    @Override
+    public void onGroupNotifySetting() {
+        final Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
+        if (team != null && team.isMyTeam()) {
+            iv_show_disturbing.setVisibility(team.mute() ? View.VISIBLE : View.GONE);
+        }
     }
 }

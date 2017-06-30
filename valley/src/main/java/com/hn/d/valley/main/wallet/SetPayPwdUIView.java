@@ -83,7 +83,7 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     protected void createItems(List<ViewItemInfo> items) {
 
         int left = mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi);
-        int top = mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xxxhdpi);
+//        int top = mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xxxhdpi);
 
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
@@ -125,7 +125,7 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
         }));
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(top) {
+        items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 Button btn_next = holder.v(R.id.btn_send);
@@ -174,8 +174,6 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         SetPayPwdUIView.this.code = code;
                     }
                 }));
-
-
     }
 
 }

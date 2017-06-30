@@ -72,11 +72,18 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     private boolean isSelfAdmin = false;
     private boolean isSelfManager = false;
 
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType) {
+    //listener
+    private GroupInfoUpdatelistener infoUpdatelistener;
+
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType,GroupInfoUpdatelistener listener) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
-        mLayout.startIView(new GroupInfoUIVIew(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
+        mLayout.startIView(new GroupInfoUIVIew(listener), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
+    }
+
+    public GroupInfoUIVIew(GroupInfoUpdatelistener listener) {
+        infoUpdatelistener = listener;
     }
 
     @Override
@@ -306,13 +313,12 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
                             SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,1);
-
                         } else {
                             SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,0);
                         }
-
                         RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
-
+                        //callback
+                        infoUpdatelistener.onGroupTop();
                     }
                 });
 
@@ -336,6 +342,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         NIMClient.getService(TeamService.class).muteTeam(mSessionId, isChecked).setCallback(new com.netease.nimlib.sdk.RequestCallback<Void>() {
                             @Override
                             public void onSuccess(Void param) {
+                                infoUpdatelistener.onGroupNotifySetting();
                                 MsgNotifySetting.instance().enableGroupMsgNotify(isChecked);
                             }
 
@@ -646,7 +653,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
     }
 
-    private void editGroupName(String name) {
+    private void editGroupName(final String name) {
         if (mGroupDescBean == null) {
             return;
         }
@@ -658,6 +665,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
+                        infoUpdatelistener.onGroupNameChanged(name);
                     }
 
                     @Override

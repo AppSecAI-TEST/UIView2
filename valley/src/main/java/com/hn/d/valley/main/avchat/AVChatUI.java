@@ -1083,7 +1083,7 @@ public class AVChatUI implements AVChatUIListener {
         if (mFloatViewService != null) {
             mFloatViewService.showAudioUI();
             if (countTime == 0) {
-                mFloatViewService.setAudioTip(mActivity.getString(R.string.text_wait_receiving));
+                mFloatViewService.setAudioTip(mActivity.getString(R.string.text_wait_receive));
             } else {
                 mFloatViewService.startChronometer(countTime);
             }

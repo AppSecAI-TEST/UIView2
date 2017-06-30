@@ -16,7 +16,7 @@
         android:id="@+id/image_view"
         android:layout_width="@dimen/base_75dpi"
         android:layout_height="@dimen/base_55dpi"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/zhanweitu_1" />
 
     <TextView

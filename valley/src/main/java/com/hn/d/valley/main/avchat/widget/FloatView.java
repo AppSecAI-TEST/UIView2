@@ -319,9 +319,10 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
             }
         }
 
-        if (getVisibility() != VISIBLE) {
+//        if (getVisibility() != VISIBLE) {
             relocate();
             showVideoUI();
+
             iv_max_sclae.setVisibility(VISIBLE);
             micro_preview_render.setVisibility(VISIBLE);
             setVisibility(VISIBLE);
@@ -334,7 +335,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
                     micro_preview_render.setVisibility(GONE);
                 }
             },5000);
-        }
+//        }
     }
 
     public void setAudioTip(String text) {

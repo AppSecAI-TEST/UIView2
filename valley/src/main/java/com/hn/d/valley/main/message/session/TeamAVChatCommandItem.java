@@ -106,7 +106,6 @@ public class TeamAVChatCommandItem extends AVChatCommandItem {
                         transaction = null;
                         T_.show(getContainer().activity.getString(R.string.t_avchat_not_start_with_less_member));
                     } else {
-//                        NimUIKit.startContact Select(getActivity(), getContactSelectOption(tid), TeamRequestCode.REQUEST_TEAM_VIDEO);
                         if (TextUtils.isEmpty(gid)) {
                             return;
                         }

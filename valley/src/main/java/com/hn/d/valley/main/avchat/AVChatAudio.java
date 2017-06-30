@@ -16,6 +16,8 @@ import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.main.avchat.constant.CallStateEnum;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.lzy.imagepicker.adapter.ImageViewHolder;
+import com.netease.nimlib.sdk.avchat.AVChatManager;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -35,19 +37,13 @@ public class AVChatAudio implements View.OnClickListener{
     private HnGlideImageView headImg;
     private TextView nickNameTV;
     private Chronometer time;
-//    private TextView wifiUnavailableNotifyTV;
     private TextView notifyTV;
     private ImageView ivPreImg;
-//    private TextView netUnstableTV;
 
     private View iv_avaudio_scale;
 
     private View ll_avaudio_bottom;
-//    private ToggleView muteToggle;
-//    private ToggleView speakerToggle;
-//    private View recordToggle;
-//    private Button recordToggleButton;
-//    private View hangup;
+
 
     // bottom control
     private View ll_avaudio_jinyin;
@@ -56,15 +52,8 @@ public class AVChatAudio implements View.OnClickListener{
     private View ll_avaudio_receive;
     private View ll_avaudio_audiotovideo;
 
-
-//    private View refuse_receive;
-//    private TextView refuseTV;
-//    private TextView receiveTV;
-
-    //record
-//    private View recordView;
-//    private View recordTip;
-//    private View recordWarning;
+    private ImageView iv_mute;
+    private ImageView iv_speaker;
 
     // data
     private AVChatUI manager;
@@ -177,6 +166,9 @@ public class AVChatAudio implements View.OnClickListener{
         iv_avaudio_scale = rootView.findViewById(R.id.iv_avaudio_scale);
         ivPreImg = (ImageView) rootView.findViewById(R.id.iv_preview_img);
 
+        iv_speaker = (ImageView) rootView.findViewById(R.id.iv_speaker);
+        iv_mute = (ImageView) rootView.findViewById(R.id.iv_mute);
+
         ll_avaudio_bottom = rootView.findViewById(R.id.audio_call_bottom_switch_layout);
         ll_avaudio_audiotovideo = ll_avaudio_bottom.findViewById(R.id.ll_avaudio_audiotovideo);
         ll_avaudio_jinyin = ll_avaudio_bottom.findViewById(R.id.ll_avaudio_jinyin);
@@ -190,24 +182,6 @@ public class AVChatAudio implements View.OnClickListener{
         ll_avaudio_audiotovideo.setOnClickListener(this);
         ll_avaudio_logout.setOnClickListener(this);
         iv_avaudio_scale.setOnClickListener(this);
-
-//        recordToggle = ll_avaudio_bottom.findViewById(R.id.avchat_audio_record);
-//        recordToggleButton = (Button) ll_avaudio_bottom.findViewById(R.id.avchat_audio_record_button);
-
-//        hangup = ll_avaudio_bottom.findViewById(R.id.avchat_audio_hangup);
-//        hangup.setOnClickListener(this);
-//        recordToggle.setOnClickListener(this);
-//        recordToggle.setEnabled(false);
-
-//        refuse_receive = rootView.findViewById(R.id.avchat_audio_refuse_receive);
-//        refuseTV = (TextView) refuse_receive.findViewById(R.id.refuse);
-//        receiveTV = (TextView) refuse_receive.findViewById(R.id.receive);
-//        refuseTV.setOnClickListener(this);
-//        receiveTV.setOnClickListener(this);
-
-//        recordView = rootView.findViewById(R.id.avchat_record_layout);
-//        recordTip = rootView.findViewById(R.id.avchat_record_tip);
-//        recordWarning = rootView.findViewById(R.id.avchat_record_warning);
 
         init = true;
     }
@@ -425,9 +399,11 @@ public class AVChatAudio implements View.OnClickListener{
                 listener.toggleSpeaker();
                 break;
             case R.id.ll_avaudio_jinyin:
+                iv_mute.setBackgroundResource(!AVChatManager.getInstance().isLocalAudioMuted() ? R.drawable.jingyin_yuyinliaotian_n :R.drawable.jingyin_yuyinliaotian_s );
                 listener.toggleMute();
                 break;
             case R.id.avchat_audio_speaker:
+                iv_speaker.setBackgroundResource(!AVChatManager.getInstance().speakerEnabled() ? R.drawable.mianti_yuyinliaotian_n : R.drawable.mianti_yuyinliaotian_s);
                 listener.toggleSpeaker();
                 break;
             case R.id.ll_avaudio_audiotovideo:

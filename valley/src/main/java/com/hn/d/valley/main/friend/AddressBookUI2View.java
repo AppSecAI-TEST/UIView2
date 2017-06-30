@@ -483,7 +483,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     Glide.with(mActivity)
                             .load(ContactsPickerHelper.getPhotoByte(mActivity, item.getContactsInfo().contactId))
                             .transform(new GlideCircleTransform(mActivity))
-                            .placeholder(R.drawable.defauit_avatar_contact)
+                            .placeholder(R.drawable.default_avatar)
                             .into(holder.imgV(R.id.image_view));
                 }
 

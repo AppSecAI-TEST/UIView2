@@ -81,6 +81,7 @@ public class SessionHelper {
 
     public static void init() {
         setSessionListener();
+        getTeamCustomization();
     }
 
     public static void startSession(ILayout mlayout, String sessionId , SessionTypeEnum sessionType) {
@@ -121,8 +122,13 @@ public class SessionHelper {
         return p2pCustomization;
 
     }
+
     private static SessionCustomization getTeamCustomization() {
         if (teamCustomization == null) {
+
+            // register 群语音监听
+            TeamAVChatHelper.sharedInstance().registerObserver(true);
+
             teamCustomization = new SessionCustomization() {
                 @Override
                 public List<CommandItemInfo> createItems() {

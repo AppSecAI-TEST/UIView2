@@ -71,7 +71,7 @@ public class TeamAVChatItemViewHolder extends TeamAVChatItemViewHolderBase {
                 .load(thumbUrl).asBitmap().centerCrop()
                 .placeholder(defaultResId)
                 .error(defaultResId)
-                .override(DEFAULT_AVATAR_THUMB_SIZE, DEFAULT_AVATAR_THUMB_SIZE)
+//                .override(DEFAULT_AVATAR_THUMB_SIZE, DEFAULT_AVATAR_THUMB_SIZE)
                 .into(avatarImage);
 
         if (data.state == TeamAVChatItem.STATE.STATE_WAITING) {

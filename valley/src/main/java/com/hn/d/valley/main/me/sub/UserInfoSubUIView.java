@@ -14,7 +14,9 @@ import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -115,6 +117,9 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
                     @Override
                     public boolean onBindView(final RBaseViewHolder holder, final int position, final String bean) {
+                        // 设置宽高
+                        UI.setViewHeight(holder.itemView, ScreenUtil.dip2px(100));
+                        UI.setViewWidth(holder.itemView,ScreenUtil.dip2px(100));
                         if (RUtils.isLast(stringList, position)) {
                             if (mUserInfoBean.isMe()) {
                                 holder.imgV(R.id.image_view).setImageResource(R.drawable.shangchuanzhaopian_zhaopianqiang);

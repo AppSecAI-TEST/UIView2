@@ -100,7 +100,7 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(3 * top) {
+        items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 Button button = holder.v(R.id.btn_send);
@@ -112,7 +112,7 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(isBind) {
+                        if (isBind) {
                             bindAlipay();
                         } else {
                             unBindAlipay();
@@ -142,7 +142,7 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
                     @Override
                     public void onSucceed(String beans) {
-                        parseResult(beans,false);
+                        parseResult(beans, false);
                     }
                 });
     }
@@ -168,21 +168,23 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
                     @Override
                     public void onSucceed(String beans) {
-                        parseResult(beans,true);
+                        parseResult(beans, true);
                     }
                 });
     }
 
     /**
      * 400 参数缺失
-     405 未绑定手机
-     406 支付宝已经被其他用户绑定
-     500 服务器错误
-     701 当日操作次数已达上限
-     601 账户还有余额，不允许删除提现账户
+     * 405 未绑定手机
+     * 406 支付宝已经被其他用户绑定
+     * 500 服务器错误
+     * 701 当日操作次数已达上限
+     * 601 账户还有余额，不允许删除提现账户
+     *
      * @param beans
      */
-    private void parseResult(String beans,boolean isBind) {
+    private void parseResult(String beans, boolean isBind) {
+
         int code = -1;
         int data = 0;
         try {
@@ -202,19 +204,23 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
             RBus.post(new WalletAccountUpdateEvent());
 
-        } else if (400 == code) {
-            T_.show("参数缺失");
-        } else if (405 == code) {
-            T_.show("未绑定手机");
-        } else if (406 == code) {
-            T_.show("支付宝已经被其他用户绑定");
-        } else if (500 == code) {
-            T_.show("服务器错误");
-        } else if (701 == code) {
-            T_.show("当日操作次数已达上限");
-        } else if (601 == code) {
-            T_.show("账户还有余额，不允许删除提现账户");
+            if (200 == code) {
+                T_.show(getString(R.string.text_refund_success));
+                RBus.post(new WalletAccountUpdateEvent());
+            } else if (400 == code) {
+                T_.show(getString(R.string.text_params_lose));
+            } else if (405 == code) {
+                T_.show(getString(R.string.text_unbind_phone));
+            } else if (406 == code) {
+                T_.show(getString(R.string.text_alipay_had_bind));
+            } else if (500 == code) {
+                T_.show(getString(R.string.tex_server_error));
+            } else if (701 == code) {
+                T_.show(getString(R.string.text_operate_count_enough));
+            } else if (601 == code) {
+                T_.show(getString(R.string.text_cannot_delete_account));
+            }
+            finishIView();
         }
-        finishIView();
     }
 }

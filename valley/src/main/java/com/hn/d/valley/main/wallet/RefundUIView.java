@@ -1,6 +1,9 @@
 package com.hn.d.valley.main.wallet;
 
+import android.text.Editable;
 import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.Gravity;
@@ -12,14 +15,26 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
+import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.x5.X5WebUIView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -35,6 +50,9 @@ import java.util.List;
  * Version: 1.0.0
  */
 public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
+
+    ExEditText et_money;
+    Button btn_next;
 
     public RefundUIView() {
 
@@ -73,17 +91,16 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 infoLayout.setItemText(mActivity.getString(R.string.text_receive_account));
 
                 if (WalletHelper.getInstance().getWalletAccount().hasAlipay()) {
-                    infoLayout.setItemDarkText(String.format(mActivity.getString(R.string.text_alipay_account),WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0]));
+                    infoLayout.setItemDarkText(String.format(mActivity.getString(R.string.text_alipay_account), WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0]));
                 } else {
                     infoLayout.setItemDarkText(mActivity.getString(R.string.text_please_bind_alipay));
                 }
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         if (WalletHelper.getInstance().getWalletAccount().hasAlipay()) {
                             mParentILayout.startIView(new BindAliPayTipUIView(true));
-                        }  else {
+                        } else {
                             mParentILayout.startIView(new BindAliPayTipUIView(false));
                         }
                     }
@@ -96,7 +113,24 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView tv_tip = holder.v(R.id.tv_tip);
                 TextView tv_note = holder.v(R.id.tv_note);
-                final ExEditText et_money = holder.v(R.id.et_count);
+                et_money = holder.v(R.id.et_count);
+
+                et_money.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        btn_next.setEnabled(!TextUtils.isEmpty(s.toString()));
+                    }
+                });
 
                 tv_tip.setText(R.string.text_write_refund_money);
                 String prestr = mActivity.getString(R.string.text_can_refund_money) + WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + " ,";
@@ -117,20 +151,30 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                             }
                         })
                         .create());
+
             }
         }));
 
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(5 * top) {
+        items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                Button btn_next = holder.v(R.id.btn_send);
+                btn_next = holder.v(R.id.btn_send);
                 btn_next.setText(R.string.text_next_step);
+                btn_next.setEnabled(false);
                 btn_next.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        // TODO: 2017/5/5 弹出输入框 支付宝
-
+                        String value = et_money.getText().toString();
+                        if (TextUtils.isEmpty(value)) {
+                            T_.show(getString(R.string.text_refun_input_none_tip));
+                            btn_next.setEnabled(false);
+                        } else if (WalletHelper.getInstance().getWalletAccount().getMoney() / 100f < Float.valueOf(value)) {
+                            T_.show(getString(R.string.text_refun_money_tip));
+                            btn_next.setEnabled(false);
+                        } else {
+                            btn_next.setEnabled(true);
+                            cashoutRequest();
+                        }
                     }
                 });
             }
@@ -169,6 +213,67 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             }
         }));
 
+    }
+
+    private void cashoutRequest() {
+        String money = et_money.getText().toString();
+
+        add(RRetrofit.create(WalletService.class)
+                .cashoutRequest(Param.buildInfoMap(
+                        "uid:" + UserCache.getUserAccount(),
+                        "type:" + 0,
+                        "account:" + WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0],
+                        "money:" + money))
+                .compose(WalletHelper.getTransformer())
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        HnLoading.show(getILayout());
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                        HnLoading.hide();
+                    }
+
+                    @Override
+                    public void onSucceed(String code) {
+                        super.onSucceed(code);
+                        HnLoading.hide();
+                        parseResult(code);
+                    }
+                }));
+    }
+
+    private void parseResult(String beans) {
+        int code = -1;
+        int data = 0;
+        try {
+            JSONObject jsonObject = new JSONObject(beans);
+            code = jsonObject.optInt("code");
+            data = jsonObject.optInt("data");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (200 == code) {
+            T_.show(getString(R.string.text_refund_success));
+            RBus.post(new WalletAccountUpdateEvent());
+        } else if (400 == code) {
+            T_.show(getString(R.string.text_params_lose));
+        } else if (401 == code){
+            T_.show(getString(R.string.text_pwd_error));
+        } else if (402 == code) {
+            T_.show(getString(R.string.text_account_not_set));
+        } else if (403 == code) {
+            T_.show(getString(R.string.text_account_incorrect));
+        } else if (500 == code) {
+            T_.show(getString(R.string.tex_server_error));
+        }
+        finishIView();
     }
 
 
