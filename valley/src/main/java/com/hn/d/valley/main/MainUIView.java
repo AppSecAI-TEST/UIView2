@@ -492,4 +492,9 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
             mHomeUIView.onJumpToDynamicListAction();
         }
     }
+
+    @Override
+    public boolean haveOtherILayout() {
+        return true;
+    }
 }
