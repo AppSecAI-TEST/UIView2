@@ -136,6 +136,19 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/other_like_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/base_xxhdpi"
+                android:layout_marginStart="@dimen/base_xxhdpi"
+                android:layout_marginTop="@dimen/base_xxhdpi"
+                android:background="@color/forward_bg_color"
+                android:divider="@drawable/base_shape_line"
+                android:dividerPadding="@dimen/base_xxhdpi"
+                android:orientation="vertical"
+                android:showDividers="middle"/>
+
             <View
                 android:id="@+id/line2"
                 android:layout_width="match_parent"

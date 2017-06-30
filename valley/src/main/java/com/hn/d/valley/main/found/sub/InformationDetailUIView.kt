@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.angcyo.library.utils.L
@@ -42,7 +43,9 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.HotInfoListBean
 import com.hn.d.valley.bean.ILikeData
 import com.hn.d.valley.bean.InformationDetailBean
+import com.hn.d.valley.bean.NewsBean
 import com.hn.d.valley.cache.UserCache
+import com.hn.d.valley.main.message.service.SearchService
 import com.hn.d.valley.service.NewsService
 import com.hn.d.valley.sub.user.PublishDynamicUIView2
 import com.hn.d.valley.sub.user.dialog.DynamicShareDialog
@@ -478,6 +481,7 @@ class InformationDetailUIView : BaseContentUIView {
                             initControlLayout()
                             initTagsLayout()
                             initLikeView()
+                            initOtherListLayout(detailBean.tagList[0])
 
                             uiTitleBarContainer.showRightItem(0)
                         }
@@ -487,6 +491,39 @@ class InformationDetailUIView : BaseContentUIView {
                         super.onEnd(isError, errorCode, isNoNetwork, e)
                         if (isError) {
                             uiTitleBarContainer.hideRightItem(0)
+                        }
+                    }
+                })
+        )
+    }
+
+    /**相关阅读填充*/
+    private fun initOtherListLayout(classify: String) {
+        add(RRetrofit
+                .create(SearchService::class.java)
+                .search(Param.buildInfoMap("type:news",
+                        "content:" + classify,
+                        "uid:" + UserCache.getUserAccount(),
+                        "amount:4"))
+                .compose(Rx.transformer(NewsBean::class.java))
+                .subscribe(object : BaseSingleSubscriber<NewsBean>() {
+
+                    override fun onSucceed(bean: NewsBean?) {
+                        if (bean == null) {
+
+                        } else {
+                            bean.news.map { b ->
+                                val viewGroup: LinearLayout = mViewHolder.v(R.id.other_like_layout)
+                                val item = TextView(mActivity)
+                                item.text = b.title
+                                item.gravity = Gravity.CENTER_VERTICAL
+
+                                val offset = getDimensionPixelOffset(R.dimen.base_xhdpi)
+                                item.setPadding(offset, 0, offset, 0)
+
+                                item.setOnClickListener { mParentILayout.startIView(InformationDetailUIView(b.id.toString())) }
+                                viewGroup.addView(item, LinearLayout.LayoutParams(-1, getDimensionPixelOffset(R.dimen.base_item_size)))
+                            }
                         }
                     }
                 })
