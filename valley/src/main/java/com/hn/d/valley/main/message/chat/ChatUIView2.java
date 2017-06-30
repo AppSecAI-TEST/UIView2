@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.Chronometer;
@@ -117,7 +118,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     FrameLayout mLayoutPlayAudio;
     FrameLayout mOverLayout;
     RelativeLayout mEmojiControlLayout;
-    RelativeLayout mCommandControlLayout;
+    ViewGroup mCommandControlLayout;
     CheckBox mMessageVoiceBox;
     LinearLayout wrap_add_view;
 

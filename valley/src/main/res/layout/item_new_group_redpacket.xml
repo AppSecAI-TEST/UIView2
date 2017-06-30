@@ -58,7 +58,7 @@
 
             <TextView
                 android:id="@+id/tv_cursor"
-                android:hint="0.01"
+                android:hint="0.00"
                 android:gravity="center_vertical|right|end"
                 android:paddingEnd="@dimen/base_xhdpi"
                 android:paddingStart="@dimen/base_xhdpi"
