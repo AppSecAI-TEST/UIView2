@@ -570,7 +570,7 @@ public class X5WebView extends WebView implements IWebView {
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         boolean result = super.drawChild(canvas, child, drawingTime);
-        if (BuildConfig.SHOW_DEBUG) {
+        if (BuildConfig.DEBUG) {
             canvas.save();
             mPaint.setTextSize(30f);
             mPaint.setColor(Color.RED);

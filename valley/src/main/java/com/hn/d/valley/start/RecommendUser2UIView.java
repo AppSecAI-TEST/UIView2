@@ -22,12 +22,10 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.RecommendUserBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.MainUIView;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.start.service.StartService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.Preconditions;
-import com.hn.d.valley.widget.HnLoading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +54,10 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                 .setListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        finishIView();
 //                        HnUIMainActivity.launcher(mActivity, true);
 //                        mActivity.finish();
-                        startIView(new MainUIView());
+                        //startIView(new MainUIView());
                     }
                 }));
         return super.getTitleBar().setRightItems(rightItems).setTitleHide(true)
@@ -107,29 +106,30 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
         tv_focus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HnLoading.show(mILayout);
+//                HnLoading.show(mILayout);
+                finishIView();
                 focusRecommendUser(mUserAdapter.getSelectorData());
-                tv_focus.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        HnLoading.hide();
-                    }
-                }, 3000);
+//                tv_focus.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        HnLoading.hide();
+//                    }
+//                }, 3000);
             }
         });
     }
 
     private void focusRecommendUser(List<RecommendUserBean> allDatas) {
 
-        add(RRetrofit.create(UserService.class)
+        RRetrofit.create(UserService.class)
                 .attentionBatch(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(allDatas)))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onSucceed(String bean) {
-                        startIView(new MainUIView());
+                        //startIView(new MainUIView());
                     }
-                }));
+                });
 
 //        Observable.from(allDatas)
 //                .map(new Func1<RecommendUserBean, String>() {

@@ -32,6 +32,7 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
+import com.angcyo.uiview.viewgroup.RRelativeLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
@@ -67,7 +68,7 @@ public class ImagePagerUIView extends UIIViewImpl {
     private ViewPagerFixed mMViewPager;
     private PinchCircleIndicator mMCircleIndicator;
     private boolean isToFinish;
-    private RelativeLayout mMRootLayout;
+    private RRelativeLayout mMRootLayout;
     private int startPosition = 0;
     private ValueAnimator mValueAnimator;
     private int mLastTranColor = Color.BLACK;
@@ -190,7 +191,7 @@ public class ImagePagerUIView extends UIIViewImpl {
 
     @Override
     protected View inflateBaseView(FrameLayout container, LayoutInflater inflater) {
-        mMRootLayout = new RelativeLayout(mActivity);
+        mMRootLayout = new RRelativeLayout(mActivity);
         mMViewPager = new ViewPagerFixed(mActivity);
         mMCircleIndicator = new PinchCircleIndicator(mActivity);
         mTextIndicator = new TextIndicator(mActivity);
@@ -215,7 +216,12 @@ public class ImagePagerUIView extends UIIViewImpl {
         mTextIndicator.setAutoHide(false);
         mMRootLayout.addView(mTextIndicator, indicatorParams);
 
-        mMRootLayout.setClickable(true);
+        mMRootLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animToFinish();
+            }
+        });
         container.addView(mMRootLayout, new ViewGroup.LayoutParams(-1, -1));
 
         mIViewConfigCallback.onInflateBaseView(mMRootLayout, inflater);

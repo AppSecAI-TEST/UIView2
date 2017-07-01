@@ -642,7 +642,9 @@ public class UserDiscussItemControl {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
                             UserDiscussItemControl.displayImage(imageView, url,
-                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, !isInDetail, imageSize);
+                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
+                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
+                                    !isInDetail, imageSize);
                         }
                     }
 
@@ -1731,7 +1733,7 @@ public class UserDiscussItemControl {
                         }
 
                         if (imageView instanceof RImageView) {
-                            ((RImageView) imageView).setImageBitmap(imageView.getDrawable(), resource);
+                            ((RImageView) imageView).setImageBitmapNoCrop(imageView.getDrawable(), resource);
                         } else {
                             imageView.setImageBitmap(resource);
                         }

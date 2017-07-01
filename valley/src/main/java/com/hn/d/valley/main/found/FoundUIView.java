@@ -12,6 +12,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.main.MainUIView;
+import com.hn.d.valley.main.found.sub.GameWebUIView;
 import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.found.sub.HotInformationUIView;
 import com.hn.d.valley.main.found.sub.SearchUIView;
@@ -135,7 +136,7 @@ public class FoundUIView extends BaseItemUIView {
                 baseInitItem(holder, R.drawable.animal, getString(R.string.game), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new X5WebUIView(GAME_URL));
+                        mParentILayout.startIView(new GameWebUIView());
                     }
                 });
             }

@@ -103,6 +103,11 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     }
 
     @Override
+    public boolean canTryCaptureView() {
+        return false;
+    }
+
+    @Override
     protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_main);
     }
@@ -491,10 +496,5 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
         if (mHomeUIView != null) {
             mHomeUIView.onJumpToDynamicListAction();
         }
-    }
-
-    @Override
-    public boolean haveOtherILayout() {
-        return true;
     }
 }
