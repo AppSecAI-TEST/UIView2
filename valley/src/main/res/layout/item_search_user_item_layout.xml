@@ -124,7 +124,7 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/zhanweitu_1"
                             android:visibility="gone"
-                            tools:visibility="visible" />
+                            tools:visibility="visible"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -248,6 +248,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:background="@drawable/base_bg2_selector"
+                android:paddingStart="@dimen/base_xhdpi"
                 android:src="@drawable/more_dongtai"/>
 
         </LinearLayout>

@@ -1,9 +1,7 @@
 package com.hn.d.valley.control;
 
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -645,6 +643,7 @@ public class UserDiscussItemControl {
                                     isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
                                     isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
                                     !isInDetail, imageSize);
+//                            imageView.setImageResource(R.drawable.zhanweitu_1);
                         }
                     }
 
@@ -1648,7 +1647,7 @@ public class UserDiscussItemControl {
                 Ok.instance().type(url, new Ok.OnImageTypeListener() {
                     @Override
                     public void onImageType(Ok.ImageType imageType) {
-                        L.d("call: onImageType([imageType])-> " + url + " : " + imageType);
+                        L.d("call: onImageType([imageType])-> " + url + " : " + imageType + " qw:" + width + " qh:" + height);
 
                         if (imageType != Ok.ImageType.UNKNOWN) {
                             if (!noGif && imageType == Ok.ImageType.GIF) {
@@ -1700,51 +1699,73 @@ public class UserDiscussItemControl {
 //            ((RImageView) imageView).setShowGifTip(false);
 //        }
 
+        if (imageSize == 1) {
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        } else {
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
         Glide.with(ValleyApp.getApp())
                 .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
                 .asBitmap()
                 .placeholder(R.drawable.zhanweitu_1)
+                .error(R.drawable.zhanweitu_1)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        if (imageView == null || resource == null) {
-                            return;
-                        }
+                .into(imageView);
 
-                        if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
-                            return;
-                        }
-
-                        int w = resource.getWidth();
-                        int h = resource.getHeight();
-                        L.d("call: onResourceReady([resource, glideAnimation])-> " + url + " w:" +
-                                w + " H:" + h);
-
-                        int abs = Math.abs(w - h);
-
-                        //自动根据图片的长宽差, 选择缩放类型
-                        if (width <= 0 && height <= 0) {
-                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        } else if (imageSize <= 1 /*|| abs < Math.min(w / 4, h / 4)*/) {
-                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                        } else {
-                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        }
-
-                        if (imageView instanceof RImageView) {
-                            ((RImageView) imageView).setImageBitmapNoCrop(imageView.getDrawable(), resource);
-                        } else {
-                            imageView.setImageBitmap(resource);
-                        }
-                    }
-
-                    @Override
-                    public void onLoadStarted(Drawable placeholder) {
-                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        imageView.setImageResource(R.drawable.zhanweitu_1);
-                    }
-                });
+//        if (imageSize == 1) {
+//            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//            Glide.with(ValleyApp.getApp())
+//                    .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
+//                    .placeholder(R.drawable.zhanweitu_1)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(imageView);
+//        } else {
+//
+//            Glide.with(ValleyApp.getApp())
+//                    .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
+//                    .asBitmap()
+//                    .placeholder(R.drawable.zhanweitu_1)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                            if (imageView == null || resource == null) {
+//                                return;
+//                            }
+//
+//                            if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+//                                return;
+//                            }
+//
+//                            int w = resource.getWidth();
+//                            int h = resource.getHeight();
+//                            L.d("call: onResourceReady([resource, glideAnimation])-> " + url + " w:" +
+//                                    w + " H:" + h);
+//
+//                            int abs = Math.abs(w - h);
+//
+//                            //自动根据图片的长宽差, 选择缩放类型
+//                            if (width <= 0 && height <= 0) {
+//                                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                            } else if (imageSize <= 1 /*|| abs < Math.min(w / 4, h / 4)*/) {
+//                                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//                            } else {
+//                                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                            }
+//
+//                            if (imageView instanceof RImageView && (width != -1 && height != -1 /**资讯加载图片不处理渐变动画*/)) {
+//                                ((RImageView) imageView).setImageBitmapNoCrop(imageView.getDrawable(), resource);
+//                            } else {
+//                                imageView.setImageBitmap(resource);
+ //                        }
+//
+//                        @Override
+//                        public void onLoadStarted(Drawable placeholder) {
+//                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                            imageView.setImageResource(R.drawable.zhanweitu_1);
+//                        }
+//                    });
+//        }
     }
 
     public static void displayVoiceImage(final ImageView imageView, String url, int width, int height, boolean blur) {

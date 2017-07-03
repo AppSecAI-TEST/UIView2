@@ -136,7 +136,6 @@ public class HnGlideImageView extends CircleImageView {
         if (TextUtils.isEmpty(url)) {
             return;
         }
-
         CharSequence description = getContentDescription();
         if (description != null && description.toString().contains("circle2")) {
             post(new Runnable() {
@@ -151,9 +150,10 @@ public class HnGlideImageView extends CircleImageView {
                     if (!anim) {
                         builder.dontAnimate();
                     }
-                    if (getDrawable() != null) {
-                        builder.placeholder(getDrawable());
-                    }
+//                    if (getDrawable() != null) {
+//                        builder.placeholder(getDrawable());
+//                    }
+                    builder.placeholder(R.drawable.defauit_avatar_contact);
                     builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(new SimpleTarget<Bitmap>() {
                         @Override
@@ -176,9 +176,10 @@ public class HnGlideImageView extends CircleImageView {
                     if (!anim) {
                         builder.dontAnimate();
                     }
-                    if (getDrawable() != null) {
-                        builder.placeholder(getDrawable());
-                    }
+//                    if (getDrawable() != null) {
+//                        builder.placeholder(getDrawable());
+//                    }
+                    builder.placeholder(R.drawable.defauit_avatar_contact);
                     builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(HnGlideImageView.this);
                 }
@@ -193,9 +194,11 @@ public class HnGlideImageView extends CircleImageView {
                     }
                     DrawableRequestBuilder<String> builder = Glide.with(getContext())
                             .load(OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()));
-                    if (getDrawable() != null) {
-                        builder.placeholder(getDrawable());
-                    }
+//                    if (getDrawable() != null) {
+//                        builder.placeholder(getDrawable());
+//                    }
+                    builder.placeholder(R.drawable.defauit_avatar_contact);
+                    builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(HnGlideImageView.this);
                 }
             });
@@ -223,9 +226,10 @@ public class HnGlideImageView extends CircleImageView {
                     DrawableRequestBuilder<? extends Serializable> builder = Glide.with(getContext())
                             .load(file.exists() ? file : url)
                             .transform(new GlideCircleTransform(getContext()));
-                    if (getDrawable() != null) {
-                        builder.placeholder(getDrawable());
-                    }
+//                    if (getDrawable() != null) {
+//                        builder.placeholder(getDrawable());
+//                    }
+                    builder.placeholder(R.drawable.defauit_avatar_contact);
                     builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(HnGlideImageView.this);
                 }
@@ -241,9 +245,11 @@ public class HnGlideImageView extends CircleImageView {
                     DrawableTypeRequest<? extends Serializable> builder = Glide.with(getContext())
                             .load(file.exists() ? file :
                                     (thumb ? OssHelper.getImageThumb(url, getMeasuredWidth(), getMeasuredHeight()) : url));
-                    if (getDrawable() != null) {
-                        builder.placeholder(getDrawable());
-                    }
+//                    if (getDrawable() != null) {
+//                        builder.placeholder(getDrawable());
+//                    }
+                    builder.placeholder(R.drawable.defauit_avatar_contact);
+                    builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(HnGlideImageView.this);
                 }
             });
