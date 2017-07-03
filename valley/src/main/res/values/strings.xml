@@ -821,6 +821,7 @@
     <string name="no_like_2">内容太水</string>
     <string name="no_like_format">不想看: %1$s</string>
     <string name="no_like_">不想看: </string>
+    <string name="text_access_error">访问错误!</string>
     <string name="not_like">不喜欢</string>
     <string name="no_like_format2">减少 不想看: %1$s 的内容</string>
     <string name="is_no_like_format2">已减少 不想看: %1$s 的内容</string>

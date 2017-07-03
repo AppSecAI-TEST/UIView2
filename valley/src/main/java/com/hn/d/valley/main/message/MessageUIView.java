@@ -183,7 +183,7 @@ public class MessageUIView extends BaseUIView {
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
         // 进入最近联系人列表界面，建议放在onResume中
-        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_ALL, SessionTypeEnum.None);
+//        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_ALL, SessionTypeEnum.None);
         L.w("messageuiview onvidwshow");
         checkEmpty();
         MsgCache.notifyNoreadNum();
@@ -194,7 +194,7 @@ public class MessageUIView extends BaseUIView {
         super.onViewHide();
 
         // 退出聊天界面或离开最近联系人列表界面，建议放在onPause中
-        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, SessionTypeEnum.None);
+//        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE, SessionTypeEnum.None);
     }
 
     private void checkEmpty() {

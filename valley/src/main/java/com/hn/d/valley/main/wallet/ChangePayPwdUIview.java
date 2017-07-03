@@ -227,6 +227,8 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);
+        } else {
+            T_.show(getString(R.string.text_access_error));
         }
     }
 

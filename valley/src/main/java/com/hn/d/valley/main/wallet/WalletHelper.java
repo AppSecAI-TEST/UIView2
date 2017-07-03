@@ -66,6 +66,12 @@ public class WalletHelper {
        fetchWallet(null);
     }
 
+    public void clean() {
+        if (mWalletAccount != null) {
+            mWalletAccount = null;
+        }
+    }
+
     public void fetchWallet(final RequestCallback<WalletAccount> callback) {
         RRetrofit.create(WalletService.class)
                 .account(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"device:" + RApplication.getIMEI()))

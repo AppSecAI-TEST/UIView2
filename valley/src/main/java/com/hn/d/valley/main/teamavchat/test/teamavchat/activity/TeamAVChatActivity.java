@@ -185,6 +185,8 @@ public class TeamAVChatActivity extends StyleActivity {
         }
 
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //状态栏 隐藏
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
         setContentView(R.layout.team_avchat_activity);
         onInit();
         onIntent();
@@ -278,6 +280,9 @@ public class TeamAVChatActivity extends StyleActivity {
 //        if (timer != null) {
 //            timer.cancel();
 //        }
+
+        //状态栏 显示
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
 
         destroy();
 

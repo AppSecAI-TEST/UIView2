@@ -90,6 +90,10 @@ public class LoginUIView2 extends BaseContentUIView {
         L.i("登录成功:" + loginBean.getUsername());
 
         //showUserIco(loginBean.getAvatar());
+
+        // 切换账号 清除钱包
+        WalletHelper.getInstance().clean();
+
         //第一次登录开户
         if (LoginControl.instance().isFirstRegister()) {
             WalletHelper.getInstance().openAccount(loginBean.getUid());
