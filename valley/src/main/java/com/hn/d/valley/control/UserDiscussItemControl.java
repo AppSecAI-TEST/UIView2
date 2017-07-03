@@ -1724,7 +1724,7 @@ public class UserDiscussItemControl {
                         int abs = Math.abs(w - h);
 
                         //自动根据图片的长宽差, 选择缩放类型
-                        if (width == 0 && height == 0) {
+                        if (width <= 0 && height <= 0) {
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         } else if (imageSize <= 1 /*|| abs < Math.min(w / 4, h / 4)*/) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);

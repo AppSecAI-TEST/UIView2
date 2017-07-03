@@ -503,7 +503,6 @@ class InformationDetailUIView : BaseContentUIView {
                 .create(SearchService::class.java)
                 .search(Param.buildInfoMap("type:news",
                         "content:" + classify,
-                        "uid:" + UserCache.getUserAccount(),
                         "amount:4"))
                 .compose(Rx.transformer(NewsBean::class.java))
                 .subscribe(object : BaseSingleSubscriber<NewsBean>() {

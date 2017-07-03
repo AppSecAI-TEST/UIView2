@@ -3,7 +3,6 @@ package com.hn.d.valley.x5;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Message;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.design.IWebView;
 import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.BuildConfig;
 import com.tencent.smtt.export.external.interfaces.ClientCertRequest;
@@ -570,21 +568,21 @@ public class X5WebView extends WebView implements IWebView {
     @Override
     protected boolean drawChild(Canvas canvas, View child, long drawingTime) {
         boolean result = super.drawChild(canvas, child, drawingTime);
-        if (BuildConfig.DEBUG) {
-            canvas.save();
-            mPaint.setTextSize(30f);
-            mPaint.setColor(Color.RED);
-
-            int top = 0;
-            if (getParent() instanceof View) {
-                top = ((View) getParent()).getScrollY();
-            }
-
-            canvas.drawText("contentHeight:" + getContentHeight(), 10, top + 300, mPaint);
-            canvas.drawText("measureHeight:" + getMeasuredHeight(), 10, top + 600, mPaint);
-            canvas.drawText("screenHeight:" + ScreenUtil.screenHeight, 10, top + 900, mPaint);
-            canvas.restore();
-        }
+//        if (BuildConfig.DEBUG) {
+//            canvas.save();
+//            mPaint.setTextSize(30f);
+//            mPaint.setColor(Color.RED);
+//
+//            int top = 0;
+//            if (getParent() instanceof View) {
+//                top = ((View) getParent()).getScrollY();
+//            }
+//
+//            canvas.drawText("contentHeight:" + getContentHeight(), 10, top + 300, mPaint);
+//            canvas.drawText("measureHeight:" + getMeasuredHeight(), 10, top + 600, mPaint);
+//            canvas.drawText("screenHeight:" + ScreenUtil.screenHeight, 10, top + 900, mPaint);
+//            canvas.restore();
+//        }
         return result;
     }
 

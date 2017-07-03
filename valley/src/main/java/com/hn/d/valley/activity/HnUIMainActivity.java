@@ -8,10 +8,8 @@ import android.support.annotation.Nullable;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.UILayoutImpl;
-import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.umeng.UM;
-import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.base.constant.Action;
@@ -129,9 +127,9 @@ public class HnUIMainActivity extends BaseActivity {
         startIView(new MainUIView());
         MainControl.checkCrash(mLayout);
         AdsControl.INSTANCE.checkAds(mLayout);
-        if (BuildConfig.DEBUG) {
-            UIDialog.build().setDialogTitle("测试对话框").showDialog(mLayout);
-        }
+//        if (BuildConfig.DEBUG) {
+//            UIDialog.build().setDialogTitle("测试对话框").showDialog(mLayout);
+//        }
     }
 
     @Override

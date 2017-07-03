@@ -1,7 +1,9 @@
 package com.hn.d.valley.start;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
@@ -175,6 +177,12 @@ public class WelcomeUIView extends BaseContentUIView {
     public void onViewUnload() {
         super.onViewUnload();
         LoginControl.instance().setCancel(true);
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     /**

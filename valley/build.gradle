@@ -147,11 +147,11 @@ dependencies {
 
 //    compile 'com.jakewharton:butterknife:8.4.0'
 
-    compile 'jp.wasabeef:takt:1.0.4'
+//    compile 'jp.wasabeef:takt:1.0.4'
 
-    _devCompile 'com.github.markzhai:blockcanary-android:1.5.0'
-    preCompile 'com.github.markzhai:blockcanary-android:1.5.0'
-    apkCompile 'com.github.markzhai:blockcanary-no-op:1.5.0'
+//    _devCompile 'com.github.markzhai:blockcanary-android:1.5.0'
+//    preCompile 'com.github.markzhai:blockcanary-android:1.5.0'
+//    apkCompile 'com.github.markzhai:blockcanary-no-op:1.5.0'
 }
 repositories {
     mavenCentral()
