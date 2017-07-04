@@ -39,6 +39,7 @@ import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.FriendsRecommendUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.sub.other.KLGCoinUIVIew;
 import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -416,6 +417,24 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 }
             }));
         }
+
+        //龙币
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                initItemLayout(itemInfoLayout, R.string.klg_coin, R.drawable.icon_purchase, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mParentILayout.startIView(new KLGCoinUIVIew());
+                    }
+                });
+                itemInfoLayout.setItemDarkText("20");
+                itemInfoLayout.getDarkTextView().setTextColor(getColor(R.color.yellow_ffac2d));
+                itemInfoLayout.setDarkDrawableRes(R.drawable.longbi);
+            }
+        }));
+
         //个性装扮
         items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
             @Override

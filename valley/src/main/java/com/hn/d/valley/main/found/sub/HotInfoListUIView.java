@@ -19,8 +19,8 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.RFlowLayout;
-import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextImageLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -88,16 +88,20 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
             }
 
             @Override
-            public void onCreateImageView(RImageView imageView) {
+            public void onCreateImageView(GlideImageView imageView) {
                 imageView.setImageResource(R.drawable.zhanweitu_1);
                 imageView.setPlayDrawable(isVideo ? R.drawable.image_picker_play : -1);
             }
 
             @Override
-            public void displayImage(RImageView imageView, String url) {
+            public void displayImage(GlideImageView imageView, String url) {
                 imageView.setShowGifTip(false);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                HotInfoListUIView.displayImage(imageView, url);
+                imageView.setCheckGif(true);
+                imageView.setShowGifImage(false);
+                imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
+                imageView.setUrl(url);
+//                HotInfoListUIView.displayImage(imageView, url);
                 L.i("RTextImageLayout: displayImage([imageView, url])-> " + url);
             }
 
@@ -255,8 +259,10 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                                             }
                                         };
 
-                                        flowLayout.addCheckTextView(getString(R.string.no_like_1)).setOnClickListener(checkListener);;
-                                        flowLayout.addCheckTextView(getString(R.string.no_like_2)).setOnClickListener(checkListener);;
+                                        flowLayout.addCheckTextView(getString(R.string.no_like_1)).setOnClickListener(checkListener);
+                                        ;
+                                        flowLayout.addCheckTextView(getString(R.string.no_like_2)).setOnClickListener(checkListener);
+                                        ;
 
                                         for (String text : dataBean.getTagList()) {
                                             flowLayout.addCheckTextView(getString(R.string.no_like_format, text)).setOnClickListener(checkListener);

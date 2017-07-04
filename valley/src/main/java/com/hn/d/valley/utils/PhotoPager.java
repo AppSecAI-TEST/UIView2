@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.github.luban.Luban;
-import com.angcyo.uiview.widget.RImageView;
+import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.library.fresco.PhotoPagerControl;
@@ -56,7 +56,7 @@ public class PhotoPager {
     }
 
     @NonNull
-    public static ArrayList<ImageItem> getImageItems(List<String> photos, List<RImageView> imageList, final boolean allowDownload) {
+    public static ArrayList<ImageItem> getImageItems(List<String> photos, List<GlideImageView> imageList, final boolean allowDownload) {
         final ArrayList<ImageItem> imageItems = new ArrayList<>();
 
         for (int i = 0; i < photos.size(); i++) {

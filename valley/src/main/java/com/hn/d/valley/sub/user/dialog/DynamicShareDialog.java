@@ -306,6 +306,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
                                     DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
                                     IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
                                     msgService().sendMessage(message, false);
+                                    T_.show("分享成功!");
 
                                 }
                             });

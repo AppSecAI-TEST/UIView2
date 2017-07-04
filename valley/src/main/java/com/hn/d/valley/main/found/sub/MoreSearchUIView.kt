@@ -10,7 +10,7 @@ import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter
 import com.angcyo.uiview.utils.RUtils
-import com.angcyo.uiview.widget.RImageView
+import com.angcyo.uiview.widget.GlideImageView
 import com.angcyo.uiview.widget.RTextImageLayout
 import com.angcyo.uiview.widget.RTextView
 import com.hn.d.valley.R
@@ -116,11 +116,11 @@ class MoreSearchUIView(var searchText: String) : SingleRecyclerUIView<OtherSearc
                         return null
                     }
 
-                    override fun onCreateImageView(imageView: RImageView) {
+                    override fun onCreateImageView(imageView: GlideImageView) {
                         imageView.setImageResource(R.drawable.zhanweitu_1)
                     }
 
-                    override fun displayImage(imageView: RImageView, url: String) {
+                    override fun displayImage(imageView: GlideImageView, url: String) {
                         imageView.setShowGifTip(false)
                         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
                         HotInfoListUIView.displayImage(imageView, url)

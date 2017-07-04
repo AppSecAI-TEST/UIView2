@@ -18,12 +18,21 @@ public class CustomExpressionMsg extends BaseCustomMsg {
         this.extend_type = CustomAttachmentType.KLGGIF_MSG;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
     /**
      * msg : f_l_021
-
      */
 
     private String msg;
+
+    private int type;
 
     public String getMsg() {
         return msg;

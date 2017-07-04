@@ -26,6 +26,7 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.ImageTextView;
 import com.angcyo.uiview.widget.RExTextView;
 import com.angcyo.uiview.widget.RImageView;
@@ -635,20 +636,32 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void displayImage(final ImageView imageView, String url, int width, int height, int imageSize) {
+                    public void displayImage(final GlideImageView imageView, String url, int width, int height, int imageSize) {
+                        imageView.setShowGifTip(false);
+                        imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
+                        if (imageSize == 1) {
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        } else {
+                            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                        }
+
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
-                            UserDiscussItemControl.displayImage(imageView, url,
-                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
-                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
-                                    !isInDetail, imageSize);
+//                            UserDiscussItemControl.displayImage(imageView, url,
+//                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
+//                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
+//                                    !isInDetail, imageSize);
 //                            imageView.setImageResource(R.drawable.zhanweitu_1);
+
+                            imageView.setCheckGif(true);
+                            imageView.setShowGifImage(isInDetail);
+                            imageView.setUrl((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url);
                         }
                     }
 
                     @Override
-                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                    public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                         //点击预览全部图片
                         ImagePagerUIView.start(iLayout, imageView,
                                 PhotoPager.getImageItems(medias, imageList, allowDownload), index)
@@ -689,7 +702,7 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
+                    public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
@@ -699,7 +712,7 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                    public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                         //T_.info(videoUrl);
                         if (!TextUtils.isEmpty(videoUrl)) {
                             iLayout.startIView(new VideoPlayUIView(videoUrl,
@@ -767,7 +780,7 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
+                    public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
@@ -777,7 +790,7 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                    public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                         //T_.info(videoUrl);
 
                         if (!TextUtils.isEmpty(finalUrl)) {
@@ -1707,6 +1720,7 @@ public class UserDiscussItemControl {
         Glide.with(ValleyApp.getApp())
                 .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
                 .asBitmap()
+                .animate(R.anim.base_alpha_to_1)
                 .placeholder(R.drawable.zhanweitu_1)
                 .error(R.drawable.zhanweitu_1)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

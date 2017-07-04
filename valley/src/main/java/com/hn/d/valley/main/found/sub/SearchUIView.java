@@ -30,7 +30,7 @@ import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.widget.RImageView;
+import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.RTextImageLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -132,13 +132,13 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                     }
 
                     @Override
-                    public void onCreateImageView(RImageView imageView) {
+                    public void onCreateImageView(GlideImageView imageView) {
                         imageView.setImageResource(R.drawable.zhanweitu_1);
                     }
 
 
                     @Override
-                    public void displayImage(RImageView imageView, String url) {
+                    public void displayImage(GlideImageView imageView, String url) {
                         HotInfoListUIView.displayImage(imageView, url);
                     }
 
@@ -167,12 +167,12 @@ public class SearchUIView extends BaseRecyclerUIView<SearchUIView.TopBean,
                         }
 
                         @Override
-                        public void onCreateImageView(RImageView imageView) {
+                        public void onCreateImageView(GlideImageView imageView) {
                             imageView.setImageResource(R.drawable.zhanweitu_1);
                         }
 
                         @Override
-                        public void displayImage(RImageView imageView, String url) {
+                        public void displayImage(GlideImageView imageView, String url) {
                             HotInfoListUIView.displayImage(imageView, url);
                         }
 

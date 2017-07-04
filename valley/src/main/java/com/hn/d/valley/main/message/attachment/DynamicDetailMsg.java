@@ -78,8 +78,9 @@ public class DynamicDetailMsg extends BaseCustomMsg{
         detailMsg.username = dataListBean.getAuthor();
         detailMsg.item_id = String.valueOf(dataListBean.getId());
         detailMsg.apnsText = dataListBean.getAuthor();
-//        detailMsg.msg = dataListBean.getTitle();
-        detailMsg.msg = Json.to(dataListBean);
+        detailMsg.msg = dataListBean.getTitle();
+        // cover 用于存储 json
+        detailMsg.cover = Json.to(dataListBean);
         detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
         return detailMsg;
     }

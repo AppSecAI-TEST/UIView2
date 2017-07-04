@@ -28,6 +28,7 @@ import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
 import com.hn.d.valley.base.rx.EmptyAction;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.skin.SkinUtils;
@@ -264,6 +265,8 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     }
 
     private void uploadFile(final boolean background) {
+        // 注册无uid 默认传 1
+        UserCache.setUserAccount("1");
         mSubscriptions.add(OssHelper.uploadAvatorImg(mIcoFilePath)
                 .doOnSubscribe(background ? EmptyAction.build() : BeforeSubscriber.build(this))
                 .subscribe(new BaseSingleSubscriber<String>() {

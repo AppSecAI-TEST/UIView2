@@ -241,7 +241,7 @@ public class OssHelper {
      */
     public static String getImageThumb(String url, int width, int height) {
         if (width > 0 && height > 0) {
-            return url + "?x-oss-process=image/resize,m_mfit,h_" + height + ",w_" + width;
+            return url + "?x-oss-process=image/resize,m_lfit,h_" + height + ",w_" + width;
         } else {
             return url;
         }

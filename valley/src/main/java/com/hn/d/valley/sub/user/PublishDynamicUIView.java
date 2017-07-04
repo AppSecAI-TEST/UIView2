@@ -27,6 +27,7 @@ import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
+import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RNineImageLayout;
@@ -221,12 +222,12 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
                     }
 
                     @Override
-                    public void displayImage(final ImageView imageView, String url, int width, int height, int imageSize) {
+                    public void displayImage(final GlideImageView imageView, String url, int width, int height, int imageSize) {
                         UserDiscussItemControl.displayImage(imageView, url, width, height, imageSize);
                     }
 
                     @Override
-                    public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                    public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                         //点击预览全部图片
                         //startIView(new VideoPlayUIView(mVideoStatusInfo.videoThumbPath, mVideoStatusInfo.videoPath));
                         startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoPath(), RImageView.copyDrawable(imageView),

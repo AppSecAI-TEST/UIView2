@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,8 +15,8 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.RefreshLayout;
+import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.RImageCheckView;
-import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RNineImageLayout;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -283,12 +282,12 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
 
                 @Override
-                public void displayImage(final ImageView imageView, String url, int width, int height, int imageSize) {
+                public void displayImage(final GlideImageView imageView, String url, int width, int height, int imageSize) {
                     UserDiscussItemControl.displayImage(imageView, url, width, height, true, imageSize);
                 }
 
                 @Override
-                public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                     //点击预览全部图片
                 }
             });
@@ -312,12 +311,12 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
 
                 @Override
-                public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
+                public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
                     UserDiscussItemControl.displayImage(imageView, url, width, height, true, imageSize);
                 }
 
                 @Override
-                public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                 }
             });
             mediaImageTypeView.setImage(thumbUrl);
@@ -355,7 +354,7 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
 
                 @Override
-                public void displayImage(ImageView imageView, String url, int width, int height, int imageSize) {
+                public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
                     if (VoiceStatusInfo.NOPIC.equalsIgnoreCase(url)) {
                         imageView.setImageResource(R.drawable.luyin_caogaoxiangi_morentu);
                     } else {
@@ -364,7 +363,7 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 }
 
                 @Override
-                public void onImageItemClick(ImageView imageView, List<String> urlList, List<RImageView> imageList, int index) {
+                public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                     //T_.info(videoUrl);
                 }
             });

@@ -129,7 +129,7 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
             iv_content.setImageResource(R.drawable.zixun_morentu);
             try{
                 final HotInfoListBean bean;
-                bean = Json.from(detailMsg.getMsg(), HotInfoListBean.class);
+                bean = Json.from(detailMsg.getCover(), HotInfoListBean.class);
                 tv_pc_name.setText(bean.getTitle());
                 pc_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -137,10 +137,9 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
                         mUIBaseView.startIView(new InformationDetailUIView(bean));
                     }
                 });
-            }catch (JsonSyntaxException e) {
+            }catch (JsonSyntaxException | NullPointerException e) {
                 pc_layout.setOnClickListener(null);
                 tv_pc_name.setText(detailMsg.getMsg());
-
             }
             return;
         }

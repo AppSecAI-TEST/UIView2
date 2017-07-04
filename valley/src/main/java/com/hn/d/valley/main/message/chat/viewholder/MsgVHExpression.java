@@ -21,6 +21,7 @@ import com.hn.d.valley.widget.MsgThumbImageView;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
+import com.netease.nimlib.sdk.msg.constant.StickerEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.util.ArrayList;
@@ -63,9 +64,9 @@ public class MsgVHExpression extends MsgViewHolderBase {
 
         CustomExpressionMsg expressionMsg = expressionAttachment.getExpressionMsg();
         String chartlet = expressionMsg.getMsg();
+        String category = StickerEnum.Companion.typeOfValue(expressionMsg.getType()).getType();
         Glide.with(context)
-                .load(Uri.parse(StickerManager.getInstance().getStickerBitmapUri(chartlet.contains("redbird")?CATEGORY_HN:CATEGORY_EXPRESSION
-                        , chartlet)))
+                .load(Uri.parse(StickerManager.getInstance().getStickerBitmapUri(category , chartlet)))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .into(draweeView);
 

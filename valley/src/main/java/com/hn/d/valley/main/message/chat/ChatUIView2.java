@@ -39,6 +39,7 @@ import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.file.FileUtil;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
@@ -76,6 +77,7 @@ import com.netease.nimlib.sdk.media.record.RecordType;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.constant.StickerEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.orhanobut.hawk.Hawk;
@@ -282,6 +284,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             public void onStickerSelected(String categoryName, String stickerName) {
 //                T_.show(categoryName + ": " + stickerName);
                 CustomExpressionMsg expressionMsg = new CustomExpressionMsg(FileUtil.getFileNameNoEx(stickerName));
+                expressionMsg.setType(StickerEnum.Companion.valueOfType(categoryName).getValue());
                 CustomExpressionAttachment attachment = new CustomExpressionAttachment(expressionMsg);
                 IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "贴图表情", attachment);
                 sendMessage(message);

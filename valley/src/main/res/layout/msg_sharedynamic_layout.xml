@@ -36,6 +36,7 @@
             android:textSize="@dimen/default_text_size"
             android:gravity="center_vertical"
             android:padding="@dimen/base_ldpi"
+            android:ellipsize="end"
             android:text="@string/str_text_pd" />
 
     </LinearLayout>

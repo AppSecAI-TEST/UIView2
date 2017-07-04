@@ -58,12 +58,12 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by hewking on 2017/3/7.
  */
-public class FriendsControl implements RefreshLayout.OnRefreshListener{
+public class FriendsControl implements RefreshLayout.OnRefreshListener {
 
     RBaseViewHolder mViewHolder;
 
     RRecyclerView rRecyclerView;
-    RefreshLayout  mRefreshLayout;
+    RefreshLayout mRefreshLayout;
     FriendsAdapter mFriendsAdapter;
     WaveSideBarView sidebar_friend;
 
@@ -87,7 +87,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
 
-    public FriendsControl(Context mContext,CompositeSubscription mSubscriptions, ILayout iLayout, RequestCallback callback) {
+    public FriendsControl(Context mContext, CompositeSubscription mSubscriptions, ILayout iLayout, RequestCallback callback) {
         this.mContext = mContext;
         this.otherLayout = iLayout;
         this.callback = callback;
@@ -110,7 +110,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
         sidebar_friend = mViewHolder.v(R.id.sidebar_friend_index);
 
-        mFriendsAdapter = new FriendsAdapter(mContext,this){
+        mFriendsAdapter = new FriendsAdapter(mContext, this) {
             @Override
             protected List<? extends AbsContactItem> onPreProvide() {
 
@@ -122,7 +122,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                 SystemPushItem item = new SystemPushItem(bean, new Action1<FriendBean>() {
                     @Override
                     public void call(FriendBean o) {
-                        SessionHelper.startSession(getOtherLayout(),o.getUid(),SessionTypeEnum.P2P);
+                        SessionHelper.startSession(getOtherLayout(), o.getUid(), SessionTypeEnum.P2P);
                     }
                 });
                 List<AbsContactItem> items = FuncItem.provide();
@@ -132,7 +132,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     @Override
                     public void call(ILayout o) {
 //                        getOtherLayout().startIView(new SearchUserUIView());
-                        GlobalSearchUIView2.start(getOtherLayout(), GlobalSearchUIView2.Options.sOptions,new int[]{ItemTypes.FRIEND,ItemTypes.GROUP,ItemTypes.MSG,});
+                        GlobalSearchUIView2.start(getOtherLayout(), GlobalSearchUIView2.Options.sOptions, new int[]{ItemTypes.FRIEND, ItemTypes.GROUP, ItemTypes.MSG,});
 
                     }
                 }));
@@ -144,7 +144,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         mFriendsAdapter.setSideAction(new Action1<List<String>>() {
             @Override
             public void call(List<String> strings) {
-                strings.add(0,"↑");
+                strings.add(0, "↑");
                 sidebar_friend.setLetters(strings);
             }
         });
@@ -159,11 +159,11 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         sidebar_friend.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
             @Override
             public void onLetterChange(String letter) {
-                scrollToLetter(letter,rRecyclerView,mFriendsAdapter.getAllDatas());
+                scrollToLetter(letter, rRecyclerView, mFriendsAdapter.getAllDatas());
             }
         });
 
-        rRecyclerView.addItemDecoration(new RGroupItemDecoration(new GroupItemCallBack(mContext,mFriendsAdapter)));
+        rRecyclerView.addItemDecoration(new RGroupItemDecoration(new GroupItemCallBack(mContext, mFriendsAdapter)));
     }
 
     public static void scrollToLetter(String letter, RecyclerView recyclerView, List<AbsContactItem> datas) {
@@ -185,13 +185,13 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
     }
 
     public static List<String> generateIndexLetter(List<AbsContactItem> data_list) {
-        List<String> letters= new ArrayList<>();
-        for(AbsContactItem bean : data_list) {
+        List<String> letters = new ArrayList<>();
+        for (AbsContactItem bean : data_list) {
             String letter = bean.getGroupText();
             if (letter == null || "".equals(letter)) {
                 continue;
             }
-            if(!letters.contains(letter)){
+            if (!letters.contains(letter)) {
                 letters.add(letter);
             }
         }
@@ -203,10 +203,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         Collections.sort(items, new Comparator<AbsContactItem>() {
             @Override
             public int compare(AbsContactItem o1, AbsContactItem o2) {
-
-//                if (o1.getGroupText().equals(o1.getGroupText())) {
-//                    return 0;
-//                }
 
                 if (o1.getGroupText().equals("")) {
                     return -1;
@@ -232,6 +228,12 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     return -1;
                 }
 
+                // 解决 Comparison method violates its general contract
+                // 两个比较对象相等 徐返回 0
+                if (o1.getGroupText().equals(o1.getGroupText())) {
+                    return 0;
+                }
+
                 return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
             }
         });
@@ -246,7 +248,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         if (callback != null) {
             callback.onSuccess("");
             L.i(" onUILoadFinish friends onsucceed");
-            if(mRefreshLayout != null){
+            if (mRefreshLayout != null) {
                 mRefreshLayout.setRefreshEnd();
             }
         }
@@ -283,7 +285,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
                     @Override
                     public void onSucceed(FriendListModel bean) {
                         super.onSucceed(bean);
-                        if(bean == null || bean.getData_list().size() == 0 ) {
+                        if (bean == null || bean.getData_list().size() == 0) {
                             onUILoadFinish();
                             if (bean == null) {
                                 resetData(new ArrayList<FriendBean>());
@@ -316,7 +318,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             @Override
             public void execute(Realm realm) {
                 results.deleteAllFromRealm();
-                for(FriendBean bean : data_list) {
+                for (FriendBean bean : data_list) {
                     realm.copyToRealm(bean);
                 }
             }
@@ -334,7 +336,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
 
         private RBaseAdapter<AbsContactItem> mAdapter;
 
-        public GroupItemCallBack(Context ctx,RBaseAdapter adapter) {
+        public GroupItemCallBack(Context ctx, RBaseAdapter adapter) {
             textPaint.setTextSize(ctx.getResources().getDisplayMetrics().scaledDensity * 14);
             this.mContext = ctx;
             this.mAdapter = adapter;
@@ -356,7 +358,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
             textPaint.setColor(mContext.getResources().getColor(R.color.chat_bg_color));
 
             rectF.set(view.getLeft(), view.getTop() - getGroupHeight(position), view.getRight(), view.getTop());
-            canvas.drawRect(rectF,textPaint);
+            canvas.drawRect(rectF, textPaint);
             textPaint.setColor(mContext.getResources().getColor(R.color.main_text_color_dark));
 
             final String letter = mAdapter.getAllDatas().get(position).getGroupText();
@@ -391,10 +393,10 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener{
         @Override
         public void onItemDraw(Canvas canvas, View view, int position) {
             super.onItemDraw(canvas, view, position);
-            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(mContext,R.color.chat_bg_color));
+            ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(mContext, R.color.chat_bg_color));
             int left = ScreenUtil.dip2px(55);
             int dividerSize = mContext.getResources().getDimensionPixelSize(R.dimen.base_line);
-            colorDrawable.setBounds(view.getLeft() + left,view.getBottom(),view.getRight() - ScreenUtil.dip2px(10),view.getBottom() + dividerSize /*ScreenUtil.dip2px(1)*/);
+            colorDrawable.setBounds(view.getLeft() + left, view.getBottom(), view.getRight() - ScreenUtil.dip2px(10), view.getBottom() + dividerSize /*ScreenUtil.dip2px(1)*/);
             colorDrawable.draw(canvas);
 
         }
