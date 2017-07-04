@@ -2,7 +2,6 @@ package com.hn.d.valley.main.me.setting;
 
 import android.content.Intent;
 import android.graphics.Rect;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -199,8 +198,13 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mAddPhotoAdapter.getAllDatas().isEmpty()) {
-                            T_.error(getString(R.string.upload_certify_tip));
+                        //允许为空
+//                        if (mAddPhotoAdapter.getAllDatas().isEmpty()) {
+//                            T_.error(getString(R.string.upload_certify_tip));
+//                            return;
+//                        }
+                        if (TextUtils.isEmpty(mCheckEditTexts.get(0).string())) {
+                            T_.error("请填写你的意见!");
                             return;
                         }
                         onApply();
@@ -223,41 +227,45 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             }
         });
 
-        new OssControl(new OssControl.OnUploadListener() {
-            @Override
-            public void onUploadStart() {
+        if (mAddPhotoAdapter.getAllDatas().isEmpty()) {
+            onApplyNext(null);
+        } else {
+            new OssControl(new OssControl.OnUploadListener() {
+                @Override
+                public void onUploadStart() {
 
-            }
-
-            @Override
-            public void onUploadSucceed(List<String> list) {
-                if (isCancel) {
-                    return;
                 }
-                onApplyNext(list);
-            }
 
-            @Override
-            public void onUploadFailed(int code, String msg) {
-                HnLoading.hide();
-            }
-        }).uploadCircleImg(mAddPhotoAdapter.getAllDatas(),true);
+                @Override
+                public void onUploadSucceed(List<String> list) {
+                    if (isCancel) {
+                        return;
+                    }
+                    onApplyNext(list);
+                }
+
+                @Override
+                public void onUploadFailed(int code, String msg) {
+                    HnLoading.hide();
+                }
+            }).uploadCircleImg(mAddPhotoAdapter.getAllDatas(), true);
+        }
     }
 
     private void onApplyNext(List<String> list) {
-        for (ExEditText et : mCheckEditTexts) {
-            if(TextUtils.isEmpty(et.string())) {
-                T_.show("信息不完整!");
-                return;
-            }
-        }
-        String feedback = mCheckEditTexts.get(0).toString();
-        String contact = mCheckEditTexts.get(1).toString();
+//        for (ExEditText et : mCheckEditTexts) {
+//            if (TextUtils.isEmpty(et.string())) {
+//                T_.show("信息不完整!");
+//                return;
+//            }
+//        }
+        String feedback = mCheckEditTexts.get(0).string();
+        String contact = mCheckEditTexts.get(1).string();
         add(RRetrofit.create(SystemService.class)
                 .feedBack(Param.buildMap("uid:" + UserCache.getUserAccount()
-                        ,"content:" + feedback
-                        ,"contact:"+ contact
-                        ,"imgs:" + RUtils.connect(list)))
+                        , "content:" + feedback
+                        , "contact:" + contact
+                        , "imgs:" + RUtils.connect(list)))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
