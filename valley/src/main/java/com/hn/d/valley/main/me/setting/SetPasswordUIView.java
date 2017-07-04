@@ -264,7 +264,7 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                     }
 
                     add(RRetrofit.create(UserService.class)
-                            .forgot(Param.buildMap("phone:" + mEditText1.string() + "code:" + mEditText2.string() + "pwd:" + RSA.encode(mEditText3.string())))
+                            .forgot(Param.buildMap("phone:" + mEditText1.string(), "code:" + mEditText2.string(), "pwd:" + RSA.encode(mEditText3.string())))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
                                 @Override
