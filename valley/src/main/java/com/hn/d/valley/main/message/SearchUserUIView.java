@@ -28,6 +28,7 @@ import com.hn.d.valley.main.message.mvp.Search;
 import com.hn.d.valley.main.message.mvp.SearchPresenter;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -44,6 +45,7 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implements Search.ISearchView {
 
     ExEditText mSearchInputView;
@@ -147,13 +149,13 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
     }
 
     @Override
-    public void onSearchSucceed(SearchUserBean bean) {
+    public void onSearchSucceed(List<SearchUserBean> bean) {
         if (bean == null) {
             mEmptyTipView.setText("该用户不存在");
         } else {
             mEmptyTipView.setText("");
         }
-        mSearchUserAdapter.setItem(bean);
+        mSearchUserAdapter.resetData(bean);
     }
 
     private class SearchUserAdapter extends RBaseAdapter<SearchUserBean> {

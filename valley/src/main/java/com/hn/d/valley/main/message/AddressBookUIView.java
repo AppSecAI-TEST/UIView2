@@ -50,6 +50,7 @@ import rx.schedulers.Schedulers;
 /**
  * Created by hewking on 2017/3/22.
  */
+@Deprecated
 @SuppressWarnings("ALL")
 public class AddressBookUIView extends SingleRecyclerUIView<AbsContactItem> {
 

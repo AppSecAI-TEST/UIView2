@@ -4,6 +4,8 @@ import com.angcyo.uiview.mvp.presenter.IBasePresenter;
 import com.angcyo.uiview.mvp.view.IBaseView;
 import com.hn.d.valley.bean.SearchUserBean;
 
+import java.util.List;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -22,7 +24,7 @@ public interface Search {
          *
          * @param bean 搜索成功的用户信息
          */
-        void onSearchSucceed(SearchUserBean bean);
+        void onSearchSucceed(List<SearchUserBean> bean);
     }
 
     interface ISearchPresenter extends IBasePresenter<ISearchView> {

@@ -3,9 +3,7 @@ package com.hn.d.valley.main.message.mvp;
 import com.angcyo.uiview.mvp.presenter.BasePresenter;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.net.TransformUtils;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.Transform;
 import com.hn.d.valley.base.rx.UIStringSubscriber;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.SearchUserBean;
@@ -39,10 +37,10 @@ public class SearchPresenter extends BasePresenter<Search.ISearchView> implement
                     @Override
                     public void onSuccess(SearchUserList bean) {
                         if (bean == null || bean.getData_list().size() == 0) {
-                            mBaseView.onRequestFinish();
+                            mBaseView.onSearchSucceed(null);
                             return;
                         }
-                        mBaseView.onSearchSucceed(bean.getData_list().get(0));
+                        mBaseView.onSearchSucceed(bean.getData_list());
                     }
                 })
         );

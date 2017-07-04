@@ -1,7 +1,11 @@
 package com.hn.d.valley.main.friend;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,23 +16,26 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.viewgroup.RRelativeLayout;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.mvp.Search;
 import com.hn.d.valley.main.message.mvp.SearchPresenter;
+import com.hn.d.valley.widget.HnGenderView;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -117,6 +124,21 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
                         }
                     }
                 });
+
+        mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
+            @Override
+            public void getItemOffsets2(Rect outRect, int position, int edge) {
+                super.getItemOffsets2(outRect, position, edge);
+                if (!mSearchUserAdapter.isLast(position)) {
+                    outRect.bottom = getDimensionPixelOffset(R.dimen.base_line);
+                }
+            }
+
+            @Override
+            public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
+                drawLeftBottomLine(canvas, paint, itemView, offsetRect, itemCount, position);
+            }
+        }));
     }
 
     @Override
@@ -159,13 +181,13 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
     }
 
     @Override
-    public void onSearchSucceed(SearchUserBean bean) {
-        if (bean == null) {
+    public void onSearchSucceed(List<SearchUserBean> bean) {
+        if (bean == null || bean.isEmpty()) {
             mEmptyTipView.setText("该用户不存在");
         } else {
             mEmptyTipView.setText("");
         }
-        mSearchUserAdapter.setItem(bean);
+        mSearchUserAdapter.resetData(bean);
     }
 
     private class SearchUserAdapter extends RBaseAdapter<SearchUserBean> {
@@ -176,13 +198,28 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
 
         @Override
         protected int getItemLayoutId(int viewType) {
-            return R.layout.item_search_user_contacts;
+            return R.layout.item_user_info_new;
         }
 
         @Override
         protected void onBindView(RBaseViewHolder holder, int position, final SearchUserBean bean) {
-            DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), bean.getAvatar());
-            holder.tv(R.id.recent_name_view).setText(bean.getUsername());
+//            DraweeViewUtil.setDraweeViewHttp((SimpleDraweeView) holder.v(R.id.ico_view), bean.getAvatar());
+            holder.tv(R.id.username).setText(bean.getUsername());
+
+            String signature = bean.getSignature();
+            if (TextUtils.isEmpty(signature)) {
+                holder.tv(R.id.signature).setText(R.string.signature_empty_tip);
+            } else {
+                holder.tv(R.id.signature).setText(signature);
+            }
+
+            HnGenderView genderView = holder.v(R.id.grade);
+            genderView.setGender(bean.getSex(), bean.getGrade());
+
+            HnGlideImageView icoImageView = holder.v(R.id.image_view);
+            icoImageView.setImageThumbUrl(bean.getAvatar());
+
+            holder.v(R.id.right_control_layout).setVisibility(View.GONE);
 
             holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -190,6 +227,9 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
                     startIView(new UserDetailUIView2(bean.getUid()));
                 }
             });
+
+            RRelativeLayout layout = holder.v(R.id.item_root_layout);
+            layout.setRBackgroundDrawable(Color.WHITE);
         }
 
         public void setItem(SearchUserBean bean) {

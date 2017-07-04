@@ -30,6 +30,7 @@ import java.util.List;
 /**
  * Created by hewking on 2017/3/22.
  */
+@Deprecated
 public class AddFriendUIView extends UserInfoRecyclerUIView {
 
     public AddFriendUIView() {
