@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:background="@color/base_orange">
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/phone_view"
+        style="@style/MainTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/base_xxhdpi"
+        android:tag="@string/code_phone_format"
+        tools:text="188888888888"/>
+
+    <com.angcyo.uiview.widget.PasswordInputEditText
+        android:id="@+id/code_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/base_xxxhdpi"
+        android:layout_marginStart="@dimen/base_xxxhdpi"
+        android:padding="@dimen/base_0dpi"
+        app:r_password_bg_color="@color/base_white"
+        app:r_password_border_color="@color/line_color"
+        app:r_password_count="6"
+        app:r_password_size="@dimen/base_40dpi"
+        app:r_password_space="@dimen/base_xhdpi"/>
+
+    <com.hn.d.valley.widget.HnButton
+        android:id="@+id/next_view"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/base_xxxhdpi"
+        android:gravity="center"
+        android:text="@string/next"
+        android:textColor="@color/base_white"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_tip_view1"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_protect_code_tip"/>
+
+        <TextView
+            android:id="@+id/text_tip_view2"
+            style="@style/MainTextStyle"
+            android:text="@string/repeat_code_tip"
+            android:textColor="@color/orange"/>
+    </LinearLayout>
+
+</LinearLayout>

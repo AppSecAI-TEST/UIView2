@@ -319,6 +319,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         LoginControl.instance().setFirstRegister(true);
         // 开钱包账户
         LoginUIView2.login(mActivity, mParentILayout, mSubscriptions,
-                phone, mPasswordView.string(), "", "", "", "", "");
+                phone, mPasswordView.string(),
+                "", "", "", "", "", "");
     }
 }

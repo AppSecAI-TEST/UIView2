@@ -14,6 +14,7 @@ import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -127,9 +128,9 @@ public class LoginUIView2 extends BaseContentUIView {
                 });
     }
 
-    public static void login(final Activity activity, ILayout iLayout, CompositeSubscription sub,
-                             String phone, String pwd, String open_id, String open_type, String open_nick,
-                             String open_avatar, String open_sex) {
+    public static void login(final Activity activity, final ILayout iLayout, CompositeSubscription sub,
+                             final String phone, final String pwd, final String open_id, final String open_type, final String open_nick,
+                             final String open_avatar, final String open_sex, String code /**登录保护的验证码*/) {
 
         Map<String, String> map = new HashMap<>();
         if (TextUtils.isEmpty(phone)) {
@@ -144,6 +145,10 @@ public class LoginUIView2 extends BaseContentUIView {
             map.put("phone", phone);
             String encode = RSA.encode(pwd);
             map.put("pwd", encode);
+
+            if (!TextUtils.isEmpty(code)) {
+                map.put("code", code);
+            }
 
             AutoLoginControl.saveAutoLoginBean(AutoLoginControl.AutoLoginBean.LOGIN_PHONE,
                     "", phone, encode);
@@ -188,10 +193,28 @@ public class LoginUIView2 extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
-                        super.onEnd(isError, isNoNetwork, e);
+                    public void onError(int code, String msg) {
+
+                    }
+
+                    @Override
+                    public void onEnd(boolean isError, int errorCode, boolean isNoNetwork, Throwable e) {
+                        super.onEnd(isError, errorCode, isNoNetwork, e);
                         if (isError) {
                             HnLoading.hide();
+                            if (errorCode == 1063) {
+                                //登录保护
+                                UIDialog.build()
+                                        .setDialogContent(activity.getString(R.string.login_protect_tip))
+                                        .setOkClick(new UIDialog.OnDialogClick() {
+                                            @Override
+                                            public void onDialogClick(UIDialog dialog, View clickView) {
+                                                iLayout.startIView(new LoginProtectCodeUIView(phone, pwd, open_id, open_type,
+                                                        open_nick, open_avatar, open_sex));
+                                            }
+                                        })
+                                        .showDialog(iLayout);
+                            }
                         }
                     }
                 }));
@@ -335,7 +358,8 @@ public class LoginUIView2 extends BaseContentUIView {
                         }
 
                         login(mActivity, mParentILayout, mSubscriptions,
-                                mPhoneView.string(), mPasswordView.string(), "", "", "", "", "");
+                                mPhoneView.string(), mPasswordView.string(),
+                                "", "", "", "", "", "");
                     }
                 });
 
