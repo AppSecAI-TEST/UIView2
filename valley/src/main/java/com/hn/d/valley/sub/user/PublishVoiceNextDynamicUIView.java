@@ -155,7 +155,10 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                 } else {
                     playView.setPlaying(true);
                     MusicControl.play(filePath);
-                    mTimeView.setTime(0);
+                    if (mTimeView.getTime() == -1 ||
+                            mTimeView.getTime() == recordTime) {
+                        mTimeView.setTime(0);
+                    }
                     mTimeView.startRecord(null);
                 }
             }
@@ -169,6 +172,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
 
             @Override
             public void onPlayEnd(String url) {
+                mTimeView.setTime(recordTime);
                 playView.setPlaying(false);
                 mTimeView.stopRecord(false);
             }
