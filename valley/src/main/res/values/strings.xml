@@ -831,6 +831,7 @@
     <string name="modify_successed">修改成功.</string>
     <string name="no_like_successed_tip">已减少相关内容推送.</string>
     <string name="login_protect_tip">你在新设备登录恐龙谷, 为了保障你的账户安全, 需要使用短信验证码确认</string>
+    <string name="unlock_tip">你的帐号已被暂时关闭,无法登录.点击确定按钮可以解封.</string>
     <string name="login_protect_code_tip">收不到验证码?</string>
     <string name="repeat_code_tip">重发验证码</string>
     <string name="code_phone_format">验证码已发送至手机: %1$s</string>

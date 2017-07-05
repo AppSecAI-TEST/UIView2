@@ -27,7 +27,7 @@ import com.hn.d.valley.service.OtherService
  * Version: 1.0.0
  */
 class LoginProtectCodeUIView(val phone: String, val pwd: String, val open_id: String, val open_type: String, val open_nick: String,
-                             val open_avatar: String, val open_sex: String) : BaseItemUIView() {
+                             val open_avatar: String, val open_sex: String, val type: String) : BaseItemUIView() {
 
     var code = ""
 
@@ -70,7 +70,7 @@ class LoginProtectCodeUIView(val phone: String, val pwd: String, val open_id: St
 
     private fun sendPhoneVerifyCode() {
         add(RRetrofit.create(OtherService::class.java)
-                .sendPhoneVerifyCode(Param.buildMap("phone:" + phone, "type:login_protect"))
+                .sendPhoneVerifyCode(Param.buildMap("phone:$phone", "type:$type"))
                 .compose(Rx.transformer(String::class.java))
                 .subscribe(object : BaseSingleSubscriber<String>() {
                     override fun onSucceed(s: String) {

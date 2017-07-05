@@ -202,15 +202,30 @@ public class LoginUIView2 extends BaseContentUIView {
                         super.onEnd(isError, errorCode, isNoNetwork, e);
                         if (isError) {
                             HnLoading.hide();
+
+                            boolean show = false;
+                            String type = "";
                             if (errorCode == 1063) {
                                 //登录保护
+                                show = true;
+                                type = "login_protect";
+                            } else if (errorCode == 1029) {
+                                //账户被锁
+                                show = true;
+                                type = "unlock";
+                            }
+
+                            if (show) {
+                                final String finalType = type;
                                 UIDialog.build()
-                                        .setDialogContent(activity.getString(R.string.login_protect_tip))
+                                        .setDialogContent("unlock".equalsIgnoreCase(type) ?
+                                                activity.getString(R.string.unlock_tip) :
+                                                activity.getString(R.string.login_protect_tip))
                                         .setOkClick(new UIDialog.OnDialogClick() {
                                             @Override
                                             public void onDialogClick(UIDialog dialog, View clickView) {
                                                 iLayout.startIView(new LoginProtectCodeUIView(phone, pwd, open_id, open_type,
-                                                        open_nick, open_avatar, open_sex));
+                                                        open_nick, open_avatar, open_sex, finalType));
                                             }
                                         })
                                         .showDialog(iLayout);
