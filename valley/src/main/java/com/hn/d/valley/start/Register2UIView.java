@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -327,5 +328,17 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         LoginUIView2.login(mActivity, mParentILayout, mSubscriptions,
                 phone, mPasswordView.string(),
                 "", "", "", "", "", "");
+    }
+
+    @Override
+    public void onViewLoad() {
+        super.onViewLoad();
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+    }
+
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 }

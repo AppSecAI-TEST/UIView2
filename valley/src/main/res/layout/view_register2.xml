@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <com.hn.d.valley.widget.HnEmptyRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -37,7 +38,7 @@
             android:background="@drawable/base_main_color_border_selector"
             android:hint="@string/register_name_hint"
             android:imeOptions="actionNext"
-            android:maxLength="@integer/name_count"
+            android:maxLength="8"
             android:textColor="@color/main_text_color"
             app:r_left_text="@string/register_name_tip"
             app:r_left_text_color="@color/base_text_color_dark"/>
@@ -62,8 +63,8 @@
                 android:textColor="@color/main_text_color"
                 android:textColorHint="@color/main_text_color_dark"
                 app:r_left_text="@string/sex_tip"
-                app:r_left_text_offset="@dimen/base_ldpi"
-                app:r_left_text_color="@color/base_text_color_dark"/>
+                app:r_left_text_color="@color/base_text_color_dark"
+                app:r_left_text_offset="@dimen/base_ldpi"/>
 
             <ImageView
                 style="@style/SingleImageButtonStyle"
@@ -98,9 +99,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:contentDescription="register"
                 android:layout_marginRight="@dimen/base_hdpi"
-                android:button="@drawable/password_zhuce_checkbox_selector"/>
+                android:button="@drawable/password_zhuce_checkbox_selector"
+                android:contentDescription="register"/>
 
         </RelativeLayout>
 
