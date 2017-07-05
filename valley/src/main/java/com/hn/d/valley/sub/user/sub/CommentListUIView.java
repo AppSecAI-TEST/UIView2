@@ -55,7 +55,11 @@ public class CommentListUIView extends BaseDynamicListUIView {
      * @param isInfo 是否是资讯评论列表
      */
     public CommentListUIView(String discuss_id, boolean isInfo) {
-        super(isInfo ? ListType.INFO_COMMENT_TYPE : ListType.COMMENT_TYPE);
+        this(discuss_id, isInfo ? ListType.INFO_COMMENT_TYPE : ListType.COMMENT_TYPE);
+    }
+
+    public CommentListUIView(String discuss_id, ListType type) {
+        super(type);
         this.discuss_id = discuss_id;
     }
 
@@ -70,14 +74,17 @@ public class CommentListUIView extends BaseDynamicListUIView {
     }
 
     @Override
-    protected void initInfoItemLayout(RBaseViewHolder holder, final CommentListBean.DataListBean dataBean, int posInData) {
+    protected void initInfoItemLayout(RBaseViewHolder holder, final CommentListBean.DataListBean dataBean, final int posInData) {
         //内容
         HnExTextView hnExTextView = holder.v(R.id.content_ex_view);
         hnExTextView.setMaxShowLine(3);
         hnExTextView.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mParentILayout));
         String content = dataBean.getContent();
-        hnExTextView.setText(content);
         hnExTextView.setVisibility(TextUtils.isEmpty(content) ? View.GONE : View.VISIBLE);
+        hnExTextView.setText(content);
+
+        holder.v(R.id.reply_cnt_view).setVisibility(View.VISIBLE);
+        holder.tv(R.id.reply_cnt_view).setText(dataBean.getReply_cnt());
 
         //头像
         HnGlideImageView glideImageView = holder.v(R.id.glide_image_view);
@@ -100,7 +107,7 @@ public class CommentListUIView extends BaseDynamicListUIView {
 
         //时间, 删除
         holder.tv(R.id.time_view).setText(TimeUtil.getTimeShowString(Long.valueOf(dataBean.getCreated()) * 1000l, true));
-        View deleteView = holder.v(R.id.delete_view);
+        final View deleteView = holder.v(R.id.delete_view);
         deleteView.setVisibility(isMe(dataBean.getUid()) ? View.VISIBLE : View.GONE);
 
         deleteView.setOnClickListener(new View.OnClickListener() {
@@ -147,7 +154,31 @@ public class CommentListUIView extends BaseDynamicListUIView {
         }
         itemTextView.setVisibility(View.VISIBLE);
 
-        InformationDetailUIView.Companion.initLikeView(mSubscriptions, holder, "comment", dataBean);
+        InformationDetailUIView.Companion.initLikeView(mSubscriptions, holder,
+                mListType == ListType.INFO_COMMENT_REPLY_TYPE ? "reply" : "comment",
+                dataBean);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InformationCommentReplyListUIView uiView = new InformationCommentReplyListUIView(dataBean);
+                uiView.setOnCommentListener(new OnCommentListener() {
+                    @Override
+                    public void onComment() {
+                        mRExBaseAdapter.notifyItemChanged(posInData);
+                    }
+
+                    @Override
+                    public void onDeleteComment() {
+                        mRExBaseAdapter.deleteItem(dataBean);
+                        if (mRExBaseAdapter.isItemEmpty()) {
+                            onUILoadDataEnd(null);
+                        }
+                    }
+                });
+                mParentILayout.startIView(uiView);
+            }
+        });
     }
 
     @Override

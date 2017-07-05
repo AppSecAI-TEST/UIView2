@@ -837,5 +837,7 @@
     <string name="code_phone_format">验证码已发送至手机: %1$s</string>
     <string name="input_code_tip">请输入验证码</string>
     <string name="input_code">填写验证码</string>
+    <string name="reply_count_format">共%1$s条回复</string>
+    <string name="replay_success">回复成功</string>
 
 </resources>

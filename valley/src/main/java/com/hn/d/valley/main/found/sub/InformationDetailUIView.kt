@@ -109,7 +109,7 @@ class InformationDetailUIView : BaseContentUIView {
                         likeView.text = data.likeCount
                     }
                     subscriptions.add(RRetrofit.create(NewsService::class.java)
-                            .unlike(Param.buildInfoMap("type:comment", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
+                            .unlike(Param.buildInfoMap("type:$type", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
                             .compose(Rx.transformer(String::class.java))
                             .subscribe(object : BaseSingleSubscriber<String>() {
                                 override fun onSucceed(bean: String?) {
@@ -134,7 +134,7 @@ class InformationDetailUIView : BaseContentUIView {
                         likeView.text = data.likeCount
                     }
                     subscriptions.add(RRetrofit.create(NewsService::class.java)
-                            .like(Param.buildInfoMap("type:comment", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
+                            .like(Param.buildInfoMap("type:$type", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
                             .compose(Rx.transformer(String::class.java))
                             .subscribe(object : BaseSingleSubscriber<String>() {
                                 override fun onSucceed(bean: String?) {
@@ -204,8 +204,10 @@ class InformationDetailUIView : BaseContentUIView {
 
         mTabLayout.setItemNoBackground(true)
 
-        initViewPager()
-        initTabLayout()
+        postDelayed(300) {
+            initViewPager()
+            initTabLayout()
+        }
         initWebView()
 
         getDetail()
@@ -256,7 +258,6 @@ class InformationDetailUIView : BaseContentUIView {
             mParentILayout.startIView(NoLikeDialog())
         }
     }
-
 
     private fun initTagsLayout() {
         val flowLayout: RFlowLayout = mViewHolder.v(R.id.flow_layout)
@@ -430,9 +431,8 @@ class InformationDetailUIView : BaseContentUIView {
         click(R.id.input_tip_view) {
             startIView(CommentInputDialog(object : CommentInputDialog.InputConfig {
                 override fun onInitDialogLayout(viewHolder: RBaseViewHolder) {
-                    viewHolder.v<View>(R.id.ico_pic).visibility = View.GONE
-                    viewHolder.v<View>(R.id.ico_gif).visibility = View.GONE
-                    viewHolder.v<View>(R.id.ico_at).visibility = View.GONE
+                    viewHolder.v<View>(R.id.control_layout).visibility = View.GONE
+                    viewHolder.v<View>(R.id.line_view).visibility = View.GONE
                 }
 
                 override fun onSendClick(imagePath: String, content: String?) {
@@ -479,10 +479,15 @@ class InformationDetailUIView : BaseContentUIView {
                         if (bean != null) {
                             detailBean = bean
 
-                            initControlLayout()
-                            initTagsLayout()
-                            initLikeView()
-                            initOtherListLayout(detailBean.tagList[0])
+                            postDelayed(300) {
+                                initControlLayout()
+                                initTagsLayout()
+                                initLikeView()
+                                initOtherListLayout(detailBean.tagList[0])
+
+                                mViewHolder.v<View>(R.id.line2).visibility = View.VISIBLE
+                                mViewHolder.v<View>(R.id.line3).visibility = View.VISIBLE
+                            }
 
                             uiTitleBarContainer.showRightItem(0)
                         }

@@ -156,7 +156,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base_ldpi"
                 android:layout_marginTop="@dimen/base_xhdpi"
-                android:background="@color/chat_bg_color"/>
+                android:background="@color/chat_bg_color"
+                android:visibility="invisible"/>
 
         </LinearLayout>
 
@@ -198,7 +199,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base_line"
                 android:layout_marginTop="@dimen/base_ldpi"
-                android:background="@color/chat_bg_color"/>
+                android:background="@color/chat_bg_color"
+                android:visibility="invisible"/>
         </LinearLayout>
 
     </com.angcyo.uiview.design.StickLayout2>
@@ -208,6 +210,12 @@
     <!--android:layout_height="@dimen/base_toast_shadow_height"-->
     <!--android:layout_above="@id/bottom_layout"-->
     <!--android:background="@drawable/base_shadow_shape_top"/>-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_toast_shadow_height"
+        android:layout_above="@id/bottom_layout"
+        android:background="@drawable/base_shadow_shape_top"/>
 
     <com.angcyo.uiview.widget.EmptyView
         android:id="@+id/load_view"

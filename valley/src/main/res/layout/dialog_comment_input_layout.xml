@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:clickable="true"
             android:orientation="vertical">
 
             <!--图片提示框-->
@@ -47,6 +48,7 @@
 
             <!--控制按钮布局-->
             <LinearLayout
+                android:id="@+id/control_layout"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:background="@color/default_base_white"
@@ -77,10 +79,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
-                    android:button="@drawable/comment_emoji_selector"
                     android:background="@drawable/base_bg2_selector"
-                    android:minWidth="@dimen/base_25dpi"
+                    android:button="@drawable/comment_emoji_selector"
                     android:gravity="center"
+                    android:minWidth="@dimen/base_25dpi"
                     />
 
                 <CheckBox
@@ -89,14 +91,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/base_xhdpi"
                     android:layout_marginStart="@dimen/base_xhdpi"
-                    android:gravity="center"
                     android:background="@drawable/base_bg2_selector"
                     android:button="@drawable/comment_expression_selector"
+                    android:gravity="center"
                     />
 
             </LinearLayout>
 
             <View
+                android:id="@+id/line_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/base_line"
                 android:background="@color/chat_bg_color"/>

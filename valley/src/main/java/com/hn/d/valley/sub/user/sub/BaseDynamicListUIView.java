@@ -35,6 +35,8 @@ import com.hn.d.valley.widget.HnItemTextView;
 
 import java.util.List;
 
+import static com.angcyo.uiview.recycler.adapter.RExBaseAdapter.TYPE_DATA;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -86,23 +88,40 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         }));
     }
 
+    protected int getItemLayoutId(int viewType) {
+        return R.layout.item_comment_layout2;
+    }
+
+    protected int getDataItemType(int posInData) {
+        return TYPE_DATA;
+    }
+
+    protected void onBindDataView(RBaseViewHolder holder, int posInData, final CommentListBean.DataListBean dataBean) {
+        if (mListType == ListType.INFO_COMMENT_TYPE || mListType == ListType.INFO_COMMENT_REPLY_TYPE) {
+            //资讯评论列表
+            initInfoItemLayout(holder, dataBean, posInData);
+        } else {
+            initItemLayout(holder, dataBean, mListType == ListType.COMMENT_TYPE ? "comment" : "", posInData);
+        }
+    }
+
     @Override
     protected RExBaseAdapter<String, CommentListBean.DataListBean, String> initRExBaseAdapter() {
         return new RExBaseAdapter<String, CommentListBean.DataListBean, String>(mActivity) {
             @Override
             protected int getItemLayoutId(int viewType) {
-                return R.layout.item_comment_layout2;
+                return BaseDynamicListUIView.this.getItemLayoutId(viewType);
+            }
+
+            @Override
+            protected int getDataItemType(int posInData) {
+                return BaseDynamicListUIView.this.getDataItemType(posInData);
             }
 
             @Override
             protected void onBindDataView(RBaseViewHolder holder, int posInData, final CommentListBean.DataListBean dataBean) {
                 super.onBindDataView(holder, posInData, dataBean);
-                if (mListType == ListType.INFO_COMMENT_TYPE) {
-                    //资讯评论列表
-                    initInfoItemLayout(holder, dataBean, posInData);
-                } else {
-                    initItemLayout(holder, dataBean, mListType == ListType.COMMENT_TYPE ? "comment" : "", posInData);
-                }
+                BaseDynamicListUIView.this.onBindDataView(holder, posInData, dataBean);
             }
         };
     }
@@ -376,6 +395,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         FORWARD_TYPE,//转发列表
         COMMENT_TYPE,//评论列表
         INFO_COMMENT_TYPE,//资讯评论列表
+        INFO_COMMENT_REPLY_TYPE,//资讯评论回复列表
         REPLY_TYPE//回复列表
     }
 

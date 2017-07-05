@@ -55,6 +55,11 @@ public abstract class SingleRecyclerUIView<T> extends BaseRecyclerUIView<String,
     }
 
     @Override
+    protected void requestLoadDataOnShowContent() {
+        //super.requestLoadDataOnShowContent();
+    }
+
+    @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
         if (!isLoadInViewPager()) {

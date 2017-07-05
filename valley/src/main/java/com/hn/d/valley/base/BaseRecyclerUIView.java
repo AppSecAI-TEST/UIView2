@@ -97,6 +97,10 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         initRefreshLayout();
         initRecyclerView();
 
+        requestLoadDataOnShowContent();
+    }
+
+    protected void requestLoadDataOnShowContent() {
         if (getDefaultLayoutState() == LayoutState.CONTENT
                 && !isLoadInViewPager()) {
             loadData();
@@ -262,7 +266,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      */
     public RefreshLayout getRefreshLayout() {
         if (mRefreshLayout == null && mViewHolder != null) {
-            return mViewHolder.v(R.id.refresh_layout);
+            mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
         }
         return mRefreshLayout;
     }
@@ -272,7 +276,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      */
     public RRecyclerView getRecyclerView() {
         if (mRecyclerView == null && mViewHolder != null) {
-            return mViewHolder.v(R.id.recycler_view);
+            mRecyclerView = mViewHolder.v(R.id.recycler_view);
         }
         return mRecyclerView;
     }

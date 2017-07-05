@@ -146,7 +146,7 @@ public class CommentListBean {
          */
 
         private String id;
-        private int itemid;
+        private String itemid;
         private String type;
         private int report_cnt;
         private int status;
@@ -388,11 +388,11 @@ public class CommentListBean {
             this.id = id;
         }
 
-        public int getItemid() {
+        public String getItemid() {
             return itemid;
         }
 
-        public void setItemid(int itemid) {
+        public void setItemid(String itemid) {
             this.itemid = itemid;
         }
 
