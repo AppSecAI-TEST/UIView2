@@ -39,6 +39,7 @@ import com.hn.d.valley.main.friend.FriendsAdapter;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.SystemPushItem;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.main.message.session.SessionHelper;
@@ -210,6 +211,12 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
                 }));
 
                 return items;
+            }
+
+            @Override
+            protected void onUserIcoClick(String uid) {
+                super.onUserIcoClick(uid);
+                otherLayout.startIView(new UserDetailUIView2(uid));
             }
         };
 

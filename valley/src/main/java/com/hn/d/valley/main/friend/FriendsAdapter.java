@@ -72,11 +72,15 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             });
         }
 
+        SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
+        TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
+        iv_head.setOnClickListener(null);
+        iv_head.setClickable(false);
+
         if (holder.getItemViewType() == ItemTypes.SYSTEMPUSH) {
             final SystemPushItem pushItem = (SystemPushItem) bean;
             final FriendBean friendBean = pushItem.getFriendBean();
-            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
-            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
+
 //            iv_head.setImageUrl(friendBean.getAvatar());
             DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
             tv_friend_name.setText(friendBean.getTrueName());
@@ -90,8 +94,6 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
 
         if(holder.getItemViewType() == ItemTypes.FUNC) {
             final FuncItem funcItem = (FuncItem) bean;
-            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
             iv_head.setImageResource(funcItem.getDrawableRes());
             tv_friend_name.setText(funcItem.text);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -106,11 +108,16 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
         } else if (holder.getItemViewType() == ItemTypes.FRIEND) {
             ContactItem friendItem = (ContactItem) bean;
             final FriendBean friendBean = friendItem.getFriendBean();
-            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
-            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
 //            iv_head.setImageThumbUrl(friendBean.getAvatar());
             DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
             tv_friend_name.setText(friendBean.getTrueName());
+
+            iv_head.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onUserIcoClick(friendBean.getUid());
+                }
+            });
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -121,6 +128,10 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
                 }
             });
         }
+    }
+
+    protected void onUserIcoClick(String uid) {
+
     }
 
     @Override
