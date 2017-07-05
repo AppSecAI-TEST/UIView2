@@ -303,8 +303,13 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                             if (isForward()) {
                                 mInputView.setText(getContent(mInputView.string()));
                             } else {
-                                mInputView.error();
-                                return;
+//                                mInputView.error();
+//                                return;
+                                if (mDynamicType == DynamicType.IMAGE &&
+                                        mAddImageAdapter2.getAllDatas().size() == 0) {
+                                    T_.error(getString(R.string.publish_empty_tip));
+                                    return;
+                                }
                             }
                         }
 
@@ -320,8 +325,26 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             mDynamicType = DynamicType.TEXT;
         } else if (mDynamicType == DynamicType.TEXT && mAddImageAdapter2.getAllDatas().size() > 1 /**加号要除掉*/) {
             mDynamicType = DynamicType.IMAGE;
+            if (mInputView.isEmpty()) {
+                mInputView.setText(R.string.publish_image);
+            }
         } else if (mVideoStatusInfo != null) {
             mDynamicType = DynamicType.VIDEO;
+        }
+
+        int emptyRes;
+        if (mDynamicType == DynamicType.TEXT) {
+            emptyRes = R.string.publish_text;
+        } else if (mDynamicType == DynamicType.IMAGE) {
+            emptyRes = R.string.publish_image;
+        } else if (mDynamicType == DynamicType.VIDEO) {
+            emptyRes = R.string.publish_video;
+        } else {
+            emptyRes = R.string.publish_dynamic_tip;
+        }
+
+        if (mInputView.isEmpty()) {
+            mInputView.setText(emptyRes);
         }
     }
 

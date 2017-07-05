@@ -839,5 +839,10 @@
     <string name="input_code">填写验证码</string>
     <string name="reply_count_format">共%1$s条回复</string>
     <string name="replay_success">回复成功</string>
+    <string name="publish_dynamic_tip">分享动态</string>
+    <string name="publish_text">分享文本</string>
+    <string name="publish_image">分享图片</string>
+    <string name="publish_video">分享视频</string>
+    <string name="publish_empty_tip">请选择图片.</string>
 
 </resources>

@@ -165,8 +165,6 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         }
                     }
                 });
-
-        loadCollectCount();
     }
 
     private void loadCollectCount() {
