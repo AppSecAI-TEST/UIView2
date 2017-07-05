@@ -119,10 +119,6 @@ public class GroupQrCodeUIView extends MyQrCodeUIView {
                 .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
                 .compose(Rx.transformer(GroupDescBean.class))
                 .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(final GroupDescBean bean) {

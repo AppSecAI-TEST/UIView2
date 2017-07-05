@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -245,8 +246,8 @@ public class ReplyListUIView extends BaseDynamicListUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                     }
                 }));
@@ -287,10 +288,11 @@ public class ReplyListUIView extends BaseDynamicListUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                     }
+
                 }));
     }
 

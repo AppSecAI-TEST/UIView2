@@ -2,6 +2,7 @@ package com.hn.d.valley.sub.user;
 
 import android.text.TextUtils;
 
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -103,10 +104,12 @@ public class MyStatusDetailUIView extends SingleRecyclerUIView<UserDiscussListBe
                     }
 
                     @Override
-                    public void onEnd() {
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                         onUILoadDataFinish();
                     }
+
                 }));
     }
 }

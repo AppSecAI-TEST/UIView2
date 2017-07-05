@@ -27,6 +27,7 @@ import com.angcyo.uiview.github.tablayout.TabLayoutUtil;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -356,9 +357,12 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        T_.error(msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        hideLoadView();
+                        if (isError) {
+                            T_.error(e.getMsg());
+                        }
                     }
 
                     @Override
@@ -370,12 +374,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
                             initView(bean);
                             initViewPager();
                         }
-                    }
-
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                        hideLoadView();
                     }
                 })
         );
@@ -768,7 +766,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                             }
 
                             @Override
-                            public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                                 super.onEnd(isError, isNoNetwork, e);
                                 HnLoading.hide();
                             }

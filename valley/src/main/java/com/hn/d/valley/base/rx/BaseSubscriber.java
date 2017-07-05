@@ -1,6 +1,7 @@
 package com.hn.d.valley.base.rx;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.base.Bean;
 
@@ -22,7 +23,7 @@ public class BaseSubscriber<O extends Object, B extends Bean<O>> extends BaseSin
         if (b.isSuccess()) {
             onSuccess(b);
         } else {
-            onError(b.error.code, b.error.msg);
+            onEnd(true, false, new RException(b.error.code, b.error.msg));
         }
     }
 

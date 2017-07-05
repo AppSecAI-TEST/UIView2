@@ -7,16 +7,13 @@ import android.widget.Button;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.event.SelectedUserNumEvent;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.RBus;
 
@@ -135,10 +132,6 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 .cashaccountRemove(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "type:" + 0))
                 .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(String beans) {
@@ -161,10 +154,6 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 .cashaccountSet(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "type:" + 0, "account:" + account, "realname:" + realname))
                 .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(String beans) {

@@ -3,6 +3,7 @@ package com.hn.d.valley.control
 import com.angcyo.library.utils.L
 import com.angcyo.uiview.github.utilcode.utils.AppUtils
 import com.angcyo.uiview.github.utilcode.utils.FileUtils
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.hn.d.valley.ValleyApp
@@ -59,7 +60,7 @@ object VersionControl {
                             checkUpgradeInfo(onUpdate)
                         }
 
-                        override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: Throwable?) {
+                        override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
                             super.onEnd(isError, isNoNetwork, e)
                             checking = false
                         }

@@ -12,6 +12,7 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -75,15 +76,15 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     //listener
     private GroupInfoUpdatelistener infoUpdatelistener;
 
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType,GroupInfoUpdatelistener listener) {
+    public GroupInfoUIVIew(GroupInfoUpdatelistener listener) {
+        infoUpdatelistener = listener;
+    }
+
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType, GroupInfoUpdatelistener listener) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
         mLayout.startIView(new GroupInfoUIVIew(listener), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
-    }
-
-    public GroupInfoUIVIew(GroupInfoUpdatelistener listener) {
-        infoUpdatelistener = listener;
     }
 
     @Override
@@ -193,21 +194,18 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
-                    }
+                        if (isError) {
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loadData();
+                                }
+                            });
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        showNonetLayout(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadData();
-                            }
-                        });
-
+                        }
                     }
 
                     @Override
@@ -275,7 +273,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onClick(View v) {
 //                        mParentILayout.startIView(new GroupQrCodeUIView());
-                        GroupQrCodeUIView.start(mParentILayout,mSessionId,mGroupDescBean);
+                        GroupQrCodeUIView.start(mParentILayout, mSessionId, mGroupDescBean);
                     }
                 });
             }
@@ -312,9 +310,9 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if (isChecked) {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,1);
+                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 1);
                         } else {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId,sessionType,0);
+                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 0);
                         }
                         RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
                         //callback
@@ -374,7 +372,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         startInputView(infoLayout, mGroupDescBean.getNick(), new Action1<String>() {
                             @Override
                             public void call(String s) {
-                                editNickName(UserCache.getUserAccount(),s);
+                                editNickName(UserCache.getUserAccount(), s);
                             }
                         });
                     }
@@ -391,7 +389,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new ChatFileUIView(mSessionId,sessionType));
+                        mParentILayout.startIView(new ChatFileUIView(mSessionId, sessionType));
                     }
                 });
 
@@ -406,7 +404,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ChatRecordSearchUIView.start(mParentILayout, GlobalSearchUIView2.Options.sOptions,mSessionId,sessionType,new int[]{ItemTypes.MSG});
+                        ChatRecordSearchUIView.start(mParentILayout, GlobalSearchUIView2.Options.sOptions, mSessionId, sessionType, new int[]{ItemTypes.MSG});
                     }
                 });
             }
@@ -524,7 +522,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         public void onClick(View v) {
                             if (mGroupDescBean != null && mGroupDescBean.canUpgrade()) {
                                 UIDialog.build()
-                                        .setDialogContent(String.format(mActivity.getString(R.string.text_group_upgrade_true_tip),mGroupDescBean.getTopMemberLimit()))
+                                        .setDialogContent(String.format(mActivity.getString(R.string.text_group_upgrade_true_tip), mGroupDescBean.getTopMemberLimit()))
                                         .setCancelText(getString(R.string.cancel))
                                         .setOkText(getString(R.string.ok))
                                         .setOkListener(new View.OnClickListener() {
@@ -538,7 +536,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                                 UIDialog.build()
                                         .setOkText(mActivity.getString(R.string.text_i_known))
                                         .setCancelText("")
-                                        .setDialogContent(String.format(mActivity.getString(R.string.text_group_upgrade_false_tip),mGroupDescBean.getTopMemberLimit()))
+                                        .setDialogContent(String.format(mActivity.getString(R.string.text_group_upgrade_false_tip), mGroupDescBean.getTopMemberLimit()))
                                         .showDialog(mILayout);
                             }
 
@@ -559,8 +557,8 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            GroupMemberSelectUIVIew.start(mParentILayout,option
-                                    , null,mGroupDescBean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                            GroupMemberSelectUIVIew.start(mParentILayout, option
+                                    , null, mGroupDescBean.getGid(), new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                         @Override
                                         public void call(UIBaseRxView uiBaseDataView, final List<AbsContactItem> absContactItems, final RequestCallback requestCallback) {
                                             requestCallback.onStart();
@@ -675,7 +673,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 }));
     }
 
-    private void editNickName(String to_uid,String name) {
+    private void editNickName(String to_uid, String name) {
         if (mGroupDescBean == null) {
             return;
         }

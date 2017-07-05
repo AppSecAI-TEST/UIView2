@@ -1,9 +1,8 @@
 package com.hn.d.valley.main.message.groupchat;
 
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.utils.T;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
@@ -14,13 +13,12 @@ import com.hn.d.valley.service.ContactService;
 
 import java.util.List;
 
-import rx.functions.Action1;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by hewking on 2017/3/9.
  */
-public class AddGroupDatatProvider implements IDataResource.IDataActionProvider<List<FriendBean>>{
+public class AddGroupDatatProvider implements IDataResource.IDataActionProvider<List<FriendBean>> {
 
     @Override
     public void provide(CompositeSubscription subscription, final RequestCallback<List<FriendBean>> requestCallback) {
@@ -36,15 +34,18 @@ public class AddGroupDatatProvider implements IDataResource.IDataActionProvider<
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        requestCallback.onError(msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+
+                            requestCallback.onError(e.getMsg());
+                        }
                     }
 
                     @Override
                     public void onSucceed(FriendListModel bean) {
                         super.onSucceed(bean);
-                        if(bean == null || bean.getData_list().size() == 0 ) {
+                        if (bean == null || bean.getData_list().size() == 0) {
                             requestCallback.onSuccess(null);
                             return;
                         }
@@ -52,10 +53,6 @@ public class AddGroupDatatProvider implements IDataResource.IDataActionProvider<
                         requestCallback.onSuccess(data_list);
                     }
 
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                    }
                 }));
     }
 }

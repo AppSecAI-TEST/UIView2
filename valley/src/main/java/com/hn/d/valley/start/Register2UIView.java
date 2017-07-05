@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
@@ -209,8 +210,11 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                         }
 
                         @Override
-                        public void onError(int code, String msg) {
-                            T_.show(mActivity.getString(R.string.register_fial_tip) + code);
+                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                            super.onEnd(isError, isNoNetwork, e);
+                            if (isError) {
+                                T_.show(mActivity.getString(R.string.register_fial_tip) + code);
+                            }
                         }
                     })
             );
@@ -280,11 +284,13 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        if (!background) {
-                            onRequestFinish();
-                            Register2UIView.this.onRequestError(code, msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            if (!background) {
+                                onRequestFinish();
+                                Register2UIView.this.onRequestError(e.getCode(), e.getMsg());
+                            }
                         }
                     }
                 })

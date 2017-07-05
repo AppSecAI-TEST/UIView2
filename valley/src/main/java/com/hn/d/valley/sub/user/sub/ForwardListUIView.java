@@ -52,10 +52,6 @@ public class ForwardListUIView extends BaseDynamicListUIView {
                         onUILoadDataEnd(bean.getData_list());
                     }
 
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                    }
                 }));
     }
 }

@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.other;
 
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.base.BaseRecyclerUIView;
@@ -25,16 +26,13 @@ public abstract class SingleRSubscriber<T> extends RSubscriber<T> {
     protected abstract void onResult(T bean);
 
     @Override
-    public void onError(int code, String msg) {
-        super.onError(code, msg);
-        T_.error(msg);
-    }
-
-    @Override
-    public void onEnd() {
-        super.onEnd();
+    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+        super.onEnd(isError, isNoNetwork, e);
         mBaseRecyclerUIView.hideLoadView();
         mBaseRecyclerUIView.onUILoadDataFinish();
+        if (isError) {
+            T_.error(e.getMsg());
+        }
     }
 
     @Override

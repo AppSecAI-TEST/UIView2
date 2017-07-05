@@ -117,10 +117,6 @@ public class P2PStatusRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
 
                     }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
                 }));
     }
 

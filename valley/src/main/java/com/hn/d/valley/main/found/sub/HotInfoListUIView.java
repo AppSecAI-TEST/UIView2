@@ -12,6 +12,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIWindow;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -331,14 +332,9 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         onUILoadDataFinish();
-                    }
-
-                    @Override
-                    public void onEnd(boolean isError, int errorCode, boolean isNoNetwork, Throwable e) {
-                        super.onEnd(isError, errorCode, isNoNetwork, e);
                         if (isError) {
                             showNonetLayout(new View.OnClickListener() {
                                 @Override

@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 
 import com.angcyo.uiview.github.all.base.adapter.ViewGroupUtils;
 import com.angcyo.uiview.github.all.base.adapter.adapter.cache.BaseCacheAdapter;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
@@ -158,10 +159,12 @@ public class TagsControl {
                         }
 
                         @Override
-                        public void onError(int code, String msg) {
-                            super.onError(code, msg);
-                            if (listAction1 != null) {
-                                listAction1.call(new ArrayList<Tag>());
+                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                            super.onEnd(isError, isNoNetwork, e);
+                            if (isError) {
+                                if (listAction1 != null) {
+                                    listAction1.call(new ArrayList<Tag>());
+                                }
                             }
                         }
                     });

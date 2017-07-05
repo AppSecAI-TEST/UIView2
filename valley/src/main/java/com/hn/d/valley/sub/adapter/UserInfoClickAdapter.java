@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -73,9 +74,11 @@ public class UserInfoClickAdapter extends UserInfoAdapter {
                                     }
 
                                     @Override
-                                    public void onError(int code, String msg) {
-                                        super.onError(code, msg);
-                                        setSelectorPosition(posInData);
+                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                        super.onEnd(isError, isNoNetwork, e);
+                                        if (isError) {
+                                            setSelectorPosition(posInData);
+                                        }
                                     }
                                 }));
                     }
@@ -109,9 +112,11 @@ public class UserInfoClickAdapter extends UserInfoAdapter {
                                                 }
 
                                                 @Override
-                                                public void onError(int code, String msg) {
-                                                    super.onError(code, msg);
-                                                    setSelectorPosition(posInData);
+                                                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                    super.onEnd(isError, isNoNetwork, e);
+                                                    if (isError) {
+                                                        setSelectorPosition(posInData);
+                                                    }
                                                 }
                                             }));
                                 }

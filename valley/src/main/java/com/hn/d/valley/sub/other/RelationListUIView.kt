@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.other
 
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.hn.d.valley.R
@@ -45,7 +46,7 @@ class RelationListUIView(val to_uid: String) : UserInfoRecyclerUIView() {
                         }
                     }
 
-                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: Throwable?) {
+                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
                         super.onEnd(isError, isNoNetwork, e)
                         hideLoadView()
                     }

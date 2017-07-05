@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.found.sub
 
 import android.view.View
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
@@ -57,8 +58,8 @@ class MoreUserUIView(var searchText: String) : SingleRecyclerUIView<LikeUserInfo
                         }
                     }
 
-                    override fun onEnd(isError: Boolean, errorCode: Int, isNoNetwork: Boolean, e: Throwable?) {
-                        super.onEnd(isError, errorCode, isNoNetwork, e)
+                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
+                        super.onEnd(isError, isNoNetwork, e)
                         hideLoadView()
                         if (isError) {
                             showNonetLayout { loadData() }

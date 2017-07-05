@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -79,9 +80,11 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                                 }
 
                                 @Override
-                                public void onError(int code, String msg) {
-                                    super.onError(code, msg);
-                                    verifyButton.endCountDown();
+                                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                    super.onEnd(isError, isNoNetwork, e);
+                                    if (isError) {
+                                        verifyButton.endCountDown();
+                                    }
                                 }
                             })
                     );
@@ -135,8 +138,8 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                                         }
 
                                         @Override
-                                        public void onEnd() {
-                                            super.onEnd();
+                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                            super.onEnd(isError, isNoNetwork, e);
                                             HnLoading.hide();
                                         }
                                     })
@@ -166,11 +169,6 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                                 public void onSucceed(String s) {
                                     code = s;
                                     T_.show(mActivity.getString(R.string.voice_code_send_tip));
-                                }
-
-                                @Override
-                                public void onError(int code, String msg) {
-                                    super.onError(code, msg);
                                 }
                             })
                     );

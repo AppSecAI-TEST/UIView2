@@ -1,6 +1,7 @@
 package com.hn.d.valley.base.rx;
 
 import com.angcyo.uiview.mvp.view.IBaseView;
+import com.angcyo.uiview.net.RException;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -33,9 +34,11 @@ public abstract class UIStringSubscriber<T, V extends IBaseView> extends BaseSin
     }
 
     @Override
-    public void onError(int code, String msg) {
-        super.onError(code, msg);
-        mBaseView.onRequestError(code, msg);
+    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+        super.onEnd(isError, isNoNetwork, e);
+        if (isError) {
+            mBaseView.onRequestError(e.getCode(), e.getMsg());
+        }
     }
 
     @Override

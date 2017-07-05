@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -34,7 +35,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
 /**
  * Created by hewking on 2017/3/17.
  */
-public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
+public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean> {
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -56,7 +57,7 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
         super.onUILoadData(page);
 
         add(RRetrofit.create(MessageService.class)
-                .list(Param.buildMap("uid:" + UserCache.getUserAccount(), "type:" + 5 , "page:" + page))
+                .list(Param.buildMap("uid:" + UserCache.getUserAccount(), "type:" + 5, "page:" + page))
                 .compose(Rx.transformer(CustomMessageModel.class))
                 .subscribe(new SingleRSubscriber<CustomMessageModel>(this) {
                     @Override
@@ -71,19 +72,31 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
                         }
                     }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
+
                 }));
 
+    }
+
+    protected void onSetDataBean(CustomMessageBean dataBean, boolean value) {
+        if (!value) {
+            dataBean.setIs_contact(0);
+        }
+        dataBean.setIs_attention(value ? 1 : 0);
+    }
+
+    @Override
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration()
+                .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
+                .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
+                .setDrawLastLine(true);
     }
 
     public static class CustomMessageModel extends ListModel<CustomMessageBean> {
 
     }
 
-    private class FriendsNewAdapter extends RExBaseAdapter<String,CustomMessageBean,String> {
+    private class FriendsNewAdapter extends RExBaseAdapter<String, CustomMessageBean, String> {
 
         private HnGlideImageView imageView;
 
@@ -161,9 +174,12 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
                                 }
 
                                 @Override
-                                public void onError(int code, String msg) {
-                                    super.onError(code, msg);
-                                    setSelectorPosition(posInData);
+                                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                    super.onEnd(isError, isNoNetwork, e);
+                                    if (isError) {
+                                        setSelectorPosition(posInData);
+
+                                    }
                                 }
                             }));
                 }
@@ -194,9 +210,12 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
                                                     }
 
                                                     @Override
-                                                    public void onError(int code, String msg) {
-                                                        super.onError(code, msg);
-                                                        setSelectorPosition(posInData);
+                                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                        super.onEnd(isError, isNoNetwork, e);
+                                                        if (isError) {
+
+                                                            setSelectorPosition(posInData);
+                                                        }
                                                     }
                                                 }));
                                     }
@@ -238,21 +257,6 @@ public class FriendsNewUIView extends SingleRecyclerUIView<CustomMessageBean>{
         protected boolean isAttention(CustomMessageBean dataBean) {
             return dataBean.getIs_attention() == 1;
         }
-    }
-
-    protected void onSetDataBean(CustomMessageBean dataBean, boolean value) {
-        if (!value) {
-            dataBean.setIs_contact(0);
-        }
-        dataBean.setIs_attention(value ? 1 : 0);
-    }
-
-    @Override
-    protected RecyclerView.ItemDecoration initItemDecoration() {
-        return super.createBaseItemDecoration()
-                .setDividerSize(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_line))
-                .setMarginStart(mActivity.getResources().getDimensionPixelOffset(R.dimen.base_xhdpi))
-                .setDrawLastLine(true);
     }
 
 }

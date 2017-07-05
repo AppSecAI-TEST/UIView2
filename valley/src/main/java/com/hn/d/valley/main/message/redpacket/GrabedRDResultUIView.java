@@ -113,10 +113,6 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                         }
                     }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
                 }));
     }
 

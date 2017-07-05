@@ -22,6 +22,7 @@ import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.skin.ISkin;
@@ -467,9 +468,10 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
                 }
 
                 @Override
-                public void onEnd() {
-                    super.onEnd();
+                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                    super.onEnd(isError, isNoNetwork, e);
                     HnLoading.hide();
+
                 }
             });
         }

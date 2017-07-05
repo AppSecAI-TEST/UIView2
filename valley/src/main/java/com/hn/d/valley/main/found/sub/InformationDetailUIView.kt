@@ -19,6 +19,7 @@ import com.angcyo.uiview.github.tablayout.SlidingTabLayout
 import com.angcyo.uiview.github.tablayout.TabLayoutUtil
 import com.angcyo.uiview.kotlin.v
 import com.angcyo.uiview.model.TitleBarPattern
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
@@ -460,8 +461,8 @@ class InformationDetailUIView : BaseContentUIView {
                         mCommentListUIView?.scrollToTop()
                     }
 
-                    override fun onEnd() {
-                        super.onEnd()
+                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
+                        super.onEnd(isError, isNoNetwork, e)
                         hideLoadView()
                     }
                 }))
@@ -487,8 +488,8 @@ class InformationDetailUIView : BaseContentUIView {
                         }
                     }
 
-                    override fun onEnd(isError: Boolean, errorCode: Int, isNoNetwork: Boolean, e: Throwable?) {
-                        super.onEnd(isError, errorCode, isNoNetwork, e)
+                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
+                        super.onEnd(isError, isNoNetwork, e)
                         if (isError) {
                             uiTitleBarContainer.hideRightItem(0)
                         }

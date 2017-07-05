@@ -1,6 +1,7 @@
 package com.hn.d.valley.base.rx;
 
 import com.angcyo.uiview.mvp.view.IBaseView;
+import com.angcyo.uiview.net.RException;
 import com.hn.d.valley.base.Bean;
 
 /**
@@ -29,9 +30,11 @@ public class UISubscriber<O extends Object, B extends Bean<O>, V extends IBaseVi
 //    }
 
     @Override
-    public void onError(int code, String msg) {
-        super.onError(code, msg);
-        mBaseView.onRequestError(code, msg);
+    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+        super.onEnd(isError, isNoNetwork, e);
+        if (isError) {
+            mBaseView.onRequestError(e.getCode(), e.getMsg());
+        }
     }
 
     @Override

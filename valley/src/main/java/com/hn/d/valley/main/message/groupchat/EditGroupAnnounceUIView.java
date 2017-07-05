@@ -51,73 +51,6 @@ public class EditGroupAnnounceUIView extends BaseUIView {
     private String gid;
     private String an_id;
     private boolean isAdmin;
-
-    EditGroupAnnounceUIView(String gid, String an_id,boolean isAdmin) {
-        this.gid = gid;
-        this.an_id = an_id;
-        this.isAdmin = isAdmin;
-    }
-
-    @Override
-    protected TitleBarPattern getTitleBar() {
-
-        ArrayList<TitleBarPattern.TitleBarItem> titleBarItems = new ArrayList<>();
-        titleBarItems.add(TitleBarPattern.TitleBarItem.build()
-                .setRes(R.drawable.delete_search)
-                .setVisibility(View.GONE).setListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAnnounce();
-            }
-        }));
-
-        return super.getTitleBar()
-                .setTitleString(mActivity.getString(R.string.text_announce_detail))
-                .setShowBackImageView(true)
-                .setRightItems(titleBarItems);
-    }
-
-
-
-    @Override
-    public void onViewShowFirst(Bundle bundle) {
-        super.onViewShowFirst(bundle);
-
-        loadData();
-
-    }
-
-    @Override
-    protected void initOnShowContentLayout() {
-        super.initOnShowContentLayout();
-        ivItemHead = v(R.id.iv_item_head);
-        tvFriendName = v(R.id.tv_friend_name);
-        tvFuncDesc = v(R.id.tv_func_desc);
-        itemRootLayout = v(R.id.item_root_layout);
-        tvAnnouncementDesc = v(R.id.tv_announcement_desc);
-        refreshLayout = v(R.id.refresh_layout);
-        commandItemView = v(R.id.text_view);
-        commandItem = v(R.id.command_item_view);
-
-        if(isAdmin) {
-            getUITitleBarContainer().showRightItem(0);
-            commandItem.setVisibility(View.VISIBLE);
-        }
-
-        initView();
-    }
-
-    private void initView() {
-
-        commandItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startIView(InputUIView.build(inputConfigCallback));
-            }
-        });
-
-    }
-
     private InputUIView.InputConfigCallback inputConfigCallback = new InputUIView.InputConfigCallback() {
         @Override
         public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
@@ -140,14 +73,9 @@ public class EditGroupAnnounceUIView extends BaseUIView {
                                                 @Override
                                                 public void onClick(View v) {
                                                     add(RRetrofit.create(GroupChatService.class)
-                                                            .setAnnouncement(Param.buildMap("an_id:" + an_id,"gid:" + gid,"content:" + finalValue))
+                                                            .setAnnouncement(Param.buildMap("an_id:" + an_id, "gid:" + gid, "content:" + finalValue))
                                                             .compose(Rx.transformer(String.class))
                                                             .subscribe(new BaseSingleSubscriber<String>() {
-                                                                @Override
-                                                                public void onError(int code, String msg) {
-                                                                    super.onError(code, msg);
-                                                                }
-
                                                                 @Override
                                                                 public void onSucceed(String beans) {
                                                                     loadData();
@@ -174,7 +102,7 @@ public class EditGroupAnnounceUIView extends BaseUIView {
             editText.setGravity(Gravity.TOP);
             editText.setHint(R.string.text_please_edit_announce);
             int padding = ScreenUtil.dip2px(15);
-            editText.setPadding(padding,padding,padding,padding);
+            editText.setPadding(padding, padding, padding, padding);
             UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_150dpi));
             final TextIndicator textIndicator = holder.v(R.id.single_text_indicator_view);
             textIndicator.setMaxCount(maxCount);
@@ -198,6 +126,70 @@ public class EditGroupAnnounceUIView extends BaseUIView {
         }
     };
 
+    EditGroupAnnounceUIView(String gid, String an_id, boolean isAdmin) {
+        this.gid = gid;
+        this.an_id = an_id;
+        this.isAdmin = isAdmin;
+    }
+
+    @Override
+    protected TitleBarPattern getTitleBar() {
+
+        ArrayList<TitleBarPattern.TitleBarItem> titleBarItems = new ArrayList<>();
+        titleBarItems.add(TitleBarPattern.TitleBarItem.build()
+                .setRes(R.drawable.delete_search)
+                .setVisibility(View.GONE).setListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteAnnounce();
+                    }
+                }));
+
+        return super.getTitleBar()
+                .setTitleString(mActivity.getString(R.string.text_announce_detail))
+                .setShowBackImageView(true)
+                .setRightItems(titleBarItems);
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+
+        loadData();
+
+    }
+
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
+        ivItemHead = v(R.id.iv_item_head);
+        tvFriendName = v(R.id.tv_friend_name);
+        tvFuncDesc = v(R.id.tv_func_desc);
+        itemRootLayout = v(R.id.item_root_layout);
+        tvAnnouncementDesc = v(R.id.tv_announcement_desc);
+        refreshLayout = v(R.id.refresh_layout);
+        commandItemView = v(R.id.text_view);
+        commandItem = v(R.id.command_item_view);
+
+        if (isAdmin) {
+            getUITitleBarContainer().showRightItem(0);
+            commandItem.setVisibility(View.VISIBLE);
+        }
+
+        initView();
+    }
+
+    private void initView() {
+
+        commandItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(InputUIView.build(inputConfigCallback));
+            }
+        });
+
+    }
+
     @Override
     public void onSkinChanged(ISkin skin) {
         super.onSkinChanged(skin);
@@ -214,14 +206,9 @@ public class EditGroupAnnounceUIView extends BaseUIView {
                     @Override
                     public void onClick(View v) {
                         add(RRetrofit.create(GroupChatService.class)
-                                .removeAnnouncement(Param.buildMap("gid:" + gid,"an_id:" + an_id))
+                                .removeAnnouncement(Param.buildMap("gid:" + gid, "an_id:" + an_id))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
-                                    @Override
-                                    public void onError(int code, String msg) {
-                                        super.onError(code, msg);
-                                    }
-
                                     @Override
                                     public void onSucceed(String beans) {
                                         T_.show(mActivity.getString(R.string.text_delete_success));
@@ -244,13 +231,9 @@ public class EditGroupAnnounceUIView extends BaseUIView {
     private void loadData() {
 
         add(RRetrofit.create(GroupChatService.class)
-                .announcementDetail(Param.buildMap("gid:" + gid,"an_id:" + an_id))
+                .announcementDetail(Param.buildMap("gid:" + gid, "an_id:" + an_id))
                 .compose(Rx.transformer(GroupAnnounceDetailBean.class))
                 .subscribe(new BaseSingleSubscriber<GroupAnnounceDetailBean>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(GroupAnnounceDetailBean beans) {

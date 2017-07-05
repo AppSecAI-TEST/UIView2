@@ -48,7 +48,6 @@ import com.hn.d.valley.main.message.session.RedPacketCommandItem;
 import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hn.d.valley.main.message.session.TeamAVChatCommandItem;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
-import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
 import com.hn.d.valley.service.GroupChatService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -282,10 +281,6 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
                 .announcementList(Param.buildMap("gid:" + bean.getGid()))
                 .compose(Rx.transformerList(GroupAnnouncementBean.class))
                 .subscribe(new BaseSingleSubscriber<List<GroupAnnouncementBean>>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(List<GroupAnnouncementBean> beans) {
@@ -337,10 +332,6 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
                     .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
                     .compose(Rx.transformer(GroupDescBean.class))
                     .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
-                        @Override
-                        public void onError(int code, String msg) {
-                            super.onError(code, msg);
-                        }
 
                         @Override
                         public void onSucceed(GroupDescBean bean) {

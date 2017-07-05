@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -212,9 +213,11 @@ public class RecommendUser2UIView extends ItemRecyclerUIView<ItemRecyclerUIView.
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        showEmptyLayout();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            showEmptyLayout();
+                        }
                     }
                 }));
     }

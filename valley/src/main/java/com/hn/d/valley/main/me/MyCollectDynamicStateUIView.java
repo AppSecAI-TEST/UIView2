@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -124,8 +125,8 @@ public class MyCollectDynamicStateUIView extends BaseRecyclerUIView<String, User
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                     }
                 }));

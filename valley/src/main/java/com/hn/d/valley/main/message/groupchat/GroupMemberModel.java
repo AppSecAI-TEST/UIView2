@@ -190,10 +190,6 @@ public class GroupMemberModel {
         .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + bean.getGid()))
         .compose(Rx.transformer(GroupMemberList.class))
                 .subscribe(new BaseSingleSubscriber<GroupMemberList>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(GroupMemberList beans) {

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -267,15 +268,12 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                                         }
 
                                         @Override
-                                        public void onError(int code, String msg) {
-                                            super.onError(code, msg);
-                                            T_.error(msg);
-                                        }
-
-                                        @Override
-                                        public void onEnd() {
-                                            super.onEnd();
+                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                            super.onEnd(isError, isNoNetwork, e);
                                             HnLoading.hide();
+                                            if (isError) {
+                                                T_.error(e.getMsg());
+                                            }
                                         }
                                     }));
                         }
@@ -299,10 +297,13 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                                             "item_id:" + dataBean.getComment_id()))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new RSubscriber<String>() {
+
                                         @Override
-                                        public void onError(int code, String msg) {
-                                            super.onError(code, msg);
-                                            T_.error(msg);
+                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                            super.onEnd(isError, isNoNetwork, e);
+                                            if (isError) {
+                                                T_.error(e.getMsg());
+                                            }
                                         }
                                     }));
                         }
@@ -415,9 +416,10 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                     }
                 })
                 .subscribe(new RSubscriber<String>() {
+
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                         onUILoadDataFinish();
                     }
@@ -444,9 +446,11 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        T_.error(msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            T_.error(e.getMsg());
+                        }
                     }
                 }));
         mInputView.setText("");

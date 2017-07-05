@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.github.WaveSideBarView;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -78,21 +79,92 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
     private CompositeSubscription mSubscriptions;
 
 
-    public Action1 getToUserDetailAction() {
-        return toUserDetailAction;
-    }
-
-    public void setToUserDetailAction(Action1 toUserDetailAction) {
-        this.toUserDetailAction = toUserDetailAction;
-    }
-
-
     public FriendsControl(Context mContext, CompositeSubscription mSubscriptions, ILayout iLayout, RequestCallback callback) {
         this.mContext = mContext;
         this.otherLayout = iLayout;
         this.callback = callback;
         this.mSubscriptions = mSubscriptions;
 
+    }
+
+    public static void scrollToLetter(String letter, RecyclerView recyclerView, List<AbsContactItem> datas) {
+        if (TextUtils.equals(letter, "↑")) {
+            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
+            return;
+        }
+        for (int i = 0; i < datas.size(); i++) {
+            if (TextUtils.equals(letter, datas.get(i).getGroupText())) {
+                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
+                break;
+            }
+        }
+    }
+
+    public static char generateFirstLetter(FriendBean o2) {
+        return Pinyin.toPinyin(o2.getTrueName().charAt(0)).toUpperCase().charAt(0);
+    }
+
+    public static List<String> generateIndexLetter(List<AbsContactItem> data_list) {
+        List<String> letters = new ArrayList<>();
+        for (AbsContactItem bean : data_list) {
+            String letter = bean.getGroupText();
+            if (letter == null || "".equals(letter)) {
+                continue;
+            }
+            if (!letters.contains(letter)) {
+                letters.add(letter);
+            }
+        }
+        return letters;
+    }
+
+    public static void sort(List<AbsContactItem> items) {
+//        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+        Collections.sort(items, new Comparator<AbsContactItem>() {
+            @Override
+            public int compare(AbsContactItem o1, AbsContactItem o2) {
+
+                if (o1.getGroupText().equals("")) {
+                    return -1;
+                }
+
+                if (o2.getGroupText().equals("")) {
+                    return 1;
+                }
+
+                if (o1.getGroupText().equals("☆")) {
+                    return -1;
+                }
+
+                if (o2.getGroupText().equals("☆")) {
+                    return 1;
+                }
+
+                if (o1.getGroupText().equals("#")) {
+                    return 1;
+                }
+
+                if (o2.getGroupText().equals("#")) {
+                    return -1;
+                }
+
+                // 解决 Comparison method violates its general contract
+                // 两个比较对象相等 徐返回 0
+                if (o1.getGroupText().equals(o1.getGroupText())) {
+                    return 0;
+                }
+
+                return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
+            }
+        });
+    }
+
+    public Action1 getToUserDetailAction() {
+        return toUserDetailAction;
+    }
+
+    public void setToUserDetailAction(Action1 toUserDetailAction) {
+        this.toUserDetailAction = toUserDetailAction;
     }
 
     public ILayout getOtherLayout() {
@@ -166,79 +238,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
         rRecyclerView.addItemDecoration(new RGroupItemDecoration(new GroupItemCallBack(mContext, mFriendsAdapter)));
     }
 
-    public static void scrollToLetter(String letter, RecyclerView recyclerView, List<AbsContactItem> datas) {
-        if (TextUtils.equals(letter, "↑")) {
-            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(0, 0);
-            return;
-        }
-        for (int i = 0; i < datas.size(); i++) {
-            if (TextUtils.equals(letter, datas.get(i).getGroupText())) {
-                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(i, 0);
-                break;
-            }
-        }
-    }
-
-
-    public static char generateFirstLetter(FriendBean o2) {
-        return Pinyin.toPinyin(o2.getTrueName().charAt(0)).toUpperCase().charAt(0);
-    }
-
-    public static List<String> generateIndexLetter(List<AbsContactItem> data_list) {
-        List<String> letters = new ArrayList<>();
-        for (AbsContactItem bean : data_list) {
-            String letter = bean.getGroupText();
-            if (letter == null || "".equals(letter)) {
-                continue;
-            }
-            if (!letters.contains(letter)) {
-                letters.add(letter);
-            }
-        }
-        return letters;
-    }
-
-    public static void sort(List<AbsContactItem> items) {
-//        System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
-        Collections.sort(items, new Comparator<AbsContactItem>() {
-            @Override
-            public int compare(AbsContactItem o1, AbsContactItem o2) {
-
-                if (o1.getGroupText().equals("")) {
-                    return -1;
-                }
-
-                if (o2.getGroupText().equals("")) {
-                    return 1;
-                }
-
-                if (o1.getGroupText().equals("☆")) {
-                    return -1;
-                }
-
-                if (o2.getGroupText().equals("☆")) {
-                    return 1;
-                }
-
-                if (o1.getGroupText().equals("#")) {
-                    return 1;
-                }
-
-                if (o2.getGroupText().equals("#")) {
-                    return -1;
-                }
-
-                // 解决 Comparison method violates its general contract
-                // 两个比较对象相等 徐返回 0
-                if (o1.getGroupText().equals(o1.getGroupText())) {
-                    return 0;
-                }
-
-                return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
-            }
-        });
-    }
-
     public void resetData(List<FriendBean> data_list) {
         mFriendsAdapter.reset(data_list);
     }
@@ -277,9 +276,11 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        T_.error(code + ":" + msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            T_.error(e.getCode() + ":" + e.getMsg());
+                        }
                     }
 
                     @Override
@@ -303,11 +304,6 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
                         L.i("friends onsucceed");
                     }
 
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-
-                    }
                 }));
     }
 

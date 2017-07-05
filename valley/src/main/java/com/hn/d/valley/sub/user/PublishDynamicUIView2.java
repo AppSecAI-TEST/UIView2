@@ -20,6 +20,7 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
@@ -346,8 +347,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 }
 
                 @Override
-                public void onEnd() {
-                    super.onEnd();
+                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                    super.onEnd(isError, isNoNetwork, e);
                     HnLoading.hide();
                 }
             });
@@ -914,8 +915,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         }
 
                         @Override
-                        public void onEnd() {
-                            super.onEnd();
+                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                            super.onEnd(isError, isNoNetwork, e);
                             HnLoading.hide();
                         }
                     }));

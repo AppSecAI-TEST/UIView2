@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -51,7 +52,7 @@ import rx.functions.Func1;
 /**
  * Created by hewking on 2017/3/20.
  */
-public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
+public class GroupMemberUIVIew extends SingleRecyclerUIView<GroupMemberBean> {
 
     public static final String GID = "gid";
     public static final String IS_ADMIN = "is_admin";
@@ -62,14 +63,13 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
     private Action1<Boolean> kictAction;
 
     private GroupMemberAdapter mGroupMemberAdapter;
+    private LinearLayout ll_bottom;
+    private TextView tv_selected;
+    private RTextView btn_delete;
 
     public Action1<Boolean> getKictAction() {
         return kictAction;
     }
-
-    private LinearLayout ll_bottom;
-    private TextView tv_selected;
-    private RTextView btn_delete;
 
     public void setKictAction(Action1<Boolean> kictAction) {
         this.kictAction = kictAction;
@@ -80,12 +80,12 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
         rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_edit))
                 .setVisibility(View.GONE).setListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 打开itemview checkbox animator 弹出底部button
-                editItems();
-            }
-        }));
+                    @Override
+                    public void onClick(View v) {
+                        // 打开itemview checkbox animator 弹出底部button
+                        editItems();
+                    }
+                }));
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_group_member)).setRightItems(rightItems);
     }
 
@@ -122,7 +122,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
         super.onUILoadData(page);
 
         RRetrofit.create(GroupChatService.class)
-                .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
+                .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(), "gid:" + gid))
                 .compose(Rx.transformer(GroupMemberModel.GroupMemberList.class))
                 .subscribe(new BaseSingleSubscriber<GroupMemberModel.GroupMemberList>() {
 
@@ -133,13 +133,8 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
-
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                     }
 
@@ -157,7 +152,7 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
 
     @Override
     protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
-        View root = inflater.inflate(R.layout.view_member_select,baseContentLayout);
+        View root = inflater.inflate(R.layout.view_member_select, baseContentLayout);
         mRefreshLayout = (RefreshLayout) root.findViewById(R.id.refresh_layout);
         mRecyclerView = (RRecyclerView) root.findViewById(R.id.recycler_view);
         ll_bottom = (LinearLayout) root.findViewById(R.id.ll_bottom);
@@ -187,136 +182,12 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
             ll_bottom.setVisibility(View.VISIBLE);
         }
 
-        float start = show? ScreenUtil.dip2px(48):0;
-        float end = show?0:ScreenUtil.dip2px(48);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_bottom,"translationY",start,end);
+        float start = show ? ScreenUtil.dip2px(48) : 0;
+        float end = show ? 0 : ScreenUtil.dip2px(48);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_bottom, "translationY", start, end);
         animator.setDuration(300);
         animator.setInterpolator(new DecelerateInterpolator());
         animator.start();
-    }
-
-    private class GroupMemberAdapter extends RExBaseAdapter<String,GroupMemberBean,String> {
-
-        private SparseBooleanArray mCheckStats = new SparseBooleanArray();
-
-        private ISlideHelper mISlideHelper = new ISlideHelper();
-
-        private boolean isEditable = true;
-
-        private GroupMemberAdapter(Context context) {
-            super(context);
-            setModel(RModelAdapter.MODEL_MULTI);
-        }
-
-        public void slideOpen() {
-            isEditable = true;
-            mISlideHelper.slideOpen();
-            animBottom(true);
-        }
-
-        public void slideClose() {
-            tv_selected.setText(String.format(getString(R.string.text_already_selected_number),0));
-            mISlideHelper.slideClose();
-            isEditable = true;
-            animBottom(false);
-            mCheckStats.clear();
-            unSelectorAll(true);
-        }
-
-        @Override
-        public void resetAllData(List<GroupMemberBean> allDatas) {
-            //去除群成员中的群主 不会被踢出
-//            List<GroupMemberBean> filterList = new ArrayList<>();
-//            for (GroupMemberBean member : allDatas) {
-//                if (member.getUserId().equals(UserCache.instance().getUserInfoBean().getUid())) {
-//                    continue;
-//                }
-//                filterList.add(member);
-//            }
-            super.resetAllData(allDatas);
-        }
-
-        @NonNull
-        @Override
-        protected RBaseViewHolder createBaseViewHolder(int viewType, View itemView) {
-            SlideViewHolder slideViewHolder = new OneSlideViewHolder(itemView,viewType);
-            mISlideHelper.add(slideViewHolder);
-            return slideViewHolder;
-        }
-
-        @Override
-        protected int getItemLayoutId(int viewType) {
-            return R.layout.item_member_select_item;
-        }
-
-        @Override
-        protected void onBindDataView(RBaseViewHolder holder, int posInData, final GroupMemberBean dataBean) {
-            super.onBindDataView(holder, posInData, dataBean);
-
-            ((OneSlideViewHolder) holder).bind();
-
-            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
-            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-
-            iv_head.setImageUrl(dataBean.getUserAvatar());
-            tv_friend_name.setText(dataBean.getDefaultNick());
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mParentILayout.startIView(new UserDetailUIView2(dataBean.getUserId()));
-                }
-            });
-
-        }
-
-        @Override
-        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, GroupMemberBean bean) {
-            super.onBindModelView(model, isSelector, holder, position, bean);
-//            if(!isAdmin || !isEditable) {
-//                return;
-//            }
-            if (!isEditable) {
-                return;
-            }
-
-            final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
-            checkBox.setTag(position);
-
-            // 群主不处理
-            if (bean.getUserId().equals(UserCache.getUserAccount())){
-                checkBox.setVisibility(View.INVISIBLE);
-                return;
-            }
-
-            View.OnClickListener listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setSelectorPosition(position,checkBox);
-                    int tag = (int) checkBox.getTag();
-                    boolean selector = isPositionSelector(position);
-                    if (selector) {
-                        mCheckStats.put(tag,true);
-                    } else {
-                        mCheckStats.delete(tag);
-                    }
-                    tv_selected.setText(String.format(getString(R.string.text_already_selected_number),mCheckStats.size()));
-                }
-            };
-
-            checkBox.setOnClickListener(listener);
-//            holder.itemView.setOnClickListener(listener);
-            checkBox.setChecked(mCheckStats.get(position,false));
-        }
-
-        @Override
-        protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
-            final CheckBox checkBox = viewHolder.v(R.id.cb_friend_addfirend);
-            checkBox.setChecked(false);
-            checkBox.setTag(position);
-            mCheckStats.delete(position);
-            return true;
-        }
-
     }
 
     private void kickMember(List<GroupMemberBean> selectedData) {
@@ -333,11 +204,14 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
                                 .kick(Param.buildMap("to_uid:" + bean.getUserId(), "gid:" + gid))
                                 .compose(Rx.transformer(String.class))
                                 .subscribe(new BaseSingleSubscriber<String>() {
+
                                     @Override
-                                    public void onError(int code, String msg) {
-                                        super.onError(code, msg);
-                                        if (code == 1044) {
-                                            T_.show(mActivity.getString(R.string.text_you_are_not_host));
+                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                        super.onEnd(isError, isNoNetwork, e);
+                                        if (isError) {
+                                            if (e.getCode() == 1044) {
+                                                T_.show(mActivity.getString(R.string.text_you_are_not_host));
+                                            }
                                         }
                                     }
 
@@ -386,5 +260,129 @@ public class GroupMemberUIVIew  extends SingleRecyclerUIView<GroupMemberBean> {
     @Override
     protected RecyclerView.ItemDecoration initItemDecoration() {
         return super.createBaseItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
+    }
+
+    private class GroupMemberAdapter extends RExBaseAdapter<String, GroupMemberBean, String> {
+
+        private SparseBooleanArray mCheckStats = new SparseBooleanArray();
+
+        private ISlideHelper mISlideHelper = new ISlideHelper();
+
+        private boolean isEditable = true;
+
+        private GroupMemberAdapter(Context context) {
+            super(context);
+            setModel(RModelAdapter.MODEL_MULTI);
+        }
+
+        public void slideOpen() {
+            isEditable = true;
+            mISlideHelper.slideOpen();
+            animBottom(true);
+        }
+
+        public void slideClose() {
+            tv_selected.setText(String.format(getString(R.string.text_already_selected_number), 0));
+            mISlideHelper.slideClose();
+            isEditable = true;
+            animBottom(false);
+            mCheckStats.clear();
+            unSelectorAll(true);
+        }
+
+        @Override
+        public void resetAllData(List<GroupMemberBean> allDatas) {
+            //去除群成员中的群主 不会被踢出
+//            List<GroupMemberBean> filterList = new ArrayList<>();
+//            for (GroupMemberBean member : allDatas) {
+//                if (member.getUserId().equals(UserCache.instance().getUserInfoBean().getUid())) {
+//                    continue;
+//                }
+//                filterList.add(member);
+//            }
+            super.resetAllData(allDatas);
+        }
+
+        @NonNull
+        @Override
+        protected RBaseViewHolder createBaseViewHolder(int viewType, View itemView) {
+            SlideViewHolder slideViewHolder = new OneSlideViewHolder(itemView, viewType);
+            mISlideHelper.add(slideViewHolder);
+            return slideViewHolder;
+        }
+
+        @Override
+        protected int getItemLayoutId(int viewType) {
+            return R.layout.item_member_select_item;
+        }
+
+        @Override
+        protected void onBindDataView(RBaseViewHolder holder, int posInData, final GroupMemberBean dataBean) {
+            super.onBindDataView(holder, posInData, dataBean);
+
+            ((OneSlideViewHolder) holder).bind();
+
+            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
+            TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
+
+            iv_head.setImageUrl(dataBean.getUserAvatar());
+            tv_friend_name.setText(dataBean.getDefaultNick());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mParentILayout.startIView(new UserDetailUIView2(dataBean.getUserId()));
+                }
+            });
+
+        }
+
+        @Override
+        protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, final int position, GroupMemberBean bean) {
+            super.onBindModelView(model, isSelector, holder, position, bean);
+//            if(!isAdmin || !isEditable) {
+//                return;
+//            }
+            if (!isEditable) {
+                return;
+            }
+
+            final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
+            checkBox.setTag(position);
+
+            // 群主不处理
+            if (bean.getUserId().equals(UserCache.getUserAccount())) {
+                checkBox.setVisibility(View.INVISIBLE);
+                return;
+            }
+
+            View.OnClickListener listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setSelectorPosition(position, checkBox);
+                    int tag = (int) checkBox.getTag();
+                    boolean selector = isPositionSelector(position);
+                    if (selector) {
+                        mCheckStats.put(tag, true);
+                    } else {
+                        mCheckStats.delete(tag);
+                    }
+                    tv_selected.setText(String.format(getString(R.string.text_already_selected_number), mCheckStats.size()));
+                }
+            };
+
+            checkBox.setOnClickListener(listener);
+//            holder.itemView.setOnClickListener(listener);
+            checkBox.setChecked(mCheckStats.get(position, false));
+        }
+
+        @Override
+        protected boolean onUnSelectorPosition(RBaseViewHolder viewHolder, int position, boolean isSelector) {
+            final CheckBox checkBox = viewHolder.v(R.id.cb_friend_addfirend);
+            checkBox.setChecked(false);
+            checkBox.setTag(position);
+            mCheckStats.delete(position);
+            return true;
+        }
+
     }
 }

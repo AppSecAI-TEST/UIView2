@@ -77,11 +77,6 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                             onUILoadDataEnd(CustomMessage2LikeUserInfo(bean.getData_list()));
                         }
                     }
-
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
                 }));
     }
 

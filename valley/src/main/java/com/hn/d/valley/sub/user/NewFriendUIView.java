@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.OverLayCardLayoutManager;
@@ -122,8 +123,8 @@ public final class NewFriendUIView extends BaseContentUIView {
                                 .subscribe(new BaseSingleSubscriber<String>() {
 
                                     @Override
-                                    public void onEnd() {
-                                        super.onEnd();
+                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                        super.onEnd(isError, isNoNetwork, e);
                                         MsgCache.instance().deleteMessage(remove);
                                     }
                                 }));

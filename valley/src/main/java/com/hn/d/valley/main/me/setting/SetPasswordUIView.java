@@ -14,6 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.rsa.RSA;
@@ -155,9 +156,11 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                                         }
 
                                         @Override
-                                        public void onError(int code, String msg) {
-                                            super.onError(code, msg);
-                                            verifyButton.endCountDown();
+                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                            super.onEnd(isError, isNoNetwork, e);
+                                            if (isError) {
+                                                verifyButton.endCountDown();
+                                            }
                                         }
                                     })
                             );
@@ -229,8 +232,8 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                                 }
 
                                 @Override
-                                public void onEnd() {
-                                    super.onEnd();
+                                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                    super.onEnd(isError, isNoNetwork, e);
                                     HnLoading.hide();
                                 }
                             })
@@ -281,8 +284,8 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                                 }
 
                                 @Override
-                                public void onEnd() {
-                                    super.onEnd();
+                                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                    super.onEnd(isError, isNoNetwork, e);
                                     HnLoading.hide();
                                 }
                             })
@@ -326,8 +329,8 @@ public class SetPasswordUIView extends ItemRecyclerUIView<String> {
                                 }
 
                                 @Override
-                                public void onEnd() {
-                                    super.onEnd();
+                                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                    super.onEnd(isError, isNoNetwork, e);
                                     HnLoading.hide();
                                 }
                             })

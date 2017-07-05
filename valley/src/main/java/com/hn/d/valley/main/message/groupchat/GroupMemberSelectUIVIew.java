@@ -10,7 +10,6 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.utils.string.StringTextWatcher;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -116,11 +115,6 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
                 .groupMember(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
                 .compose(Rx.transformer(GroupMemberModel.GroupMemberList.class))
                 .subscribe(new BaseSingleSubscriber<GroupMemberModel.GroupMemberList>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
-
                     @Override
                     public void onSucceed(GroupMemberModel.GroupMemberList beans) {
                         if (beans == null || beans.getData_list().size() == 0) {

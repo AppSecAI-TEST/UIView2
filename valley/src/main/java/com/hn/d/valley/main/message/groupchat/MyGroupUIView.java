@@ -8,10 +8,10 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
@@ -25,6 +25,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.realm.RRealm;
@@ -44,22 +45,22 @@ import rx.functions.Action2;
  */
 public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
 
-    private Action2<GroupBean,RequestCallback> selectAction;
+    private Action2<GroupBean, RequestCallback> selectAction;
     private BaseContactSelectAdapter.Options option;
 
 
-    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options, Action2<GroupBean,RequestCallback> selectAction) {
+    public MyGroupUIView(BaseContactSelectAdapter.Options options) {
+        this.option = options;
+    }
+
+    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options, Action2<GroupBean, RequestCallback> selectAction) {
         Bundle bundle = new Bundle();
         MyGroupUIView targetView = new MyGroupUIView(options);
         targetView.setSelectAction(selectAction);
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
-    public MyGroupUIView(BaseContactSelectAdapter.Options options) {
-        this.option = options;
-    }
-
-    public void setSelectAction(Action2<GroupBean,RequestCallback> setSelectAction) {
+    public void setSelectAction(Action2<GroupBean, RequestCallback> setSelectAction) {
         this.selectAction = setSelectAction;
     }
 
@@ -93,20 +94,17 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
-                    }
-
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        showNonetLayout(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadData();
-                            }
-                        });
+                        if (isError) {
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loadData();
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -143,10 +141,21 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
         });
     }
 
-    public static class GroupList extends ListModel<GroupBean> {}
+    @Override
+    protected RBaseItemDecoration initItemDecoration() {
+        return new RBaseItemDecoration(getItemDecorationHeight()).setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_60dpi));
+    }
 
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
+    }
 
-    public class GroupListAdapter extends RExBaseAdapter<String,GroupBean,String>  {
+    public static class GroupList extends ListModel<GroupBean> {
+    }
+
+    public class GroupListAdapter extends RExBaseAdapter<String, GroupBean, String> {
 
         protected SparseBooleanArray mCheckStats = new SparseBooleanArray();
 
@@ -168,7 +177,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
             SimpleDraweeView glideImageView = holder.v(R.id.iv_item_head);
             TextView tv = holder.tv(R.id.tv_friend_name);
 
-            DraweeViewUtil.setDraweeViewHttp(glideImageView,dataBean.getDefaultAvatar());
+            DraweeViewUtil.setDraweeViewHttp(glideImageView, dataBean.getDefaultAvatar());
             tv.setText(dataBean.getTrueName());
 
             final String yxGid = dataBean.getYxGid();
@@ -176,7 +185,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SessionHelper.startTeamSession(mParentILayout,yxGid, SessionTypeEnum.Team);
+                    SessionHelper.startTeamSession(mParentILayout, yxGid, SessionTypeEnum.Team);
                 }
             });
 
@@ -204,18 +213,18 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
                         }
                     }
 
-                    setSelectorPosition(position,checkBox);
+                    setSelectorPosition(position, checkBox);
 
                     int tag = (int) checkBox.getTag();
 
                     boolean selector = isPositionSelector(position);
                     if (selector) {
-                        mCheckStats.put(tag,true);
+                        mCheckStats.put(tag, true);
                     } else {
                         mCheckStats.delete(tag);
                     }
 
-                    if(selectAction == null){
+                    if (selectAction == null) {
                         return;
                     }
                     selectAction.call(getSelectorData().get(0), new RequestCallback() {
@@ -240,7 +249,7 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
 
             checkBox.setOnClickListener(listener);
             holder.itemView.setOnClickListener(listener);
-            checkBox.setChecked(mCheckStats.get(position,false));
+            checkBox.setChecked(mCheckStats.get(position, false));
 
         }
 
@@ -260,17 +269,5 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
         public boolean isEnableLoadMore() {
             return false;
         }
-    }
-
-    @Override
-    protected RBaseItemDecoration initItemDecoration() {
-        return new RBaseItemDecoration(getItemDecorationHeight()).setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_60dpi));
-    }
-
-
-    @NonNull
-    @Override
-    protected LayoutState getDefaultLayoutState() {
-        return LayoutState.LOAD;
     }
 }

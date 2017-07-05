@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.resources.ResUtil;
@@ -152,9 +153,11 @@ public class RegisterUIView extends BaseUIView<RegisterPresenter> implements Sta
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        mVerifyView.endCountDown();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            mVerifyView.endCountDown();
+                        }
                     }
                 })
         );

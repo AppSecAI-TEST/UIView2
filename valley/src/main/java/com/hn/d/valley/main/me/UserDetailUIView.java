@@ -18,6 +18,7 @@ import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -156,9 +157,12 @@ public class UserDetailUIView extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        T_.error(msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        hideLoadView();
+                        if (isError) {
+                            T_.error(e.getMsg());
+                        }
                     }
 
                     @Override
@@ -169,12 +173,6 @@ public class UserDetailUIView extends BaseContentUIView {
                             showContentLayout();
                             initView(bean);
                         }
-                    }
-
-                    @Override
-                    public void onEnd() {
-                        super.onEnd();
-                        hideLoadView();
                     }
                 })
         );

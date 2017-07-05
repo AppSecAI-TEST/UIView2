@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.github.all.base.adapter.ViewGroupUtils;
 import com.angcyo.uiview.github.all.base.adapter.adapter.cache.BaseCacheAdapter;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -115,8 +116,8 @@ public class ReportUIView extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                     }
 
@@ -179,13 +180,13 @@ public class ReportUIView extends BaseContentUIView {
         } else {
             Tag tag = (Tag) checkView.getTag();
             if (mInfoBean != null) {
-                reportUser(mInfoBean.getUid(),tag);
+                reportUser(mInfoBean.getUid(), tag);
             } else if (mDataBean != null) {
                 reportDiscuss(tag);
             } else if (mGroupDesc != null) {
                 startIView(new ReportNextUIView(tag, mGroupDesc.getGid()));
-            }else if (userInfo != null) {
-                reportUser(userInfo.getAccount(),tag);
+            } else if (userInfo != null) {
+                reportUser(userInfo.getAccount(), tag);
             }
         }
     }
@@ -194,7 +195,7 @@ public class ReportUIView extends BaseContentUIView {
     /**
      * 举报用户
      */
-    private void reportUser(String account,Tag tag) {
+    private void reportUser(String account, Tag tag) {
         add(RRetrofit.create(SocialService.class)
                 .report(Param.buildMap("type:user", "item_id:" + account, "reason_id:" + tag.getId()))
                 .compose(Rx.transformer(String.class))
@@ -213,10 +214,11 @@ public class ReportUIView extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         HnLoading.hide();
                     }
+
                 }));
     }
 
@@ -241,8 +243,8 @@ public class ReportUIView extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         HnLoading.hide();
                     }
                 }));

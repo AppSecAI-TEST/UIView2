@@ -8,25 +8,20 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupDescBean;
-import com.hn.d.valley.cache.SimpleCallback;
-import com.hn.d.valley.cache.TeamDataCache;
-import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.HnButton;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.team.model.Team;
 
 
 /**
@@ -85,10 +80,6 @@ public class QrCodeAddGroupUIView extends BaseContentUIView {
                         .groupInfo(Param.buildMap("uid:" + split[1], "yx_gid:" + split[2]))
                         .compose(Rx.transformer(GroupDescBean.class))
                         .subscribe(new BaseSingleSubscriber<GroupDescBean>() {
-                            @Override
-                            public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
-                                super.onEnd(isError, isNoNetwork, e);
-                            }
 
                             @Override
                             public void onSucceed(GroupDescBean bean) {
@@ -125,7 +116,7 @@ public class QrCodeAddGroupUIView extends BaseContentUIView {
                             }
 
                             @Override
-                            public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                                 super.onEnd(isError, isNoNetwork, e);
                             }
                         });

@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RGroupItemDecoration;
@@ -71,10 +72,10 @@ public class AddGroupChatUIView extends BaseUIView {
 
     private List<String> mSelectedUids;
 
-    private Action2<Boolean,ContactItem> action = new Action2<Boolean, ContactItem>() {
+    private Action2<Boolean, ContactItem> action = new Action2<Boolean, ContactItem>() {
         @Override
         public void call(Boolean aBoolean, ContactItem item) {
-            IcoInfoBean icon ;
+            IcoInfoBean icon;
             FriendBean bean = item.getFriendBean();
 //            if (aBoolean) {
 //                icon = new IcoInfoBean(bean.getUid(),bean.getAvatar());
@@ -109,7 +110,7 @@ public class AddGroupChatUIView extends BaseUIView {
     public void onViewCreate(View rootView, UIParam param) {
         super.onViewCreate(rootView, param);
 
-        if (param != null  && param.mBundle != null) {
+        if (param != null && param.mBundle != null) {
             mSelectedUids = (List<String>) param.mBundle.getSerializable(SELECTED_UIDS);
         }
 
@@ -140,11 +141,11 @@ public class AddGroupChatUIView extends BaseUIView {
             }
         });
 
-        mGroupAdapter = new ContactSelectAdapter(mActivity,new BaseContactSelectAdapter.Options(),recyclerView);
+        mGroupAdapter = new ContactSelectAdapter(mActivity, new BaseContactSelectAdapter.Options(), recyclerView);
         datatProvider = new AddGroupDatatProvider();
 //        mGroupAdapter.setAction(action);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        recyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity,mGroupAdapter)));
+        recyclerView.addItemDecoration(new RGroupItemDecoration(new FriendsControl.GroupItemCallBack(mActivity, mGroupAdapter)));
 
         recyclerView.setAdapter(mGroupAdapter);
 
@@ -166,7 +167,7 @@ public class AddGroupChatUIView extends BaseUIView {
                 refreshLayout.setRefreshEnd();
 
                 List<AbsContactItem> datas = new ArrayList();
-                datas.add(new FuncItem<>("搜索",new Action1<ILayout>() {
+                datas.add(new FuncItem<>("搜索", new Action1<ILayout>() {
                     @Override
                     public void call(ILayout o) {
                         mParentILayout.startIView(new SearchUserUIView());
@@ -200,14 +201,14 @@ public class AddGroupChatUIView extends BaseUIView {
         HnLoading.show(mParentILayout);
         final List<FriendBean> beans = new ArrayList<>();
         for (AbsContactItem item : selectorData) {
-            beans.add(((ContactItem)item).getFriendBean());
+            beans.add(((ContactItem) item).getFriendBean());
         }
         add(Observable.just(beans)
                 .flatMap(new Func1<List<FriendBean>, Observable<List<String>>>() {
                     @Override
                     public Observable<List<String>> call(List<FriendBean> beanList) {
                         List<String> urls = new ArrayList<>();
-                        for(FriendBean bean : beanList){
+                        for (FriendBean bean : beanList) {
                             urls.add(bean.getAvatar());
                         }
                         return Observable.just(urls);
@@ -218,9 +219,9 @@ public class AddGroupChatUIView extends BaseUIView {
                     public Observable<List<Bitmap>> call(List<String> s) {
                         List<Bitmap> bitmaps = new ArrayList<>();
                         s.add(UserCache.getUserAvatar());
-                        for(String url : s ) {
+                        for (String url : s) {
                             Bitmap bitmap = NetUtils.createBitmapFromUrl(url);
-                            if(bitmap == null) {
+                            if (bitmap == null) {
                                 continue;
                             }
                             bitmaps.add(bitmap);
@@ -230,21 +231,21 @@ public class AddGroupChatUIView extends BaseUIView {
                 }).map(new Func1<List<Bitmap>, String>() {
                     @Override
                     public String call(List<Bitmap> bitmaps) {
-                        String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE) +"/avatar2.png";
+                        String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE) + "/avatar2.png";
                         //ios 目前大小为 40
-                        AttachmentStore.saveBitmap(JoinBitmaps.createGroupBitCircle(bitmaps,40,40,mActivity),filePath,true);
+                        AttachmentStore.saveBitmap(JoinBitmaps.createGroupBitCircle(bitmaps, 40, 40, mActivity), filePath, true);
                         for (Bitmap bitmap : bitmaps) {
                             if (!bitmap.isRecycled()) {
                                 bitmap.recycle();
                             }
                         }
                         File file = new File(filePath);
-                        if(!file.exists()) {
+                        if (!file.exists()) {
                             return null;
                         }
                         return filePath;
                     }
-                 })
+                })
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override
                     public Observable<String> call(String s) {
@@ -258,17 +259,20 @@ public class AddGroupChatUIView extends BaseUIView {
                         return RRetrofit.create(GroupChatService.class)
                                 .add(Param.buildMap("uid:" + UserCache.getUserAccount()
                                         , "to_uid:" + RUtils.connect(beans)
-                                        ,"avatar:" + circleUrl))
+                                        , "avatar:" + circleUrl))
                                 .compose(Rx.transformer(GroupInfoBean.class));
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSingleSubscriber<GroupInfoBean>() {
+
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        HnLoading.hide();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            HnLoading.hide();
+                        }
                     }
 
                     @Override

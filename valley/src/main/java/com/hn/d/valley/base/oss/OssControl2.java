@@ -3,6 +3,7 @@ package com.hn.d.valley.base.oss;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.RException;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 
@@ -104,9 +105,11 @@ public class OssControl2 {
                                     }
 
                                     @Override
-                                    public void onError(int code, String msg) {
-                                        super.onError(code, msg);
-                                        mUploadListener.onUploadFailed(code, msg);
+                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                        super.onEnd(isError, isNoNetwork, e);
+                                        if (isError) {
+                                            mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                        }
                                     }
                                 });
                     } else {
@@ -169,9 +172,11 @@ public class OssControl2 {
                                     }
 
                                     @Override
-                                    public void onError(int code, String msg) {
-                                        super.onError(code, msg);
-                                        mUploadListener.onUploadFailed(code, msg);
+                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                        super.onEnd(isError, isNoNetwork, e);
+                                        if (isError) {
+                                            mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                        }
                                     }
                                 });
                     } else {
@@ -244,9 +249,11 @@ public class OssControl2 {
                                     }
 
                                     @Override
-                                    public void onError(int code, String msg) {
-                                        super.onError(code, msg);
-                                        mUploadListener.onUploadFailed(code, msg);
+                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                        super.onEnd(isError, isNoNetwork, e);
+                                        if (isError) {
+                                            mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                        }
                                     }
                                 });
                     } else {
@@ -269,9 +276,11 @@ public class OssControl2 {
                                     }
 
                                     @Override
-                                    public void onError(int code, String msg) {
-                                        super.onError(code, msg);
-                                        mUploadListener.onUploadFailed(code, msg);
+                                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                        super.onEnd(isError, isNoNetwork, e);
+                                        if (isError) {
+                                            mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                        }
                                     }
                                 });
                     }

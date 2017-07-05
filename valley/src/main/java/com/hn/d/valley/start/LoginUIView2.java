@@ -16,6 +16,7 @@ import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.rsa.RSA;
@@ -198,18 +199,18 @@ public class LoginUIView2 extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onEnd(boolean isError, int errorCode, boolean isNoNetwork, Throwable e) {
-                        super.onEnd(isError, errorCode, isNoNetwork, e);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         if (isError) {
                             HnLoading.hide();
 
                             boolean show = false;
                             String type = "";
-                            if (errorCode == 1063) {
+                            if (e.getCode() == 1063) {
                                 //登录保护
                                 show = true;
                                 type = "login_protect";
-                            } else if (errorCode == 1029) {
+                            } else if (e.getCode() == 1029) {
                                 //账户被锁
                                 show = true;
                                 type = "unlock";
@@ -229,6 +230,8 @@ public class LoginUIView2 extends BaseContentUIView {
                                             }
                                         })
                                         .showDialog(iLayout);
+                            } else {
+                                T_.error(e.getLocalizedMessage());
                             }
                         }
                     }

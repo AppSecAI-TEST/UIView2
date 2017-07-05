@@ -42,6 +42,7 @@ import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.github.pickerview.view.WheelTime;
 import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -327,10 +328,13 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         }
                     }
 
+
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        HnLoading.hide();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            HnLoading.hide();
+                        }
                     }
                 }));
     }
@@ -495,9 +499,12 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                             }
 
                             @Override
-                            public void onError(int code, String msg) {
-                                T_.show(msg);
-                                HnLoading.hide();
+                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                super.onEnd(isError, isNoNetwork, e);
+                                if (isError) {
+                                    T_.show(e.getMsg());
+                                    HnLoading.hide();
+                                }
                             }
                         })
         );
@@ -627,8 +634,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         HnLoading.hide();
                     }
                 });

@@ -169,10 +169,6 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
                         }
                     }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
                 }));
     }
 

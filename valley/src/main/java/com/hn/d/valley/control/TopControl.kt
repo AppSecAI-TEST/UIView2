@@ -1,5 +1,6 @@
 package com.hn.d.valley.control
 
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.ROnSubscribe
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
@@ -44,7 +45,7 @@ class TopControl {
                                     observer.onCompleted()
                                 }
 
-                                override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: Throwable?) {
+                                override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
                                     super.onEnd(isError, isNoNetwork, e)
                                     if (isError) {
                                         observer.onNext(false)

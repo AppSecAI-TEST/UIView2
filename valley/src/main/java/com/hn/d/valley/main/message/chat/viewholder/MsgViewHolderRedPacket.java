@@ -129,10 +129,6 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                         }
                     }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
                 });
     }
 

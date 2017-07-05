@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.R;
@@ -80,14 +81,9 @@ public class MyCollectInformationUIView extends HotInfoListUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
-                    }
-
-                    @Override
-                    public void onEnd(boolean isError, int errorCode, boolean isNoNetwork, Throwable e) {
-                        super.onEnd(isError, errorCode, isNoNetwork, e);
                         if (isError) {
                             showNonetLayout(new View.OnClickListener() {
                                 @Override

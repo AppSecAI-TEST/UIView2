@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.skin.ISkin;
@@ -97,16 +98,6 @@ public class HotInformationUIView extends BaseContentUIView {
                 .classifylist(Param.buildInfoMap())
                 .compose(Rx.transformerList(String.class))
                 .subscribe(new BaseSingleSubscriber<List<String>>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        showNonetLayout(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                onViewShowFirst(null);
-                            }
-                        });
-                    }
 
                     @Override
                     public void onSucceed(List<String> bean) {
@@ -120,10 +111,19 @@ public class HotInformationUIView extends BaseContentUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
+                        if (isError) {
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onViewShowFirst(null);
+                                }
+                            });
+                        }
                     }
+
                 })
         );
     }

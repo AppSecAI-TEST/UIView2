@@ -1,5 +1,6 @@
 package com.hn.d.valley.base.rx;
 
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.utils.T_;
 
@@ -23,7 +24,7 @@ public abstract class BaseSingleSubscriber<T> extends RSubscriber<T> {
     }
 
     @Override
-    public void onEnd(boolean isError, boolean isNoNetwork, Throwable e) {
+    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
         super.onEnd(isError, isNoNetwork, e);
     }
 }

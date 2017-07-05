@@ -1,19 +1,15 @@
 package com.hn.d.valley.main.wallet;
 
-import android.app.DownloadManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
-import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -89,8 +85,8 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView text = holder.tv(R.id.text_view);
-                text.setTextColor(ContextCompat.getColor(mActivity,R.color.main_text_color_dark));
-                text.setText(String.format(Locale.CHINA,mActivity.getString(R.string.text_aut_phonenum), UserCache.instance().getLoginBean().getPhone()));
+                text.setTextColor(ContextCompat.getColor(mActivity, R.color.main_text_color_dark));
+                text.setText(String.format(Locale.CHINA, mActivity.getString(R.string.text_aut_phonenum), UserCache.instance().getLoginBean().getPhone()));
             }
         }));
 
@@ -139,9 +135,9 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                             return;
                         }
                         if (SETPAYPWD.equals(type)) {
-                            replaceIView(new ChangePayPwdUIview(ChangePayPwdUIview.SET_PAY_PWD,SetPayPwdUIView.this.code));
+                            replaceIView(new ChangePayPwdUIview(ChangePayPwdUIview.SET_PAY_PWD, SetPayPwdUIView.this.code));
                         } else if (FINDPAYPWD.equals(type)) {
-                            replaceIView(new ChangePayPwdUIview(ChangePayPwdUIview.FIND_PAY_PWD,SetPayPwdUIView.this.code));
+                            replaceIView(new ChangePayPwdUIview(ChangePayPwdUIview.FIND_PAY_PWD, SetPayPwdUIView.this.code));
                         }
                     }
                 });
@@ -152,7 +148,7 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
 
     private void sendVerify(final RequestCallback<String> callback) {
         add(RRetrofit.create(WalletService.class)
-                .sendPhoneVerifyCode(Param.buildInfoMap("phone:" + UserCache.instance().getLoginBean().getPhone(),"type:" + this.type))
+                .sendPhoneVerifyCode(Param.buildInfoMap("phone:" + UserCache.instance().getLoginBean().getPhone(), "type:" + this.type))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -163,9 +159,11 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        callback.onError(msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            callback.onError(e.getMsg());
+                        }
                     }
 
                     @Override

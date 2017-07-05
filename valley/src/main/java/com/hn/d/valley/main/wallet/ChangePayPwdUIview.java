@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
@@ -40,16 +41,14 @@ import static com.hn.d.valley.main.wallet.WalletHelper.getTransformer;
  * 修改备注：
  * Version: 1.0.0
  */
-public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>{
+public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
     public static final int FIND_PAY_PWD = 0;
     public static final int CHANGE_PAY_PWD = 1;
     public static final int SET_PAY_PWD = 2;
-
-    private RelativeLayout ll_container;
     TextView tv_change_pwd_tip;
     PasscodeView passcodeView;
-
+    private RelativeLayout ll_container;
     private boolean confirmPwd = false;
     private boolean inputNewPwd = false;
 
@@ -64,7 +63,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
     }
 
-    public ChangePayPwdUIview(int pay_pwd_type,String verifyCode) {
+    public ChangePayPwdUIview(int pay_pwd_type, String verifyCode) {
 //        this.findPayPwd = findPayPwd;
         this.verifyCode = verifyCode;
         this.pay_pwd_type = pay_pwd_type;
@@ -74,7 +73,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
     protected TitleBarPattern getTitleBar() {
         if (pay_pwd_type == CHANGE_PAY_PWD) {
             return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_change_pay_pwd));
-        } else if (pay_pwd_type == FIND_PAY_PWD){
+        } else if (pay_pwd_type == FIND_PAY_PWD) {
             return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_find_paypwd));
         } else if (pay_pwd_type == SET_PAY_PWD) {
             return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_set_pay_pwd));
@@ -102,7 +101,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     public void run() {
                         passcodeView.requestToShowKeyboard();
                     }
-                },500);
+                }, 500);
 
                 if (pay_pwd_type == FIND_PAY_PWD || pay_pwd_type == SET_PAY_PWD) {
                     tv_change_pwd_tip.setText(R.string.text_please_input_pwd);
@@ -121,14 +120,14 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                         if (!confirmPwd) {
                             oldPwd = passcode;
                             passwdConfirm(passcode);
-                        } else if (!inputNewPwd){
+                        } else if (!inputNewPwd) {
                             inputNewPwd = true;
                             newPwd = passcode;
                             ll_container.startAnimation(translateAnim());
                             tv_change_pwd_tip.setText(R.string.text_repeat_new_pwd);
                             passcodeView.clearText();
                         } else {
-                            if (newPwd!= null && newPwd.equals(passcode)) {
+                            if (newPwd != null && newPwd.equals(passcode)) {
                                 passwordSet();
                             } else {
                                 T_.show(mActivity.getString(R.string.text_new_old_pwd_not_same));
@@ -144,24 +143,20 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         Map<String, String> buildInfoMap = null;
         if (pay_pwd_type == FIND_PAY_PWD || pay_pwd_type == SET_PAY_PWD) {
             buildInfoMap = Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + newPwd
-                    , "verification_code:" + verifyCode,"phone:" + UserCache.instance().getLoginBean().getPhone());
+                    , "verification_code:" + verifyCode, "phone:" + UserCache.instance().getLoginBean().getPhone());
         } else {
             buildInfoMap = Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + newPwd, "oldpassword:" + oldPwd
-                    ,"phone:" + UserCache.instance().getLoginBean().getPhone());
+                    , "phone:" + UserCache.instance().getLoginBean().getPhone());
         }
 
         RRetrofit.create(WalletService.class)
                 .passwordSet(buildInfoMap)
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(String beans) {
-                        parseResult(mParentILayout,beans, new Action1() {
+                        parseResult(mParentILayout, beans, new Action1() {
                             @Override
                             public void call(Object o) {
                                 finishIView();
@@ -175,19 +170,22 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
     private void passwdConfirm(String passcode) {
         RRetrofit.create(WalletService.class)
-                .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"password:" + passcode))
+                .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + passcode))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
+
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        T_.show(mActivity.getString(R.string.text_pay_pwd_failed));
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            T_.show(mActivity.getString(R.string.text_pay_pwd_failed));
+                        }
                     }
 
                     @Override
                     public void onSucceed(String beans) {
 //                        replaceIView(new ChangePayPwdUIview());
-                        parseResult(mParentILayout,beans, new Action1<Integer>() {
+                        parseResult(mParentILayout, beans, new Action1<Integer>() {
                             @Override
                             public void call(Integer o) {
                                 confirmPwd = true;
@@ -201,7 +199,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 });
     }
 
-    private void parseResult(ILayout mOtherILayout,String beans, Action1 action) {
+    private void parseResult(ILayout mOtherILayout, String beans, Action1 action) {
         int code = -1;
         int data = 0;
         try {
@@ -217,13 +215,13 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
         } else if (code == 401) {
             UIDialog.build()
-                    .setDialogContent(String.format("密码错误，剩余可尝试次数 %d",data))
+                    .setDialogContent(String.format("密码错误，剩余可尝试次数 %d", data))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);
         } else if (code == 403) {
             UIDialog.build()
-                    .setDialogContent(String.format("密码输错过错次，已冻结，离解冻还剩 %d 秒",data))
+                    .setDialogContent(String.format("密码输错过错次，已冻结，离解冻还剩 %d 秒", data))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);
@@ -234,7 +232,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
 
 
     public Animation translateAnim() {
-        Animation translateAniation = AnimationUtils.loadAnimation(mActivity,R.anim.base_tran_to_left_enter);
+        Animation translateAniation = AnimationUtils.loadAnimation(mActivity, R.anim.base_tran_to_left_enter);
         return translateAniation;
 
 //        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1f,

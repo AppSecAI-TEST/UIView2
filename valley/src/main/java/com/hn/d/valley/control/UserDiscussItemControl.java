@@ -19,6 +19,7 @@ import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
 import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.github.utilcode.utils.PhoneUtils;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -1771,7 +1772,7 @@ public class UserDiscussItemControl {
 //                                ((RImageView) imageView).setImageBitmapNoCrop(imageView.getDrawable(), resource);
 //                            } else {
 //                                imageView.setImageBitmap(resource);
- //                        }
+        //                        }
 //
 //                        @Override
 //                        public void onLoadStarted(Drawable placeholder) {
@@ -1833,9 +1834,11 @@ public class UserDiscussItemControl {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        updateReadCountList.remove(item_id);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            updateReadCountList.remove(item_id);
+                        }
                     }
                 });
     }

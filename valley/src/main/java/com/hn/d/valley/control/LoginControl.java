@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.umeng.UM;
@@ -14,9 +15,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.receiver.JPushReceiver;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.base.rx.RException;
 import com.hn.d.valley.bean.realm.LoginBean;
-import com.hn.d.valley.main.wallet.WalletAccount;
 import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.start.service.StartService;
 import com.umeng.socialize.UMAuthListener;
@@ -210,25 +209,28 @@ public class LoginControl {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        if (isCancel) {
-                            if (mOnLoginListener != null) {
-                                mOnLoginListener.onLoginCancel();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            if (isCancel) {
+                                if (mOnLoginListener != null) {
+                                    mOnLoginListener.onLoginCancel();
+                                }
+                                return;
                             }
-                            return;
-                        }
-                        if (code == 1068) {
-                            isFirstRegister = true;
-                            //还未使用第三方帐号登录
-                            //需要先注册
-                            if (loginType == TYPE_QQ) {
-                                getQQInfo();
-                            } else if (loginType == TYPE_WX) {
-                                getWxInfo();
-                            }
-                        } else {
-                            if (mOnLoginListener != null) {
-                                mOnLoginListener.onLoginError(new RException(code, msg, "no more"));
+                            if (e.getCode() == 1068) {
+                                isFirstRegister = true;
+                                //还未使用第三方帐号登录
+                                //需要先注册
+                                if (loginType == TYPE_QQ) {
+                                    getQQInfo();
+                                } else if (loginType == TYPE_WX) {
+                                    getWxInfo();
+                                }
+                            } else {
+                                if (mOnLoginListener != null) {
+                                    mOnLoginListener.onLoginError(new RException(e.getCode(), e.getMsg(), "no more"));
+                                }
                             }
                         }
                     }

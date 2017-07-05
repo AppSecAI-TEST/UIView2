@@ -100,10 +100,6 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
                 .announcementList(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
                 .compose(Rx.transformerList(GroupAnnouncementBean.class))
                 .subscribe(new BaseSingleSubscriber<List<GroupAnnouncementBean>>() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                    }
 
                     @Override
                     public void onSucceed(List<GroupAnnouncementBean> beans) {
@@ -185,11 +181,6 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
                                                             .setAnnouncement(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid,"content:" + finalValue))
                                                             .compose(Rx.transformer(String.class))
                                                             .subscribe(new BaseSingleSubscriber<String>() {
-                                                                @Override
-                                                                public void onError(int code, String msg) {
-                                                                    super.onError(code, msg);
-                                                                }
-
                                                                 @Override
                                                                 public void onSucceed(String beans) {
                                                                     loadData();

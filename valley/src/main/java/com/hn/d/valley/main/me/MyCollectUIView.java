@@ -3,6 +3,7 @@ package com.hn.d.valley.main.me;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -73,8 +74,8 @@ public class MyCollectUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                     }
                 }));

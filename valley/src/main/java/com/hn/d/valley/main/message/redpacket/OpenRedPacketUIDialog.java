@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.hn.d.valley.R;
@@ -263,10 +264,13 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        L.i(TAG, msg);
-                        finishDialog();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            L.i(TAG, e.getMsg());
+                            finishDialog();
+
+                        }
                     }
 
                     @Override

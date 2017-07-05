@@ -22,6 +22,7 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.utilcode.utils.StringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.rsa.RSA;
@@ -42,7 +43,6 @@ import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
-import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.PhoneUser;
 import com.hn.d.valley.cache.UserCache;
@@ -79,12 +79,10 @@ import rx.schedulers.Schedulers;
  */
 public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRefreshListener {
 
-    private AddressBookAdapter mAddressAdapter;
-
     RecyclerView rv_phoneusers;
     ExEditText et_search;
     HnRefreshLayout refreshLayout;
-
+    private AddressBookAdapter mAddressAdapter;
     private List<AbsContactItem> mContacts;
 
     public AddressBookUI2View() {
@@ -172,7 +170,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        if (Build.VERSION.SDK_INT >=23 ) {
+        if (Build.VERSION.SDK_INT >= 23) {
             if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
                 checkPermissionDialog();
                 return;
@@ -191,18 +189,19 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     public void onClick(View v) {
                         // 获取权限
                         new RxPermissions(mActivity)
-                        .request(Manifest.permission.READ_CONTACTS)
-                        .subscribe(new BaseSingleSubscriber<Boolean>() {
-                            @Override
-                            public void onSucceed(Boolean bean) {
-                                super.onSucceed(bean);
-                                if (bean) {
-                                    startLoad();
-                                } else {
-                                    finishIView();
-                                }
-                            }
-                        });                    }
+                                .request(Manifest.permission.READ_CONTACTS)
+                                .subscribe(new BaseSingleSubscriber<Boolean>() {
+                                    @Override
+                                    public void onSucceed(Boolean bean) {
+                                        super.onSucceed(bean);
+                                        if (bean) {
+                                            startLoad();
+                                        } else {
+                                            finishIView();
+                                        }
+                                    }
+                                });
+                    }
                 })
                 .setCancelListener(new View.OnClickListener() {
                     @Override
@@ -288,17 +287,14 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
+                        if (isError) {
+                            mAddressAdapter.resetData(absContactItems);
+                        }
                     }
 
-                    @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        hideLoadView();
-                        mAddressAdapter.resetData(absContactItems);
-                    }
                 });
     }
 
@@ -351,6 +347,52 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         if (RefreshLayout.TOP == direction) {
             startLoad();
         }
+    }
+
+    //是否是联系人
+    protected boolean isContact(PhoneUser dataBean) {
+        return dataBean.getIs_contact() == 1;
+    }
+
+    //是否已关注
+    protected boolean isAttention(PhoneUser dataBean) {
+        return dataBean.getIs_attention() == 1;
+    }
+
+    /**
+     * @param value true 关注, false 未关注
+     */
+    protected boolean onSetDataBean(PhoneUser dataBean, boolean value) {
+        //请根据界面设置对应关系值
+        if (!value) {
+            dataBean.setIs_contact(0);
+        }
+        dataBean.setIs_attention(value ? 1 : 0);
+        return true;
+    }
+
+    private void buildMsg(PhoneContactItem item) {
+        //                            NSString *spm = [NSString stringWithFormat:@"%@_invite_%@",[ToolObject getUid],[ToolObject returnNowDate]];
+//                            NSString *shareUrl = [NSString stringWithFormat:@"wap.klgwl.com/user/register?spm=%@",[ToolObject encryptString:spm publicKey:RSAPUBLICKEY]];
+//
+//                            NSString *message = [NSString stringWithFormat:@"【恐龙谷】%@通过手机通讯录邀请你加入恐龙谷,快点击 %@ 注册吧。",[ToolObject getUserName],shareUrl];
+
+        //未关注
+        StringBuilder sb = new StringBuilder();
+        sb.append(UserCache.getUserAccount())
+                .append("_invite_")
+                .append(TimeUtil.getNowDatetime());
+
+        String encodeInfo = RSA.encode(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
+        sb = new StringBuilder();
+        sb.append("【恐龙谷】")
+                .append(UserCache.getUserAccount())
+                .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
+                .append("wap.klgwl.com/user/register?spm=")
+                .append(encodeInfo)
+                .append(" 下载吧");
+
+        RUtils.sendSMS(mActivity, sb.toString(), item.getContactsInfo().phone);
     }
 
     public class AddressBookAdapter extends RExBaseAdapter<String, AbsContactItem, String> {
@@ -418,10 +460,13 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                                             setSelectorPosition(posInData);
                                         }
 
+
                                         @Override
-                                        public void onError(int code, String msg) {
-                                            super.onError(code, msg);
-                                            setSelectorPosition(posInData);
+                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                            super.onEnd(isError, isNoNetwork, e);
+                                            if (isError) {
+                                                setSelectorPosition(posInData);
+                                            }
                                         }
                                     }));
                         }
@@ -454,16 +499,18 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
                                                             }
 
                                                             @Override
-                                                            public void onError(int code, String msg) {
-                                                                super.onError(code, msg);
-                                                                setSelectorPosition(posInData);
+                                                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                                super.onEnd(isError, isNoNetwork, e);
+                                                                if (isError) {
+                                                                    setSelectorPosition(posInData);
+                                                                }
                                                             }
                                                         }));
                                             }
                                         })).showDialog(mILayout);
                             }
                         };
-                      follow_image_view.setOnClickListener(clickListener);
+                        follow_image_view.setOnClickListener(clickListener);
                     }
 
                 } else {
@@ -495,7 +542,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, AbsContactItem bean) {
             super.onBindModelView(model, isSelector, holder, position, bean);
             if (holder.getViewType() == ItemTypes.PHONECOTACT) {
-                if (! (bean instanceof WrapPhoneContactItem)) {
+                if (!(bean instanceof WrapPhoneContactItem)) {
                     return;
                 }
                 WrapPhoneContactItem wrapContact = (WrapPhoneContactItem) bean;
@@ -538,52 +585,6 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
         }
     }
 
-    //是否是联系人
-    protected boolean isContact(PhoneUser dataBean) {
-        return dataBean.getIs_contact() == 1;
-    }
-
-    //是否已关注
-    protected boolean isAttention(PhoneUser dataBean) {
-        return dataBean.getIs_attention() == 1;
-    }
-
-    /**
-     * @param value true 关注, false 未关注
-     */
-    protected boolean onSetDataBean(PhoneUser dataBean, boolean value) {
-        //请根据界面设置对应关系值
-        if (!value) {
-            dataBean.setIs_contact(0);
-        }
-        dataBean.setIs_attention(value ? 1 : 0);
-        return true;
-    }
-
-    private void buildMsg(PhoneContactItem item) {
-        //                            NSString *spm = [NSString stringWithFormat:@"%@_invite_%@",[ToolObject getUid],[ToolObject returnNowDate]];
-//                            NSString *shareUrl = [NSString stringWithFormat:@"wap.klgwl.com/user/register?spm=%@",[ToolObject encryptString:spm publicKey:RSAPUBLICKEY]];
-//
-//                            NSString *message = [NSString stringWithFormat:@"【恐龙谷】%@通过手机通讯录邀请你加入恐龙谷,快点击 %@ 注册吧。",[ToolObject getUserName],shareUrl];
-
-        //未关注
-        StringBuilder sb = new StringBuilder();
-        sb.append(UserCache.getUserAccount())
-                .append("_invite_")
-                .append(TimeUtil.getNowDatetime());
-
-        String encodeInfo = RSA.encode(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
-        sb = new StringBuilder();
-        sb.append("【恐龙谷】")
-                .append(UserCache.getUserAccount())
-                .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
-                .append("wap.klgwl.com/user/register?spm=")
-                .append(encodeInfo)
-                .append(" 下载吧");
-
-        RUtils.sendSMS(mActivity, sb.toString(), item.getContactsInfo().phone);
-    }
-
     public class AddressBookViewHolder extends RBaseViewHolder {
 
 
@@ -608,7 +609,7 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
             super(info);
             char ch = phoneUser.getUsername().charAt(0);
             String letter = StringUtils.getAsciiLeadingUp(ch);
-            if (letter != null ) {
+            if (letter != null) {
                 groupText = letter;
             } else if (Pinyin.isChinese(ch)) {
                 groupText = String.valueOf(Pinyin.toPinyin(ch).toUpperCase().charAt(0));

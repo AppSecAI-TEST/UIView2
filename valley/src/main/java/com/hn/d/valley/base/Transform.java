@@ -4,9 +4,9 @@ import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.mvp.view.IBaseView;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
-import com.hn.d.valley.base.rx.RException;
 import com.hn.d.valley.base.rx.UnSubscriber;
 
 import org.json.JSONException;

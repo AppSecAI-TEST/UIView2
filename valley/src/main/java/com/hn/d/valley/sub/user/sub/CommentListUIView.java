@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
@@ -122,9 +123,11 @@ public class CommentListUIView extends BaseDynamicListUIView {
                                         .compose(Rx.transformer(String.class))
                                         .subscribe(new RSubscriber<String>() {
                                             @Override
-                                            public void onError(int code, String msg) {
-                                                super.onError(code, msg);
-                                                T_.error(msg);
+                                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                super.onEnd(isError, isNoNetwork, e);
+                                                if (isError) {
+                                                    T_.error(e.getMsg());
+                                                }
                                             }
                                         }));
                             }

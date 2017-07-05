@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
@@ -26,7 +26,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.RBus;
@@ -183,7 +182,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemCallback() {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                holder.itemView.setPadding(0,0,0,0);
+                holder.itemView.setPadding(0, 0, 0, 0);
                 TextView tv_tip = holder.tv(R.id.text_view);
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tv_tip.getLayoutParams();
                 params.gravity = Gravity.CENTER_HORIZONTAL;
@@ -226,7 +225,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                         "uid:" + UserCache.getUserAccount(),
                         "type:" + 0,
                         "account:" + WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0],
-                        "money:" + (int)(Float.valueOf(money) * 100)))
+                        "money:" + (int) (Float.valueOf(money) * 100)))
                 .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -237,10 +236,12 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        HnLoading.hide();
-                        finishIView();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            HnLoading.hide();
+                            finishIView();
+                        }
                     }
 
                     @Override
@@ -268,7 +269,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             RBus.post(new WalletAccountUpdateEvent());
         } else if (400 == code) {
             T_.show(getString(R.string.text_params_lose));
-        } else if (401 == code){
+        } else if (401 == code) {
             T_.show(getString(R.string.text_pwd_error));
         } else if (402 == code) {
             T_.show(getString(R.string.text_account_not_set));

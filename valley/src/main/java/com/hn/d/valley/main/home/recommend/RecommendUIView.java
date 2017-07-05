@@ -3,6 +3,7 @@ package com.hn.d.valley.main.home.recommend;
 import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -99,7 +100,8 @@ public class RecommendUIView extends NoTitleBaseRecyclerUIView<UserDiscussListBe
                     }
 
                     @Override
-                    public void onEnd() {
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         onUILoadDataFinish();
                         mLoadStatusCallback.onLoadEnd();
                     }

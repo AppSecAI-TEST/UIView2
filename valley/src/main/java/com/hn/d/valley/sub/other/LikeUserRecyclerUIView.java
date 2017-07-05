@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.other;
 
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
@@ -84,11 +85,10 @@ public class LikeUserRecyclerUIView extends UserInfoRecyclerUIView {
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         hideLoadView();
                     }
-
                 }));
 
 //        add(RRetrofit.create(SocialService.class)

@@ -4,6 +4,7 @@ import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.net.RException;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 
@@ -46,16 +47,16 @@ public class OssControl {
         mUploadListener = uploadListener;
     }
 
-    public OnUploadListener getUploadListener() {
-        return mUploadListener;
-    }
-
     /**
      * 检查路径是否已经上传成功过
      */
     public static String isUpload(final String path) {
         String s = urlMap.get(path);
         return s;
+    }
+
+    public OnUploadListener getUploadListener() {
+        return mUploadListener;
     }
 
     public void uploadCircleImg(List<String> files) {
@@ -144,9 +145,11 @@ public class OssControl {
                                         }
 
                                         @Override
-                                        public void onError(int code, String msg) {
-                                            super.onError(code, msg);
-                                            mUploadListener.onUploadFailed(code, msg);
+                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                            super.onEnd(isError, isNoNetwork, e);
+                                            if (isError) {
+                                                mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                            }
                                         }
                                     });
                         } else {
@@ -167,9 +170,11 @@ public class OssControl {
                                         }
 
                                         @Override
-                                        public void onError(int code, String msg) {
-                                            super.onError(code, msg);
-                                            mUploadListener.onUploadFailed(code, msg);
+                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                            super.onEnd(isError, isNoNetwork, e);
+                                            if (isError) {
+                                                mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                            }
                                         }
                                     });
                         }

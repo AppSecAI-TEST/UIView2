@@ -3,6 +3,7 @@ package com.hn.d.valley.control
 import com.angcyo.library.utils.L
 import com.angcyo.uiview.container.ILayout
 import com.angcyo.uiview.container.UIParam
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.bumptech.glide.Glide
@@ -84,10 +85,6 @@ object AdsControl {
                 .compose(Rx.transformer(AdModel::class.java))
                 .subscribe(object : BaseSingleSubscriber<AdModel>() {
 
-                    override fun onError(code: Int, msg: String?) {
-
-                    }
-
                     override fun onSucceed(bean: AdModel?) {
                         if (bean == null || bean.data_count == 0) {
                         } else {
@@ -96,8 +93,8 @@ object AdsControl {
                         }
                     }
 
-                    override fun onEnd(isError: Boolean, errorCode: Int, isNoNetwork: Boolean, e: Throwable?) {
-                        super.onEnd(isError, errorCode, isNoNetwork, e)
+                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
+                        super.onEnd(isError, isNoNetwork, e)
                         checking = false
                     }
                 })

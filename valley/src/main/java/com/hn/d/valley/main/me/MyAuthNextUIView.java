@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -426,9 +427,10 @@ public class MyAuthNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     }
 
                     @Override
-                    public void onEnd() {
-                        super.onEnd();
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
                         HnLoading.hide();
+
                     }
                 })
         );

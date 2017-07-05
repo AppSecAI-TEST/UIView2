@@ -1,6 +1,7 @@
 package com.hn.d.valley.sub.other
 
 import com.angcyo.uiview.model.TitleBarPattern
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
@@ -65,7 +66,7 @@ class BlackListUIView : SingleRecyclerUIView<ReplyListBean.DataListBean>() {
                         }
                     }
 
-                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: Throwable?) {
+                    override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException?) {
                         super.onEnd(isError, isNoNetwork, e)
                         hideLoadView()
                         if (isError) {

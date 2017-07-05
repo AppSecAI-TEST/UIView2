@@ -3,6 +3,7 @@ package com.hn.d.valley.main.message.groupchat;
 import android.graphics.Bitmap;
 
 import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.RUtils;
@@ -51,14 +52,14 @@ public class TeamCreateHelper {
 
         final List<FriendBean> beans = new ArrayList<>();
         for (AbsContactItem item : selectorData) {
-            beans.add(((ContactItem)item).getFriendBean());
+            beans.add(((ContactItem) item).getFriendBean());
         }
         iLayout.add(Observable.just(beans)
                 .flatMap(new Func1<List<FriendBean>, Observable<List<String>>>() {
                     @Override
                     public Observable<List<String>> call(List<FriendBean> beanList) {
                         List<String> urls = new ArrayList<>();
-                        for(FriendBean bean : beanList){
+                        for (FriendBean bean : beanList) {
                             urls.add(bean.getAvatar());
                         }
                         return Observable.just(urls);
@@ -69,9 +70,9 @@ public class TeamCreateHelper {
                     public Observable<List<Bitmap>> call(List<String> s) {
                         List<Bitmap> bitmaps = new ArrayList<>();
                         s.add(UserCache.getUserAvatar());
-                        for(String url : s ) {
+                        for (String url : s) {
                             Bitmap bitmap = NetUtils.createBitmapFromUrl(url);
-                            if(bitmap == null) {
+                            if (bitmap == null) {
                                 continue;
                             }
                             bitmaps.add(bitmap);
@@ -81,16 +82,16 @@ public class TeamCreateHelper {
                 }).map(new Func1<List<Bitmap>, String>() {
                     @Override
                     public String call(List<Bitmap> bitmaps) {
-                        String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE)  + UUID.randomUUID().toString() + ".png";
+                        String filePath = StorageUtil.getDirectoryByDirType(StorageType.TYPE_IMAGE) + UUID.randomUUID().toString() + ".png";
                         //ios 目前大小为 40
-                        AttachmentStore.saveBitmap(JoinBitmaps.createGroupBitCircle(bitmaps,100,100, ValleyApp.getApp().getApplicationContext()),filePath,true);
+                        AttachmentStore.saveBitmap(JoinBitmaps.createGroupBitCircle(bitmaps, 100, 100, ValleyApp.getApp().getApplicationContext()), filePath, true);
                         for (Bitmap bitmap : bitmaps) {
                             if (!bitmap.isRecycled()) {
                                 bitmap.recycle();
                             }
                         }
                         File file = new File(filePath);
-                        if(!file.exists()) {
+                        if (!file.exists()) {
                             return null;
                         }
                         return filePath;
@@ -109,17 +110,20 @@ public class TeamCreateHelper {
                         return RRetrofit.create(GroupChatService.class)
                                 .add(Param.buildMap("uid:" + UserCache.getUserAccount()
                                         , "to_uid:" + RUtils.connect(beans)
-                                        ,"avatar:" + circleUrl))
+                                        , "avatar:" + circleUrl))
                                 .compose(Rx.transformer(GroupInfoBean.class));
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSingleSubscriber<GroupInfoBean>() {
+
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        callback.onError(msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            callback.onError(e.getMsg());
+                        }
                     }
 
                     @Override
@@ -134,38 +138,41 @@ public class TeamCreateHelper {
     public static void invite(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, final RequestCallback requestCallback, final String gid, final Action1<Boolean> successAction) {
         requestCallback.onStart();
 
-       uiBaseDataView.add(Observable.just(absContactItems)
+        uiBaseDataView.add(Observable.just(absContactItems)
                 .flatMap(new Func1<List<AbsContactItem>, Observable<List<FriendBean>>>() {
                     @Override
                     public Observable<List<FriendBean>> call(List<AbsContactItem> absContactItem) {
                         List<FriendBean> beanlist = new ArrayList();
                         for (AbsContactItem bean : absContactItem) {
-                            beanlist.add(((ContactItem)bean).getFriendBean());
+                            beanlist.add(((ContactItem) bean).getFriendBean());
                         }
                         return Observable.just(beanlist);
                     }
                 }).flatMap(new Func1<List<FriendBean>, Observable<String>>() {
-            @Override
-            public Observable<String> call(List<FriendBean> friendBeen) {
-                return RRetrofit.create(GroupChatService.class)
-                        .invite(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
-                        .compose(Rx.transformer(String.class));
-            }
-        }).subscribe(new BaseSingleSubscriber<String>(){
-            @Override
-            public void onSucceed(String bean) {
-                requestCallback.onSuccess(bean);
-                if (successAction != null) {
-                    successAction.call(true);
-                }
-            }
+                    @Override
+                    public Observable<String> call(List<FriendBean> friendBeen) {
+                        return RRetrofit.create(GroupChatService.class)
+                                .invite(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen), "gid:" + gid))
+                                .compose(Rx.transformer(String.class));
+                    }
+                }).subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String bean) {
+                        requestCallback.onSuccess(bean);
+                        if (successAction != null) {
+                            successAction.call(true);
+                        }
+                    }
 
-            @Override
-            public void onError(int code, String msg) {
-                super.onError(code, msg);
-                requestCallback.onError(msg);
-            }
-        }));
+
+                    @Override
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            requestCallback.onError(e.getMsg());
+                        }
+                    }
+                }));
 
 //        uiBaseDataView.add(RRetrofit.create(GroupChatService.class)
 //                .add(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(absContactItems)))
@@ -187,7 +194,7 @@ public class TeamCreateHelper {
                     public Observable<List<GroupMemberBean>> call(List<AbsContactItem> absContactItem) {
                         List<GroupMemberBean> beanlist = new ArrayList();
                         for (AbsContactItem bean : absContactItem) {
-                            beanlist.add(((GroupMemberItem)bean).getMemberBean());
+                            beanlist.add(((GroupMemberItem) bean).getMemberBean());
                         }
                         return Observable.just(beanlist);
                     }
@@ -195,12 +202,12 @@ public class TeamCreateHelper {
                     @Override
                     public Observable<String> call(List<GroupMemberBean> friendBeen) {
                         return RRetrofit.create(GroupChatService.class)
-                                .changeOwner(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen),"gid:" + gid))
+                                .changeOwner(Param.buildMap("uid:" + UserCache.getUserAccount(), "to_uid:" + RUtils.connect(friendBeen), "gid:" + gid))
                                 .compose(Rx.transformer(String.class));
                     }
                 }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseSingleSubscriber<String>(){
+                .subscribe(new BaseSingleSubscriber<String>() {
                     @Override
                     public void onSucceed(String bean) {
                         callback.onSuccess(bean);
@@ -208,9 +215,11 @@ public class TeamCreateHelper {
                     }
 
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        callback.onError(msg);
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            callback.onError(e.getMsg());
+                        }
                     }
                 }));
     }

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.luban.Luban;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.receiver.NetworkStateReceiver;
@@ -425,16 +426,13 @@ public class PublishControl {
                                }
 
                                @Override
-                               public void onError(int code, String msg) {
-                                   super.onError(code, msg);
-                                   task.setPublishStatus(PublishTaskRealm.STATUS_ERROR);
-                                   PublishTaskRealm.changeStatus(task.getUuid(), PublishTaskRealm.STATUS_ERROR);
-                               }
-
-                               @Override
-                               public void onEnd() {
-                                   super.onEnd();
+                               public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                   super.onEnd(isError, isNoNetwork, e);
                                    onPublishStart(false);
+                                   if (isError) {
+                                       task.setPublishStatus(PublishTaskRealm.STATUS_ERROR);
+                                       PublishTaskRealm.changeStatus(task.getUuid(), PublishTaskRealm.STATUS_ERROR);
+                                   }
                                }
                            }
                 );

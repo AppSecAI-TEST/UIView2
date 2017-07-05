@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -109,7 +110,7 @@ public class PayUIDialog extends UIIDialogImpl {
         baseItemInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mParentILayout.startIView(new ChoosePayWayUIDialog(action,params));
+                mParentILayout.startIView(new ChoosePayWayUIDialog(action, params));
                 finishDialog();
             }
         });
@@ -134,10 +135,14 @@ public class PayUIDialog extends UIIDialogImpl {
                 .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + passcode))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
+
+
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        T_.show("支付密码校验失败！");
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            T_.show("支付密码校验失败！");
+                        }
                     }
 
                     @Override
@@ -182,19 +187,22 @@ public class PayUIDialog extends UIIDialogImpl {
     }
 
 
-
     private void sendRedPacket() {
         String type = checkType();
         RRetrofit.create(RedPacketService.class)
                 .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num,
-                        "money:" + (int)params.money, "content:" + params.content, type, "random:" + params.random))
+                        "money:" + (int) params.money, "content:" + params.content, type, "random:" + params.random))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
+
                     @Override
-                    public void onError(int code, String msg) {
-                        super.onError(code, msg);
-                        finishDialog();
-                        T_.show(mActivity.getString(R.string.text_send_fail));
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+
+                            finishDialog();
+                            T_.show(mActivity.getString(R.string.text_send_fail));
+                        }
                     }
 
                     @Override
@@ -220,7 +228,7 @@ public class PayUIDialog extends UIIDialogImpl {
                 if (action != null) {
                     action.call(code);
                 }
-            } else if (Constants.FAIL == code){
+            } else if (Constants.FAIL == code) {
 //                T_.show(mActivity.getString(R.string.text_send_fail));
                 T_.show(jsonObject.optString("data"));
             }
@@ -241,6 +249,16 @@ public class PayUIDialog extends UIIDialogImpl {
         return "to_uid:" + params.to_uid;
     }
 
+    public static enum RedPacketType {
+        PERSON("uid"), GROUP("gid"), SQURE("squre");
+
+        String type;
+
+        RedPacketType(String type) {
+            this.type = type;
+        }
+    }
+
     public static class Params {
 
         int num;
@@ -251,14 +269,6 @@ public class PayUIDialog extends UIIDialogImpl {
         String content;
         String to_uid;
 
-        public int getBalance() {
-            return balance;
-        }
-
-        public void setBalance(int balance) {
-            this.balance = balance;
-        }
-
         public Params(int num, float money, String content, String to_uid, String to_gid, int random) {
             this.num = num;
             this.money = money;
@@ -267,15 +277,13 @@ public class PayUIDialog extends UIIDialogImpl {
             this.to_gid = to_gid;
             this.random = random;
         }
-    }
 
-    public static enum RedPacketType {
-        PERSON("uid"), GROUP("gid"), SQURE("squre");
+        public int getBalance() {
+            return balance;
+        }
 
-        String type;
-
-        RedPacketType(String type) {
-            this.type = type;
+        public void setBalance(int balance) {
+            this.balance = balance;
         }
     }
 
