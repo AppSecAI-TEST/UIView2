@@ -20,8 +20,6 @@ import com.angcyo.uiview.recycler.adapter.RGroupAdapter;
 import com.angcyo.uiview.recycler.adapter.RGroupData;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.RUtils;
-import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
@@ -36,12 +34,11 @@ import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.widget.HnCheckBox;
 import com.hn.d.valley.widget.HnEmptyRefreshLayout;
-import com.netease.nimlib.sdk.friend.model.Friend;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.functions.Action2;
+import rx.functions.Action0;
 import rx.functions.Action3;
 
 import static com.angcyo.uiview.utils.RUtils.safe;
@@ -59,12 +56,23 @@ import static com.angcyo.uiview.utils.RUtils.safe;
  */
 public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisiableLevelUIView.SubSection> {
 
-    private RGroupAdapter<String,SubSection,String> mGroupAdapter;
+    private RGroupAdapter<String, SubSection, String> mGroupAdapter;
 
-    private Action2<LevelType,List<String>> mSelectionAction;
+    private Action3<LevelType, List<String>, List<FriendBean>> mSelectionAction;
 
     private LevelType mCurrentType = LevelType.PUBLIC;
+    private LevelType mDefaultType = LevelType.PUBLIC;
     private List<String> mCurrentSelectedFriend = new ArrayList<>();
+    private List<FriendBean> mSelectedFriendBean = new ArrayList<>();
+
+    public DynamicVisiableLevelUIView() {
+    }
+
+    public DynamicVisiableLevelUIView(LevelType currentType, List<FriendBean> selectedFriendBean) {
+        mCurrentType = currentType;
+        mDefaultType = currentType;
+        mSelectedFriendBean.addAll(selectedFriendBean);
+    }
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -78,14 +86,14 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         return super.getTitleBar().setTitleString(mActivity.getString(R.string.text_dynamic_visiable)).setRightItems(rightItems);
     }
 
-    public DynamicVisiableLevelUIView setSelectionAction(Action2<LevelType,List<String>> action){
-        this.mSelectionAction = action;
+    public DynamicVisiableLevelUIView setSelectionAction(Action3<LevelType, List<String>, List<FriendBean>> selectionAction) {
+        mSelectionAction = selectionAction;
         return this;
     }
 
     private void onSelected() {
         if (mSelectionAction != null) {
-            mSelectionAction.call(mCurrentType,mCurrentSelectedFriend);
+            mSelectionAction.call(mCurrentType, mCurrentSelectedFriend, mSelectedFriendBean);
             finishIView();
         }
     }
@@ -99,7 +107,6 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
         initData();
-
     }
 
     @Override
@@ -126,8 +133,94 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         return mGroupAdapter;
     }
 
+    public void initData() {
 
-    private class VisiableLevelAdpater extends RGroupAdapter<String,SubSection,String> {
+        List<SubSection> datas = new ArrayList<>();
+        datas.add(new SubSection(LevelType.PUBLIC));
+        datas.add(new SubSection(LevelType.PRIVATE));
+        datas.add(new SubSection(LevelType.ONLY_FIRENDS_VISIABLE));
+
+        SubSection visiableSub = new SubSection(LevelType.PARTIALLY_VISIABLE).setClickListener(true);
+        if (mCurrentType == LevelType.PARTIALLY_VISIABLE) {
+            visiableSub.setFriendList(mSelectedFriendBean);
+            visiableSub.addSubBean();
+            visiableSub.setClickListener(false);
+        }
+        datas.add(visiableSub);
+
+        SubSection invisibleSub = new SubSection(LevelType.PARTIALLY_INVISIABLE).setClickListener(true);
+        if (mCurrentType == LevelType.PARTIALLY_INVISIABLE) {
+            invisibleSub.setFriendList(mSelectedFriendBean);
+            invisibleSub.addSubBean();
+            visiableSub.setClickListener(false);
+        }
+        datas.add(invisibleSub);
+
+        mGroupAdapter.addSelectorPosition(mCurrentType.getId() - 1);//默认选中位置
+        mGroupAdapter.setAllDatas(datas);
+    }
+
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.CONTENT;
+    }
+
+    /**
+     * 1-公开 2-私密 3-部分好友可见 4-不给谁看,5-仅好友可见】
+     */
+    public enum LevelType {
+        PUBLIC(1, ValleyApp.getApp().getResources().getString(R.string.text_public), "所有人可见"),
+        PRIVATE(2, ValleyApp.getApp().getResources().getString(R.string.text_private), "仅自己可见"),
+        ONLY_FIRENDS_VISIABLE(3, ValleyApp.getApp().getResources().getString(R.string.text_only_friends_visiable), "所有朋友可见"),
+        PARTIALLY_VISIABLE(4, ValleyApp.getApp().getResources().getString(R.string.text_partially_visiable), "选中的朋友可见"),
+        PARTIALLY_INVISIABLE(5, ValleyApp.getApp().getResources().getString(R.string.text_partially_invisiable), "选中的朋友不可见");
+
+        int id;
+        String des;
+        String level;
+
+        LevelType(int id, String level, String des) {
+            this.id = id;
+            this.des = des;
+            this.level = level;
+        }
+
+        static LevelType valueOf(int id) {
+            switch (id) {
+                case 1:
+                    return PUBLIC;
+                case 2:
+                    return PRIVATE;
+                case 4:
+                    return PARTIALLY_VISIABLE;
+                case 5:
+                    return PARTIALLY_INVISIABLE;
+                case 3:
+                    return ONLY_FIRENDS_VISIABLE;
+                default:
+                    return null;
+            }
+        }
+
+        public String getLevel() {
+            return level;
+        }
+
+        public void setLevel(String level) {
+            this.level = level;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getDes() {
+            return des;
+        }
+    }
+
+    private class VisiableLevelAdpater extends RGroupAdapter<String, SubSection, String> {
 
         public VisiableLevelAdpater(Context context) {
             super(context);
@@ -147,13 +240,17 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         @Override
         protected void onBindModelView(int model, boolean isSelector, RBaseViewHolder holder, int position, SubSection bean) {
             super.onBindModelView(model, isSelector, holder, position, bean);
-            if (getItemType(position) == TYPE_GROUP_HEAD) {
+            if (isInGroup(position)) {
                 HnCheckBox cb = holder.v(R.id.radio_view);
                 cb.setChecked(isSelector);
-                if (isSelector && bean != null) {
+                if (isSelector) {
+                    bean = (SubSection) getGroupDataFromPosition(position);
+
                     mCurrentType = bean.section;
                     mCurrentSelectedFriend = bean.atUsers;
-                    if (mCurrentSelectedFriend.size() == 0) {
+                    mSelectedFriendBean = bean.mFriendList;
+                    if ((mCurrentType == LevelType.PARTIALLY_VISIABLE || mCurrentType == LevelType.PARTIALLY_INVISIABLE)
+                            && mCurrentSelectedFriend.size() == 0) {
                         mCurrentType = LevelType.PUBLIC;
                     }
                 }
@@ -161,27 +258,14 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         }
     }
 
-
-    public void initData() {
-
-        List<SubSection> datas = new ArrayList<>();
-        datas.add(new SubSection(LevelType.PUBLIC));
-        datas.add(new SubSection(LevelType.PRIVATE));
-        datas.add(new SubSection(LevelType.ONLY_FIRENDS_VISIABLE));
-        datas.add(new SubSection(LevelType.PARTIALLY_VISIABLE).setClickListener(true));
-        datas.add(new SubSection(LevelType.PARTIALLY_INVISIABLE).setClickListener(true));
-        mGroupAdapter.setAllDatas(datas);
-    }
-
-    protected class SubSection extends RGroupData<FriendBean>{
+    protected class SubSection extends RGroupData<FriendBean> {
 
         private LevelType section;
 
-        private List<AbsContactItem> subItems;
+        //private List<AbsContactItem> subItems;//局部变量
 
         private List<String> atUsers = new ArrayList<>();//@的用户
         private List<FriendBean> mFriendList = new ArrayList<>();
-
 
         private boolean canClick;
 
@@ -192,6 +276,15 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         public SubSection setClickListener(boolean listener) {
             this.canClick = listener;
             return this;
+        }
+
+        public void setFriendList(List<FriendBean> friendList) {
+            mFriendList.addAll(friendList);
+
+            atUsers.clear();
+            for (FriendBean item : friendList) {
+                atUsers.add(item.getUid());
+            }
         }
 
         @Override
@@ -227,15 +320,18 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
                                     @Override
                                     public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
                                         requestCallback.onSuccess("");
-                                        subItems = absContactItems;
-                                        if (subItems.size() > 0) {
+                                        if (absContactItems.size() > 0) {
                                             canClick = false;
                                         }
                                         // 增加sub 选项
-                                        List<FriendBean> sub = new ArrayList<>();
-                                        sub.add(new FriendBean());
-                                        appendDatas(sub);
-                                        processSelectedData(subItems);
+                                        addSubBean();
+                                        processSelectedData(absContactItems);
+                                    }
+                                })
+                                .setOnCancelAction(new Action0() {
+                                    @Override
+                                    public void call() {
+                                        mGroupAdapter.setSelectorPosition(mDefaultType.getId() - 1);
                                     }
                                 });
 
@@ -247,6 +343,12 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
             holder.itemView.setOnClickListener(listener);
         }
 
+        public void addSubBean() {
+            List<FriendBean> sub = new ArrayList<>();
+            sub.add(new FriendBean());
+            resetDatas(sub);
+        }
+
         @Override
         protected void onBindDataView(RBaseViewHolder holder, int position, int indexInData) {
             super.onBindDataView(holder, position, indexInData);
@@ -254,13 +356,13 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
 
             switch (SkinUtils.getSkin()) {
                 case SkinManagerUIView.SKIN_BLACK:
-                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity,R.drawable.add_black),null,null,null);
+                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity, R.drawable.add_black), null, null, null);
                     break;
                 case SkinManagerUIView.SKIN_GREEN:
-                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity,R.drawable.add_green),null,null,null);
+                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity, R.drawable.add_green), null, null, null);
                     break;
                 case SkinManagerUIView.SKIN_BLUE:
-                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity,R.drawable.add_blue),null,null,null);
+                    tv_name.setCompoundDrawablesRelativeWithIntrinsicBounds(ContextCompat.getDrawable(mActivity, R.drawable.add_blue), null, null, null);
                     break;
             }
             // 设置已添加 name
@@ -270,11 +372,10 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
                     ContactSelectUIVIew.start(getILayout(), new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_MULTI)
                             , atUsers, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                 @Override
-                                public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
+                                public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems,
+                                                 com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
                                     requestCallback.onSuccess("");
-                                    subItems = absContactItems;
-                                    processSelectedData(subItems);
-
+                                    processSelectedData(absContactItems);
                                 }
                             });
                 }
@@ -298,7 +399,7 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
             mGroupAdapter.notifyDataSetChanged();
         }
 
-        public  String connect(List<FriendBean> list) {
+        public String connect(List<FriendBean> list) {
             if (list == null) {
                 return "";
             }
@@ -312,66 +413,5 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         }
 
 
-    }
-
-    /**
-     * 1-公开 2-私密 3-部分好友可见 4-不给谁看,5-仅好友可见】
-     */
-    public enum LevelType {
-        PUBLIC(1, ValleyApp.getApp().getResources().getString(R.string.text_public),"所有人可见"),
-        PRIVATE(2, ValleyApp.getApp().getResources().getString(R.string.text_private),"仅自己可见"),
-        PARTIALLY_VISIABLE(3, ValleyApp.getApp().getResources().getString(R.string.text_partially_visiable),"选中的朋友可见"),
-        PARTIALLY_INVISIABLE(4, ValleyApp.getApp().getResources().getString(R.string.text_partially_invisiable),"选中的朋友不可见"),
-        ONLY_FIRENDS_VISIABLE(5, ValleyApp.getApp().getResources().getString(R.string.text_only_friends_visiable),"所有朋友可见");
-
-
-        int id;
-        String des;
-        String level;
-
-        LevelType(int id, String level, String des) {
-            this.id = id;
-            this.des = des;
-            this.level = level;
-        }
-
-        public String getLevel() {
-            return level;
-        }
-
-        public void setLevel(String level) {
-            this.level = level;
-        }
-
-        static LevelType valueOf(int id) {
-            switch (id) {
-                case 1:
-                    return PUBLIC;
-                case 2:
-                    return PRIVATE;
-                case 3:
-                    return PARTIALLY_VISIABLE;
-                case 4:
-                    return PARTIALLY_INVISIABLE;
-                case 5:
-                    return ONLY_FIRENDS_VISIABLE;
-                default:
-                    return null;
-            }
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getDes() {
-            return des;
-        }
-    }
-
-    @NonNull
-    @Override
-    protected LayoutState getDefaultLayoutState() {
-        return LayoutState.CONTENT;
     }
 }

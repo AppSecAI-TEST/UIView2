@@ -89,7 +89,6 @@ import io.realm.Realm;
 import rx.Observable;
 import rx.functions.Action0;
 import rx.functions.Action1;
-import rx.functions.Action2;
 import rx.functions.Action3;
 
 import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Options.DEFALUT_LIMIT;
@@ -112,6 +111,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     UserDiscussListBean.DataListBean mDataListBean;
     String mContent;
     ForwardInformationBean mForwardInformationBean;
+    List<FriendBean> friendBean = new ArrayList<>();
     private HnAddImageAdapter2 mAddImageAdapter2;
     private List<Luban.ImageItem> photos = new ArrayList<>();
     private List<Tag> mSelectorTags = new ArrayList<>();
@@ -125,7 +125,6 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private VideoStatusInfo mVideoStatusInfo;
     private HotInfoListBean mHotInfoListBean;
     private PublishTaskRealm mPublishTaskRealm;
-
     private List<String> visiableFriends = new ArrayList<>();//可见或不可见好友
     private DynamicVisiableLevelUIView.LevelType levelType = DynamicVisiableLevelUIView.LevelType.PUBLIC;// 可见类型 默认公开
 
@@ -644,15 +643,20 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         visibleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new DynamicVisiableLevelUIView().setSelectionAction(new Action2<DynamicVisiableLevelUIView.LevelType, List<String>>() {
-                    @Override
-                    public void call(DynamicVisiableLevelUIView.LevelType levelType, List<String> strings) {
-                        L.d(PublishDynamicUIView2.class.getSimpleName(), "type : " + levelType.name() + " friends : " + strings.toString());
-                        PublishDynamicUIView2.this.levelType = levelType;
-                        PublishDynamicUIView2.this.visiableFriends = strings;
-                        visibleView.setText(levelType.getLevel());
-                    }
-                }));
+                startIView(new DynamicVisiableLevelUIView(PublishDynamicUIView2.this.levelType,
+                        PublishDynamicUIView2.this.friendBean)
+                        .setSelectionAction(new Action3<DynamicVisiableLevelUIView.LevelType, List<String>, List<FriendBean>>() {
+
+                            @Override
+                            public void call(DynamicVisiableLevelUIView.LevelType levelType, List<String> list, List<FriendBean> friendBeen) {
+                                L.d(PublishDynamicUIView2.class.getSimpleName(), "type : " + levelType.name() + " friends : " + list.toString());
+                                PublishDynamicUIView2.this.levelType = levelType;
+                                PublishDynamicUIView2.this.visiableFriends = list;
+                                PublishDynamicUIView2.this.friendBean = friendBeen;
+
+                                visibleView.setText(levelType.getLevel());
+                            }
+                        }));
             }
         });
     }

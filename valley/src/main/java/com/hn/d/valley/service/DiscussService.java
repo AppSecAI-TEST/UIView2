@@ -3,6 +3,8 @@ package com.hn.d.valley.service;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -40,8 +42,9 @@ public interface DiscussService {
      * lng	否	string	公开的地址经度【如113.961974】
      * lat	否	string	公开的地址纬度【如22.547832】
      */
+    @FormUrlEncoded
     @POST("discuss/publish")
-    Observable<ResponseBody> publish(@QueryMap Map<String, String> map);
+    Observable<ResponseBody> publish(@FieldMap Map<String, String> map);
 
     /**
      * 动态详情

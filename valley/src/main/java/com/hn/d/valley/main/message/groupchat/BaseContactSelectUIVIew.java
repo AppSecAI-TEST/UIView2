@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import rx.functions.Action0;
 import rx.functions.Action3;
 
 /**
@@ -38,27 +39,22 @@ import rx.functions.Action3;
 public class BaseContactSelectUIVIew extends BaseUIView {
 
     public static final String SELECTED_UIDS = "SELECTED_UIDS";
-
+    protected BaseContactSelectAdapter.Options options;
+    protected BaseContactSelectAdapter mGroupAdapter;
+    protected IDataResource.IDataActionProvider datatProvider;
+    protected Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction;
+    protected Action0 onCancelAction;
     HnRefreshLayout refreshLayout;
     RecyclerView recyclerView;
     WaveSideBarView sideBarView;
-
-    protected BaseContactSelectAdapter.Options options;
-
-    protected BaseContactSelectAdapter mGroupAdapter;
-
-    protected IDataResource.IDataActionProvider datatProvider;
-
+    boolean isCancel = true;
     private List<String> mSelectedUids;
 
-
-    protected Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction;
 
     public BaseContactSelectUIVIew(BaseContactSelectAdapter.Options options) {
         super();
         this.options = options;
     }
-
 
     public void setSelectAction(Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction) {
         this.selectAction = selectAction;
@@ -144,16 +140,17 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
     }
 
-
     protected void onSelected() {
         if (selectAction != null) {
             if (mGroupAdapter.getSelectorData().size() == 0) {
                 T_.show("没有选择!");
                 return;
             }
+            isCancel = false;
             selectAction.call(this, mGroupAdapter.getSelectorData(), new RequestCallback() {
                 @Override
                 public void onStart() {
+                    isCancel = true;
                     HnLoading.show(mParentILayout);
                 }
 
@@ -173,6 +170,18 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     }
 
 
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        if (isCancel && onCancelAction != null) {
+            onCancelAction.call();
+        }
+    }
+
+    public void setOnCancelAction(Action0 onCancelAction) {
+        this.onCancelAction = onCancelAction;
+    }
+
     @NonNull
     @Override
     protected LayoutState getDefaultLayoutState() {
@@ -185,11 +194,9 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     public void onEvent(SelectedUserNumEvent event) {
         TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
         if (event.getNum() != 0) {
-            selectNum.setText(String.format(Locale.CHINA,mActivity.getString(R.string.text_contact_ok),event.getNum()));
+            selectNum.setText(String.format(Locale.CHINA, mActivity.getString(R.string.text_contact_ok), event.getNum()));
         } else {
             selectNum.setText(mActivity.getString(R.string.ok));
         }
     }
-
-
 }

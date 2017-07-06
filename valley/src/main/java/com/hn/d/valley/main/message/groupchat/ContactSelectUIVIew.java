@@ -40,21 +40,22 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         super(options);
     }
 
-    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
-                             List<String> uids/**默认选中*/,
-                             Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
-        start(mLayout,options,uids,false,selectAction);
+    public static ContactSelectUIVIew start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
+                                            List<String> uids/**默认选中*/,
+                                            Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
+        return start(mLayout, options, uids, false, selectAction);
     }
 
-    public static void start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
-                             List<String> uids/**默认选中*/,boolean onShowGroup,/*是否显示群聊funcitem*/
-                             Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
+    public static ContactSelectUIVIew start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
+                                            List<String> uids/**默认选中*/, boolean onShowGroup,/*是否显示群聊funcitem*/
+                                            Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
         ContactSelectUIVIew targetView = new ContactSelectUIVIew(options);
         targetView.setSelectAction(selectAction);
         targetView.onShowGroup = onShowGroup;
         mLayout.startIView(targetView, new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
+        return targetView;
     }
 
 
@@ -133,7 +134,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                 @Override
                 public void call(ILayout layout) {
                     //进入群聊
-                    MyGroupUIView.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE,1,true)
+                    MyGroupUIView.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE, 1, true)
                             , new Action2<GroupBean, RequestCallback>() {
                                 @Override
                                 public void call(GroupBean groupBean, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
@@ -149,7 +150,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                                 }
                             });
                 }
-            },R.drawable.group_chat_n));
+            }, R.drawable.group_chat_n));
         }
 
         datas.add(new FuncItem<>(mActivity.getString(R.string.search), ItemTypes.SEARCH, new Action1<ILayout>() {
@@ -174,7 +175,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
     public void onEvent(SelectedUserNumEvent event) {
         TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
         if (event.getNum() != 0) {
-            selectNum.setText(String.format(mActivity.getString(R.string.text_sure_d),+ event.getNum()));
+            selectNum.setText(String.format(mActivity.getString(R.string.text_sure_d), +event.getNum()));
         } else {
             selectNum.setText(mActivity.getString(R.string.ok));
         }
