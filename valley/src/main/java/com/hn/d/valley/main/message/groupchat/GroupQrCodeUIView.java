@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.groupchat;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -8,12 +9,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.Root;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -24,6 +29,7 @@ import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.lzy.imagepicker.ImagePicker;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -101,12 +107,39 @@ public class GroupQrCodeUIView extends MyQrCodeUIView {
                         if (!new File(path).exists() || !new File(avatar).exists()) {
                             createQrCodeView(imageView, qrView);
                         } else {
+                            mQrFilePath = path;
                             setQrCodeView(imageView, qrView, path, avatar);
                         }
                     }
                 }
             });
         }
+
+        qrView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (!TextUtils.isEmpty(mQrFilePath)) {
+                    final File file = new File(mQrFilePath);
+                    if (file.exists()) {
+                        UIBottomItemDialog.build()
+                                .addItem(getString(R.string.save_to_phone), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        File toFile = new File(Root.getAppExternalFolder("images"), Root.createFileName(".jpeg"));
+                                        if (FileUtils.copyFile(file, toFile)) {
+                                            ImagePicker.galleryAddPic(mActivity, toFile);
+                                            T_.ok(getString(R.string.save_to_phone_format, toFile.getAbsolutePath()));
+                                        } else {
+                                            T_.error(getString(R.string.save_error));
+                                        }
+                                    }
+                                })
+                                .showDialog(GroupQrCodeUIView.this);
+                    }
+                }
+                return true;
+            }
+        });
     }
 
     @Override

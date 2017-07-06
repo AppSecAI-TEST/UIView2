@@ -400,6 +400,7 @@ public class UserDiscussItemControl {
             holder.v(R.id.forward_control_layout).setOnClickListener(null);
         }
 
+        //转发内容显示
         if (original_info.isForwardInformation()) {
             exTextView.setText(original_info.getTitle());
 
@@ -411,7 +412,7 @@ public class UserDiscussItemControl {
         } else {
             exTextView.setOnImageSpanClick(createSpanClick(iLayout));
             exTextView.setText(createMention(original_info.getUid(),
-                    "@" + original_info.getUsername()) +
+                    "@" + original_info.getUsername()) + " " +
                     original_info.getContent());
         }
 

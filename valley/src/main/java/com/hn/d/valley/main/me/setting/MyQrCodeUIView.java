@@ -67,7 +67,7 @@ public class MyQrCodeUIView extends BaseContentUIView {
     /**
      * 本地QR文件路径
      */
-    private String mQrFilePath;
+    protected String mQrFilePath;
 
     public static Observable<Bitmap> createQrCode(final String date, final int size, final int color, final Bitmap logo) {
         return Observable
