@@ -11,6 +11,7 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -221,7 +222,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     .showDialog(mOtherILayout);
         } else if (code == 403) {
             UIDialog.build()
-                    .setDialogContent(String.format("密码输错过错次，已冻结，离解冻还剩 %d 秒", data))
+                    .setDialogContent(String.format("密码输错过错次，已冻结，离解冻还剩 %d 秒", RUtils.formatTime(data * 1000)))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -36,6 +37,9 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     protected void onBindDataView(RBaseViewHolder holder, int posInData, ItemRecyclerUIView.ViewItemInfo dataBean) {
         ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
         infoLayout.setItemText(dataBean.itemString);
+
+        final String phone = UserCache.instance().getUserInfoBean().getPhone();
+
         if (dataBean.itemClickListener == null) {
             infoLayout.setClickable(false);
         } else {
@@ -45,7 +49,6 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
             infoLayout.setItemDarkText(UserCache.getUserAccount());
             infoLayout.setRightDrawableRes(-1);
         } else if (posInData == 1) {
-            final String phone = UserCache.instance().getUserInfoBean().getPhone();
             if (TextUtils.isEmpty(phone)) {
                 infoLayout.setItemDarkText(mActivity.getString(R.string.not_bind_phone));
             } else {
@@ -76,12 +79,31 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
             } else {
                 infoLayout.setItemDarkText(mActivity.getString(R.string.not_open));
             }
-            infoLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startIView(new LoginProtectUIView(is_login_protect == 1));
-                }
-            });
+            if (TextUtils.isEmpty(phone)) {
+                UIDialog.build()
+                        .setDialogContent(mActivity.getString(R.string.text_please_bind_phone))
+                        .setOkText(mActivity.getString(R.string.text_bind_phone))
+                        .setCancelText(mActivity.getString(R.string.cancel))
+                        .setCancelListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        })
+                        .setOkListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startIView(new BindPhoneUIView());
+                            }
+                        })
+                        .showDialog(mParentILayout);
+            } else {
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new LoginProtectUIView(is_login_protect == 1));
+                    }
+                });
+            }
         }
     }
 
