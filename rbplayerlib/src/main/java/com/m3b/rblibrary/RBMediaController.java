@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -49,6 +50,8 @@ public class RBMediaController extends RelativeLayout {
     private static final int MESSAGE_SEEK_NEW_POSITION = 3;
     private static final int MESSAGE_HIDE_CENTER_BOX = 4;
     private static final int MESSAGE_RESTART_PLAY = 5;
+    GestureDetectorCompat mGestureDetectorCompat;
+    OnLongPress mOnLongPress;
     private Activity activity;
     private Context context;
     private View contentView;
@@ -73,15 +76,11 @@ public class RBMediaController extends RelativeLayout {
     private boolean isSupportGesture = false;//是否至此手势操作，false ：小屏幕的时候不支持，全屏的支持；true : 小屏幕还是全屏都支持
     private boolean isPrepare = false;// 是否已经初始化播放
     private boolean isNetListener = true;// 是否添加网络监听 (默认是监听)
-
     private int defaultTimeout = 3000;
     private int screenWidthPixels;
-
     private int initWidth = 0;
     private int initHeight = 0;
     private ImageView mPreviewImageView;
-
-
     /***************************************
      * 对外调用的方法
      ********************/
@@ -583,7 +582,6 @@ public class RBMediaController extends RelativeLayout {
         showTopControl(false);
     }
 
-
     /**
      * 暂停
      */
@@ -611,7 +609,6 @@ public class RBMediaController extends RelativeLayout {
             videoView.start();
         }
     }
-
 
     /**
      * 在activity中的onDestroy中需要回调
@@ -795,7 +792,6 @@ public class RBMediaController extends RelativeLayout {
         }
     }
 
-
     public void setScaleType(String scaleType) {
         if (SCALETYPE_FITPARENT.equals(scaleType)) {
             videoView.setAspectRatio(IRenderView.AR_ASPECT_FIT_PARENT);
@@ -930,6 +926,29 @@ public class RBMediaController extends RelativeLayout {
         return this;
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (mOnLongPress == null) {
+            return super.onInterceptTouchEvent(ev);
+        }
+
+        if (mGestureDetectorCompat == null) {
+            mGestureDetectorCompat = new GestureDetectorCompat(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    mOnLongPress.onLongPress(url);
+                }
+            });
+            mGestureDetectorCompat.setIsLongpressEnabled(true);
+        }
+
+        return mGestureDetectorCompat.onTouchEvent(ev) || super.onInterceptTouchEvent(ev);
+    }
+
+    public void setOnLongPress(OnLongPress onLongPress) {
+        mOnLongPress = onLongPress;
+    }
+
     public interface OnErrorListener {
         void onError(int what, int extra);
     }
@@ -940,6 +959,10 @@ public class RBMediaController extends RelativeLayout {
 
     public interface OnPreparedListener {
         void onPrepared();
+    }
+
+    public interface OnLongPress {
+        void onLongPress(String videoUrl);
     }
 
     class Query {
@@ -1049,5 +1072,4 @@ public class RBMediaController extends RelativeLayout {
             return true;
         }
     }
-
 }

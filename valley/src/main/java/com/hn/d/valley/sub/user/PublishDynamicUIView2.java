@@ -45,6 +45,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.iview.RelayVideoLongClickListener;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
@@ -534,7 +535,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             videoThumbView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoThumbPath(), mVideoStatusInfo.getVideoPath()));
+                    startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoThumbPath(), mVideoStatusInfo.getVideoPath())
+                            .setOnLongPress(new RelayVideoLongClickListener(mParentILayout)));
                 }
             });
         }

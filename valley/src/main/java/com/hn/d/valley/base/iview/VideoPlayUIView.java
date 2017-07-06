@@ -8,10 +8,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.Root;
+import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.github.utilcode.utils.FileUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.hn.d.valley.R;
+import com.lzy.imagepicker.ImagePicker;
 import com.m3b.rblibrary.RBMediaController;
+
+import java.io.File;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -35,6 +43,7 @@ public class VideoPlayUIView extends UIIViewImpl {
     int[] thumbSize;
 
     RBMediaController mMediaController;
+    RBMediaController.OnLongPress mOnLongPress;
     private boolean mIsLive;
 
     public VideoPlayUIView(String path) {
@@ -68,6 +77,11 @@ public class VideoPlayUIView extends UIIViewImpl {
      */
     private void initPlayer() {
         mMediaController = mViewHolder.v(R.id.view_player);
+
+        if (mOnLongPress != null) {
+            mMediaController.setOnLongPress(mOnLongPress);
+        }
+
         mMediaController.setScaleType("fitParent");
         if (mIsLive) {
             mMediaController.setLive(true);//设置该地址是直播的地址, 主播状态下, 不会显示播放控制按钮
@@ -129,7 +143,6 @@ public class VideoPlayUIView extends UIIViewImpl {
         }
     }
 
-
     @Override
     public void onViewHide() {
         super.onViewHide();
@@ -169,5 +182,46 @@ public class VideoPlayUIView extends UIIViewImpl {
             return false;
         }
         return super.onBackPressed();
+    }
+
+    public VideoPlayUIView setOnLongPress(RBMediaController.OnLongPress onLongPress) {
+        mOnLongPress = onLongPress;
+        return this;
+    }
+
+    /**
+     * 用来保存视频的监听事件
+     */
+    public static class SaveVideoLongClickListener implements RBMediaController.OnLongPress {
+        ILayout mILayout;
+
+        public SaveVideoLongClickListener(ILayout ILayout) {
+            mILayout = ILayout;
+        }
+
+        protected void saveVideoFile(File file) {
+            File toFile = new File(Root.getAppExternalFolder("videos"), Root.createFileName(".mp4"));
+            if (FileUtils.copyFile(file, toFile)) {
+                ImagePicker.galleryAddPic(mILayout.getLayout().getContext(), toFile);
+                T_.ok(mILayout.getLayout().getContext().getString(R.string.save_to_phone_format, toFile.getAbsolutePath()));
+            } else {
+                T_.error(mILayout.getLayout().getContext().getString(R.string.save_error));
+            }
+        }
+
+        @Override
+        public void onLongPress(String videoUrl) {
+            final File file = new File(videoUrl);
+            if (file.exists()) {
+                UIBottomItemDialog.build()
+                        .addItem(mILayout.getLayout().getContext().getString(R.string.save_video), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                saveVideoFile(file);
+                            }
+                        })
+                        .showDialog(mILayout);
+            }
+        }
     }
 }
