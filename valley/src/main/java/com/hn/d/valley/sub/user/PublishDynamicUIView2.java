@@ -1,8 +1,8 @@
 package com.hn.d.valley.sub.user;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -23,8 +23,8 @@ import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.recycler.RBaseItemDecoration;
-import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.RDragRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
@@ -421,8 +421,26 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         initControlLayout();
 
         //图片
-        final RRecyclerView recyclerView = mViewHolder.v(R.id.recycler_view);
-        mAddImageAdapter2 = new HnAddImageAdapter2(mActivity);
+        final RDragRecyclerView recyclerView = mViewHolder.v(R.id.recycler_view);
+        recyclerView.setDragCallback(new RDragRecyclerView.OnDragCallback() {
+            @Override
+            public boolean canDragDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                if (mAddImageAdapter2.isDeleteModel()) {
+                    if (viewHolder.getItemViewType() != HnAddImageAdapter2.TYPE_ADD_ITEM) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        mAddImageAdapter2 = new HnAddImageAdapter2(mActivity) {
+            @Override
+            protected void onBindView(RBaseViewHolder holder, int position, Luban.ImageItem bean) {
+                int px = (int) ResUtil.dpToPx(mActivity.getResources(), 6) / 2;
+                holder.itemView.setPadding(px, px, px, px);
+                super.onBindView(holder, position, bean);
+            }
+        };
         mAddImageAdapter2.setMaxItemCount(9);
         recyclerView.post(new Runnable() {
             @Override
@@ -430,7 +448,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 mAddImageAdapter2.setItemHeight(recyclerView.getMeasuredWidth() / 3);
             }
         });
-        recyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6), Color.TRANSPARENT));
+        //recyclerView.addItemDecoration(new RBaseItemDecoration((int) ResUtil.dpToPx(mActivity.getResources(), 6), Color.TRANSPARENT));
         mAddImageAdapter2.setAddListener(new HnAddImageAdapter2.OnAddListener() {
 
             @Override
@@ -446,7 +464,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
             @Override
             public void onItemLongClick(View view, int position, Luban.ImageItem item) {
-                mAddImageAdapter2.setDeleteModel(recyclerView);
+                mAddImageAdapter2.setDeleteModel(recyclerView, true);
             }
 
             @Override

@@ -176,6 +176,10 @@ public class HnAddImageAdapter2 extends HnGlideImageAdapter {
         setDeleteModel(recyclerView, !isDeleteModel);
     }
 
+    public boolean isDeleteModel() {
+        return isDeleteModel;
+    }
+
     public void setMaxItemCount(int maxItemCount) {
         this.maxItemCount = maxItemCount;
     }

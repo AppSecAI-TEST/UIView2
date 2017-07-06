@@ -78,7 +78,7 @@
                     android:padding="@dimen/base_xhdpi">
 
                     <!--显示图片-->
-                    <com.angcyo.uiview.recycler.RRecyclerView
+                    <com.angcyo.uiview.recycler.RDragRecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
