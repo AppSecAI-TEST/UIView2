@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,12 +21,10 @@ import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
-import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
-import com.angcyo.uiview.widget.RCheckGroup;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
@@ -73,6 +70,8 @@ public class CommentInputDialog extends UIIDialogImpl {
     public static final String GIF_BASE_HN_URL = "http://circleimg.klgwl.com/gif/2/";
 
     InputConfig mInputConfig;
+    //view
+    TextView sendView;
     private EmojiLayoutControl mEmojiLayoutControl;
     private String mImagePath = "", mImageUrl = "";//选择的图片, 上传之后的地址
     private List<String> atUsers = new ArrayList<>();//@的用户
@@ -80,10 +79,6 @@ public class CommentInputDialog extends UIIDialogImpl {
     private RSoftInputLayout mSoftInputLayout;
     private ExEditText mInputView;
     private OssControl mOssControl;
-
-    //view
-    TextView sendView ;
-
     //gif url
     private String gifUrl;
 
@@ -131,8 +126,8 @@ public class CommentInputDialog extends UIIDialogImpl {
             public void onClick(View v) {
                 //finishDialog();
 //                if (mSoftInputLayout.requestBackPressed()){
-                    mSoftInputLayout.requestBackPressed();
-                    finishDialog();
+                mSoftInputLayout.requestBackPressed();
+                finishDialog();
 //                }
             }
         });
@@ -174,7 +169,7 @@ public class CommentInputDialog extends UIIDialogImpl {
         mSoftInputLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
             @Override
             public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
-                L.d(CommentInputDialog.class.getSimpleName(),"onEmojiLayoutChange isEmojiShow " + isEmojiShow + "isKeyboardShow " + isKeyboardShow);
+                L.d(CommentInputDialog.class.getSimpleName(), "onEmojiLayoutChange isEmojiShow " + isEmojiShow + "isKeyboardShow " + isKeyboardShow);
 
                 if (isEmojiShow) {
 //                    imageView.setImageResource(R.drawable.icon_keyboard);
@@ -205,7 +200,7 @@ public class CommentInputDialog extends UIIDialogImpl {
             public void onStickerSelected(String categoryName, String stickerName) {
                 Uri uri = Uri.parse(StickerManager.getInstance().getStickerBitmapUri(categoryName
                         , stickerName));
-                L.d(CommentInputDialog.class.getSimpleName(),"onStickerSelected " + stickerName);
+                L.d(CommentInputDialog.class.getSimpleName(), "onStickerSelected " + stickerName);
 
                 switch (categoryName) {
                     case CATEGORY_EXPRESSION:
@@ -217,7 +212,7 @@ public class CommentInputDialog extends UIIDialogImpl {
                 }
                 sendView.setEnabled(true);
 
-                initPreviewLayout(uri.getPath(),true);
+                initPreviewLayout(uri.getPath(), true);
             }
         });
 
@@ -272,7 +267,7 @@ public class CommentInputDialog extends UIIDialogImpl {
 //                if (isChecked) {
 //                    imageView.setChecked(false);
 //                }
-                if (mSoftInputLayout.isEmojiShow() ) {
+                if (mSoftInputLayout.isEmojiShow()) {
 
                 } else {
                     mSoftInputLayout.showEmojiLayout();
@@ -456,9 +451,14 @@ public class CommentInputDialog extends UIIDialogImpl {
                         for (AbsContactItem item : absContactItems) {
                             if (item instanceof ContactItem) {
                                 FriendBean friendBean = ((ContactItem) item).getFriendBean();
-                                atUsers.add(friendBean.getUid());
-                                mFriendList.add(friendBean);
-                                mInputView.addMention(friendBean.getTrueName());
+
+                                if (!TextUtils.isEmpty(friendBean.getUid()) &&
+                                        !TextUtils.isEmpty(friendBean.getTrueName())) {
+                                    atUsers.add(friendBean.getUid());
+                                    mFriendList.add(friendBean);
+                                    mInputView.addMention(friendBean.getTrueName());
+                                }
+
                             }
                         }
                     }
@@ -466,7 +466,7 @@ public class CommentInputDialog extends UIIDialogImpl {
     }
 
     // direction previewlayout 显示方向 控制 gif 或图片 方向 ,gif true
-    private void initPreviewLayout(String imagePath,boolean direction) {
+    private void initPreviewLayout(String imagePath, boolean direction) {
         this.mImagePath = imagePath;
 
         View previewControlLayout = mViewHolder.v(R.id.preview_control_layout);
@@ -489,7 +489,7 @@ public class CommentInputDialog extends UIIDialogImpl {
         mViewHolder.v(R.id.preview_delete_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initPreviewLayout("",false);
+                initPreviewLayout("", false);
             }
         });
     }
@@ -507,7 +507,7 @@ public class CommentInputDialog extends UIIDialogImpl {
                 .subscribe(new Action1<ArrayList<String>>() {
                     @Override
                     public void call(ArrayList<String> strings) {
-                        initPreviewLayout(strings.get(0),false);
+                        initPreviewLayout(strings.get(0), false);
                         gifUrl = "";// girUrl 为"" 判断条件
                         sendView.setEnabled(true);
                         L.e("call: call([strings])-> " + strings.get(0));

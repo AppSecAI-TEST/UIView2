@@ -189,6 +189,14 @@
                 android:layout_marginTop="@dimen/base_ldpi"
                 android:visibility="gone"/>
 
+            <com.hn.d.valley.widget.HnExTextView
+                android:id="@+id/reply_text_view3"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_ldpi"
+                android:visibility="gone"/>
+
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/reply_count_view"
                 android:layout_width="wrap_content"

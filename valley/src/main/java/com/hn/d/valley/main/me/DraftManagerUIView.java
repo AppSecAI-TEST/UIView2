@@ -189,6 +189,7 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
             @Override
             protected void onBindDataView(RBaseViewHolder holder, final int posInData, final PublishTaskRealm dataBean) {
                 holder.v(R.id.check_view).setVisibility(isInEditMode ? View.VISIBLE : View.GONE);
+                holder.v(R.id.retry_view).setVisibility(isInEditMode ? View.GONE : View.VISIBLE);
 
                 RTextView textView = holder.v(R.id.time_view);
                 View mediaControlLayout = holder.v(R.id.media_control_layout);

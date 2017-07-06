@@ -328,6 +328,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
             } else {
                 replyControlLayout.setVisibility(View.VISIBLE);
 
+                //第一条回复
                 HnExTextView tv1 = holder.v(R.id.reply_text_view1);
                 if (reply_cnt > 0) {
                     tv1.setVisibility(View.VISIBLE);
@@ -343,6 +344,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                     tv1.setVisibility(View.GONE);
                 }
 
+                //第二条回复
                 HnExTextView tv2 = holder.v(R.id.reply_text_view2);
                 if (reply_cnt > 1) {
                     tv2.setVisibility(View.VISIBLE);
@@ -356,6 +358,20 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                     tv2.setVisibility(View.GONE);
                 }
 
+                //第三条回复
+                HnExTextView tv3 = holder.v(R.id.reply_text_view3);
+                if (reply_cnt > 2) {
+                    tv3.setVisibility(View.VISIBLE);
+                    CommentListBean.DataListBean.ReplyListBean replyListBean = reply_list.get(2);
+                    tv3.setImageSpanTextColor(SkinHelper.getSkin().getThemeSubColor());
+                    tv3.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mParentILayout));
+                    tv3.setImage(replyListBean.getImages());
+                    tv3.setText(UserDiscussItemControl.createMention(replyListBean.getUid(), replyListBean.getUsername()) +
+                            ":" + replyListBean.getContent());
+                } else {
+                    tv3.setVisibility(View.GONE);
+                }
+
                 holder.tv(R.id.reply_count_view).setTextColor(SkinHelper.getSkin().getThemeSubColor());
                 holder.tv(R.id.reply_count_view).setText(reply_cnt + "");
                 holder.tv(R.id.reply_count_view).setOnClickListener(new View.OnClickListener() {
@@ -364,6 +380,8 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                         mParentILayout.startIView(new ReplyListUIView(dataBean));
                     }
                 });
+                holder.tv(R.id.reply_count_view).setVisibility(reply_cnt > 3 ? View.VISIBLE : View.GONE);
+
             }
         } else {
             replyControlLayout.setVisibility(View.GONE);
