@@ -181,6 +181,9 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                         }
                     }
                 });
+                if (PublishControl.instance().isInPublish(bean.getUuid())) {
+                    holder.itemView.setClickable(false);
+                }
             }
 
             @Override
@@ -216,37 +219,42 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                 TextView retryView = holder.tv(R.id.retry_view);
                 retryView.setText(PublishControl.instance().isInPublish(dataBean.getUuid()) ?
                         R.string.sending2 : R.string.repeat_send_has_blank);
-                retryView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (PublishControl.instance().isInPublish(dataBean.getUuid())) {
-                            return;
-                        }
 
-                        RRealm.exe(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                PublishControl.instance().addTask(realm.copyFromRealm(dataBean), false);
-                                PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
-                                    @Override
-                                    public void onPublishStart() {
-                                        notifyItemChanged(posInData);
-                                    }
-
-                                    @Override
-                                    public void onPublishEnd() {
-                                        loadData();
-                                    }
-
-                                    @Override
-                                    public void onPublishError(String msg) {
-                                        loadData();
-                                    }
-                                });
+                if (PublishControl.instance().isInPublish(dataBean.getUuid())) {
+                    retryView.setClickable(false);
+                } else {
+                    retryView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (PublishControl.instance().isInPublish(dataBean.getUuid())) {
+                                return;
                             }
-                        });
-                    }
-                });
+
+                            RRealm.exe(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    PublishControl.instance().addTask(realm.copyFromRealm(dataBean), false);
+                                    PublishControl.instance().startPublish(new PublishControl.OnPublishListener() {
+                                        @Override
+                                        public void onPublishStart() {
+                                            notifyItemChanged(posInData);
+                                        }
+
+                                        @Override
+                                        public void onPublishEnd() {
+                                            loadData();
+                                        }
+
+                                        @Override
+                                        public void onPublishError(String msg) {
+                                            loadData();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
             }
         };
     }

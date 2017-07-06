@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.RecordTimeView;
@@ -106,8 +108,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
             });
         }
 
-        PublishTaskRealm publishTask = new PublishTaskRealm(
-                new VoiceStatusInfo(mImagePath, filePath));
+        PublishTaskRealm publishTask = getPublishTaskRealm();
         PublishControl.instance().addTask(publishTask, true);
 
         finishIView();
@@ -257,5 +258,41 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
         }
         HnGlideImageView glideImageView = mViewHolder.v(R.id.image_view);
         glideImageView.setImageUrl(mImagePath);
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        UIDialog.build().setDialogContent(getString(R.string.save_draft_tip))
+                .setOkText(getString(R.string.save))
+                .setCancelText(getString(R.string.no_save))
+                .setOkClick(new UIDialog.OnDialogClick() {
+                    @Override
+                    public void onDialogClick(UIDialog dialog, View clickView) {
+                        RRealm.exe(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                if (mPublishTaskRealm != null) {
+                                    mPublishTaskRealm.deleteFromRealm();
+                                }
+                                PublishTaskRealm.save(getPublishTaskRealm());
+                                finishIView(PublishVoiceNextDynamicUIView.this, new UIParam(true, true, false));
+                            }
+                        });
+                    }
+                })
+                .setCancelClick(new UIDialog.OnDialogClick() {
+                    @Override
+                    public void onDialogClick(UIDialog dialog, View clickView) {
+                        finishIView(PublishVoiceNextDynamicUIView.this, new UIParam(true, true, false));
+                    }
+                })
+                .showDialog(mParentILayout);
+        return false;
+    }
+
+    private PublishTaskRealm getPublishTaskRealm() {
+        PublishTaskRealm publishTask = new PublishTaskRealm(
+                new VoiceStatusInfo(mImagePath, filePath));
+        return publishTask;
     }
 }
