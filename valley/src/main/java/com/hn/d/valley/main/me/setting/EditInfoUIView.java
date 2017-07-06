@@ -598,6 +598,15 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         } else {
             final List<Luban.ImageItem> oldDatas = mHnAddImageAdapter == null ? null : mHnAddImageAdapter.getAllDatas();
 
+            if (ImagePickerHelper.isCancelPicker(resultCode)) {
+                List<String> keepPaths = new ArrayList<>();
+                for (Luban.ImageItem item : oldDatas) {
+                    keepPaths.add(item.path);
+                }
+                ImagePickerHelper.clearSelectedPath(keepPaths, true);
+                return;
+            }
+
             //请求压缩图片,排除掉已经压缩的图片
             Observable<ArrayList<Luban.ImageItem>> observable = Image.onActivityResult(mActivity, requestCode, resultCode, data, oldDatas);
             if (observable != null) {
