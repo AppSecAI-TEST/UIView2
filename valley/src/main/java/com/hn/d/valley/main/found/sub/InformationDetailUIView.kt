@@ -108,6 +108,9 @@ class InformationDetailUIView : BaseContentUIView {
                         data.likeCount = (data.likeCount.toInt() - 1).toString()
                         likeView.text = data.likeCount
                     }
+                    data.isLike = 2
+                    initLikeView(subscriptions, viewHolder, type, data)
+
                     subscriptions.add(RRetrofit.create(NewsService::class.java)
                             .unlike(Param.buildInfoMap("type:$type", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
                             .compose(Rx.transformer(String::class.java))
@@ -115,8 +118,7 @@ class InformationDetailUIView : BaseContentUIView {
                                 override fun onSucceed(bean: String?) {
                                     super.onSucceed(bean)
                                     //T_.show(bean)
-                                    data.isLike = 2
-                                    initLikeView(subscriptions, viewHolder, type, data)
+                                    //data.isLike = 2
                                 }
                             }))
                 }
@@ -133,6 +135,9 @@ class InformationDetailUIView : BaseContentUIView {
                         data.likeCount = (data.likeCount.toInt() + 1).toString()
                         likeView.text = data.likeCount
                     }
+                    data.isLike = 1
+                    initLikeView(subscriptions, viewHolder, type, data)
+
                     subscriptions.add(RRetrofit.create(NewsService::class.java)
                             .like(Param.buildInfoMap("type:$type", "id:" + data.getDiscussId("info_comment"), "uid:" + UserCache.getUserAccount()))
                             .compose(Rx.transformer(String::class.java))
@@ -140,8 +145,6 @@ class InformationDetailUIView : BaseContentUIView {
                                 override fun onSucceed(bean: String?) {
                                     super.onSucceed(bean)
                                     //T_.show(bean)
-                                    data.isLike = 1
-                                    initLikeView(subscriptions, viewHolder, type, data)
                                 }
                             }))
                 }
