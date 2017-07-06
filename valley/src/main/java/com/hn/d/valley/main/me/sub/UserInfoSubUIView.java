@@ -91,6 +91,8 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 RTextView tv = holder.v(R.id.tip_view);
                 tv.setDefaultSKin(R.string.photo_wall);
 
+                holder.v(R.id.tv_more).setVisibility(View.GONE);
+
                 RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
                 if (mDecor == null) {
                     mDecor = new RBaseItemDecoration((int) (density() * 10), Color.TRANSPARENT);

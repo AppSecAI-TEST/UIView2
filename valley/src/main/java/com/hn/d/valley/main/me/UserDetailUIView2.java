@@ -68,6 +68,8 @@ import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.AuthService;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserService;
+import com.hn.d.valley.sub.other.FansRecyclerUIView;
+import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
@@ -491,7 +493,26 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
         setTitleString(mUserInfoBean.getUsername());
         //getUITitleBarContainer().setBackgroundColor(Color.TRANSPARENT);
-        mViewHolder.fillView(mUserInfoBean);
+        //mViewHolder.fillView(mUserInfoBean);
+
+        //关注, 粉丝
+        mViewHolder.tv(R.id.attention_count).setText(mUserInfoBean.getAttention_count() + "");
+        mViewHolder.tv(R.id.fans_count).setText(mUserInfoBean.getFans_count() + "");
+
+        if (isMe() || mUserInfoBean.getLook_fans() == 1) {
+            mViewHolder.click(R.id.attention_count, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
+                }
+            });
+            mViewHolder.click(R.id.fans_count, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
+                }
+            });
+        }
 
         //可见性图标控制
         if (!isMe()) {
