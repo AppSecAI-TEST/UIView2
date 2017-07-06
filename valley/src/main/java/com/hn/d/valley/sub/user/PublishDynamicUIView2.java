@@ -107,6 +107,7 @@ import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Op
 public class PublishDynamicUIView2 extends BaseContentUIView {
 
     private static boolean isShowTip = false;
+    private static List<Tag> mLastSelectorTags = new ArrayList<>();//保存上一次选择标签(只在图文动态下有小)
     Action0 mPublishAction;
     UserDiscussListBean.DataListBean mDataListBean;
     String mContent;
@@ -134,6 +135,9 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
      */
     public PublishDynamicUIView2(DynamicType dynamicType) {
         mDynamicType = dynamicType;
+        if (mDynamicType == DynamicType.IMAGE) {
+            mSelectorTags.addAll(mLastSelectorTags);
+        }
     }
 
     /**
@@ -489,6 +493,10 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                     @Override
                     public void call(List<Tag> tags) {
                         mSelectorTags = tags;
+                        if (mDynamicType == DynamicType.IMAGE) {
+                            mLastSelectorTags.clear();
+                            mLastSelectorTags.addAll(tags);
+                        }
                         initTagsView();
                     }
                 }, mSelectorTags).setIsVideo(mDynamicType == DynamicType.VIDEO));
@@ -704,15 +712,21 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         for (Tag t : TagsControl.getAllTags()) {
             if (mDynamicType == DynamicType.IMAGE) {
                 if (TextUtils.equals(t.getName(), getString(R.string.life))) {
-                    mSelectorTags.add(t);
+                    if (mSelectorTags.isEmpty()) {
+                        mSelectorTags.add(t);
+                    }
                 }
             } else if (mDynamicType == DynamicType.VIDEO) {
                 if (TextUtils.equals(t.getName(), getString(R.string.video))) {
-                    mSelectorTags.add(t);
+                    if (!mSelectorTags.contains(t)) {
+                        mSelectorTags.add(t);
+                    }
                 }
             } else if (mDynamicType == DynamicType.VOICE) {
                 if (TextUtils.equals(t.getName(), getString(R.string.voice))) {
-                    mSelectorTags.add(t);
+                    if (!mSelectorTags.contains(t)) {
+                        mSelectorTags.add(t);
+                    }
                 }
             }
         }
