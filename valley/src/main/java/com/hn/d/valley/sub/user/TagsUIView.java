@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.user;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,7 +8,9 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.RFlowLayout;
 import com.angcyo.uiview.widget.RTextCheckView;
 import com.hn.d.valley.R;
@@ -116,10 +119,24 @@ public class TagsUIView extends BaseContentUIView {
             @Override
             public void call(RTextCheckView rTextCheckView, Tag tag) {
                 rTextCheckView.setChecked(selectorTag.contains(tag));
+                UI.setBackgroundDrawable(rTextCheckView, ResUtil.selector(
+                        ResUtil.createDrawable(getColor(R.color.line_color), Color.TRANSPARENT,
+                                getDimensionPixelOffset(R.dimen.base_line), getDimensionPixelOffset(R.dimen.little_round_radius)),
+                        ResUtil.createDrawable(SkinHelper.getSkin().getThemeSubColor(), Color.TRANSPARENT,
+                                getDimensionPixelOffset(R.dimen.base_line), getDimensionPixelOffset(R.dimen.little_round_radius)),
+                        ResUtil.createDrawable(SkinHelper.getSkin().getThemeSubColor(), Color.TRANSPARENT,
+                                getDimensionPixelOffset(R.dimen.base_line), getDimensionPixelOffset(R.dimen.little_round_radius)),
+                        ResUtil.createDrawable(getColor(R.color.base_color_disable), Color.TRANSPARENT,
+                                getDimensionPixelOffset(R.dimen.base_line), getDimensionPixelOffset(R.dimen.little_round_radius))
+                ));
+
                 if (tag.getName().equalsIgnoreCase(getString(R.string.video))) {
                     rTextCheckView.setEnabled(false);
                     if (isVideo) {
+                        rTextCheckView.setTextColor(SkinHelper.getSkin().getThemeSubColor());
                         rTextCheckView.setChecked(true);
+                        UI.setBackgroundDrawable(rTextCheckView, ResUtil.createDrawable(SkinHelper.getSkin().getThemeSubColor(), Color.TRANSPARENT,
+                                getDimensionPixelOffset(R.dimen.base_line), getDimensionPixelOffset(R.dimen.little_round_radius)));
                     }
                 }
             }
