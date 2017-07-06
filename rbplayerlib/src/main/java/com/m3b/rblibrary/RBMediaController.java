@@ -544,7 +544,7 @@ public class RBMediaController extends RelativeLayout {
             seekBar.setProgress(Integer.MAX_VALUE);
             $.id(R.id.app_video_currentTime).text(generateTime(duration));
 
-            hideAll();
+            //hideAll();
             if (isShowCenterControl) {
                 updatePausePlay();// FIX completed pause button
                 $.id(R.id.view_jky_player_center_control).visible();
@@ -772,20 +772,29 @@ public class RBMediaController extends RelativeLayout {
 
         long position = videoView.getCurrentPosition();
         long duration = videoView.getDuration();
+        long pos = 1000L * position / duration;
         if (seekBar != null) {
             if (duration > 0) {
-                long pos = 1000L * position / duration;
-                seekBar.setProgress((int) pos);
+                if (status == STATUS_COMPLETED)
+                    seekBar.setProgress(1000);
+                else
+                    seekBar.setProgress((int) pos);
             }
             int percent = videoView.getBufferPercentage();
             seekBar.setSecondaryProgress(percent * 10);
         }
 
         this.duration = duration;
-        $.id(R.id.app_video_currentTime).text(generateTime(position));
-        $.id(R.id.app_video_endTime).text(generateTime(this.duration));
+        if (status == STATUS_COMPLETED) {
+            $.id(R.id.app_video_currentTime).text(generateTime(this.duration));
+            $.id(R.id.app_video_endTime).text(generateTime(this.duration));
+        } else {
+            $.id(R.id.app_video_currentTime).text(generateTime(position));
+            $.id(R.id.app_video_endTime).text(generateTime(this.duration));
+        }
         return position;
     }
+
 
     public void hide(boolean force) {
         if (force || isShowing) {

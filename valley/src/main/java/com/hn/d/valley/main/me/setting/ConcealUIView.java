@@ -119,7 +119,7 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setVisibility(View.GONE);
 
-                itemInfoLayout.setItemText("联系人黑名单");
+                itemInfoLayout.setItemText(getString(R.string.blacklist_title));
                 itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
 
                 itemInfoLayout.setOnClickListener(new View.OnClickListener() {
