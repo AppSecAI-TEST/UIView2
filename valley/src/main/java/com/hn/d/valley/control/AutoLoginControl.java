@@ -23,6 +23,7 @@ import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.service.StartService;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
+import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.orhanobut.hawk.Hawk;
 
@@ -218,7 +219,7 @@ public class AutoLoginControl {
             }
         } else {
             //正常登录流程
-            HnSplashActivity.launcher(activity, false);
+            HnSplashActivity.launcher(activity, false, StatusCode.LOGINED.getValue());
             activity.finish();
         }
     }

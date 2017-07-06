@@ -19,6 +19,7 @@ import com.hn.d.valley.start.LauncherUIView;
 import com.hn.d.valley.start.WelcomeUIView;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.ClientType;
 import com.orhanobut.hawk.Hawk;
@@ -42,11 +43,13 @@ public class HnSplashActivity extends BaseActivity {
      * 是否被踢
      */
     public static final String IS_KICKOUT = "is_kick_out";
+    public static final String STATUS_CODE = "statusCode";
     Intent mIntent;
 
-    public static void launcher(Activity activity, boolean isKickOut) {
+    public static void launcher(Activity activity, boolean isKickOut,int statusCode) {
         Intent intent = new Intent(activity, HnSplashActivity.class);
         intent.putExtra(IS_KICKOUT, isKickOut);
+        intent.putExtra(STATUS_CODE,statusCode);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
                 R.anim.base_tran_to_left_exit);
@@ -125,6 +128,7 @@ public class HnSplashActivity extends BaseActivity {
 
     private void onParseIntent() {
         boolean isKickout = mIntent.getBooleanExtra(IS_KICKOUT, false);
+        int statusCode = mIntent.getIntExtra(STATUS_CODE, StatusCode.KICKOUT.getValue());
         if (isKickout) {
             //帐号被踢
             int type = NIMClient.getService(AuthService.class).getKickedClientType();
@@ -145,6 +149,10 @@ public class HnSplashActivity extends BaseActivity {
             }
             startIView(UIDialog.build()
                     .setDialogContent(getString(R.string.kick_out_tip, client))
+                    .setGravity(Gravity.CENTER));
+        } else if (statusCode == StatusCode.FORBIDDEN.getValue()){
+            startIView(UIDialog.build()
+                    .setDialogContent(getString(R.string.text_account_forbidden))
                     .setGravity(Gravity.CENTER));
         }
     }

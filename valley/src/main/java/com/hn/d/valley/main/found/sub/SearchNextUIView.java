@@ -228,7 +228,16 @@ public class SearchNextUIView extends BaseContentUIView {
                     public void onSucceed(SearchResultBean bean) {
                         super.onSucceed(bean);
                         mSearchAdapter.setShowState(IShowState.NORMAL);
-                        mSearchAdapter.resetHeaderData(bean.getUsers());
+
+                        List<LikeUserInfoBean> users = bean.getUsers();
+                        List<LikeUserInfoBean> newUsers = new ArrayList<>();
+                        for (LikeUserInfoBean b : users) {
+                            if (UserCache.getUserAccount().equalsIgnoreCase(b.getUid())) {
+                            } else {
+                                newUsers.add(b);
+                            }
+                        }
+                        mSearchAdapter.resetHeaderData(newUsers);
 
                         mSearchAdapter.resetAllData(bean.getDynamics().getDynamics());
                         mSearchAdapter.resetFooterData(bean.getNews().getNews());

@@ -52,4 +52,25 @@ public interface SystemNotifyType {
      */
     String ADS_UPDATE = "ads_update";
 
+    /**
+     * 简要描述：
+
+     用户被永久封号
+     扩展名【extend_type】：
+
+     user_freeze
+     */
+
+    String USER_FREEZE = "user_freeze";
+
+    /**
+     * 简要描述：
+
+     用户被临时锁定
+     扩展名【extend_type】：
+
+     user_locked
+     */
+    String USER_LOCK = "user_locked";
+
 }

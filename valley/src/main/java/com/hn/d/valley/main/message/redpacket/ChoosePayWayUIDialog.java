@@ -95,7 +95,7 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
         infoAlipay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.ALIPAY,1));
+                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.ALIPAY,params.missionType));
                 finishDialog();
             }
         });
@@ -103,7 +103,7 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
         infoWechat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.WECHAT,1));
+                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.WECHAT,params.missionType));
                 finishDialog();
             }
         });

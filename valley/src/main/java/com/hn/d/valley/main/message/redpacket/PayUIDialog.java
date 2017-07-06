@@ -268,6 +268,64 @@ public class PayUIDialog extends UIIDialogImpl {
         String to_gid;
         String content;
         String to_uid;
+        int coin;
+        int way;
+        //默认1 发红包 2 充值龙币
+        int missionType = 1;
+
+        public Params setType(int missionType) {
+            this.missionType = missionType;
+            return this;
+        }
+
+        public int getBalance() {
+            return balance;
+        }
+
+        public Params setBalance(int balance) {
+            this.balance = balance;
+            return this;
+        }
+
+        public Params setNum(int num) {
+            this.num = num;
+            return this;
+        }
+
+        public Params setMoney(float money) {
+            this.money = money;
+            return this;
+        }
+
+        public Params setRandom(int random) {
+            this.random = random;
+            return this;
+        }
+
+        public Params setTo_gid(String to_gid) {
+            this.to_gid = to_gid;
+            return this;
+        }
+
+        public Params setContent(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Params setTo_uid(String to_uid) {
+            this.to_uid = to_uid;
+            return this;
+        }
+
+        public Params setCoin(int coin) {
+            this.coin = coin;
+            return this;
+        }
+
+        public Params setWay(int way) {
+            this.way = way;
+            return this;
+        }
 
         public Params(int num, float money, String content, String to_uid, String to_gid, int random) {
             this.num = num;
@@ -278,14 +336,8 @@ public class PayUIDialog extends UIIDialogImpl {
             this.random = random;
         }
 
-        public int getBalance() {
-            return balance;
-        }
-
-        public void setBalance(int balance) {
-            this.balance = balance;
+        public Params() {
         }
     }
-
 
 }

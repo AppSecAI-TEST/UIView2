@@ -48,6 +48,7 @@ import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.skin.SkinUtils;
+import com.hn.d.valley.start.ChooseTagsUIView;
 import com.hn.d.valley.start.RecommendUser2UIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
@@ -361,7 +362,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
 
         if (LoginControl.instance().isFirstRegister()) {
             //// TODO: 2017/5/19
-            mParentILayout.startIView(new RecommendUser2UIView());
+            mParentILayout.startIView(new ChooseTagsUIView());
             LoginControl.instance().setFirstRegister(false);
         }
     }
@@ -374,31 +375,15 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
 
     @Subscribe
     public void onEvent(StatusCode status) {
-        if (status == StatusCode.KICKOUT || status == StatusCode.KICK_BY_OTHER_CLIENT) {
+        if (status == StatusCode.KICKOUT
+                || status == StatusCode.KICK_BY_OTHER_CLIENT
+                ) {
             //帐号被踢
-            HnSplashActivity.launcher(mActivity, true);
+            HnSplashActivity.launcher(mActivity, true,status.getValue());
             mActivity.finish();
-
-//            int type = NIMClient.getService(AuthService.class).getKickedClientType();
-//            String client;
-//            switch (type) {
-//                case ClientType.Web:
-//                    client = "网页端";
-//                    break;
-//                case ClientType.Windows:
-//                    client = "电脑端";
-//                    break;
-//                case ClientType.REST:
-//                    client = "服务端";
-//                    break;
-//                default:
-//                    client = "其他移动设备";
-//                    break;
-//            }
-//            replaceIView(new LoginUIView(), new UIParam(true, true));
-//            startIView(UIDialog.build()
-//                    .setDialogContent("您的账户在 " + client + " 登录.")
-//                    .setGravity(Gravity.CENTER));
+        } else if (status == StatusCode.FORBIDDEN){
+            HnSplashActivity.launcher(mActivity, false,status.getValue());
+            mActivity.finish();
         }
     }
 

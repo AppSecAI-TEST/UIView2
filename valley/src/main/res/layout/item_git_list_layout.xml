@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/base_pink_rect_shape">
+
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/base_bg_selector"
+        android:orientation="vertical"
+        tools:showIn="@layout/item_focus_user_layout">
+
+        <com.hn.d.valley.widget.HnGlideImageView
+            android:id="@+id/image_view"
+            android:layout_gravity="center"
+            android:layout_width="@dimen/avatar_image_size_little"
+            android:layout_height="@dimen/avatar_image_size_little"
+            android:src="@drawable/default_avatar" />
+
+        <LinearLayout
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_username"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxEms="5"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="李伟" />
+
+            <TextView
+                android:id="@+id/tv_is_vip"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxEms="5"
+                android:visibility="gone"
+                android:layout_marginStart="@dimen/base_ldpi"
+                android:maxLines="1"
+                android:textColor="@color/pink_f5b8c2"
+                android:background="@drawable/base_pink_rect_shape"
+                android:ellipsize="end"
+                android:text="VIP" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_klg_coin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/pink_f5b8c2"
+            android:textSize="10sp"
+            android:gravity="center"
+            android:maxEms="5"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="4 龙币" />
+
+
+    </LinearLayout>
+
+</RelativeLayout>

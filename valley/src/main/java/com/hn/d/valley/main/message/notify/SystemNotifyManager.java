@@ -9,6 +9,7 @@ import com.hn.d.valley.bean.event.AnnounceUpdateEvent;
 import com.hn.d.valley.bean.event.GroupDissolveEvent;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.UserInfoBean;
+import com.hn.d.valley.cache.LogoutHelper;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AdsControl;
 import com.hn.d.valley.main.me.setting.MsgNotifySetting;
@@ -16,6 +17,7 @@ import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.model.CustomNotification;
 
@@ -104,6 +106,13 @@ public class SystemNotifyManager {
                 break;
             case SystemNotifyType.ADS_UPDATE:
                 AdsControl.INSTANCE.updateAds();
+                break;
+            case SystemNotifyType.USER_FREEZE:
+            case SystemNotifyType.USER_LOCK:
+                // 用戶被封号 踢出下线
+                //帐号被踢
+                LogoutHelper.logout();
+                RBus.post(StatusCode.FORBIDDEN);
                 break;
             default:
 

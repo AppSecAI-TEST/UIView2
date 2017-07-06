@@ -21,6 +21,7 @@ import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.start.LoginUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.x5.X5WebUIView;
+import com.netease.nimlib.sdk.StatusCode;
 
 import java.util.List;
 
@@ -173,7 +174,7 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                             @Override
                             public void onClick(View v) {
                                 MainControl.onLoginOut();
-                                HnSplashActivity.launcher(mActivity, false);
+                                HnSplashActivity.launcher(mActivity, false, StatusCode.LOGINED.getValue());
                                 mActivity.finish();
                             }
                         })

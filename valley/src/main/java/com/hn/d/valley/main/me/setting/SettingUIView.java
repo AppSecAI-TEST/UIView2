@@ -9,6 +9,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.BaseSubContentUIView;
 import com.hn.d.valley.control.MainControl;
+import com.netease.nimlib.sdk.StatusCode;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -62,7 +63,7 @@ public class SettingUIView extends BaseSubContentUIView {
                             @Override
                             public void onClick(View v) {
                                 MainControl.onLoginOut();
-                                HnSplashActivity.launcher(mActivity, false);
+                                HnSplashActivity.launcher(mActivity, false, StatusCode.LOGINED.getValue());
                                 mActivity.finish();
                             }
                         })

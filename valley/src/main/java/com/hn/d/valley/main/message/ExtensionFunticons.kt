@@ -31,5 +31,9 @@ import com.hn.d.valley.ValleyApp
                 .placeholder(R.drawable.default_avatar)
                 .error(R.drawable.default_avatar)
                 .into(this)
+    }
 
+    fun ImageView.setThumbUrl(url : String) {
+        Glide.with(context).load(url).placeholder(R.drawable.zhanweitu_1).error(R.drawable.zhanweitu_1)
+                .into(this)
     }

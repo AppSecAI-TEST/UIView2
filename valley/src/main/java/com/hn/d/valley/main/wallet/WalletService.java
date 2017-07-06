@@ -360,6 +360,10 @@ public interface WalletService {
     Observable<ResponseBody> sendPhoneVerifyCode(@QueryMap Map<String, String> map);
 
 
+    @POST("coin/records")
+    Observable<ResponseBody> records(@QueryMap Map<String, String> map);
+
+
 
 
 

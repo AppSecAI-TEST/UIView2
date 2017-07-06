@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_interest_desc"
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:padding="@dimen/base_xhdpi"
+        android:text="@string/text_choose_interest_type"
+        android:textColor="@color/main_text_color"
+        android:textSize="@dimen/base_title_size"/>
+
+    <TextView
+        android:layout_below="@id/tv_interest_desc"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:gravity="center"
+        android:text="@string/text_let_us_understand_you_more"
+/>
+
+    <com.angcyo.uiview.widget.viewpager.RViewPager
+        android:id="@+id/vp_tags_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_interest_desc"
+        android:layout_marginTop="@dimen/base_35dpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi">
+
+    </com.angcyo.uiview.widget.viewpager.RViewPager>
+
+
+
+    <RelativeLayout
+        android:id="@+id/rl_next"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/base_xxxhdpi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/base_xhdpi">
+
+        <com.hn.d.valley.widget.HnButton
+            android:id="@+id/text_view"
+            style="@style/WhiteColorTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/main_color_bg_round_selector"
+            android:gravity="center"
+            android:minHeight="@dimen/base_item_size"
+            android:padding="@dimen/base_xhdpi"
+            android:layout_marginStart="@dimen/base_xxxhdpi"
+            android:layout_marginEnd="@dimen/base_xxxhdpi"
+            android:text="@string/text_choose_latest_three_tags"/>
+
+    </RelativeLayout>
+
+    <com.angcyo.uiview.recycler.RecyclerViewPagerIndicator
+        android:id="@+id/recycler_view_pager_indicator"
+        android:layout_above="@id/rl_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/base_xhdpi"/>
+
+</RelativeLayout>

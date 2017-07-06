@@ -375,7 +375,7 @@ public class LoginUIView extends BaseUIView<Start.ILoginPresenter> implements St
 //                .setCanTouchOnOutside(false)
 //                .setCanDoubleCancel(true)
 //                .showDialog(this);
-        mParentILayout.startIView(new RecommendUser2UIView());
+        mParentILayout.startIView(new ChooseTagsUIView());
         UIDialog.build().setDialogTitle(mActivity.getString(R.string.tip))
                 .setDialogContent(mActivity.getString(R.string.dynamic_top_tip))
                 .setCancelText("").setOkText(mActivity.getString(R.string.known))

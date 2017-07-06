@@ -187,6 +187,8 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
             //充值
         } else if(missionType == 1) {
             //发红包
+        } else if (missionType == 2) {
+            // 充龙币
         }
 
          builder = new OrderInfoUtil2_0.Builder()
@@ -258,7 +260,9 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 object.put("to_gid", TextUtils.isEmpty(params.to_gid) ? 0 : Integer.valueOf(params.to_gid));
                 object.put("content", params.content);
             } else if (type == 2) {
-                // 转账
+                // 购买龙币
+                object.put("coin",params.coin);
+                object.put("way",params.way);
             }
         } catch (JSONException e) {
             e.printStackTrace();

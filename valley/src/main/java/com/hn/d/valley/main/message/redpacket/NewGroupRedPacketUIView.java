@@ -265,7 +265,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
     private void performClick(int count, float money, String content) {
         final PayUIDialog.Params params = new PayUIDialog.Params(count
                 ,money,content,null,to_gid,rp_type);
-
+        params.setType(1);
         // 红包发送成功回调
         final Action1 action = new Action1() {
             @Override

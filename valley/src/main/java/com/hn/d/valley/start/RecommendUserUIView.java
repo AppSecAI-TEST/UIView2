@@ -174,7 +174,7 @@ public class RecommendUserUIView extends BaseContentUIView {
             final HnGlideImageView imageView = (HnGlideImageView) holder.imgV(R.id.image_view);
             final TextView username = holder.tv(R.id.tv_username);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setImageResource(R.drawable.zhanweitu_1);
+            imageView.setImageResource(R.drawable.default_avatar);
             imageView.post(new Runnable() {
                 @Override
                 public void run() {

@@ -108,6 +108,7 @@ public class SessionHelper {
                     items.add(new AVChatCommandItem(AVChatType.VIDEO));
                     items.add(new LocationCommandItem());
                     items.add(new PersonalCardCommandItem());
+                    items.add(new GiftCommandItem());
 
                     if (DynamicFuncManager2.instance().dynamicFuncResult != null) {
                         if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet()) {

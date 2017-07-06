@@ -231,7 +231,7 @@ public class LoginUIView2 extends BaseContentUIView {
                                         })
                                         .showDialog(iLayout);
                             } else {
-                                T_.error(e.getLocalizedMessage());
+                                T_.error(e.getMsg());
                             }
                         }
                     }

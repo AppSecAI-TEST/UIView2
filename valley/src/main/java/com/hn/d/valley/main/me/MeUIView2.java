@@ -400,7 +400,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         }));
 
 
-        if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet()) {
+        if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet() || BuildConfig.SHOW_DEBUG) {
             //我的钱包
             items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
                 @Override
@@ -427,7 +427,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         mParentILayout.startIView(new KLGCoinUIVIew());
                     }
                 });
-                itemInfoLayout.setItemDarkText("20");
+                itemInfoLayout.setItemDarkText(UserCache.instance().getLoginBean().getCoins());
                 itemInfoLayout.getDarkTextView().setTextColor(getColor(R.color.yellow_ffac2d));
                 itemInfoLayout.setDarkDrawableRes(R.drawable.longbi);
             }

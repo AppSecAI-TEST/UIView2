@@ -27,6 +27,11 @@ public class Tag extends RealmObject {
      * "attention_count": "4"
      */
     private String attention_count;
+    /**
+     * thumb : http://avatorimg.klgwl.com/13/13584.png
+     */
+
+    private String thumb;
 
     public Tag(String id, String name) {
         this.id = id;
@@ -80,5 +85,13 @@ public class Tag extends RealmObject {
 
     public void setAttention_count(String attention_count) {
         this.attention_count = attention_count;
+    }
+
+    public String getThumb() {
+        return thumb;
+    }
+
+    public void setThumb(String thumb) {
+        this.thumb = thumb;
     }
 }

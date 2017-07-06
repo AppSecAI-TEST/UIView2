@@ -19,6 +19,7 @@ import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.MainUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
+import com.netease.nimlib.sdk.StatusCode;
 import com.orhanobut.hawk.Hawk;
 
 //import com.hn.d.valley.main.message.avchat.AVChatControl;
@@ -119,7 +120,7 @@ public class HnUIMainActivity extends BaseActivity {
     }
 
     private void toSplashActivity() {
-        HnSplashActivity.launcher(HnUIMainActivity.this, false);
+        HnSplashActivity.launcher(HnUIMainActivity.this, false, StatusCode.LOGINED.getValue());
         finish();
     }
 

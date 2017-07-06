@@ -205,6 +205,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         }
         PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(etMoney.getText().toString()) * 100,content,to_uid,null,0);
         params.setBalance(account.getMoney());
+        params.setType(1);
         mParentILayout.startIView(new PayUIDialog(new Action1() {
             @Override
             public void call(Object o) {

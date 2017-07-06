@@ -151,9 +151,9 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
 
                 // 解决 Comparison method violates its general contract
                 // 两个比较对象相等 徐返回 0
-                if (o1.getGroupText().equals(o1.getGroupText())) {
-                    return 0;
-                }
+//                if (o1.getGroupText().equals(o1.getGroupText())) {
+//                    return 0;
+//                }
 
                 return o1.getGroupText().charAt(0) - o2.getGroupText().charAt(0);
             }
