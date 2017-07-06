@@ -539,6 +539,11 @@ public class RBMediaController extends RelativeLayout {
         status = newStatus;
         if (!isLive && newStatus == STATUS_COMPLETED) {// 当视频播放完成的时候
             handler.removeMessages(MESSAGE_SHOW_PROGRESS);
+
+            long duration = videoView.getDuration();
+            seekBar.setProgress(Integer.MAX_VALUE);
+            $.id(R.id.app_video_currentTime).text(generateTime(duration));
+
             hideAll();
             if (isShowCenterControl) {
                 updatePausePlay();// FIX completed pause button

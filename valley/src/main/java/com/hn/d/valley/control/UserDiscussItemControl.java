@@ -704,6 +704,7 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
+                        imageView.setShowGifTip(false);
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
@@ -782,6 +783,7 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
+                        imageView.setShowGifTip(false);
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {

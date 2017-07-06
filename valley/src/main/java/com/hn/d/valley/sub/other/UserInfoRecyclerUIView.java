@@ -2,6 +2,7 @@ package com.hn.d.valley.sub.other;
 
 import android.support.v7.widget.RecyclerView;
 
+import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.LikeUserInfoBean;
@@ -22,9 +23,18 @@ public abstract class UserInfoRecyclerUIView extends SingleRecyclerUIView<LikeUs
         return true;
     }
 
+    protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
+    }
+
     @Override
     protected RExBaseAdapter<String, LikeUserInfoBean, String> initRExBaseAdapter() {
         mUserInfoAdapter = new UserInfoClickAdapter(mActivity, mParentILayout, mSubscriptions) {
+
+            @Override
+            protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
+                super.onBindDataView(holder, posInData, dataBean);
+                UserInfoRecyclerUIView.this.onBindDataView(holder, posInData, dataBean);
+            }
 
             @Override
             protected boolean isContact(LikeUserInfoBean dataBean) {

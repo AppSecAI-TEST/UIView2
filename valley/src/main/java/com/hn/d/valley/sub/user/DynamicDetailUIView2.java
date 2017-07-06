@@ -40,6 +40,7 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
@@ -176,6 +177,13 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 for (LikeUserInfoBean infoBean : like_users) {
                     infos.add(new IcoInfoBean(infoBean.getUid(), infoBean.getAvatar()));
                 }
+
+                mIcoRecyclerView.setOnItemClickListener(new HnIcoRecyclerView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(RBaseViewHolder holder, int position, IcoInfoBean bean) {
+                        mParentILayout.startIView(new UserDetailUIView2(bean.uid));
+                    }
+                });
                 mIcoRecyclerView.getMaxAdapter().resetData(infos);
             }
 
@@ -214,7 +222,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             }, true);
 
             //点赞人数列表
-            mViewHolder.v(R.id.click_view).setOnClickListener(new View.OnClickListener() {
+            mViewHolder.v(R.id.like_users_layout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startIView(new LikeUserRecyclerUIView(mDataListBean.getDiscuss_id()));

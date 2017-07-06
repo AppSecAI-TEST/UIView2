@@ -1,11 +1,14 @@
 package com.hn.d.valley.sub.other
 
+import android.view.View
 import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
+import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.hn.d.valley.R
 import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
+import com.hn.d.valley.bean.LikeUserInfoBean
 import com.hn.d.valley.bean.LikeUserModel
 import com.hn.d.valley.service.ContactService
 
@@ -23,6 +26,11 @@ import com.hn.d.valley.service.ContactService
 class RelationListUIView(val to_uid: String) : UserInfoRecyclerUIView() {
     override fun getTitleString(): String {
         return getString(R.string.relation_title)
+    }
+
+    override fun onBindDataView(holder: RBaseViewHolder?, posInData: Int, dataBean: LikeUserInfoBean?) {
+        super.onBindDataView(holder, posInData, dataBean)
+        holder?.v<View>(R.id.follow_image_view)?.visibility = View.GONE
     }
 
     override fun onUILoadData(page: String?) {
