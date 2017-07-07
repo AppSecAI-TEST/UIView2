@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.gift
 
 import android.content.Context
+import android.content.pm.PackageInstaller
 import android.graphics.Color
 import android.support.v4.view.PagerAdapter
 import android.support.v7.widget.GridLayoutManager
@@ -17,6 +18,7 @@ import com.angcyo.uiview.recycler.RRecyclerView
 import com.angcyo.uiview.recycler.RecyclerViewPagerIndicator
 import com.angcyo.uiview.recycler.adapter.RModelAdapter
 import com.angcyo.uiview.utils.ScreenUtil
+import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.widget.RImageView
 import com.angcyo.uiview.widget.viewpager.RViewPager
 import com.hn.d.valley.R
@@ -27,6 +29,10 @@ import com.hn.d.valley.bean.GiftBean
 import com.hn.d.valley.bean.ListModel
 import com.hn.d.valley.bean.realm.Tag
 import com.hn.d.valley.cache.NimUserInfoCache
+import com.hn.d.valley.cache.UserCache
+import com.hn.d.valley.main.message.ChatUIView.msgService
+import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment
+import com.hn.d.valley.main.message.session.Container
 import com.hn.d.valley.main.message.setThumbUrl
 import com.hn.d.valley.main.wallet.WalletHelper
 import com.hn.d.valley.service.DiscussService
@@ -34,6 +40,9 @@ import com.hn.d.valley.start.ChooseTagsUIView
 import com.hn.d.valley.start.SpaceItemDecoration
 import com.hn.d.valley.sub.other.KLGCoinUIVIew
 import com.hn.d.valley.widget.HnGlideImageView
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import rx.functions.Action0
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -46,7 +55,7 @@ import com.hn.d.valley.widget.HnGlideImageView
  * 修改备注：
  * Version: 1.0.0
  */
-class GiftListUIView(account : String) : BaseContentUIView() {
+class GiftListUIView: BaseContentUIView {
 
     var vp_tags_pager: RViewPager? = null
     var indicator: RecyclerViewPagerIndicator? = null
@@ -57,10 +66,18 @@ class GiftListUIView(account : String) : BaseContentUIView() {
     var btn_send : TextView? = null
 
     var account : String
+    var sessionType : SessionTypeEnum
+    var container : Container? = null
 
-    init {
+    constructor(account : String, sessionType : SessionTypeEnum) : super(){
         this.account = account
+        this.sessionType = sessionType
     }
+
+    constructor(container : Container) : this(container.account,container.sessionType) {
+        this.container = container
+    }
+
 
     override fun getTitleBar(): TitleBarPattern {
         val titleBarPattern = super.getTitleBar()
@@ -100,8 +117,7 @@ class GiftListUIView(account : String) : BaseContentUIView() {
             tv_interest_desc!!.text = String.format("送给 %s",userInfo.name)
         }
 
-//        tv_selected!!.text = WalletHelper.getInstance().walletAccount.money.toString()
-
+        tv_selected!!.text = String.format("龙币:%s",UserCache.instance().getLoginBean().getCoins())
         loadData()
 
     }
@@ -145,7 +161,7 @@ class GiftListUIView(account : String) : BaseContentUIView() {
             val rv_tags = RRecyclerView(container!!.context)
             val layoutParams = ViewGroup.LayoutParams(-2, -2)
             layoutParams.width = ScreenUtil.screenWidth
-            val itemHeight = layoutParams.width / 3
+            val itemHeight = (layoutParams.width - ScreenUtil.dip2px(48f)) / 3
 
             val itemDecoration = SpaceItemDecoration(10)
             rv_tags.addItemDecoration(itemDecoration)
@@ -207,7 +223,7 @@ class GiftListUIView(account : String) : BaseContentUIView() {
             if (bean.coins.toInt() == 0) {
                 tv_klg_coin.text = "免费"
             } else {
-                tv_klg_coin.text = String.format("%d 龙币",bean.coins)
+                tv_klg_coin.text = String.format("%s 龙币",bean.coins)
             }
             tv_is_vip.visibility = if (bean.is_vip.equals("0")){
                 View.GONE
@@ -222,14 +238,56 @@ class GiftListUIView(account : String) : BaseContentUIView() {
 
         }
 
-        private fun sendGift(gift : GiftBean) {
-            startIView(SendGiftUIDialog(gift))
-        }
-
         override fun onBindModelView(model: Int, isSelector: Boolean, holder: RBaseViewHolder?, position: Int, bean: GiftBean?) {
             super.onBindModelView(model, isSelector, holder, position, bean)
         }
 
+        private fun sendGift(gift : GiftBean) {
+            startIView(SendGiftUIDialog(gift, Action0 {
+                if (sessionType == SessionTypeEnum.P2P) {
+
+
+                } else if(sessionType == SessionTypeEnum.Team){
+                    // 送给群里某群友
+                }
+
+                sendGift(account,gift.gift_id)
+
+//                val attachment = GiftReceiveAttachment(gift,account)
+//                val message = MessageBuilder.createCustomMessage(account, sessionType,attachment.giftReceiveMsg.msg, attachment)
+//                if (container == null) {
+//                    msgService().sendMessage(message, false)
+//                } else {
+//                    container?.proxy?.sendMessage(message)
+//                }
+                finishIView()
+            }))
+        }
+
     }
+
+    companion object{
+        fun sendGift(account: String, giftId: String) {
+            RRetrofit.create(GiftService::class.java)
+                    .giving(Param.buildMap("to_uid:" + account, "gift_id:" + giftId))
+                    .compose(Rx.transformer(String::class.java))
+                    .subscribe(object : BaseSingleSubscriber<String>() {
+                        override fun onSucceed(bean: String) {
+                            super.onSucceed(bean)
+                            T_.show(bean)
+                        }
+
+                        override fun onStart() {
+                            super.onStart()
+                        }
+
+                        override fun onError(code: Int, msg: String) {
+                            super.onError(code, msg)
+                        }
+                    })
+        }
+    }
+
+
 
 }

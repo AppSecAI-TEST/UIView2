@@ -48,9 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingTop="@dimen/base_xhdpi"
-        android:paddingEnd="@dimen/base_xhdpi"
-        android:paddingStart="@dimen/base_xhdpi">
+        android:padding="@dimen/base_xhdpi_15"
+    >
 
     </com.angcyo.uiview.widget.viewpager.RViewPager>
 

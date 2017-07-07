@@ -1,11 +1,16 @@
 package com.hn.d.valley.main.me.sub;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -13,6 +18,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
+import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
@@ -24,17 +30,25 @@ import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.GiftBean;
+import com.hn.d.valley.bean.GiftReceiveBean;
+import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.bean.realm.RelationDataBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
+import com.hn.d.valley.main.message.gift.GiftListUIView;
+import com.hn.d.valley.main.message.gift.GiftService;
+import com.hn.d.valley.main.message.gift.SendGiftUIDialog;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.adapter.ImageAdapter;
 import com.hn.d.valley.sub.other.RelationListUIView;
 import com.hn.d.valley.utils.PhotoPager;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.x5.X5WebUIView;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.List;
 
@@ -57,6 +71,8 @@ public class UserInfoSubUIView extends BaseItemUIView {
     UserInfoBean mUserInfoBean;
     Action0 mAction0;
 
+    private GiftList mGiftList;
+
     public UserInfoSubUIView(UserInfoBean userInfoBean, Action0 action0) {
         mUserInfoBean = userInfoBean;
         mAction0 = action0;
@@ -72,13 +88,34 @@ public class UserInfoSubUIView extends BaseItemUIView {
         return getColor(R.color.chat_bg_color);
     }
 
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        loadGift();
+    }
+
     @Override
     protected int getItemLayoutId(int viewType) {
         if (viewType == 0) {
             return R.layout.item_search_layout_user_recommend;
+        }
+
+        if (mGiftList != null && viewType == 1) {
+            return R.layout.item_search_layout_user_recommend;
         } else if (viewType == 1) {
             return R.layout.item_user_info_sub_view;
         }
+
+        if (mGiftList != null && viewType == 2) {
+            return R.layout.item_user_info_sub_view;
+        }
+
         return R.layout.item_user_introduce_view;
     }
 
@@ -157,6 +194,26 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 }));
             }
         });
+
+        // 礼物
+        if (mGiftList != null) {
+            items.add(new SingleItem(SingleItem.Type.TOP) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, final int posInData, Item dataBean) {
+                    RTextView tv = holder.v(R.id.tip_view);
+                    tv.setDefaultSKin("TA的礼物");
+                    RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
+                    if (mDecor == null) {
+                        mDecor = new RBaseItemDecoration((int) (density() * 10), Color.TRANSPARENT);
+                    } else {
+                        recyclerView.removeItemDecoration(mDecor);
+                    }
+                    recyclerView.addItemDecoration(mDecor);
+                    recyclerView.setAdapter(new GiftListAdapter(mActivity,mGiftList));
+
+                }
+            });
+        }
 
         //基本资料
         items.add(new SingleItem(SingleItem.Type.TOP) {
@@ -264,4 +321,114 @@ public class UserInfoSubUIView extends BaseItemUIView {
             });
         }
     }
+
+    private void loadGift() {
+        if (isContact()) {
+            mGiftList = new GiftList();
+        }
+        RRetrofit.create(GiftService.class)
+                .giftReceived(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                .compose(Rx.transformer(GiftList.class))
+                .subscribe(new BaseSingleSubscriber<GiftList>() {
+                    @Override
+                    public void onSucceed(GiftList bean) {
+                        super.onSucceed(bean);
+                        hideLoadView();
+                        if (bean != null && bean.getData_list().size() != 0) {
+                            mGiftList = bean;
+                        }
+                        showContentLayout();
+                    }
+
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        showLoadView();
+                    }
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                            hideLoadView();
+                            showNonetLayout(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    loadGift();
+                                }
+                            });
+
+                    }
+                });
+    }
+
+    private boolean isContact() {
+        return mUserInfoBean.getIs_contact() == 1;
+    }
+
+    class GiftListAdapter extends RExBaseAdapter<String,GiftReceiveBean,String>{
+
+
+        public GiftListAdapter(Context context,GiftList giftList) {
+            super(context,giftList.getData_list());
+            if(isContact()) {
+                mAllDatas.add(0,new GiftReceiveBean());
+            }
+        }
+
+        @Override
+        protected int getItemLayoutId(int viewType) {
+            return R.layout.item_headimg_name_view;
+        }
+
+        @Override
+        public int getItemCount() {
+            return getDataCount();
+        }
+
+        @Override
+        protected void onBindDataView(RBaseViewHolder holder, final int posInData, final GiftReceiveBean bean) {
+            super.onBindDataView(holder, posInData, bean);
+
+            UI.setViewHeight(holder.itemView, ScreenUtil.dip2px(100));
+            UI.setViewWidth(holder.itemView,ScreenUtil.dip2px(100));
+
+            HnGlideImageView image_view = holder.v(R.id.image_view);
+            TextView username = holder.tv(R.id.tv_username);
+
+            if (isContact() && posInData == 0) {
+                image_view.setImageResource(R.drawable.songliwu_icon);
+                username.setText("");
+            } else {
+                image_view.setImageUrl(bean.getThumb());
+                username.setText(String.format("%s(%s)",bean.getName(),bean.getOwn_count()));
+            }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //送礼物图标
+                    if (isContact() && posInData == 0 ) {
+                        mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
+                    } else if(isContact()) {
+                        SendGiftUIDialog dialog = new SendGiftUIDialog(GiftBean.create(bean), new Action0() {
+                            @Override
+                            public void call() {
+                                GiftListUIView.Companion.sendGift(mUserInfoBean.getUid(),bean.getGift_id());
+                            }
+                        });
+                        dialog.setGiftEnable(bean.getEnable().equals("1"));
+                        mParentILayout.startIView(dialog);
+                    }
+                }
+            });
+
+
+        }
+    }
+
+
+
+    class GiftList extends ListModel<GiftReceiveBean> {}
+
+
 }

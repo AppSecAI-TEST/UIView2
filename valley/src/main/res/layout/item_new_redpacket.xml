@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/base_chat_bg_color"
-    android:gravity="center_horizontal">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/base_chat_bg_color"
+                android:gravity="center_horizontal">
 
 
     <!--<include-->
@@ -18,9 +19,9 @@
         android:id="@+id/item_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/base_xxhdpi"
-        android:layout_marginStart="@dimen/base_xhdpi_15"
         android:layout_marginEnd="@dimen/base_xhdpi_15"
+        android:layout_marginStart="@dimen/base_xhdpi_15"
+        android:layout_marginTop="@dimen/base_xxhdpi"
         android:background="@drawable/base_white_round_bg_5x"
         android:gravity="center_vertical"
         android:orientation="horizontal">
@@ -32,40 +33,41 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/base_xhdpi"
             android:text="@string/text_amount"
-            android:textColor="@color/main_text_color" />
+            android:textColor="@color/main_text_color"/>
 
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-            <EditText
+            <com.angcyo.uiview.widget.ExEditText
                 android:id="@+id/et_money"
                 style="@style/EditStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:gravity="center_vertical|right|end"
-                android:textDirection="ltr"
-                android:inputType="numberDecimal"
                 android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
                 android:paddingEnd="@dimen/base_xhdpi"
                 android:paddingStart="@dimen/base_xhdpi"
                 android:textColor="@color/main_text_color"
-                android:textColorHint="@color/main_text_color_dark" />
+                android:textColorHint="@color/main_text_color_dark"
+                android:textDirection="ltr"
+                app:r_decimal_count="2"
+                app:r_max_number="200"/>
 
             <TextView
                 android:id="@+id/tv_cursor"
-                android:hint="0.00"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center_vertical|right|end"
+                android:hint="0.00"
                 android:paddingEnd="@dimen/base_xhdpi"
                 android:paddingStart="@dimen/base_xhdpi"
-                android:textColorHint="@color/main_text_color_dark"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:textColorHint="@color/main_text_color_dark"/>
 
         </FrameLayout>
-
 
 
         <com.angcyo.uiview.widget.RTextView
@@ -75,17 +77,17 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/base_xhdpi"
             android:text="@string/text_unit"
-            android:textColor="@color/main_text_color" />
+            android:textColor="@color/main_text_color"/>
 
 
     </LinearLayout>
 
     <include
         android:id="@+id/item_input_note"
-        android:layout_below="@id/item_input"
         layout="@layout/item_red_input_note"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_input"/>
 
 
     <com.angcyo.uiview.widget.RTextView
@@ -98,7 +100,7 @@
         android:layout_marginRight="@dimen/base_xhdpi_15"
         android:maxLines="2"
         android:text="@string/text_redpacket_notice"
-        tools:text="@string/register_warning" />
+        tools:text="@string/register_warning"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -112,8 +114,8 @@
             style="@style/WhiteColorTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
             android:background="@drawable/main_color_red_round_selector"
+            android:enabled="false"
             android:gravity="center"
             android:minHeight="@dimen/base_item_size"
             android:padding="@dimen/base_xhdpi"

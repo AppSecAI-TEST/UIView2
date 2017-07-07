@@ -8,11 +8,13 @@ import android.widget.TextView;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
@@ -21,16 +23,30 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.control.ShareControl;
+import com.hn.d.valley.main.friend.AbsContactItem;
+import com.hn.d.valley.main.friend.ContactItem;
+import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
+import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
+import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
+import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.util.List;
+
+import rx.functions.Action3;
+
+import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -139,6 +155,20 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                         .setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                // 发送名片
+                                ContactSelectUIVIew.start(mILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                                        , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                                            @Override
+                                            public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                                                requestCallback.onSuccess("");
+                                                ContactItem contactItem = (ContactItem) absContactItems.get(0);
+                                                FriendBean friendBean = contactItem.getFriendBean();
+                                                PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
+                                                IMMessage message = MessageBuilder.createCustomMessage(mUserInfoBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
+                                                msgService().sendMessage(message,false);
+
+                                            }
+                                        });
 
                             }
                         });

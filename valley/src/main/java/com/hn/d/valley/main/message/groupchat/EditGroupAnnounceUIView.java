@@ -1,5 +1,8 @@
 package com.hn.d.valley.main.message.groupchat;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
@@ -60,7 +63,10 @@ public class EditGroupAnnounceUIView extends BaseUIView {
                                 @Override
                                 public void onClick(View v) {
                                     String value = "empty";
-                                    if (!mExEditText.isEmpty()) {
+                                    if (mExEditText.isEmpty()) {
+                                        T_.error(getString(R.string.input_group_announcement_hint));
+                                        return;
+                                    } else {
                                         value = mExEditText.string();
                                     }
 
@@ -134,10 +140,12 @@ public class EditGroupAnnounceUIView extends BaseUIView {
 
     @Override
     protected TitleBarPattern getTitleBar() {
+        Drawable drawable = getDrawable(R.drawable.delete_search);
+        drawable.mutate().setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY);
 
         ArrayList<TitleBarPattern.TitleBarItem> titleBarItems = new ArrayList<>();
         titleBarItems.add(TitleBarPattern.TitleBarItem.build()
-                .setRes(R.drawable.delete_search)
+                .setIcoDrawable(drawable)
                 .setVisibility(View.GONE).setListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -156,7 +164,6 @@ public class EditGroupAnnounceUIView extends BaseUIView {
         super.onViewShowFirst(bundle);
 
         loadData();
-
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.session;
 
 import android.Manifest;
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 
@@ -60,7 +61,7 @@ public class VideoCommandItem extends CommandItemInfo {
                                         return;
                                     }
 
-                                    MediaPlayer mediaPlayer = getVideoMediaPlayer(file);
+                                    MediaPlayer mediaPlayer = getVideoMediaPlayer(getContainer().activity,file);
                                     long duration = mediaPlayer == null ? 0 : mediaPlayer.getDuration();
                                     int height = mediaPlayer == null ? 0 : mediaPlayer.getVideoHeight();
                                     int width = mediaPlayer == null ? 0 : mediaPlayer.getVideoWidth();
@@ -83,9 +84,9 @@ public class VideoCommandItem extends CommandItemInfo {
      * @param file 视频文件
      * @return mediaPlayer
      */
-    private MediaPlayer getVideoMediaPlayer(File file) {
+    public static MediaPlayer getVideoMediaPlayer(Context ctx, File file) {
         try {
-            return MediaPlayer.create(getContainer().activity, Uri.fromFile(file));
+            return MediaPlayer.create(ctx, Uri.fromFile(file));
         } catch (Exception e) {
             e.printStackTrace();
         }

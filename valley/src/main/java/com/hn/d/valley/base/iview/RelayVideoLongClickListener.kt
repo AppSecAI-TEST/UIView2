@@ -2,7 +2,19 @@ package com.hn.d.valley.base.iview
 
 import com.angcyo.uiview.container.ILayout
 import com.angcyo.uiview.dialog.UIBottomItemDialog
+import com.angcyo.uiview.recycler.adapter.RModelAdapter
+import com.angcyo.uiview.utils.string.MD5
 import com.hn.d.valley.R
+import com.hn.d.valley.ValleyApp
+import com.hn.d.valley.main.friend.ContactItem
+import com.hn.d.valley.main.message.chat.ChatUIView2
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter
+import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew
+import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew.*
+import com.hn.d.valley.main.message.session.ImageCommandItem
+import com.hn.d.valley.main.message.session.VideoCommandItem.getVideoMediaPlayer
+import com.netease.nimlib.sdk.msg.MessageBuilder
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import java.io.File
 
 /**
@@ -32,17 +44,28 @@ class RelayVideoLongClickListener(iLayout: ILayout<*>) : VideoPlayUIView.SaveVid
     }
 
     private fun sendVideo(path: String) {
-//        ContactSelectUIVIew.start(mILayout, BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null, true) { _, absContactItems, requestCallback ->
-//            requestCallback.onSuccess("")
-//            val contactItem = absContactItems[0] as ContactItem
-//            val friendBean = contactItem.friendBean
-//            var type = SessionTypeEnum.P2P
-//            // 暂时 size > 1 判断 team
-//            if (absContactItems.size > 1) {
-//                type = SessionTypeEnum.Team
-//            }
-//            val msg = ImageCommandItem.makePicAndGifMsg(path, friendBean.uid, type)
-//            ChatUIView2.msgService().sendMessage(msg, false)
-//        }
+        start(mILayout, BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null, true) { _, absContactItems, requestCallback ->
+            requestCallback.onSuccess("")
+            val contactItem = absContactItems[0] as ContactItem
+            val friendBean = contactItem.friendBean
+            var type = SessionTypeEnum.P2P
+            // 暂时 size > 1 判断 team
+            if (absContactItems.size > 1) {
+                type = SessionTypeEnum.Team
+            }
+
+            val file = File(path)
+            if (!file.exists()) {
+                return@start
+            }
+
+            val mediaPlayer = getVideoMediaPlayer(ValleyApp.getApp().applicationContext,file)
+            val duration = (if (mediaPlayer == null) 0 else mediaPlayer!!.getDuration()).toLong()
+            val height = if (mediaPlayer == null) 0 else mediaPlayer!!.getVideoHeight()
+            val width = if (mediaPlayer == null) 0 else mediaPlayer!!.getVideoWidth()
+            val md5 = MD5.getStreamMD5(path)
+            val message = MessageBuilder.createVideoMessage(friendBean.uid, type, file, duration, width, height, md5)
+            ChatUIView2.msgService().sendMessage(message, false)
+        }
     }
 }

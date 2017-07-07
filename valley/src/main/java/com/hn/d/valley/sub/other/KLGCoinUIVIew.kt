@@ -8,6 +8,8 @@ import com.angcyo.uiview.widget.ItemInfoLayout
 import com.hn.d.valley.R
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView
+import com.hn.d.valley.main.message.redpacket.ChoosePayWayUIDialog
+import com.hn.d.valley.main.message.redpacket.GrabPacketHelper
 import com.hn.d.valley.main.message.redpacket.PayUIDialog
 import com.hn.d.valley.main.message.redpacket.ThirdPayUIDialog
 import com.hn.d.valley.main.wallet.KlGCoinBillUIView
@@ -29,7 +31,7 @@ import rx.functions.Action1
  */
 class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
 
-    var balanceView : ItemInfoLayout? = null
+    var balanceView: ItemInfoLayout? = null
 
     override fun getTitleBar(): TitleBarPattern {
         return super.getTitleBar().setTitleString("购买龙币")
@@ -71,8 +73,8 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
         items!!.add(ItemRecyclerUIView.ViewItemInfo.build(object : ItemOffsetCallback(line) {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: ItemRecyclerUIView.ViewItemInfo) {
                 val itemInfoLayout = holder.v<ItemInfoLayout>(R.id.item_info_layout)
-                bindInfo(itemInfoLayout,"60 龙币","￥ 6")
-                bindRechargeAction(itemInfoLayout,60)
+                bindInfo(itemInfoLayout, "60 龙币", "￥ 6")
+                bindRechargeAction(itemInfoLayout, 60)
             }
         }))
 
@@ -80,8 +82,8 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
         items!!.add(ItemRecyclerUIView.ViewItemInfo.build(object : ItemOffsetCallback(line) {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: ItemRecyclerUIView.ViewItemInfo) {
                 val itemInfoLayout = holder.v<ItemInfoLayout>(R.id.item_info_layout)
-                bindInfo(itemInfoLayout,"120 龙币","￥ 12")
-                bindRechargeAction(itemInfoLayout,120)
+                bindInfo(itemInfoLayout, "120 龙币", "￥ 12")
+                bindRechargeAction(itemInfoLayout, 120)
             }
         }))
 
@@ -89,8 +91,8 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
         items.add(ItemRecyclerUIView.ViewItemInfo.build(object : ItemOffsetCallback(line) {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: ItemRecyclerUIView.ViewItemInfo) {
                 val itemInfoLayout = holder.v<ItemInfoLayout>(R.id.item_info_layout)
-                bindInfo(itemInfoLayout,"300 龙币","￥ 30")
-                bindRechargeAction(itemInfoLayout,300)
+                bindInfo(itemInfoLayout, "300 龙币", "￥ 30")
+                bindRechargeAction(itemInfoLayout, 300)
             }
         }))
 
@@ -98,8 +100,8 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
         items!!.add(ItemRecyclerUIView.ViewItemInfo.build(object : ItemOffsetCallback(line) {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: ItemRecyclerUIView.ViewItemInfo) {
                 val itemInfoLayout = holder.v<ItemInfoLayout>(R.id.item_info_layout)
-                bindInfo(itemInfoLayout,"600 龙币","￥ 60")
-                bindRechargeAction(itemInfoLayout,600)
+                bindInfo(itemInfoLayout, "600 龙币", "￥ 60")
+                bindRechargeAction(itemInfoLayout, 600)
             }
         }))
 
@@ -107,8 +109,8 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
         items!!.add(ItemRecyclerUIView.ViewItemInfo.build(object : ItemOffsetCallback(line) {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: ItemRecyclerUIView.ViewItemInfo) {
                 val itemInfoLayout = holder.v<ItemInfoLayout>(R.id.item_info_layout)
-                bindInfo(itemInfoLayout,"1080 龙币","￥ 108")
-                bindRechargeAction(itemInfoLayout,1080)
+                bindInfo(itemInfoLayout, "1080 龙币", "￥ 108")
+                bindRechargeAction(itemInfoLayout, 1080)
             }
         }))
 
@@ -116,37 +118,46 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
         items!!.add(ItemRecyclerUIView.ViewItemInfo.build(object : ItemOffsetCallback(line) {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: ItemRecyclerUIView.ViewItemInfo) {
                 val itemInfoLayout = holder.v<ItemInfoLayout>(R.id.item_info_layout)
-                bindInfo(itemInfoLayout,"5180 龙币","￥ 518")
-                bindRechargeAction(itemInfoLayout,5180)
+                bindInfo(itemInfoLayout, "5180 龙币", "￥ 518")
+                bindRechargeAction(itemInfoLayout, 5180)
             }
         }))
 
     }
 
-    private fun bindRechargeAction(itemInfoLayout: ItemInfoLayout ,coin : Int) {
+    private fun bindRechargeAction(itemInfoLayout: ItemInfoLayout, coin: Int) {
         itemInfoLayout.setOnClickListener {
             val params = PayUIDialog.Params()
-    //                    params.balance = WalletHelper.getInstance().walletAccount.money
+//            params.balance = WalletHelper.getInstance().walletAccount.money
 
             params.setMoney(coin * 10f)
                     .setCoin(coin)
                     .setWay(1)
                     .setType(2)
 
-            mParentILayout.startIView(PayUIDialog(object : Action1<Any> {
-                override fun call(o: Any) {
-    //                            finishIView()
-                    T_.show("充值成功!")
-                    // 重新获取个人信息 刷新列表 || 增加余额 刷新列表数据
-                                UserCache.instance().loginBean.coins = (UserCache.instance().loginBean.coins.toInt() + coin / 10).toString()
-                                balanceView!!.setItemDarkText(UserCache.instance().loginBean.coins)
+            //检查余额是否足够
+            GrabPacketHelper.balanceCheck { money ->
+                //参数设置余额
+                params.balance = money!!
+                val action = object : Action1<Any> {
+                    override fun call(o: Any) {
+                        T_.show("充值成功!")
+                        // 重新获取个人信息 刷新列表 || 增加余额 刷新列表数据
+                        UserCache.instance().loginBean.coins = (UserCache.instance().loginBean.coins.toInt() + coin / 10).toString()
+                        balanceView!!.setItemDarkText(UserCache.instance().loginBean.coins)
+                    }
                 }
-            }, params))
+                if (money >= params.money) {
+                    mParentILayout.startIView(PayUIDialog(action, params))
 
+                } else {
+                    mParentILayout.startIView(ChoosePayWayUIDialog(action, params))
+                }
+            }
         }
     }
 
-    private fun bindInfo(itemInfoLayout: ItemInfoLayout,type : String ,value : String) {
+    private fun bindInfo(itemInfoLayout: ItemInfoLayout, type: String, value: String) {
         itemInfoLayout.setItemText(type)
         itemInfoLayout.darkTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
         itemInfoLayout.darkTextView.setTextColor(getColor(R.color.yellow_ffac2d))

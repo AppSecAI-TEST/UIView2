@@ -203,7 +203,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     }
 
-    private void toBindPhone() {
+    public void toBindPhone() {
         UIDialog.build()
                 .setDialogContent(mActivity.getString(R.string.text_please_bind_phone))
                 .setOkText(mActivity.getString(R.string.text_bind_phone))

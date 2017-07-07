@@ -363,10 +363,12 @@ public interface WalletService {
     @POST("coin/records")
     Observable<ResponseBody> records(@QueryMap Map<String, String> map);
 
-
-
-
-
-
+    /**
+     * 余额消费接口
+     * @param map
+     * @return
+     */
+    @POST("wallet/balance/consume")
+    Observable<ResponseBody> rechargeKlgcoin(@QueryMap Map<String, String> map);
 
 }

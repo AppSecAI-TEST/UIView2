@@ -32,9 +32,7 @@
                     android:id="@+id/base_dialog_title_view"
                     style="@style/DarkTextStyle"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="@dimen/base_title_size"
-                    tools:text="更多礼物" />
+                    android:text="@string/text_more_gift" />
 
             </RelativeLayout>
 
@@ -43,15 +41,15 @@
             <com.hn.d.valley.widget.HnGlideImageView
                 android:id="@+id/iv_gift_thumb"
                 android:src="@drawable/zhanweitu_1"
-                android:layout_width="@dimen/avatar_image_size"
-                android:layout_height="@dimen/avatar_image_size" />
+                android:layout_width="109dp"
+                android:layout_height="109dp" />
 
             <TextView
                 android:id="@+id/tv_gift_name"
                 style="@style/MainTextStyle"
                 android:layout_height="wrap_content"
                 tools:text="情侣钻戒"
-                android:padding="@dimen/base_xhdpi"
+                android:paddingTop="@dimen/base_xhdpi"
                 android:textColor="@color/main_text_color"
                 android:textSize="17sp" />
 
@@ -60,8 +58,10 @@
                 style="@style/DarkTextStyle"
                 android:layout_height="wrap_content"
                 tools:text="已下架"
-                android:textColor="@color/main_text_color"
-                android:textSize="17sp" />
+                android:textColor="@color/pink_fa758a"
+                android:layout_marginBottom="@dimen/base_xxhdpi"
+                android:layout_marginTop="@dimen/base_ldpi"
+                android:textSize="12sp" />
 
             <View
                 android:id="@+id/line_layout"

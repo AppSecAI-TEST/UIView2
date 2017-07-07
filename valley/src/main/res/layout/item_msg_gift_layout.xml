@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/base_bg_selector"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    >
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/iv_icon"
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/register_warning" />
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/iv_gift_thumb"
+        tools:src="@drawable/add_black"
+        android:layout_marginStart="-10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

@@ -27,6 +27,16 @@ public class GiftBean {
     private String coins;
     private String is_vip;
 
+    public static GiftBean create(GiftReceiveBean receiveBean) {
+        GiftBean bean = new GiftBean();
+        bean.gift_id = receiveBean.getGift_id();
+        bean.name = receiveBean.getName();
+        bean.thumb = receiveBean.getThumb();
+        bean.coins = receiveBean.getCoins();
+        bean.is_vip = receiveBean.getIs_vip();
+        return bean;
+    }
+
     public String getGift_id() {
         return gift_id;
     }

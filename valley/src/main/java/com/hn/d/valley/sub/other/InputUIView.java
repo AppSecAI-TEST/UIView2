@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
@@ -76,7 +75,7 @@ public class InputUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemI
 
         protected RBaseViewHolder mViewHolder;
         protected ExEditText mExEditText;
-        protected IView mIView;
+        protected InputUIView mIView;
 
         /**
          * 初始化标题bar

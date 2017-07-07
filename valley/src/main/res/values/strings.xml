@@ -850,5 +850,9 @@
     <string name="publish_image">分享图片</string>
     <string name="publish_video">分享视频</string>
     <string name="publish_empty_tip">请选择图片.</string>
+    <string name="text_more_gift">更多礼物</string>
+    <string name="text_klgcoin_not_enough">龙币不足,请去充值</string>
+    <string name="text_recharge_now">立即充值</string>
     <string name="blacklist_title">黑名单</string>
+    <string name="input_group_announcement_hint">请输入群公告</string>
 </resources>

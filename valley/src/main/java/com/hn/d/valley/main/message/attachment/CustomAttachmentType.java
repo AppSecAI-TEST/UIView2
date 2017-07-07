@@ -48,6 +48,8 @@ public interface CustomAttachmentType {
 
     int SP_MULTI_PICTURE = 33;
 
+    int GIFT_RECEIVE = 15;
+
 
     String PersonalCard_ = "user";
 
@@ -76,5 +78,7 @@ public interface CustomAttachmentType {
     String SHARE_DYNAMIC_MSG  = "dynamic";
 
     String INVITE_UPLOAD_PHOTOS  = "invite_upload_photos";
+
+    String GIFT = "gift";
 
 }

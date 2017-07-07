@@ -136,7 +136,6 @@ public class PayUIDialog extends UIIDialogImpl {
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 
-
                     @Override
                     public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                         super.onEnd(isError, isNoNetwork, e);
@@ -150,9 +149,53 @@ public class PayUIDialog extends UIIDialogImpl {
                         parseResult(mParentILayout, beans, new Action1() {
                             @Override
                             public void call(Object o) {
-                                sendRedPacket();
+                                if (params.missionType == 1) {
+                                    sendRedPacket();
+                                } else if(params.missionType == 2) {
+                                    buyKlgCoin();
+                                }
                             }
                         });
+                    }
+                });
+    }
+
+
+    /**
+     * {
+     "uid":60001,          // 购买者id
+     "money":200,          // 金额，单位为分
+     "coin":20000,         // 购买的龙币个数
+     "way":4               // 1-苹果商店 2-支付宝 3-微信 4-余额
+     }
+     */
+    private void buyKlgCoin() {
+        //goods 0 为龙币
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("uid",Integer.valueOf(UserCache.getUserAccount()));
+            jsonObject.put("money",(int)params.money);
+            jsonObject.put("coin",params.coin);
+            jsonObject.put("way",4);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RRetrofit.create(WalletService.class)
+                .rechargeKlgcoin(Param.buildInfoMap("goods:0", "data:" + jsonObject.toString()))
+                .compose(getTransformer())
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                        super.onEnd(isError, isNoNetwork, e);
+                        if (isError) {
+                            finishDialog();
+                            T_.show(mActivity.getString(R.string.text_send_fail));
+                        }
+                    }
+
+                    @Override
+                    public void onSucceed(String beans) {
+                        parseResult(beans);
                     }
                 });
     }
@@ -262,7 +305,7 @@ public class PayUIDialog extends UIIDialogImpl {
     public static class Params {
 
         int num;
-        float money;
+        public float money;
         int random = 0;
         int balance = -1;
         String to_gid;
