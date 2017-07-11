@@ -527,14 +527,14 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
                 new AlertDialog.Builder(this);
 
         builder.setMessage("打开悬浮窗权限");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SettingsCompat.manageDrawOverlays(AVChatActivity.this);
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

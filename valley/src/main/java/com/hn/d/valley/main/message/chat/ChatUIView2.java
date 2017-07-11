@@ -272,10 +272,17 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 if (emoji.equals("/DEL")) {
                     mInputView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
                 } else {
-                    final int selectionStart = mInputView.getSelectionStart();
-                    mInputView.getText().insert(selectionStart, emoji);
+//                    final int selectionStart = mInputView.getSelectionStart();
+//                    mInputView.getText().insert(selectionStart, emoji);
+                    int start = mInputView.getSelectionStart();
+                    int end = mInputView.getSelectionEnd();
+                    start = (start < 0 ? 0 : start);
+                    end = (end < 0 ? 0 : end);
+                    L.e("ChatUIView2" ,"onEmojiSelected start :" + start + "end: " + end + " emoji : " + emoji);
+                    mInputView.getText().replace(start, end, emoji);
+
                     MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
-                    mInputView.setSelection(selectionStart + emoji.length());
+                    mInputView.setSelection(start + emoji.length());
                     mInputView.requestFocus();
                 }
             }

@@ -29,7 +29,7 @@ import com.hn.d.valley.control.ShareControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
-import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Options;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.service.ContactService;
@@ -156,15 +156,16 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                             @Override
                             public void onClick(View v) {
                                 // 发送名片
-                                ContactSelectUIVIew.start(mILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                                Options option = new Options(RModelAdapter.MODEL_SINGLE);
+                                ContactSelectUIVIew.start(mILayout, option
                                         , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                             @Override
                                             public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
                                                 requestCallback.onSuccess("");
                                                 ContactItem contactItem = (ContactItem) absContactItems.get(0);
                                                 FriendBean friendBean = contactItem.getFriendBean();
-                                                PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
-                                                IMMessage message = MessageBuilder.createCustomMessage(mUserInfoBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
+                                                PersonalCardAttachment attachment = new PersonalCardAttachment(mUserInfoBean);
+                                                IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
                                                 msgService().sendMessage(message,false);
 
                                             }

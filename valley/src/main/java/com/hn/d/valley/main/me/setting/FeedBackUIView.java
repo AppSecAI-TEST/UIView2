@@ -109,9 +109,16 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
                     @Override
                     public boolean onDeleteClick(View view, int position) {
+                        changeImageCountUI(mAddPhotoAdapter.getAllDatas().size() - 1);
                         return false;
                     }
                 });
+    }
+
+    private void changeImageCountUI(int num) {
+        imageCount.setText(SpannableStringUtils.getBuilder(num + "")
+                .setForegroundColor(SkinHelper.getSkin().getThemeSubColor())
+                .append("/3").create());
     }
 
     @Override
@@ -299,9 +306,7 @@ public class FeedBackUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         }
         String filePath = images.get(0);
         mAddPhotoAdapter.addLastItemSafe(filePath);
-        imageCount.setText(SpannableStringUtils.getBuilder(mAddPhotoAdapter.getItemCount() - 1 + "")
-                .setForegroundColor(SkinHelper.getSkin().getThemeSubColor())
-                .append("/3").create());
+        changeImageCountUI(mAddPhotoAdapter.getAllDatas().size());
     }
 
     @Override

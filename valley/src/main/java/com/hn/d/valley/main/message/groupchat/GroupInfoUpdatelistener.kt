@@ -14,5 +14,6 @@ interface GroupInfoUpdatelistener {
 
     fun onGroupNotifySetting()
 
+    fun onGropuDissolve();
 
 }

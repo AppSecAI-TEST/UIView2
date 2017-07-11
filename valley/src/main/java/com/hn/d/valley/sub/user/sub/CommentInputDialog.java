@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -523,6 +524,16 @@ public class CommentInputDialog extends UIIDialogImpl {
                         HnLoading.hide();
                     }
                 });
+    }
+
+    @Override
+    public Animation loadStartAnimation() {
+        return null;
+    }
+
+    @Override
+    public Animation loadFinishAnimation() {
+        return null;
     }
 
     public interface InputConfig {

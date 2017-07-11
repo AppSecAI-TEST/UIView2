@@ -1,7 +1,6 @@
 package com.hn.d.valley.main.message.gift
 
 import android.content.Context
-import android.content.pm.PackageInstaller
 import android.graphics.Color
 import android.support.v4.view.PagerAdapter
 import android.support.v7.widget.GridLayoutManager
@@ -19,7 +18,6 @@ import com.angcyo.uiview.recycler.RecyclerViewPagerIndicator
 import com.angcyo.uiview.recycler.adapter.RModelAdapter
 import com.angcyo.uiview.utils.ScreenUtil
 import com.angcyo.uiview.utils.T_
-import com.angcyo.uiview.widget.RImageView
 import com.angcyo.uiview.widget.viewpager.RViewPager
 import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseContentUIView
@@ -27,20 +25,13 @@ import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.GiftBean
 import com.hn.d.valley.bean.ListModel
-import com.hn.d.valley.bean.realm.Tag
 import com.hn.d.valley.cache.NimUserInfoCache
 import com.hn.d.valley.cache.UserCache
-import com.hn.d.valley.main.message.ChatUIView.msgService
-import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment
 import com.hn.d.valley.main.message.session.Container
 import com.hn.d.valley.main.message.setThumbUrl
-import com.hn.d.valley.main.wallet.WalletHelper
-import com.hn.d.valley.service.DiscussService
-import com.hn.d.valley.start.ChooseTagsUIView
 import com.hn.d.valley.start.SpaceItemDecoration
 import com.hn.d.valley.sub.other.KLGCoinUIVIew
 import com.hn.d.valley.widget.HnGlideImageView
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import rx.functions.Action0
 
@@ -231,15 +222,20 @@ class GiftListUIView: BaseContentUIView {
                 View.VISIBLE
             }
 
-            holder.itemView.setOnClickListener {
-
-                sendGift(bean)
-            }
-
         }
 
         override fun onBindModelView(model: Int, isSelector: Boolean, holder: RBaseViewHolder?, position: Int, bean: GiftBean?) {
             super.onBindModelView(model, isSelector, holder, position, bean)
+            holder!!.itemView.setOnClickListener {
+                sendGift(bean!!)
+                setSelectorPosition(position)
+                notifyDataSetChanged()
+            }
+            if (isPositionSelector(position)) {
+                holder.itemView.setBackgroundResource(R.drawable.base_pink_rect_shape)
+            } else {
+                holder.itemView.background = null
+            }
         }
 
         private fun sendGift(gift : GiftBean) {

@@ -137,7 +137,6 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                         } else {
                             SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 0);
                         }
-
                         RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
 
                     }
@@ -151,15 +150,14 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 final CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_messge_notallow));
-                boolean notice = NIMClient.getService(FriendService.class).isNeedMessageNotify(mSessionId);
+                boolean notice = !NIMClient.getService(FriendService.class).isNeedMessageNotify(mSessionId);
                 switchCompat.setChecked(notice);
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        SessionSettingDelegate.getInstance().setMessageNotify(mSessionId, isChecked, switchCompat);
+                        SessionSettingDelegate.getInstance().setMessageNotify(mSessionId, !isChecked, switchCompat);
                     }
                 });
-
             }
         }));
 
@@ -168,7 +166,6 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_chat_file));
-
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -198,7 +195,6 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_empty_record));
-
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -214,7 +210,6 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_report));
-
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

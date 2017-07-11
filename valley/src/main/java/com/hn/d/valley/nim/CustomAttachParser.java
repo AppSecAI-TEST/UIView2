@@ -4,6 +4,7 @@ import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
@@ -82,6 +83,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.GIFT:
                     attachment = new GiftReceiveAttachment(json);
+                    break;
+                case CustomAttachmentType.DISCUSS_RECOMM:
+                    attachment = new DiscussRecommAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

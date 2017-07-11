@@ -102,6 +102,7 @@ public class SystemNotifyManager {
                 notifyNewVisitor();
                 break;
             case SystemNotifyType.GROUP_DISMISS:
+                // 群被后台解散
                 notifyGroupDisslove(customNotification, content);
                 break;
             case SystemNotifyType.ADS_UPDATE:

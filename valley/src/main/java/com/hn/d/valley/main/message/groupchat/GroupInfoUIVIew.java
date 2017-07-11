@@ -385,7 +385,6 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_chat_file));
-
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -442,23 +441,17 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                     ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                     infoLayout.setItemText(mActivity.getString(R.string.text_report));
-
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mParentILayout.startIView(new ReportUIView(mGroupDescBean));
                         }
                     });
-
                 }
             }));
         }
-
-
         bindGroupOwnerFunc(items, line, left);
         jugeGroupOwner(items, line, left);
-
-
     }
 
     private void jugeGroupOwner(List<ViewItemInfo> items, int line, int left) {
@@ -612,6 +605,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     public void onSucceed(String bean) {
                         super.onSucceed(bean);
                         finishIView();
+                        infoUpdatelistener.onGropuDissolve();
                         T_.info(mActivity.getString(R.string.text_desolve_success));
                     }
 
@@ -639,6 +633,9 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         infoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!isSelfAdmin) {
+                    return;
+                }
                 startInputView(infoLayout, currentName, new Action1<String>() {
                     @Override
                     public void call(String s) {

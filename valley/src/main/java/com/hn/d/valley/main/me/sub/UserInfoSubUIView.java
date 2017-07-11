@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -202,6 +201,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 public void onBindView(RBaseViewHolder holder, final int posInData, Item dataBean) {
                     RTextView tv = holder.v(R.id.tip_view);
                     tv.setDefaultSKin("TA的礼物");
+                    holder.v(R.id.tv_more).setVisibility(View.GONE);
                     RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
                     if (mDecor == null) {
                         mDecor = new RBaseItemDecoration((int) (density() * 10), Color.TRANSPARENT);
@@ -397,7 +397,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
             if (isContact() && posInData == 0) {
                 image_view.setImageResource(R.drawable.songliwu_icon);
-                username.setText("");
+                username.setText(R.string.text_send_gift);
             } else {
                 image_view.setImageUrl(bean.getThumb());
                 username.setText(String.format("%s(%s)",bean.getName(),bean.getOwn_count()));
@@ -414,6 +414,12 @@ public class UserInfoSubUIView extends BaseItemUIView {
                             @Override
                             public void call() {
                                 GiftListUIView.Companion.sendGift(mUserInfoBean.getUid(),bean.getGift_id());
+                            }
+                        });
+                        dialog.setMoreAction(new Action0() {
+                            @Override
+                            public void call() {
+                                mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(),SessionTypeEnum.P2P));
                             }
                         });
                         dialog.setGiftEnable(bean.getEnable().equals("1"));

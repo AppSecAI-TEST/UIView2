@@ -33,6 +33,7 @@ import com.hn.d.valley.control.MediaTypeControl;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
+import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.message.attachment.LikeMsg;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.slide.ISlideHelper;
@@ -281,7 +282,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         @Override
         protected void onBindDataView(RBaseViewHolder holder, int posInData, IMMessage dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
-            String media = "", media_type = "", item_id = "", msg = "", created = "", avatar = "";
+            String media = "", media_type = "", item_id = "", msg = "", created = "", avatar = "",type = "";
             MsgAttachment attachment = dataBean.getAttachment();
 
             ((OneSlideViewHolder) holder).bind();
@@ -294,13 +295,13 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 created = String.valueOf(likeMsg.getCreated());//时间
                 msg = likeMsg.getMsg();//显示的消息
                 avatar = likeMsg.getAvatar();//头像
-
+                type = likeMsg.getType();
             } else if (attachment instanceof NoticeAttachment) {
                 final CustomBean customBean = getBean(dataBean);
                 holder.fillView(customBean);
                 media = customBean.getMedia();
                 media_type = customBean.getMedia_type();
-
+                type = customBean.getType();
                 item_id = customBean.getItem_id();
                 msg = customBean.getMsg();
                 avatar = customBean.getAvatar();
@@ -324,13 +325,21 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             holder.tv(R.id.msg).setText(msg);
 
             final String finalItem_id = item_id;
+            final String finalType = type;
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //startIView(new DynamicDetailUIView2(customBean.getItem_id()));
-                    UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false, false);
+                    //资讯
+                    if ("news".equals(finalType)) {
+                        startIView(new InformationDetailUIView(finalItem_id));
+                    } else if("discuss".equals(finalType)) {
+                        // 动态
+                        UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false, false);
+                    }
                 }
             });
+
         }
 
         @Override

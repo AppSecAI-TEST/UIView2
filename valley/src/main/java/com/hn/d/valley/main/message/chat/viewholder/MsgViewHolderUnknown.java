@@ -29,7 +29,7 @@ public class MsgViewHolderUnknown extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
         TextView tv_text = (TextView) findViewById(R.id.text_view);
-        tv_text.setText(R.string.text_unkown_msg);
+        tv_text.setText(mUIBaseView.getString(R.string.text_unkown_msg) + ": " + message.getContent());
 
     }
 }

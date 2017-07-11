@@ -5,8 +5,10 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -21,6 +23,7 @@ import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.found.sub.HotInfoListUIView;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnLoading;
@@ -51,6 +54,13 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     private Tag mTag;
     private String gid;
 
+    private TextView tv_count;
+
+    @Override
+    protected TitleBarPattern getTitleBar() {
+        return super.getTitleBar().setTitleString(getString(R.string.report));
+    }
+
     public ReportNextUIView(Tag tag, String gid) {
         this.mTag = tag;
         this.gid = gid;
@@ -69,7 +79,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
         super.onViewLoad();
         mAddPhotoAdapter = new RAddPhotoAdapter<String>(mActivity)
                 .setDeleteModel(true)
-                .setMaxPhotoCount(1)
+                .setMaxPhotoCount(4)
                 .setExcludeWidth(mBaseOffsetSize * 4)
                 .setConfigCallback(new RAddPhotoAdapter.ConfigCallback() {
                     @Override
@@ -84,6 +94,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
 
                     @Override
                     public boolean onDeleteClick(View view, int position) {
+                        tv_count.setText(String.format("%d 张",mAddPhotoAdapter.getAllDatas().size()- 1));
                         return false;
                     }
                 });
@@ -119,6 +130,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
+                tv_count = holder.tv(R.id.tv_iv_count);
                 recyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
                     @Override
                     public void getItemOffsets(Rect outRect, int position) {
@@ -215,7 +227,9 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
         }
         String filePath = images.get(0);
         mAddPhotoAdapter.addLastItemSafe(filePath);
-
+        if (tv_count != null) {
+            tv_count.setText(String.format("%d 张",mAddPhotoAdapter.getAllDatas().size()));
+        }
     }
 
 }

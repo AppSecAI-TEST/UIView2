@@ -50,7 +50,7 @@ public class ImageCommandItem extends CommandItemInfo {
 
     @Override
     protected void onClick() {
-        ImagePickerHelper.startImagePicker(getContainer().activity, false, false, 9);
+        ImagePickerHelper.startImagePicker(getContainer().activity, false, true, 9);
     }
 
     @Override
@@ -123,7 +123,8 @@ public class ImageCommandItem extends CommandItemInfo {
 
     private void sendPictureAndGif(ArrayList<String> strings) {
         //发送图片和gif图
-        String path = strings.get(0);
-        getContainer().proxy.sendMessage(makePicAndGifMsg(path, getContainer().account, getContainer().sessionType));
+        for (String path : strings) {
+            getContainer().proxy.sendMessage(makePicAndGifMsg(path, getContainer().account, getContainer().sessionType));
+        }
     }
 }

@@ -38,10 +38,12 @@ import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
+import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
+import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
@@ -469,7 +471,6 @@ public class RecentContactsControl {
             if (attachment instanceof NoticeAttachment) {
                 CustomBean bean = ((NoticeAttachment) attachment).getBean();
                 if (bean != null) {
-
                     // 设置新的动态通知
                     final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
                     RRealm.exe(new Realm.Transaction() {
@@ -479,9 +480,10 @@ public class RecentContactsControl {
                             userInfoBean.setNew_notification(true);
                         }
                     });
-
                     return bean.getMsg();
                 }
+            } else if (attachment instanceof LikeMsgAttachment) {
+                return ((LikeMsgAttachment)attachment).getLikeMsg().getMsg();
             }
 
         } else if (attachment instanceof PersonalCardAttachment) {
@@ -505,6 +507,8 @@ public class RecentContactsControl {
             return ((RefundMsgAttachment)attachment).getRefundMsg().getMsg();
         } else if (attachment instanceof InviteUploadProfileAttachment) {
             return ((InviteUploadProfileAttachment)attachment).getInviteUploadMsg().getMsg();
+        } else if (attachment instanceof DiscussRecommAttachment) {
+            return ((DiscussRecommAttachment)attachment).getRecommendMsg().getMsg();
         }
         return "[自定义消息]";
     }

@@ -39,87 +39,10 @@ import java.util.List;
 /**
  * Created by hewking on 2017/3/20.
  */
-public class GroupAnnouncementUIView extends SingleRecyclerUIView<GroupAnnouncementBean> {
+public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnouncementBean>{
 
     private String gid;
     private Boolean isAdmin;
-    private InputUIView.InputConfigCallback inputConfigCallback = new InputUIView.InputConfigCallback() {
-
-
-        @Override
-        public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
-            return super.initTitleBar(titleBarPattern).setTitleString(mActivity.getString(R.string.text_publish_group_annonce))
-                    .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.publish),
-                            new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    String value = "empty";
-                                    if (mExEditText.isEmpty()) {
-                                        T_.error(getString(R.string.input_group_announcement_hint));
-                                        return;
-                                    } else {
-                                        value = mExEditText.string();
-                                    }
-
-                                    final String finalValue = value;
-                                    UIDialog.build()
-                                            .setDialogContent(mActivity.getString(R.string.text_send_announce_tip))
-                                            .setOkText(getString(R.string.ok))
-                                            .setCancelText(getString(R.string.cancel))
-                                            .setOkListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    add(RRetrofit.create(GroupChatService.class)
-                                                            .setAnnouncement(Param.buildMap("uid:" + UserCache.getUserAccount(), "gid:" + gid, "content:" + finalValue))
-                                                            .compose(Rx.transformer(String.class))
-                                                            .subscribe(new BaseSingleSubscriber<String>() {
-                                                                @Override
-                                                                public void onSucceed(String beans) {
-                                                                    loadData();
-                                                                    finishIView(mIView);
-
-                                                                }
-                                                            }));
-                                                }
-                                            })
-                                            .showDialog(mILayout);
-                                }
-                            }));
-        }
-
-        @Override
-        public void initInputView(RBaseViewHolder holder, ExEditText editText, ItemRecyclerUIView.ViewItemInfo bean) {
-            super.initInputView(holder, editText, bean);
-            editText.setHint(R.string.input_group_announcement_hint);
-            editText.setSingleLine(false);
-            editText.setMaxLines(5);
-            int maxCount = mActivity.getResources().getInteger(R.integer.signature_count);
-            editText.setMaxLength(maxCount);
-            editText.setGravity(Gravity.TOP);
-            int padding = ScreenUtil.dip2px(15);
-            editText.setPadding(padding, padding, padding, padding);
-            UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_150dpi));
-            final TextIndicator textIndicator = holder.v(R.id.single_text_indicator_view);
-            textIndicator.setMaxCount(maxCount);
-            textIndicator.setVisibility(View.VISIBLE);
-            editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    textIndicator.setCurrentCount(s.length());
-                }
-            });
-        }
-    };
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -175,7 +98,7 @@ public class GroupAnnouncementUIView extends SingleRecyclerUIView<GroupAnnouncem
         super.onUILoadData(page);
 
         add(RRetrofit.create(GroupChatService.class)
-                .announcementList(Param.buildMap("uid:" + UserCache.getUserAccount(), "gid:" + gid))
+                .announcementList(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid))
                 .compose(Rx.transformerList(GroupAnnouncementBean.class))
                 .subscribe(new BaseSingleSubscriber<List<GroupAnnouncementBean>>() {
 
@@ -196,23 +119,7 @@ public class GroupAnnouncementUIView extends SingleRecyclerUIView<GroupAnnouncem
         return new AnnouncementAdapter(mActivity);
     }
 
-    @NonNull
-    @Override
-    protected LayoutState getDefaultLayoutState() {
-        return LayoutState.LOAD;
-    }
-
-    @Override
-    protected RecyclerView.ItemDecoration initItemDecoration() {
-        return super.initItemDecoration();
-    }
-
-    @Override
-    protected boolean hasDecoration() {
-        return false;
-    }
-
-    public class AnnouncementAdapter extends RExBaseAdapter<String, GroupAnnouncementBean, String> {
+    public class AnnouncementAdapter extends RExBaseAdapter<String,GroupAnnouncementBean,String> {
 
         public AnnouncementAdapter(Context context) {
             super(context);
@@ -236,9 +143,100 @@ public class GroupAnnouncementUIView extends SingleRecyclerUIView<GroupAnnouncem
             content.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new EditGroupAnnounceUIView(gid, dataBean.getAn_id(), isAdmin));
+                    startIView(new EditGroupAnnounceUIView(gid,dataBean.getAn_id(),isAdmin));
                 }
             });
         }
+    }
+
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
+    }
+
+    private InputUIView.InputConfigCallback inputConfigCallback = new InputUIView.InputConfigCallback() {
+        @Override
+        public TitleBarPattern initTitleBar(TitleBarPattern titleBarPattern) {
+            return super.initTitleBar(titleBarPattern).setTitleString(mActivity.getString(R.string.text_publish_group_annonce))
+                    .addRightItem(TitleBarPattern.TitleBarItem.build(mActivity.getResources().getString(R.string.publish),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    String value = "empty";
+                                    if (mExEditText.isEmpty()) {
+                                        T_.error(getString(R.string.input_group_announcement_hint));
+                                        return;
+                                    } else {
+                                        value = mExEditText.string();
+                                    }
+
+                                    final String finalValue = value;
+                                    UIDialog.build()
+                                            .setDialogContent(mActivity.getString(R.string.text_send_announce_tip))
+                                            .setOkText(getString(R.string.ok))
+                                            .setCancelText(getString(R.string.cancel))
+                                            .setOkListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    add(RRetrofit.create(GroupChatService.class)
+                                                            .setAnnouncement(Param.buildMap("uid:" + UserCache.getUserAccount(),"gid:" + gid,"content:" + finalValue))
+                                                            .compose(Rx.transformer(String.class))
+                                                            .subscribe(new BaseSingleSubscriber<String>() {
+                                                                @Override
+                                                                public void onSucceed(String beans) {
+                                                                    loadData();
+                                                                    finishIView(mIView);
+
+                                                                }
+                                                            }));
+                                                }
+                                            })
+                                            .showDialog(mILayout);
+                                }
+                            }));
+        }
+
+        @Override
+        public void initInputView(RBaseViewHolder holder, ExEditText editText, ItemRecyclerUIView.ViewItemInfo bean) {
+            super.initInputView(holder, editText, bean);
+            editText.setSingleLine(false);
+            editText.setMaxLines(5);
+            int maxCount = mActivity.getResources().getInteger(R.integer.signature_count);
+            editText.setMaxLength(maxCount);
+            editText.setGravity(Gravity.TOP);
+            int padding = ScreenUtil.dip2px(15);
+            editText.setPadding(padding,padding,padding,padding);
+            UI.setViewHeight(editText, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_150dpi));
+            final TextIndicator textIndicator = holder.v(R.id.single_text_indicator_view);
+            textIndicator.setMaxCount(maxCount);
+            textIndicator.setVisibility(View.VISIBLE);
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    textIndicator.setCurrentCount(s.length());
+                }
+            });
+        }
+    };
+
+    @Override
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.initItemDecoration();
+    }
+
+    @Override
+    protected boolean hasDecoration() {
+        return false;
     }
 }

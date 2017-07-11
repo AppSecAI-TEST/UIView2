@@ -50,6 +50,7 @@ public interface CustomAttachmentType {
 
     int GIFT_RECEIVE = 15;
 
+    int DISCUSS_RECOMM_TYPE = 16;
 
     String PersonalCard_ = "user";
 
@@ -80,5 +81,7 @@ public interface CustomAttachmentType {
     String INVITE_UPLOAD_PHOTOS  = "invite_upload_photos";
 
     String GIFT = "gift";
+
+    String DISCUSS_RECOMM = "discuss_recommend";
 
 }

@@ -72,6 +72,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import rx.functions.Action0;
 import rx.functions.Action3;
 
 /**
@@ -80,7 +81,6 @@ import rx.functions.Action3;
 public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdatelistener {
 
     public static final String TAG = GroupChatUIView.class.getSimpleName();
-
 
     //view
     private View layout;
@@ -440,7 +440,6 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
             String account = keys.next();
             String aitName = AitHelper.getAitName(selectedMembers.get(account));
             text = text.replaceAll("(@" + account + " )", "@" + aitName + " ");
-
             pushList.add(account);
         }
         message.setContent(text);
@@ -477,7 +476,13 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
             return;
         }
 
-        mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_group_dissolove), event.notification.getMsg()));
+        mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_group_dissolove), event.notification.getMsg(), new Action0() {
+            @Override
+            public void call() {
+                finishIView();
+                msgService().deleteRecentContact2(mSessionId,sessionType);
+            }
+        }));
 
         L.i(TAG, event.notification.getMsg());
     }
@@ -523,5 +528,11 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
         if (team != null && team.isMyTeam()) {
             iv_show_disturbing.setVisibility(team.mute() ? View.VISIBLE : View.GONE);
         }
+    }
+
+    @Override
+    public void onGropuDissolve() {
+        msgService().deleteRecentContact2(mSessionId,sessionType);
+        finishIView();
     }
 }

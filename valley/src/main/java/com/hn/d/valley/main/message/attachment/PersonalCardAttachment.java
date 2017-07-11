@@ -3,6 +3,7 @@ package com.hn.d.valley.main.message.attachment;
 import com.angcyo.uiview.utils.Json;
 import com.google.gson.reflect.TypeToken;
 import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.bean.realm.UserInfoBean;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -25,9 +26,12 @@ public class PersonalCardAttachment extends CustomAttachment {
     public PersonalCardAttachment(FriendBean friendBean) {
         super(CustomAttachmentType.PersonalCard);
 //        this.friendBean = new BaseCustomBean<>(friendBean,CustomAttachmentType.PersonalCard);
-
         this.personalCard = PersonalCard.friend2PerCard(friendBean);
+    }
 
+    public PersonalCardAttachment(UserInfoBean bean) {
+        super(CustomAttachmentType.PersonalCard);
+        this.personalCard = PersonalCard.userInfo2PerCard(bean);
     }
 
     public PersonalCardAttachment(PersonalCard card) {

@@ -17,7 +17,7 @@ import com.hn.d.valley.bean.UserDiscussListBean;
  * 修改备注：
  * Version: 1.0.0
  */
-public class DynamicDetailMsg extends BaseCustomMsg{
+public class DynamicDetailMsg extends BaseCustomMsg {
 
 
     /**
@@ -51,6 +51,8 @@ public class DynamicDetailMsg extends BaseCustomMsg{
         detailMsg.apnsText = detailMsg.username;
         detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
 
+        String itemType = dataListBean.getShare_original_item_id();
+
         if (dataListBean.isImageMediaType()) {
             detailMsg.picture = dataListBean.getMediaValue()[0];
             detailMsg.msg = dataListBean.getContent();
@@ -60,7 +62,12 @@ public class DynamicDetailMsg extends BaseCustomMsg{
 
         } else if (dataListBean.isVideoMediaType()) {
             String[] split = dataListBean.getMediaValue();
-            detailMsg.cover = split[0];
+
+            if (Integer.valueOf(itemType) == 0) {
+                detailMsg.cover = split[0];
+            } else {
+                detailMsg.cover = dataListBean.getOriginal_info().getMedia();
+            }
             detailMsg.vedioURL = split[1];
             detailMsg.msg = "分享视频";
 

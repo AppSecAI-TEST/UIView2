@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.widget.ExEditText;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.main.message.redpacket.PayUIDialog;
@@ -46,7 +47,7 @@ import static android.R.attr.button;
 public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
     private Button button;
-    EditText edit_text_view;
+    ExEditText edit_text_view;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -77,7 +78,9 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 holder.tv(R.id.input_tip_view).setText(R.string.text_jine_yuan);
                 edit_text_view = holder.v(R.id.edit_text_view);
-                edit_text_view.setInputType(InputType.TYPE_CLASS_NUMBER);
+                edit_text_view.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                edit_text_view.setMaxNumber(10000);
+                edit_text_view.setDecimalCount(2);
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {

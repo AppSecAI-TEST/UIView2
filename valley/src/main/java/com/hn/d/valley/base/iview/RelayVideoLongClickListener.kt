@@ -53,7 +53,7 @@ class RelayVideoLongClickListener(iLayout: ILayout<*>) : VideoPlayUIView.SaveVid
             if (absContactItems.size > 1) {
                 type = SessionTypeEnum.Team
             }
-
+0
             val file = File(path)
             if (!file.exists()) {
                 return@start

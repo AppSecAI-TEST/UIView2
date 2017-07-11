@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.attachment;
 
 import com.hn.d.valley.bean.FriendBean;
+import com.hn.d.valley.bean.realm.UserInfoBean;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -34,6 +35,17 @@ public class PersonalCard extends BaseCustomMsg{
         personalCard.setUsername(bean.getTrueName());
         personalCard.setAvatar(bean.getAvatar());
         return personalCard;
+    }
+
+    public static PersonalCard userInfo2PerCard(UserInfoBean bean) {
+        PersonalCard card = new PersonalCard();
+        card.setMsg("用户名片");
+        card.setExtend_type(CustomAttachmentType.PersonalCard_);
+        card.setUid(bean.getUid());
+        card.setCreated((int)System.currentTimeMillis());
+        card.setUsername(bean.getTrue_name());
+        card.setAvatar(bean.getAvatar());
+        return card;
     }
 
     private String msg;

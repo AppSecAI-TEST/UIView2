@@ -74,7 +74,7 @@ public class MsgViewHolderPersonCard extends MsgViewHolderBase {
                 tv_pc_name.setText(from.getUsername());
                 imageView.setImageUrl(from.getAvatar());
 
-                pc_layout.setOnClickListener(new View.OnClickListener() {
+                contentContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mUIBaseView.startIView(new UserDetailUIView2(from.getUid()));

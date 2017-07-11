@@ -17,6 +17,7 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.utils.NetworkUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.LastMessageEvent;
 import com.hn.d.valley.helper.MessageHelper;
@@ -269,6 +270,12 @@ public class ChatControl2 {
 //        longClickItemVoidToText(selectedItem, itemDialog, msgType);
 
         // 6 forward
+        switch (selectedItem.getSessionId()) {
+            case Constant.klj:
+            case Constant.wallet:
+            case Constant.hot_news:
+                return;
+        }
         longClickItemForward(selectedItem, SessionTypeEnum.P2P, itemDialog);
         longClickItemForward(selectedItem, SessionTypeEnum.Team, itemDialog);
     }
@@ -279,7 +286,6 @@ public class ChatControl2 {
         itemDialog.addItem(itemTitle, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (SessionTypeEnum.P2P == sessionType) {
                     ContactSelectUIVIew.start(mUIBaseView.getILayout(), new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
                             , null, new Action3<UIBaseRxView, List<AbsContactItem>, com.hn.d.valley.main.message.groupchat.RequestCallback>() {
@@ -291,7 +297,6 @@ public class ChatControl2 {
                                 }
                             });
                 } else if (SessionTypeEnum.Team == sessionType) {
-
                     MyGroupUIView.start(mUIBaseView.getILayout(), new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE,1,true)
                             , new Action2<GroupBean, com.hn.d.valley.main.message.groupchat.RequestCallback>() {
                         @Override

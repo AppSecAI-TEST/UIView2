@@ -250,6 +250,7 @@ class ChooseTagsUIView : BaseContentUIView() , Action1<Boolean>{
                 }
             }
 
+            imageView.setImageResource(R.drawable.default_avatar)
         }
 
     }

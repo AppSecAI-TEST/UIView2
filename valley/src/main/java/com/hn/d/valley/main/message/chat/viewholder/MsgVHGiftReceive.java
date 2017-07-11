@@ -43,18 +43,18 @@ public class MsgVHGiftReceive extends MsgViewHolderBase {
         if (attachment == null) {
             return;
         }
-        contentContainer.setBackground(null);
-        switch (SkinUtils.getSkin()) {
-            case SkinManagerUIView.SKIN_BLACK:
-                tv_text.setBackgroundResource(R.drawable.bubble_box_right_black_selector);
-                break;
-            case SkinManagerUIView.SKIN_GREEN:
-                tv_text.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
-                break;
-            case SkinManagerUIView.SKIN_BLUE:
-                tv_text.setBackgroundResource(R.drawable.bubble_box_right_blue_selector);
-                break;
-        }
+//        contentContainer.setBackground(null);
+//        switch (SkinUtils.getSkin()) {
+//            case SkinManagerUIView.SKIN_BLACK:
+//                tv_text.setBackgroundResource(R.drawable.bubble_box_right_black_selector);
+//                break;
+//            case SkinManagerUIView.SKIN_GREEN:
+//                tv_text.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
+//                break;
+//            case SkinManagerUIView.SKIN_BLUE:
+//                tv_text.setBackgroundResource(R.drawable.bubble_box_right_blue_selector);
+//                break;
+//        }
         GiftReceiveMsg msg = attachment.getGiftReceiveMsg();
         tv_text.setText(String.format("送你一个 %s",msg.getGift_info().getName()));
         iv_thumb.setImageUrl(msg.getGift_info().getThumb());

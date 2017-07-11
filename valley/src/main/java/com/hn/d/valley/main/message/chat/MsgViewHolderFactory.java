@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat;
 
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
@@ -16,6 +17,7 @@ import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHAVChat;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHDiscussRecommend;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHDynamicMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHDynamicShareDetail;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHExpression;
@@ -88,6 +90,7 @@ public class MsgViewHolderFactory {
         register(DynamicDetailAttachment.class, MsgVHDynamicShareDetail.class);
         register(InviteUploadProfileAttachment.class, MsgVHInviteUploadProfile.class);
         register(GiftReceiveAttachment.class,MsgVHGiftReceive.class);
+        register(DiscussRecommAttachment.class, MsgVHDiscussRecommend.class);
         register(SystemPushAttachment.SingleTextSPAttachment.class, MsgViewHolderPushText.class);
         register(SystemPushAttachment.TextAndPictureSPAttachment.class, MsgViewHolderPushPictureText.class);
         register(SystemPushAttachment.MultiPictureSPAttachment.class, MsgViewHolderPushMultiPicture.class);

@@ -854,5 +854,6 @@
     <string name="text_klgcoin_not_enough">龙币不足,请去充值</string>
     <string name="text_recharge_now">立即充值</string>
     <string name="blacklist_title">黑名单</string>
+    <string name="text_send_gift">送礼物</string>
     <string name="input_group_announcement_hint">请输入群公告</string>
 </resources>

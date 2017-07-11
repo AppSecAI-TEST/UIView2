@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.hn.d.valley.R;
 
+import rx.functions.Action0;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -31,11 +33,16 @@ public class MiddleUIDialog extends UIIDialogImpl {
     private String title;
     private String content;
 
-    public MiddleUIDialog(String title , String content) {
+    private Action0 action;
 
+    public void setAction(Action0 action) {
+        this.action = action;
+    }
+
+    public MiddleUIDialog(String title , String content,Action0 action) {
         this.title = title;
         this.content = content;
-
+        this.action = action;
     }
 
     @Override
@@ -59,6 +66,9 @@ public class MiddleUIDialog extends UIIDialogImpl {
             @Override
             public void onClick(View v) {
                 finishDialog();
+                if (action != null) {
+                    action.call();
+                }
             }
         });
 

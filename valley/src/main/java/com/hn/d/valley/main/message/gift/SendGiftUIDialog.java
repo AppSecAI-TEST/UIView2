@@ -5,46 +5,20 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
-import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
-import com.angcyo.uiview.net.RException;
-import com.angcyo.uiview.net.RRetrofit;
-import com.angcyo.uiview.net.Rx;
-import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GiftBean;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
-import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
-import com.hn.d.valley.main.message.redpacket.ChoosePayWayUIDialog;
-import com.hn.d.valley.main.message.redpacket.Constants;
-import com.hn.d.valley.main.message.service.RedPacketService;
-import com.hn.d.valley.main.wallet.WalletService;
 import com.hn.d.valley.sub.other.KLGCoinUIVIew;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.hn.d.valley.widget.PasscodeView;
-import com.netease.nimlib.sdk.msg.MessageBuilder;
-import com.netease.nimlib.sdk.msg.model.IMMessage;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import rx.functions.Action0;
-import rx.functions.Action1;
-
-import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
-import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.balanceCheck;
-import static com.hn.d.valley.main.wallet.WalletHelper.getTransformer;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -69,6 +43,12 @@ public class SendGiftUIDialog extends UIIDialogImpl {
     }
 
     Action0 action;
+
+    public void setMoreAction(Action0 moreAction) {
+        this.moreAction = moreAction;
+    }
+
+    Action0 moreAction;
 
     public SendGiftUIDialog(GiftBean gift,Action0 action) {
         this.gift = gift;
@@ -97,14 +77,28 @@ public class SendGiftUIDialog extends UIIDialogImpl {
         TextView tv_gift_status = (TextView) rootView.findViewById(R.id.tv_git_status);
         TextView tv_cancel = (TextView) rootView.findViewById(R.id.tv_cancel);
         TextView tv_ok = (TextView) rootView.findViewById(R.id.tv_ok);
+        TextView tv_more_gift = (TextView) rootView.findViewById(R.id.tv_more_gift);
 
         iv_thumb.setImageUrl(gift.getThumb());
         tv_gift_name.setText(gift.getName());
         if (giftEnable) {
             tv_gift_status.setText(gift.getCoins() .equals("0") ? "免费" : String.format("%s 龙币",gift.getCoins()));
         } else {
-            tv_gift_status.setText("下架");
+            tv_gift_status.setText("已下架");
         }
+        if (moreAction == null) {
+            tv_more_gift.setVisibility(View.GONE);
+        }
+        tv_more_gift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (moreAction != null) {
+                    finishDialog();
+                    moreAction.call();
+                }
+            }
+        });
+
 
         tv_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
