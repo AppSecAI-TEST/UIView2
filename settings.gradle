@@ -1,4 +1,4 @@
-include ':valley', ':rbrecoderlib', ':rbplayerlib', ':umeng'
+include ':valley', ':rbrecoderlib', ':rbplayerlib', ':umeng', ':rbvideolib'
 include ':RLibrary:uiview', ':RLibrary:library', ':RLibrary:imagepicker'/*, ':RLibrary:fragmentation'*/, /*':qrcodecore', ':zxing', */':RLibrary:rcode'
 include ':RLibrary:filedownloader'
 include 'pay-library'
