@@ -1,5 +1,7 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
 import com.angcyo.uiview.utils.RUtils;
 
 import java.util.List;
@@ -108,6 +110,9 @@ public class InformationDetailBean implements ILikeData {
     }
 
     public String getTags() {
+        if (TextUtils.isEmpty(tags)){
+            return getClassify();
+        }
         return tags;
     }
 

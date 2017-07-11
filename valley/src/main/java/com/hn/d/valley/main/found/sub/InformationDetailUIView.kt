@@ -486,7 +486,10 @@ class InformationDetailUIView : BaseContentUIView {
                                 initControlLayout()
                                 initTagsLayout()
                                 initLikeView()
-                                initOtherListLayout(detailBean.tagList[0])
+                                try {
+                                    initOtherListLayout(detailBean.tagList[0])//有些时候会没有tag
+                                } catch(e: Exception) {
+                                }
 
                                 mViewHolder.v<View>(R.id.line2).visibility = View.VISIBLE
                                 mViewHolder.v<View>(R.id.line3).visibility = View.VISIBLE
