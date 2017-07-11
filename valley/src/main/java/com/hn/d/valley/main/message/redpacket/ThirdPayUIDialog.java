@@ -8,8 +8,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alipay.sdk.app.PayTask;
@@ -87,7 +87,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     }
 
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         setGravity(Gravity.CENTER);
         return inflater.inflate(R.layout.pay_third_dialog_layout, dialogRootLayout);
     }

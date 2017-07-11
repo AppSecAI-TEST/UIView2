@@ -2,8 +2,8 @@ package com.hn.d.valley.main.found.sub;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -21,7 +21,7 @@ import com.hn.d.valley.base.BaseContentUIView;
  */
 public class InviteFriendsUIView extends BaseContentUIView {
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_invite_friends);
     }
 

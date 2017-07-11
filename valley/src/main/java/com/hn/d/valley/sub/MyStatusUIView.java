@@ -3,8 +3,8 @@ package com.hn.d.valley.sub;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -44,7 +44,7 @@ public class MyStatusUIView extends BaseContentUIView {
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_my_status);
     }
 

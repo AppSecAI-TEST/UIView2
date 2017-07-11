@@ -7,10 +7,10 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -76,7 +76,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     private boolean isFirst = true;
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.ui_layout);
         //mEmptyView = new EmptyView(mActivity);
         //int offset = getDimensionPixelOffset(R.dimen.base_xhdpi);

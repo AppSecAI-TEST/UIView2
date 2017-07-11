@@ -8,8 +8,8 @@ import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
@@ -114,7 +114,7 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
     }
 
     @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         mRootSoftInputLayout = new RSoftInputLayout(mActivity);
         mRefreshLayout = new HnRefreshLayout(mActivity);
         mRecyclerView = new RSwipeRecycleView(mActivity);

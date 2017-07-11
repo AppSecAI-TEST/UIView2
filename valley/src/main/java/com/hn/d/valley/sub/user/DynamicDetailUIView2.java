@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
 import com.angcyo.uiview.github.tablayout.TabLayoutUtil;
@@ -129,7 +129,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_dynamic_detail2);
     }
 
@@ -411,7 +411,6 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 }
                 return mForwardListUIView;
             }
-
 
             @Override
             public int getCount() {

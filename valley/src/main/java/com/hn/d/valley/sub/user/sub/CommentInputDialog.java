@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
@@ -93,7 +93,7 @@ public class CommentInputDialog extends UIIDialogImpl {
 //    }
 
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         return inflate(R.layout.dialog_comment_input_layout);
     }
 

@@ -4,9 +4,9 @@ import android.graphics.Rect;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
@@ -145,7 +145,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
     }
 
     @Override
-    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateOverlayLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.layout_default_empty_pager);
     }
 

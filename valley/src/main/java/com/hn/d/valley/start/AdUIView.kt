@@ -5,8 +5,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.widget.JumpAdProgressBar
 import com.angcyo.uiview.widget.RExTextView
@@ -40,7 +42,7 @@ class AdUIView : BaseContentUIView() {
         return Color.WHITE
     }
 
-    override fun inflateContentLayout(baseContentLayout: RelativeLayout?, inflater: LayoutInflater?) {
+    override fun inflateContentLayout(baseContentLayout: ContentLayout?, inflater: LayoutInflater?) {
         inflate(R.layout.view_ad_layout)
     }
 

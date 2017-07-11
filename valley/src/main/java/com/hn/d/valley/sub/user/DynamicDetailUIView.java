@@ -11,10 +11,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
@@ -101,7 +101,7 @@ public class DynamicDetailUIView extends BaseRecyclerUIView<UserDiscussListBean.
     }
 
     @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflater.inflate(R.layout.view_dynamic_detail, baseContentLayout);
 //        inflate(R.layout.view_dynamic_detail);
     }

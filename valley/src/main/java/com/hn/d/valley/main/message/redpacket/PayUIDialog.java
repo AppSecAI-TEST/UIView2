@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
@@ -66,7 +66,7 @@ public class PayUIDialog extends UIIDialogImpl {
     }
 
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         setGravity(Gravity.CENTER);
         return inflater.inflate(R.layout.pay_dialog_layout, dialogRootLayout);
     }

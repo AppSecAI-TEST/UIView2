@@ -16,9 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -89,7 +89,7 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
     }
 
     @Override
-    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateOverlayLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         if (isInSubUIView()) {
             inflate(R.layout.layout_default_empty_pager);
         } else {

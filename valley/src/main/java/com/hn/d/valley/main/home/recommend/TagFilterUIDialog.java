@@ -8,6 +8,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -51,7 +52,7 @@ public class TagFilterUIDialog extends UIIDialogImpl {
     }
 
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         mDialogRootLayout.fixInsertsTop();
         mRootLayout = new RelativeLayout(mActivity);
 

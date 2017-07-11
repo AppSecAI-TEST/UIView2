@@ -2,8 +2,8 @@ package com.hn.d.valley.main.me.setting;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.hn.d.valley.R;
 import com.hn.d.valley.activity.HnSplashActivity;
@@ -25,7 +25,7 @@ import com.netease.nimlib.sdk.StatusCode;
 @Deprecated
 public class SettingUIView extends BaseSubContentUIView {
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_setting);
     }
 

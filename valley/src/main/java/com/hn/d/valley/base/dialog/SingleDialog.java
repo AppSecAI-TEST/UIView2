@@ -2,7 +2,7 @@ package com.hn.d.valley.base.dialog;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.hn.d.valley.R;
@@ -20,9 +20,7 @@ import com.hn.d.valley.R;
  */
 public class SingleDialog extends UIIDialogImpl {
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         return inflate(R.layout.base_view_single_dialog);
     }
-
-
 }

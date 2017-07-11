@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
@@ -237,7 +238,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         super.inflateRecyclerRootLayout(baseContentLayout, inflater);
     }
 
@@ -722,7 +723,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     }
 
     @Override
-    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateOverlayLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.layout_audio_record);
 
         mPathAudioControl = PathAudioControl.getInstance(mActivity);

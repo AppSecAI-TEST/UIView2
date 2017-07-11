@@ -6,10 +6,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -82,7 +82,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_friend_addgroupchat);
     }
 

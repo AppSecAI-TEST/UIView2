@@ -1,30 +1,21 @@
 package com.hn.d.valley.main.message.groupchat
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.widget.*
 import com.angcyo.uiview.base.UIIDialogImpl
 import com.angcyo.uiview.container.UIParam
 import com.angcyo.uiview.utils.TimeUtil
-import com.angcyo.uiview.viewgroup.RRelativeLayout
 import com.angcyo.uiview.widget.ItemInfoLayout
-import com.angcyo.uiview.widget.RImageView
 import com.angcyo.uiview.widget.RTextView
-import com.hn.d.valley.main.message.notify.GroupAnnounceNotification
 import com.hn.d.valley.R
-import com.hn.d.valley.cache.SimpleCallback
 import com.hn.d.valley.cache.TeamDataCache
 import com.hn.d.valley.cache.UserCache
+import com.hn.d.valley.main.message.notify.GroupAnnounceNotification
 import com.hn.d.valley.main.message.setImageUrl
-import com.hn.d.valley.utils.HnGlide
 import com.hn.d.valley.widget.HnButton
-import com.hn.d.valley.widget.HnGlideImageView
 import com.netease.nimlib.sdk.team.model.Team
 
 
@@ -59,7 +50,7 @@ class GroupAnnnounceUpdateDialog(sessionid : String ,notification : GroupAnnounc
         loadTeamInfo()
     }
 
-    override fun inflateDialogView(dialogRootLayout: RelativeLayout?, inflater: LayoutInflater?): View {
+    override fun inflateDialogView(dialogRootLayout: FrameLayout?, inflater: LayoutInflater?): View {
         setGravity(Gravity.CENTER)
         return inflater!!.inflate(R.layout.dialog_group_announce_update,dialogRootLayout)
     }

@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -68,7 +68,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
 
     @CallSuper
     @Override
-    final protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    final protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         if (getUITitleBarContainer() != null) {
             //双击标题, 自动滚动到顶部
             RGestureDetector.onDoubleTap(getUITitleBarContainer(), new RGestureDetector.OnDoubleTapListener() {
@@ -194,7 +194,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     /**
      * 可以重写此方法, 实现自定义的布局
      */
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         mRootSoftInputLayout = new RSoftInputLayout(mActivity);
         mRefreshLayout = new HnRefreshLayout(mActivity);
         mRecyclerView = new RRecyclerView(mActivity);
@@ -209,7 +209,7 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
     /**
      * 如果只是想添加自定义的覆盖层, 可以只重写此方法
      */
-    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateOverlayLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         //空数据
         inflate(R.layout.layout_default_pager);
     }

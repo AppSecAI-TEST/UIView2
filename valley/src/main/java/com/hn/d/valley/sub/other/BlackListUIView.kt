@@ -3,7 +3,7 @@ package com.hn.d.valley.sub.other
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
@@ -77,12 +77,12 @@ class BlackListUIView : SingleRecyclerUIView<ReplyListBean.DataListBean>() {
         return false
     }
 
-    override fun inflateRecyclerRootLayout(baseContentLayout: RelativeLayout, inflater: LayoutInflater) {
+    override fun inflateRecyclerRootLayout(baseContentLayout: ContentLayout?, inflater: LayoutInflater) {
         mRootSoftInputLayout = RSoftInputLayout(mActivity)
         mRefreshLayout = HnRefreshLayout(mActivity)
         mRecyclerView = RSwipeRecycleView(mActivity)
         mRefreshLayout.addView(mRecyclerView, ViewGroup.LayoutParams(-1, -1))
-        baseContentLayout.addView(mRefreshLayout, ViewGroup.LayoutParams(-1, -1))
+        baseContentLayout?.addView(mRefreshLayout, ViewGroup.LayoutParams(-1, -1))
     }
 
     override fun onUILoadData(page: String?) {

@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -151,7 +151,7 @@ public class GroupMemberUIVIew extends SingleRecyclerUIView<GroupMemberBean> {
 
 
     @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         View root = inflater.inflate(R.layout.view_member_select, baseContentLayout);
         mRefreshLayout = (RefreshLayout) root.findViewById(R.id.refresh_layout);
         mRecyclerView = (RRecyclerView) root.findViewById(R.id.recycler_view);

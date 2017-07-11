@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.Anim;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.design.StickLayout;
 import com.angcyo.uiview.design.StickLayout2;
@@ -308,7 +309,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_user_detail_layout2);
     }
 

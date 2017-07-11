@@ -6,8 +6,8 @@ import android.support.v4.content.ContextCompat;
 import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
@@ -40,7 +40,7 @@ public class NextSendRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     }
 
     @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         baseContentLayout.setBackgroundResource(R.color.base_red_d85940);
         super.inflateRecyclerRootLayout(baseContentLayout,inflater);
     }

@@ -8,9 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.github.ripple.RippleBackground;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.RSeekBar;
@@ -67,7 +67,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_publish_voice_dynamic);
     }
 

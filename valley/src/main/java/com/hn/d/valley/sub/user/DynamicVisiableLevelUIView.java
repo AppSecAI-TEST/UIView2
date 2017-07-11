@@ -7,10 +7,10 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -110,7 +110,7 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
     }
 
     @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         mRootSoftInputLayout = new RSoftInputLayout(mActivity);
         mRefreshLayout = new HnEmptyRefreshLayout(mActivity);
         mRecyclerView = new RRecyclerView(mActivity);

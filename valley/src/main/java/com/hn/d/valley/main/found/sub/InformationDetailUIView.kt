@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.angcyo.library.utils.L
+import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.design.StickLayout2
 import com.angcyo.uiview.dialog.UIItemDialog
 import com.angcyo.uiview.github.goodview.GoodView
@@ -178,7 +178,7 @@ class InformationDetailUIView : BaseContentUIView {
         startIView(DynamicShareDialog(hotInfoBean, mSubscriptions))
     }
 
-    override fun inflateContentLayout(baseContentLayout: RelativeLayout?, inflater: LayoutInflater?) {
+    override fun inflateContentLayout(baseContentLayout: ContentLayout?, inflater: LayoutInflater?) {
         inflate(R.layout.view_information_detail)
     }
 

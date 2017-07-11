@@ -122,7 +122,7 @@
 //    }
 //
 //    @Override
-//    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+//    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
 //        inflate(R.layout.view_message_avchat_layout);
 //    }
 //

@@ -1,33 +1,25 @@
 package com.hn.d.valley.main.message.redpacket;
 
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.maps.model.Text;
-import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
-import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.NimUserInfoCache;
-import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
 import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
@@ -78,7 +70,7 @@ public class P2PStatusRPUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     }
 
     @Override
-    protected void inflateRecyclerRootLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         baseContentLayout.setBackgroundResource(R.color.base_red_d85940);
         super.inflateRecyclerRootLayout(baseContentLayout, inflater);
         mRecyclerView.setBackgroundResource(R.color.default_base_white);

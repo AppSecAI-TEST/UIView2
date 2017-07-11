@@ -85,7 +85,7 @@ public class HnAudioRedordDialog extends UIIDialogImpl {
     }
 
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         FrameLayout frameLayout = new FrameLayout(mActivity);
 
         chronometer = new Chronometer(mActivity);

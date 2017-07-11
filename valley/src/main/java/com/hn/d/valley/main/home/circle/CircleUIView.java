@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
@@ -123,7 +123,7 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
     }
 
     @Override
-    protected void inflateOverlayLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateOverlayLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         if (isInSubUIView) {
             inflate(R.layout.layout_default_empty_pager);
         } else {

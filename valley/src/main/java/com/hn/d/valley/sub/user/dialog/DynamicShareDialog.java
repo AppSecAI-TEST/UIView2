@@ -3,7 +3,7 @@ package com.hn.d.valley.sub.user.dialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIIDialogImpl;
@@ -81,7 +81,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
     }
 
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         return inflate(R.layout.dialog_dynamic_share);
     }
 

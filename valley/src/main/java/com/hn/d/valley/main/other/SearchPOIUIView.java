@@ -1,43 +1,29 @@
 package com.hn.d.valley.main.other;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.amap.api.fence.PoiItem;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
-import com.hn.d.valley.bean.SearchUserBean;
 import com.hn.d.valley.bean.realm.AmapBean;
-import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
-import com.hn.d.valley.main.me.UserDetailUIView2;
-import com.hn.d.valley.main.message.mvp.Search;
-import com.hn.d.valley.main.message.mvp.SearchPresenter;
 import com.jakewharton.rxbinding.widget.RxTextView;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -91,7 +77,7 @@ public class SearchPOIUIView extends BaseUIView<IPOISearchPresenter> implements 
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_search_layout);
     }
 

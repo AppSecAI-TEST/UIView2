@@ -12,9 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.net.RException;
@@ -176,7 +176,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
 
     }
 
-    public void init(RelativeLayout rootview) {
+    public void init(ContentLayout rootview) {
 
         mViewHolder = new RBaseViewHolder(rootview);
         rRecyclerView = mViewHolder.v(R.id.recycler_friend);

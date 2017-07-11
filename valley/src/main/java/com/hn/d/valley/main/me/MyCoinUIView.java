@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
@@ -22,7 +23,7 @@ import com.hn.d.valley.base.BaseContentUIView;
  */
 public class MyCoinUIView extends BaseContentUIView {
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         ImageView imageView = new ImageView(mActivity);
         imageView.setImageResource(R.drawable.default_page_3);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);

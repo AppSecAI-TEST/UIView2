@@ -2,7 +2,7 @@ package com.hn.d.valley.main.me;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.net.RException;
@@ -55,7 +55,7 @@ public class IndustriesSelectorUIView extends UIIDialogImpl implements RefreshLa
     }
 
     @Override
-    protected View inflateDialogView(RelativeLayout dialogRootLayout, LayoutInflater inflater) {
+    protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         return inflate(R.layout.view_industries_selector);
     }
 

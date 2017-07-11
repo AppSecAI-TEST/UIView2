@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.github.all.base.adapter.ViewGroupUtils;
 import com.angcyo.uiview.github.all.base.adapter.adapter.cache.BaseCacheAdapter;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -78,7 +78,7 @@ public class ReportUIView extends BaseContentUIView {
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_report);
     }
 

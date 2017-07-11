@@ -4,25 +4,19 @@ import android.content.Context
 import android.graphics.Color
 import android.support.v4.view.PagerAdapter
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import com.angcyo.library.utils.L
+import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.recycler.RRecyclerView
 import com.angcyo.uiview.recycler.RecyclerViewPagerIndicator
-import com.angcyo.uiview.recycler.adapter.RExBaseAdapter
 import com.angcyo.uiview.recycler.adapter.RModelAdapter
 import com.angcyo.uiview.skin.SkinHelper
 import com.angcyo.uiview.utils.ScreenUtil
-import com.angcyo.uiview.utils.T_
-import com.angcyo.uiview.widget.JumpAdProgressBar
 import com.angcyo.uiview.widget.RImageView
 import com.angcyo.uiview.widget.viewpager.RViewPager
 import com.hn.d.valley.R
@@ -31,12 +25,9 @@ import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.realm.Tag
 import com.hn.d.valley.control.TagsControl
-import com.hn.d.valley.main.message.setImageUrl
 import com.hn.d.valley.main.message.setThumbUrl
 import com.hn.d.valley.service.DiscussService
 import com.hn.d.valley.widget.HnButton
-import com.hn.d.valley.widget.HnGlideImageView
-import org.apache.lucene.util.packed.PackedInts
 import rx.functions.Action1
 
 /**
@@ -69,7 +60,7 @@ class ChooseTagsUIView : BaseContentUIView() , Action1<Boolean>{
 //        return LayoutState.LOAD
 //    }
 
-    override fun inflateContentLayout(baseContentLayout: RelativeLayout?, inflater: LayoutInflater?) {
+    override fun inflateContentLayout(baseContentLayout: ContentLayout?, inflater: LayoutInflater?) {
         inflate(R.layout.view_start_choose_tags)
     }
 

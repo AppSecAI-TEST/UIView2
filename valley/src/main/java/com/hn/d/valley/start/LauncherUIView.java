@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.widget.viewpager.ImageAdapter;
 import com.angcyo.uiview.widget.viewpager.RViewPager;
@@ -28,7 +29,7 @@ public class LauncherUIView extends BaseContentUIView {
     }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         mViewPager = new RViewPager(mActivity);
         mViewPager.setAdapter(new ImageAdapter() {
 

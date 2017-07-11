@@ -2,7 +2,8 @@ package com.hn.d.valley.sub.user.sub
 
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.RelativeLayout
+import android.widget.FrameLayout
+import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.dialog.UIDialog
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RException
@@ -98,7 +99,7 @@ class InformationCommentReplyListUIView(val commentBean: CommentListBean.DataLis
         return super.getItemLayoutId(viewType)
     }
 
-    override fun inflateRecyclerRootLayout(baseContentLayout: RelativeLayout, inflater: LayoutInflater) {
+    override fun inflateRecyclerRootLayout(baseContentLayout: ContentLayout?, inflater: LayoutInflater) {
         inflate(R.layout.view_reply_list_layout)
     }
 

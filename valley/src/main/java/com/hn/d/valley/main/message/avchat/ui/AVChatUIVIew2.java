@@ -5,28 +5,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.base.StyleActivity;
-import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.utils.NetworkUtil;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
-import com.hn.d.valley.activity.HnUIMainActivity;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.main.avchat.AVChatFloatEvent;
 import com.hn.d.valley.main.avchat.AVChatNotification;
@@ -57,8 +50,6 @@ import com.netease.nimlib.sdk.avchat.model.AVChatOnlineAckEvent;
 import com.netease.nimlib.sdk.avchat.model.AVChatVideoFrame;
 
 import java.util.Map;
-
-import static com.hn.d.valley.main.avchat.activity.AVChatActivity.FROM_INTERNAL;
 
 /**
  * 音视频界面
@@ -336,7 +327,7 @@ public class AVChatUIVIew2 extends BaseUIView implements AVChatUI.AVChatListener
 //    }
 
     @Override
-    protected void inflateContentLayout(RelativeLayout baseContentLayout, LayoutInflater inflater) {
+    protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         inflate(R.layout.view_message_avchat_layout);
     }
 
