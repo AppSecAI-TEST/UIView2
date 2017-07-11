@@ -40,6 +40,7 @@ import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
+import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
@@ -484,6 +485,8 @@ public class RecentContactsControl {
                 }
             } else if (attachment instanceof LikeMsgAttachment) {
                 return ((LikeMsgAttachment)attachment).getLikeMsg().getMsg();
+            } else if (attachment instanceof DynamicMsgAttachment) {
+                return ((DynamicMsgAttachment) attachment).getDynamicMsg().getMsg();
             }
 
         } else if (attachment instanceof PersonalCardAttachment) {

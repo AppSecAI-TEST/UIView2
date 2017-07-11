@@ -480,6 +480,10 @@ public class AVChatUI implements AVChatUIListener {
             case AVChatExitCode.LOCAL_CALL_BUSY:
 //                Toast.makeText(mActivity, R.string.avchat_local_call_busy, Toast.LENGTH_SHORT).show();
                 break;
+            case AVChatExitCode.REJECT:
+                //发起语音聊天或者视频聊天，好友那边挂断 提示 对方正忙
+                T_.show(mActivity.getString(R.string.avchat_peer_reject));
+                break;
             default:
                 break;
         }

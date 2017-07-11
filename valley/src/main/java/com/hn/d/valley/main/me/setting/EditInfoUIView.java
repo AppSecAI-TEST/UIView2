@@ -1427,9 +1427,11 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         StringBuilder builder = new StringBuilder();
                         builder.append(wheelTime.getSelectorYear());
                         builder.append("-");
-                        builder.append(wheelTime.getSelectorMonth());
+                        int month = wheelTime.getSelectorMonth();
+                        builder.append(month < 10 ? "0" + month : month);
                         builder.append("-");
-                        builder.append(wheelTime.getSelectorDay());
+                        int day = wheelTime.getSelectorDay();
+                        builder.append(day < 10 ? "0" + day : day);
                         final String time = builder.toString();
 
                         RRealm.exe(new Realm.Transaction() {

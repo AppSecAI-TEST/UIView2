@@ -287,7 +287,6 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-
         msgService().queryMessageList(mSessionId,
                 mSessionType, 500 * (Integer.valueOf(page) - 1)
                 , 500)
@@ -298,7 +297,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                         for (IMMessage message : result) {
                             if (message.getAttachment() instanceof FileAttachment) {
                                 FileAttachment attachment = (FileAttachment) message.getAttachment();
-                                if (TextUtils.isEmpty(attachment.getThumbPath())/* || TextUtils.isEmpty(attachment.getPath())*/) {
+                                if (TextUtils.isEmpty(attachment.getThumbPath()) || TextUtils.isEmpty(attachment.getPath())) {
                                     continue;
                                 }
                                 fileList.add(ChatFile.create(message));
@@ -307,6 +306,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                         if (fileList.size() != 0) {
                             getUITitleBarContainer().showRightItem(0);
                         }
+
                         setChatFileGroups(fileList);
 //                        mGroupAdapter.setEnableLoadMore(false);
                     }

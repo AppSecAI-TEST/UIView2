@@ -29,6 +29,18 @@
             android:textSize="@dimen/base_title_size"
             tools:text="标题"/>
 
+        <TextView
+            android:id="@+id/tv_group_member_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:tag="title"
+            android:textColor="@color/default_base_white"
+            android:textSize="@dimen/base_title_size"
+           />
+
+
+
         <ImageView
             android:id="@+id/iv_show_disturbing"
             android:src="@drawable/top_no_disturbing"

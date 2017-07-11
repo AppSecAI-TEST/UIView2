@@ -33,6 +33,7 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
+@Deprecated
 public class ChatControl {
 
 

@@ -34,6 +34,8 @@ import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.found.sub.InformationDetailUIView;
+import com.hn.d.valley.main.message.attachment.DynamicMsg;
+import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsg;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.slide.ISlideHelper;
@@ -194,6 +196,8 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                                         }
                                     } else if (attachment instanceof LikeMsgAttachment) {
                                         beans.add(message);
+                                    } else if (attachment instanceof DynamicMsgAttachment) {
+                                        beans.add(message);
                                     }
                                 }
                             }
@@ -287,7 +291,16 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
 
             ((OneSlideViewHolder) holder).bind();
 
-            if (attachment instanceof LikeMsgAttachment) {
+            if (attachment instanceof DynamicMsgAttachment) {
+                DynamicMsg dynamicMsg = ((DynamicMsgAttachment) attachment).getDynamicMsg();
+                media = dynamicMsg.getMedia();//媒体内容
+                media_type = dynamicMsg.getMedia_type();//媒体类型
+                item_id = dynamicMsg.getItem_id();//数据id
+                created = String.valueOf(dynamicMsg.getCreated());//时间
+                msg = dynamicMsg.getMsg();//显示的消息
+                avatar = dynamicMsg.getAvatar();//头像
+                type = dynamicMsg.getType();
+            } else if (attachment instanceof LikeMsgAttachment) {
                 LikeMsg likeMsg = ((LikeMsgAttachment) attachment).getLikeMsg();
                 media = likeMsg.getMedia();//媒体内容
                 media_type = likeMsg.getMedia_type();//媒体类型

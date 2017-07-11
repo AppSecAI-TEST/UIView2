@@ -89,6 +89,7 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
     private ImageView iv_show_disturbing;
     private CheckBox cb_show;
     private TextView tv_title;
+    private TextView tv_group_member_count;
     private LinearLayout ll_switch;
 
     private Map<String, GroupMemberBean> selectedMembers;
@@ -97,6 +98,8 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
 
     private boolean showAnnounce;
     private boolean isVisible;
+    private boolean isSelfAdmin;
+
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -128,6 +131,7 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
                         ll_switch = layout;
                         cb_show = (CheckBox) parent.findViewById(R.id.cb_show);
                         tv_title = (TextView) parent.findViewById(R.id.tv_title);
+                        tv_group_member_count = (TextView) parent.findViewById(R.id.tv_group_member_num);
                         iv_show_disturbing = (ImageView) parent.findViewById(R.id.iv_show_disturbing);
                     }
                 });
@@ -144,11 +148,17 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
         // 是否有群消息更新通知
         BaseNotification notification = SystemNotifyManager.getInstance().checkForKey(mSessionId);
         if (notification != null) {
-            GroupAnnounceNotification announce = (GroupAnnounceNotification) notification;
+            final GroupAnnounceNotification announce = (GroupAnnounceNotification) notification;
             if (isVisible) {
 //                mParentILayout.startIView(new MiddleUIDialog(mActivity.getString(R.string.text_groupannounce_update),announce.getContent()));
                 mParentILayout.startIView(new GroupAnnnounceUpdateDialog(mSessionId, announce));
                 tv_announce.setText(announce.getContent());
+                tv_announce.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new EditGroupAnnounceUIView(mGroupDesc.getGid(), announce.getAn_id(), isSelfAdmin));
+                    }
+                });
             }
         }
     }
@@ -192,15 +202,18 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
 //        setTitleString(TeamDataCache.getInstance().getTeamName(mSessionId));
 
         if (mGroupDesc != null) {
-            tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId)
-                    + "(" + mGroupDesc.getMemberCount() + ")");
+            tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId));
         } else {
             tv_title.setText(TeamDataCache.getInstance().getTeamName(mSessionId));
         }
 
-        Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
+        final Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
         if (team != null && team.isMyTeam()) {
             iv_show_disturbing.setVisibility(team.mute() ? View.VISIBLE : View.GONE);
+        }
+
+        if (team.getCreator().equals(UserCache.getUserAccount())) {
+            isSelfAdmin = true;
         }
 
         ll_switch.setOnClickListener(new View.OnClickListener() {
@@ -281,13 +294,18 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
                 .announcementList(Param.buildMap("gid:" + bean.getGid()))
                 .compose(Rx.transformerList(GroupAnnouncementBean.class))
                 .subscribe(new BaseSingleSubscriber<List<GroupAnnouncementBean>>() {
-
                     @Override
-                    public void onSucceed(List<GroupAnnouncementBean> beans) {
+                    public void onSucceed(final List<GroupAnnouncementBean> beans) {
                         if (beans == null || beans.size() == 0) {
-
+                            tv_announce.setText(R.string.text_no_announce);
                         } else {
                             tv_announce.setText(beans.get(0).getContent());
+                            tv_announce.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startIView(new EditGroupAnnounceUIView(mGroupDesc.getGid(), beans.get(0).getAn_id(), isSelfAdmin));
+                                }
+                            });
                         }
                     }
                 }));
@@ -295,19 +313,19 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
     }
 
     private void showNotice() {
-        final View layout = mViewHolder.v(R.id.recent_contact_layout);
-        final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
-        content.setText(R.string.team_invalid_tip);
-        if (layout.getVisibility() == View.GONE) {
-            layout.setVisibility(View.VISIBLE);
-            post(new Runnable() {
-                @Override
-                public void run() {
-                    layout.setTranslationY(-layout.getMeasuredHeight());
-                    ViewCompat.animate(layout).translationY(0).setDuration(UIBaseView.DEFAULT_ANIM_TIME).start();
-                }
-            });
-        }
+//        final View layout = mViewHolder.v(R.id.recent_contact_layout);
+//        final TextView content = mViewHolder.v(R.id.recent_recent_content_view);
+//        content.setText(R.string.team_invalid_tip);
+//        if (layout.getVisibility() == View.GONE) {
+//            layout.setVisibility(View.VISIBLE);
+//            post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    layout.setTranslationY(-layout.getMeasuredHeight());
+//                    ViewCompat.animate(layout).translationY(0).setDuration(UIBaseView.DEFAULT_ANIM_TIME).start();
+//                }
+//            });
+//        }
     }
 
     /**
@@ -338,6 +356,7 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
                             if (bean != null) {
                                 mGroupDesc = bean;
                                 avChatAction.setGid(mGroupDesc.getGid());
+                                tv_group_member_count.setText(String.format("(%d)", mGroupDesc.getMemberCount()));
                                 loadAnnounce(bean);
                                 initMentionListener(bean);
                             }
@@ -480,7 +499,7 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
             @Override
             public void call() {
                 finishIView();
-                msgService().deleteRecentContact2(mSessionId,sessionType);
+                msgService().deleteRecentContact2(mSessionId, sessionType);
             }
         }));
 
@@ -514,7 +533,8 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
 
     @Override
     public void onGroupNameChanged(String name) {
-        tv_title.setText(String.format(Locale.CANADA,"%s(%d)", name, mGroupDesc.getMemberCount()));
+        tv_title.setText(String.format(Locale.CANADA, "%s", name));
+        tv_group_member_count.setText(String.format(Locale.CANADA, "(%d)", mGroupDesc.getMemberCount()));
     }
 
     @Override
@@ -532,7 +552,7 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
 
     @Override
     public void onGropuDissolve() {
-        msgService().deleteRecentContact2(mSessionId,sessionType);
+        msgService().deleteRecentContact2(mSessionId, sessionType);
         finishIView();
     }
 }

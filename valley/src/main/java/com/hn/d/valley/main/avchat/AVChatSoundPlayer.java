@@ -76,7 +76,7 @@ public class AVChatSoundPlayer {
             loop = false;
             break;
         case CONNECTING:
-            ringId = R.raw.avchat_connecting;
+            ringId = R.raw.avchat_ring;
             loop = true;
             break;
         case RING:

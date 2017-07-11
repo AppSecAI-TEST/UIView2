@@ -94,9 +94,8 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
             AVChatSoundPlayer.instance().stop();
 
             if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_BUSY) {
-
+                T_.show(getString(R.string.avchat_in_call_or_busying));
                 AVChatSoundPlayer.instance().play(AVChatSoundPlayer.RingerTypeEnum.PEER_BUSY);
-
                 avChatUI.closeSessions(AVChatExitCode.PEER_BUSY);
             } else if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_REJECT) {
                 avChatUI.closeSessions(AVChatExitCode.REJECT);
@@ -583,7 +582,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
                 break;
             case AVChatControlCommand.SWITCH_AUDIO_TO_VIDEO_REJECT:
                 avChatUI.onCallStateChange(CallStateEnum.AUDIO);
-//                Toast.makeText(AVChatActivity.this, R.string.avchat_switch_video_reject, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AVChatActivity.this, R.string.avchat_switch_video_reject, Toast.LENGTH_SHORT).show();
                 break;
             case AVChatControlCommand.SWITCH_VIDEO_TO_AUDIO:
                 onVideoToAudio();
@@ -595,7 +594,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
                 avChatUI.peerVideoOn();
                 break;
             default:
-                Toast.makeText(this, "对方发来指令值：" + notification.getControlCommand(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "对方发来指令值：" + notification.getControlCommand(), Toast.LENGTH_SHORT).show();
                 break;
         }
     }

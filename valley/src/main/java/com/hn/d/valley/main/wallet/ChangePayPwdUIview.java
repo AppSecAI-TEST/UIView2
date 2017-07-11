@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.wallet;
 
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
@@ -13,6 +14,7 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.TimeUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -217,13 +219,25 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         } else if (code == 401) {
             UIDialog.build()
                     .setDialogContent(String.format("密码错误，剩余可尝试次数 %d", data))
-                    .setOkText(mActivity.getString(R.string.ok))
+                    .setOkText(mActivity.getString(R.string.text_forget_paypwd))
                     .setCancelText(mActivity.getString(R.string.cancel))
+                    .setOkClick(new UIDialog.OnDialogClick() {
+                        @Override
+                        public void onDialogClick(UIDialog dialog, View clickView) {
+                            startIView(new SetPayPwdUIView(SetPayPwdUIView.FINDPAYPWD));
+                        }
+                    })
                     .showDialog(mOtherILayout);
         } else if (code == 403) {
             UIDialog.build()
-                    .setDialogContent(String.format("密码输错过错次，已冻结，离解冻还剩 %d 秒", RUtils.formatTime(data * 1000)))
-                    .setOkText(mActivity.getString(R.string.ok))
+                    .setDialogContent(String.format("支付密码输入错误超过3次,账户已被锁定,请点击忘记密码找回或%s后重试", TimeUtil.getElapseTimeForShow(data * 1000)))
+                    .setOkText(mActivity.getString(R.string.text_forget_paypwd))
+                    .setOkClick(new UIDialog.OnDialogClick() {
+                        @Override
+                        public void onDialogClick(UIDialog dialog, View clickView) {
+                            startIView(new SetPayPwdUIView(SetPayPwdUIView.FINDPAYPWD));
+                        }
+                    })
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);
         } else {

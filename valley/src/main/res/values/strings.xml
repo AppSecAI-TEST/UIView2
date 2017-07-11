@@ -598,7 +598,7 @@
     <string name="my_draft_tip">我的草稿</string>
     <string name="text_resport_success">举报成功！</string>
     <string name="text_report_profile">举报资料</string>
-    <string name="text_report_tip">请上传举报所需要图片</string>
+    <string name="text_report_tip">图片证据</string>
     <string name="forward_video_tip">转发视频</string>
     <string name="forward_voice_tip">转发语音</string>
     <string name="forward_tip">转发动态</string>
@@ -856,4 +856,9 @@
     <string name="blacklist_title">黑名单</string>
     <string name="text_send_gift">送礼物</string>
     <string name="input_group_announcement_hint">请输入群公告</string>
+    <string name="avchat_switch_video_reject">对方不同意音频切换为视频！</string>
+    <string name="avchat_peer_reject">对方正忙</string>
+    <string name="avchat_in_call_or_busying">对方正忙或对方正在通话中</string>
+    <string name="text_no_announce">暂无公告</string>
+
 </resources>

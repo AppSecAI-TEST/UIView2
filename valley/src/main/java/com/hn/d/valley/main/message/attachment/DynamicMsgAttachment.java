@@ -22,7 +22,7 @@ public class DynamicMsgAttachment extends CustomAttachment {
         dynamicMsg = Json.from(content,DynamicMsg.class);
     }
 
-    public LikeMsg getDynamicMsg() {
+    public DynamicMsg getDynamicMsg() {
         return dynamicMsg;
     }
 

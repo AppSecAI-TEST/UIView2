@@ -490,7 +490,6 @@ public class NearbyUIView extends NoTitleBaseRecyclerUIView<LikeUserInfoBean> {
                         hideLoadView();
                         if (isError) {
                             getUITitleBarContainer().hideRightItem(0);
-
                             showNonetLayout(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {

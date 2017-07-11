@@ -128,10 +128,10 @@ public class AVChatAudio implements View.OnClickListener{
                 setMuteSpeakerHangupControl(true);
                 setRefuseReceive(true);
                 // 直接开启视频聊天 不需要点击同意
-//                showWaitingUI();
-                if(listener != null) {
-                    listener.onReceive();
-                }
+                showWaitingUI();
+//                if(listener != null) {
+//                    listener.onReceive();
+//                }
 //                receiveTV.setText(R.string.text_av_receive);
                 break;
             default:

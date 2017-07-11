@@ -23,14 +23,16 @@ import com.hn.d.valley.base.oss.OssControl;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.found.sub.HotInfoListUIView;
 import com.hn.d.valley.service.GroupChatService;
+import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.hn.d.valley.main.found.sub.HotInfoListUIView.displayImage;
 
@@ -52,7 +54,8 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     private boolean isCancel;
 
     private Tag mTag;
-    private String gid;
+    private String id;
+    private SessionTypeEnum type = SessionTypeEnum.Team;
 
     private TextView tv_count;
 
@@ -63,7 +66,12 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
 
     public ReportNextUIView(Tag tag, String gid) {
         this.mTag = tag;
-        this.gid = gid;
+        this.id = gid;
+    }
+
+    public ReportNextUIView(Tag tag , String id , SessionTypeEnum type) {
+        this(tag,id);
+        this.type = type;
     }
 
     @Override
@@ -196,26 +204,47 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
     }
 
     private void onApplyNext(List<String> list) {
-        add(RRetrofit.create(GroupChatService.class)
-                .report(Param.buildMap("uid:" + UserCache.getUserAccount()
-                        , "gid:" + gid,"reason_id:" + mTag.getId()
-                        ,"imgs:" + RUtils.connect(list)))
-                .compose(Rx.transformer(String.class))
-                .subscribe(new BaseSingleSubscriber<String>() {
-                    @Override
-                    public void onSucceed(String bean) {
-                        super.onSucceed(bean);
-                        HnLoading.hide();
-                        finishIView();
-                        T_.info(mActivity.getString(R.string.text_resport_success));
-                    }
+        Map<String,String> params = null;
 
-                    @Override
-                    public void onNoNetwork() {
-                        super.onNoNetwork();
-                        HnLoading.hide();
-                    }
-                }));
+        BaseSingleSubscriber<String> subscriber = new BaseSingleSubscriber<String>() {
+            @Override
+            public void onSucceed(String bean) {
+                super.onSucceed(bean);
+                HnLoading.hide();
+                finishIView();
+                T_.info(mActivity.getString(R.string.text_resport_success));
+            }
+
+            @Override
+            public void onNoNetwork() {
+                super.onNoNetwork();
+                HnLoading.hide();
+            }
+
+            @Override
+            public void onError(int code, String msg) {
+                super.onError(code, msg);
+                HnLoading.hide();
+            }
+        };
+
+        if (type == SessionTypeEnum.Team) {
+            params = Param.buildMap("uid:" + UserCache.getUserAccount()
+                    , "id:" + id,"reason_id:" + mTag.getId()
+                    ,"imgs:" + RUtils.connect(list));
+            add(RRetrofit.create(GroupChatService.class)
+                    .report(params)
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(subscriber));
+        } else if (type == SessionTypeEnum.P2P) {
+            params = Param.buildMap("type:user", "item_id:" + id, "reason_id:" + mTag.getId());
+            add(RRetrofit.create(SocialService.class)
+                    .report(params)
+                    .compose(Rx.transformer(String.class))
+                    .subscribe(subscriber));
+        }
+
+
     }
 
     @Override

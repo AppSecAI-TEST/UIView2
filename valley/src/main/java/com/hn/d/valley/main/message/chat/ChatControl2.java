@@ -481,7 +481,7 @@ public class ChatControl2 {
             if (message == null || !mSessionId.equals(message.getSessionId())) {
                 return;
             }
-
+            MessageHelper.getInstance().onRevokeOtherSideMessage(message);
             deleteItem(message, false);
         }
     };

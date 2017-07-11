@@ -206,7 +206,6 @@ public class EditGroupAnnounceUIView extends BaseUIView {
     }
 
     private void deleteAnnounce() {
-
         UIDialog.build()
                 .setDialogContent("确定删除此公告?")
                 .setOkListener(new View.OnClickListener() {

@@ -29,6 +29,7 @@ import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.main.message.groupchat.ReportNextUIView;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.widget.HnLoading;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.List;
@@ -165,7 +166,8 @@ public class ReportUIView extends BaseContentUIView {
         } else if (mGroupDesc != null) {
             return "group";
         } else if (userInfo != null) {
-            return "user";
+//            return "user";
+            return "group";
         }
         return "";
     }
@@ -180,13 +182,14 @@ public class ReportUIView extends BaseContentUIView {
         } else {
             Tag tag = (Tag) checkView.getTag();
             if (mInfoBean != null) {
-                reportUser(mInfoBean.getUid(), tag);
+                startIView(new ReportNextUIView(tag,mInfoBean.getUid(), SessionTypeEnum.P2P));
             } else if (mDataBean != null) {
                 reportDiscuss(tag);
             } else if (mGroupDesc != null) {
                 startIView(new ReportNextUIView(tag, mGroupDesc.getGid()));
             } else if (userInfo != null) {
-                reportUser(userInfo.getAccount(), tag);
+//                reportUser(userInfo.getAccount(), tag);
+                startIView(new ReportNextUIView(tag,userInfo.getAccount(), SessionTypeEnum.P2P));
             }
         }
     }
