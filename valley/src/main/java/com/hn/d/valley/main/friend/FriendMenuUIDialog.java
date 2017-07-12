@@ -99,7 +99,7 @@ public class FriendMenuUIDialog extends UIIDialogImpl {
         mRootLayout.addView(mContentLayout, contentParams);
 
         //顶部偏移标题栏的高度
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-1, -1);
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(-1, -1);
         params.setMargins(0, mActivity.getResources().getDimensionPixelSize(R.dimen.tags_dialog_offset), 0, 0);
         dialogRootLayout.addView(mRootLayout, params);
 
