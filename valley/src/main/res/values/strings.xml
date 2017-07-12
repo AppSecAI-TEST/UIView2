@@ -867,5 +867,7 @@
     <string name="send_request_faild">发送请求失败</string>
     <string name="in_blacklist_tip">\"%1$s\"已在你的黑名单中, 是否将其从黑名单中移除?</string>
     <string name="circle_visit_error_tip">你没有权限访问</string>
+    <string name="video_edit_title">视频剪切</string>
+    <string name="cut">剪切</string>
 
 </resources>

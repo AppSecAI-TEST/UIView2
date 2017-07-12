@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -24,39 +25,36 @@ public class ImageSeekBar extends View {
     private static final String Tag = "ImageSeekBar";
     private static final int DEFAULT_HEIGHT = 50;//默认高度，单位dp
     private static final int DEFAULT_DURATION = 30;//默认最长裁剪时间长度
-    private static final int DEFAULT_WIDTH = DEFAULT_DURATION*10;//默认宽度，单位d
+    private static final int DEFAULT_WIDTH = DEFAULT_DURATION * 10;//默认宽度，单位d
     private static final int DEFAULT_POSITION = -1;//未设置时为止，用来判断是否初始化
-
+    Rect tempRect = new Rect();
+    Paint tempPaint = new Paint();
     private int mHeight = dp2px(getContext(), DEFAULT_HEIGHT);//View的总高度
     private int mWidth = dp2px(getContext(), DEFAULT_WIDTH);//measure时获取
     private int mMarginSide = dp2px(getContext(), 10);//左右两边距离屏幕边缘距离
     private int mRectStrokeWidth = dp2px(getContext(), 2);//线条粗
     private int mIndicatorStrokeWidth = dp2px(getContext(), 1);//指示器宽度
     private int mArrowWidth = dp2px(getContext(), 10);//箭头图标宽度
-
     private int mCoverColor = Color.parseColor("#77000000");//左右两边遮罩颜色
     private int mRectStrokeColor = Color.parseColor("#15bfff");//线条颜色
     private int mOutLineRectStrokeColor = Color.parseColor("#77ffffff");
     private int mIndicatorStrokeColor = Color.parseColor("#ffffff");//指示器颜色
-
     private int mLeftMarkPosition = DEFAULT_POSITION;//左边标记的位置，默认位置为mMarginSide
-
     private int mRightMarkPosition = DEFAULT_POSITION; //measure时获取
-
     private Paint mPaintRect;//外围矩形绘笔
     private Paint mPaintCover;//遮罩矩形绘笔
     private Paint mPaintIndicator;//指示器绘笔
     private Paint mPaintOutLine;//外部的轮廓
-
-
     private OnVideoStateChangeListener mVideoStateChangeListener;
     private ObjectAnimator mIndicatorAnimator;
     private Context mContext;
-
     private Bitmap mBitmapLeftArrow;
     private Bitmap mBitmapRightArrow;
-
+    private Drawable leftDrawable, rightDrawable;
     private boolean mIsMoving;
+    private float value = 0;
+    private boolean leftMarkOnTouch = false;
+    private boolean rightMarkOnTouch = false;
 
     public ImageSeekBar(Context context) {
         this(context, null);
@@ -83,8 +81,37 @@ public class ImageSeekBar extends View {
         initPaintCover();
         initPaintIndicator();
         initPaintOutLine();
+        tempPaint.setColor(Color.WHITE);
     }
 
+    /**
+     * 边框的颜色
+     */
+    public void setRectStrokeColor(int rectStrokeColor) {
+        mRectStrokeColor = rectStrokeColor;
+        mPaintRect.setColor(mRectStrokeColor);
+    }
+
+    public void setIndicatorStrokeColor(int indicatorStrokeColor) {
+        mIndicatorStrokeColor = indicatorStrokeColor;
+        mPaintIndicator.setColor(mIndicatorStrokeColor);
+    }
+
+    public Bitmap getBitmapLeftArrow() {
+        return mBitmapLeftArrow;
+    }
+
+    public Bitmap getBitmapRightArrow() {
+        return mBitmapRightArrow;
+    }
+
+    public void setLeftDrawable(Drawable leftDrawable) {
+        this.leftDrawable = leftDrawable;
+    }
+
+    public void setRightDrawable(Drawable rightDrawable) {
+        this.rightDrawable = rightDrawable;
+    }
 
     private void initPaintRect() {
         mPaintRect = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -113,7 +140,6 @@ public class ImageSeekBar extends View {
         mPaintOutLine.setStyle(Paint.Style.STROKE);
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -127,8 +153,24 @@ public class ImageSeekBar extends View {
         canvas.drawRect(mLeftMarkPosition, mRectStrokeWidth / 2, mRightMarkPosition, mHeight - mRectStrokeWidth / 2, mPaintRect);
         canvas.drawRect(0, 0, mLeftMarkPosition - mRectStrokeWidth / 2, mHeight, mPaintCover);
         canvas.drawRect(mRightMarkPosition + mRectStrokeWidth / 2, 0, mWidth, mHeight, mPaintCover);
-        drawArrow(canvas, mBitmapLeftArrow, mLeftMarkPosition);
-        drawArrow(canvas, mBitmapRightArrow, mRightMarkPosition);
+        if (leftDrawable == null) {
+            drawArrow(canvas, mBitmapLeftArrow, mLeftMarkPosition);
+        } else {
+            tempRect.set(mLeftMarkPosition - mArrowWidth / 2, 0, mLeftMarkPosition + mArrowWidth / 2, mHeight);
+            leftDrawable.setBounds(tempRect);
+
+            canvas.drawRect(tempRect, tempPaint);
+            leftDrawable.draw(canvas);
+        }
+        if (rightDrawable == null) {
+            drawArrow(canvas, mBitmapRightArrow, mRightMarkPosition);
+        } else {
+            tempRect.set(mRightMarkPosition - mArrowWidth / 2, 0, mRightMarkPosition + mArrowWidth / 2, mHeight);
+            rightDrawable.setBounds(tempRect);
+
+            canvas.drawRect(tempRect, tempPaint);
+            rightDrawable.draw(canvas);
+        }
     }
 
     private void drawArrow(Canvas canvas, Bitmap bitmap, int x) {
@@ -145,8 +187,6 @@ public class ImageSeekBar extends View {
         des.bottom = mHeight;
         canvas.drawBitmap(bitmap, src, des, null);
     }
-
-    private float value = 0;
 
     private void drawIndicator(final Canvas canvas) {
         if (mIndicatorAnimator != null) {
@@ -189,7 +229,7 @@ public class ImageSeekBar extends View {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 //Log.d(Tag, "onAnimationRepeat=====>");
-                if (mVideoStateChangeListener!=null){
+                if (mVideoStateChangeListener != null) {
                     mVideoStateChangeListener.onEnd();
                 }
             }
@@ -206,10 +246,6 @@ public class ImageSeekBar extends View {
             mIndicatorAnimator.cancel();
         }
     }
-
-
-    private boolean leftMarkOnTouch = false;
-    private boolean rightMarkOnTouch = false;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -377,6 +413,24 @@ public class ImageSeekBar extends View {
         return (int) (dpValue * scale + 0.5f);
     }
 
+    public void setOnVideoStateChangeListener(OnVideoStateChangeListener listener) {
+        this.mVideoStateChangeListener = listener;
+    }
+
+    public void release() {
+        mIndicatorAnimator.removeAllListeners();
+        mIndicatorAnimator.removeAllUpdateListeners();
+        mIndicatorAnimator.cancel();
+    }
+
+    public int getMaxDuration() {
+        return DEFAULT_DURATION;
+    }
+
+    public int getMaxwidth() {
+        return DEFAULT_WIDTH;
+    }
+
     public interface OnVideoStateChangeListener {
 
         void onStart(float x, float y);
@@ -387,24 +441,6 @@ public class ImageSeekBar extends View {
 
         void onResume();
 
-    }
-
-    public void setOnVideoStateChangeListener(OnVideoStateChangeListener listener) {
-        this.mVideoStateChangeListener = listener;
-    }
-
-    public void release(){
-        mIndicatorAnimator.removeAllListeners();
-        mIndicatorAnimator.removeAllUpdateListeners();
-        mIndicatorAnimator.cancel();
-    }
-
-    public int getMaxDuration(){
-        return DEFAULT_DURATION;
-    }
-
-    public int getMaxwidth(){
-        return  DEFAULT_WIDTH;
     }
 
 }

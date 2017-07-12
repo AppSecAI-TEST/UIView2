@@ -433,8 +433,12 @@ public class VideoRecordUIView extends UIBaseView {
         if (BuildConfig.DEBUG) {
             mRecordLayout.setMaxTime(6);
         } else {
-            mRecordLayout.setMaxTime(getResources().getInteger(R.integer.max_video_record_length));
+            mRecordLayout.setMaxTime(getMaxRecordLength());
         }
+    }
+
+    private int getMaxRecordLength() {
+        return getResources().getInteger(R.integer.max_video_record_length);
     }
 
     /**
@@ -647,12 +651,25 @@ public class VideoRecordUIView extends UIBaseView {
         ArrayList<ImageItem> items = ImagePickerHelper.getItems(mActivity, requestCode, resultCode, data);
         if (items.size() > 0) {
             ImageItem item = items.get(0);
-            L.i("视频大小:" + item.size / 1024f + "Kb'");
-            if (item.size / 1024f > 50 * 1024) {
-                T_.ok("视频过大.");
-            } else {
-                fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, -1);
+            if (item.loadType == ImageDataSource.VIDEO) {
+                //选择视频后返回
+                startIView(new VideoEditUIView(item));
+//                if (item.videoDuration / 1000 > getMaxRecordLength()) {
+//                    //视频时长大于限制, 剪切并压缩
+//
+//                } else if (item.size / 1024f > 50 * 1024) {
+//                    //视频大小大于限制, 压缩
+//
+//                } else {
+//                    fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+//                }
             }
+
+//            L.i("视频大小:" + item.size / 1024f + "Kb'");
+//            if (item.size / 1024f > 50 * 1024) {
+//                T_.ok("视频过大.");
+//            } else {
+//            }
         }
     }
 
