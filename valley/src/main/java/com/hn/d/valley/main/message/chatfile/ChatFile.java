@@ -113,7 +113,6 @@ public class ChatFile {
         }else {
             return create(attachment,message.getTime());
         }
-
     }
 
     protected ChatFile createEx(IMMessage message) {

@@ -318,7 +318,7 @@
     <string name="upload_info_tip">上传资料</string>
     <string name="upload_card_tip2">请上传身份证照.</string>
     <string name="upload_certify_tip">请至少上传一张证明材料</string>
-    <string name="team_invalid_tip">您已退出该群</string>
+    <string name="team_invalid_tip">您已退出该群或群里已解散</string>
     <string name="prize_tip">有奖</string>
     <string name="my_photos">我的相册</string>
     <string name="my_collect_tip">我的收藏</string>
@@ -469,6 +469,7 @@
     <string name="text_change_paypwd">修改支付密码</string>
     <string name="text_find_paypwd">找回支付密码</string>
     <string name="text_inputpwd_auth_id">请输入支付密码，用于验证身份</string>
+    <string name="text_inputpwd">请输入支付密码</string>
     <string name="text_forget_paypwd">忘记支付密码</string>
     <string name="text_immediately_pay">立即支付</string>
     <string name="text_cashier_desk">收银台</string>
@@ -521,6 +522,7 @@
     <string name="text_set_pay_pwd">设置支付密码</string>
     <string name="text_bind_success">绑定成功！</string>
     <string name="text_have_bind">当前已绑定</string>
+    <string name="text_have_bind2">已绑定</string>
     <string name="text_not_immedately_bind">立即解绑</string>
     <string name="text_send_you_a_packet">给你发了一个红包</string>
     <string name="text_red_packet_expore">红包已过期</string>
@@ -574,7 +576,7 @@
     <string name="text_klg_rp">恐龙谷红包</string>
     <string name="text_klg_wallet">恐龙谷钱包</string>
     <string name="text_withdrawal_msg">提现金额: ￥%1$.2f元已到帐至支付宝(%2$s)</string>
-    <string name="text_pwd_error_freeze">密码输错过错次，已冻结，离解冻还剩 %1$d 秒</string>
+    <string name="text_pwd_error_freeze">密码输错过错次，已冻结，离解冻还剩 %1$s</string>
     <string name="text_pwd_error_reaming">密码错误，剩余可尝试次数 %d</string>
     <string name="add_picture">添加图片</string>
     <string name="play_tip">点击播放</string>
@@ -588,8 +590,10 @@
     <string name="text_add">添加</string>
     <string name="text_publish_group_annonce">发布群公告</string>
     <string name="text_get_your">%1$s 领取了你的</string>
+    <string name="text_get_redpacket_myself">你领取了你自己的</string>
     <string name="text_redpacket">红包</string>
     <string name="text_you_already_get">你已经领取了 %1$s 的</string>
+    <string name="text_two_user_already_get">%1$s领取了 %2$s 的</string>
     <string name="call">呼叫</string>
     <string name="forward_succeed">转发成功</string>
     <string name="text_msg_type_not_support_forward">该类型不支持转发</string>
@@ -805,7 +809,7 @@
     <string name="relay_image">发送给好友</string>
     <string name="text_refun_money_tip">金额不能大于余额!</string>
     <string name="text_refun_input_none_tip">输入不能为空!</string>
-    <string name="text_refund_success">提现成功!</string>
+    <string name="text_refund_success">申请提现成功!</string>
     <string name="text_params_lose">参数缺失</string>
     <string name="text_unbind_phone">未绑定手机</string>
     <string name="text_alipay_had_bind">支付宝已经被其他用户绑定</string>
@@ -860,5 +864,8 @@
     <string name="avchat_peer_reject">对方正忙</string>
     <string name="avchat_in_call_or_busying">对方正忙或对方正在通话中</string>
     <string name="text_no_announce">暂无公告</string>
+    <string name="send_request_faild">发送请求失败</string>
+    <string name="in_blacklist_tip">\"%1$s\"已在你的黑名单中, 是否将其从黑名单中移除?</string>
+    <string name="circle_visit_error_tip">你没有权限访问</string>
 
 </resources>

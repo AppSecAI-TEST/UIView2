@@ -1,12 +1,15 @@
 package com.hn.d.valley.main.avchat;
 
 import android.content.Context;
+import android.icu.text.DateFormat;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.library.glide.GlideBlurTransformation;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.NetworkUtil;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
@@ -19,6 +22,8 @@ import com.hn.d.valley.widget.HnGlideImageView;
 import com.lzy.imagepicker.adapter.ImageViewHolder;
 import com.netease.nimlib.sdk.avchat.AVChatManager;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
+
+import java.lang.reflect.Field;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
@@ -354,12 +359,30 @@ public class AVChatAudio implements View.OnClickListener{
      * @return 秒
      */
     public static int getCountTime(Chronometer time) {
-        try {
-            return Integer.parseInt(time.getContentDescription().toString().split(" ")[0]);
-        }catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return 0;
-        }
+//        try {
+            try {
+                Field f1 = time.getClass().getDeclaredField("mNow");
+                Field f2 = time.getClass().getDeclaredField("mBase");
+                f1.setAccessible(true);
+                f2.setAccessible(true);
+                int duration = (int) ((int)(f1.getLong(time) - f2.getLong(time)) / DateUtils.SECOND_IN_MILLIS);
+                if (duration < 0) {
+                    duration = -duration;
+                }
+                L.d("getCountTime" + duration );
+                return duration;
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+                return 0;
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                return 0;
+            }
+//            return Integer.parseInt(time.getContentDescription().toString().split(" ")[0]);
+//        }catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//            return 0;
+//        }
     }
 
     public int getCountTime() {

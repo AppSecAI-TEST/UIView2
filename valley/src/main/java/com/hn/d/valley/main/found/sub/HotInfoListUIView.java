@@ -204,7 +204,6 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
 
             @Override
             protected int getDataItemType(int posInData) {
-
                 return super.getDataItemType(posInData);
             }
 

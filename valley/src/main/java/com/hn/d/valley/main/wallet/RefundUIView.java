@@ -27,6 +27,8 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.redpacket.Constants;
+import com.hn.d.valley.main.message.redpacket.PayUIDialog;
+import com.hn.d.valley.main.message.redpacket.RechargeAndRefundUIDialog;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnLoading;
@@ -36,6 +38,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -220,66 +224,20 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         if (TextUtils.isEmpty(money)) {
             return;
         }
-        add(RRetrofit.create(WalletService.class)
-                .cashoutRequest(Param.buildInfoMap(
-                        "uid:" + UserCache.getUserAccount(),
-                        "type:" + 0,
-                        "account:" + WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0],
-                        "money:" + (int) (Float.valueOf(money) * 100)))
-                .compose(WalletHelper.getTransformer())
-                .subscribe(new BaseSingleSubscriber<String>() {
+        PayUIDialog.Params params = new PayUIDialog.Params();
+        params.setMoney(Float.valueOf(money));
+        params.setType(4);
+        startIView(new RechargeAndRefundUIDialog(new Action1() {
+            @Override
+            public void call(Object o) {
+                finishIView();
+            }
+        },params));
 
-                    @Override
-                    public void onStart() {
-                        super.onStart();
-                        HnLoading.show(getILayout());
-                    }
 
-                    @Override
-                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
-                        super.onEnd(isError, isNoNetwork, e);
-                        if (isError) {
-                            HnLoading.hide();
-                            finishIView();
-                        }
-                    }
-
-                    @Override
-                    public void onSucceed(String code) {
-                        super.onSucceed(code);
-                        HnLoading.hide();
-                        parseResult(code);
-                    }
-                }));
     }
 
-    private void parseResult(String beans) {
-        int code = -1;
-        int data = 0;
-        try {
-            JSONObject jsonObject = new JSONObject(beans);
-            code = jsonObject.optInt("code");
-            data = jsonObject.optInt("data");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        if (200 == code) {
-            T_.show(getString(R.string.text_refund_success));
-            RBus.post(new WalletAccountUpdateEvent());
-        } else if (400 == code) {
-            T_.show(getString(R.string.text_params_lose));
-        } else if (401 == code) {
-            T_.show(getString(R.string.text_pwd_error));
-        } else if (402 == code) {
-            T_.show(getString(R.string.text_account_not_set));
-        } else if (403 == code) {
-            T_.show(getString(R.string.text_account_incorrect));
-        } else if (500 == code) {
-            T_.show(getString(R.string.tex_server_error));
-        }
-        finishIView();
-    }
 
 
 }

@@ -3,6 +3,7 @@ package com.hn.d.valley.main.message.chat.viewholder;
 import android.text.TextPaint;
 import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
@@ -30,6 +32,10 @@ import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnVideoPlayView;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+
+import java.util.ArrayList;
+
+import rx.functions.Action0;
 
 /**
  * Created by hewking on 2017/4/9.
@@ -48,24 +54,65 @@ public class MsgVHInviteUploadProfile extends MsgViewHolderBase {
 
     @Override
     protected int getContentResId() {
-        return R.layout.msg_text_layout;
+        return R.layout.msg_text_invite_layout;
     }
 
     @Override
     protected void inflateContentView() {
-        TextView contentView = (TextView) findViewById(R.id.msg_text_view);
+        final TextView tv_name = (TextView) findViewById(R.id.tv_name);
+        final TextView tv_msg = (TextView) findViewById(R.id.tv_msg);
+//        final TextView tv_tip = (TextView) findViewById(R.id.tv_tip);
 
         InviteUploadProfileAttachment attachment = (InviteUploadProfileAttachment) message.getAttachment();
-        InviteUploadMsg uploadMsg = attachment.getInviteUploadMsg();
+        final InviteUploadMsg uploadMsg = attachment.getInviteUploadMsg();
 
-        contentView.setText(SpannableStringUtils.getBuilder(uploadMsg.getUsername())
-            .setForegroundColor(SkinHelper.getSkin().getThemeSubColor())
-                .append(uploadMsg.getMsg())
+        tv_name.setTextColor(SkinHelper.getSkin().getThemeSubColor());
+//        tv_tip.setTextColor(SkinHelper.getSkin().getThemeSubColor());
+        tv_name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUIBaseView.startIView(new UserDetailUIView2(uploadMsg.getUid()));
+            }
+        });
+//
+        tv_name.setText(uploadMsg.getUsername());
+//        tv_msg.setText(uploadMsg.getMsg());
+//        tv_tip.setText("上传照片吧!");
+//        tv_tip.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mUIBaseView.startIView(new EditInfoUIView(new ArrayList<String>(), new Action0() {
+//                    @Override
+//                    public void call() {
+//
+//                    }
+//                }));
+//            }
+//        });
+
+        tv_msg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUIBaseView.startIView(new EditInfoUIView(new ArrayList<String>(), new Action0() {
+                    @Override
+                    public void call() {
+
+                    }
+                }));
+            }
+        });
+
+        tv_msg.setText(SpannableStringUtils.getBuilder(uploadMsg.getMsg())
                 .append("上传照片吧!")
                 .setClickSpan(new ClickableSpan() {
                     @Override
                     public void onClick(View widget) {
-                        mUIBaseView.startIView(new EditInfoUIView(null,null));
+                        mUIBaseView.startIView(new EditInfoUIView(new ArrayList<String>(), new Action0() {
+                            @Override
+                            public void call() {
+
+                            }
+                        }));
                     }
 
                     @Override
@@ -77,19 +124,18 @@ public class MsgVHInviteUploadProfile extends MsgViewHolderBase {
                     }
 
                 })
-            .create());
-        contentView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+                .create());
+//        contentContainer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                contentView.performClick();
+//            }
+//        });
 
     }
 
     @Override
     protected void bindContentView() {
-
 
 
     }

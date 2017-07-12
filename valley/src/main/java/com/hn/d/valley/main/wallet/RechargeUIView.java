@@ -118,7 +118,8 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         if (TextUtils.isEmpty(money)) {
                             return;
                         }
-                        PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(money),"","0",null,0);
+                        PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(money) * 100,"","0",null,0);
+                        params.enableBalance(false);
                         startIView(new ThirdPayUIDialog(new Action1() {
                             @Override
                             public void call(Object o) {

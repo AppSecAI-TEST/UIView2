@@ -68,29 +68,37 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
             }
         });
 
-        infoBalance.setItemText(mActivity.getString(R.string.text_balance));
-        infoBalance.setLeftDrawableRes(R.drawable.icon_chai);
-        if (params.getBalance() != -1) {
-            infoBalance.setItemDarkText("￥" + params.getBalance() / 100f);
+
+        if (!params.enableBalance) {
+            infoBalance.setVisibility(View.GONE);
+        } else {
+            infoBalance.setVisibility(View.VISIBLE);
+            infoBalance.setItemText(mActivity.getString(R.string.text_balance));
+            infoBalance.setLeftDrawableRes(R.drawable.icon_chai);
+            if (params.getBalance() != -1) {
+                infoBalance.setItemDarkText("￥" + params.getBalance() / 100f);
+            }
+            infoBalance.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (params.getBalance() >= params.money) {
+                        startIView(new PayUIDialog(action, params));
+                        finishDialog();
+                    } else {
+                        T_.show(mActivity.getString(R.string.text_balance_not_enough));
+                    }
+                }
+            });
+
         }
+
+
 
         infoAlipay.setLeftDrawableRes(R.drawable.icon_alipay_wallet);
         infoAlipay.setItemText(mActivity.getString(R.string.text_alipay));
 
         infoWechat.setLeftDrawableRes(R.drawable.icon_wechat_wallet);
         infoWechat.setItemText(mActivity.getString(R.string.text_wechat));
-
-        infoBalance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (params.getBalance() >= params.money) {
-                    startIView(new PayUIDialog(action, params));
-                    finishDialog();
-                } else {
-                    T_.show(mActivity.getString(R.string.text_balance_not_enough));
-                }
-            }
-        });
 
         infoAlipay.setOnClickListener(new View.OnClickListener() {
             @Override

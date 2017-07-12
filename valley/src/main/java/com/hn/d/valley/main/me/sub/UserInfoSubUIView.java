@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
@@ -40,6 +41,7 @@ import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.message.gift.GiftListUIView;
 import com.hn.d.valley.main.message.gift.GiftService;
 import com.hn.d.valley.main.message.gift.SendGiftUIDialog;
+import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.adapter.ImageAdapter;
 import com.hn.d.valley.sub.other.RelationListUIView;
@@ -172,17 +174,49 @@ public class UserInfoSubUIView extends BaseItemUIView {
                                 holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        add(RRetrofit.create(UserService.class)
-                                                .inviteUploadPhotos(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
-                                                .compose(Rx.transformer(String.class))
-                                                .subscribe(new BaseSingleSubscriber<String>() {
-                                                    @Override
-                                                    public void onSucceed(String bean) {
-                                                        super.onSucceed(bean);
-                                                        T_.show(bean);
-                                                    }
-                                                })
-                                        );
+                                        int relationship = mUserInfoBean.getGetRelationship();
+                                        if (relationship == 3) {
+                                            //对方拉黑了我
+                                            T_.error(getString(R.string.send_request_faild));
+                                        } else if (relationship == 2) {
+                                            //我拉黑了对方
+                                            UIDialog.build()
+                                                    .setDialogContent(getString(R.string.in_blacklist_tip, mUserInfoBean.getUsername()))
+                                                    .setOkText(getString(R.string.cancel_blackList_tip))
+                                                    .setOkListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View v) {
+                                                            add(RRetrofit.create(ContactService.class)
+                                                                    .cancelBlackList(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                                                    .compose(Rx.transformer(String.class))
+                                                                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                                                                        @Override
+                                                                        public void onSucceed(String bean) {
+                                                                            T_.show(bean);
+                                                                            mUserInfoBean.setGetRelationship(0);
+                                                                        }
+                                                                    }));
+                                                        }
+                                                    })
+                                                    .showDialog(mParentILayout)
+                                            ;
+                                        } else {
+                                            //邀请上传
+                                            add(RRetrofit.create(UserService.class)
+                                                    .inviteUploadPhotos(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                                    .compose(Rx.transformer(String.class))
+                                                    .subscribe(new BaseSingleSubscriber<String>() {
+                                                        @Override
+                                                        public void onSucceed(String bean) {
+                                                            super.onSucceed(bean);
+                                                            T_.show(bean);
+                                                        }
+                                                    })
+                                            );
+                                        }
+
+
                                     }
                                 });
                             }

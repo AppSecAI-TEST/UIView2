@@ -15,6 +15,7 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -222,7 +223,7 @@ public class PayUIDialog extends UIIDialogImpl {
                     .showDialog(mOtherILayout);
         } else if (code == 403) {
             UIDialog.build()
-                    .setDialogContent(String.format(getString(R.string.text_pwd_error_freeze), data))
+                    .setDialogContent(String.format(getString(R.string.text_pwd_error_freeze), TimeUtil.getTimeString(data)))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);
@@ -304,17 +305,22 @@ public class PayUIDialog extends UIIDialogImpl {
 
     public static class Params {
 
-        int num;
-        public float money;
-        int random = 0;
-        int balance = -1;
-        String to_gid;
-        String content;
-        String to_uid;
-        int coin;
-        int way;
-        //默认1 发红包 2 充值龙币
+        int num; // 群红包个数
+        public float money;//金额
+        int random = 0;//红包类型 拼手气或普通
+        int balance = -1;//钱包余额
+        String to_gid;// 群id
+        String content;// 红包附带信息
+        String to_uid;//uid
+        int coin;//龙币数
+        int way;// 充值龙币途径 余额 或支付宝
+        //默认1 发红包 2 充值龙币 3 充值 4 提现
         int missionType = 1;
+        boolean enableBalance = true; // 是否显示余额选项
+
+        public void enableBalance(boolean enableBalance) {
+            this.enableBalance = enableBalance;
+        }
 
         public Params setType(int missionType) {
             this.missionType = missionType;

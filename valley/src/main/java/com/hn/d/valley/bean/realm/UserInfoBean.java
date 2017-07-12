@@ -39,6 +39,10 @@ public class UserInfoBean extends RealmObject {
 
 
     /**
+     * 用户关系
+     */
+    int getRelationship = 0;
+    /**
      * is_attention : 1
      * is_contact : 0
      * contact_remark :
@@ -148,6 +152,13 @@ public class UserInfoBean extends RealmObject {
 
     private RelationDataBean relation;
 
+    public int getGetRelationship() {
+        return getRelationship;
+    }
+
+    public void setGetRelationship(int getRelationship) {
+        this.getRelationship = getRelationship;
+    }
 
     /**
      * 是否有新的访客

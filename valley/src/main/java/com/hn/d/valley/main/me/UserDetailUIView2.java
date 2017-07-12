@@ -18,9 +18,11 @@ import android.widget.TextView;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.design.StickLayout;
 import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
@@ -107,6 +109,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     boolean isFollower = false;
     TextView mCommandItemView;
     LastAuthInfoBean mLastAuthInfoBean;
+    int getRelationship = 0;
     private String to_uid;
     private CommonTabLayout mCommonTabLayout;
     private UIViewPager mViewPager;
@@ -181,21 +184,51 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 commandView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        subscription.add(RRetrofit.create(UserService.class)
-                                .attention(Param.buildMap("to_uid:" + uid, "to_uid:" + to_uid))
-                                .compose(Rx.transformer(String.class))
-                                .subscribe(new BaseSingleSubscriber<String>() {
+                        int relationship = userInfoBean.getGetRelationship();
 
-                                    @Override
-                                    public void onSucceed(String bean) {
-                                        T_.show(commandView.getResources().getString(R.string.attention_successed_tip));
-                                        userInfoBean.setIs_attention(1);
-                                        initCommandView(commandView, userInfoBean, iLayout, subscription, onRequestEnd);
-                                        if (onRequestEnd != null) {
-                                            onRequestEnd.call();
+                        if (relationship == 3) {
+                            //对方拉黑了我
+                            T_.error(commandView.getResources().getString(R.string.send_request_faild));
+                        } else if (relationship == 2) {
+                            //我拉黑了对方
+                            UIDialog.build()
+                                    .setDialogContent(commandView.getResources().getString(R.string.in_blacklist_tip, userInfoBean.getUsername()))
+                                    .setOkText(commandView.getResources().getString(R.string.cancel_blackList_tip))
+                                    .setOkListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            subscription.add(RRetrofit.create(ContactService.class)
+                                                    .cancelBlackList(Param.buildMap("to_uid:" + to_uid))
+                                                    .compose(Rx.transformer(String.class))
+                                                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                                                        @Override
+                                                        public void onSucceed(String bean) {
+                                                            T_.show(bean);
+                                                            userInfoBean.setGetRelationship(0);
+                                                        }
+                                                    }));
                                         }
-                                    }
-                                }));
+                                    })
+                                    .showDialog(iLayout)
+                            ;
+                        } else {
+                            subscription.add(RRetrofit.create(UserService.class)
+                                    .attention(Param.buildMap("to_uid:" + uid, "to_uid:" + to_uid))
+                                    .compose(Rx.transformer(String.class))
+                                    .subscribe(new BaseSingleSubscriber<String>() {
+
+                                        @Override
+                                        public void onSucceed(String bean) {
+                                            T_.show(commandView.getResources().getString(R.string.attention_successed_tip));
+                                            userInfoBean.setIs_attention(1);
+                                            initCommandView(commandView, userInfoBean, iLayout, subscription, onRequestEnd);
+                                            if (onRequestEnd != null) {
+                                                onRequestEnd.call();
+                                            }
+                                        }
+                                    }));
+                        }
                     }
                 });
             }
@@ -347,6 +380,24 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
     @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+        if (!isMe()) {
+            //获取用户关系
+            add(RRetrofit.create(ContactService.class)
+                    .getRelationship(Param.buildMap("to_uid:" + to_uid))
+                    .compose(Rx.transformer(Integer.class))
+                    .subscribe(new BaseSingleSubscriber<Integer>() {
+                        @Override
+                        public void onSucceed(Integer bean) {
+                            super.onSucceed(bean);
+                            getRelationship = bean;
+                        }
+                    }));
+        }
+    }
+
+    @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
         add(RRetrofit.create(UserService.class)
@@ -480,6 +531,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
     private void initView(final UserInfoBean bean) {
         mUserInfoBean = bean;
+        mUserInfoBean.setGetRelationship(getRelationship);
+
         final String is_auth = bean.getIs_auth();
 
         //背景墙

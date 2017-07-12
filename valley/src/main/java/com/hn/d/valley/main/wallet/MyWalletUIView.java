@@ -167,6 +167,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     return;
                 }
                 if (mAccount.hasAlipay()) {
+                    infoLayout.setItemDarkText(getString(R.string.text_have_bind2));
                     infoLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

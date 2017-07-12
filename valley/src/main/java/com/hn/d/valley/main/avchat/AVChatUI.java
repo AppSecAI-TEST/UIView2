@@ -1036,7 +1036,7 @@ public class AVChatUI implements AVChatUIListener {
             setFloatActionListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    T_.show("返回视频聊天");
+//                    T_.show("返回视频聊天");
                     hideFloatingView();
 //                    AVChatActivity.launch(mActivity);
                     // 正在进行语音通话

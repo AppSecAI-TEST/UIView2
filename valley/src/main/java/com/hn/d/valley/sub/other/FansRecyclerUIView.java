@@ -108,6 +108,8 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
         }
     }
 
+
+
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);

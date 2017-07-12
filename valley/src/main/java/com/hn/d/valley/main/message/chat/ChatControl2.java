@@ -35,9 +35,11 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.ResponseCode;
+import com.netease.nimlib.sdk.avchat.model.AVChatAttachment;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.attachment.AudioAttachment;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.constant.MsgDirectionEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
@@ -564,7 +566,15 @@ public class ChatControl2 {
             //消息状态发生了改变
             List<IMMessage> allDatas = mChatAdapter.getAllDatas();
             for (int i = 0; i < allDatas.size(); i++) {
+                IMMessage item = allDatas.get(i);
+                // 语音和语音聊天刷新状态
                 if (allDatas.get(i).isTheSame(imMessage)) {
+                    item.setStatus(imMessage.getStatus());
+                    item.setAttachStatus(imMessage.getAttachStatus());
+                    if (item.getAttachment() instanceof AVChatAttachment
+                            || item.getAttachment() instanceof AudioAttachment) {
+                        item.setAttachment(imMessage.getAttachment());
+                    }
                     mChatAdapter.notifyItemChanged(i);
                     break;
                 }
@@ -576,7 +586,6 @@ public class ChatControl2 {
     public static class Images {
         public int positon;
         public ArrayList<ImageItem> images;
-
     }
 
 

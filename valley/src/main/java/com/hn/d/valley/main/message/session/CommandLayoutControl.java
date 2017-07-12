@@ -102,7 +102,6 @@ public class CommandLayoutControl {
 //            params.topMargin = ScreenUtil.dip2px(10);
 //            params.bottomMargin = ScreenUtil.dip2px(10);
             params.addRule(RelativeLayout.CENTER_IN_PARENT);
-
             relativeLayout.addView(textView, params);
 
             relativeLayout.setClickable(true);

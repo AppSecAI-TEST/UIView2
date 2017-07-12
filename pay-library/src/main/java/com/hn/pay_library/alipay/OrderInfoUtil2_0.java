@@ -74,7 +74,7 @@ public class OrderInfoUtil2_0 {
         try {
             jsonObject.put("timeout_express", "30m");
             jsonObject.put("product_code", "QUICK_MSECURITY_PAY");
-            jsonObject.put("total_amount", "0.01");
+            jsonObject.put("total_amount", builder.total_amount);
             jsonObject.put("subject", "1");
             jsonObject.put("body", "我是测试数据");
             jsonObject.put("out_trade_no", builder.out_trade_no);
@@ -85,7 +85,6 @@ public class OrderInfoUtil2_0 {
         return jsonObject.toString();
     }
     public static class Builder {
-
         private String timeout_express;
         private String product_code;
         private String total_amount;

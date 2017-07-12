@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.hn.d.valley.R;
@@ -18,6 +19,7 @@ import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.AudioViewControl;
 import com.hn.d.valley.main.message.audio.AudioPlayCallback;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
+import com.hn.d.valley.main.message.chat.MsgUIObserver;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.skin.SkinUtils;
 import com.netease.nimlib.sdk.avchat.constant.AVChatRecordState;
@@ -81,8 +83,6 @@ public class MsgVHAVChat extends MsgViewHolderBase {
             }
         }
 
-
-
         switch (state) {
             case Success:
                 timeView.setText("聊天时长: " + TimeUtil.secToTime(duration));
@@ -98,4 +98,5 @@ public class MsgVHAVChat extends MsgViewHolderBase {
                 break;
         }
     }
+
 }

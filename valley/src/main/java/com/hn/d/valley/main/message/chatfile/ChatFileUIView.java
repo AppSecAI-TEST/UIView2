@@ -41,6 +41,8 @@ import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
+import com.hn.d.valley.base.iview.RelayPhotoLongClickListener;
+import com.hn.d.valley.base.iview.RelayVideoLongClickListener;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.main.message.slide.ISlideHelper;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
@@ -297,9 +299,12 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                         for (IMMessage message : result) {
                             if (message.getAttachment() instanceof FileAttachment) {
                                 FileAttachment attachment = (FileAttachment) message.getAttachment();
-                                if (TextUtils.isEmpty(attachment.getThumbPath()) || TextUtils.isEmpty(attachment.getPath())) {
+                                if (TextUtils.isEmpty(attachment.getPath())) {
                                     continue;
                                 }
+//                                if (TextUtils.isEmpty(attachment.getThumbPath()) || TextUtils.isEmpty(attachment.getPath())) {
+//                                    continue;
+//                                }
                                 fileList.add(ChatFile.create(message));
                             }
                         }
@@ -563,7 +568,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
             if ("2".equalsIgnoreCase(chatFile.media_type)) {
                 //图片
                 Glide.with(holder.getContext())
-                        .load(chatFile.thumbPath)
+                        .load(chatFile.getPath())
                         .placeholder(R.drawable.zhanweitu_1)
                         .into(imageView);
 
@@ -573,12 +578,12 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                     @Override
                     public void onClick(View v) {
                         ImagePagerUIView.start(mParentILayout, imageView,
-                                PhotoPager.getImageItems(getAllPhotos()), getPhotoStartIndex(position));
+                                PhotoPager.getImageItems(getAllPhotos()), getPhotoStartIndex(position))
+                                .setPhotoViewLongClickListener(new RelayPhotoLongClickListener(getILayout()));
                     }
                 });
             } else if ("3".equalsIgnoreCase(chatFile.media_type)) {
                 //视频
-
                 Glide.with(holder.getContext())
                         .load(chatFile.thumbPath)
                         .placeholder(R.drawable.zhanweitu_1)
@@ -594,7 +599,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
                         }
                         mParentILayout.startIView(new VideoPlayUIView(chatFile.getPath(),
                                 RImageView.copyDrawable(imageView),
-                                ((VideoFile) chatFile).genWidthAndHeight()));
+                                ((VideoFile) chatFile).genWidthAndHeight()).setOnLongPress(new RelayVideoLongClickListener(mParentILayout)));
                     }
                 });
             } else {
@@ -607,7 +612,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
             for (int i = 0; i < mAllDatas.size(); i++) {
                 ChatFile chatFile = mAllDatas.get(i);
                 if ("2".equalsIgnoreCase(chatFile.media_type)) {
-                    photos.add(chatFile.getThumbPath());
+                    photos.add(chatFile.getPath());
                 }
             }
             return photos;

@@ -109,7 +109,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         });
 
         baseDialogTitleView.setText(R.string.text_cashier_desk);
-        baseDialogContentView.setText("￥ " + params.money / 100f);
+        baseDialogContentView.setText("￥ " + params.money / 100);
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,7 +195,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
          .setAppId(APPID)
          .setTimeout("30m")
          .setProductCode("QUICK_MSECURITY_PAY")
-         .setTotalAmount("0.01")
+         .setTotalAmount(String.valueOf(params.money / 100))
          .setSubject("1").setRSA2(true)
          .setBody("我是测试数据");
 
@@ -248,7 +248,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         JSONObject object = new JSONObject();
         try {
             object.put("uid", Integer.valueOf(UserCache.getUserAccount()));
-            object.put("money", 1);
+            object.put("money", params.money * 100);
             if (type == 0) {
                 //充值
 

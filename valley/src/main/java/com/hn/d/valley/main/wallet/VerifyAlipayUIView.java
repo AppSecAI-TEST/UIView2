@@ -190,26 +190,20 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
             } else {
                 T_.show(mActivity.getString(R.string.text_unbind_success));
             }
-
             RBus.post(new WalletAccountUpdateEvent());
-
-            if (200 == code) {
-                T_.show(getString(R.string.text_refund_success));
-                RBus.post(new WalletAccountUpdateEvent());
-            } else if (400 == code) {
-                T_.show(getString(R.string.text_params_lose));
-            } else if (405 == code) {
-                T_.show(getString(R.string.text_unbind_phone));
-            } else if (406 == code) {
-                T_.show(getString(R.string.text_alipay_had_bind));
-            } else if (500 == code) {
-                T_.show(getString(R.string.tex_server_error));
-            } else if (701 == code) {
-                T_.show(getString(R.string.text_operate_count_enough));
-            } else if (601 == code) {
-                T_.show(getString(R.string.text_cannot_delete_account));
-            }
             finishIView();
+        } else if (400 == code) {
+            T_.show(getString(R.string.text_params_lose));
+        } else if (405 == code) {
+            T_.show(getString(R.string.text_unbind_phone));
+        } else if (406 == code) {
+            T_.show(getString(R.string.text_alipay_had_bind));
+        } else if (500 == code) {
+            T_.show(getString(R.string.tex_server_error));
+        } else if (701 == code) {
+            T_.show(getString(R.string.text_operate_count_enough));
+        } else if (601 == code) {
+            T_.show(getString(R.string.text_cannot_delete_account));
         }
     }
 }

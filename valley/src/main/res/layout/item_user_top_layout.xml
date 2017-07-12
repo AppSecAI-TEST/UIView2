@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -13,7 +13,11 @@
         android:layout_height="wrap_content"
         android:background="@drawable/base_bg_selector"
         android:orientation="horizontal"
-        android:padding="@dimen/base_xhdpi">
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_xxhdpi"
+        android:paddingBottom="@dimen/base_xxhdpi"
+       >
 
         <com.hn.d.valley.widget.HnGlideImageView
             android:id="@+id/user_ico_view"
@@ -75,7 +79,7 @@
             android:id="@+id/status_item_layout"
             style="@style/BaseAvgHStyleM"
             android:background="@drawable/base_bg_selector"
-            android:padding="@dimen/base_hdpi">
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -102,7 +106,7 @@
             android:id="@+id/follow_item_layout"
             style="@style/BaseAvgHStyleM"
             android:background="@drawable/base_bg_selector"
-            android:padding="@dimen/base_hdpi">
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -129,7 +133,7 @@
             android:id="@+id/follower_item_layout"
             style="@style/BaseAvgHStyleM"
             android:background="@drawable/base_bg_selector"
-            android:padding="@dimen/base_hdpi">
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"

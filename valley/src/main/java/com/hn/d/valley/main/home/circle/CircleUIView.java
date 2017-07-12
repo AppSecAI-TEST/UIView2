@@ -194,6 +194,11 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                                 mLoadStatusCallback.onLoadEnd();
                             }
 
+                            if (isError && e.getCode() == 1060) {
+                                //主人设置了访问权限
+                                showContentLayout();
+                                initEmpty(mViewHolder, true, getString(R.string.circle_visit_error_tip));
+                            }
                         }
 
                         @Override
