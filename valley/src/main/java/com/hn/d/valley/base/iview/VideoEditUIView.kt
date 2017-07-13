@@ -29,6 +29,7 @@ import com.angcyo.uiview.resources.ResUtil
 import com.angcyo.uiview.skin.SkinHelper
 import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.utils.file.AttachmentStore
+import com.bumptech.glide.Glide
 import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseContentUIView
 import com.lzy.imagepicker.bean.ImageItem
@@ -36,6 +37,7 @@ import com.m3b.rbvideolib.ImageSeekBar.ImageSeekBar
 import com.m3b.rbvideolib.widget.ScalableTextureView
 import com.m3b.rbvideolib.widget.TextureVideoView
 import rx.functions.Action1
+import java.io.ByteArrayOutputStream
 import java.io.File
 
 /**
@@ -274,7 +276,15 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
                     override fun onSucceed(bean: Bitmap?) {
                         super.onSucceed(bean)
                         if (bean != null) {
-                            imageView.setImageBitmap(bean)
+                            //imageView.setImageBitmap(bean)
+                            val baos = ByteArrayOutputStream()
+                            bean.compress(Bitmap.CompressFormat.JPEG, 10, baos)
+
+                            Glide.with(mContext)
+                                    .load(baos.toByteArray())
+                                    .override(getDimensionPixelOffset(R.dimen.base_xxxhdpi),
+                                            getDimensionPixelOffset(R.dimen.base_50dpi))
+                                    .into(imageView)
                         }
                     }
                 })
