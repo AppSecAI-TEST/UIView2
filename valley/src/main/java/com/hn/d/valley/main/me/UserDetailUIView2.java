@@ -107,11 +107,10 @@ public class UserDetailUIView2 extends BaseContentUIView {
     public static final int TYPE_CHANGE_ICO = 1;
     public static final int TYPE_CHANGE_BG_PHOTO = 2;
     boolean isFollower = false;
-    private TextView mCommandItemView;
-    private TextView tv_chat;
-
     LastAuthInfoBean mLastAuthInfoBean;
     int getRelationship = 0;
+    private TextView mCommandItemView;
+    private TextView tv_chat;
     private String to_uid;
     private CommonTabLayout mCommonTabLayout;
     private UIViewPager mViewPager;
@@ -147,7 +146,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     /**
      * 命令按钮
      */
-    public static void initCommandView(final TextView commandView,final TextView tv_chat, final UserInfoBean userInfoBean,
+    public static void initCommandView(final TextView commandView, final TextView tv_chat, final UserInfoBean userInfoBean,
                                        final ILayout iLayout, final CompositeSubscription subscription,
                                        final Action0 onRequestEnd) {
         final String to_uid = userInfoBean.getUid();
@@ -234,7 +233,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                         public void onSucceed(String bean) {
                                             T_.show(commandView.getResources().getString(R.string.attention_successed_tip));
                                             userInfoBean.setIs_attention(1);
-                                            initCommandView(commandView,tv_chat, userInfoBean, iLayout, subscription, onRequestEnd);
+                                            initCommandView(commandView, tv_chat, userInfoBean, iLayout, subscription, onRequestEnd);
                                             if (onRequestEnd != null) {
                                                 onRequestEnd.call();
                                             }
@@ -350,7 +349,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         }
         if (mCommandItemView != null) {
             ResUtil.setBgDrawable(mCommandItemView, skin.getThemeMaskBackgroundSelector());
-            ResUtil.setBgDrawable(tv_chat,skin.getThemeMaskBackgroundSelector());
+            ResUtil.setBgDrawable(tv_chat, skin.getThemeMaskBackgroundSelector());
         }
     }
 
@@ -660,12 +659,13 @@ public class UserDetailUIView2 extends BaseContentUIView {
             });
         }
 
-        initCommandView(mCommandItemView,tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+        initCommandView(mCommandItemView, tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
             @Override
             public void call() {
                 updateRelationship();
             }
         });
+
         //语音介绍
         initVoiceView();
 
@@ -1133,7 +1133,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     @Override
                     public void onSucceed(String bean) {
                         mUserInfoBean.setIs_attention(0);
-                        initCommandView(mCommandItemView,tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+                        initCommandView(mCommandItemView, tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
                             @Override
                             public void call() {
                                 updateRelationship();
@@ -1211,7 +1211,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         isFollower = false;
                         mUserInfoBean.setIs_attention(0);
                         mUserInfoBean.setIs_contact(0);
-                        initCommandView(mCommandItemView,tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+                        initCommandView(mCommandItemView, tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
                             @Override
                             public void call() {
                                 updateRelationship();
