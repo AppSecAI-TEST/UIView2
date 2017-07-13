@@ -706,11 +706,32 @@ public class UserDiscussItemControl {
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
                         imageView.setShowGifTip(false);
+//                        if (YImageControl.isYellowImage(url)) {
+//                            YImageControl.showYellowImageXiao(imageView);
+//                        } else {
+//                            UserDiscussItemControl.displayImage(imageView, url,
+//                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, true, 9);
+//                        }
+
+                        imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
+                        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
-                            UserDiscussItemControl.displayImage(imageView, url,
-                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, true, 9);
+//                            UserDiscussItemControl.displayImage(imageView, url,
+//                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
+//                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
+//                                    !isInDetail, imageSize);
+//                            imageView.setImageResource(R.drawable.zhanweitu_1);
+
+                            imageView.setCheckGif(true);
+                            imageView.setShowGifImage(false);
+                            if (isFromInformation) {
+                                imageView.setUrl(url);
+                            } else {
+                                imageView.setUrl((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url);
+                            }
                         }
                     }
 
@@ -1663,7 +1684,7 @@ public class UserDiscussItemControl {
             {
                 Ok.instance().type(url, new Ok.OnImageTypeListener() {
                     @Override
-                    public void onImageType(String imageUrl, Ok.ImageType imageType) {
+                    public void onImageType(final String imageUrl, Ok.ImageType imageType) {
                         L.d("call: onImageType([imageType])-> " + imageUrl + " : " + imageType + " qw:" + width + " qh:" + height);
 
                         imageView.setImageResource(R.drawable.zhanweitu_1);
@@ -1682,10 +1703,10 @@ public class UserDiscussItemControl {
                                         .into(new SimpleTarget<GifDrawable>() {
                                             @Override
                                             public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
-                                                if (imageView == null || resource == null) {
+                                                if (resource == null) {
                                                     return;
                                                 }
-                                                if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+                                                if (!imageUrl.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
                                                     imageView.setImageResource(R.drawable.zhanweitu_1);
                                                     return;
                                                 }
