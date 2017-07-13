@@ -78,7 +78,8 @@ public class HotInformationUIView extends BaseContentUIView {
                         mMyTypeList = list;
                         resetViewPagerAdapter();
                         mSlidTabLayout.setViewPager(mViewPager);
-                        mViewPager.setCurrentItem(0);
+                        //mViewPager.setCurrentItem(0);
+                        mSlidTabLayout.onPageSelected(0);
                     }
                 }));
             }
