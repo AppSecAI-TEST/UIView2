@@ -570,12 +570,15 @@
     <string name="text_income">收入</string>
     <string name="text_outcome">支出</string>
     <string name="text_msg_notice_refund">由于 %1$s 您发给 %2$s 的红包 ￥ %3$.2f 已退回给你的恐龙谷钱包</string>
+    <string name="text_notice_refund_shouxufei">提现需支付手续费 %1$.2f 实际到账 %2$.2f 是否确定提现?</string>
     <string name="text_rp_haven_send_you">红包已发给 %s，对方已领取</string>
     <string name="tv_send_waite_receive">红包已发给 %s，等待对方领取</string>
     <string name="text_have_save_klg_wallet">已存入恐龙谷钱包</string>
     <string name="text_klg_rp">恐龙谷红包</string>
     <string name="text_klg_wallet">恐龙谷钱包</string>
     <string name="text_withdrawal_msg">提现金额: ￥%1$.2f元已到帐至支付宝(%2$s)</string>
+    <string name="text_withdrawal_fail_msg">提现失败,你的提现金额: ￥%1$.2f已退回你的钱包</string>
+    <string name="text_klgcoin_consume_msg">充值%1$d个龙币成功</string>
     <string name="text_pwd_error_freeze">密码输错过错次，已冻结，离解冻还剩 %1$s</string>
     <string name="text_pwd_error_reaming">密码错误，剩余可尝试次数 %d</string>
     <string name="add_picture">添加图片</string>
@@ -781,6 +784,7 @@
     <string name="collect_success">收藏成功</string>
     <string name="uncollect_success">取消收藏成功</string>
     <string name="text_had_focused">已关注</string>
+    <string name="text_had_no_focused">你还未关注TA哦~</string>
     <string name="text_avchat_audio_call_request">邀请你进行语音聊天</string>
     <string name="text_hand_free">免提</string>
     <string name="text_avchat_invite_chat">邀请您进行语音聊天</string>
@@ -867,7 +871,7 @@
     <string name="send_request_faild">发送请求失败</string>
     <string name="in_blacklist_tip">\"%1$s\"已在你的黑名单中, 是否将其从黑名单中移除?</string>
     <string name="circle_visit_error_tip">你没有权限访问</string>
+    <string name="text_input_error">输入错误!</string>
     <string name="video_edit_title">视频剪切</string>
     <string name="cut">剪切</string>
-
 </resources>

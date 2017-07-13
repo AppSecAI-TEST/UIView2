@@ -17,6 +17,6 @@ public interface SessionProxy {
     // 发送消息
     boolean sendMessage(IMMessage msg);
 
-
+    int getRelationType();
 
 }

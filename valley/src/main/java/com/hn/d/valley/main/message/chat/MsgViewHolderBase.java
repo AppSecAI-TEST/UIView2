@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -44,7 +45,7 @@ import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
  * 修改备注：
  * Version: 1.0.0
  */
-public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends RBaseViewHolder>{
+public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>, V extends RBaseViewHolder> {
 
     protected TextView msgTimeView;
     protected SimpleDraweeView msgIcoView;
@@ -97,7 +98,7 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
         return adapter;
     }
 
-    protected  void convert(V holder, IMMessage data, int position, boolean isScrolling) {
+    protected void convert(V holder, IMMessage data, int position, boolean isScrolling) {
         view = holder.itemView;
         context = holder.getContext();
         message = data;
@@ -124,18 +125,18 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
             itemRootLayout.removeAllViews();
             itemRootLayout.setGravity(Gravity.CENTER);
             if (itemRootLayout.getChildCount() == 0) {
-                if(getContentResId() == 0) {
+                if (getContentResId() == 0) {
                     return;
                 }
-                View.inflate(view.getContext(),getContentResId(),itemRootLayout);
+                View.inflate(view.getContext(), getContentResId(), itemRootLayout);
             }
             inflateContentView();
             return;
         }
 
         // 这里只要inflate出来后加入一次即可
-        if(contentContainer.getChildCount() == 0) {
-            if(getContentResId() == 0) {
+        if (contentContainer.getChildCount() == 0) {
+            if (getContentResId() == 0) {
                 return;
             }
             View.inflate(view.getContext(), getContentResId(), contentContainer);
@@ -179,34 +180,34 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
             nameTextView.setVisibility(View.GONE);
         }
 
-            if (isReceivedMessage()) {
-                //收到的消息
-                itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+        if (isReceivedMessage()) {
+            //收到的消息
+            itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
-                contentContainer.setBackgroundResource(R.drawable.bubble_box_left_selector);
+            contentContainer.setBackgroundResource(R.drawable.bubble_box_left_selector);
 
-                if (userInfoCache != null) {
-                    NimUserInfo userInfo = userInfoCache.getUserInfo(message.getFromAccount());
-                    if (userInfo != null) {
-                        avatar = userInfo.getAvatar();
-                    }
+            if (userInfoCache != null) {
+                NimUserInfo userInfo = userInfoCache.getUserInfo(message.getFromAccount());
+                if (userInfo != null) {
+                    avatar = userInfo.getAvatar();
                 }
-            } else {
-                //发出去的消息
-                itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                switch (SkinUtils.getSkin()) {
-                    case SkinManagerUIView.SKIN_BLACK:
-                        contentContainer.setBackgroundResource(R.drawable.bubble_box_right_black_selector);
-                        break;
-                    case SkinManagerUIView.SKIN_GREEN:
-                        contentContainer.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
-                        break;
-                    case SkinManagerUIView.SKIN_BLUE:
-                        contentContainer.setBackgroundResource(R.drawable.bubble_box_right_blue_selector);
-                        break;
-                }
-                avatar = UserCache.instance().getAvatar();
             }
+        } else {
+            //发出去的消息
+            itemRootLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            switch (SkinUtils.getSkin()) {
+                case SkinManagerUIView.SKIN_BLACK:
+                    contentContainer.setBackgroundResource(R.drawable.bubble_box_right_black_selector);
+                    break;
+                case SkinManagerUIView.SKIN_GREEN:
+                    contentContainer.setBackgroundResource(R.drawable.bubble_box_right_green_selector);
+                    break;
+                case SkinManagerUIView.SKIN_BLUE:
+                    contentContainer.setBackgroundResource(R.drawable.bubble_box_right_blue_selector);
+                    break;
+            }
+            avatar = UserCache.instance().getAvatar();
+        }
 
         itemRootLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -226,10 +227,18 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
         msgIcoView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SessionHelper.getSessionListener().onAvatarClicked(mUIBaseView,message);
+                SessionHelper.getSessionListener().onAvatarClicked(mUIBaseView, message);
             }
         });
 
+        msgIcoView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                getMsgAdapter().getHeadAitListener().onGroupHeadAit(message.getFromNick());
+//                SessionHelper.getSessionListener().onAvatarLongClicked(mUIBaseView, message);
+                return true;
+            }
+        });
         bindContentView();
     }
 
@@ -340,10 +349,10 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>,V extends 
      * 下载附件/缩略图
      */
     protected void downloadAttachment(IMMessage message) {
-        downloadAttachment(message,true);
+        downloadAttachment(message, true);
     }
 
-    protected void downloadAttachment(IMMessage message , boolean thumb) {
+    protected void downloadAttachment(IMMessage message, boolean thumb) {
         if (message.getAttachment() != null && message.getAttachment() instanceof FileAttachment) {
             NIMClient.getService(MsgService.class).downloadAttachment(message, thumb);
         }

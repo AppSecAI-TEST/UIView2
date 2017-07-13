@@ -3,12 +3,18 @@ package com.hn.d.valley.main.message.session;
 import android.Manifest;
 import android.content.Intent;
 
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.main.avchat.AVChatDelegete;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 //import com.hn.d.valley.main.message.avchat.AVChatControl;
 //import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
 import com.hn.d.valley.main.message.avchat.ui.AVChatUIVIew2;
+import com.hn.d.valley.service.ContactService;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 
 import rx.functions.Action1;
@@ -33,9 +39,9 @@ public class AVChatCommandItem extends CommandItemInfo {
 
     private AVChatType chatType;
 
-    public AVChatCommandItem(AVChatType type){
-        this(type == AVChatType.AUDIO ? R.drawable.yuying_xiaoxi_n:R.drawable.shipingliaotian_xiaoxi,
-                type == AVChatType.AUDIO ?"语音聊天":"视频聊天");
+    public AVChatCommandItem(AVChatType type) {
+        this(type == AVChatType.AUDIO ? R.drawable.yuying_xiaoxi_n : R.drawable.shipingliaotian_xiaoxi,
+                type == AVChatType.AUDIO ? "语音聊天" : "视频聊天");
         this.chatType = type;
     }
 
@@ -47,6 +53,12 @@ public class AVChatCommandItem extends CommandItemInfo {
     protected void onClick() {
 //        AVChatUIVIew2.start(getContainer().mLayout,getContainer().account, AVChatType.VIDEO.getValue(),FROM_INTERNAL);
 //        AVChatDelegete.getInstance().bind(getContainer().activity);
+        // 好友才可以视频聊天
+        if (getContainer().proxy.getRelationType() != 4) {
+            T_.show("非好友不能语音聊天/视频聊天");
+            return;
+        }
+
         getContainer().activity.checkPermissions(new String[]{
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.CAMERA,
@@ -55,7 +67,7 @@ public class AVChatCommandItem extends CommandItemInfo {
                     @Override
                     public void call(Boolean aBoolean) {
                         if (aBoolean) {
-                            AVChatActivity.launch(getContainer().activity,getContainer().account,chatType.getValue(),FROM_INTERNAL);
+                            AVChatActivity.launch(getContainer().activity, getContainer().account, chatType.getValue(), FROM_INTERNAL);
                         }
                     }
                 });

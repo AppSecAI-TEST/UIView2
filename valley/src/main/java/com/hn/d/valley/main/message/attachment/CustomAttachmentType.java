@@ -28,7 +28,13 @@ public interface CustomAttachmentType {
 
     int REFOUNDMSG = 7;
 
+    int RECHARGE_CODE = 18;
+
     int WITHDRAWAL = 8;
+
+    int WITHDRAWAL_FAIL = 16;
+
+    int KLG_CONSUME = 17;
 
     int EXPRESSIONMSG = 9;
 
@@ -66,7 +72,13 @@ public interface CustomAttachmentType {
 
     String REFUND = "refund";
 
+    String RECHARGE = "recharge";
+
+    String WITHDRAWAL_FAIL_MSG = "cashout_fail";
+
     String WITHDRAWAL_MSG = "cashout";
+
+    String KLG_COIN_CONSUME = "consume";
 
     String KLGGIF_MSG = "system_klgGif";
 

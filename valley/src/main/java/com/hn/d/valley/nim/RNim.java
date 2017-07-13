@@ -64,7 +64,6 @@ public class RNim {
 
     public static void init(ValleyApp app) {
         NIMClient.init(app, loginInfo(), options());
-
     }
 
     public static void initOnce(Application application) {

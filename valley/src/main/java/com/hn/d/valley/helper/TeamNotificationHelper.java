@@ -117,6 +117,12 @@ public class TeamNotificationHelper {
     }
 
     private static String buildInviteMemberNotification(MemberChangeAttachment a, String fromAccount) {
+
+        Map<String, Object> extension = a.getExtension();
+        if (extension != null && extension.size() == 3) {
+            fromAccount = (String) extension.get("uid");
+        }
+
         StringBuilder sb = new StringBuilder();
         String selfName = getTeamMemberDisplayName(fromAccount);
 

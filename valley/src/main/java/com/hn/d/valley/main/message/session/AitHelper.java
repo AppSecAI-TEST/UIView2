@@ -185,7 +185,6 @@ public class AitHelper {
     }
 
     public static String getAitName(GroupMemberBean member) {
-
         if (member == null) {
             return "";
         }

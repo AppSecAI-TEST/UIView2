@@ -1,19 +1,31 @@
 package com.hn.d.valley.main.message.p2pchat;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.session.SessionCustomization;
 import com.hn.d.valley.main.message.uinfo.UserInfoHelper;
 import com.hn.d.valley.main.message.uinfo.UserInfoObservable;
 import com.hn.d.valley.main.other.KLJUIView;
+import com.hn.d.valley.service.ContactService;
+import com.hn.d.valley.service.UserService;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
@@ -39,16 +51,19 @@ public class P2PChatUIView extends ChatUIView2 {
 
     private UserInfoObservable.UserInfoObserver uinfoObserver;
 
+    private LinearLayout ll_focus;
+    int getRelationship = 0;
+
     /**
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
-    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType,IMMessage anchor, SessionCustomization customization) {
+    public static void start(ILayout mLayout, String sessionId, SessionTypeEnum sessionType, IMMessage anchor, SessionCustomization customization) {
         Bundle bundle = new Bundle();
         bundle.putString(KEY_SESSION_ID, sessionId);
         bundle.putInt(KEY_SESSION_TYPE, sessionType.getValue());
         bundle.putSerializable(KEY_ANCHOR, anchor);
-        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION,customization);
+        bundle.putSerializable(KEY_SESSION_CUSTOMIZATION, customization);
         mLayout.startIView(new P2PChatUIView(), new UIParam().setBundle(bundle).setLaunchMode(UIParam.SINGLE_TOP));
     }
 
@@ -83,6 +98,71 @@ public class P2PChatUIView extends ChatUIView2 {
     public void onViewUnload() {
         super.onViewUnload();
         registerObservers(false);
+    }
+
+    @Override
+    public void loadContentView(View rootView) {
+        super.loadContentView(rootView);
+        ll_focus = (LinearLayout) rootView.findViewById(R.id.ll_focus);
+
+    }
+
+    @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
+        initContactFocus();
+    }
+
+    private void initContactFocus() {
+        add(RRetrofit.create(ContactService.class)
+                .getRelationship(Param.buildMap("to_uid:" + mSessionId))
+                .compose(Rx.transformer(Integer.class))
+                .subscribe(new BaseSingleSubscriber<Integer>() {
+                    @Override
+                    public void onSucceed(Integer bean) {
+                        super.onSucceed(bean);
+                        getRelationship = bean;
+                        if (bean == 0 || bean == 6) {
+                            ll_focus.setVisibility(View.VISIBLE);
+                            TextView tv_focus = (TextView) ll_focus.findViewById(R.id.btn_send);
+                            tv_focus.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                  collapseFocuslayout();
+                                }
+                            },5000);
+                            tv_focus.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    add(RRetrofit.create(UserService.class)
+                                            .attention(Param.buildMap("to_uid:" + mSessionId))
+                                            .compose(Rx.transformer(String.class))
+                                            .subscribe(new BaseSingleSubscriber<String>() {
+                                                @Override
+                                                public void onSucceed(String bean) {
+                                                    T_.show(getResources().getString(R.string.attention_successed_tip));
+                                                    collapseFocuslayout();
+                                                }
+                                            }));
+                                }
+                            });
+                        }
+                    }
+                }));
+    }
+
+    private void collapseFocuslayout() {
+        float start = 0;
+        float end = -ll_focus.getMeasuredHeight();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_focus, "translationY", start, end);
+        animator.setDuration(300);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
+    }
+
+    @Override
+    public int getRelationType() {
+        return getRelationship;
     }
 
     @Subscribe

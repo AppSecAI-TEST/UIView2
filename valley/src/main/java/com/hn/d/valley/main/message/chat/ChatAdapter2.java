@@ -7,6 +7,7 @@ import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderVideo;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -45,8 +46,18 @@ public class ChatAdapter2 extends BaseMultiAdapter<RBaseViewHolder> {
     //listener
     private ViewHolderEventListener eventListener;
 
+    // 头像长按grupchatuiview 监听
+    private SessionHelper.GroupHeadAitListener headAitListener;
 
-    public ChatAdapter2(RecyclerView recyclerView, List<IMMessage> data,RBaseViewHolder viewHolder, UIBaseView uIBaseView){
+    public SessionHelper.GroupHeadAitListener getHeadAitListener() {
+        return headAitListener;
+    }
+
+    public void setHeadAitListener(SessionHelper.GroupHeadAitListener headAitListener) {
+        this.headAitListener = headAitListener;
+    }
+
+    public ChatAdapter2(RecyclerView recyclerView, List<IMMessage> data, RBaseViewHolder viewHolder, UIBaseView uIBaseView){
         super(recyclerView, data,viewHolder,uIBaseView);
 
         mMsgUIObservable = new MsgUIObservable();

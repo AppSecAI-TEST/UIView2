@@ -107,7 +107,9 @@ public class UserDetailUIView2 extends BaseContentUIView {
     public static final int TYPE_CHANGE_ICO = 1;
     public static final int TYPE_CHANGE_BG_PHOTO = 2;
     boolean isFollower = false;
-    TextView mCommandItemView;
+    private TextView mCommandItemView;
+    private TextView tv_chat;
+
     LastAuthInfoBean mLastAuthInfoBean;
     int getRelationship = 0;
     private String to_uid;
@@ -145,19 +147,29 @@ public class UserDetailUIView2 extends BaseContentUIView {
     /**
      * 命令按钮
      */
-    public static void initCommandView(final TextView commandView, final UserInfoBean userInfoBean,
+    public static void initCommandView(final TextView commandView,final TextView tv_chat, final UserInfoBean userInfoBean,
                                        final ILayout iLayout, final CompositeSubscription subscription,
                                        final Action0 onRequestEnd) {
         final String to_uid = userInfoBean.getUid();
         final String uid = UserCache.getUserAccount();
         if (isMe(to_uid)) {
             commandView.setVisibility(View.GONE);
+            tv_chat.setVisibility(View.GONE);
         } else {
             commandView.setVisibility(View.VISIBLE);
+            tv_chat.setVisibility(View.VISIBLE);
+            tv_chat.setText(R.string.send_message);
+            tv_chat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SessionHelper.startP2PSession(iLayout, to_uid, SessionTypeEnum.P2P);
+                }
+            });
             if (userInfoBean.getIs_attention() == 1) {
                 //已关注
                 if (userInfoBean.getIs_contact() == 1) {
                     //是联系人
+                    tv_chat.setVisibility(View.GONE);
                     commandView.setText(R.string.send_message);
                     //commandView.setImageResource(R.drawable.send_message_selector);
                     commandView.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +226,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                             ;
                         } else {
                             subscription.add(RRetrofit.create(UserService.class)
-                                    .attention(Param.buildMap("to_uid:" + uid, "to_uid:" + to_uid))
+                                    .attention(Param.buildMap("to_uid:" + to_uid))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -222,7 +234,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                         public void onSucceed(String bean) {
                                             T_.show(commandView.getResources().getString(R.string.attention_successed_tip));
                                             userInfoBean.setIs_attention(1);
-                                            initCommandView(commandView, userInfoBean, iLayout, subscription, onRequestEnd);
+                                            initCommandView(commandView,tv_chat, userInfoBean, iLayout, subscription, onRequestEnd);
                                             if (onRequestEnd != null) {
                                                 onRequestEnd.call();
                                             }
@@ -338,6 +350,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         }
         if (mCommandItemView != null) {
             ResUtil.setBgDrawable(mCommandItemView, skin.getThemeMaskBackgroundSelector());
+            ResUtil.setBgDrawable(tv_chat,skin.getThemeMaskBackgroundSelector());
         }
     }
 
@@ -355,6 +368,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         StickLayout2 stickLayout = mViewHolder.v(R.id.stick_layout);
         stickLayout.setFloatTopOffset((int) getTitleBarHeight());
         mCommandItemView = mViewHolder.v(R.id.command_item_view);
+        tv_chat = mViewHolder.v(R.id.tv_chat);
         initTabLayout();
         mViewPager = mViewHolder.v(R.id.view_pager);
         mViewPager.setBackgroundColor(Color.WHITE);
@@ -646,7 +660,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             });
         }
 
-        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+        initCommandView(mCommandItemView,tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
             @Override
             public void call() {
                 updateRelationship();
@@ -1119,7 +1133,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     @Override
                     public void onSucceed(String bean) {
                         mUserInfoBean.setIs_attention(0);
-                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+                        initCommandView(mCommandItemView,tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
                             @Override
                             public void call() {
                                 updateRelationship();
@@ -1197,7 +1211,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                         isFollower = false;
                         mUserInfoBean.setIs_attention(0);
                         mUserInfoBean.setIs_contact(0);
-                        initCommandView(mCommandItemView, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
+                        initCommandView(mCommandItemView,tv_chat, mUserInfoBean, mILayout, mSubscriptions, new Action0() {
                             @Override
                             public void call() {
                                 updateRelationship();

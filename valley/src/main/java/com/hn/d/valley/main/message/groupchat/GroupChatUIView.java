@@ -2,7 +2,6 @@ package com.hn.d.valley.main.message.groupchat;
 
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseRxView;
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -46,6 +44,7 @@ import com.hn.d.valley.main.message.session.AitHelper;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.RedPacketCommandItem;
 import com.hn.d.valley.main.message.session.SessionCustomization;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.main.message.session.TeamAVChatCommandItem;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.service.GroupChatService;
@@ -78,7 +77,7 @@ import rx.functions.Action3;
 /**
  * Created by hewking on 2017/3/10.
  */
-public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdatelistener {
+public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdatelistener ,SessionHelper.GroupHeadAitListener {
 
     public static final String TAG = GroupChatUIView.class.getSimpleName();
 
@@ -345,6 +344,7 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
     @Override
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
+        mChatControl.mChatAdapter.setHeadAitListener(this);
         if (checkInGroup()) {
             add(RRetrofit.create(GroupChatService.class)
                     .groupInfo(Param.buildMap("uid:" + UserCache.getUserAccount(), "yx_gid:" + mSessionId))
@@ -543,6 +543,22 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
     }
 
     @Override
+    public void onGroupHeadAit(String nick){
+        // 点击头像ait
+        mInputView.unableCallback();
+        mInputView.insert("@");
+        mInputView.addMention(nick);
+        if (selectedMembers == null) {
+            selectedMembers = new HashMap<>();
+        }
+        GroupMemberBean memberBean = new GroupMemberBean();
+        memberBean.setDefaultNick(nick);
+        memberBean.setUserId("");
+        mInputView.enableCallback();
+        selectedMembers.put(nick,memberBean);
+    }
+
+    @Override
     public void onGroupNotifySetting() {
         final Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
         if (team != null && team.isMyTeam()) {
@@ -555,4 +571,6 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
         msgService().deleteRecentContact2(mSessionId, sessionType);
         finishIView();
     }
+
+
 }

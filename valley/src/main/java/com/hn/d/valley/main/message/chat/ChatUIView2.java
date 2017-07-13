@@ -293,7 +293,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 CustomExpressionMsg expressionMsg = new CustomExpressionMsg(FileUtil.getFileNameNoEx(stickerName));
                 expressionMsg.setType(StickerEnum.Companion.valueOfType(categoryName).getValue());
                 CustomExpressionAttachment attachment = new CustomExpressionAttachment(expressionMsg);
-                IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "贴图表情", attachment);
+                IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "[动画表情]", attachment);
                 sendMessage(message);
             }
         });
@@ -825,6 +825,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         }
     }
 
+
     /**
      * 发送消息
      */
@@ -842,6 +843,11 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         msgService().sendMessage(message, false);
         mChatControl.addData(message);
         return true;
+    }
+
+    @Override
+    public int getRelationType() {
+        return 0;
     }
 
     @NonNull

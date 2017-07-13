@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
@@ -220,21 +221,30 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     }
 
     private void cashoutRequest() {
-        String money = et_money.getText().toString();
+        final String money = et_money.getText().toString();
         if (TextUtils.isEmpty(money)) {
+            T_.show(getString(R.string.text_input_error));
             return;
         }
-        PayUIDialog.Params params = new PayUIDialog.Params();
-        params.setMoney(Float.valueOf(money));
-        params.setType(4);
-        startIView(new RechargeAndRefundUIDialog(new Action1() {
-            @Override
-            public void call(Object o) {
-                finishIView();
-            }
-        },params));
-
-
+        UIDialog.build()
+                .setDialogContent(String.format(getString(R.string.text_notice_refund_shouxufei
+                        ,Float.valueOf(money) * 0.0055,(1 - 0.0055) * Float.valueOf(money))))
+                .setOkText(getString(R.string.text_crashout))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PayUIDialog.Params params = new PayUIDialog.Params();
+                        params.setMoney(Float.valueOf(money));
+                        params.setType(4);
+                        startIView(new RechargeAndRefundUIDialog(new Action1() {
+                            @Override
+                            public void call(Object o) {
+                                finishIView();
+                            }
+                        },params));
+                    }
+                }).
+                showDialog(mILayout);
     }
 
 

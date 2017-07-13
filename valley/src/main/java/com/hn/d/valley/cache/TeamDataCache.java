@@ -395,7 +395,7 @@ public class TeamDataCache {
         }
 
         String alias = NimUserInfoCache.getInstance().getAlias(account);
-        if (!TextUtils.isEmpty(alias)) {
+        if (!TextUtils.isEmpty(alias) && !" ".equals(alias)) {
             return alias;
         }
 

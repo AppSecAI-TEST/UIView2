@@ -38,20 +38,27 @@ import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
+import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
+import com.hn.d.valley.main.message.attachment.KLGCoinConsumeAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
+import com.hn.d.valley.main.message.attachment.RechargeMsg;
+import com.hn.d.valley.main.message.attachment.RechargeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.main.message.attachment.RefundMsg;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
+import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
+import com.hn.d.valley.main.message.attachment.WithDrawalFailAttachment;
+import com.hn.d.valley.main.message.attachment.WithDrawalFailMsg;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
@@ -512,6 +519,16 @@ public class RecentContactsControl {
             return ((InviteUploadProfileAttachment)attachment).getInviteUploadMsg().getMsg();
         } else if (attachment instanceof DiscussRecommAttachment) {
             return ((DiscussRecommAttachment)attachment).getRecommendMsg().getMsg();
+        } else if (attachment instanceof CustomExpressionAttachment) {
+            return "[动画表情]";
+        }else if (attachment instanceof KLGCoinConsumeAttachment) {
+            return ((KLGCoinConsumeAttachment)attachment).getConsumeMsg().getMsg();
+        }else if (attachment instanceof WithDrawalFailAttachment) {
+            return ((WithDrawalFailAttachment)attachment).getWithDrawalMsg().getMsg();
+        }else if (attachment instanceof WithDrawalAttachment) {
+            return ((WithDrawalAttachment)attachment).getWithDrawalMsg().getMsg();
+        } else if (attachment instanceof RechargeMsgAttachment) {
+            return ((RechargeMsgAttachment)attachment).getRechargeMsg().getMsg();
         }
         return "[自定义消息]";
     }

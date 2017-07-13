@@ -26,11 +26,32 @@
 
     </com.angcyo.uiview.design.StickLayout2>
 
-    <com.angcyo.uiview.widget.RTextView
-        android:id="@+id/command_item_view"
-        style="@style/MainColorButtonStyle"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_item_size"
-        android:visibility="gone"
-        tools:text="+关注"/>
+        android:layout_height="wrap_content">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/tv_chat"
+            style="@style/MainColorButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/base_item_size"
+            android:visibility="visible"
+            tools:text="+对话"/>
+
+        <View
+            style="@style/BaseVLine"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/command_item_view"
+            style="@style/MainColorButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/base_item_size"
+            android:visibility="visible"
+            tools:text="+关注"/>
+    </LinearLayout>
+
+
 </LinearLayout>

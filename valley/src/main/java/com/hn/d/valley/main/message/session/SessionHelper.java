@@ -52,8 +52,13 @@ public class SessionHelper {
             @Override
             public void onAvatarLongClicked(UIBaseView uiBaseView, IMMessage message) {
 
+
             }
         };
+    }
+
+    public interface GroupHeadAitListener {
+        void onGroupHeadAit(String nick);
     }
 
     // 会话窗口消息列表一些点击事件的响应处理函数

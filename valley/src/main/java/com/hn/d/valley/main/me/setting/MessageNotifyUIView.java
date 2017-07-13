@@ -12,6 +12,10 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
+import com.netease.nimlib.sdk.ResponseCode;
+import com.netease.nimlib.sdk.mixpush.MixPushService;
 
 import java.util.List;
 
@@ -48,12 +52,38 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                CompoundButton switchCompat = holder.v(R.id.switch_view);
+                final CompoundButton switchCompat = holder.v(R.id.switch_view);
                 switchCompat.setChecked(MsgNotifySetting.instance().isEnableNoti());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                         MsgNotifySetting.instance().toggleNotification(isChecked);
+
+//                        NIMClient.getService(MixPushService.class).enable(isChecked)
+//                                .setCallback(new RequestCallback<Void>() {
+//                                    @Override
+//                                    public void onSuccess(Void param) {
+//                                        MsgNotifySetting.instance().toggleNotification(isChecked);
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailed(int code) {
+//                                        // 这种情况是客户端不支持第三方推送
+//                                        switchCompat.setChecked(!MsgNotifySetting.instance().isEnableNoti());
+//                                        if (code == ResponseCode.RES_UNSUPPORT) {
+//
+//                                        } else if (code == ResponseCode.RES_EFREQUENTLY) {
+//
+//                                        } else {
+//
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onException(Throwable exception) {
+//
+//                                    }
+//                                });
                     }
                 });
                 infoLayout.setItemText(mActivity.getString(R.string.text_reveive_msg_notify));

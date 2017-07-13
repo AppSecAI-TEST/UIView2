@@ -11,14 +11,17 @@ import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
+import com.hn.d.valley.main.message.attachment.KLGCoinConsumeAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
+import com.hn.d.valley.main.message.attachment.RechargeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
+import com.hn.d.valley.main.message.attachment.WithDrawalFailAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.attachment.MsgAttachmentParser;
 
@@ -60,8 +63,14 @@ public class CustomAttachParser implements MsgAttachmentParser {
                 case CustomAttachmentType.REFUND:
                     attachment = new RefundMsgAttachment(json);
                     break;
+                case CustomAttachmentType.RECHARGE:
+                    attachment = new RechargeMsgAttachment(json);
+                    break;
                 case CustomAttachmentType.WITHDRAWAL_MSG:
                     attachment = new WithDrawalAttachment(json);
+                    break;
+                case CustomAttachmentType.WITHDRAWAL_FAIL_MSG:
+                    attachment = new WithDrawalFailAttachment(json);
                     break;
                 case CustomAttachmentType.KLGGIF_MSG:
                     attachment = new CustomExpressionAttachment(json);
@@ -71,6 +80,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.FORWARD_MSG:
                     attachment = new DynamicMsgAttachment(json);
+                    break;
+                case CustomAttachmentType.KLG_COIN_CONSUME:
+                    attachment = new KLGCoinConsumeAttachment(json);
                     break;
                 case CustomAttachmentType.HOTSPOTIFNO_MSG:
                     attachment = new HotSpotInfoAttachment(json);

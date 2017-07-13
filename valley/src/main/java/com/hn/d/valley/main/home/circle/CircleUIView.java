@@ -28,6 +28,7 @@ import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.MyStatusUIView;
+import com.hn.d.valley.utils.RBus;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
@@ -162,7 +163,7 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
     }
 
     @Override
-    protected void onUILoadData(String page) {
+    protected void onUILoadData(final String page) {
         if (mLoadStatusCallback != null) {
             mLoadStatusCallback.onLoadStart();
         }
@@ -228,6 +229,10 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                                 List<UserDiscussListBean.DataListBean> newDatas = insertPublishTask();
                                 newDatas.addAll(data_list);
                                 onUILoadDataEnd(newDatas, userDiscussListBean.getData_count());
+                                //下拉刷新
+                                if (Integer.valueOf(page) == 1) {
+                                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(0, 1));
+                                }
                             }
                         }
 
