@@ -20,6 +20,9 @@ public class CustomMessageBean {
     private BodyBean bodyBean;
     private String body;
     private String extend_type;
+    private String created;
+    private int is_attention;
+    private int is_contact;
 
     public BodyBean getBodyBean() {
         return bodyBean;
@@ -36,10 +39,6 @@ public class CustomMessageBean {
     public void setBody(String body) {
         this.body = body;
     }
-
-    private String created;
-    private int is_attention;
-    private int is_contact;
 
     public String getMessage_id() {
         return message_id;
@@ -89,7 +88,6 @@ public class CustomMessageBean {
     public void setIs_contact(int is_contact) {
         this.is_contact = is_contact;
     }
-
 
 
     public LikeUserInfoBean convert() {
@@ -152,6 +150,15 @@ public class CustomMessageBean {
         private String company;
         private String signature;
         private String grade;
+        private String message_id;
+
+        public String getMessage_id() {
+            return message_id;
+        }
+
+        public void setMessage_id(String message_id) {
+            this.message_id = message_id;
+        }
 
         public String getMsg() {
             return msg;

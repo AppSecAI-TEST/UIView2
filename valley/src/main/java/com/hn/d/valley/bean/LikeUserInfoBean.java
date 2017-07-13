@@ -126,6 +126,17 @@ public class LikeUserInfoBean {
     private String media;
     private String share_type;
 
+    /**新的朋友字段*/
+    private CustomMessageBean.BodyBean mBodyBean;
+
+    public CustomMessageBean.BodyBean getBodyBean() {
+        return mBodyBean;
+    }
+
+    public void setBodyBean(CustomMessageBean.BodyBean bodyBean) {
+        mBodyBean = bodyBean;
+    }
+
     public String getShare_type() {
         return share_type;
     }

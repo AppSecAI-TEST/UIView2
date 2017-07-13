@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -20,6 +21,7 @@ import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.CustomMessageBean;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.cache.UserCache;
@@ -63,7 +65,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(MessageService.class)
-                .list(Param.buildMap("uid:" + UserCache.getUserAccount(), "type:" + 5 , "page:" + page))
+                .list(Param.buildMap("uid:" + UserCache.getUserAccount(), "type:" + 5, "page:" + page))
                 .compose(Rx.transformer(FriendsNewUIView.CustomMessageModel.class))
                 .subscribe(new SingleRSubscriber<FriendsNewUIView.CustomMessageModel>(this) {
                     @Override
@@ -90,8 +92,12 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
 
     private List<LikeUserInfoBean> CustomMessage2LikeUserInfo(List<CustomMessageBean> datas) {
         List<LikeUserInfoBean> list = new ArrayList<>();
-        for(CustomMessageBean bean : datas) {
-            list.add(bean.convert());
+        for (CustomMessageBean bean : datas) {
+            LikeUserInfoBean convert = bean.convert();
+            CustomMessageBean.BodyBean bodyBean = bean.getBodyBean();
+            bodyBean.setMessage_id(bean.getMessage_id());
+            convert.setBodyBean(bodyBean);
+            list.add(convert);
         }
         return list;
 
@@ -100,7 +106,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
 
     @Override
     protected RExBaseAdapter initRExBaseAdapter() {
-        return new AddFriendAdpater(mActivity,mILayout,mSubscriptions);
+        return new AddFriendAdpater(mActivity, mILayout, mSubscriptions);
     }
 
     @Override
@@ -195,8 +201,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                     }
                 });
 
-            }
-            else if (ADDRESSBOOK == getDataItemType(posInData)) {
+            } else if (ADDRESSBOOK == getDataItemType(posInData)) {
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -214,6 +219,30 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
             } else {
                 super.onBindDataView(holder, posInData, dataBean);
 //                holder.itemView.setBackgroundResource(R.color.white);
+                CustomMessageBean.BodyBean bodyBean = dataBean.getBodyBean();
+                holder.tv(R.id.signature).setText(bodyBean.getMsg());
+
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        UIBottomItemDialog.build()
+                                .addItem(getString(R.string.delete_text), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        String message_id = dataBean.getBodyBean().getMessage_id();
+                                        deleteItem(posInData);
+
+                                        add(RRetrofit.create(MessageService.class)
+                                                .remove(Param.buildMap("type:5", "message_id:" + message_id))
+                                                .compose(Rx.transformer(String.class))
+                                                .subscribe(new BaseSingleSubscriber<String>() {
+                                                }));
+                                    }
+                                })
+                                .showDialog(mParentILayout);
+                        return true;
+                    }
+                });
             }
 
         }
