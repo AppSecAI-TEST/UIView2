@@ -673,7 +673,7 @@ public class VideoRecordUIView extends UIBaseView {
                             fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
                         }
                     }));
-                } else if (item.size / 1024f > 1 * 1024) {
+                } else if (item.size / 1024f > 50 * 1024) {
                     //视频大小大于限制, 压缩
                     final UIProgressDialog progressDialog = UIProgressDialog.build();
                     progressDialog.setCanCancel(false);

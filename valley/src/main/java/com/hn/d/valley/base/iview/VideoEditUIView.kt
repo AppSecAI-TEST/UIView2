@@ -68,6 +68,8 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
 
 
     private var outPath: String? = null
+    private var callback = false
+    private var cropTime: Long = 0
 
     override fun onViewCreate(rootView: View?, param: UIParam?) {
         super.onViewCreate(rootView, param)
@@ -85,7 +87,7 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
                 .setShowBackImageView(true)
                 .setTitleString(mActivity, R.string.video_edit_title)
                 .addRightItem(TitleBarPattern.buildText(getString(R.string.cut)) {
-                    val cropTime = seekBar.cropTime
+                    cropTime = seekBar.cropTime
                     val currentTime = getCurrentTime(mCurrentX, mCurrentY)
 
                     progressDialog.showDialog(mParentILayout)
@@ -107,9 +109,9 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
                                 override fun onExecSuccess(message: String) {
                                     L.e("call: onExecSuccess -> $message")
                                     progressDialog.finishDialog()
-                                    finishIView(this@VideoEditUIView, false)
+                                    mILayout.finishIView(this@VideoEditUIView, false)
 
-                                    onCommandSuccess.call(EditVideoInfo(outPath!!, cropTime))
+                                    callback = true
                                 }
 
                                 override fun onExecStart() {
@@ -322,6 +324,10 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
         mmr.release()
 
         RVideoEdit.release()
+
+        if (callback) {
+            onCommandSuccess.call(EditVideoInfo(outPath!!, cropTime))
+        }
     }
 }
 

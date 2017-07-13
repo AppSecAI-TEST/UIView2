@@ -2,6 +2,7 @@ package com.hn.d.valley.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -41,16 +42,18 @@ public class HnRefreshLayout extends RefreshLayout {
 
     private class HnTopView extends View implements RefreshLayout.OnTopViewMoveListener {
 
+        int viewSize, bgSize;
+
         public HnTopView(Context context) {
             super(context);
-            setBackgroundResource(R.drawable.refresh_animation_list2);
+            viewSize = (int) ResUtil.dpToPx(getResources(), 60);
+            bgSize = (int) ResUtil.dpToPx(getResources(), 16);
         }
 
         @Override
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            int size = (int) ResUtil.dpToPx(getResources(), 60);
-            setMeasuredDimension(size, size);
+            setMeasuredDimension(viewSize, viewSize);
         }
 
         @Override
@@ -69,16 +72,25 @@ public class HnRefreshLayout extends RefreshLayout {
         }
 
         @Override
+        protected void onAttachedToWindow() {
+            super.onAttachedToWindow();
+            setBackgroundResource(R.drawable.refresh_animation_list2);
+        }
+
+        @Override
         public void draw(Canvas canvas) {
+//            canvas.drawColor(Color.YELLOW);
+//            super.draw(canvas);
             Drawable background = getBackground();
             if (background != null) {
-                int cx = getMeasuredWidth() / 2;
-                int cy = getMeasuredHeight() / 2;
-                int w = background.getIntrinsicWidth() / 2;
-                int h = background.getIntrinsicHeight() / 2;
+                int cx = viewSize / 2;
+                int cy = viewSize / 2;
+                int w = bgSize / 2;
+                int h = bgSize / 2;
                 background.setBounds(cx - w, cy - h, cx + w, cy + h);
+//                background.setBounds(0, 0, size / 4, size / 4);
+                background.draw(canvas);
             }
-            super.draw(canvas);
         }
 
         @Override

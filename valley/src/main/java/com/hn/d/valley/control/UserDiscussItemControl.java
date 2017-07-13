@@ -1663,13 +1663,19 @@ public class UserDiscussItemControl {
             {
                 Ok.instance().type(url, new Ok.OnImageTypeListener() {
                     @Override
-                    public void onImageType(Ok.ImageType imageType) {
-                        L.d("call: onImageType([imageType])-> " + url + " : " + imageType + " qw:" + width + " qh:" + height);
+                    public void onImageType(String imageUrl, Ok.ImageType imageType) {
+                        L.d("call: onImageType([imageType])-> " + imageUrl + " : " + imageType + " qw:" + width + " qh:" + height);
+
+                        imageView.setImageResource(R.drawable.zhanweitu_1);
+
+                        if (!imageUrl.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+                            return;
+                        }
 
                         if (imageType != Ok.ImageType.UNKNOWN) {
                             if (!noGif && imageType == Ok.ImageType.GIF) {
                                 Glide.with(imageView.getContext())
-                                        .load(url)
+                                        .load(imageUrl)
                                         .asGif()
                                         .placeholder(R.drawable.zhanweitu_1)
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -1689,14 +1695,14 @@ public class UserDiscussItemControl {
                                             }
                                         });
                             } else {
-                                if (!url.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
+                                if (!imageUrl.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
                                     imageView.setImageResource(R.drawable.zhanweitu_1);
                                     return;
                                 }
                                 if (imageView instanceof RImageView) {
                                     ((RImageView) imageView).setShowGifTip(imageType == Ok.ImageType.GIF);
                                 }
-                                displayJpeg(imageView, url, width, height, imageSize);
+                                displayJpeg(imageView, imageUrl, width, height, imageSize);
                             }
                         }
                     }
