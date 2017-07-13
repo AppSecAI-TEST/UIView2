@@ -39,41 +39,52 @@ public class X5WebUIView extends BaseContentUIView {
     private int mSoftInputMode;
     private X5RefreshLayout mRefreshLayout;
 
+    private boolean showDefaultMenu = false;
+
     public X5WebUIView(String targetUrl) {
         mTargetUrl = targetUrl;
     }
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        return super.getTitleBar()
+        TitleBarPattern titleBarPattern = super.getTitleBar()
                 .setShowBackImageView(true)
-                .setTitleString("")
-                //.setTitleBarBGColor(Color.TRANSPARENT)
-                //.setFloating(true)
-                .addRightItem(TitleBarPattern.buildImage(R.drawable.more, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UIBottomItemDialog.build()
-                                .addItem("在浏览器中打开", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (mWebView != null) {
-                                            RUtils.openUrl(mActivity, mWebView.getUrl());
+                .setTitleString("");
+        //.setTitleBarBGColor(Color.TRANSPARENT)
+        //.setFloating(true)
+        if (showDefaultMenu) {
+            titleBarPattern
+                    .addRightItem(TitleBarPattern.buildImage(R.drawable.more, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            UIBottomItemDialog.build()
+                                    .addItem(getString(R.string.open_in_brower), new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (mWebView != null) {
+                                                RUtils.openUrl(mActivity, mWebView.getUrl());
+                                            }
                                         }
-                                    }
-                                })
-                                .addItem(getString(R.string.refresh), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (mWebView != null) {
-                                            mWebView.reload();
+                                    })
+                                    .addItem(getString(R.string.refresh), new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (mWebView != null) {
+                                                mWebView.reload();
+                                            }
                                         }
-                                    }
-                                })
-                                .showDialog(X5WebUIView.this);
-                    }
-                }))
-                ;
+                                    })
+                                    .showDialog(X5WebUIView.this);
+                        }
+                    }))
+            ;
+        }
+        return titleBarPattern;
+    }
+
+    public X5WebUIView setShowDefaultMenu(boolean showDefaultMenu) {
+        this.showDefaultMenu = showDefaultMenu;
+        return this;
     }
 
     @Override

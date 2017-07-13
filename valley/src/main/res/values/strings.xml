@@ -876,4 +876,5 @@
     <string name="cut">剪切</string>
     <string name="handing_tip">处理中...</string>
     <string name="handing_error_tip">处理失败, 请重试.</string>
+    <string name="open_in_brower">在浏览器中打开</string>
 </resources>
