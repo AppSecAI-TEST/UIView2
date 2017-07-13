@@ -646,6 +646,8 @@ public class VideoRecordUIView extends UIBaseView {
     @Override
     public void onViewUnload() {
         super.onViewUnload();
+
+        RVideoEdit.INSTANCE.release();
     }
 
     @Override

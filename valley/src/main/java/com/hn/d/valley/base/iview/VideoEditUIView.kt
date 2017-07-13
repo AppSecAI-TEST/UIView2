@@ -320,6 +320,8 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
         super.onViewUnload()
         seekBar.release()
         mmr.release()
+
+        RVideoEdit.release()
     }
 }
 
