@@ -97,7 +97,13 @@ class MoreDynamicsUIView(var searchText: String) : SingleRecyclerUIView<LikeUser
     companion object {
         fun initDynamicsItemLayout(holder: RBaseViewHolder, dataBean: LikeUserInfoBean, mILayout: ILayout<*>, highlightWord: String?) {
             UserInfoAdapter.initUserItem(holder, dataBean, mILayout)
-            holder.tv(R.id.signature).text = dataBean.content
+
+            if ("news".equals(dataBean.share_type, true)) {
+                holder.tv(R.id.signature).text = holder.context.resources.getString(R.string.forward_information)
+            } else {
+                holder.tv(R.id.signature).text = dataBean.content
+            }
+
             holder.tv(R.id.time_text_view).text = TimeUtil.getTimeShowString(java.lang.Long.valueOf(dataBean.created)!! * 1000, false)
 
             val nameView: RTextView = holder.v(R.id.username)

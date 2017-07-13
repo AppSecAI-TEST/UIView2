@@ -66,8 +66,6 @@ object RVideoEdit {
         }
     }
 
-    private var videoLength: Long = 0//视频时长 s
-
 
     /**裁剪视频*/
     fun cutAndCompressVideo(activity: Activity, path: String, _outPath: String,
@@ -82,8 +80,7 @@ object RVideoEdit {
 
             mCutter?.execCommand(command, object : CutterListener {
                 override fun onExecSuccess(message: String) {
-                    videoLength = getVideoLength(cutOutPath)
-                    compressVideo(activity, cutOutPath, _outPath, _logoPath, listener)
+                    compressVideo(activity, cutOutPath, _outPath, _logoPath, getVideoLength(cutOutPath), listener)
                 }
 
                 override fun onExecFail(reason: String) {
@@ -98,7 +95,7 @@ object RVideoEdit {
     }
 
     /**压缩视频*/
-    fun compressVideo(activity: Activity, _cutPath: String, _outPath: String, _logoPath: String?, listener: OnExecCommandListener?) {
+    fun compressVideo(activity: Activity, _cutPath: String, _outPath: String, _logoPath: String?, videoLength: Long /**秒*/, listener: OnExecCommandListener?) {
         if (TextUtils.isEmpty(_cutPath)) {
             T_.error("视频路径不能为空")
             listener?.onExecFail("视频路径不能为空")

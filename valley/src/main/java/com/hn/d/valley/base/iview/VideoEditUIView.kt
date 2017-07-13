@@ -1,5 +1,6 @@
 package com.hn.d.valley.base.iview
 
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -16,6 +17,7 @@ import com.angcyo.library.utils.L
 import com.angcyo.uiview.Root
 import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.container.UIParam
+import com.angcyo.uiview.dialog.UIProgressDialog
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RFunc
 import com.angcyo.uiview.net.RSubscriber
@@ -33,6 +35,7 @@ import com.lzy.imagepicker.bean.ImageItem
 import com.m3b.rbvideolib.ImageSeekBar.ImageSeekBar
 import com.m3b.rbvideolib.widget.ScalableTextureView
 import com.m3b.rbvideolib.widget.TextureVideoView
+import rx.functions.Action1
 import java.io.File
 
 /**
@@ -46,40 +49,67 @@ import java.io.File
  * 修改备注：
  * Version: 1.0.0
  */
-class VideoEditUIView(val item: ImageItem) : BaseContentUIView() {
+class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVideoInfo>) : BaseContentUIView() {
 
-    val shuiyinPath: String = "${Root.getAppExternalFolder("cache")}/shui_yin_logo.jpeg"
 
-    override fun onViewCreate(rootView: View?, param: UIParam?) {
-        super.onViewCreate(rootView, param)
+    companion object {
+        val shuiyinPath: String = "${Root.getAppExternalFolder("cache")}/shui_yin_logo.jpeg"
 
-        //检查水印是否存在SD卡上
-        val file = File(shuiyinPath)
-        if (file.exists()) {
+        fun initShuiYin(resources: Resources) {
+            //检查水印是否存在SD卡上
+            val file = File(shuiyinPath)
+            if (file.exists()) {
 
-        } else {
-            AttachmentStore.saveBitmap(BitmapFactory.decodeResource(resources, R.drawable.shuiyin_1), shuiyinPath, false)
+            } else {
+                AttachmentStore.saveBitmap(BitmapFactory.decodeResource(resources, R.drawable.shuiyin_1), shuiyinPath, false)
+            }
         }
     }
 
+
+    private var outPath: String? = null
+
+    override fun onViewCreate(rootView: View?, param: UIParam?) {
+        super.onViewCreate(rootView, param)
+        initShuiYin(resources)
+    }
+
     override fun getTitleBar(): TitleBarPattern {
+        val progressDialog = UIProgressDialog.build().apply {
+            setCanCancel(false)
+            isDimBehind = false
+            setTipText(getString(R.string.handing_tip))
+        }
+
         return super.getTitleBar()
                 .setShowBackImageView(true)
                 .setTitleString(mActivity, R.string.video_edit_title)
                 .addRightItem(TitleBarPattern.buildText(getString(R.string.cut)) {
+                    val cropTime = seekBar.cropTime
+                    val currentTime = getCurrentTime(mCurrentX, mCurrentY)
+
+                    progressDialog.showDialog(mParentILayout)
+                    videoView.stop()
+                    seekBar.cancelIndicatorAnimator()
+
                     RVideoEdit.cutAndCompressVideo(mActivity,
                             item.path,
-                            "${Root.getAppExternalFolder("videos")}/${Root.createFileName(".mp4")}",
+                            getOutFilePath(),
                             shuiyinPath,
-                            getFormatTime(getCurrentTime(mCurrentX, mCurrentY)),
-                            getFormatTime(seekBar.cropTime),
+                            getFormatTime(currentTime),
+                            getFormatTime(cropTime),
                             object : OnExecCommandListener {
                                 override fun onExecProgress(progress: Int) {
                                     L.e("call: onExecProgress -> $progress")
+                                    progressDialog.setProgress(progress)
                                 }
 
                                 override fun onExecSuccess(message: String) {
                                     L.e("call: onExecSuccess -> $message")
+                                    progressDialog.finishDialog()
+                                    finishIView(this@VideoEditUIView, false)
+
+                                    onCommandSuccess.call(EditVideoInfo(outPath!!, cropTime))
                                 }
 
                                 override fun onExecStart() {
@@ -88,6 +118,8 @@ class VideoEditUIView(val item: ImageItem) : BaseContentUIView() {
 
                                 override fun onExecFail(reason: String) {
                                     L.e("call: onExecFail -> $reason")
+                                    progressDialog.finishDialog()
+                                    T_.error(getString(R.string.handing_error_tip))
                                 }
                             }
                     )
@@ -97,6 +129,11 @@ class VideoEditUIView(val item: ImageItem) : BaseContentUIView() {
     override fun onViewShowFirst(bundle: Bundle?) {
         super.onViewShowFirst(bundle)
         uiTitleBarContainer.showRightItem(0)
+    }
+
+    private fun getOutFilePath(): String {
+        outPath = "${Root.getAppExternalFolder("videos")}/${Root.createFileName(".mp4")}"
+        return outPath!!
     }
 
     private fun getFormatTime(msTime: Long): String {
@@ -285,3 +322,5 @@ class VideoEditUIView(val item: ImageItem) : BaseContentUIView() {
         mmr.release()
     }
 }
+
+data class EditVideoInfo(var videoPath: String, var videoDuration: Long)

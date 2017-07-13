@@ -874,4 +874,6 @@
     <string name="text_input_error">输入错误!</string>
     <string name="video_edit_title">视频剪切</string>
     <string name="cut">剪切</string>
+    <string name="handing_tip">处理中...</string>
+    <string name="handing_error_tip">处理失败, 请重试.</string>
 </resources>

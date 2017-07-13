@@ -124,7 +124,15 @@ public class LikeUserInfoBean {
     private int user_id;
     private int media_type;
     private String media;
+    private String share_type;
 
+    public String getShare_type() {
+        return share_type;
+    }
+
+    public void setShare_type(String share_type) {
+        this.share_type = share_type;
+    }
 
     public String getAvatar() {
         return avatar;

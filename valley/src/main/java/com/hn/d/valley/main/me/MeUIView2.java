@@ -24,7 +24,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.control.AdsControl;
 import com.hn.d.valley.control.DraftControl;
 import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
@@ -594,7 +593,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         @Override
                         public void onClick(View v) {
                             //MainControl.checkVersion(mParentILayout);
-                            AdsControl.INSTANCE.updateAds();
+                            //AdsControl.INSTANCE.updateAds();
 
                             //{"phone":"18770090887,18770080909","name":"张三，李四"}
 
@@ -619,7 +618,9 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //                                        }
 //                                    });
 
-                            int i = 1 / 0;
+                            //int i = 1 / 0;
+
+
                         }
                     });
                 }

@@ -19,8 +19,11 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.Root;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ContentLayout;
+import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIProgressDialog;
 import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -646,23 +649,66 @@ public class VideoRecordUIView extends UIBaseView {
     }
 
     @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+        VideoEditUIView.Companion.initShuiYin(getResources());
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         ArrayList<ImageItem> items = ImagePickerHelper.getItems(mActivity, requestCode, resultCode, data);
         if (items.size() > 0) {
-            ImageItem item = items.get(0);
+            final ImageItem item = items.get(0);
             if (item.loadType == ImageDataSource.VIDEO) {
                 //选择视频后返回
-                startIView(new VideoEditUIView(item));
-//                if (item.videoDuration / 1000 > getMaxRecordLength()) {
-//                    //视频时长大于限制, 剪切并压缩
-//
-//                } else if (item.size / 1024f > 50 * 1024) {
-//                    //视频大小大于限制, 压缩
-//
-//                } else {
-//                    fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
-//                }
+
+                if (item.videoDuration / 1000 > getMaxRecordLength()) {
+                    //视频时长大于限制, 剪切并压缩
+                    startIView(new VideoEditUIView(item, new Action1<EditVideoInfo>() {
+                        @Override
+                        public void call(EditVideoInfo editVideoInfo) {
+                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
+                        }
+                    }));
+                } else if (item.size / 1024f > 1 * 1024) {
+                    //视频大小大于限制, 压缩
+                    final UIProgressDialog progressDialog = UIProgressDialog.build();
+                    progressDialog.setCanCancel(false);
+                    progressDialog.setDimBehind(false);
+                    progressDialog.setTipText(getString(R.string.handing_tip));
+
+                    final String outPath = Root.getAppExternalFolder("videos") + File.separator + Root.createFileName(".mp4");
+                    RVideoEdit.INSTANCE.compressVideo(mActivity,
+                            item.path,
+                            outPath,
+                            VideoEditUIView.Companion.getShuiyinPath(),
+                            item.videoDuration / 1000,
+                            new OnExecCommandListener() {
+                                @Override
+                                public void onExecProgress(int progress) {
+                                    progressDialog.setProgress(progress);
+                                }
+
+                                @Override
+                                public void onExecSuccess(String message) {
+                                    progressDialog.finishIView();
+                                    fixVideoPath(outPath, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+                                }
+
+                                @Override
+                                public void onExecStart() {
+                                    progressDialog.showDialog(mParentILayout);
+                                }
+
+                                @Override
+                                public void onExecFail(String reason) {
+                                    progressDialog.finishIView();
+                                }
+                            });
+                } else {
+                    fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+                }
             }
 
 //            L.i("视频大小:" + item.size / 1024f + "Kb'");
