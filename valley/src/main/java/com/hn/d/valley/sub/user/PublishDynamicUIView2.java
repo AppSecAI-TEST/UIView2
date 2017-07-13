@@ -787,7 +787,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private void initControlLayout() {
 
         if (isForwardInformation()) {
-            mViewHolder.v(R.id.ico_at).setVisibility(View.GONE);
+            //mViewHolder.v(R.id.ico_at).setVisibility(View.GONE);//也需要@功能
         }
 
         mViewHolder.v(R.id.ico_pic).setOnClickListener(new View.OnClickListener() {
@@ -988,11 +988,13 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
      * 获取转发内容
      */
     private String getForwardContent() {
-        if (isForwardInformation()) {
-            mForwardInformationBean.setContent(mInputView.string());
-            return Json.to(mForwardInformationBean);
-        }
-        return mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
+//        if (isForwardInformation()) {
+//            mForwardInformationBean.setContent(mInputView.string());
+//            return Json.to(mForwardInformationBean);
+//        }
+
+
+        String mentionString = mInputView.fixMentionString(new ExEditText.getIdFromUserName() {
             @Override
             public String userId(String userName) {
                 for (FriendBean bean : mFriendList) {
@@ -1003,6 +1005,13 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 return "";
             }
         });
+
+        if (isForwardInformation()) {
+            mForwardInformationBean.setContent(mentionString);
+            return Json.to(mForwardInformationBean);
+        } else {
+            return mentionString;
+        }
     }
 
     @NonNull
