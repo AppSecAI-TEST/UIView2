@@ -879,4 +879,5 @@
     <string name="handing_error_tip">处理失败, 请重试.</string>
     <string name="text_not_over_10000">不超过10000元</string>
     <string name="open_in_brower">在浏览器中打开</string>
+    <string name="record_time_short_tip">录制时间太短!</string>
 </resources>

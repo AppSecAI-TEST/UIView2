@@ -1619,13 +1619,13 @@ public class UserDiscussItemControl {
     }
 
     public static int getVideoTimeLong(String url) {
-        int videoTime = -1;
+        float videoTime = -1f;
         try {
-            videoTime = Integer.parseInt(url.substring(0, url.lastIndexOf('.')).split("t_")[1]);
+            videoTime = Float.parseFloat(url.substring(0, url.lastIndexOf('.')).split("t_")[1]);
         } catch (Exception e) {
             //e.printStackTrace();
         }
-        return videoTime;
+        return (int) videoTime;
     }
 
     public static void displayImage(final ImageView imageView, final String url,

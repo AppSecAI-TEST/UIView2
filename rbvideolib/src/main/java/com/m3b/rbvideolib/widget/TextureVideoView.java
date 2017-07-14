@@ -499,4 +499,8 @@ public class TextureVideoView extends ScalableTextureView
         }
         return true;
     }
+
+    public MediaPlayer getMediaPlayer() {
+        return mMediaPlayer;
+    }
 }

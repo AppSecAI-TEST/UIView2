@@ -248,6 +248,7 @@ public class HnGlideImageView extends CircleImageView {
 //                    if (getDrawable() != null) {
 //                        builder.placeholder(getDrawable());
 //                    }
+                    builder.asBitmap();
                     builder.placeholder(R.drawable.defauit_avatar_contact);
                     builder.error(R.drawable.defauit_avatar_contact);
                     builder.into(HnGlideImageView.this);

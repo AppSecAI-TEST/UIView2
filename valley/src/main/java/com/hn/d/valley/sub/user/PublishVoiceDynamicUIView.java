@@ -13,6 +13,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.github.ripple.RippleBackground;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RSeekBar;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -161,10 +162,20 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                             }
 
                             @Override
-                            public void onRecordStop(String bgmPath, String filePath, long time) {
+                            public void onRecordStop(String bgmPath, final String filePath, final long time) {
                                 L.e("call: onRecordStop([bgmPath, filePath, time])-> " + filePath + " " + Math.floor(time / 1000f));
                                 //Record.playFile(filePath);
-                                replaceIView(new PublishVoiceNextDynamicUIView(filePath, time, mMusicRealm).setPublishAction(mPublishAction));
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (Math.floor(time / 1000f) < 3) {
+                                            T_.error(getString(R.string.record_time_short_tip));
+                                        } else {
+                                            replaceIView(new PublishVoiceNextDynamicUIView(filePath, time, mMusicRealm)
+                                                    .setPublishAction(mPublishAction));
+                                        }
+                                    }
+                                });
                             }
 
                             @Override

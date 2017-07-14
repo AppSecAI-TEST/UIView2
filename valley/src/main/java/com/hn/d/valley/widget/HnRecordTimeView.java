@@ -83,6 +83,10 @@ public class HnRecordTimeView extends RTextView {
         setText(String.format(Locale.CHINA, "%02d:%02d", m, s));
     }
 
+    public long getTime() {
+        return mTime;
+    }
+
     /**
      * 开始录制
      */

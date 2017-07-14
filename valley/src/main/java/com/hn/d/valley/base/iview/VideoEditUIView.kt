@@ -70,7 +70,6 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
 
 
     private var outPath: String? = null
-    private var callback = false
     private var cropTime: Long = 0
 
     override fun onViewCreate(rootView: View?, param: UIParam?) {
@@ -111,9 +110,10 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
                                 override fun onExecSuccess(message: String) {
                                     L.e("call: onExecSuccess -> $message")
                                     progressDialog.finishDialog()
-                                    mILayout.finishIView(this@VideoEditUIView, false)
+                                    mILayout.finishIView(this@VideoEditUIView, UIParam(false).setUnloadRunnable {
+                                        onCommandSuccess.call(EditVideoInfo(outPath!!, cropTime))
+                                    })
 
-                                    callback = true
                                 }
 
                                 override fun onExecStart() {
@@ -334,10 +334,6 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
         mmr.release()
 
         RVideoEdit.release()
-
-        if (callback) {
-            onCommandSuccess.call(EditVideoInfo(outPath!!, cropTime))
-        }
     }
 }
 

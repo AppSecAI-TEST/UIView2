@@ -16,14 +16,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.angcyo.library.utils.L;
-import com.angcyo.uiview.Root;
 import com.angcyo.uiview.base.UIBaseView;
+import com.angcyo.uiview.base.UIViewConfig;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UIParam;
-import com.angcyo.uiview.dialog.UIProgressDialog;
 import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -32,6 +32,7 @@ import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.media.BitmapDecoder;
 import com.angcyo.uiview.view.UIIViewImpl;
@@ -664,53 +665,121 @@ public class VideoRecordUIView extends UIBaseView {
             final ImageItem item = items.get(0);
             if (item.loadType == ImageDataSource.VIDEO) {
                 //选择视频后返回
+                VideoPreviewUIView videoPreviewUIView = new VideoPreviewUIView(new UIViewConfig() {
+                    @Override
+                    public void initOnShowContentLayout(final UIBaseView uiview, RBaseViewHolder viewHolder) {
+                        super.initOnShowContentLayout(uiview, viewHolder);
+                        View videoView = viewHolder.v(R.id.videoView);
+                        ViewGroup.LayoutParams layoutParams = videoView.getLayoutParams();
+                        layoutParams.width = ScreenUtil.screenWidth;
+                        layoutParams.height = (int) (item.height * (ScreenUtil.screenWidth * 1.f / item.width));
+                        videoView.setLayoutParams(layoutParams);
 
-                if (item.videoDuration / 1000 > getMaxRecordLength()) {
-                    //视频时长大于限制, 剪切并压缩
-                    startIView(new VideoEditUIView(item, new Action1<EditVideoInfo>() {
-                        @Override
-                        public void call(EditVideoInfo editVideoInfo) {
-                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
-                        }
-                    }));
-                } else if (item.size / 1024f > 50 * 1024) {
-                    //视频大小大于限制, 压缩
-                    final UIProgressDialog progressDialog = UIProgressDialog.build();
-                    progressDialog.setCanCancel(false);
-                    progressDialog.setDimBehind(false);
-                    progressDialog.setTipText(getString(R.string.handing_tip));
+                        viewHolder.v(R.id.root_layout).setBackgroundColor(SkinHelper.getSkin().getThemeTranColor(0x40));
+                        viewHolder.tv(R.id.ok_view).setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
-                    final String outPath = Root.getAppExternalFolder("videos") + File.separator + Root.createFileName(".mp4");
-                    RVideoEdit.INSTANCE.compressVideo(mActivity,
-                            item.path,
-                            outPath,
-                            VideoEditUIView.Companion.getShuiyinPath(),
-                            item.videoDuration / 1000,
-                            new OnExecCommandListener() {
+                        if (item.videoDuration / 1000 > getMaxRecordLength()) {
+                            viewHolder.tv(R.id.tip_view).setText("朋友圈只能分享不大于30秒的视频.");
+                            viewHolder.tv(R.id.ok_view).setText("编辑");
+
+                            viewHolder.click(R.id.ok_view, new View.OnClickListener() {
                                 @Override
-                                public void onExecProgress(int progress) {
-                                    progressDialog.setProgress(progress);
-                                }
-
-                                @Override
-                                public void onExecSuccess(String message) {
-                                    progressDialog.finishIView();
-                                    fixVideoPath(outPath, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
-                                }
-
-                                @Override
-                                public void onExecStart() {
-                                    progressDialog.showDialog(mParentILayout);
-                                }
-
-                                @Override
-                                public void onExecFail(String reason) {
-                                    progressDialog.finishIView();
+                                public void onClick(View v) {
+                                    uiview.replaceIView(new VideoEditUIView(item, new Action1<EditVideoInfo>() {
+                                        @Override
+                                        public void call(EditVideoInfo editVideoInfo) {
+                                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
+                                        }
+                                    }));
                                 }
                             });
-                } else {
-                    fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
-                }
+
+                        } else if (item.videoDuration / 1000 < 3) {
+                            viewHolder.tv(R.id.tip_view).setText("视频时长需要大于3秒.");
+                            viewHolder.tv(R.id.ok_view).setEnabled(false);
+                            viewHolder.tv(R.id.ok_view).setText("完成");
+                        } else if (item.size / 1024f > 50 * 1024) {
+                            viewHolder.tv(R.id.tip_view).setText("视频过大,请先编辑.");
+                            viewHolder.tv(R.id.ok_view).setText("编辑");
+
+                            viewHolder.click(R.id.ok_view, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    uiview.replaceIView(new VideoEditUIView(item, new Action1<EditVideoInfo>() {
+                                        @Override
+                                        public void call(EditVideoInfo editVideoInfo) {
+                                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
+                                        }
+                                    }));
+                                }
+                            });
+                        } else {
+                            viewHolder.tv(R.id.tip_view).setText("");
+                            viewHolder.tv(R.id.ok_view).setText("完成");
+
+                            viewHolder.click(R.id.ok_view, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    finishIView(uiview, new UIParam(false).setUnloadRunnable(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+                                        }
+                                    }));
+                                }
+                            });
+                        }
+                    }
+                });
+                videoPreviewUIView.setVideoPath(item.path);
+                startIView(videoPreviewUIView);
+
+//                if (item.videoDuration / 1000 > getMaxRecordLength()) {
+//                    //视频时长大于限制, 剪切并压缩
+//                    startIView(new VideoEditUIView(item, new Action1<EditVideoInfo>() {
+//                        @Override
+//                        public void call(EditVideoInfo editVideoInfo) {
+//                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
+//                        }
+//                    }));
+//                } else if (item.size / 1024f > 50 * 1024) {
+//                    //视频大小大于限制, 压缩
+//                    final UIProgressDialog progressDialog = UIProgressDialog.build();
+//                    progressDialog.setCanCancel(false);
+//                    progressDialog.setDimBehind(false);
+//                    progressDialog.setTipText(getString(R.string.handing_tip));
+//
+//                    final String outPath = Root.getAppExternalFolder("videos") + File.separator + Root.createFileName(".mp4");
+//                    RVideoEdit.INSTANCE.compressVideo(mActivity,
+//                            item.path,
+//                            outPath,
+//                            VideoEditUIView.Companion.getShuiyinPath(),
+//                            item.videoDuration / 1000,
+//                            new OnExecCommandListener() {
+//                                @Override
+//                                public void onExecProgress(int progress) {
+//                                    progressDialog.setProgress(progress);
+//                                }
+//
+//                                @Override
+//                                public void onExecSuccess(String message) {
+//                                    progressDialog.finishIView();
+//                                    fixVideoPath(outPath, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+//                                }
+//
+//                                @Override
+//                                public void onExecStart() {
+//                                    progressDialog.showDialog(mParentILayout);
+//                                }
+//
+//                                @Override
+//                                public void onExecFail(String reason) {
+//                                    progressDialog.finishIView();
+//                                }
+//                            });
+//                } else {
+//                    fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+//                }
             }
 
 //            L.i("视频大小:" + item.size / 1024f + "Kb'");

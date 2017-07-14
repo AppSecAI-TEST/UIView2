@@ -602,7 +602,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 //头像, 图片, 视频缩略图
                 imageView.setImageUrl(thumbIco, false);
                 mViewHolder.tv(R.id.username).setText(mHotInfoListBean.getAuthor());
-                contentView.setText(shareDes);
+
+                MoonUtil.show(mActivity, contentView, shareDes);
 
             } else if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
                 //不是转发的动态
@@ -615,7 +616,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
                 mViewHolder.tv(R.id.username).setText(mDataListBean.getUser_info().getUsername());
 
-                contentView.setText(getContent(mDataListBean.getContent()));
+                MoonUtil.show(mActivity, contentView, getContent(mDataListBean.getContent()));
             } else {
                 if (mDynamicType == DynamicType.FORWARD_TEXT) {
                     imageView.setContentDescription(getString(R.string.is_circle));
@@ -625,9 +626,11 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 }
 
                 mViewHolder.tv(R.id.username).setText(mDataListBean.getOriginal_info().getUsername());
-                contentView.setText(getContent(mDataListBean.getOriginal_info().getContent()));
+
+                MoonUtil.show(mActivity, contentView, getContent(mDataListBean.getOriginal_info().getContent()));
             }
         }
+
 
         //重新编辑的动态
         if (mPublishTaskRealm != null) {
