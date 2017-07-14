@@ -97,7 +97,7 @@ public class VideoRecordUIView extends UIBaseView {
     /**
      * 默认录像level
      */
-    GPUImageMovieWriter.Level DefaultLevel = GPUImageMovieWriter.Level.HIGH;
+    GPUImageMovieWriter.Level DefaultLevel = GPUImageMovieWriter.Level.MEDIUM;
     long lastSwitchTime = 0l;
     private GPUImage mGPUImage;
     private OrientationEventListener mOrientationEventListener;
@@ -276,7 +276,7 @@ public class VideoRecordUIView extends UIBaseView {
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.shuiyin_1);
         logofilter = new RBLogoFilter();// left, top, right, bottom
         logofilter.setBitmap(logo);
-        logofilter.setPostion(RBLogoFilter.Gravity.RIGHT | RBLogoFilter.Gravity.TOP, 100, 100);
+        logofilter.setPostion(RBLogoFilter.Gravity.RIGHT | RBLogoFilter.Gravity.TOP, 40, 50);
         logofilter.setBitmap(logo);
 
         // 实时美颜

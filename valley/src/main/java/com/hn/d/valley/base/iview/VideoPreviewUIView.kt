@@ -9,6 +9,7 @@ import android.widget.ImageView
 import com.angcyo.uiview.base.UIViewConfig
 import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
+import com.angcyo.uiview.skin.SkinHelper
 import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseContentUIView
 import com.m3b.rbvideolib.widget.ScalableTextureView
@@ -37,6 +38,10 @@ class VideoPreviewUIView(val viewConfig: UIViewConfig) : BaseContentUIView() {
                 .setFloating(true)
                 .setShowBackImageView(true)
                 .setTitleString("")
+    }
+
+    override fun getTitleBarBGColor(): Int {
+        return SkinHelper.getSkin().getThemeTranColor(0x80)
     }
 
     override fun inflateContentLayout(baseContentLayout: ContentLayout?, inflater: LayoutInflater?) {
