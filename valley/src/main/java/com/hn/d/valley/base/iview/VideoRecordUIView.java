@@ -667,7 +667,7 @@ public class VideoRecordUIView extends UIBaseView {
                 //选择视频后返回
                 VideoPreviewUIView videoPreviewUIView = new VideoPreviewUIView(new UIViewConfig() {
                     @Override
-                    public void initOnShowContentLayout(final UIBaseView uiview, RBaseViewHolder viewHolder) {
+                    public void initOnShowContentLayout(final UIIViewImpl uiview, RBaseViewHolder viewHolder) {
                         super.initOnShowContentLayout(uiview, viewHolder);
                         View videoView = viewHolder.v(R.id.videoView);
                         ViewGroup.LayoutParams layoutParams = videoView.getLayoutParams();

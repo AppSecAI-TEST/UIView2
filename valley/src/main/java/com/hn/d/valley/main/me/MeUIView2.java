@@ -63,18 +63,18 @@ import io.realm.RealmResults;
  */
 public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo> {
 
-    private List<String> mPhotos = new ArrayList<>();
-    private int mDrawPadding;
-    /**
-     * 收藏的资讯数量
-     */
-    private int mCollectCount = 0;
     Runnable refreshRunnable = new Runnable() {
         @Override
         public void run() {
             loadUserData();
         }
     };
+    private List<String> mPhotos = new ArrayList<>();
+    private int mDrawPadding;
+    /**
+     * 收藏的资讯数量
+     */
+    private int mCollectCount = 0;
 
     static void resize(View view, int size, int margin) {
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -621,6 +621,14 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                             //int i = 1 / 0;
 
 
+                        }
+                    });
+
+                    holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            int i = 1 / 0;
+                            return false;
                         }
                     });
                 }
