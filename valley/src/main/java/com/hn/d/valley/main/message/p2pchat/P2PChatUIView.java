@@ -114,6 +114,10 @@ public class P2PChatUIView extends ChatUIView2 {
     }
 
     private void initContactFocus() {
+        // 当前对象恐龙君不显示
+        if (mSessionId.equals(Constant.klj)) {
+            return;
+        }
         add(RRetrofit.create(ContactService.class)
                 .getRelationship(Param.buildMap("to_uid:" + mSessionId))
                 .compose(Rx.transformer(Integer.class))

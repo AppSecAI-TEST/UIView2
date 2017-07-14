@@ -84,6 +84,8 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
                 }
             }
         } else {
+            //最后一条动态
+            dataBean.getNewest_dynamic();
             signatureView.setText(dataBean.getNewest_dynamic());
         }
     }

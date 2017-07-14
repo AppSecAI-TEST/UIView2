@@ -251,7 +251,6 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
             object.put("money", params.money * 100);
             if (type == 0) {
                 //充值
-
             } else if (type == 1) {
                 // 发红包
                 object.put("num", params.num);

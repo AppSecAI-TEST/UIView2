@@ -60,8 +60,8 @@ public class WalletHelper {
                                     return responseBody.string();
                                 } catch (IOException e) {
                                     e.printStackTrace();
+                                    return "";
                                 }
-                                return "";
                             }
                         })
                         .retry(3)

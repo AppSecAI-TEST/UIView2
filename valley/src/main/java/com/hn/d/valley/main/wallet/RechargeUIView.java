@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
@@ -78,8 +79,9 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 holder.tv(R.id.input_tip_view).setText(R.string.text_jine_yuan);
                 edit_text_view = holder.v(R.id.edit_text_view);
-                edit_text_view.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                edit_text_view.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
                 edit_text_view.setMaxNumber(10000);
+                edit_text_view.setHint(R.string.text_not_over_10000);
                 edit_text_view.setDecimalCount(2);
                 TextWatcher textWatcher = new TextWatcher() {
                     @Override
@@ -118,6 +120,14 @@ public class RechargeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                         if (TextUtils.isEmpty(money)) {
                             return;
                         }
+
+                        if (Float.valueOf(money) > 10000) {
+                            UIDialog.build()
+                                    .setDialogContent("最大金额不超过10000元!")
+                                    .showDialog(mILayout);
+                            return;
+                        }
+
                         PayUIDialog.Params params = new PayUIDialog.Params(1,Float.valueOf(money) * 100,"","0",null,0);
                         params.enableBalance(false);
                         startIView(new ThirdPayUIDialog(new Action1() {

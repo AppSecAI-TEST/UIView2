@@ -543,19 +543,19 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
     }
 
     @Override
-    public void onGroupHeadAit(String nick){
+    public void onGroupHeadAit(IMMessage message){
         // 点击头像ait
         mInputView.unableCallback();
         mInputView.insert("@");
-        mInputView.addMention(nick);
+        mInputView.addMention(message.getFromNick());
         if (selectedMembers == null) {
             selectedMembers = new HashMap<>();
         }
         GroupMemberBean memberBean = new GroupMemberBean();
-        memberBean.setDefaultNick(nick);
-        memberBean.setUserId("");
+        memberBean.setDefaultNick(message.getFromNick());
+        memberBean.setUserId(message.getFromAccount());
         mInputView.enableCallback();
-        selectedMembers.put(nick,memberBean);
+        selectedMembers.put(message.getFromNick(),memberBean);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.hn.d.valley.main.wallet;
 
 import android.text.Editable;
+import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -57,6 +59,11 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
     ExEditText et_money;
     Button btn_next;
+    private TextView tv_note;
+
+    public static final float INTEREST = 0.0055f;
+
+    private boolean refundTotal;
 
     public RefundUIView() {
 
@@ -116,8 +123,31 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 TextView tv_tip = holder.v(R.id.tv_tip);
-                TextView tv_note = holder.v(R.id.tv_note);
+                tv_note = holder.v(R.id.tv_note);
                 et_money = holder.v(R.id.et_count);
+                et_money.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_CLASS_NUMBER);
+                et_money.setMaxNumber(10000);
+//                et_money.setHint(R.string.text_not_over_10000);
+                et_money.setDecimalCount(2);
+
+                String prestr = mActivity.getString(R.string.text_can_refund_money) + WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + " ,";
+                final SpannableStringBuilder totalRefundBuilder = SpannableStringUtils.getBuilder(prestr)
+                        .append(mActivity.getString(R.string.text_can_refund_money))
+                        .setClickSpan(new ClickableSpan() {
+                            @Override
+                            public void onClick(View widget) {
+                                refundTotal = true;
+                                et_money.setText(WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + "");
+                            }
+
+                            @Override
+                            public void updateDrawState(TextPaint ds) {
+                                super.updateDrawState(ds);
+                                ds.setUnderlineText(false);
+                                ds.setColor(SkinHelper.getSkin().getThemeSubColor());
+                            }
+                        })
+                        .create();
 
                 et_money.addTextChangedListener(new TextWatcher() {
                     @Override
@@ -132,29 +162,38 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
                     @Override
                     public void afterTextChanged(Editable s) {
-                        btn_next.setEnabled(!TextUtils.isEmpty(s.toString()));
+                        refundTotal = false;
+                        if (TextUtils.isEmpty(s.toString())) {
+                            tv_note.setText(totalRefundBuilder);
+                            return;
+                        }
+
+                        float amount = Float.valueOf(s.toString());
+                        if (amount < 10) {
+                            tv_note.setText(SpannableStringUtils.getBuilder("提现金额最少10元").setForegroundColor(getColor(R.color.base_red)).create());
+                            btn_next.setEnabled(false);
+                            return;
+                        }
+
+                        if (amount > 10000) {
+                            tv_note.setText(getString(R.string.text_not_over_10000));
+                            return;
+                        }
+
+                        if (WalletHelper.getInstance().getWalletAccount().getMoney() / 100f == amount) {
+                            refundTotal = true;
+                            et_money.setText(amount * (1 - INTEREST) + "");
+                            tv_note.setText(String.format("额外扣除 ￥%.2f元手续费",  amount * INTEREST));
+                        }
+//                        amount * 0.0055  ,(1 - 0.0055) * amount;
+                        tv_note.setText(String.format("额外扣除 ￥%.2f元手续费", amount * INTEREST));
+                        btn_next.setEnabled(true);
                     }
                 });
 
                 tv_tip.setText(R.string.text_write_refund_money);
-                String prestr = mActivity.getString(R.string.text_can_refund_money) + WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + " ,";
                 tv_note.setMovementMethod(LinkMovementMethod.getInstance());
-                tv_note.setText(SpannableStringUtils.getBuilder(prestr)
-                        .append(mActivity.getString(R.string.text_can_refund_money))
-                        .setClickSpan(new ClickableSpan() {
-                            @Override
-                            public void onClick(View widget) {
-                                et_money.setText(WalletHelper.getInstance().getWalletAccount().getMoney() / 100f + "");
-                            }
-
-                            @Override
-                            public void updateDrawState(TextPaint ds) {
-                                super.updateDrawState(ds);
-                                ds.setUnderlineText(false);
-                                ds.setColor(SkinHelper.getSkin().getThemeSubColor());
-                            }
-                        })
-                        .create());
+                tv_note.setText(totalRefundBuilder);
 
             }
         }));
@@ -226,28 +265,31 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             T_.show(getString(R.string.text_input_error));
             return;
         }
-        UIDialog.build()
-                .setDialogContent(String.format(getString(R.string.text_notice_refund_shouxufei
-                        ,Float.valueOf(money) * 0.0055,(1 - 0.0055) * Float.valueOf(money))))
-                .setOkText(getString(R.string.text_crashout))
-                .setOkListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PayUIDialog.Params params = new PayUIDialog.Params();
-                        params.setMoney(Float.valueOf(money));
-                        params.setType(4);
-                        startIView(new RechargeAndRefundUIDialog(new Action1() {
-                            @Override
-                            public void call(Object o) {
-                                finishIView();
-                            }
-                        },params));
-                    }
-                }).
-                showDialog(mILayout);
+        float amount = Float.valueOf(money);
+        float totalAmount = amount + amount * INTEREST;
+        if (refundTotal) {
+            totalAmount = WalletHelper.getInstance().getWalletAccount().getMoney() / 100f;
+        }
+//        UIDialog.build()
+//                .setDialogContent(String.format(getString(R.string.text_notice_refund_shouxufei
+//                        ,)
+//                .setOkText(getString(R.string.text_crashout))
+//                .setOkListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+        PayUIDialog.Params params = new PayUIDialog.Params();
+        params.setMoney(totalAmount);
+        params.setType(4);
+        startIView(new RechargeAndRefundUIDialog(new Action1() {
+            @Override
+            public void call(Object o) {
+                finishIView();
+            }
+        }, params));
+//                    }
+//                }).
+//                showDialog(mILayout);
     }
-
-
 
 
 }

@@ -580,7 +580,7 @@
     <string name="text_withdrawal_fail_msg">提现失败,你的提现金额: ￥%1$.2f已退回你的钱包</string>
     <string name="text_klgcoin_consume_msg">充值%1$d个龙币成功</string>
     <string name="text_pwd_error_freeze">密码输错过错次，已冻结，离解冻还剩 %1$s</string>
-    <string name="text_pwd_error_reaming">密码错误，剩余可尝试次数 %d</string>
+    <string name="text_pwd_error_reaming">支付密码不正确，你还可以输入 %d 次</string>
     <string name="add_picture">添加图片</string>
     <string name="play_tip">点击播放</string>
     <string name="re_record">重录</string>
@@ -751,6 +751,7 @@
     <string name="text_is_change_owner">确定将群转让给TA?</string>
     <string name="text_edit_announce_sure_tip">编辑群公告将会通知所有群成员?</string>
     <string name="text_search_place">搜索地点</string>
+    <string name="text_search_nick">搜索昵称</string>
     <string name="text_upgrade_success">升级成功!</string>
     <string name="text_group_upgrade_true_tip">确定要将该群升级为 %1$s 人群</string>
     <string name="text_group_upgrade_false_tip">对不起,你当前等级最多支持 %1$s 人群</string>
@@ -876,5 +877,6 @@
     <string name="cut">剪切</string>
     <string name="handing_tip">处理中...</string>
     <string name="handing_error_tip">处理失败, 请重试.</string>
+    <string name="text_not_over_10000">不超过10000元</string>
     <string name="open_in_brower">在浏览器中打开</string>
 </resources>

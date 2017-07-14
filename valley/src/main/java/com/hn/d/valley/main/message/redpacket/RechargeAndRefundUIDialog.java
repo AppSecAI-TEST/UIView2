@@ -200,7 +200,7 @@ public class RechargeAndRefundUIDialog extends UIIDialogImpl {
                     .showDialog(mOtherILayout);
         } else if (code == 403) {
             UIDialog.build()
-                    .setDialogContent(String.format(getString(R.string.text_pwd_error_freeze), TimeUtil.getTimeString(data)))
+                    .setDialogContent(String.format(getString(R.string.text_pwd_error_freeze), TimeUtil.getElapseTimeForShow(data * 1000)))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);

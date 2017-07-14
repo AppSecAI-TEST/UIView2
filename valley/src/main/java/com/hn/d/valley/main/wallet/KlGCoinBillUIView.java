@@ -113,7 +113,7 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean>{
                     @Override
                     public void onSucceed(KLGCoinList beans) {
                         hideLoadView();
-                        if (beans == null || beans.getData_count() == 0) {
+                        if (beans == null || beans.getData_list().size() == 0) {
                             onUILoadDataEnd();
                         } else {
                             onUILoadDataEnd(beans.getData_list());

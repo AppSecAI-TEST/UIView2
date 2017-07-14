@@ -129,7 +129,6 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
         itemInfoLayout.setOnClickListener {
             val params = PayUIDialog.Params()
 //            params.balance = WalletHelper.getInstance().walletAccount.money
-
             params.setMoney(coin * 10f)
                     .setCoin(coin)
                     .setWay(1)
@@ -149,7 +148,6 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
                 }
                 if (money >= params.money) {
                     mParentILayout.startIView(PayUIDialog(action, params))
-
                 } else {
                     mParentILayout.startIView(ChoosePayWayUIDialog(action, params))
                 }

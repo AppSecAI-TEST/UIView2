@@ -58,7 +58,7 @@ public class SessionHelper {
     }
 
     public interface GroupHeadAitListener {
-        void onGroupHeadAit(String nick);
+        void onGroupHeadAit(IMMessage message);
     }
 
     // 会话窗口消息列表一些点击事件的响应处理函数

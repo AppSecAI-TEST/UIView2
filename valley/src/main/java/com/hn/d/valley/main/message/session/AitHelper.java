@@ -189,7 +189,7 @@ public class AitHelper {
             return "";
         }
         String memberNick = member.getDefaultNick();
-        if (!TextUtils.isEmpty(memberNick)) {
+        if (!TextUtils.isEmpty(memberNick) && !memberNick.equals(" ")) {
             return memberNick;
         }
 

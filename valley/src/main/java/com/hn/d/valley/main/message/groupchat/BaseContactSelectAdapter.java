@@ -21,7 +21,12 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     protected Action2 action;
 
+    // 已选中的user
     protected List<String> mSelectedUsers;
+
+
+    //标记不可选中的user
+    protected List<String> mSelectedFinalUsers;
 
     protected Options options;
 
@@ -48,6 +53,18 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
 
     public void setSelecteUids(List<String> selecteUids) {
         this.mSelectedUsers = selecteUids;
+    }
+
+    public List<String> getSelectedUsers() {
+        return mSelectedUsers;
+    }
+
+    public List<String> getSelectedFinalUsers() {
+        return mSelectedFinalUsers;
+    }
+
+    public void setSelectedFinalUsers(List<String> mSelectedFinalUsers) {
+        this.mSelectedFinalUsers = mSelectedFinalUsers;
     }
 
     @Override
@@ -112,6 +129,11 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
         boolean isSelectUids = true;
 
         /**
+         * 是否标记不可选中
+         */
+        boolean isSelectFinalUids = true;
+
+        /**
          * 是否显示dialog
          */
         boolean showDialog = false;
@@ -133,14 +155,14 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
         }
 
         public Options(int mode, int limit, boolean showCheckBox) {
-            this(mode,limit,showCheckBox,true);
+            this(mode, limit, showCheckBox, true);
         }
 
-        public Options(int mode, int limit,boolean showCheckBox,boolean isSelectUids) {
-            this(mode,limit,showCheckBox,isSelectUids,false);
+        public Options(int mode, int limit, boolean showCheckBox, boolean isSelectUids) {
+            this(mode, limit, showCheckBox, isSelectUids, false);
         }
 
-        public Options(int mode, int limit,boolean showCheckBox,boolean isSelectUids,boolean showDialog) {
+        public Options(int mode, int limit, boolean showCheckBox, boolean isSelectUids, boolean showDialog) {
             this.showDialog = showDialog;
             this.mode = mode;
             this.selectCountLimit = limit;

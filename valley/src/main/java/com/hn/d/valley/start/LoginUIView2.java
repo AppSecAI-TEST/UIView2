@@ -40,6 +40,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
+import com.hn.d.valley.main.message.redpacket.ChoosePayWayUIDialog;
 import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.service.StartService;
@@ -295,7 +296,8 @@ public class LoginUIView2 extends BaseContentUIView {
         mViewHolder.v(R.id.forget_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new SetPasswordUIView(SetPasswordUIView.TYPE_FORGET_PW));
+//                startIView(new SetPasswordUIView(SetPasswordUIView.TYPE_FORGET_PW));
+                startIView(new ChooseTagsUIView());
             }
         });
         //手机注册

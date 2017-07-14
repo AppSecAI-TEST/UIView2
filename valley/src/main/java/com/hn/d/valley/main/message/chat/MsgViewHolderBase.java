@@ -234,7 +234,9 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>, V extends
         msgIcoView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                getMsgAdapter().getHeadAitListener().onGroupHeadAit(message.getFromNick());
+                if (getMsgAdapter().getHeadAitListener() != null) {
+                    getMsgAdapter().getHeadAitListener().onGroupHeadAit(message);
+                }
 //                SessionHelper.getSessionListener().onAvatarLongClicked(mUIBaseView, message);
                 return true;
             }

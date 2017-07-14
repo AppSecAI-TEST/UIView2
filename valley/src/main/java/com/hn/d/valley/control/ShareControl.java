@@ -2,6 +2,7 @@ package com.hn.d.valley.control;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.angcyo.uiview.net.rsa.Spm;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.BmpUtil;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.umeng.UM;
 import com.bumptech.glide.Glide;
@@ -291,7 +293,6 @@ public class ShareControl {
                         imageView.setImageBitmap(cornerBitmap);
 //                        final String avatar = mActivity.getCacheDir().getAbsolutePath() + File.separator + UUID.randomUUID().toString();
 //                        AttachmentStore.saveBitmap(cornerBitmap, avatar, false);
-
                         createQrCode(h5_url,
                                 (int) ResUtil.dpToPx(mActivity, 200),
                                 Color.BLACK,
@@ -300,7 +301,7 @@ public class ShareControl {
                                     @Override
                                     public void call(Bitmap bitmap) {
                                         qrView.setImageBitmap(bitmap);
-                                        onQrCodeCreateEnd(mActivity, convertViewToBitmap(ll_share_root), shareMedia);
+                                        onQrCodeCreateEnd(mActivity, layoutView(ll_share_root, ScreenUtil.dip2px(400),ScreenUtil.dip2px(500)), shareMedia);
                                     }
                                 });
                     }
@@ -310,12 +311,33 @@ public class ShareControl {
 
     public static Bitmap convertViewToBitmap(View view) {
         L.d("convertViewToBitmap ; width : " + view.getMeasuredWidth() + "height : " + view.getMeasuredHeight());
+
         view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                 , View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
         L.d("convertViewToBitmap after ; width : " + view.getMeasuredWidth() + "height : " + view.getMeasuredHeight());
         view.buildDrawingCache();
         return view.getDrawingCache();
+    }
+
+    // view 没有添加到界面上截图
+    private static Bitmap layoutView(View v, int width, int height) {
+        // validate view.width and view.height
+        v.layout(0, 0, width, height);
+        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
+        int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
+
+        // validate view.measurewidth and view.measureheight
+        v.measure(measuredWidth, measuredHeight);
+        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+        int viewWidth = v.getMeasuredWidth();
+        int viewHeight = v.getMeasuredHeight();
+        Bitmap b = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
+        if (viewWidth > 0 && viewHeight > 0) {
+            Canvas cvs = new Canvas(b);
+            v.draw(cvs);
+        }
+        return b;
     }
 
     /**

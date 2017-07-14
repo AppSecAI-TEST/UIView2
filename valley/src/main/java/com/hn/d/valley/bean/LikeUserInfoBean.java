@@ -3,6 +3,10 @@ package com.hn.d.valley.bean;
 import android.text.TextUtils;
 
 import com.angcyo.uiview.utils.file.FileUtil;
+import com.hn.d.valley.R;
+import com.hn.d.valley.ValleyApp;
+
+import org.json.JSONObject;
 
 /**
  * Created by angcyo on 2017-01-15.
@@ -126,7 +130,9 @@ public class LikeUserInfoBean {
     private String media;
     private String share_type;
 
-    /**新的朋友字段*/
+    /**
+     * 新的朋友字段
+     */
     private CustomMessageBean.BodyBean mBodyBean;
 
     public CustomMessageBean.BodyBean getBodyBean() {
@@ -357,6 +363,16 @@ public class LikeUserInfoBean {
     }
 
     public String getNewest_dynamic() {
+        if (!TextUtils.isEmpty(newest_dynamic)) {
+            try {
+                JSONObject jsonObject = new JSONObject(newest_dynamic);
+                String news_id = jsonObject.getString("news_id");
+                if (!TextUtils.isEmpty(news_id)) {
+                    return ValleyApp.getApp().getResources().getString(R.string.forward_information);
+                }
+            } catch (Exception e) {
+            }
+        }
         return newest_dynamic;
     }
 

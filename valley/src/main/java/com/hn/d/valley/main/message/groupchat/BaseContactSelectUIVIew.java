@@ -39,6 +39,8 @@ import rx.functions.Action3;
 public class BaseContactSelectUIVIew extends BaseUIView {
 
     public static final String SELECTED_UIDS = "SELECTED_UIDS";
+    public static final String SELECTED_FINAL_UIDS = "SELECTED_FINAL_UIDS";
+
     protected BaseContactSelectAdapter.Options options;
     protected BaseContactSelectAdapter mGroupAdapter;
     protected IDataResource.IDataActionProvider datatProvider;
@@ -48,7 +50,9 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     RecyclerView recyclerView;
     WaveSideBarView sideBarView;
     boolean isCancel = true;
+
     private List<String> mSelectedUids;
+    private List<String> mSelectedFinalUids;
 
 
     public BaseContactSelectUIVIew(BaseContactSelectAdapter.Options options) {
@@ -78,6 +82,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
         if (param != null && param.mBundle != null) {
             mSelectedUids = (List<String>) param.mBundle.getSerializable(SELECTED_UIDS);
+            mSelectedFinalUids = (List<String>) param.mBundle.getSerializable(SELECTED_FINAL_UIDS);
         }
     }
 
@@ -116,6 +121,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
         recyclerView.setAdapter(mGroupAdapter);
 
         mGroupAdapter.setSelecteUids(mSelectedUids);
+        mGroupAdapter.setSelectedFinalUsers(mSelectedFinalUids);
 
         sideBarView.setOnTouchLetterChangeListener(new WaveSideBarView.OnTouchLetterChangeListener() {
             @Override

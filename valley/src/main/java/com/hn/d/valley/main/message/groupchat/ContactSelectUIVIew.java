@@ -9,6 +9,7 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
@@ -19,6 +20,8 @@ import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.SearchUserUIView;
+import com.hn.d.valley.main.other.ContactSearchAdapter;
+import com.hn.d.valley.main.other.ContactSearchUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
 
 import java.io.Serializable;
@@ -46,11 +49,21 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         return start(mLayout, options, uids, false, selectAction);
     }
 
+
     public static ContactSelectUIVIew start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
-                                            List<String> uids/**默认选中*/, boolean onShowGroup,/*是否显示群聊funcitem*/
+                                            List<String> uids/**默认选中*/,boolean onShowGroup,/*是否显示群聊funcitem*/
+                                            Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
+        return start(mLayout,options,uids,new ArrayList<String>(),onShowGroup,selectAction);
+
+    }
+
+
+    public static ContactSelectUIVIew start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
+                                            List<String> uids/**默认选中*/,List<String> finanUids,boolean onShowGroup,/*是否显示群聊funcitem*/
                                             Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
+        bundle.putSerializable(SELECTED_FINAL_UIDS, (Serializable) finanUids);
         ContactSelectUIVIew targetView = new ContactSelectUIVIew(options);
         targetView.setSelectAction(selectAction);
         targetView.onShowGroup = onShowGroup;
@@ -121,12 +134,12 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 //        }
     }
 
-    private void processResult(List<FriendBean> beanList) {
+    private void processResult(final List<FriendBean> beanList) {
         showContentLayout();
 
         refreshLayout.setRefreshEnd();
 
-        List<AbsContactItem> datas = new ArrayList();
+        final List<AbsContactItem> datas = new ArrayList();
 
         //转发等需要转发到群聊 需要添加群聊funcItem
         if (onShowGroup) {
@@ -156,7 +169,21 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         datas.add(new FuncItem<>(mActivity.getString(R.string.search), ItemTypes.SEARCH, new Action1<ILayout>() {
             @Override
             public void call(ILayout o) {
-                mParentILayout.startIView(new SearchUserUIView());
+//                mParentILayout.startIView(new SearchUserUIView());
+                mParentILayout.startIView(new ContactSearchUIView(beanList, new Action1<FriendBean>() {
+                    @Override
+                    public void call(FriendBean friendBean) {
+                        List<String> selectedUsers = mGroupAdapter.getSelectedUsers();
+                        if (selectedUsers == null) {
+                            selectedUsers = new ArrayList<>();
+                            mGroupAdapter.setSelecteUids(selectedUsers);
+                        }
+                        selectedUsers.add(friendBean.getUid());
+                        ((ContactSelectAdapter) mGroupAdapter).showSelectUsers();
+                        mGroupAdapter.notifyDataSetChanged();
+//                        onSelected();
+                    }
+                }));
             }
         }));
 
@@ -165,7 +192,6 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         }
 
         FriendsControl.sort(datas);
-
         mGroupAdapter.resetData(datas);
 
         sideBarView.setLetters(FriendsControl.generateIndexLetter(datas));

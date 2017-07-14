@@ -209,6 +209,10 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
             return;
         }
 
+        if (money < 0.01) {
+
+        }
+
         PayUIDialog.Params params = new PayUIDialog.Params(1,money,content,to_uid,null,0);
         params.setBalance(account.getMoney());
         params.setType(1);

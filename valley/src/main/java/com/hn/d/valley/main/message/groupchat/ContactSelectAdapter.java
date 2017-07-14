@@ -97,9 +97,9 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
             final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
             checkBox.setTag(position);
 
-            if (!options.isSelectUids && mSelectedUsers != null && mSelectedUsers.size() != 0) {
+            if (!options.isSelectFinalUids && mSelectedFinalUsers != null && mSelectedFinalUsers.size() != 0) {
                 FriendBean friendBean = ((ContactItem)bean).getFriendBean();
-                if (mSelectedUsers.contains(friendBean.getUid()) ){
+                if (mSelectedFinalUsers.contains(friendBean.getUid()) ){
                     mCheckStats.put(position,true);
                     holder.itemView.setEnabled(false);
                     holder.itemView.setBackgroundResource(R.color.default_base_bg_dark2);
@@ -158,6 +158,11 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
         mAllDatas.clear();
         mAllDatas.addAll(datas);
 
+        showSelectUsers();
+        //notifyItemRangeChanged(1,datas.size() - 1);
+    }
+
+    public void showSelectUsers() {
         if (options.isSelectUids && mSelectedUsers != null && mSelectedUsers.size() != 0) {
             List<Integer> indexList = new ArrayList<>();
             // j == 0 为 搜索项 不参与查找
@@ -174,13 +179,12 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
                 mCheckStats.put(indexList.get(i),true);
             }
             // 选中 indexlist 标记的item
-            setSelectIndexs((RRecyclerView) mRecyclerView,R.id.cb_friend_addfirend,indexList);
+            setSelectIndexs((RRecyclerView) mRecyclerView, R.id.cb_friend_addfirend,indexList);
             // post 选中数量显示
             RBus.post(new SelectedUserNumEvent(getSelectorData().size()));
         } else {
             notifyDataSetChanged();
         }
-        //notifyItemRangeChanged(1,datas.size() - 1);
     }
 
     @Override

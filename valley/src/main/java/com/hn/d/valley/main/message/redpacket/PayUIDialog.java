@@ -223,10 +223,12 @@ public class PayUIDialog extends UIIDialogImpl {
                     .showDialog(mOtherILayout);
         } else if (code == 403) {
             UIDialog.build()
-                    .setDialogContent(String.format(getString(R.string.text_pwd_error_freeze), TimeUtil.getTimeString(data)))
+                    .setDialogContent(String.format(getString(R.string.text_pwd_error_freeze), TimeUtil.getElapseTimeForShow(data * 1000)))
                     .setOkText(mActivity.getString(R.string.ok))
                     .setCancelText(mActivity.getString(R.string.cancel))
                     .showDialog(mOtherILayout);
+        } else {
+            T_.show(getString(R.string.text_access_error));
         }
     }
 
@@ -266,18 +268,19 @@ public class PayUIDialog extends UIIDialogImpl {
             JSONObject jsonObject = new JSONObject(beans);
             code = jsonObject.optInt("code");
 
-            if (Constants.SUCCESS == code) {
+            if (200 == code) {
                 data = jsonObject.optInt("data");
                 T_.show(mActivity.getString(R.string.text_send_success));
                 if (action != null) {
                     action.call(code);
                 }
-            } else if (Constants.FAIL == code) {
-//                T_.show(mActivity.getString(R.string.text_send_fail));
-                T_.show(jsonObject.optString("data"));
+            } else  {
+                T_.show(mActivity.getString(R.string.text_send_fail));
+//                T_.show(jsonObject.optString("data"));
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            T_.show(getString(R.string.text_access_error));
         }
 
         finishDialog();
