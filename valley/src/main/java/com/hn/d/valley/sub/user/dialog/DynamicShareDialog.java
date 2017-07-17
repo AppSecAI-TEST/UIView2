@@ -193,25 +193,25 @@ public class DynamicShareDialog extends UIIDialogImpl {
                         return;
                     }
                     getILayout().finishIView(DynamicShareDialog.class);
-                    ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                    ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options()
                             , null, true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                 @Override
                                 public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
 
                                     requestCallback.onSuccess("");
 
-                                    ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                                    FriendBean friendBean = contactItem.getFriendBean();
                                     SessionTypeEnum type = SessionTypeEnum.P2P;
-                                    // 暂时 size > 1 判断 team
-                                    if (absContactItems.size() > 1) {
+                                    if (uiBaseDataView == null) {
                                         type = SessionTypeEnum.Team;
                                     }
-                                    DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mDataListBean);
-                                    DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
-                                    IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
-                                    msgService().sendMessage(message, false);
-
+                                    for (AbsContactItem item : absContactItems) {
+                                        ContactItem contactItem = (ContactItem) item;
+                                        FriendBean friendBean = contactItem.getFriendBean();
+                                        DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mDataListBean);
+                                        DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
+                                        IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
+                                        msgService().sendMessage(message, false);
+                                    }
                                     T_.ok(getString(R.string.share_success));
 
                                 }
@@ -290,25 +290,33 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 @Override
                 public void onClick(View v) {
                     getILayout().finishIView(DynamicShareDialog.class);
-                    ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
+                    ContactSelectUIVIew.start(mParentILayout, new BaseContactSelectAdapter.Options()
                             , null, true, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                 @Override
                                 public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
 
                                     requestCallback.onSuccess("");
 
-                                    ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                                    FriendBean friendBean = contactItem.getFriendBean();
                                     SessionTypeEnum type = SessionTypeEnum.P2P;
-                                    // 暂时 size > 1 判断 team
-                                    if (absContactItems.size() > 1) {
+                                    // 注释暂时 size > 1 判断 team
+//                                    if (absContactItems.size() > 1) {
+//                                        type = SessionTypeEnum.Team;
+//                                    }
+                                    // 选择群 uibasedataview 为 null
+                                    if (uiBaseDataView == null) {
                                         type = SessionTypeEnum.Team;
                                     }
-                                    DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mHotInfoListBean);
-                                    DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
-                                    IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
-                                    msgService().sendMessage(message, false);
-                                    T_.show("分享成功!");
+
+                                    for (AbsContactItem item : absContactItems) {
+                                        ContactItem contactItem = (ContactItem) item;
+                                        FriendBean friendBean = contactItem.getFriendBean();
+                                        DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mHotInfoListBean);
+                                        DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
+                                        IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
+                                        msgService().sendMessage(message, false);
+                                    }
+
+                                    T_.ok(getString(R.string.share_success));
 
                                 }
                             });

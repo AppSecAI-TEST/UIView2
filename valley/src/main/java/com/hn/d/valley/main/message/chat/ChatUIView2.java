@@ -80,6 +80,7 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.StickerEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -162,7 +163,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     }
 
     /**
-     *
      * @param sessionId   聊天对象账户
      * @param sessionType 聊天类型, 群聊, 单聊
      */
@@ -278,7 +278,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     int end = mInputView.getSelectionEnd();
                     start = (start < 0 ? 0 : start);
                     end = (end < 0 ? 0 : end);
-                    L.e("ChatUIView2" ,"onEmojiSelected start :" + start + "end: " + end + " emoji : " + emoji);
+                    L.e("ChatUIView2", "onEmojiSelected start :" + start + "end: " + end + " emoji : " + emoji);
                     mInputView.getText().replace(start, end, emoji);
 
                     MoonUtil.show(mActivity, mInputView, mInputView.getText().toString());
@@ -606,7 +606,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        mChatControl.onLoad(mSessionId,sessionType);
+        mChatControl.onLoad(mSessionId, sessionType);
     }
 
     @Override
@@ -618,7 +618,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        L.d("chatuiview2","onViewShow ");
+        L.d("chatuiview2", "onViewShow ");
         mChatControl.onViewShow();
     }
 
@@ -639,23 +639,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             final String lastId = mSessionId;
 
             setTitleString(NimUserInfoCache.getInstance().getUserDisplayName(mSessionId));
-
-//            NimUserInfoCache.getInstance().getUserInfoFromRemote(mSessionId, new com.netease.nimlib.sdk.RequestCallback<NimUserInfo>() {
-//                @Override
-//                public void onSuccess(NimUserInfo param) {
-//                    setTitleString(param.getName());
-//                }
-//
-//                @Override
-//                public void onFailed(int code) {
-//
-//                }
-//
-//                @Override
-//                public void onException(Throwable exception) {
-//
-//                }
-//            });
 
             loadFirst(lastId);
         }
@@ -929,7 +912,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     @Subscribe
     public void onEvent(AVChatFloatEvent event) {
-        L.d("ChatUIVIew2 onKeyDown :: "  + event.show);
+        L.d("ChatUIVIew2 onKeyDown :: " + event.show);
         if (event.show) {
             AVChatDelegete.getInstance().showFloatingView();
         } else {

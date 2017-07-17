@@ -238,7 +238,7 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 //                SkinHelper.getSkin().getThemeSubColor(),
 //                ContextCompat.getColor(mActivity, R.color.base_text_color_dark)));
 
-        if (mAccount.hasMoney() && mAccount.hasPin()) {
+        if (mAccount.hasMoney() && mAccount.hasPin() ) {
             btn_crashout.setEnabled(true);
         } else {
             btn_crashout.setEnabled(false);
@@ -255,10 +255,18 @@ public class MyWalletUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         btn_crashout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isBindPhone()) {
-                    startIView(new RefundUIView());
-                } else {
+                if (isBindPhone()) {
                     toBindPhone();
+                    return;
+                }
+
+                if (!mAccount.hasAlipay()) {
+                    T_.show(getString(R.string.text_notbind_alipay));
+                    startIView(new BindAliPayTipUIView(false));
+                    return;
+                }
+                if (!isBindPhone() && mAccount.hasAlipay()) {
+                    startIView(new RefundUIView());
                 }
             }
         });

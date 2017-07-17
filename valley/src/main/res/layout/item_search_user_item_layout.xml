@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.angcyo.uiview.viewgroup.RLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/base_white_bg_selector"
+    android:background="@drawable/base_bg_selector"
     android:orientation="vertical">
 
     <TextView
@@ -254,4 +254,4 @@
         </LinearLayout>
 
     </LinearLayout>
-</LinearLayout>
+</com.angcyo.uiview.viewgroup.RLinearLayout>

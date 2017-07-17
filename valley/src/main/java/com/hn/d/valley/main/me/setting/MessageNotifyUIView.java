@@ -58,32 +58,6 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                         MsgNotifySetting.instance().toggleNotification(isChecked);
-
-//                        NIMClient.getService(MixPushService.class).enable(isChecked)
-//                                .setCallback(new RequestCallback<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void param) {
-//                                        MsgNotifySetting.instance().toggleNotification(isChecked);
-//                                    }
-//
-//                                    @Override
-//                                    public void onFailed(int code) {
-//                                        // 这种情况是客户端不支持第三方推送
-//                                        switchCompat.setChecked(!MsgNotifySetting.instance().isEnableNoti());
-//                                        if (code == ResponseCode.RES_UNSUPPORT) {
-//
-//                                        } else if (code == ResponseCode.RES_EFREQUENTLY) {
-//
-//                                        } else {
-//
-//                                        }
-//                                    }
-//
-//                                    @Override
-//                                    public void onException(Throwable exception) {
-//
-//                                    }
-//                                });
                     }
                 });
                 infoLayout.setItemText(mActivity.getString(R.string.text_reveive_msg_notify));

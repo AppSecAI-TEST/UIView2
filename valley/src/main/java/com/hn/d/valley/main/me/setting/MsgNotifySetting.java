@@ -50,7 +50,7 @@ public class MsgNotifySetting {
     // 开启/关闭通知栏消息提醒
     public MsgNotifySetting toggleNotification(boolean enable) {
         NIMClient.toggleNotification(enable);
-        NIMClient.updateStatusBarNotificationConfig(RNim.genNotiConfig());
+//        NIMClient.updateStatusBarNotificationConfig(RNim.genNotiConfig());
         mSPUtils.putBoolean(TOGGLENOTIFICATION,enable);
         return this;
     }

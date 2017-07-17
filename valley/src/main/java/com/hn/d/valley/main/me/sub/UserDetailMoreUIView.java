@@ -156,17 +156,19 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                             @Override
                             public void onClick(View v) {
                                 // 发送名片
-                                Options option = new Options(RModelAdapter.MODEL_SINGLE);
+                                Options option = new Options();
                                 ContactSelectUIVIew.start(mILayout, option
                                         , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                             @Override
                                             public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
                                                 requestCallback.onSuccess("");
-                                                ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                                                FriendBean friendBean = contactItem.getFriendBean();
-                                                PersonalCardAttachment attachment = new PersonalCardAttachment(mUserInfoBean);
-                                                IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
-                                                msgService().sendMessage(message,false);
+                                                for (AbsContactItem item : absContactItems) {
+                                                    ContactItem contactItem = (ContactItem) item;
+                                                    FriendBean friendBean = contactItem.getFriendBean();
+                                                    PersonalCardAttachment attachment = new PersonalCardAttachment(mUserInfoBean);
+                                                    IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
+                                                    msgService().sendMessage(message, false);
+                                                }
 
                                             }
                                         });

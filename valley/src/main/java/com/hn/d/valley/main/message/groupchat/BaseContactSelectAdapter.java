@@ -10,6 +10,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.functions.Action2;
@@ -56,6 +57,9 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
     }
 
     public List<String> getSelectedUsers() {
+        if (mSelectedUsers == null) {
+            mSelectedUsers = new ArrayList<>();
+        }
         return mSelectedUsers;
     }
 

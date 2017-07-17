@@ -34,7 +34,7 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
     var balanceView: ItemInfoLayout? = null
 
     override fun getTitleBar(): TitleBarPattern {
-        return super.getTitleBar().setTitleString("购买龙币")
+        return super.getTitleBar().setTitleString(getString(R.string.klg_coin))
     }
 
 
@@ -48,8 +48,8 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
                 itemInfoLayout.setItemDarkText(UserCache.instance().loginBean.coins)
                 balanceView = itemInfoLayout
                 itemInfoLayout.setItemText("龙币余额")
-                itemInfoLayout.setDarkDrawableRes(R.drawable.longbi)
-//                itemInfoLayout.darkTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+//                itemInfoLayout.setDarkDrawableRes(R.drawable.longbi)
+                itemInfoLayout.darkTextView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.longbi, 0, 0, 0)
             }
         }))
 

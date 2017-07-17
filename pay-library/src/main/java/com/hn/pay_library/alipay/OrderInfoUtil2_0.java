@@ -72,11 +72,11 @@ public class OrderInfoUtil2_0 {
     public static String biz_content_Json(Builder builder) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("timeout_express", "30m");
+            jsonObject.put("timeout_express", builder.timeout_express);
             jsonObject.put("product_code", "QUICK_MSECURITY_PAY");
             jsonObject.put("total_amount", builder.total_amount);
-            jsonObject.put("subject", "1");
-            jsonObject.put("body", "我是测试数据");
+            jsonObject.put("subject", builder.subject);
+            jsonObject.put("body", builder.body);
             jsonObject.put("out_trade_no", builder.out_trade_no);
         } catch (JSONException e) {
             e.printStackTrace();

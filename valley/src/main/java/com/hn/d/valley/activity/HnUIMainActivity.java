@@ -37,6 +37,7 @@ public class HnUIMainActivity extends BaseActivity {
     public static void launcher(Activity activity, boolean isLoginSuccess) {
         Intent intent = new Intent(activity, HnUIMainActivity.class);
         intent.putExtra(KEY_IS_LOGIN_SUCCESS, isLoginSuccess);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
@@ -114,7 +115,7 @@ public class HnUIMainActivity extends BaseActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        L.d("HnUIMainActivity : taskid : " + getTaskId());
+        L.d("HnUIMainActivity : taskId : " + getTaskId());
 
         super.onNewIntent(intent);
     }
@@ -137,7 +138,7 @@ public class HnUIMainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //RNim.initOnce(getApplication());
-        L.d("HnUIMainActivity : taskid : " + getTaskId());
+        L.d(this.getClass().getSimpleName() + " : taskId : " + getTaskId());
 
     }
 

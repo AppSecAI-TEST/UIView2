@@ -1,7 +1,9 @@
 package com.hn.d.valley.main.me;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
@@ -620,7 +622,10 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 
                             //int i = 1 / 0;
 
-
+                            Uri webPage = Uri.parse("klg://klg.com");
+                            Intent webIntent = new Intent(Intent.ACTION_VIEW, webPage);
+                            webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mActivity.startActivity(webIntent);
                         }
                     });
 

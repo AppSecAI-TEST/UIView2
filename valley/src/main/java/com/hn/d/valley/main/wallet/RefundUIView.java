@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -181,8 +182,10 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                         }
 
                         if (WalletHelper.getInstance().getWalletAccount().getMoney() / 100f == amount) {
-                            refundTotal = true;
+                            et_money.unableCallback();
                             et_money.setText(amount * (1 - INTEREST) + "");
+                            // refuoundtotal 赋值在settext 后执行 因为settext 会执行回调 aftertextchange refoundtotal = false
+                            refundTotal = true;
                             tv_note.setText(String.format("额外扣除 ￥%.2f元手续费",  amount * INTEREST));
                         }
 //                        amount * 0.0055  ,(1 - 0.0055) * amount;

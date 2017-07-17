@@ -22,10 +22,13 @@ import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.wallet.RechargeUIView;
 import com.hn.d.valley.main.wallet.SetPayPwdUIView;
 import com.hn.d.valley.main.wallet.WalletAccount;
+import com.hn.d.valley.main.wallet.WalletAccountUpdateEvent;
 import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.ArrayList;
@@ -134,6 +137,11 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                             enable = false;
                             T_.show(mActivity.getString(R.string.text_hongbao_lower_200));
                         }
+                        if (money < 0.01) {
+                            enable = false;
+//                            T_.show(mActivity.getString(R.string.text_hongbao_lower_001));
+                        }
+
                         btn_send.setEnabled(enable);
                     }
                 };
@@ -204,18 +212,25 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
             content = etContent.getHint().toString();
         }
         float money = Float.valueOf(etMoney.getText().toString()) * 100;
-        if (money > account.getMoney()) {
-            T_.show(getString(R.string.text_balance_not_enough));
-            return;
-        }
-
-        if (money < 0.01) {
-
-        }
 
         PayUIDialog.Params params = new PayUIDialog.Params(1,money,content,to_uid,null,0);
         params.setBalance(account.getMoney());
         params.setType(1);
+        if (money > account.getMoney()) {
+            T_.show(getString(R.string.text_balance_not_enough));
+
+            params.enableBalance(false);
+            startIView(new ThirdPayUIDialog(new Action1() {
+                @Override
+                public void call(Object o) {
+                    finishIView();
+                }
+            },params, ThirdPayUIDialog.ALIPAY,0));
+
+            return;
+        }
+
+
         mParentILayout.startIView(new PayUIDialog(new Action1() {
             @Override
             public void call(Object o) {

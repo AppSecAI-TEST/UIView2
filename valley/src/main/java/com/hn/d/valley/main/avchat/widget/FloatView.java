@@ -57,6 +57,7 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
     private ImageView iv_max_sclae;
     private Chronometer tv_audio_tip;
     private View ll_audio_flag;
+    private View rootView;
 
     private float mTouchStartX;
     private float mTouchStartY;
@@ -117,28 +118,28 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
 
     private View createView(Context mContext) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.layout_avchat_float, null);
+        rootView = inflater.inflate(R.layout.layout_avchat_float, null);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            view.setElevation(10);
+            rootView.setElevation(10);
         }
 
-        small_size_preview_layout = (FrameLayout) view.findViewById(R.id.small_size_preview_layout);
-        small_size_preview = (LinearLayout) view.findViewById(R.id.small_size_preview);
-        small_preview_render = (AVChatVideoRender) view.findViewById(R.id.small_preview_render);
-        micro_preview_render = (AVChatVideoRender) view.findViewById(R.id.micro_preview_render);
-        smallSizePreviewCoverImg = (ImageView) view.findViewById(R.id.smallSizePreviewCoverImg);
-        ll_micro_preview = (LinearLayout) view.findViewById(R.id.ll_micro_preview);
-        iv_max_sclae = (ImageView) view.findViewById(R.id.iv_max_sclae);
-        ll_audio_flag = view.findViewById(R.id.iv_audio_flag);
-        tv_audio_tip = (Chronometer) view.findViewById(R.id.tv_audio_tip);
+        small_size_preview_layout = (FrameLayout) rootView.findViewById(R.id.small_size_preview_layout);
+        small_size_preview = (LinearLayout) rootView.findViewById(R.id.small_size_preview);
+        small_preview_render = (AVChatVideoRender) rootView.findViewById(R.id.small_preview_render);
+        micro_preview_render = (AVChatVideoRender) rootView.findViewById(R.id.micro_preview_render);
+        smallSizePreviewCoverImg = (ImageView) rootView.findViewById(R.id.smallSizePreviewCoverImg);
+        ll_micro_preview = (LinearLayout) rootView.findViewById(R.id.ll_micro_preview);
+        iv_max_sclae = (ImageView) rootView.findViewById(R.id.iv_max_sclae);
+        ll_audio_flag = rootView.findViewById(R.id.iv_audio_flag);
+        tv_audio_tip = (Chronometer) rootView.findViewById(R.id.tv_audio_tip);
 
         int width = mScreenWidth / 4;
         int height = (int) (width * (mScreenHeight * 1.0f / mScreenWidth));
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(width,height);
         small_size_preview.setLayoutParams(params);
 
-        view.setOnTouchListener(this);
+        rootView.setOnTouchListener(this);
 //        view.setOnClickListener(new OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -146,11 +147,11 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
 //            }
 //        });
 
-        view.measure(View.MeasureSpec.makeMeasureSpec(0,
+        rootView.measure(View.MeasureSpec.makeMeasureSpec(0,
                 View.MeasureSpec.UNSPECIFIED), View.MeasureSpec
                 .makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
 
-        return view;
+        return rootView;
     }
 
     public void checkPermission() {
@@ -211,10 +212,14 @@ public class FloatView extends FrameLayout implements View.OnTouchListener{
 
     public void setActionListener (OnClickListener listener) {
         this.mActionListener = listener;
-        if (getChildCount() == 1) {
-            View view = getChildAt(0);
-            view.setOnClickListener(listener);
-        }
+        rootView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( !mDraging ) {
+                    mActionListener.onClick(rootView);
+                }
+            }
+        });
     }
 
     @Override

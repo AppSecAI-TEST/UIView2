@@ -2,6 +2,7 @@ package com.hn.d.valley.main.message.p2pchat;
 
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
@@ -12,12 +13,15 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.skin.SkinImpl;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
+import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.session.SessionCustomization;
@@ -32,6 +36,7 @@ import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +118,32 @@ public class P2PChatUIView extends ChatUIView2 {
         initContactFocus();
     }
 
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        NimUserInfoCache.getInstance().getUserInfoFromRemote(mSessionId, new com.netease.nimlib.sdk.RequestCallback<NimUserInfo>() {
+            @Override
+            public void onSuccess(NimUserInfo param) {
+                if (param == null) {
+                    return;
+                }
+                if (!TextUtils.isEmpty(param.getName())) {
+                    setTitleString(param.getName());
+                }
+            }
+
+            @Override
+            public void onFailed(int code) {
+
+            }
+
+            @Override
+            public void onException(Throwable exception) {
+
+            }
+        });
+    }
+
     private void initContactFocus() {
         // 当前对象恐龙君不显示
         if (mSessionId.equals(Constant.klj)) {
@@ -129,6 +160,7 @@ public class P2PChatUIView extends ChatUIView2 {
                         if (bean == 0 || bean == 6) {
                             ll_focus.setVisibility(View.VISIBLE);
                             TextView tv_focus = (TextView) ll_focus.findViewById(R.id.btn_send);
+                            tv_focus.setBackground(SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
                             tv_focus.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -138,6 +170,7 @@ public class P2PChatUIView extends ChatUIView2 {
                             tv_focus.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+                                    collapseFocuslayout();
                                     add(RRetrofit.create(UserService.class)
                                             .attention(Param.buildMap("to_uid:" + mSessionId))
                                             .compose(Rx.transformer(String.class))
@@ -145,7 +178,11 @@ public class P2PChatUIView extends ChatUIView2 {
                                                 @Override
                                                 public void onSucceed(String bean) {
                                                     T_.show(getResources().getString(R.string.attention_successed_tip));
-                                                    collapseFocuslayout();
+                                                }
+
+                                                @Override
+                                                public void onError(int code, String msg) {
+                                                    super.onError(code, msg);
                                                 }
                                             }));
                                 }

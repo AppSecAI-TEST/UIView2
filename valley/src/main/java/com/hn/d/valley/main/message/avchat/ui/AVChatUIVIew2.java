@@ -395,9 +395,7 @@ public class AVChatUIVIew2 extends BaseUIView implements AVChatUI.AVChatListener
             AVChatSoundPlayer.instance().stop();
 
             if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_BUSY) {
-
                 AVChatSoundPlayer.instance().play(AVChatSoundPlayer.RingerTypeEnum.PEER_BUSY);
-
                 avChatUI.closeSessions(AVChatExitCode.PEER_BUSY);
             } else if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_REJECT) {
                 avChatUI.closeSessions(AVChatExitCode.REJECT);

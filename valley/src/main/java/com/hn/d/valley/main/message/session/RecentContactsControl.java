@@ -499,11 +499,9 @@ public class RecentContactsControl {
         } else if (attachment instanceof PersonalCardAttachment) {
             PersonalCard card = ((PersonalCardAttachment) attachment).getPersonalCard();
             if (card != null) {
-                if (TextUtils.isEmpty(card.getMsg())) {
-                    return "个人名片";
-                }
                 return card.getMsg();
             }
+            return "个人名片";
         } else if (attachment instanceof RedPacketAttachment) {
             return "红包消息";
         } else if (attachment instanceof GrabedMsgAttachment) {

@@ -58,6 +58,9 @@ public class MsgVHRefundMsg extends MsgViewHolderBase {
 
         imageView.setImageResource(R.drawable.hongbao_xiao_konglongjun);
         NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+        if (refundMsg.getExtend() == null ) {
+            return;
+        }
         if (refundMsg.getExtend().getTo_uid() == 0) {
             tv_pc_name.setText(String.format(Locale.CHINA,context.getString(R.string.text_msg_notice_refund),refundMsg.getReason()
                     , TeamDataCache.getInstance().getTeamName(refundMsg.getExtend().getTo_gid() + ""),refundMsg.getMoney() / 100f));

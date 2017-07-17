@@ -155,9 +155,8 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                                     ContactItem item = new ContactItem(briend);
                                     List<AbsContactItem> list = new ArrayList<>();
                                     list.add(item);
-                                    // 暂时 size > 1 判断 team
-                                    list.add(item);
-//                                    ContactSelectUIVIew.this.finishIView();
+                                    // 注释暂时 size > 1 判断 team
+//                                    list.add(item);
                                     getILayout().finishIView(ContactSelectUIVIew.class);
                                     selectAction.call(null, list, requestCallback);
                                 }
@@ -174,10 +173,6 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                     @Override
                     public void call(FriendBean friendBean) {
                         List<String> selectedUsers = mGroupAdapter.getSelectedUsers();
-                        if (selectedUsers == null) {
-                            selectedUsers = new ArrayList<>();
-                            mGroupAdapter.setSelecteUids(selectedUsers);
-                        }
                         selectedUsers.add(friendBean.getUid());
                         ((ContactSelectAdapter) mGroupAdapter).showSelectUsers();
                         mGroupAdapter.notifyDataSetChanged();

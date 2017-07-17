@@ -2,6 +2,7 @@ package com.hn.d.valley.control;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -27,11 +28,13 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.viewgroup.RLinearLayout;
 import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.ImageTextView;
 import com.angcyo.uiview.widget.RExTextView;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RNineImageLayout;
+import com.angcyo.uiview.widget.RTextView;
 import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.GifRequestBuilder;
 import com.bumptech.glide.Glide;
@@ -138,6 +141,9 @@ public class UserDiscussItemControl {
         //holder.fillView(dataListBean, true);
         //holder.fillView(user_info, true);
 
+        //推荐动态
+        holder.v(R.id.top_image_view).setVisibility("1".equalsIgnoreCase(dataListBean.getIs_recommend()) ? View.VISIBLE : View.GONE);
+
         //用户名
         holder.tv(R.id.username).setText(user_info.getUsername());
         //多少人阅读
@@ -155,10 +161,18 @@ public class UserDiscussItemControl {
         holder.tv(R.id.comment_cnt).setText(dataListBean.getComment_cnt());
 
         //时间
-        TextView showTimeView = holder.v(R.id.show_time);
+        RTextView showTimeView = holder.v(R.id.show_time);
         showTimeView.setVisibility(View.VISIBLE);
         if (TextUtils.isEmpty(dataListBean.uuid)) {
             showTimeView.setText(dataListBean.getShow_time());
+
+            if ("2".equalsIgnoreCase(dataListBean.getScan_type())) {
+                showTimeView.setRightIco(R.drawable.private_gary);
+            } else if ("1".equalsIgnoreCase(dataListBean.getScan_type())) {
+                showTimeView.setRightIco(-1);
+            } else {
+                showTimeView.setRightIco(R.drawable.partiallyvisible_gray);
+            }
         } else {
             if (PublishControl.instance().getTaskStatus(dataListBean.uuid) == PublishTaskRealm.STATUS_ERROR) {
                 showTimeView.setText(R.string.send_error);
@@ -320,10 +334,11 @@ public class UserDiscussItemControl {
             holder.v(R.id.forward_control_layout).setVisibility(View.GONE);
         }
 
+        //动态未发布
         View rootLayout = holder.v(R.id.item_root_layout);
         if (itemRootAction != null) {
             if (TextUtils.isEmpty(dataListBean.uuid)) {
-                rootLayout.setBackgroundResource(R.drawable.base_white_bg_selector);
+                rootLayout.setBackgroundResource(R.drawable.base_bg_selector);
             } else {
                 rootLayout.setBackgroundColor(SkinHelper.getSkin().getThemeTranColor(0x20));
             }
@@ -541,10 +556,15 @@ public class UserDiscussItemControl {
     }
 
     /**
-     * 动态是否置顶
+     * 动态是否置顶,
      */
     public static void showTopView(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
-        holder.v(R.id.top_image_view).setVisibility("1".equalsIgnoreCase(dataListBean.getIs_top()) ? View.VISIBLE : View.GONE);
+        //置顶动态
+        if ("1".equalsIgnoreCase(dataListBean.getIs_top())) {
+            ((RLinearLayout) holder.itemView).setRBackgroundDrawable(ContextCompat.getColor(holder.getContext(), R.color.top_background_color));
+        } else {
+            ((RLinearLayout) holder.itemView).setRBackgroundDrawable(ContextCompat.getColor(holder.getContext(), R.color.base_white));
+        }
     }
 
     private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean,

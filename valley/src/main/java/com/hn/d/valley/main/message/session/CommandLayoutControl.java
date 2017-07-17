@@ -6,6 +6,7 @@ import android.support.annotation.DrawableRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -92,21 +93,24 @@ public class CommandLayoutControl {
 
         @Override
         protected View createContentView(ViewGroup parent, int viewType) {
-            RelativeLayout relativeLayout = new RelativeLayout(mContext);
+//            RelativeLayout relativeLayout = new RelativeLayout(mContext);
+//
+//            TextView textView = new TextView(mContext);
+//            textView.setTag("text");
+//            textView.setGravity(Gravity.CENTER);
+//
+//            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);
+////            params.topMargin = ScreenUtil.dip2px(10);
+////            params.bottomMargin = ScreenUtil.dip2px(10);
+//            params.addRule(RelativeLayout.CENTER_IN_PARENT);
+//            relativeLayout.addView(textView, params);
+//
+//            relativeLayout.setClickable(true);
+//            relativeLayout.setBackgroundResource(R.drawable.base_bg_selector);
+//            return relativeLayout;
 
-            TextView textView = new TextView(mContext);
-            textView.setTag("text");
-            textView.setGravity(Gravity.CENTER);
-
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(-2, -2);
-//            params.topMargin = ScreenUtil.dip2px(10);
-//            params.bottomMargin = ScreenUtil.dip2px(10);
-            params.addRule(RelativeLayout.CENTER_IN_PARENT);
-            relativeLayout.addView(textView, params);
-
-            relativeLayout.setClickable(true);
-            relativeLayout.setBackgroundResource(R.drawable.base_bg_selector);
-            return relativeLayout;
+            View view = LayoutInflater.from(mContext).inflate(R.layout.item_headimg_name_view,null);
+            return view;
         }
 
         @Override
@@ -117,9 +121,19 @@ public class CommandLayoutControl {
                     bean.onClick();
                 }
             });
-            final TextView textView = holder.tag("text");
-            textView.setText(bean.text);
-            textView.setCompoundDrawablesWithIntrinsicBounds(0, bean.icoResId, 0, 0);
+            holder.tv(R.id.tv_username).setText(bean.text);
+            holder.imgV(R.id.image_view).setImageResource(bean.icoResId);
+//            final TextView textView = holder.tag("text");
         }
+//            holder.itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    bean.onClick();
+//                }
+//            });
+//            final TextView textView = holder.tag("text");
+//            textView.setText(bean.text);
+//            textView.setCompoundDrawablesWithIntrinsicBounds(0, bean.icoResId, 0, 0);
+//        }
     }
 }

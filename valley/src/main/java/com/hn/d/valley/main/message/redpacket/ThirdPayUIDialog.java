@@ -79,6 +79,13 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     private OrderInfoUtil2_0.Builder builder;
 
 
+    /**
+     *
+     * @param action
+     * @param params 传进来的 money 单位统一为 分
+     * @param thirdType
+     * @param missionType
+     */
     public ThirdPayUIDialog(Action1 action, PayUIDialog.Params params, String thirdType,int missionType) {
         this.params = params;
         this.type = thirdType;
@@ -183,21 +190,26 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     private void pay() {
         String missionParam = generateParam(missionType);
 
+        builder = new OrderInfoUtil2_0.Builder()
+                .setAppId(APPID)
+                .setTimeout("30m")
+                .setProductCode("QUICK_MSECURITY_PAY")
+                .setTotalAmount(String.valueOf(params.money / 100))
+                .setRSA2(true);
+
         if (missionType == 0) {
             //充值
+            builder.setSubject("余额充值")
+                    .setBody("余额充值");
         } else if(missionType == 1) {
             //发红包
+            builder.setSubject("发红包")
+            .setBody("发红包");
         } else if (missionType == 2) {
             // 充龙币
+            builder.setSubject("充龙币")
+            .setBody("充龙币");
         }
-
-         builder = new OrderInfoUtil2_0.Builder()
-         .setAppId(APPID)
-         .setTimeout("30m")
-         .setProductCode("QUICK_MSECURITY_PAY")
-         .setTotalAmount(String.valueOf(params.money / 100))
-         .setSubject("1").setRSA2(true)
-         .setBody("我是测试数据");
 
         RRetrofit.create(WalletService.class)
                 .alipayPrepar(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
@@ -248,7 +260,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         JSONObject object = new JSONObject();
         try {
             object.put("uid", Integer.valueOf(UserCache.getUserAccount()));
-            object.put("money", params.money * 100);
+            object.put("money", params.money);
             if (type == 0) {
                 //充值
             } else if (type == 1) {

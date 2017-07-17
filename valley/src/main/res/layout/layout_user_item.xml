@@ -55,11 +55,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/show_time"
                 style="@style/DarkTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/base_xhdpi"
                 android:textSize="@dimen/default_text_little_size"
                 tools:text="1分钟前"/>
 
@@ -128,10 +129,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/base_xxxhdpi"
-        tools:visibility="visible"
-        android:src="@drawable/icon_zhiding"
-        android:visibility="gone"/>
+        android:layout_marginEnd="@dimen/base_70dpi"
+        android:layout_marginTop="@dimen/base_xxhdpi_"
+        android:src="@drawable/tuijian"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/view_cnt"

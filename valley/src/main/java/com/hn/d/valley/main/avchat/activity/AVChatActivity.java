@@ -94,7 +94,6 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
             AVChatSoundPlayer.instance().stop();
 
             if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_BUSY) {
-                T_.show(getString(R.string.avchat_in_call_or_busying));
                 AVChatSoundPlayer.instance().play(AVChatSoundPlayer.RingerTypeEnum.PEER_BUSY);
                 avChatUI.closeSessions(AVChatExitCode.PEER_BUSY);
             } else if (ackInfo.getEvent() == AVChatEventType.CALLEE_ACK_REJECT) {
@@ -202,6 +201,7 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
     Observer<AVChatCommonEvent> callHangupObserver = new Observer<AVChatCommonEvent>() {
         @Override
         public void onEvent(AVChatCommonEvent avChatHangUpInfo) {
+            T_.show(getString(R.string.avchat_peer_reject));
 
             AVChatSoundPlayer.instance().stop();
 

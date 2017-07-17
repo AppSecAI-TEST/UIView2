@@ -1039,6 +1039,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 .setLat(getLatitude())
                 .setLng(getLongitude())
                 .setAllow_download(allowDownloadView.isChecked() ? 1 : 0)
+                .setScan_type(levelType.getId())
+                .setScan_user(RUtils.connect(visiableFriends))
                 .setShowContent(mInputView.fixShowMentionString(new ExEditText.getIdFromUserName() {
                     @Override
                     public String userId(String userName) {

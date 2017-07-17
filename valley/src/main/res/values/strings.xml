@@ -355,7 +355,7 @@
     <string name="more_information">更多资讯</string>
     <string name="text_my_album">我的相册</string>
     <string name="personalized_dress">个性装扮</string>
-    <string name="klg_coin">龙币</string>
+    <string name="klg_coin">购买龙币</string>
     <string name="free">免费</string>
     <string name="theme_skin">主题皮肤</string>
     <string name="black">黑色</string>
@@ -539,7 +539,8 @@
     <string name="text_please_input_new_pwd">请输入新密码</string>
     <string name="text_pay_pwd_failed">支付密码校验失败！</string>
     <string name="text_please_input_pwd">请输入密码</string>
-    <string name="text_hongbao_lower_200">红包金额不能大于200</string>
+    <string name="text_hongbao_lower_200">红包金额不能大于200元</string>
+    <string name="text_hongbao_lower_001">红包金额不能小于0.01元</string>
     <string name="text_single_money">单个金额</string>
     <string name="text_amout_money">总金额</string>
     <string name="text_new_old_pwd_not_same">两次密码不一致！</string>
@@ -817,6 +818,7 @@
     <string name="text_refund_success">申请提现成功!</string>
     <string name="text_params_lose">参数缺失</string>
     <string name="text_unbind_phone">未绑定手机</string>
+    <string name="text_notbind_alipay">未绑定支付宝</string>
     <string name="text_alipay_had_bind">支付宝已经被其他用户绑定</string>
     <string name="tex_server_error">服务器错误</string>
     <string name="text_operate_count_enough">当日操作次数已达上限</string>
