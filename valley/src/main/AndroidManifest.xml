@@ -125,6 +125,7 @@
         <activity
             android:name=".JumpActivity"
             android:noHistory="true"
+            android:taskAffinity="com.hn.d.valley.jump"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>

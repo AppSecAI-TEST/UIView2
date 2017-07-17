@@ -10,6 +10,7 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.umeng.UM;
+import com.hn.d.valley.JumpActivity;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseActivity;
 import com.hn.d.valley.base.constant.Action;
@@ -18,6 +19,9 @@ import com.hn.d.valley.control.AdsControl;
 import com.hn.d.valley.control.AutoLoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.MainUIView;
+import com.hn.d.valley.main.found.sub.InformationDetailUIView;
+import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.StatusCode;
 import com.orhanobut.hawk.Hawk;
@@ -39,6 +43,7 @@ public class HnUIMainActivity extends BaseActivity {
         intent.putExtra(KEY_IS_LOGIN_SUCCESS, isLoginSuccess);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
                 R.anim.base_tran_to_left_exit);
@@ -115,9 +120,21 @@ public class HnUIMainActivity extends BaseActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         L.d("HnUIMainActivity : taskId : " + getTaskId());
 
-        super.onNewIntent(intent);
+        if (intent != null) {
+            String type = intent.getStringExtra(JumpActivity.KEY_TYPE);
+            String id = intent.getStringExtra(JumpActivity.KEY_ID);
+
+            if ("dynamic".equalsIgnoreCase(type)) {
+                startIView(new DynamicDetailUIView2(id));
+            } else if ("news".equalsIgnoreCase(type)) {
+                startIView(new InformationDetailUIView(id));
+            } else if ("user".equalsIgnoreCase(type)) {
+                startIView(new UserDetailUIView2(id));
+            }
+        }
     }
 
     private void toSplashActivity() {

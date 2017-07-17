@@ -622,7 +622,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 
                             //int i = 1 / 0;
 
-                            Uri webPage = Uri.parse("klg://klg.com");
+                            Uri webPage = Uri.parse("klg://klg.com/?type=user&id=62194");
                             Intent webIntent = new Intent(Intent.ACTION_VIEW, webPage);
                             webIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             mActivity.startActivity(webIntent);
