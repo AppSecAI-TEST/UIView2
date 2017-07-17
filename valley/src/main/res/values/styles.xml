@@ -37,7 +37,7 @@
 
     <!--启动页样式-->
     <style name="SplashTheme" parent="BaseAppTheme">
-        <item name="android:windowBackground">@drawable/default_720_2</item>
+        <item name="android:windowBackground">@drawable/default_720</item>
     </style>
 
     <!--图片-->

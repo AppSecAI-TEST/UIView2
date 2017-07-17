@@ -26,6 +26,8 @@ public class HnEditText extends ExEditText {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        SkinUtils.setEditText(this);
+        if (!isInEditMode()) {
+            SkinUtils.setEditText(this);
+        }
     }
 }

@@ -124,7 +124,7 @@ public class MsgNotifySetting {
     }
 
     public boolean isCircleCNotify() {
-        return mSPUtils.getBoolean(CIRCLE_NOTIFY);
+        return mSPUtils.getBoolean(CIRCLE_NOTIFY,true);
     }
 
     public void enableGroupMsgNotify(boolean enable) {

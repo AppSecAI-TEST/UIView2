@@ -275,7 +275,7 @@ public abstract class UserInfoTimeRecyclerUIView extends
             HnGenderView genderView = holder.v(R.id.grade_view);
             genderView.setGender(likeUserInfoBean.getSex(), likeUserInfoBean.getGrade());
 
-            holder.tv(R.id.time_view).setText(formatHHMM(Long.valueOf(likeUserInfoBean.getCreated()) * 100l));
+            holder.tv(R.id.time_view).setText(formatHHMM(Long.valueOf(likeUserInfoBean.getCreated()) * 1000l));
 
             holder.v(R.id.item_root_layout).setOnClickListener(new View.OnClickListener() {
                 @Override

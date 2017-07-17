@@ -209,6 +209,16 @@ public class LoginControl {
                     }
 
                     @Override
+                    public void onError(int code, String msg) {
+                        // 用户账号被封
+                        if (code == 1067) {
+
+                        } else {
+                            super.onError(code, msg);
+                        }
+                    }
+
+                    @Override
                     public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                         super.onEnd(isError, isNoNetwork, e);
                         if (isError) {

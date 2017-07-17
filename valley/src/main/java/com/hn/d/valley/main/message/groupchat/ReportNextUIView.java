@@ -230,7 +230,7 @@ public class ReportNextUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
 
         if (type == SessionTypeEnum.Team) {
             params = Param.buildMap("uid:" + UserCache.getUserAccount()
-                    , "id:" + id,"reason_id:" + mTag.getId()
+                    , "gid:" + id,"reason_id:" + mTag.getId()
                     ,"imgs:" + RUtils.connect(list));
             add(RRetrofit.create(GroupChatService.class)
                     .report(params)

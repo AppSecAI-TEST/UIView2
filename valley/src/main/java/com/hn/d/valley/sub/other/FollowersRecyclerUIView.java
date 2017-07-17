@@ -1,7 +1,10 @@
 package com.hn.d.valley.sub.other;
 
+import android.view.View;
+
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
@@ -30,11 +33,15 @@ public class FollowersRecyclerUIView extends UserInfoRecyclerUIView {
 
     @Override
     protected String getTitleString() {
-        if (uid.equalsIgnoreCase(UserCache.getUserAccount())) {
+        if (isMe()) {
             return mActivity.getString(R.string.followers_title);
         } else {
             return mActivity.getString(R.string.ta_followers_title);
         }
+    }
+
+    private boolean isMe() {
+        return uid.equalsIgnoreCase(UserCache.getUserAccount());
     }
 
     @Override
@@ -56,6 +63,12 @@ public class FollowersRecyclerUIView extends UserInfoRecyclerUIView {
                         }
                     }
                 }));
+    }
+
+    @Override
+    protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
+        super.onBindDataView(holder, posInData, dataBean);
+        holder.v(R.id.follow_image_view).setVisibility(isMe() ? View.VISIBLE : View.GONE);
     }
 
     @Override

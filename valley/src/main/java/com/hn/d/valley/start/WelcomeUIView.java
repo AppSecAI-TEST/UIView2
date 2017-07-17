@@ -1,6 +1,7 @@
 package com.hn.d.valley.start;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -8,8 +9,11 @@ import android.view.WindowManager;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ContentLayout;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UILoading;
+import com.angcyo.uiview.github.utilcode.utils.PhoneUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.hn.d.valley.R;
@@ -107,6 +111,28 @@ public class WelcomeUIView extends BaseContentUIView {
         public void onLoginError(Throwable exception) {
             UILoading.hide();
             exception.printStackTrace();
+            if (exception instanceof RException) {
+                // 用户被封
+                if (((RException) exception).getCode() == 1067) {
+                    startIView(UIDialog.build()
+                            .setDialogContent(getString(R.string.text_third_login_can_not_login))
+                            .setOkListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startIView(UIDialog.build()
+                                            .setDialogContent("拨打客服电话:0755-26777170")
+                                            .setOkListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    PhoneUtils.call("0755-26777170");
+                                                }
+                                            })
+                                            .setGravity(Gravity.CENTER));
+                                }
+                            })
+                            .setGravity(Gravity.CENTER));
+                }
+            }
         }
 
         @Override

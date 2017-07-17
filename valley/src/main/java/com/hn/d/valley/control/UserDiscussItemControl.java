@@ -678,7 +678,9 @@ public class UserDiscussItemControl {
 
                             imageView.setCheckGif(true);
                             imageView.setShowGifImage(isInDetail);
-                            imageView.setUrl((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url);
+                            imageView.setUrl((width > 0 && height > 0) ?
+                                    OssHelper.getImageThumb(url, ScreenUtil.screenWidth / 3, ScreenUtil.screenWidth / 3) :
+                                    url);
                         }
                     }
 

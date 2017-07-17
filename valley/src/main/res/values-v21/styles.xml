@@ -9,7 +9,7 @@
 
     <!--启动页样式-->
     <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/default_720_2</item>
+        <item name="android:windowBackground">@drawable/default_720</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

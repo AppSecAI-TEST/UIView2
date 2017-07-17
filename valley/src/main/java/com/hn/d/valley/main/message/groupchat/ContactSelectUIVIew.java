@@ -54,16 +54,22 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                                             List<String> uids/**默认选中*/,boolean onShowGroup,/*是否显示群聊funcitem*/
                                             Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
         return start(mLayout,options,uids,new ArrayList<String>(),onShowGroup,selectAction);
-
     }
 
 
     public static ContactSelectUIVIew start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
                                             List<String> uids/**默认选中*/,List<String> finanUids,boolean onShowGroup,/*是否显示群聊funcitem*/
                                             Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
+        return start(mLayout,options,uids,finanUids,null,onShowGroup,selectAction);
+    }
+
+    public static ContactSelectUIVIew start(ILayout mLayout, BaseContactSelectAdapter.Options options/**配置*/,
+                                            List<String> uids/**默认选中*/,List<String> finanUids,List<String> unselectUids,boolean onShowGroup,/*是否显示群聊funcitem*/
+                                            Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback> selectAction/**回调*/) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(SELECTED_UIDS, (Serializable) uids);
         bundle.putSerializable(SELECTED_FINAL_UIDS, (Serializable) finanUids);
+        bundle.putSerializable(UNSELECTED_FINAL_UIDS, (Serializable) unselectUids);
         ContactSelectUIVIew targetView = new ContactSelectUIVIew(options);
         targetView.setSelectAction(selectAction);
         targetView.onShowGroup = onShowGroup;
@@ -183,6 +189,23 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
         }));
 
         for (FriendBean bean : beanList) {
+            boolean flag = false;
+            if (options.isUnSelectUids) {
+                if (unselectedFinalUids == null) {
+                    datas.add(new ContactItem(bean));
+                    continue;
+                }
+
+                for (String uid : unselectedFinalUids) {
+                    if (bean.getUid().equals(uid)) {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+            if (flag) {
+                continue;
+            }
             datas.add(new ContactItem(bean));
         }
 

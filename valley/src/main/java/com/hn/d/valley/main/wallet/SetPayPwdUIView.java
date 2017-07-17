@@ -96,7 +96,6 @@ public class SetPayPwdUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 final VerifyButton verifyBtn = holder.v(R.id.verify_view);
                 et_phone = holder.v(R.id.edit_text_view);
 
-
                 verifyBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

@@ -420,14 +420,15 @@ public class AVChatAudio implements View.OnClickListener{
                 break;
             case R.id.ll_avaudio_handsfree:
                 listener.toggleSpeaker();
+                iv_speaker.setImageResource(!AVChatManager.getInstance().speakerEnabled() ? R.drawable.mianti_yuyinliaotian_n : R.drawable.mianti_yuyinliaotian_s);
                 break;
             case R.id.ll_avaudio_jinyin:
-                iv_mute.setBackgroundResource(!AVChatManager.getInstance().isLocalAudioMuted() ? R.drawable.jingyin_yuyinliaotian_n :R.drawable.jingyin_yuyinliaotian_s );
                 listener.toggleMute();
+                iv_mute.setImageResource(!AVChatManager.getInstance().isLocalAudioMuted() ? R.drawable.jingyin_yuyinliaotian_n :R.drawable.jingyin_yuyinliaotian_s );
                 break;
             case R.id.avchat_audio_speaker:
-                iv_speaker.setBackgroundResource(!AVChatManager.getInstance().speakerEnabled() ? R.drawable.mianti_yuyinliaotian_n : R.drawable.mianti_yuyinliaotian_s);
                 listener.toggleSpeaker();
+                iv_speaker.setImageResource(!AVChatManager.getInstance().speakerEnabled() ? R.drawable.mianti_yuyinliaotian_n : R.drawable.mianti_yuyinliaotian_s);
                 break;
             case R.id.ll_avaudio_audiotovideo:
                 listener.audioSwitchVideo();

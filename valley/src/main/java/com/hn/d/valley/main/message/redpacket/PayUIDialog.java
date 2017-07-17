@@ -245,7 +245,6 @@ public class PayUIDialog extends UIIDialogImpl {
                     public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                         super.onEnd(isError, isNoNetwork, e);
                         if (isError) {
-
                             finishDialog();
                             T_.show(mActivity.getString(R.string.text_send_fail));
                         }

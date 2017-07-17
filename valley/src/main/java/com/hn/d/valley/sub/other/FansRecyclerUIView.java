@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.LikeUserInfoBean;
@@ -99,15 +100,25 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
 //        };
 //    }
 
+
+    @Override
+    protected void onBindDataView(RBaseViewHolder holder, int posInData, LikeUserInfoBean dataBean) {
+        super.onBindDataView(holder, posInData, dataBean);
+        holder.v(R.id.follow_image_view).setVisibility(isMe() ? View.VISIBLE : View.GONE);
+    }
+
     @Override
     protected String getTitleString() {
-        if (uid.equalsIgnoreCase(UserCache.getUserAccount())) {
+        if (isMe()) {
             return mActivity.getString(R.string.fans_title);
         } else {
             return mActivity.getString(R.string.ta_fans_title);
         }
     }
 
+    private boolean isMe() {
+        return uid.equalsIgnoreCase(UserCache.getUserAccount());
+    }
 
 
     @Override

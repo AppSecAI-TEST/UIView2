@@ -138,6 +138,15 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
         boolean isSelectFinalUids = true;
 
         /**
+         * 是否去除不需要显示数据
+         */
+        boolean isUnSelectUids = false;
+
+        public void showUnSelectUids(boolean unSelectUids) {
+            isUnSelectUids = unSelectUids;
+        }
+
+        /**
          * 是否显示dialog
          */
         boolean showDialog = false;

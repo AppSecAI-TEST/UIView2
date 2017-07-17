@@ -42,6 +42,7 @@ import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
+import java.util.Arrays;
 import java.util.List;
 
 import rx.functions.Action3;
@@ -157,8 +158,9 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                             public void onClick(View v) {
                                 // 发送名片
                                 Options option = new Options();
+                                option.showUnSelectUids(true);
                                 ContactSelectUIVIew.start(mILayout, option
-                                        , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                                        , null,null, Arrays.asList(mUserInfoBean.getUid()),false, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                             @Override
                                             public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
                                                 requestCallback.onSuccess("");
@@ -169,7 +171,6 @@ public class UserDetailMoreUIView extends BaseItemUIView {
                                                     IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), SessionTypeEnum.P2P, friendBean.getIntroduce(), attachment);
                                                     msgService().sendMessage(message, false);
                                                 }
-
                                             }
                                         });
 

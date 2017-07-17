@@ -171,7 +171,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
                         float amount = Float.valueOf(s.toString());
                         if (amount < 10) {
-                            tv_note.setText(SpannableStringUtils.getBuilder("提现金额最少10元").setForegroundColor(getColor(R.color.base_red)).create());
+                            tv_note.setText(SpannableStringUtils.getBuilder(getString(R.string.text_refund_money_10)).setForegroundColor(getColor(R.color.base_red)).create());
                             btn_next.setEnabled(false);
                             return;
                         }

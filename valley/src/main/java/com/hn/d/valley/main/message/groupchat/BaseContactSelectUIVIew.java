@@ -40,6 +40,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
     public static final String SELECTED_UIDS = "SELECTED_UIDS";
     public static final String SELECTED_FINAL_UIDS = "SELECTED_FINAL_UIDS";
+    public static final String UNSELECTED_FINAL_UIDS = "UNSELECTED_UIDS";
 
     protected BaseContactSelectAdapter.Options options;
     protected BaseContactSelectAdapter mGroupAdapter;
@@ -53,6 +54,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
 
     private List<String> mSelectedUids;
     private List<String> mSelectedFinalUids;
+    protected List<String> unselectedFinalUids;
 
 
     public BaseContactSelectUIVIew(BaseContactSelectAdapter.Options options) {
@@ -83,6 +85,7 @@ public class BaseContactSelectUIVIew extends BaseUIView {
         if (param != null && param.mBundle != null) {
             mSelectedUids = (List<String>) param.mBundle.getSerializable(SELECTED_UIDS);
             mSelectedFinalUids = (List<String>) param.mBundle.getSerializable(SELECTED_FINAL_UIDS);
+            unselectedFinalUids = (List<String>) param.mBundle.getSerializable(UNSELECTED_FINAL_UIDS);
         }
     }
 

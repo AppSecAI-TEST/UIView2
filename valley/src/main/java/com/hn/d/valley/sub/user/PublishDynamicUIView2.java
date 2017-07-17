@@ -108,7 +108,8 @@ import static com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter.Op
 public class PublishDynamicUIView2 extends BaseContentUIView {
 
     private static boolean isShowTip = false;
-    private static List<Tag> mLastSelectorTags = new ArrayList<>();//保存上一次选择标签(只在图文动态下有小)
+    private static List<Tag> mLastSelectorTags = new ArrayList<>();//保存上一次选择标签(只在图文动态下有效)
+    private static List<Tag> mLastVideoSelectorTags = new ArrayList<>();//保存上一次选择标签(只在视频动态下有效)
     Action0 mPublishAction;
     UserDiscussListBean.DataListBean mDataListBean;
     String mContent;
@@ -169,6 +170,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     public PublishDynamicUIView2(VideoStatusInfo videoStatusInfo) {
         mVideoStatusInfo = videoStatusInfo;
         mDynamicType = DynamicType.VIDEO;
+        mSelectorTags.addAll(mLastVideoSelectorTags);
     }
 
 
@@ -497,6 +499,9 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         if (mDynamicType == DynamicType.IMAGE) {
                             mLastSelectorTags.clear();
                             mLastSelectorTags.addAll(tags);
+                        } else if (mDynamicType == DynamicType.VIDEO) {
+                            mLastVideoSelectorTags.clear();
+                            mLastVideoSelectorTags.addAll(tags);
                         }
                         initTagsView();
                     }

@@ -378,10 +378,10 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
                 || status == StatusCode.KICK_BY_OTHER_CLIENT
                 ) {
             //帐号被踢
-            HnSplashActivity.launcher(mActivity, true,status.getValue());
+            HnSplashActivity.launcher(mActivity, true, status.getValue());
             mActivity.finish();
-        } else if (status == StatusCode.FORBIDDEN){
-            HnSplashActivity.launcher(mActivity, false,status.getValue());
+        } else if (status == StatusCode.FORBIDDEN) {
+            HnSplashActivity.launcher(mActivity, false, status.getValue());
             mActivity.finish();
         }
     }
@@ -390,6 +390,8 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     public void onEvent(UpdateDataEvent event) {
         if (event.num == 0) {
             mBottomNavLayout.hideMsg(event.position);
+        } else if (event.position == 1) {
+            mBottomNavLayout.showDot(event.position);
         } else {
             mBottomNavLayout.showMsg(event.position, event.num);
         }

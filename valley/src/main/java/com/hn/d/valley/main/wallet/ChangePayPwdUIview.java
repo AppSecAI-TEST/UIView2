@@ -59,7 +59,8 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
     private String oldPwd;
 
     private String verifyCode;
-    private boolean findPayPwd = false;
+
+
     private int pay_pwd_type = CHANGE_PAY_PWD;
 
     public ChangePayPwdUIview() {
