@@ -660,11 +660,13 @@ public class UserDiscussItemControl {
                     @Override
                     public void displayImage(final GlideImageView imageView, String url, int width, int height, int imageSize) {
                         imageView.setShowGifTip(false);
+//                        imageView.setOverride(false);
                         imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
                         if (imageSize == 1) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         } else {
                             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                            imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                         }
 
                         if (YImageControl.isYellowImage(url)) {
@@ -678,9 +680,12 @@ public class UserDiscussItemControl {
 
                             imageView.setCheckGif(true);
                             imageView.setShowGifImage(isInDetail);
-                            imageView.setUrl((width > 0 && height > 0) ?
-                                    OssHelper.getImageThumb(url, ScreenUtil.screenWidth / 3, ScreenUtil.screenWidth / 3) :
-                                    url);
+//                            imageView.setUrl((width > 0 && height > 0) ?
+//                                    OssHelper.getImageThumb(url, ScreenUtil.screenWidth / 3, ScreenUtil.screenWidth / 3) :
+//                                    url);
+                            //L.e(url + ":" + imageSize + " -> " + width + " " + height);
+                            imageView.setUrl((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url);
+//                            imageView.setUrl(url);
                         }
                     }
 

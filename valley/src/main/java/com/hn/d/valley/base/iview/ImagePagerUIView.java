@@ -185,8 +185,6 @@ public class ImagePagerUIView extends UIIViewImpl {
             mValueAnimator = null;
         }
         fullscreen(false, true);
-
-        mIViewConfigCallback = null;
     }
 
     @Override
