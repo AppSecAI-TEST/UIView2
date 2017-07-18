@@ -563,8 +563,8 @@ public class UserDetailUIView2 extends BaseContentUIView {
         //mViewHolder.fillView(mUserInfoBean);
 
         //关注, 粉丝
-        mViewHolder.tv(R.id.attention_count).setText(mUserInfoBean.getAttention_count() + "");
-        mViewHolder.tv(R.id.fans_count).setText(mUserInfoBean.getFans_count() + "");
+        mViewHolder.tv(R.id.attention_count).setText(RUtils.getShortString(mUserInfoBean.getAttention_count()));
+        mViewHolder.tv(R.id.fans_count).setText(RUtils.getShortString(mUserInfoBean.getFans_count()));
 
         if (isMe() || mUserInfoBean.getLook_fans() == 1) {
             mViewHolder.click(R.id.attention_count, new View.OnClickListener() {
