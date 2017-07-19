@@ -19,4 +19,6 @@ public interface SessionProxy {
 
     int getRelationType();
 
+    String getGid();
+
 }

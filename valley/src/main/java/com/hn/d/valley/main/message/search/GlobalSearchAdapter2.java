@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RTextView;
@@ -223,7 +224,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
         public void onBind(RecordGroupItem item) {
             final GroupBean groupBean = item.getBean();
 //            ivItemHead.setImageUrl(groupBean.getAvatar());
-            DraweeViewUtil.setDraweeViewHttp(ivItemHead,groupBean.getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(ivItemHead,groupBean.getDefaultAvatar());
 //        tv_friend_name.setText(groupBean.getDefaultName());
             display(tvFriendName, groupBean.getTrueName(), item.hitInfo);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -490,7 +491,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
         SpannableStringBuilder sb = new SpannableStringBuilder();
         SpannableString ss = new SpannableString(text);
-        ss.setSpan(new ForegroundColorSpan(tv.getResources().getColor(R.color.colorAccent)), hitInfo.start, hitInfo.end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new ForegroundColorSpan(SkinHelper.getSkin().getThemeDarkColor()), hitInfo.start, hitInfo.end, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
 
         sb.append(ss);
         tv.setText(sb);
@@ -505,7 +506,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
         SpannableStringBuilder sb = new SpannableStringBuilder();
         SpannableString ss = new SpannableString(text);
         for (com.netease.nimlib.sdk.search.model.RecordHitInfo r : hitInfos) {
-            ss.setSpan(new ForegroundColorSpan(tv.getResources().getColor(R.color.colorAccent)), r.start, r.end + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            ss.setSpan(new ForegroundColorSpan(SkinHelper.getSkin().getThemeDarkColor()), r.start, r.end + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         }
 
         sb.append(ss);

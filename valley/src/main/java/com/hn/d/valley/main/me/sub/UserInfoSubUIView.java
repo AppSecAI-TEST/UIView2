@@ -447,7 +447,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
                         SendGiftUIDialog dialog = new SendGiftUIDialog(GiftBean.create(bean), new Action0() {
                             @Override
                             public void call() {
-                                GiftListUIView.Companion.sendGift(mUserInfoBean.getUid(), bean.getGift_id());
+                                GiftListUIView.Companion.sendGift(mUserInfoBean.getUid(),"", bean.getGift_id());
                             }
                         });
                         dialog.setMoreAction(new Action0() {

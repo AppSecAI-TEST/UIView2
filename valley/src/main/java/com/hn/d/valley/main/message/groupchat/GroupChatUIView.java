@@ -559,6 +559,11 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
     }
 
     @Override
+    public String getGid() {
+        return mGroupDesc.getGid();
+    }
+
+    @Override
     public void onGroupNotifySetting() {
         final Team team = TeamDataCache.getInstance().getTeamById(mSessionId);
         if (team != null && team.isMyTeam()) {

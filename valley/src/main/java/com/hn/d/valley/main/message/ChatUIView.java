@@ -733,6 +733,11 @@ public class ChatUIView extends BaseContentUIView implements IAudioRecordCallbac
         return 0;
     }
 
+    @Override
+    public String getGid() {
+        return null;
+    }
+
     @NonNull
     private IMMessage createTextMessage(String text) {
         return MessageBuilder.createTextMessage(mSessionId, sessionType, text);

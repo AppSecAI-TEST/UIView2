@@ -457,28 +457,28 @@ public class AVChatUI implements AVChatUIListener {
             case AVChatExitCode.NET_CHANGE: // 网络切换
             case AVChatExitCode.NET_ERROR: // 网络异常
             case AVChatExitCode.CONFIG_ERROR: // 服务器返回数据错误
-//                Toast.makeText(mActivity, R.string.avchat_net_error_then_quit, Toast.LENGTH_SHORT).show();
+                T_.show(mActivity.getString(R.string.avchat_net_error_then_quit));
                 break;
             case AVChatExitCode.PEER_HANGUP:
             case AVChatExitCode.HANGUP:
                 if (isCallEstablish.get()) {
-//                    Toast.makeText(mActivity, R.string.avchat_call_finish, Toast.LENGTH_SHORT).show();
+                    T_.show(mActivity.getString(R.string.avchat_call_finish));
                 }
                 break;
             case AVChatExitCode.PEER_BUSY:
-//                Toast.makeText(mActivity, R.string.avchat_peer_busy, Toast.LENGTH_SHORT).show();
+                T_.show(mActivity.getString(R.string.avchat_peer_busy));
                 break;
             case AVChatExitCode.PROTOCOL_INCOMPATIBLE_PEER_LOWER:
-//                Toast.makeText(mActivity, R.string.avchat_peer_protocol_low_version, Toast.LENGTH_SHORT).show();
+                T_.show(mActivity.getString(R.string.avchat_peer_protocol_low_version));
                 break;
             case AVChatExitCode.PROTOCOL_INCOMPATIBLE_SELF_LOWER:
-//                Toast.makeText(mActivity, R.string.avchat_local_protocol_low_version, Toast.LENGTH_SHORT).show();
+                T_.show(mActivity.getString(R.string.avchat_local_protocol_low_version));
                 break;
             case AVChatExitCode.INVALIDE_CHANNELID:
-//                Toast.makeText(mActivity, R.string.avchat_invalid_channel_id, Toast.LENGTH_SHORT).show();
+                T_.show(mActivity.getString(R.string.avchat_invalid_channel_id));
                 break;
             case AVChatExitCode.LOCAL_CALL_BUSY:
-//                Toast.makeText(mActivity, R.string.avchat_local_call_busy, Toast.LENGTH_SHORT).show();
+                T_.show(mActivity.getString(R.string.avchat_local_call_busy));
                 break;
             case AVChatExitCode.REJECT:
                 //发起语音聊天或者视频聊天，好友那边挂断 提示 对方正忙

@@ -19,6 +19,7 @@ import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
 import com.hn.d.valley.main.message.attachment.RechargeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
+import com.hn.d.valley.main.message.attachment.ShareNewsAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalFailAttachment;
@@ -89,6 +90,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.SHARE_DYNAMIC_MSG:
                     attachment = new DynamicDetailAttachment(json);
+                    break;
+                case CustomAttachmentType.SHARE_NEWS:
+                    attachment = new ShareNewsAttachment(json);
                     break;
                 case CustomAttachmentType.INVITE_UPLOAD_PHOTOS:
                     attachment = new InviteUploadProfileAttachment(json);

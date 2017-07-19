@@ -69,6 +69,12 @@ class GiftListUIView: BaseContentUIView {
         this.container = container
     }
 
+    constructor(uid : String,container: Container) : this(container) {
+        this.container = container
+        account = uid
+
+    }
+
 
     override fun getTitleBar(): TitleBarPattern {
         val titleBarPattern = super.getTitleBar()
@@ -114,7 +120,6 @@ class GiftListUIView: BaseContentUIView {
     }
 
     private fun loadData() {
-
         RRetrofit.create(GiftService::class.java)
                 .giftList(Param.buildMap())
                 .compose(Rx.transformer(GiftList::class.java))
@@ -242,12 +247,14 @@ class GiftListUIView: BaseContentUIView {
             startIView(SendGiftUIDialog(gift, Action0 {
                 if (sessionType == SessionTypeEnum.P2P) {
 
+                    sendGift(account,"",gift.gift_id)
 
                 } else if(sessionType == SessionTypeEnum.Team){
                     // 送给群里某群友
+                    sendGift(account,container?.proxy!!.gid,gift.gift_id)
+
                 }
 
-                sendGift(account,gift.gift_id)
 
 //                val attachment = GiftReceiveAttachment(gift,account)
 //                val message = MessageBuilder.createCustomMessage(account, sessionType,attachment.giftReceiveMsg.msg, attachment)
@@ -263,9 +270,9 @@ class GiftListUIView: BaseContentUIView {
     }
 
     companion object{
-        fun sendGift(account: String, giftId: String) {
+        fun sendGift(account: String,gid : String ,giftId: String) {
             RRetrofit.create(GiftService::class.java)
-                    .giving(Param.buildMap("to_uid:" + account, "gift_id:" + giftId))
+                    .giving(Param.buildMap("to_uid:" + account, "gift_id:" + giftId,"gid:" + gid))
                     .compose(Rx.transformer(String::class.java))
                     .subscribe(object : BaseSingleSubscriber<String>() {
                         override fun onSucceed(bean: String) {

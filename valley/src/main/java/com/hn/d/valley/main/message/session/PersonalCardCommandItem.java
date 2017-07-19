@@ -13,8 +13,11 @@ import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.team.model.Team;
 
+import java.util.Arrays;
 import java.util.List;
 
 import rx.functions.Action3;
@@ -42,21 +45,38 @@ public class PersonalCardCommandItem extends CommandItemInfo {
 
     @Override
     protected void onClick() {
+        BaseContactSelectAdapter.Options option = new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE);
+
         //个人名片
-        ContactSelectUIVIew.start(getContainer().mLayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE)
-                , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
-                    @Override
-                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+        if (getContainer().sessionType == SessionTypeEnum.P2P) {
+            //
+            option.showUnSelectUids(true);
+            ContactSelectUIVIew.start(getContainer().mLayout, option
+                    , null,null, Arrays.asList(getContainer().account),false, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                        @Override
+                        public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                            sendCardMsg(absContactItems, requestCallback);
+                        }
+                    });
+        } else if(getContainer().sessionType == SessionTypeEnum.Team){
+            ContactSelectUIVIew.start(getContainer().mLayout, option
+                    , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
+                        @Override
+                        public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+                            sendCardMsg(absContactItems,requestCallback);
+                        }
+                    });
+        }
 
-                        requestCallback.onSuccess("");
 
-                        ContactItem contactItem = (ContactItem) absContactItems.get(0);
-                        FriendBean friendBean = contactItem.getFriendBean();
-                        PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
-                        IMMessage message = MessageBuilder.createCustomMessage(getContainer().account, getContainer().sessionType, friendBean.getIntroduce(), attachment);
-                        getContainer().proxy.sendMessage(message);
+    }
 
-                    }
-                });
+    private void sendCardMsg(List<AbsContactItem> absContactItems, RequestCallback requestCallback) {
+        requestCallback.onSuccess("");
+        ContactItem contactItem = (ContactItem) absContactItems.get(0);
+        FriendBean friendBean = contactItem.getFriendBean();
+        PersonalCardAttachment attachment = new PersonalCardAttachment(friendBean);
+        IMMessage message = MessageBuilder.createCustomMessage(getContainer().account, getContainer().sessionType, friendBean.getIntroduce(), attachment);
+        getContainer().proxy.sendMessage(message);
     }
 }

@@ -141,6 +141,8 @@ public class SessionHelper {
                     List<CommandItemInfo> items = new ArrayList<>();
                     items.add(new LocationCommandItem());
                     items.add(new PersonalCardCommandItem());
+                    items.add(new GiftCommandItem());
+
                     //因为 发红包涉及到 群聊人数 先注释
 //                    items.add(new RedPacketCommandItem());
                     return items;

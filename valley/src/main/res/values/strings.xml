@@ -884,4 +884,11 @@
     <string name="record_time_short_tip">录制时间太短!</string>
     <string name="text_third_login_can_not_login">你的账号暂时被锁定,无法登陆,点击联系客服!</string>
     <string name="text_refund_money_10">提现金额最少10元</string>
+    <string name="avchat_net_error_then_quit">网络异常,通话结束</string>
+    <string name="avchat_call_finish">通话结束</string>
+    <string name="avchat_peer_busy">对方正在通话中,请稍后再拨</string>
+    <string name="avchat_peer_protocol_low_version">对方版本过低,请提示对方升级</string>
+    <string name="avchat_local_protocol_low_version">版本过低,请升级后使用</string>
+    <string name="avchat_invalid_channel_id">对方已挂断</string>
+    <string name="avchat_local_call_busy">本地通话中</string>
 </resources>

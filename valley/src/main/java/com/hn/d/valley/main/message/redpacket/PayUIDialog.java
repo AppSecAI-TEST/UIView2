@@ -152,7 +152,7 @@ public class PayUIDialog extends UIIDialogImpl {
                             public void call(Object o) {
                                 if (params.missionType == 1) {
                                     sendRedPacket();
-                                } else if(params.missionType == 2) {
+                                } else if (params.missionType == 2) {
                                     buyKlgCoin();
                                 }
                             }
@@ -164,20 +164,20 @@ public class PayUIDialog extends UIIDialogImpl {
 
     /**
      * {
-     "uid":60001,          // 购买者id
-     "money":200,          // 金额，单位为分
-     "coin":20000,         // 购买的龙币个数
-     "way":4               // 1-苹果商店 2-支付宝 3-微信 4-余额
-     }
+     * "uid":60001,          // 购买者id
+     * "money":200,          // 金额，单位为分
+     * "coin":20000,         // 购买的龙币个数
+     * "way":4               // 1-苹果商店 2-支付宝 3-微信 4-余额
+     * }
      */
     private void buyKlgCoin() {
         //goods 0 为龙币
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("uid",Integer.valueOf(UserCache.getUserAccount()));
-            jsonObject.put("money",(int)params.money);
-            jsonObject.put("coin",params.coin);
-            jsonObject.put("way",4);
+            jsonObject.put("uid", Integer.valueOf(UserCache.getUserAccount()));
+            jsonObject.put("money", (int) params.money);
+            jsonObject.put("coin", params.coin);
+            jsonObject.put("way", 4);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -185,13 +185,11 @@ public class PayUIDialog extends UIIDialogImpl {
                 .rechargeKlgcoin(Param.buildInfoMap("goods:0", "data:" + jsonObject.toString()))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
+
                     @Override
-                    public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
-                        super.onEnd(isError, isNoNetwork, e);
-                        if (isError) {
-                            finishDialog();
-                            T_.show(mActivity.getString(R.string.text_send_fail));
-                        }
+                    public void onError(int code, String msg) {
+                        finishDialog();
+                        T_.show(mActivity.getString(R.string.text_send_fail));
                     }
 
                     @Override
@@ -242,12 +240,18 @@ public class PayUIDialog extends UIIDialogImpl {
                 .subscribe(new BaseSingleSubscriber<String>() {
 
                     @Override
+                    public void onError(int code, String msg) {
+                        finishDialog();
+                        T_.show(mActivity.getString(R.string.text_send_fail));
+                    }
+
+                    @Override
                     public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                         super.onEnd(isError, isNoNetwork, e);
-                        if (isError) {
-                            finishDialog();
-                            T_.show(mActivity.getString(R.string.text_send_fail));
-                        }
+//                        if (isError) {
+//                            finishDialog();
+//                            T_.show(mActivity.getString(R.string.text_send_fail));
+//                        }
                     }
 
                     @Override
@@ -260,20 +264,25 @@ public class PayUIDialog extends UIIDialogImpl {
     }
 
     private void parseResult(String beans) {
-
         int code = -1;
         int data = 0;
         try {
             JSONObject jsonObject = new JSONObject(beans);
             code = jsonObject.optInt("code");
 
-            if (200 == code) {
+            int successCode = Constants.SUCCESS;
+            if (params.missionType == 2) {
+                // 购买龙币
+                successCode = 200;
+            }
+
+            if (successCode == code) {
                 data = jsonObject.optInt("data");
                 T_.show(mActivity.getString(R.string.text_send_success));
                 if (action != null) {
                     action.call(code);
                 }
-            } else  {
+            } else {
                 T_.show(mActivity.getString(R.string.text_send_fail));
 //                T_.show(jsonObject.optString("data"));
             }

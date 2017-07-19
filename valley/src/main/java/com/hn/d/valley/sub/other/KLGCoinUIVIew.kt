@@ -142,7 +142,7 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
                     override fun call(o: Any) {
                         T_.show("充值成功!")
                         // 重新获取个人信息 刷新列表 || 增加余额 刷新列表数据
-                        UserCache.instance().loginBean.coins = (UserCache.instance().loginBean.coins.toInt() + coin / 10).toString()
+                        UserCache.instance().loginBean.coins = (UserCache.instance().loginBean.coins.toInt() + coin).toString()
                         balanceView!!.setItemDarkText(UserCache.instance().loginBean.coins)
                     }
                 }
@@ -164,14 +164,11 @@ class KLGCoinUIVIew : ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInfo>() {
     }
 
     override fun getItemLayoutId(viewType: Int): Int {
-
         if (viewType == 2) {
             return R.layout.item_single_main_text_view
         } else {
             return R.layout.item_info_layout
         }
-
-
     }
 
 

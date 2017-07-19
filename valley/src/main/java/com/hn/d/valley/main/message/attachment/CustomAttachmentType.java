@@ -28,13 +28,9 @@ public interface CustomAttachmentType {
 
     int REFOUNDMSG = 7;
 
-    int RECHARGE_CODE = 18;
-
     int WITHDRAWAL = 8;
 
     int WITHDRAWAL_FAIL = 16;
-
-    int KLG_CONSUME = 17;
 
     int EXPRESSIONMSG = 9;
 
@@ -48,15 +44,23 @@ public interface CustomAttachmentType {
 
     int INVITE_UPLOAD = 14;
 
+    int GIFT_RECEIVE = 15;
+
+    int DISCUSS_RECOMM_TYPE = 16;
+
+    int KLG_CONSUME = 17;
+
+    int RECHARGE_CODE = 18;
+
+    int SHARE_NEWS_CODE = 19;
+
     int SP_SINGLE_TEXT = 31;
 
     int SP_TEXT_PICTURE = 32;
 
     int SP_MULTI_PICTURE = 33;
 
-    int GIFT_RECEIVE = 15;
 
-    int DISCUSS_RECOMM_TYPE = 16;
 
     String PersonalCard_ = "user";
 
@@ -89,6 +93,8 @@ public interface CustomAttachmentType {
     String HOTSPOTIFNO_MSG = "hot_news";
 
     String SHARE_DYNAMIC_MSG  = "dynamic";
+
+    String SHARE_NEWS = "ShareHotNews";
 
     String INVITE_UPLOAD_PHOTOS  = "invite_upload_photos";
 
