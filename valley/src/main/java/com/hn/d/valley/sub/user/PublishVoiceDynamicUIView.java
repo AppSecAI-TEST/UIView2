@@ -113,6 +113,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                     case MotionEvent.ACTION_CANCEL:
                     case MotionEvent.ACTION_UP:
                         recordStop();
+                        mViewHolder.v(R.id.mic_view).setEnabled(false);
                         break;
                 }
                 return true;
@@ -170,6 +171,18 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                                     public void run() {
                                         if (Math.floor(time / 1000f) < 3) {
                                             T_.error(getString(R.string.record_time_short_tip));
+                                            postDelayed(500, new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Record.instance().stopRecord();
+                                                }
+                                            });
+                                            postDelayed(100, new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    mViewHolder.v(R.id.mic_view).setEnabled(true);
+                                                }
+                                            });
                                         } else {
                                             replaceIView(new PublishVoiceNextDynamicUIView(filePath, time, mMusicRealm)
                                                     .setPublishAction(mPublishAction));

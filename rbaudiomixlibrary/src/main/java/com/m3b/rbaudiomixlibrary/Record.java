@@ -124,6 +124,7 @@ public class Record {
             }).start();
         } catch (Exception e) {
             e.printStackTrace();
+            stopRecord();
             if (recordListener != null) {
                 recordListener.onRecordError(e);
             }
@@ -153,14 +154,10 @@ public class Record {
     }
 
     public void stopRecord() {
-        if (!recording) {
-            return;
-        }
         recording = false;
         endRecordTime = System.currentTimeMillis();
         if (mMusicPlayer != null) {
             mMusicPlayer.release();
-            mMusicPlayer = null;
         }
     }
 
