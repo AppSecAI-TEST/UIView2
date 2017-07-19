@@ -13,10 +13,10 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.angcyo.github.WaveSideBarView;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.github.WaveSideBarView;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
