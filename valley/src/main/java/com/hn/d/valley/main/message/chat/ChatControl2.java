@@ -1,16 +1,15 @@
 package com.hn.d.valley.main.message.chat;
 
 import android.app.Activity;
-import android.content.pm.PackageInstaller;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.angcyo.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.dialog.UIItemDialog;
-import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
@@ -55,8 +54,6 @@ import java.util.Map;
 
 import rx.functions.Action2;
 import rx.functions.Action3;
-
-import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.

@@ -1,6 +1,6 @@
 package com.hn.d.valley.main.friend;
 
-import com.angcyo.uiview.github.utilcode.utils.StringUtils;
+import com.angcyo.github.utilcode.utils.StringUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.hn.d.valley.bean.FriendBean;
 

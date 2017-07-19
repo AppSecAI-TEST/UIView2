@@ -11,7 +11,7 @@ import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UILoading;
-import com.angcyo.uiview.github.utilcode.utils.PhoneUtils;
+import com.angcyo.github.utilcode.utils.PhoneUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.skin.SkinHelper;

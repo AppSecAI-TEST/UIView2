@@ -1,8 +1,8 @@
 package com.hn.d.valley.main.found.sub
 
 import android.content.Intent
+import com.angcyo.github.utilcode.utils.VibrationUtils
 import com.angcyo.uiview.base.UIScanView
-import com.angcyo.uiview.github.utilcode.utils.VibrationUtils
 import com.angcyo.uiview.model.TitleBarPattern
 import com.hn.d.valley.R
 import com.hn.d.valley.main.me.UserDetailUIView2

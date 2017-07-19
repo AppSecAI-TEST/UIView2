@@ -1,36 +1,20 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.text.TextPaint;
-import android.text.style.CharacterStyle;
 import android.text.style.ClickableSpan;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.angcyo.library.glide.GlideBlurTransformation;
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.widget.RImageView;
-import com.bumptech.glide.DrawableRequestBuilder;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
-import com.hn.d.valley.main.message.attachment.CustomAttachment;
-import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
-import com.hn.d.valley.main.message.attachment.DynamicDetailMsg;
 import com.hn.d.valley.main.message.attachment.InviteUploadMsg;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
-import com.hn.d.valley.sub.user.DynamicDetailUIView2;
-import com.hn.d.valley.widget.HnGlideImageView;
-import com.hn.d.valley.widget.HnVideoPlayView;
-import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.util.ArrayList;

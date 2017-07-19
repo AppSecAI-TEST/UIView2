@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.angcyo.github.utilcode.utils.StringUtils;
 import com.angcyo.library.glide.GlideCircleTransform;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ContentLayout;
@@ -20,7 +21,6 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
-import com.angcyo.uiview.github.utilcode.utils.StringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;

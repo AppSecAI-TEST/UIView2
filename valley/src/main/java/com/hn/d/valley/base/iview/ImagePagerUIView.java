@@ -19,13 +19,13 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.widget.DragPhotoView;
 import com.angcyo.uiview.Root;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
-import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.resources.AnimUtil;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;

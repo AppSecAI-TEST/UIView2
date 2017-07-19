@@ -2,8 +2,7 @@ package com.hn.d.valley.main.me.setting;
 
 import android.text.TextUtils;
 
-import com.angcyo.uiview.github.utilcode.utils.SPUtils;
-import com.hn.d.valley.nim.RNim;
+import com.angcyo.github.utilcode.utils.SPUtils;
 import com.netease.nimlib.sdk.NIMClient;
 
 /**

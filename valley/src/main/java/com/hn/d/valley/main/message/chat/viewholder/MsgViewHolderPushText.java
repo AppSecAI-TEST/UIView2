@@ -4,7 +4,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.emoji.MoonUtil;

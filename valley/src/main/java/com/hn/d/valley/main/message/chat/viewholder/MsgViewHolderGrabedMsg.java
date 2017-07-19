@@ -3,7 +3,7 @@ package com.hn.d.valley.main.message.chat.viewholder;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.UserCache;

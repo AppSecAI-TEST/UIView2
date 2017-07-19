@@ -2,10 +2,10 @@ package com.hn.d.valley.control;
 
 import android.view.View;
 
+import com.angcyo.github.utilcode.utils.AppUtils;
 import com.angcyo.uiview.RCrashHandler;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
-import com.angcyo.uiview.github.utilcode.utils.AppUtils;
 import com.angcyo.uiview.net.REmptySubscriber;
 import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;

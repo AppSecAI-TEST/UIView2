@@ -1,5 +1,6 @@
 package com.hn.d.valley;
 
+import com.angcyo.github.utilcode.utils.Utils;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.Root;
@@ -42,6 +43,8 @@ public class ValleyApp extends RApplication {
 
     @Override
     public void onCreate() {
+        Utils.init(this);
+
            /*sp持久化库*/
         Hawk.init(this)
                 .build();

@@ -1,6 +1,7 @@
 package com.hn.d.valley.bean;
 
-import com.angcyo.uiview.github.pickerview.model.IPickerViewData;
+
+import com.angcyo.github.pickerview.model.IPickerViewData;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.

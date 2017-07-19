@@ -3,8 +3,6 @@ package com.hn.d.valley.utils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.angcyo.uiview.github.utilcode.utils.NetworkUtils;
-import com.angcyo.uiview.receiver.NetworkStateReceiver;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;

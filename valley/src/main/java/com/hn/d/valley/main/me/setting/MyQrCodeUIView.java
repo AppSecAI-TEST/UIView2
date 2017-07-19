@@ -9,11 +9,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.rcode.QRCodeEncoder;
 import com.angcyo.uiview.Root;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
-import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.rsa.Base64Utils;
 import com.angcyo.uiview.net.rsa.RSAUtils;

@@ -10,6 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.github.utilcode.utils.ClipboardUtils;
+import com.angcyo.github.utilcode.utils.PhoneUtils;
 import com.angcyo.library.glide.GlideBlurTransformation;
 import com.angcyo.library.okhttp.Ok;
 import com.angcyo.library.utils.L;
@@ -18,8 +20,6 @@ import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.github.goodview.GoodView;
-import com.angcyo.uiview.github.utilcode.utils.ClipboardUtils;
-import com.angcyo.uiview.github.utilcode.utils.PhoneUtils;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;

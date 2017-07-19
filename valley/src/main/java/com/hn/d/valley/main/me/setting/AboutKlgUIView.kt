@@ -2,8 +2,8 @@ package com.hn.d.valley.main.me.setting
 
 import com.angcyo.uiview.base.Item
 import com.angcyo.uiview.base.SingleItem
-import com.angcyo.uiview.github.utilcode.utils.AppUtils
-import com.angcyo.uiview.github.utilcode.utils.PhoneUtils
+import com.angcyo.github.utilcode.utils.AppUtils
+import com.angcyo.github.utilcode.utils.PhoneUtils
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.utils.RUtils
 import com.hn.d.valley.R

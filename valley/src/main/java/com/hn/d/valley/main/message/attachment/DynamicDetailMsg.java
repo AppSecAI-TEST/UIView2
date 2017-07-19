@@ -1,7 +1,5 @@
 package com.hn.d.valley.main.message.attachment;
 
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
-import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.UserDiscussListBean;

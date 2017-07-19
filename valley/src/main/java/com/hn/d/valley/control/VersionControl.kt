@@ -1,8 +1,8 @@
 package com.hn.d.valley.control
 
 import com.angcyo.library.utils.L
-import com.angcyo.uiview.github.utilcode.utils.AppUtils
-import com.angcyo.uiview.github.utilcode.utils.FileUtils
+import com.angcyo.github.utilcode.utils.AppUtils
+import com.angcyo.github.utilcode.utils.FileUtils
 import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx

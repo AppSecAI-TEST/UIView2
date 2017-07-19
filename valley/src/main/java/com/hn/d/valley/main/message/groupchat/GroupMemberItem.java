@@ -1,8 +1,7 @@
 package com.hn.d.valley.main.message.groupchat;
 
-import com.angcyo.uiview.github.utilcode.utils.StringUtils;
+import com.angcyo.github.utilcode.utils.StringUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
-import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.GroupMemberBean;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ItemTypes;

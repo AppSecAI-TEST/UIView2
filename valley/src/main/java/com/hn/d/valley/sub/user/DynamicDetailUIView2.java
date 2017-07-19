@@ -7,12 +7,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.github.utilcode.utils.NetworkUtils;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.design.StickLayout2;
 import com.angcyo.uiview.github.tablayout.SlidingTabLayout;
 import com.angcyo.uiview.github.tablayout.TabLayoutUtil;
 import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
-import com.angcyo.uiview.github.utilcode.utils.NetworkUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;

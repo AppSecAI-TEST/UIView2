@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIBaseRxView;
 import com.angcyo.uiview.container.ContentLayout;
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;

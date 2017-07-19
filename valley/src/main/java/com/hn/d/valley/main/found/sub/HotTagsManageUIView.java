@@ -9,9 +9,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextPaint;
 import android.view.View;
 
-import com.angcyo.uiview.github.item.touch.helper.ChannelAdapter;
-import com.angcyo.uiview.github.item.touch.helper.ChannelEntity;
-import com.angcyo.uiview.github.item.touch.helper.ItemDragHelperCallback;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.utils.RUtils;
@@ -63,7 +60,7 @@ public class HotTagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                 recyclerView.setTag("GV4");
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                ItemDragHelperCallback.OnDragCallback dragCallback = new ItemDragHelperCallback.OnDragCallback() {
+                com.angcyo.github.item.touch.helper.ItemDragHelperCallback.OnDragCallback dragCallback = new com.angcyo.github.item.touch.helper.ItemDragHelperCallback.OnDragCallback() {
                     @Override
                     public boolean canDragDirs(RecyclerView.ViewHolder viewHolder) {
                         if (viewHolder.getAdapterPosition() == 1) {
@@ -72,15 +69,15 @@ public class HotTagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                         return true;
                     }
                 };
-                ItemDragHelperCallback callback = new ItemDragHelperCallback(dragCallback);
+                com.angcyo.github.item.touch.helper.ItemDragHelperCallback callback = new com.angcyo.github.item.touch.helper.ItemDragHelperCallback(dragCallback);
                 final ItemTouchHelper helper = new ItemTouchHelper(callback);
                 helper.attachToRecyclerView(recyclerView);
 
-                final ChannelAdapter adapter = new ChannelAdapter(mActivity, helper, get(mMyTag), get(mOtherTag));
+                final com.angcyo.github.item.touch.helper.ChannelAdapter adapter = new com.angcyo.github.item.touch.helper.ChannelAdapter(mActivity, helper, get(mMyTag), get(mOtherTag));
                 adapter.setMyTagTitle(getString(R.string.my_channel_tip));
                 adapter.setOtherTagTitle(getString(R.string.other_channel_tip));
                 adapter.setOnDragCallback(dragCallback);
-                adapter.setOnFinishListener(new ChannelAdapter.OnFinishListener() {
+                adapter.setOnFinishListener(new com.angcyo.github.item.touch.helper.ChannelAdapter.OnFinishListener() {
                     @Override
                     public void onFinish(String ids) {
                         isChanged = true;
@@ -92,7 +89,7 @@ public class HotTagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                     @Override
                     public int getSpanSize(int position) {
                         int viewType = adapter.getItemViewType(position);
-                        return viewType == ChannelAdapter.TYPE_MY || viewType == ChannelAdapter.TYPE_OTHER ? 1 : 4;
+                        return viewType == com.angcyo.github.item.touch.helper.ChannelAdapter.TYPE_MY || viewType == com.angcyo.github.item.touch.helper.ChannelAdapter.TYPE_OTHER ? 1 : 4;
                     }
                 });
                 recyclerView.setAdapter(adapter);
@@ -110,10 +107,10 @@ public class HotTagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
         }));
     }
 
-    List<ChannelEntity> get(List<String> tags) {
-        List<ChannelEntity> entity = new ArrayList<>();
+    List<com.angcyo.github.item.touch.helper.ChannelEntity> get(List<String> tags) {
+        List<com.angcyo.github.item.touch.helper.ChannelEntity> entity = new ArrayList<>();
         for (String tag : tags) {
-            entity.add(new ChannelEntity(tag, tag));
+            entity.add(new com.angcyo.github.item.touch.helper.ChannelEntity(tag, tag));
         }
         return entity;
     }

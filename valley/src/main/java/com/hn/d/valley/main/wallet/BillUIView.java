@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;

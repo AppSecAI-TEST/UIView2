@@ -10,8 +10,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.base.UIIDialogImpl;
-import com.angcyo.uiview.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;

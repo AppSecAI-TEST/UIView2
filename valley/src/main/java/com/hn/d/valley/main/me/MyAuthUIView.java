@@ -6,9 +6,9 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.angcyo.github.utilcode.utils.IDCardUtil;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.container.UIParam;
-import com.angcyo.uiview.github.utilcode.utils.IDCardUtil;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.ExEditText;

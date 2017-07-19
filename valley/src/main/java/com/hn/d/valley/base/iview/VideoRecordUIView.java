@@ -19,12 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.base.UIViewConfig;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UIParam;
-import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RLoopRecyclerView;

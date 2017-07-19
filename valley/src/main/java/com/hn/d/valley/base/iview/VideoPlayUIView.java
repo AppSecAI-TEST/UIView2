@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.Root;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
-import com.angcyo.uiview.github.utilcode.utils.FileUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;

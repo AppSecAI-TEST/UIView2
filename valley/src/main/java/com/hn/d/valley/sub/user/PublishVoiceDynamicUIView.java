@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.angcyo.github.ripple.RippleBackground;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ContentLayout;
-import com.angcyo.uiview.github.ripple.RippleBackground;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RSeekBar;
