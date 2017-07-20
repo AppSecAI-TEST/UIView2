@@ -42,6 +42,8 @@ import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
+import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
+import com.hn.d.valley.main.message.attachment.GiftReceiveMsg;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
@@ -55,6 +57,7 @@ import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.main.message.attachment.RefundMsg;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
+import com.hn.d.valley.main.message.attachment.ShareNewsAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalFailAttachment;
@@ -495,7 +498,6 @@ public class RecentContactsControl {
             } else if (attachment instanceof DynamicMsgAttachment) {
                 return ((DynamicMsgAttachment) attachment).getDynamicMsg().getMsg();
             }
-
         } else if (attachment instanceof PersonalCardAttachment) {
             PersonalCard card = ((PersonalCardAttachment) attachment).getPersonalCard();
             if (card != null) {
@@ -505,9 +507,18 @@ public class RecentContactsControl {
         } else if (attachment instanceof RedPacketAttachment) {
             return "红包消息";
         } else if (attachment instanceof GrabedMsgAttachment) {
+            NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
             GrabedMsgAttachment msgAttachment = (GrabedMsgAttachment) attachment;
             RedPacketGrabedMsg grabedMsg = msgAttachment.getGrabedMsg();
-            return grabedMsg.getMsg();
+            if (grabedMsg.getOwner() == (grabedMsg.getGraber()) && UserCache.getUserAccount().equals(grabedMsg.getOwner() + "")) {
+                return mContext.getString(R.string.text_get_redpacket_myself) + mContext.getString(R.string.text_redpacket);
+            }else if (UserCache.getUserAccount().equals(grabedMsg.getOwner() + "")) {
+                return String.format(mContext.getString(R.string.text_get_your), userInfoCache.getUserDisplayName(grabedMsg.getGraber() + "")) + mContext.getString(R.string.text_redpacket);
+            }else if (UserCache.getUserAccount().equals(grabedMsg.getGraber() + "")) {
+                return String.format(mContext.getString(R.string.text_you_already_get), userInfoCache.getUserDisplayName(grabedMsg.getOwner() + "")) + mContext.getString(R.string.text_redpacket);
+            } else {
+                return String.format(mContext.getString(R.string.text_two_user_already_get),userInfoCache.getUserDisplayName(grabedMsg.getGraber() + ""), userInfoCache.getUserDisplayName(grabedMsg.getOwner() + ""))+ mContext.getString(R.string.text_redpacket);
+            }
         } else if (attachment instanceof HotSpotInfoAttachment) {
             return ((HotSpotInfoAttachment) attachment).getHotSpotInfo().getMsg();
         } else if (attachment instanceof DynamicDetailAttachment) {
@@ -530,11 +541,23 @@ public class RecentContactsControl {
             return ((WithDrawalAttachment)attachment).getWithDrawalMsg().getMsg();
         } else if (attachment instanceof RechargeMsgAttachment) {
             return ((RechargeMsgAttachment)attachment).getRechargeMsg().getMsg();
+        } else if (attachment instanceof GiftReceiveAttachment) {
+            GiftReceiveMsg msg = ((GiftReceiveAttachment)attachment).getGiftReceiveMsg();
+            if (recent.getSessionType() == SessionTypeEnum.P2P) {
+                return String.format("送你一个 %s", msg.getGift_info().getName());
+            }else if (recent.getSessionType() == SessionTypeEnum.Team) {
+                NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+                return String.format("%s 送 %s 一个 %s", userInfoCache.getUserDisplayName(recent.getFromAccount())
+                        , userInfoCache.getUserDisplayName(msg.getTo_uid()), msg.getGift_info().getName());
+            }
+        } else if (attachment instanceof ShareNewsAttachment) {
+            return ((ShareNewsAttachment) attachment).getNewsMsg().getTitle();
         }
         return "[自定义消息]";
     }
 
     public static class RecentContactsInfo {
+
         public String name = "";//显示的名称
         public String icoUrl = "";//显示的头像
         public String lastContent = "";//最后一条信息

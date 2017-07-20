@@ -82,4 +82,6 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
     protected boolean isShowBubble() {
         return false;
     }
+
+
 }

@@ -16,6 +16,7 @@ import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.utils.string.MD5;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -132,8 +133,9 @@ public class PayUIDialog extends UIIDialogImpl {
     }
 
     private void passwdConfirm(final String passcode) {
+        String encryptPw = MD5.getStringMD5(passcode);
         RRetrofit.create(WalletService.class)
-                .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + passcode))
+                .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + encryptPw))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 

@@ -15,6 +15,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.utils.string.MD5;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -144,12 +145,14 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
     }
 
     private void passwordSet() {
+        String encryptPwd = MD5.getStringMD5(newPwd);
+        String encryptOldPwd = MD5.getStringMD5(oldPwd);
         Map<String, String> buildInfoMap = null;
         if (pay_pwd_type == FIND_PAY_PWD || pay_pwd_type == SET_PAY_PWD) {
-            buildInfoMap = Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + newPwd
+            buildInfoMap = Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + encryptPwd
                     , "verification_code:" + verifyCode, "phone:" + UserCache.instance().getLoginBean().getPhone());
         } else {
-            buildInfoMap = Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + newPwd, "oldpassword:" + oldPwd
+            buildInfoMap = Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + encryptPwd, "oldpassword:" + encryptOldPwd
                     , "phone:" + UserCache.instance().getLoginBean().getPhone());
         }
 
@@ -173,8 +176,9 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
     }
 
     private void passwdConfirm(String passcode) {
+        String encryptPw = MD5.getStringMD5(passcode);
         RRetrofit.create(WalletService.class)
-                .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + passcode))
+                .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + encryptPw))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 

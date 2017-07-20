@@ -19,6 +19,7 @@ import com.hn.d.valley.main.message.audio.AudioPlayCallback;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.skin.SkinUtils;
+import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 import java.util.List;
@@ -129,7 +130,7 @@ public class MsgVHForwardAudio extends MsgViewHolderBase {
 
     public static boolean isForfardMsg(IMMessage message) {
         Map<String, Object> extension = message.getRemoteExtension();
-        if(extension != null) {
+        if(message.getMsgType() == MsgTypeEnum.audio && extension != null) {
             // TODO: 2017/5/11 语音转发
             String from = (String) extension.get("from");
             return !TextUtils.isEmpty(from);

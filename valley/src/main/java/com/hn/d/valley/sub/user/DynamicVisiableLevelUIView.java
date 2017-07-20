@@ -172,9 +172,9 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
     public enum LevelType {
         PUBLIC(1, ValleyApp.getApp().getResources().getString(R.string.text_public), "所有人可见"),
         PRIVATE(2, ValleyApp.getApp().getResources().getString(R.string.text_private), "仅自己可见"),
-        ONLY_FIRENDS_VISIABLE(3, ValleyApp.getApp().getResources().getString(R.string.text_only_friends_visiable), "所有朋友可见"),
-        PARTIALLY_VISIABLE(4, ValleyApp.getApp().getResources().getString(R.string.text_partially_visiable), "选中的朋友可见"),
-        PARTIALLY_INVISIABLE(5, ValleyApp.getApp().getResources().getString(R.string.text_partially_invisiable), "选中的朋友不可见");
+        ONLY_FIRENDS_VISIABLE(5, ValleyApp.getApp().getResources().getString(R.string.text_only_friends_visiable), "所有朋友可见"),
+        PARTIALLY_VISIABLE(3, ValleyApp.getApp().getResources().getString(R.string.text_partially_visiable), "选中的朋友可见"),
+        PARTIALLY_INVISIABLE(4, ValleyApp.getApp().getResources().getString(R.string.text_partially_invisiable), "选中的朋友不可见");
 
         int id;
         String des;

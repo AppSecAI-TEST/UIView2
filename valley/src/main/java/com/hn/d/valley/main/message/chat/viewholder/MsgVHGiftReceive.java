@@ -1,25 +1,21 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
-import com.hn.d.valley.main.me.SkinManagerUIView;
-import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveMsg;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
-import com.hn.d.valley.main.message.gift.SendGiftUIDialog;
-import com.hn.d.valley.skin.SkinUtils;
+import com.hn.d.valley.main.message.gift.ReceiveGiftUIDialog;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import rx.functions.Action0;
+import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
 /**
  * Created by hewking on 2017/4/9.
@@ -56,24 +52,22 @@ public class MsgVHGiftReceive extends MsgViewHolderBase {
         if (message.getSessionType() == SessionTypeEnum.P2P) {
             tv_text.setText(String.format("送你一个 %s", msg.getGift_info().getName()));
         } else if (message.getSessionType() == SessionTypeEnum.Team) {
-            tv_text.setText(String.format("%s 送 %s 一个 %s", message.getFromAccount(),msg.getTo_uid(),msg.getGift_info().getName()));
-        }
-        boolean read = message.isRemoteRead();
-        if (!read) {
-//            getUIBaseView().startIView(new SendGiftUIDialog(msg.getGift_info(), new Action0() {
-//                @Override
-//                public void call() {
-//
-//                }
-//            }));
+            NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+            tv_text.setText(String.format("%s 送 %s 一个 %s", userInfoCache.getUserDisplayName(message.getFromAccount())
+                    , userInfoCache.getUserDisplayName(msg.getTo_uid()), msg.getGift_info().getName()));
         }
 
-        contentContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
+        Map<String, Object> localExtension = message.getLocalExtension();
+        if (localExtension == null) {
+            localExtension = new HashMap<>();
+            localExtension.put("read", true);
+            message.setLocalExtension(localExtension);
+            msgService().updateIMMessage(message);
+            if (getMsgAdapter().hasOnShow()) {
+                getUIBaseView().startIView(new ReceiveGiftUIDialog(msg.getGift_info().getThumb()));
             }
-        });
+        }
+
         iv_thumb.setImageUrl(msg.getGift_info().getThumb());
     }
 }

@@ -255,7 +255,6 @@ class GiftListUIView: BaseContentUIView {
 
                 }
 
-
 //                val attachment = GiftReceiveAttachment(gift,account)
 //                val message = MessageBuilder.createCustomMessage(account, sessionType,attachment.giftReceiveMsg.msg, attachment)
 //                if (container == null) {

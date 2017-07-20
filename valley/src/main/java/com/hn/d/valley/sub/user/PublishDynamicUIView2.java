@@ -682,7 +682,6 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 startIView(new DynamicVisiableLevelUIView(PublishDynamicUIView2.this.levelType,
                         PublishDynamicUIView2.this.friendBean)
                         .setSelectionAction(new Action3<DynamicVisiableLevelUIView.LevelType, List<String>, List<FriendBean>>() {
-
                             @Override
                             public void call(DynamicVisiableLevelUIView.LevelType levelType, List<String> list, List<FriendBean> friendBeen) {
                                 L.d(PublishDynamicUIView2.class.getSimpleName(), "type : " + levelType.name() + " friends : " + list.toString());

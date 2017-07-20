@@ -9,6 +9,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextPaint;
 import android.view.View;
 
+import com.angcyo.uiview.github.item.touch.helper.ChannelAdapter;
+import com.angcyo.uiview.github.item.touch.helper.ChannelEntity;
+import com.angcyo.uiview.github.item.touch.helper.ItemDragHelperCallback;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.hn.d.valley.R;
@@ -71,7 +74,7 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 recyclerView.setTag("GV4");
                 recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                com.angcyo.github.item.touch.helper.ItemDragHelperCallback.OnDragCallback dragCallback = new com.angcyo.github.item.touch.helper.ItemDragHelperCallback.OnDragCallback() {
+                ItemDragHelperCallback.OnDragCallback dragCallback = new ItemDragHelperCallback.OnDragCallback() {
                     @Override
                     public boolean canDragDirs(RecyclerView.ViewHolder viewHolder) {
                         if (viewHolder.getAdapterPosition() == 1) {
@@ -80,13 +83,13 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                         return true;
                     }
                 };
-                com.angcyo.github.item.touch.helper.ItemDragHelperCallback callback = new com.angcyo.github.item.touch.helper.ItemDragHelperCallback(dragCallback);
+                ItemDragHelperCallback callback = new ItemDragHelperCallback(dragCallback);
                 final ItemTouchHelper helper = new ItemTouchHelper(callback);
                 helper.attachToRecyclerView(recyclerView);
 
-                final com.angcyo.github.item.touch.helper.ChannelAdapter adapter = new com.angcyo.github.item.touch.helper.ChannelAdapter(mActivity, helper, get(mMyTag), get(mOtherTag));
+                final ChannelAdapter adapter = new ChannelAdapter(mActivity, helper, get(mMyTag), get(mOtherTag));
                 adapter.setOnDragCallback(dragCallback);
-                adapter.setOnFinishListener(new com.angcyo.github.item.touch.helper.ChannelAdapter.OnFinishListener() {
+                adapter.setOnFinishListener(new ChannelAdapter.OnFinishListener() {
                     @Override
                     public void onFinish(String ids) {
                         isChanged = true;
@@ -97,7 +100,7 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                     @Override
                     public int getSpanSize(int position) {
                         int viewType = adapter.getItemViewType(position);
-                        return viewType == com.angcyo.github.item.touch.helper.ChannelAdapter.TYPE_MY || viewType == com.angcyo.github.item.touch.helper.ChannelAdapter.TYPE_OTHER ? 1 : 4;
+                        return viewType == ChannelAdapter.TYPE_MY || viewType == ChannelAdapter.TYPE_OTHER ? 1 : 4;
                     }
                 });
                 recyclerView.setAdapter(adapter);
@@ -115,10 +118,10 @@ public class TagsManageUIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
         }));
     }
 
-    List<com.angcyo.github.item.touch.helper.ChannelEntity> get(List<Tag> tags) {
-        List<com.angcyo.github.item.touch.helper.ChannelEntity> entity = new ArrayList<>();
+    List<ChannelEntity> get(List<Tag> tags) {
+        List<ChannelEntity> entity = new ArrayList<>();
         for (Tag g : tags) {
-            entity.add(new com.angcyo.github.item.touch.helper.ChannelEntity(g.getId(), g.getName()));
+            entity.add(new ChannelEntity(g.getId(), g.getName()));
         }
         return entity;
     }

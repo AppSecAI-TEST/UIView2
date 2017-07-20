@@ -66,12 +66,10 @@ public class MsgVHShareNews extends MsgViewHolderBase {
         RImageView iv_content = (RImageView) findViewById(R.id.iv_item_content);
         HnVideoPlayView videoPlayView = (HnVideoPlayView) findViewById(R.id.video_play_view);
 
-        CustomAttachment attachment = (CustomAttachment) message.getAttachment();
-        if (attachment == null) {
+        ShareNewsAttachment shareNewsAttachment = (ShareNewsAttachment) message.getAttachment();
+        if (shareNewsAttachment == null) {
             return;
         }
-
-        ShareNewsAttachment shareNewsAttachment = (ShareNewsAttachment) attachment;
         final ShareNewsMsg detailMsg = shareNewsAttachment.getNewsMsg();
         tv_pc_name.setText(detailMsg.getTitle());
         imageView.setImageUrl(detailMsg.getLogo());
@@ -86,12 +84,12 @@ public class MsgVHShareNews extends MsgViewHolderBase {
                 final HotInfoListBean bean;
 //                bean = Json.from(detailMsg.get(), HotInfoListBean.class);
 //                tv_pc_name.setText(bean.getTitle());
-//                pc_layout.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        mUIBaseView.startIView(new InformationDetailUIView(bean));
-//                    }
-//                });
+                pc_layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mUIBaseView.startIView(new InformationDetailUIView(detailMsg.getItem_id()));
+                    }
+                });
             }catch (JsonSyntaxException | NullPointerException e) {
                 pc_layout.setOnClickListener(null);
                 tv_pc_name.setText(detailMsg.getAuthor());

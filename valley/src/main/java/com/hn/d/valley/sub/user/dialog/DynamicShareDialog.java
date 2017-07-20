@@ -26,6 +26,8 @@ import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailMsg;
+import com.hn.d.valley.main.message.attachment.ShareNewsAttachment;
+import com.hn.d.valley.main.message.attachment.ShareNewsMsg;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
@@ -309,8 +311,10 @@ public class DynamicShareDialog extends UIIDialogImpl {
                                     for (AbsContactItem item : absContactItems) {
                                         ContactItem contactItem = (ContactItem) item;
                                         FriendBean friendBean = contactItem.getFriendBean();
-                                        DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mHotInfoListBean);
-                                        DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
+//                                        DynamicDetailMsg detailMsg = DynamicDetailMsg.create(mHotInfoListBean);
+//                                        DynamicDetailAttachment attachment = new DynamicDetailAttachment(detailMsg);
+                                        ShareNewsMsg msg = ShareNewsMsg.create(mHotInfoListBean);
+                                        ShareNewsAttachment attachment = new ShareNewsAttachment(msg);
                                         IMMessage message = MessageBuilder.createCustomMessage(friendBean.getUid(), type, friendBean.getIntroduce(), attachment);
                                         msgService().sendMessage(message, false);
                                     }

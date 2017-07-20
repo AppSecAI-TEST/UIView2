@@ -211,7 +211,7 @@ public class GroupChatUIView extends ChatUIView2 implements GroupInfoUpdateliste
             iv_show_disturbing.setVisibility(team.mute() ? View.VISIBLE : View.GONE);
         }
 
-        if (team.getCreator().equals(UserCache.getUserAccount())) {
+        if (team != null && team.getCreator().equals(UserCache.getUserAccount())) {
             isSelfAdmin = true;
         }
 

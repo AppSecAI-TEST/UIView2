@@ -108,7 +108,7 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
     public static class Options {
 
 
-        public static final int DEFALUT_LIMIT = 5;
+        public static final int DEFALUT_LIMIT = 100;
 
         /**
          * 单选/多选

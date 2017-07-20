@@ -137,7 +137,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                             enable = false;
                             T_.show(mActivity.getString(R.string.text_hongbao_lower_200));
                         }
-                        if (money < 0.01) {
+                        if (money < 0.01f) {
                             enable = false;
 //                            T_.show(mActivity.getString(R.string.text_hongbao_lower_001));
                         }

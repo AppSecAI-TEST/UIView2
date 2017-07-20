@@ -110,7 +110,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 
     @Override
     protected void loadData() {
-        // TODO: 2017/4/16 创建群聊 无法访问 realm 只能在创建的线程中访问
+        // TODO: 2017/4/16 创建群聊 ,无法访问 realm 只能在创建的线程中访问
 //        RealmResults<FriendBean> results = RRealm.realm().where(FriendBean.class).findAll();
 //        if (!results.isEmpty()) {
 //

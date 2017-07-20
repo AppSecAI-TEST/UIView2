@@ -288,10 +288,12 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
             //启动悬浮窗service
             avChatUI.bindService();
         } else {
-
             new Handler(getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    if (isDestroyed()) {
+                        return;
+                    }
                     showPermissionCheckDialog();
                 }
             }, 3000);
@@ -520,6 +522,10 @@ public class AVChatActivity extends StyleActivity implements AVChatUI.AVChatList
 //                    })
 //                    .showDialog(mLayout);
 
+        // 防止activity 被销毁 创建alertdialog
+        if (isDestroyed()) {
+            return;
+        }
         hasOnPermissionDenied = true;
 
         final AlertDialog.Builder builder =

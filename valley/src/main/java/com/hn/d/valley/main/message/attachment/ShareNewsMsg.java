@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.attachment;
 
+import com.hn.d.valley.bean.HotInfoListBean;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -66,5 +68,16 @@ public class ShareNewsMsg extends BaseCustomMsg {
 
     public void setItem_id(String item_id) {
         this.item_id = item_id;
+    }
+
+    public static ShareNewsMsg create(HotInfoListBean mHotInfoListBean) {
+        ShareNewsMsg msg = new ShareNewsMsg();
+        msg.author = mHotInfoListBean.getAuthor();
+        msg.logo = mHotInfoListBean.getLogo();
+        msg.title = mHotInfoListBean.getTitle();
+        msg.item_id = String.valueOf(mHotInfoListBean.getId());
+        msg.extend_type = CustomAttachmentType.SHARE_NEWS;
+        msg.type = mHotInfoListBean.getType();
+        return msg;
     }
 }
