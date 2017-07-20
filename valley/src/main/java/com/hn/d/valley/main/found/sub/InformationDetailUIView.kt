@@ -29,10 +29,7 @@ import com.angcyo.uiview.utils.RUtils
 import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.utils.UI
 import com.angcyo.uiview.view.IView
-import com.angcyo.uiview.widget.EmptyView
-import com.angcyo.uiview.widget.RFlowLayout
-import com.angcyo.uiview.widget.RTextCheckView
-import com.angcyo.uiview.widget.RTextView
+import com.angcyo.uiview.widget.*
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter
 import com.angcyo.uiview.widget.viewpager.UIViewPager
 import com.hn.d.valley.R
@@ -436,6 +433,9 @@ class InformationDetailUIView : BaseContentUIView {
                 override fun onInitDialogLayout(viewHolder: RBaseViewHolder) {
                     viewHolder.v<View>(R.id.control_layout).visibility = View.GONE
                     viewHolder.v<View>(R.id.line_view).visibility = View.GONE
+
+                    val editText: ExEditText = viewHolder.v(R.id.input_view)
+                    editText.unableCallback()
                 }
 
                 override fun onSendClick(imagePath: String, content: String?) {
