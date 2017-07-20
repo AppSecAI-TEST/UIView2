@@ -891,4 +891,5 @@
     <string name="avchat_local_protocol_low_version">版本过低,请升级后使用</string>
     <string name="avchat_invalid_channel_id">对方已挂断</string>
     <string name="avchat_local_call_busy">本地通话中</string>
+    <string name="about_klg_copyright">Copyright © 2017 恐龙谷 All Rights Reserved</string>
 </resources>

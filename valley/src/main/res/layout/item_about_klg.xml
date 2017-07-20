@@ -83,6 +83,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/base_xhdpi"
         android:padding="@dimen/base_xhdpi"
-        android:text="Copyright © 2016 恐龙谷 All Rights Reserved"
+        android:text="@string/about_klg_copyright"
         android:textSize="12sp"/>
 </LinearLayout>
