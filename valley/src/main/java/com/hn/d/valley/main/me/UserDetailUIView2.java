@@ -41,6 +41,7 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
+import com.angcyo.uiview.view.RClickListener;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextView;
@@ -894,9 +895,33 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
             voiceTimeView.setText(mUserInfoBean.getVoiceTime());
 
-            controlLayout.setOnClickListener(new View.OnClickListener() {
+//            controlLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    mAudioPlayHelper.playAudio(mUserInfoBean.getVoiceUrl(),
+//                            mUserInfoBean.getVoiceDuration(),
+//                            new BaseAudioControl.AudioControlListener() {
+//                                @Override
+//                                public void onAudioControllerReady(Playable playable) {
+//
+//                                }
+//
+//                                @Override
+//                                public void onEndPlay(Playable playable) {
+//                                    initVoiceView();
+//                                }
+//
+//                                @Override
+//                                public void updatePlayingProgress(Playable playable, long curPosition) {
+//                                    voiceTimeView.setText(String.valueOf(curPosition / 1000));
+//                                }
+//                            });
+//                }
+//            });
+            controlLayout.setOnClickListener(new RClickListener(1000, true) {
+
                 @Override
-                public void onClick(View v) {
+                public void onRClick(View view) {
                     mAudioPlayHelper.playAudio(mUserInfoBean.getVoiceUrl(),
                             mUserInfoBean.getVoiceDuration(),
                             new BaseAudioControl.AudioControlListener() {
