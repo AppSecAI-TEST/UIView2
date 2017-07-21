@@ -31,7 +31,6 @@ public final class Handlers {
 		/**
 		 * duplicate handlers !!! i don't care
 		 */
-		
 		if (sharedHandler == null) {
 			sharedHandler = new Handler(context.getMainLooper());
 		}

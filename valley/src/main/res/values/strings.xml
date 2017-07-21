@@ -792,7 +792,7 @@
     <string name="text_avchat_invite_chat">邀请您进行语音聊天</string>
     <string name="text_hangup">挂断</string>
     <string name="text_mute">静音</string>
-    <string name="text_switch_to_av_video">切到视频聊天</string>
+    <string name="text_switch_to_av_video">切换到视频</string>
     <string name="text_avchat_receive">接听</string>
     <string name="text_open_camera">打开摄像头</string>
     <string name="text_had_hangup">已挂断</string>
@@ -840,11 +840,12 @@
     <string name="is_no_like_format2">已减少 不想看: %1$s 的内容</string>
     <string name="no_like2_">减少 不想看: </string>
     <string name="cancel_2">撤销</string>
-    <string name="modify_successed">修改成功.</string>
+    <string name="modify_successed">修改成功</string>
     <string name="no_like_successed_tip">已减少相关内容推送.</string>
     <string name="text_klgcoin_record">龙币记录</string>
     <string name="text_let_us_understand_you_more">让我们更懂你</string>
     <string name="text_choose_interest_type">选择兴趣分类</string>
+    <string name="text_send_gift_profile">*送出礼物可以提升对方的魅力值,增加TA对你的好感</string>
     <string name="text_choose_latest_three_tags">至少选择三个标签</string>
     <string name="login_protect_tip">你在新设备登录恐龙谷, 为了保障你的账户安全, 需要使用短信验证码确认</string>
     <string name="unlock_tip">你的帐号已被暂时关闭,无法登录.点击确定按钮可以解封.</string>
@@ -891,5 +892,7 @@
     <string name="avchat_local_protocol_low_version">版本过低,请升级后使用</string>
     <string name="avchat_invalid_channel_id">对方已挂断</string>
     <string name="avchat_local_call_busy">本地通话中</string>
+    <string name="text_send_gift2">赠送礼物</string>
+    <string name="text_refund_service_change_rate">额外扣除 ￥%.2f元手续费</string>
     <string name="about_klg_copyright">Copyright © 2017 恐龙谷 All Rights Reserved</string>
 </resources>

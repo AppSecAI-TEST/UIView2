@@ -168,7 +168,7 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                             public void call(Object o) {
                                 finishIView();
                                 RBus.post(new WalletAccountUpdateEvent());
-                                T_.show("修改成功！");
+                                T_.show(getString(R.string.modify_successed));
                             }
                         });
                     }

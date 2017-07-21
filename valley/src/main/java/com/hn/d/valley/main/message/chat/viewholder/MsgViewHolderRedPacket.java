@@ -20,10 +20,14 @@ import com.hn.d.valley.main.message.redpacket.GrabedRDResultUIView;
 import com.hn.d.valley.main.message.redpacket.P2PStatusRPUIView;
 import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
 import com.hn.d.valley.main.message.service.RedPacketService;
+import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -78,17 +82,30 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
             return;
         }
 
-        rl_container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isChatGroup()) {
-//                    mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
-                    checkRedPacketStatus(redPacket);
-                } else {
-                    checkRedPacketStatus(redPacket);
-                }
-            }
-        });
+        // 防止多次重复点击
+        RxView.clicks(rl_container).throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(new Action1<Void>() {
+                    @Override
+                    public void call(Void aVoid) {
+                        if (!isChatGroup()) {
+                            checkRedPacketStatus(redPacket);
+                        } else {
+                            checkRedPacketStatus(redPacket);
+                        }
+                    }
+                });
+
+//        rl_container.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!isChatGroup()) {
+////                    mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
+//                    checkRedPacketStatus(redPacket);
+//                } else {
+//                    checkRedPacketStatus(redPacket);
+//                }
+//            }
+//        });
 
     }
 

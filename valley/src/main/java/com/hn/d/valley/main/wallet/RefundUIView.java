@@ -41,6 +41,8 @@ import com.hn.d.valley.x5.X5WebUIView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import rx.functions.Action1;
@@ -62,12 +64,12 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     Button btn_next;
     private TextView tv_note;
 
-    public static final float INTEREST = 0.0055f;
+    private float INTEREST = 0.0055f;
 
     private boolean refundTotal;
 
     public RefundUIView() {
-
+        INTEREST = WalletHelper.getInstance().getWalletAccount().getCashout_rate();
     }
 
     @Override
@@ -186,10 +188,10 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                             et_money.setText(amount * (1 - INTEREST) + "");
                             // refuoundtotal 赋值在settext 后执行 因为settext 会执行回调 aftertextchange refoundtotal = false
                             refundTotal = true;
-                            tv_note.setText(String.format("额外扣除 ￥%.2f元手续费",  amount * INTEREST));
+                            tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate),  decimal(amount)));
                         }
 //                        amount * 0.0055  ,(1 - 0.0055) * amount;
-                        tv_note.setText(String.format("额外扣除 ￥%.2f元手续费", amount * INTEREST));
+                        tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate), decimal(amount)));
                         btn_next.setEnabled(true);
                     }
                 });
@@ -262,6 +264,11 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
     }
 
+    private float decimal(float amount) {
+        BigDecimal b   =   new   BigDecimal(amount * INTEREST);
+        return b.setScale(2,   RoundingMode.HALF_UP).floatValue();
+    }
+
     private void cashoutRequest() {
         final String money = et_money.getText().toString();
         if (TextUtils.isEmpty(money)) {
@@ -269,7 +276,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             return;
         }
         float amount = Float.valueOf(money);
-        float totalAmount = amount + amount * INTEREST;
+        float totalAmount = amount - decimal(amount);
         if (refundTotal) {
             totalAmount = WalletHelper.getInstance().getWalletAccount().getMoney() / 100f;
         }

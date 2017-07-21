@@ -4,6 +4,7 @@ import android.widget.TextView;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.NimUserInfoCache;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveMsg;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
@@ -50,10 +51,10 @@ public class MsgVHGiftReceive extends MsgViewHolderBase {
         final GiftReceiveMsg msg = attachment.getGiftReceiveMsg();
         message.getFromAccount();
         if (message.getSessionType() == SessionTypeEnum.P2P) {
-            tv_text.setText(String.format("送你一个 %s", msg.getGift_info().getName()));
+            tv_text.setText(String.format("送你 %s", msg.getGift_info().getName()));
         } else if (message.getSessionType() == SessionTypeEnum.Team) {
             NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-            tv_text.setText(String.format("%s 送 %s 一个 %s", userInfoCache.getUserDisplayName(message.getFromAccount())
+            tv_text.setText(String.format("%s 送 %s  %s", userInfoCache.getUserDisplayName(message.getFromAccount())
                     , userInfoCache.getUserDisplayName(msg.getTo_uid()), msg.getGift_info().getName()));
         }
 
@@ -63,7 +64,7 @@ public class MsgVHGiftReceive extends MsgViewHolderBase {
             localExtension.put("read", true);
             message.setLocalExtension(localExtension);
             msgService().updateIMMessage(message);
-            if (getMsgAdapter().hasOnShow()) {
+            if (getMsgAdapter().hasOnShow() && isReceivedMessage() && msg.getTo_uid().equals(UserCache.getUserAccount())) {
                 getUIBaseView().startIView(new ReceiveGiftUIDialog(msg.getGift_info().getThumb()));
             }
         }

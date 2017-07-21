@@ -7,7 +7,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import com.angcyo.uiview.base.UIBaseRxView
 import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RRetrofit
@@ -27,6 +29,11 @@ import com.hn.d.valley.bean.GiftBean
 import com.hn.d.valley.bean.ListModel
 import com.hn.d.valley.cache.NimUserInfoCache
 import com.hn.d.valley.cache.UserCache
+import com.hn.d.valley.main.friend.AbsContactItem
+import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter
+import com.hn.d.valley.main.message.groupchat.GroupMemberItem
+import com.hn.d.valley.main.message.groupchat.GroupMemberSelectUIVIew
+import com.hn.d.valley.main.message.groupchat.RequestCallback
 import com.hn.d.valley.main.message.session.Container
 import com.hn.d.valley.main.message.setThumbUrl
 import com.hn.d.valley.start.SpaceItemDecoration
@@ -34,6 +41,7 @@ import com.hn.d.valley.sub.other.KLGCoinUIVIew
 import com.hn.d.valley.widget.HnGlideImageView
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 import rx.functions.Action0
+import rx.functions.Action3
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -46,30 +54,31 @@ import rx.functions.Action0
  * 修改备注：
  * Version: 1.0.0
  */
-class GiftListUIView: BaseContentUIView {
+class GiftListUIView : BaseContentUIView {
 
     var vp_tags_pager: RViewPager? = null
     var indicator: RecyclerViewPagerIndicator? = null
     var adapter: GiftPagerAdapter? = null
-    var tv_selected : TextView? = null
-    var user_ico_view : HnGlideImageView? = null
-    var tv_interest_desc : TextView? = null
-    var btn_send : TextView? = null
+    var tv_selected: TextView? = null
+    var user_ico_view: HnGlideImageView? = null
+    var tv_interest_desc: TextView? = null
+    var btn_send: TextView? = null
+    var iv_switch: ImageView? = null
 
-    var account : String
-    var sessionType : SessionTypeEnum
-    var container : Container? = null
+    var account: String
+    var sessionType: SessionTypeEnum
+    var container: Container? = null
 
-    constructor(account : String, sessionType : SessionTypeEnum) : super(){
+    constructor(account: String, sessionType: SessionTypeEnum) : super() {
         this.account = account
         this.sessionType = sessionType
     }
 
-    constructor(container : Container) : this(container.account,container.sessionType) {
+    constructor(container: Container) : this(container.account, container.sessionType) {
         this.container = container
     }
 
-    constructor(uid : String,container: Container) : this(container) {
+    constructor(uid: String, container: Container) : this(container) {
         this.container = container
         account = uid
 
@@ -79,7 +88,7 @@ class GiftListUIView: BaseContentUIView {
     override fun getTitleBar(): TitleBarPattern {
         val titleBarPattern = super.getTitleBar()
                 .setShowBackImageView(true)
-                .setTitleString("赠送礼物")
+                .setTitleString(getString(R.string.text_send_gift2))
                 .setFloating(true)
                 .setTitleBarBGColor(Color.TRANSPARENT)
         return titleBarPattern
@@ -101,6 +110,26 @@ class GiftListUIView: BaseContentUIView {
         user_ico_view = mViewHolder.v(R.id.user_ico_view)
         tv_interest_desc = mViewHolder.v(R.id.tv_interest_desc)
         btn_send = mViewHolder.v(R.id.btn_send)
+        iv_switch = mViewHolder.imgV(R.id.iv_switch)
+
+        if (sessionType == SessionTypeEnum.Team) {
+            iv_switch?.visibility = View.VISIBLE
+            iv_switch?.setOnClickListener {
+                GroupMemberSelectUIVIew.start(mILayout, BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null, container?.proxy!!.gid
+                        , Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback<Any>> { uiBaseRxView, items, callback ->
+                    if (items.size == 0) {
+                        T_.show(getString(R.string.not_empty_tip))
+                        return@Action3
+                    }
+                    callback.onSuccess("")
+                    val item = items[0] as GroupMemberItem
+                    user_ico_view!!.setImageThumbUrl(item.memberBean.userAvatar)
+                    tv_interest_desc!!.text = String.format("送给 %s", item.memberBean.defaultNick)
+                    account = item.memberBean.userId
+                })
+
+            }
+        }
 
         btn_send!!.setOnClickListener {
             startIView(KLGCoinUIVIew())
@@ -111,10 +140,10 @@ class GiftListUIView: BaseContentUIView {
         if (userInfo != null) {
             val avatar = userInfo.getAvatar()
             user_ico_view!!.setImageThumbUrl(avatar)
-            tv_interest_desc!!.text = String.format("送给 %s",userInfo.name)
+            tv_interest_desc!!.text = String.format("送给 %s", userInfo.name)
         }
 
-        tv_selected!!.text = String.format("龙币:%s",UserCache.instance().getLoginBean().getCoins())
+        tv_selected!!.text = String.format("龙币:%s", UserCache.instance().getLoginBean().getCoins())
         loadData()
 
     }
@@ -128,7 +157,7 @@ class GiftListUIView: BaseContentUIView {
                         super.onSucceed(bean)
                         adapter = GiftPagerAdapter(bean!!.data_list)
                         vp_tags_pager!!.adapter = adapter
-                        indicator!!.setUpUIViewPager(vp_tags_pager,adapter!!.count)
+                        indicator!!.setUpUIViewPager(vp_tags_pager, adapter!!.count)
                     }
 
                     override fun onError(code: Int, msg: String?) {
@@ -190,7 +219,7 @@ class GiftListUIView: BaseContentUIView {
 
     inner class GiftListAdapter(context: Context?, datas: List<GiftBean>, itemHeight: Int) : RModelAdapter<GiftBean>(context, datas) {
 
-        var itemHeight : Int
+        var itemHeight: Int
 
         init {
             setModel(RModelAdapter.MODEL_SINGLE)
@@ -215,13 +244,14 @@ class GiftListUIView: BaseContentUIView {
             }
 
             imageView.setThumbUrl(bean!!.thumb)
+//            username.setTextColor(R.color.main_text_color_dark)
             username.text = bean!!.name
             if (bean.coins.toInt() == 0) {
                 tv_klg_coin.text = "免费"
             } else {
-                tv_klg_coin.text = String.format("%s 龙币",bean.coins)
+                tv_klg_coin.text = String.format("%s 龙币", bean.coins)
             }
-            tv_is_vip.visibility = if (bean.is_vip.equals("0")){
+            tv_is_vip.visibility = if (bean.is_vip.equals("0")) {
                 View.GONE
             } else {
                 View.VISIBLE
@@ -243,15 +273,15 @@ class GiftListUIView: BaseContentUIView {
             }
         }
 
-        private fun sendGift(gift : GiftBean) {
+        private fun sendGift(gift: GiftBean) {
             startIView(SendGiftUIDialog(gift, Action0 {
                 if (sessionType == SessionTypeEnum.P2P) {
 
-                    sendGift(account,"",gift.gift_id)
+                    sendGift(account, "", gift.gift_id)
 
-                } else if(sessionType == SessionTypeEnum.Team){
+                } else if (sessionType == SessionTypeEnum.Team) {
                     // 送给群里某群友
-                    sendGift(account,container?.proxy!!.gid,gift.gift_id)
+                    sendGift(account, container?.proxy!!.gid, gift.gift_id)
 
                 }
 
@@ -268,10 +298,10 @@ class GiftListUIView: BaseContentUIView {
 
     }
 
-    companion object{
-        fun sendGift(account: String,gid : String ,giftId: String) {
+    companion object {
+        fun sendGift(account: String, gid: String, giftId: String) {
             RRetrofit.create(GiftService::class.java)
-                    .giving(Param.buildMap("to_uid:" + account, "gift_id:" + giftId,"gid:" + gid))
+                    .giving(Param.buildMap("to_uid:" + account, "gift_id:" + giftId, "gid:" + gid))
                     .compose(Rx.transformer(String::class.java))
                     .subscribe(object : BaseSingleSubscriber<String>() {
                         override fun onSucceed(bean: String) {
@@ -289,7 +319,6 @@ class GiftListUIView: BaseContentUIView {
                     })
         }
     }
-
 
 
 }

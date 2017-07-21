@@ -3,14 +3,35 @@
     xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center"
-    android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_gift_anim"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/ll_shine"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="match_parent">
+        <ImageView
+            tools:src="@drawable/longbi_80"
+            android:id="@+id/iv_gift_anim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_tip_anim"
+            style="@style/WhiteColorTextStyle"
+            android:layout_margin="@dimen/base_xhdpi"
+            tools:text="送你一个呵呵大"
+            android:gravity="center"
+            android:background="@drawable/jianbiandise_songliwu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 
 
 

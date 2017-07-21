@@ -7,6 +7,8 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
+import com.angcyo.library.utils.L;
+import com.angcyo.uiview.utils.ThreadExecutor;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.audio.AudioRecordPlayable;
@@ -144,13 +146,19 @@ public class AudioPlayHelper {
      * 停止播放
      */
     public void stopAudio() {
+        L.d("AudioPlayHelper", "stopAudio thread : " + Thread.currentThread().getName());
         if (mPathAudioControl != null) {
             if (mPathAudioControl.isPlayingAudio()) {
                 mPathAudioControl.stopAudio();
             }
         }
         if (mPlayImageView != null) {
-            mPlayImageView.clearAnimation();
+            ThreadExecutor.instance().onMain(new Runnable() {
+                @Override
+                public void run() {
+                    mPlayImageView.clearAnimation();
+                }
+            });
         }
     }
 

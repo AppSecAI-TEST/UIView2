@@ -374,7 +374,7 @@ public class ChatFileUIView extends SingleRecyclerUIView<ChatFileUIView.ChatFile
 
         List<ChatFile> selectFile = mGroupAdapter.getSelectFile(integerList);
         for (ChatFile chatFile : selectFile) {
-            String path = chatFile.getThumbPath();
+            String path = chatFile.getPath();
             File file = new File(path);
             if (FileUtils.isFileExists(file)) {
                 FileUtils.deleteFile(file);

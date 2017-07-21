@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.chat;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -86,6 +87,8 @@ import com.orhanobut.hawk.Hawk;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.functions.Action1;
 
 /**
  * Created by hewking on 2017/3/16.
@@ -361,8 +364,17 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             }
         });
 
-        initAudioRecordButton();
-
+        // 请求录音权限
+        mActivity.checkPermissions(new String[]{
+                        Manifest.permission.RECORD_AUDIO},
+                new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            initAudioRecordButton();
+                        }
+                    }
+                });
         updateSkin();//更新皮肤资源
     }
 
@@ -384,10 +396,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
      */
     private void initAudioRecordButton() {
         mRecordView.setOnTouchListener(new View.OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    L.d("ChatUIView2","ontouch :ACTION_DOWN  event " + event.getAction() );
                     touched = true;
                     initAudioRecord();
                     onStartAudioRecord();
@@ -396,10 +408,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     touched = false;
                     onEndAudioRecord(isCancelled(v, event));
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    L.d("ChatUIView2","ontouch : event " + event.getAction() + "  value ACTION_MOVE  iscancelled " + isCancelled(v,event) );
                     touched = false;
                     cancelAudioRecord(isCancelled(v, event));
                 }
-
                 return true;
             }
         });
@@ -489,10 +501,10 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
      */
     private void updateTimerTip(boolean cancel) {
         if (cancel) {
-            mTimerTip.setText(mActivity.getString(R.string.recording_cancel_tip));
+            mTimerTip.setText(mActivity.getString(R.string.recording_cancel));
             mTimerTipContainer.setBackgroundResource(R.drawable.nim_cancel_record_red_bg);
         } else {
-            mTimerTip.setText(mActivity.getString(R.string.recording_cancel));
+            mTimerTip.setText(mActivity.getString(R.string.recording_cancel_tip));
             mTimerTipContainer.setBackgroundResource(0);
         }
     }
@@ -850,11 +862,14 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     @Override
     public void onRecordStart(File audioFile, RecordType recordType) {
+        L.d("chatuiview2","onRecordStart");
+        started = true;
 
     }
 
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
+        L.d("chatuiview2","onRecordSuccess");
         IMMessage audioMessage = MessageBuilder.createAudioMessage(mSessionId, sessionType, audioFile, audioLength);
         sendMessage(audioMessage);
     }

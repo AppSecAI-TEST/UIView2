@@ -22,6 +22,7 @@ import com.hn.d.valley.main.avchat.AVChatProfile;
 import com.hn.d.valley.main.avchat.activity.AVChatActivity;
 import com.hn.d.valley.main.avchat.receiver.PhoneCallStateObserver;
 import com.hn.d.valley.main.me.setting.MsgNotifySetting;
+import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
 import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
@@ -113,6 +114,7 @@ public class RNim {
                 Log.e("Extra", "Extra Message->" + extra);
                 if (PhoneCallStateObserver.getInstance().getPhoneCallState() != PhoneCallStateObserver.PhoneCallStateEnum.IDLE
                         || AVChatProfile.getInstance().isAVChatting()
+                        || TeamAVChatHelper.sharedInstance().isTeamAVChatting()
                         || AVChatManager.getInstance().getCurrentChatId() != 0) {
                     L.i(TAG, "reject incoming call data =" + data.toString() + " as local phone is not idle");
                     AVChatManager.getInstance().sendControlCommand(data.getChatId(), AVChatControlCommand.BUSY, null);

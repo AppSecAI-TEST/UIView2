@@ -193,7 +193,6 @@ public class ChatControl2 {
                 && msg.isRemoteRead()) {
             return true;
         }
-
         return false;
     }
 
@@ -202,7 +201,6 @@ public class ChatControl2 {
     }
 
     private class MsgItemEventListener implements ChatAdapter2.ViewHolderEventListener {
-
         @Override
         public void onFailedBtnClick(IMMessage message) {
             if (message.getDirect() == MsgDirectionEnum.Out) {
@@ -275,6 +273,7 @@ public class ChatControl2 {
             case Constant.hot_news:
                 return;
         }
+
         longClickItemForward(selectedItem, SessionTypeEnum.P2P, itemDialog);
         longClickItemForward(selectedItem, SessionTypeEnum.Team, itemDialog);
     }
@@ -584,6 +583,4 @@ public class ChatControl2 {
         public int positon;
         public ArrayList<ImageItem> images;
     }
-
-
 }

@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
@@ -66,10 +67,13 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
         final ImageView ivShine = mViewHolder.imgV(R.id.iv_gift_anim);
+        final TextView ivTip = mViewHolder.tv(R.id.tv_tip_anim);
+        final LinearLayout ll_shine = mViewHolder.v(R.id.ll_shine);
 
         BitmapTypeRequest<String> builder = Glide.with(mActivity)
                 .load(thumb)
                 .asBitmap();
+        ivTip.setText("送你一个呵呵大");
 //        builder.placeholder(R.drawable.defauit_avatar_contact);
 //        builder.error(R.drawable.defauit_avatar_contact);
         builder.into(new SimpleTarget<Bitmap>() {
@@ -77,8 +81,25 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 ivShine.setImageBitmap(resource);
                 Animation animShine = AnimationUtils.loadAnimation(mActivity, R.anim.shine);
-                ivShine.animate().alpha(1F).setDuration(500).start();
+                animShine.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        finishDialog();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
                 ivShine.startAnimation(animShine);
+//                ivTip.startAnimation(animShine);
+//                ll_shine.startAnimation(animShine);
             }
         });
 

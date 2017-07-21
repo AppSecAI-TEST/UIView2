@@ -25,6 +25,7 @@ public class WalletAccount {
      * has_pin : 1
      * fingerprint : 0
      * device : 1ASD23123SFESF2343XCVDGDFGFG3434
+     * "cashout_rate":0.0055
      */
 
     private int uid;
@@ -33,8 +34,18 @@ public class WalletAccount {
     private String alipay;
     private String wechatpay;
     private int has_pin;
+
+    public float getCashout_rate() {
+        return cashout_rate;
+    }
+
+    public void setCashout_rate(float cashout_rate) {
+        this.cashout_rate = cashout_rate;
+    }
+
     private int fingerprint;
     private String device;
+    private float cashout_rate;
 
     public boolean hasPin() {
         // 1 已设置 0 未设置

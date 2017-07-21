@@ -544,14 +544,14 @@ public class RecentContactsControl {
         } else if (attachment instanceof GiftReceiveAttachment) {
             GiftReceiveMsg msg = ((GiftReceiveAttachment)attachment).getGiftReceiveMsg();
             if (recent.getSessionType() == SessionTypeEnum.P2P) {
-                return String.format("送你一个 %s", msg.getGift_info().getName());
+                return String.format("送你 %s", msg.getGift_info().getName());
             }else if (recent.getSessionType() == SessionTypeEnum.Team) {
                 NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-                return String.format("%s 送 %s 一个 %s", userInfoCache.getUserDisplayName(recent.getFromAccount())
+                return String.format("%s 送 %s  %s", userInfoCache.getUserDisplayName(recent.getFromAccount())
                         , userInfoCache.getUserDisplayName(msg.getTo_uid()), msg.getGift_info().getName());
             }
         } else if (attachment instanceof ShareNewsAttachment) {
-            return ((ShareNewsAttachment) attachment).getNewsMsg().getTitle();
+            return "[分享资讯]" + ((ShareNewsAttachment) attachment).getNewsMsg().getTitle();
         }
         return "[自定义消息]";
     }
@@ -672,7 +672,7 @@ public class RecentContactsControl {
                 String tid = bean.getContactId();
                 String teamNick = getTeamUserDisplayName(tid, fromId);
 
-                String content = teamNick + ": " + bean.getContent();
+                String content = teamNick + ": " + getShowContent(bean);
 
                 L.i(TAG,content + ": " + AitHelper.hasAitExtention(bean));
                 if (AitHelper.hasAitExtention(bean)) {

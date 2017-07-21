@@ -8,12 +8,12 @@
     <RelativeLayout
         android:id="@+id/rl_top_profile"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="210dp">
 
         <ImageView
             android:id="@+id/bg_view"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="210dp"
             android:scaleType="centerCrop"
             android:src="@drawable/beijing_zengsongliwu"/>
 
@@ -26,18 +26,45 @@
             android:contentDescription="@string/is_circle"
             android:src="@drawable/defauit_avatar_contact"/>
 
+        <ImageView
+            android:id="@+id/iv_switch"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:paddingLeft="@dimen/base_xhdpi"
+            android:visibility="gone"
+            android:layout_alignEnd="@id/user_ico_view"
+            android:layout_alignBottom="@id/user_ico_view"
+            android:src="@drawable/qiehuan_songliwu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/tv_interest_desc"
             android:layout_below="@id/user_ico_view"
             style="@style/MainTextStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/base_xhdpi"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="@string/text_choose_interest_type"
             android:textColor="@color/white"
             android:textSize="@dimen/base_title_size"/>
+
+        <TextView
+            android:id="@+id/tv_profile_tip"
+            android:layout_below="@id/tv_interest_desc"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xhdpi"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:layout_marginStart="@dimen/base_xhdpi"
+            android:layout_marginEnd="@dimen/base_xhdpi"
+            android:text="@string/text_send_gift_profile"
+            android:textColor="@color/white"
+            android:textSize="@dimen/default_text_little_size"/>
 
 
     </RelativeLayout>
