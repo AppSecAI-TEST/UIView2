@@ -833,6 +833,8 @@ public class UserDiscussItemControl {
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
                         imageView.setShowGifTip(false);
+                        imageView.setTagUrl(url);
+
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {

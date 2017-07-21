@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
@@ -27,8 +30,10 @@ import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.resources.AnimUtil;
+import com.angcyo.uiview.resources.RAnimListener;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
@@ -131,7 +136,8 @@ public class ImagePagerUIView extends UIIViewImpl {
 
             @Override
             public void onExit(DragPhotoView view, float translateX, float translateY, float w, float h) {
-                animToFinish();
+                //animToFinish();
+                animToMin();
             }
 
             @Override
@@ -153,7 +159,8 @@ public class ImagePagerUIView extends UIIViewImpl {
         mImagePageAdapter.setPhotoViewClickListener(new ImagePageAdapter.PhotoViewClickListener() {
             @Override
             public void OnPhotoTapListener(View view, float v, float v1) {
-                animToFinish();
+                //animToFinish();
+                animToMin();
             }
         });
         setPhotoViewLongClickListener(photoViewLongClickListener);
@@ -164,7 +171,8 @@ public class ImagePagerUIView extends UIIViewImpl {
 
     @Override
     public boolean onBackPressed() {
-        animToFinish();
+        //animToFinish();
+        animToMin();
         finishIView(this, new UIParam(true, true, false));
         return false;
     }
@@ -172,7 +180,8 @@ public class ImagePagerUIView extends UIIViewImpl {
     @Override
     public void onViewLoad() {
         super.onViewLoad();
-        startAnimation();
+        //startAnimation();
+        animToMax();
         //startAnimation2();
         fullscreen(true, true);
     }
@@ -217,7 +226,8 @@ public class ImagePagerUIView extends UIIViewImpl {
         mMRootLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                animToFinish();
+                //animToFinish();
+                animToMin();
             }
         });
         container.addView(mMRootLayout, new ViewGroup.LayoutParams(-1, -1));
@@ -394,6 +404,112 @@ public class ImagePagerUIView extends UIIViewImpl {
         if (mImagePageAdapter != null) {
             mImagePageAdapter.setPhotoViewLongClickListener(photoViewLongClickListener);
         }
+    }
+
+    /**
+     * 退出动画
+     */
+    private void animToMin() {
+        if (isToFinish) {
+            return;
+        }
+        isToFinish = true;
+        hideIndicator();
+        mMCircleIndicator.setAlpha(0);
+
+//        AnimUtil.startArgb(mMRootLayout, mLastTranColor, Color.TRANSPARENT, UIIViewImpl.DEFAULT_ANIM_TIME);
+//        ViewCompat.animate(mMViewPager).alpha(0).scaleX(0.2f).scaleY(0.2f)
+//                .setInterpolator(new AccelerateInterpolator())
+//                .setDuration(UIIViewImpl.DEFAULT_ANIM_TIME)
+//                .withEndAction(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        isToFinish = false;
+//                        finishIView(ImagePagerUIView2.this, false);
+//                    }
+//                }).start();
+
+        Rect viewLocation = mImageItems.get(mMViewPager.getCurrentItem()).mViewLocation;
+        viewLocation = AnimUtil.ensureRect(viewLocation);
+
+        AnimUtil.startToMinAnim(viewLocation,
+                mMViewPager, new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
+                new Point(viewLocation.centerX(), viewLocation.centerY()),
+                mMViewPager.getMeasuredWidth(), mMViewPager.getMeasuredHeight(),
+                new RAnimListener() {
+                    @Override
+                    public void onAnimationProgress(Animator animation, float progress) {
+                        super.onAnimationProgress(animation, progress);
+                        mMRootLayout.setBackgroundColor(AnimUtil.evaluateColor(progress, mLastTranColor, Color.TRANSPARENT));
+                        mMViewPager.setAlpha(0.6f + 1 - progress);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        isToFinish = false;
+                        finishIView(ImagePagerUIView.this, false);
+                    }
+                });
+    }
+
+    /**
+     * 进入动画
+     */
+    private void animToMax() {
+        hideIndicator();
+        Rect viewLocation = mImageItems.get(startPosition).mViewLocation;
+        viewLocation = AnimUtil.ensureRect(viewLocation);
+
+        if (mMViewPager.getMeasuredWidth() == 0 || mMViewPager.getMeasuredHeight() == 0) {
+            final Rect finalViewLocation = viewLocation;
+            mMViewPager.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    mMViewPager.getViewTreeObserver().removeOnPreDrawListener(this);
+                    startAnimInner(finalViewLocation);
+                    return false;
+                }
+            });
+        } else {
+            startAnimInner(viewLocation);
+        }
+    }
+
+    private void startAnimInner(Rect viewLocation) {
+        AnimUtil.startToMaxAnim(viewLocation,
+                mMViewPager,
+                new Point(viewLocation.centerX(), viewLocation.centerY()),
+                new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
+                mMViewPager.getMeasuredWidth(),
+                mMViewPager.getMeasuredHeight(), 60, new RAnimListener() {
+                    @Override
+                    public void onAnimationProgress(Animator animation, float progress) {
+                        super.onAnimationProgress(animation, progress);
+                        mMRootLayout.setBackgroundColor(AnimUtil.evaluateColor(progress, Color.TRANSPARENT, Color.BLACK));
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+//                        mPreviewImageView.setVisibility(View.GONE);
+//                        mMViewPager.setVisibility(View.VISIBLE);
+                        if (mImageItems.size() > 1) {
+                            showIndicator();
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                    }
+
+                    @Override
+                    public void onDelayBeforeStart(Animator animation) {
+                        super.onDelayBeforeStart(animation);
+//                        mPreviewImageView.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     /**

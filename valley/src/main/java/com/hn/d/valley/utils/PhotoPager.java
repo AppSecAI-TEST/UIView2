@@ -68,9 +68,13 @@ public class PhotoPager {
             final ImageItem imageItem = new ImageItem();
             imageItem.url = s;
             imageItem.canSave = allowDownload;
+
             if (imageList.size() > i) {
-                imageItem.placeholderDrawable = imageList.get(i).copyDrawable();
+                GlideImageView imageView = imageList.get(i);
+                imageView.getGlobalVisibleRect(imageItem.mViewLocation);
+                imageItem.placeholderDrawable = imageView.copyDrawable();
             }
+
             imageItems.add(imageItem);
         }
 
