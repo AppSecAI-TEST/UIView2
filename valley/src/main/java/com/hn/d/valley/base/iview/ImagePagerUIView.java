@@ -417,31 +417,23 @@ public class ImagePagerUIView extends UIIViewImpl {
         hideIndicator();
         mMCircleIndicator.setAlpha(0);
 
-//        AnimUtil.startArgb(mMRootLayout, mLastTranColor, Color.TRANSPARENT, UIIViewImpl.DEFAULT_ANIM_TIME);
-//        ViewCompat.animate(mMViewPager).alpha(0).scaleX(0.2f).scaleY(0.2f)
-//                .setInterpolator(new AccelerateInterpolator())
-//                .setDuration(UIIViewImpl.DEFAULT_ANIM_TIME)
-//                .withEndAction(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        isToFinish = false;
-//                        finishIView(ImagePagerUIView2.this, false);
-//                    }
-//                }).start();
-
         Rect viewLocation = mImageItems.get(mMViewPager.getCurrentItem()).mViewLocation;
         viewLocation = AnimUtil.ensureRect(viewLocation);
 
+        View targetView = null;//mImagePageAdapter.getCurrentImageView();//mMViewPager;
+        if (targetView == null) {
+            targetView = mMViewPager;
+        }
         AnimUtil.startToMinAnim(viewLocation,
-                mMViewPager, new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
+                targetView, new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
                 new Point(viewLocation.centerX(), viewLocation.centerY()),
-                mMViewPager.getMeasuredWidth(), mMViewPager.getMeasuredHeight(),
+                targetView.getMeasuredWidth(), targetView.getMeasuredHeight(),
                 new RAnimListener() {
                     @Override
                     public void onAnimationProgress(Animator animation, float progress) {
                         super.onAnimationProgress(animation, progress);
                         mMRootLayout.setBackgroundColor(AnimUtil.evaluateColor(progress, mLastTranColor, Color.TRANSPARENT));
-                        mMViewPager.setAlpha(0.6f + 1 - progress);
+//                        mMViewPager.setAlpha(0.6f + 1 - progress);
                     }
 
                     @Override
@@ -477,6 +469,7 @@ public class ImagePagerUIView extends UIIViewImpl {
     }
 
     private void startAnimInner(Rect viewLocation) {
+//        mMViewPager.setBackgroundColor(Color.RED);
         AnimUtil.startToMaxAnim(viewLocation,
                 mMViewPager,
                 new Point(viewLocation.centerX(), viewLocation.centerY()),
