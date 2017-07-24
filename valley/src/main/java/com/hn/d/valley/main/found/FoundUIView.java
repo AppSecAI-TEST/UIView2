@@ -12,12 +12,11 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.main.MainUIView;
-import com.hn.d.valley.main.found.sub.GameWebUIView;
+import com.hn.d.valley.main.found.sub.GameListUIView;
 import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.found.sub.HotInformationUIView;
 import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.home.nearby.NearbyUIView;
-import com.hn.d.valley.x5.X5WebUIView;
 
 import java.util.List;
 
@@ -88,6 +87,7 @@ public class FoundUIView extends BaseItemUIView {
                 });
             }
         });
+        //扫一扫
         items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
 
             @Override
@@ -117,6 +117,7 @@ public class FoundUIView extends BaseItemUIView {
             }
         });
 
+        //搜一搜
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
@@ -130,13 +131,14 @@ public class FoundUIView extends BaseItemUIView {
             }
         });
 
+        //游戏
         items.add(new SingleItem(SingleItem.Type.TOP) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
                 baseInitItem(holder, R.drawable.animal, getString(R.string.game), mBaseOffsetSize, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new GameWebUIView());
+                        mParentILayout.startIView(new GameListUIView());
                     }
                 });
             }

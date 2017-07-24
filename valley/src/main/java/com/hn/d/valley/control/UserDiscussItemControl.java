@@ -679,6 +679,7 @@ public class UserDiscussItemControl {
 //                            imageView.setImageResource(R.drawable.zhanweitu_1);
 
                             imageView.setCheckGif(true);
+                            imageView.setAnimType(GlideImageView.AnimType.NONE);
                             imageView.setShowGifImage(isInDetail);
 //                            imageView.setUrl((width > 0 && height > 0) ?
 //                                    OssHelper.getImageThumb(url, ScreenUtil.screenWidth / 3, ScreenUtil.screenWidth / 3) :
@@ -832,8 +833,15 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
+                        imageView.setCheckGif(true);
                         imageView.setShowGifTip(false);
+                        imageView.setShowGifImage(false);
                         imageView.setTagUrl(url);
+                        imageView.setPlaceholderRes(R.drawable.default_vociecover);
+
+                        imageView.cancelRequest();
+                        imageView.setImageResource(R.drawable.default_vociecover);
+                        imageView.setUrl(url);
 
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
@@ -1861,7 +1869,6 @@ public class UserDiscussItemControl {
                     .placeholder(R.drawable.default_vociecover)
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL);
-
             if (blur) {
                 builder.bitmapTransform(new GlideBlurTransformation(imageView.getContext()))
                         .into(imageView);

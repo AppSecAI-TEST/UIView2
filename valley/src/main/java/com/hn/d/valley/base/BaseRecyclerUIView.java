@@ -369,6 +369,8 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      * 初始化控件状态
      */
     public void onUILoadDataFinish() {
+        hideLoadView();
+
         if (mRefreshLayout != null) {
             mRefreshLayout.setRefreshEnd();
         }

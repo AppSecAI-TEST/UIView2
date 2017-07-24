@@ -1,28 +1,22 @@
 package com.hn.d.valley.base.iview
 
 import android.text.TextUtils
-import com.angcyo.uiview.base.UIBaseRxView
 import com.angcyo.uiview.container.ILayout
 import com.angcyo.uiview.dialog.UIBottomItemDialog
 import com.angcyo.uiview.recycler.adapter.RModelAdapter
+import com.angcyo.uiview.utils.T_
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.animation.GlideAnimation
 import com.bumptech.glide.request.target.SimpleTarget
 import com.github.chrisbanes.photoview.PhotoView
 import com.hn.d.valley.R
-import com.hn.d.valley.main.friend.AbsContactItem
 import com.hn.d.valley.main.friend.ContactItem
-import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment
-import com.hn.d.valley.main.message.attachment.DynamicDetailMsg
 import com.hn.d.valley.main.message.chat.ChatUIView2.msgService
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew
-import com.hn.d.valley.main.message.groupchat.RequestCallback
 import com.hn.d.valley.main.message.session.ImageCommandItem
 import com.lzy.imagepicker.bean.ImageItem
-import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
-import rx.functions.Action3
 import java.io.File
 
 /**
@@ -40,7 +34,10 @@ class RelayPhotoLongClickListener(iLayout: ILayout<*>) : ImagePagerUIView.SavePh
 
 
     override fun onLongClickListener(photoView: PhotoView?, position: Int, item: ImageItem?) {
-        if (item != null && item.canSave) {
+        if (item == null) {
+            return
+        }
+        if (item.canSave) {
             UIBottomItemDialog.build()
                     .addItem(mILayout.layout.context.getString(R.string.relay_image)) {
                         //点击发送给好友
@@ -60,10 +57,12 @@ class RelayPhotoLongClickListener(iLayout: ILayout<*>) : ImagePagerUIView.SavePh
                     }
                     .addItem(mILayout.layout.context.getString(R.string.save_image), createSaveClickListener(item))
                     .showDialog(mILayout)
+        } else {
+            T_.error("图片非公开，不能保存.")
         }
     }
 
-    private fun sendPicAndGif(path : String) {
+    private fun sendPicAndGif(path: String) {
         ContactSelectUIVIew.start(mILayout, BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null, true) { uiBaseDataView, absContactItems, requestCallback ->
             requestCallback.onSuccess("")
             val contactItem = absContactItems[0] as ContactItem

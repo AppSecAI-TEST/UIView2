@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
-    android:orientation="vertical">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
+              android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/user_layout"
@@ -13,11 +12,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/base_bg_selector"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/base_xhdpi"
-        android:paddingEnd="@dimen/base_xhdpi"
-        android:paddingTop="@dimen/base_xxhdpi"
         android:paddingBottom="@dimen/base_xxhdpi"
-       >
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_xxhdpi">
 
         <com.hn.d.valley.widget.HnGlideImageView
             android:id="@+id/user_ico_view"
@@ -25,6 +23,11 @@
             android:layout_height="@dimen/avatar_image_size"
             android:contentDescription="@string/is_circle"
             android:src="@drawable/defauit_avatar_contact"/>
+
+        <!--<com.hn.d.valley.main.me.TestImageView-->
+            <!--android:id="@+id/test_image_view"-->
+            <!--android:layout_width="@dimen/base_50dpi"-->
+            <!--android:layout_height="@dimen/base_50dpi"/>-->
 
         <LinearLayout
             android:layout_width="0dp"

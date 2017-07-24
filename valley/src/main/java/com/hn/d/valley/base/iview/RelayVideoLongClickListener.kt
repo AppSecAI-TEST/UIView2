@@ -9,9 +9,7 @@ import com.hn.d.valley.ValleyApp
 import com.hn.d.valley.main.friend.ContactItem
 import com.hn.d.valley.main.message.chat.ChatUIView2
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter
-import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew
-import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew.*
-import com.hn.d.valley.main.message.session.ImageCommandItem
+import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew.start
 import com.hn.d.valley.main.message.session.VideoCommandItem.getVideoMediaPlayer
 import com.netease.nimlib.sdk.msg.MessageBuilder
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
@@ -41,6 +39,9 @@ class RelayVideoLongClickListener(iLayout: ILayout<*>) : VideoPlayUIView.SaveVid
                     .addItem(mILayout.layout.context.getString(R.string.save_video)) { saveVideoFile(file) }
                     .showDialog(mILayout)
         }
+//        else {
+//            T_.error("视频非公开，不能保存.")
+//        }
     }
 
     private fun sendVideo(path: String) {

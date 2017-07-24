@@ -192,6 +192,8 @@ class InformationDetailUIView : BaseContentUIView {
         super.initOnShowContentLayout()
 //        webLayout = mViewHolder.v(R.id.web_contain_layout)
         webView = mViewHolder.v(R.id.web_view)
+        val settings = webView.settings
+        settings.setUserAgent(settings.userAgentString + " KLG_Android")
 //        webView = X5WebView(mActivity)
 //        webLayout.addView(webView, -1, -2)
         mTabLayout = mViewHolder.v(R.id.tab_layout)

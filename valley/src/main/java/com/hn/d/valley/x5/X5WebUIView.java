@@ -16,6 +16,7 @@ import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.SimpleProgressBar;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseContentUIView;
+import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 
 /**
@@ -102,6 +103,9 @@ public class X5WebUIView extends BaseContentUIView {
         inflate(R.layout.view_x5_web);
         //mEmptyView = mViewHolder.v(R.id.empty_view);
         mWebView = mViewHolder.v(R.id.web_view);
+        WebSettings settings = mWebView.getSettings();
+        settings.setUserAgent(settings.getUserAgentString() + " KLG_Android");
+
         mProgressBarView = mViewHolder.v(R.id.progress_bar_view);
         mRefreshLayout = mViewHolder.v(R.id.refresh_layout);
         mRefreshLayout.setRefreshDirection(RefreshLayout.TOP);

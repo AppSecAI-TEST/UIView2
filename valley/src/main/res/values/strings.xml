@@ -895,4 +895,5 @@
     <string name="text_send_gift2">赠送礼物</string>
     <string name="text_refund_service_change_rate">额外扣除 ￥%.2f元手续费</string>
     <string name="about_klg_copyright">Copyright © 2017 恐龙谷 All Rights Reserved</string>
+    <string name="game_list_title">游戏列表</string>
 </resources>

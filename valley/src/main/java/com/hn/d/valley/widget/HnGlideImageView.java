@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -105,6 +106,12 @@ public class HnGlideImageView extends CircleImageView {
             authDrawable.setBounds(left, top, left + authDrawable.getIntrinsicWidth(), top + authDrawable.getIntrinsicHeight());
             authDrawable.draw(canvas);
         }
+    }
+
+    @Override
+    public void setImageDrawable(@Nullable Drawable drawable) {
+        super.setImageDrawable(drawable);
+        //L.e("call:HnGlideImageView setImageDrawable([drawable])-> " + drawable.getClass().getSimpleName());
     }
 
     /**
