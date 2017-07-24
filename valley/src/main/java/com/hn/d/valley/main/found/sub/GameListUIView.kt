@@ -1,5 +1,8 @@
 package com.hn.d.valley.main.found.sub
 
+import android.support.v4.view.MotionEventCompat
+import android.support.v4.view.ViewCompat
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
 import com.angcyo.uiview.net.RException
@@ -49,7 +52,7 @@ class GameListUIView : SingleRecyclerUIView<GameBean>() {
                     url = dataBean?.thumb
                 }
 
-                holder.itemView.setOnClickListener(object : RClickListener(2000, true) {
+                holder.click(R.id.start_view, object : RClickListener(2000, true) {
                     override fun onRClick(view: View?) {
                         add(RRetrofit
                                 .create(GameService::class.java)
@@ -66,6 +69,25 @@ class GameListUIView : SingleRecyclerUIView<GameBean>() {
                         )
                     }
                 })
+
+                val startButton: ImageView = holder.v(R.id.start_view)
+                startButton.setOnTouchListener { v, event ->
+                    when (MotionEventCompat.getActionMasked(event)) {
+                        MotionEvent.ACTION_DOWN -> {
+                            ViewCompat.setScaleX(v, 1.2f)
+                            ViewCompat.setScaleY(v, 1.2f)
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            ViewCompat.setScaleX(v, 1f)
+                            ViewCompat.setScaleY(v, 1f)
+                        }
+                        MotionEvent.ACTION_CANCEL -> {
+                            ViewCompat.setScaleX(v, 1f)
+                            ViewCompat.setScaleY(v, 1f)
+                        }
+                    }
+                    return@setOnTouchListener false
+                }
             }
         }
     }
