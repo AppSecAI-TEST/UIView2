@@ -661,7 +661,7 @@ public class UserDiscussItemControl {
                     public void displayImage(final GlideImageView imageView, String url, int width, int height, int imageSize) {
                         imageView.setShowGifTip(false);
 //                        imageView.setOverride(false);
-                        imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
+                        //imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
                         if (imageSize == 1) {
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         } else {
@@ -741,7 +741,7 @@ public class UserDiscussItemControl {
 //                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, true, 9);
 //                        }
 
-                        imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
+                        //imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
                         if (YImageControl.isYellowImage(url)) {
@@ -1709,7 +1709,7 @@ public class UserDiscussItemControl {
             } else {
                 Glide.with(imageView.getContext())                             //配置上下文
                         .load(file)
-                        .placeholder(R.drawable.zhanweitu_1)
+                        .placeholder(R.drawable.base_image_placeholder_shape)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             }
@@ -1724,7 +1724,7 @@ public class UserDiscussItemControl {
                     public void onImageType(final String imageUrl, Ok.ImageType imageType) {
                         L.d("call: onImageType([imageType])-> " + imageUrl + " : " + imageType + " qw:" + width + " qh:" + height);
 
-                        imageView.setImageResource(R.drawable.zhanweitu_1);
+                        imageView.setImageResource(R.drawable.base_image_placeholder_shape);
 
                         if (!imageUrl.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
                             return;
@@ -1735,7 +1735,7 @@ public class UserDiscussItemControl {
                                 Glide.with(imageView.getContext())
                                         .load(imageUrl)
                                         .asGif()
-                                        .placeholder(R.drawable.zhanweitu_1)
+                                        .placeholder(R.drawable.base_image_placeholder_shape)
                                         .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                                         .into(new SimpleTarget<GifDrawable>() {
                                             @Override
@@ -1744,7 +1744,7 @@ public class UserDiscussItemControl {
                                                     return;
                                                 }
                                                 if (!imageUrl.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
-                                                    imageView.setImageResource(R.drawable.zhanweitu_1);
+                                                    imageView.setImageResource(R.drawable.base_image_placeholder_shape);
                                                     return;
                                                 }
                                                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -1754,7 +1754,7 @@ public class UserDiscussItemControl {
                                         });
                             } else {
                                 if (!imageUrl.contains(String.valueOf(imageView.getTag(R.id.tag_url)))) {
-                                    imageView.setImageResource(R.drawable.zhanweitu_1);
+                                    imageView.setImageResource(R.drawable.base_image_placeholder_shape);
                                     return;
                                 }
                                 if (imageView instanceof RImageView) {
@@ -1768,7 +1768,7 @@ public class UserDiscussItemControl {
                     @Override
                     public void onLoadStart() {
                         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                        imageView.setImageResource(R.drawable.zhanweitu_1);
+                        imageView.setImageResource(R.drawable.base_image_placeholder_shape);
                     }
                 });
             }
@@ -1789,8 +1789,8 @@ public class UserDiscussItemControl {
                 .load((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url)
                 .asBitmap()
                 .animate(R.anim.base_alpha_to_1)
-                .placeholder(R.drawable.zhanweitu_1)
-                .error(R.drawable.zhanweitu_1)
+                .placeholder(R.drawable.base_image_placeholder_shape)
+                .error(R.drawable.base_image_placeholder_shape)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
 
