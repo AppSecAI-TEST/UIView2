@@ -29,6 +29,7 @@ import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.utils.RBus;
+import com.hn.d.valley.widget.groupView.AutoPlayVideoControl;
 import com.hwangjr.rxbus.annotation.Subscribe;
 import com.hwangjr.rxbus.annotation.Tag;
 
@@ -331,5 +332,20 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
         }
         return newDatas;
     }
+
+    @Override
+    protected void OnShowContentLayout() {
+        super.OnShowContentLayout();
+        if (!isInSubUIView) {
+            AutoPlayVideoControl.INSTANCE.init(getRecyclerView());
+        }
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        AutoPlayVideoControl.INSTANCE.stopPlay();
+    }
+
 
 }

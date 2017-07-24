@@ -77,6 +77,7 @@ import com.hn.d.valley.widget.HnItemTextView;
 import com.hn.d.valley.widget.HnPlayTimeView;
 import com.hn.d.valley.widget.HnTagsNameTextView;
 import com.hn.d.valley.widget.HnVideoPlayView;
+import com.hn.d.valley.widget.groupView.AutoPlayVideoLayout;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImageUtils;
@@ -112,6 +113,9 @@ public class UserDiscussItemControl {
      */
     private static Set<String> updateReadCountList = new HashSet<>();
 
+    /**
+     * @see com.hn.d.valley.R.layout#item_search_user_item_layout
+     */
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
                                 UserDiscussListBean.DataListBean dataListBean,
                                 final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
@@ -570,7 +574,7 @@ public class UserDiscussItemControl {
     private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean,
                                           final ILayout iLayout, RBaseViewHolder holder,
                                           boolean isInDetail, final boolean allowDownload) {
-        final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
+        //final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
 //        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
 
@@ -617,6 +621,10 @@ public class UserDiscussItemControl {
 
         if (mediaControlLayout == null) {
             return;
+        }
+
+        if (mediaControlLayout instanceof AutoPlayVideoLayout) {
+            ((AutoPlayVideoLayout) mediaControlLayout).setVideoPath("");
         }
 
         RNineImageLayout mediaImageTypeView = (RNineImageLayout) mediaControlLayout.findViewById(R.id.media_image_view);
@@ -777,6 +785,10 @@ public class UserDiscussItemControl {
                     }
                 });
                 mediaImageTypeView.setImage(thumbUrl);
+
+                if (!isInDetail && mediaControlLayout instanceof AutoPlayVideoLayout) {
+                    ((AutoPlayVideoLayout) mediaControlLayout).setVideoPath(videoUrl);
+                }
             } else if (DynamicType.isVoice(mediaType)) {
                 //语音类型
                 videoPlayView.setVisibility(View.VISIBLE);

@@ -53,7 +53,7 @@
             tools:text="广东 深圳"/>
 
         <!--动态图片/视频/语音展示-->
-        <RelativeLayout
+        <com.hn.d.valley.widget.groupView.AutoPlayVideoLayout
             android:id="@+id/media_control_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,19 +68,28 @@
             <include
                 layout="@layout/item_media_layout"/>
 
-            <!--媒体文件(图片), 的数量 (废弃)-->
-            <TextView
-                android:id="@+id/media_count_view"
-                style="@style/WhiteColorTextStyle"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:layout_margin="@dimen/base_xhdpi"
-                android:background="@drawable/fold"
-                android:gravity="center"
-                android:textSize="@dimen/default_text_size10"
-                android:visibility="gone"
-                tools:text="99"/>
-        </RelativeLayout>
+            <!--&lt;!&ndash;媒体文件(图片), 的数量 (废弃)&ndash;&gt;-->
+            <!--<TextView-->
+            <!--android:id="@+id/media_count_view"-->
+            <!--style="@style/WhiteColorTextStyle"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_margin="@dimen/base_xhdpi"-->
+            <!--android:background="@drawable/fold"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="@dimen/default_text_size10"-->
+            <!--android:visibility="gone"-->
+            <!--tools:text="99"/>-->
+
+            <!--视频大小固定-->
+            <com.m3b.rbvideolib.widget.TextureVideoView
+                android:id="@+id/videoView"
+                android:layout_width="250dp"
+                android:layout_height="150dp"
+                android:background="@color/base_red_d85940"
+                android:visibility="gone"/>
+
+        </com.hn.d.valley.widget.groupView.AutoPlayVideoLayout>
 
         <!--转发动态控制-->
         <LinearLayout
@@ -92,7 +101,7 @@
             android:paddingEnd="@dimen/base_xhdpi"
             android:paddingStart="@dimen/base_xhdpi">
 
-            <RelativeLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/forward_bg_color"
@@ -174,7 +183,7 @@
                     android:visibility="gone"
                     tools:text="@string/dynamic_delete_tip"/>
 
-            </RelativeLayout>
+            </FrameLayout>
 
             <!--<com.angcyo.uiview.widget.RTextView-->
             <!--android:id="@+id/copy_info_view"-->

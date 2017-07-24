@@ -19,6 +19,7 @@ import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.home.HomeBaseRecyclerUIView;
 import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.service.UserService;
+import com.hn.d.valley.widget.groupView.AutoPlayVideoControl;
 
 import java.util.List;
 
@@ -78,6 +79,18 @@ public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
     @Override
     public void loadData() {
         super.loadData();
+    }
+
+    @Override
+    protected void OnShowContentLayout() {
+        super.OnShowContentLayout();
+        AutoPlayVideoControl.INSTANCE.init(getRecyclerView());
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        AutoPlayVideoControl.INSTANCE.stopPlay();
     }
 
     @Override
