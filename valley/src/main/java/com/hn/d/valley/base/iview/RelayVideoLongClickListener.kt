@@ -3,6 +3,7 @@ package com.hn.d.valley.base.iview
 import com.angcyo.uiview.container.ILayout
 import com.angcyo.uiview.dialog.UIBottomItemDialog
 import com.angcyo.uiview.recycler.adapter.RModelAdapter
+import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.utils.string.MD5
 import com.hn.d.valley.R
 import com.hn.d.valley.ValleyApp
@@ -27,21 +28,33 @@ import java.io.File
  * Version: 1.0.0
  */
 class RelayVideoLongClickListener(iLayout: ILayout<*>) : VideoPlayUIView.SaveVideoLongClickListener(iLayout) {
+    private var canSave: Boolean = true
+
+    constructor(iLayout: ILayout<*>, canSave: Boolean) : this(iLayout) {
+        this.canSave = canSave
+    }
 
     override fun onLongPress(videoUrl: String?) {
-        val file = File(videoUrl)
-        if (file.exists()) {
+        if (canSave && !videoUrl.isNullOrEmpty()) {
             UIBottomItemDialog.build()
                     .addItem(mILayout.layout.context.getString(R.string.relay_image)) {
                         //点击发送给好友
                         sendVideo(videoUrl!!)
                     }
-                    .addItem(mILayout.layout.context.getString(R.string.save_video)) { saveVideoFile(file) }
+                    .addItem(mILayout.layout.context.getString(R.string.save_video)) {
+                        val file = File(videoUrl)
+                        if (file.exists()) {
+                            //本地视频
+                            saveVideoFile(file)
+                        } else {
+                            //网络视频
+                            saveVideoUrl(videoUrl)
+                        }
+                    }
                     .showDialog(mILayout)
+        } else {
+            T_.error("视频非公开，不能保存.")
         }
-//        else {
-//            T_.error("视频非公开，不能保存.")
-//        }
     }
 
     private fun sendVideo(path: String) {
@@ -54,13 +67,13 @@ class RelayVideoLongClickListener(iLayout: ILayout<*>) : VideoPlayUIView.SaveVid
             if (absContactItems.size > 1) {
                 type = SessionTypeEnum.Team
             }
-0
+            0
             val file = File(path)
             if (!file.exists()) {
                 return@start
             }
 
-            val mediaPlayer = getVideoMediaPlayer(ValleyApp.getApp().applicationContext,file)
+            val mediaPlayer = getVideoMediaPlayer(ValleyApp.getApp().applicationContext, file)
             val duration = (if (mediaPlayer == null) 0 else mediaPlayer!!.getDuration()).toLong()
             val height = if (mediaPlayer == null) 0 else mediaPlayer!!.getVideoHeight()
             val width = if (mediaPlayer == null) 0 else mediaPlayer!!.getVideoWidth()

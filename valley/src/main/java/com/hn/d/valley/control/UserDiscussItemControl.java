@@ -49,6 +49,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.iview.RelayPhotoLongClickListener;
+import com.hn.d.valley.base.iview.RelayVideoLongClickListener;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -784,7 +785,9 @@ public class UserDiscussItemControl {
                         if (!TextUtils.isEmpty(videoUrl)) {
                             iLayout.startIView(new VideoPlayUIView(videoUrl,
                                     RImageView.copyDrawable(imageView),
-                                    OssHelper.getWidthHeightWithUrl(thumbUrl)));
+                                    getWidthHeight(1)
+                                    /*OssHelper.getWidthHeightWithUrl(thumbUrl)*/)
+                                    .setRelayVideoLongClickListener(new RelayVideoLongClickListener(iLayout, allowDownload)));
                         }
                         if (!isInDetail) {
                             updateDiscussReadCnt(discuss_id);

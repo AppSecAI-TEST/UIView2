@@ -16,6 +16,9 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.hn.d.valley.R;
+import com.liulishuo.FDown;
+import com.liulishuo.FDownListener;
+import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.lzy.imagepicker.ImagePicker;
 import com.m3b.rblibrary.RBMediaController;
 
@@ -42,8 +45,20 @@ public class VideoPlayUIView extends UIIViewImpl {
 
     int[] thumbSize;
 
+    RelayVideoLongClickListener mRelayVideoLongClickListener;
+
     RBMediaController mMediaController;
-    RBMediaController.OnLongPress mOnLongPress;
+    RBMediaController.OnLongPress mOnLongPress = new RBMediaController.OnLongPress() {
+        @Override
+        public void onLongPress(String videoUrl) {
+            L.e("call: onLongPress([videoUrl])-> " + videoUrl + " " + path);
+
+            if (mRelayVideoLongClickListener != null) {
+                mRelayVideoLongClickListener.onLongPress(videoUrl);
+            }
+        }
+    };
+    boolean canSave = false;
     private boolean mIsLive;
 
     public VideoPlayUIView(String path) {
@@ -184,6 +199,19 @@ public class VideoPlayUIView extends UIIViewImpl {
         return super.onBackPressed();
     }
 
+    /**
+     * 视频是否可以保存
+     */
+    public VideoPlayUIView setCanSave(boolean canSave) {
+        this.canSave = canSave;
+        return this;
+    }
+
+    public VideoPlayUIView setRelayVideoLongClickListener(RelayVideoLongClickListener relayVideoLongClickListener) {
+        mRelayVideoLongClickListener = relayVideoLongClickListener;
+        return this;
+    }
+
     public VideoPlayUIView setOnLongPress(RBMediaController.OnLongPress onLongPress) {
         mOnLongPress = onLongPress;
         return this;
@@ -207,6 +235,24 @@ public class VideoPlayUIView extends UIIViewImpl {
             } else {
                 T_.error(mILayout.getLayout().getContext().getString(R.string.save_error));
             }
+        }
+
+        protected void saveVideoUrl(String url) {
+            String path = Root.getAppExternalFolder("videos") + "/" + Root.createFileName(".mp4");
+            L.e("call: saveVideoUrl([url])-> " + path);
+            FDown.build(url).setFullPath(path).download(new FDownListener() {
+                @Override
+                public void onStarted(BaseDownloadTask task) {
+                    super.onStarted(task);
+                    T_.info("正在保存视频...");
+                }
+
+                @Override
+                public void onCompleted(BaseDownloadTask task) {
+                    super.onCompleted(task);
+                    T_.info("视频保存至:" + task.getPath());
+                }
+            });
         }
 
         @Override
