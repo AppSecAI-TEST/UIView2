@@ -634,6 +634,7 @@
     <string name="text_man_ait_you">有人@你</string>
     <string name="sex_tip">性别:</string>
     <string name="selector_sex_tip">请选择性别</string>
+    <string name="selector_birthday_tip">请选择生日</string>
     <string name="selector_all">全选</string>
     <string name="text_you_are_not_host">你不是群主！</string>
     <string name="text_kick_out_success">踢出群成员成功！</string>
@@ -900,4 +901,5 @@
     <string name="text_my_gift">我的礼物</string>
     <string name="text_talk">对话</string>
     <string name="game_list_title">游戏列表</string>
+    <string name="birthday_tip">生日:</string>
 </resources>

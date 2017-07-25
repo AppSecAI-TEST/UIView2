@@ -26,7 +26,7 @@ import java.util.Map;
 public class Register2Presenter extends BasePresenter<Start.IRegister2View> implements Start.IRegister2Presenter {
 
     @Override
-    public void register(String username, String pwd, String phone, String avatar, String sex, String code) {
+    public void register(String username, String pwd, String phone, String avatar, String sex, String birthday, String code) {
         Map<String, String> map = new HashMap<>();
         map.put("username", username);
         map.put("pwd", RSA.encode(pwd));
@@ -34,6 +34,7 @@ public class Register2Presenter extends BasePresenter<Start.IRegister2View> impl
         map.put("avatar", avatar);
         map.put("sex", sex);
         map.put("code", code);
+        map.put("birthday", birthday);
 
         UISubscriber<String, Bean<String>, Start.IRegister2View> subscriber = new UISubscriber<String, Bean<String>, Start.IRegister2View>(mBaseView) {
             @Override

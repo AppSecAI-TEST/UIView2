@@ -10,9 +10,11 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.angcyo.github.pickerview.view.WheelTime;
 import com.angcyo.library.utils.Anim;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.dialog.UIItemDialog;
+import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.resources.ResUtil;
@@ -64,6 +66,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
     SimpleDraweeView mIcoView;
     ExEditText mNameView;
     TextView mSexView;
+    TextView mBirthdayView;
     ExEditText mPasswordView;
 
     String mIcoFilePath;
@@ -94,6 +97,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         mIcoView = v(R.id.ico_view);
         mNameView = v(R.id.name_view);
         mSexView = v(R.id.sex_view);
+        mBirthdayView = v(R.id.birthday_view);
         mPasswordView = v(R.id.password_view);
         mFinishView = v(R.id.finish_view);
 
@@ -108,6 +112,33 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
             @Override
             public void onClick(View v) {
                 onIcoClick();
+            }
+        });
+
+        click(R.id.birthday_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startIView(new DateDialog(new DateDialog.SimpleDateConfig() {
+                    @Override
+                    public void onDateSelector(WheelTime wheelTime) {
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(wheelTime.getSelectorYear());
+                        builder.append("-");
+                        int month = wheelTime.getSelectorMonth();
+                        builder.append(month < 10 ? "0" + month : month);
+                        builder.append("-");
+                        int day = wheelTime.getSelectorDay();
+                        builder.append(day < 10 ? "0" + day : day);
+                        final String time = builder.toString();
+
+                        mBirthdayView.setText(time);
+                    }
+
+                    @Override
+                    public String getCurrentDate() {
+                        return "";
+                    }
+                }));
             }
         });
 
@@ -141,6 +172,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
         SkinUtils.setEditText(mNameView);
         SkinUtils.setEditText(mPasswordView);
         SkinUtils.setEditText(mSexView);
+        SkinUtils.setEditText(mBirthdayView);
     }
 
     @Override
@@ -192,6 +224,11 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
             return;
         }
 
+        if (TextUtils.isEmpty(mBirthdayView.getText())) {
+            Anim.band(mBirthdayView);
+            return;
+        }
+
         if (!mPasswordView.isPassword()) {
             Anim.band(mPasswordView);
             return;
@@ -207,7 +244,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
                             mIcoFilePathUrl = OssHelper.getAvatorUrl(s);
                             Hawk.put(phone, mIcoFilePathUrl);
                             mPresenter.register(mNameView.string(), mPasswordView.string(),
-                                    phone, mIcoFilePathUrl, String.valueOf(sex), code);
+                                    phone, mIcoFilePathUrl, String.valueOf(sex), String.valueOf(mBirthdayView.getText()), code);
                         }
 
                         @Override
@@ -221,7 +258,7 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
             );
         } else {
             mPresenter.register(RUtils.fixName(mNameView.string()), mPasswordView.string(),
-                    phone, mIcoFilePathUrl, String.valueOf(sex), code);
+                    phone, mIcoFilePathUrl, String.valueOf(sex), String.valueOf(mBirthdayView.getText()), code);
         }
     }
 

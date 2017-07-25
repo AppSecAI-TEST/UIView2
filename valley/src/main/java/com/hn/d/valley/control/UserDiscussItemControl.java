@@ -798,6 +798,7 @@ public class UserDiscussItemControl {
 
                 if (!isInDetail && mediaControlLayout instanceof AutoPlayVideoLayout) {
                     ((AutoPlayVideoLayout) mediaControlLayout).setVideoPath(videoUrl);
+                    ((AutoPlayVideoLayout) mediaControlLayout).setVideoSize(OssHelper.getImageThumbSize2(thumbUrl));
                 }
             } else if (DynamicType.isVoice(mediaType)) {
                 //语音类型

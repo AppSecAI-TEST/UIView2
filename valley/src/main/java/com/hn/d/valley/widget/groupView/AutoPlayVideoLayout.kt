@@ -1,14 +1,19 @@
 package com.hn.d.valley.widget.groupView
 
+import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.angcyo.uiview.kotlin.v
+import com.angcyo.uiview.resources.AnimUtil
+import com.angcyo.uiview.utils.ScreenUtil
 import com.hn.d.valley.R
 import com.m3b.rbvideolib.widget.ScalableTextureView
 import com.m3b.rbvideolib.widget.TextureVideoView
+
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -25,6 +30,19 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
 
     var path: String = ""
 
+    /**视频宽高大小*/
+    var videoSize = intArrayOf(0, 0)
+        get() {
+            if (field[0] <= 0) {
+                field[0] = (250 * ScreenUtil.density).toInt()
+            }
+            if (field[1] <= 0) {
+                field[1] = (150 * ScreenUtil.density).toInt()
+            }
+            return field
+        }
+
+    /**视频视图所在屏幕上的位置*/
     var videoRect = Rect()
         get() {
             videoView?.getGlobalVisibleRect(field)
@@ -36,11 +54,22 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
             return v(R.id.videoView)
         }
 
+    private val videoControlView: View?
+        get() {
+            return v(R.id.video_control_layout)
+        }
+
     fun stopPlay() {
+        colorAnim?.let { it.cancel() }
         videoView?.let {
             it.stop()
-            it.visibility = View.GONE
+            videoControlView?.visibility = View.GONE
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        stopPlay()
     }
 
     fun setVideoPath(path: String) {
@@ -54,9 +83,9 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
         }
 
         if (path.isNullOrEmpty()) {
-            videoView?.visibility = View.GONE
+            videoControlView?.visibility = View.GONE
         } else {
-            videoView?.visibility = View.INVISIBLE
+            videoControlView?.visibility = View.INVISIBLE
             if (AutoPlayVideoControl.canAutoPlay()) {
                 post { AutoPlayVideoControl.checkPlay() }
             }
@@ -64,14 +93,27 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
         //videoView.start()
     }
 
+    private var colorAnim: ValueAnimator? = null
+
     fun startPlay() {
         try {
             if (AutoPlayVideoControl.canAutoPlay()) {
                 videoView?.apply {
                     setScaleType(ScalableTextureView.ScaleType.TOP)
-                    visibility = View.VISIBLE
                     setVideoPath(path)
                     start()
+
+                    videoControlView?.let {
+                        it.visibility = View.VISIBLE
+                        colorAnim = AnimUtil.startArgb(it, Color.TRANSPARENT, Color.BLACK, 300)
+                    }
+
+                    val lp = layoutParams as FrameLayout.LayoutParams
+                    //lp.width = getResources().getDisplayMetrics().widthPixels;
+                    //lp.height = (int) (height * (lp.width / (float) width));
+                    lp.height = (150 * ScreenUtil.density).toInt()
+                    lp.width = (videoSize[0] * (lp.height * 1f / videoSize[1])).toInt()
+                    layoutParams = lp
                 }
             }
         } catch(e: Exception) {

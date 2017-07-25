@@ -46,7 +46,7 @@ public interface Start {
          * code	是	string	验证码【6位数字】
          */
         void register(String username, String pwd, String phone, String avatar,
-                      String sex, String code);
+                      String sex, String birthday, String code);
     }
 
     interface ILoginPresenter extends IBasePresenter<ILoginView> {

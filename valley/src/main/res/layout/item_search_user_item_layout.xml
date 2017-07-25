@@ -82,11 +82,20 @@
             <!--tools:text="99"/>-->
 
             <!--视频大小固定-->
-            <com.hn.d.valley.widget.AutoPlayVideoView
-                android:id="@+id/videoView"
+            <FrameLayout
+                android:id="@+id/video_control_layout"
                 android:layout_width="250dp"
                 android:layout_height="150dp"
-                android:visibility="gone"/>
+                android:visibility="gone">
+
+                <com.hn.d.valley.widget.AutoPlayVideoView
+                    android:id="@+id/videoView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+            </FrameLayout>
+
 
         </com.hn.d.valley.widget.groupView.AutoPlayVideoLayout>
 
