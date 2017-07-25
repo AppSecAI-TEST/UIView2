@@ -2,10 +2,7 @@ package com.hn.d.valley.main.me;
 
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +19,6 @@ import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -51,6 +43,8 @@ import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.x5.VipWebUIView;
+import com.lzy.imagepicker.ImageDataSource;
+import com.lzy.imagepicker.ImagePickerHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -659,20 +653,22 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //                                        }
 //                                    });
 
-                            Glide.with(mActivity)
-                                    .load("http://circleimg.klgwl.com/62410/1500601458974_s_248x209.gif")
-                                    .asGif()
-                                    .into(new SimpleTarget<GifDrawable>() {
-                                        @Override
-                                        public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
-                                            final TransitionDrawable td = new TransitionDrawable(new Drawable[]{
-                                                    ContextCompat.getDrawable(mActivity, R.drawable.base_image_placeholder_shape),
-                                                    resource});
-                                            mTestImageView.setImageDrawable(td);
-                                            td.startTransition(300);
-                                            resource.start();
-                                        }
-                                    });
+//                            Glide.with(mActivity)
+//                                    .load("http://circleimg.klgwl.com/62410/1500601458974_s_248x209.gif")
+//                                    .asGif()
+//                                    .into(new SimpleTarget<GifDrawable>() {
+//                                        @Override
+//                                        public void onResourceReady(GifDrawable resource, GlideAnimation<? super GifDrawable> glideAnimation) {
+//                                            final TransitionDrawable td = new TransitionDrawable(new Drawable[]{
+//                                                    ContextCompat.getDrawable(mActivity, R.drawable.base_image_placeholder_shape),
+//                                                    resource});
+//                                            mTestImageView.setImageDrawable(td);
+//                                            td.startTransition(300);
+//                                            resource.start();
+//                                        }
+//                                    });
+
+                            ImagePickerHelper.startImagePicker(mActivity, false, false, 0, ImageDataSource.VIDEO);
                         }
                     });
 
@@ -680,14 +676,14 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         @Override
                         public boolean onLongClick(View v) {
                             //int i = 1 / 0;
-                            Glide.with(mActivity)
-                                    .load("http://circleimg.klgwl.com/62215/1500875757920_s_460x1200.jpeg")
-                                    .into(new SimpleTarget<GlideDrawable>() {
-                                        @Override
-                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
-
-                                        }
-                                    });
+//                            Glide.with(mActivity)
+//                                    .load("http://circleimg.klgwl.com/62215/1500875757920_s_460x1200.jpeg")
+//                                    .into(new SimpleTarget<GlideDrawable>() {
+//                                        @Override
+//                                        public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+//
+//                                        }
+//                                    });
                             return false;
                         }
                     });

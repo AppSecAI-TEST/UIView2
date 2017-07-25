@@ -54,19 +54,26 @@ class GameListUIView : SingleRecyclerUIView<GameBean>() {
 
                 holder.click(R.id.start_view, object : RClickListener(2000, true) {
                     override fun onRClick(view: View?) {
-                        add(RRetrofit
-                                .create(GameService::class.java)
-                                .getToken(Param.buildMap("app_id:${dataBean?.app_id}"))
-                                .compose(Rx.transformer(String::class.java))
-                                .subscribe(object : BaseSingleSubscriber<String>() {
+                        dataBean?.let {
+                            if ("1".contentEquals(it.support_login)) {
+                                add(RRetrofit
+                                        .create(GameService::class.java)
+                                        .getToken(Param.buildMap("app_id:${dataBean.app_id}"))
+                                        .compose(Rx.transformer(String::class.java))
+                                        .subscribe(object : BaseSingleSubscriber<String>() {
 
-                                    override fun onSucceed(bean: String?) {
-                                        bean?.let {
-                                            startIView(GameWebUIView("${dataBean?.url}/?token=$it"))
-                                        }
-                                    }
-                                })
-                        )
+                                            override fun onSucceed(bean: String?) {
+                                                bean?.let {
+                                                    startIView(GameWebUIView("${dataBean.url}/?token=$it"))
+                                                }
+                                            }
+                                        })
+                                )
+                            } else {
+                                startIView(GameWebUIView(dataBean.url))
+                            }
+                        }
+
                     }
                 })
 

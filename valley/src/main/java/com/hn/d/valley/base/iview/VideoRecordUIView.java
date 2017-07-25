@@ -342,6 +342,7 @@ public class VideoRecordUIView extends UIBaseView {
         mViewHolder.click(R.id.video_selector_view, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onViewHide();
                 ImagePickerHelper.startImagePicker(mActivity, false, false, 0, ImageDataSource.VIDEO);
             }
         });
