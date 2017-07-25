@@ -53,7 +53,7 @@ public class HnVideoPlayView extends AppCompatImageView {
                 setImageResource(R.drawable.icon_pause_home_small);
                 break;
             case VOICE_HOME:
-                setImageResource(R.drawable.icon_play_home_small);
+                setImageResource(R.drawable.icon_play_home);
                 break;
             case VOICE_HOME_PAUSE:
                 setImageResource(R.drawable.icon_pause_home_small);

@@ -99,7 +99,7 @@ public class HotInfoListUIView extends BaseRecyclerUIView<String, HotInfoListBea
                 imageView.setShowGifTip(false);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 imageView.setCheckGif(true);
-                imageView.setShowGifImage(false);
+                imageView.setShowAsGifImage(false);
                 //imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
                 imageView.setUrl(url);
 //                HotInfoListUIView.displayImage(imageView, url);

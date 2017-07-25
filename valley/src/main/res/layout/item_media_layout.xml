@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
         android:visibility="gone"
         tools:text="00:07"/>
 

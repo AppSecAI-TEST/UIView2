@@ -159,8 +159,8 @@ public class TextureVideoView extends ScalableTextureView
                 mTargetState = STATE_IDLE;
             }
 //            mAudioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_LOSS);
-            AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-            am.abandonAudioFocus(null);
+            //AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+            //am.abandonAudioFocus(null);
         }
     }
 
@@ -170,8 +170,8 @@ public class TextureVideoView extends ScalableTextureView
             return;
         }
 
-        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
+        //mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        //mAudioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
 
         // we shouldn't clear the target state, because somebody might have
         // called start() previously

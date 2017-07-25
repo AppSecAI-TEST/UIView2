@@ -674,7 +674,12 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(final GlideImageView imageView, String url, int width, int height, int imageSize) {
-                        imageView.setShowGifTip(false);
+                        imageView.reset();
+                        imageView.setCheckGif(true);
+                        imageView.setShowGifTip(true);
+                        imageView.setShowAsGifImage(isInDetail);
+                        imageView.setAnimType(GlideImageView.AnimType.NONE);
+
 //                        imageView.setOverride(false);
                         //imageView.setPlaceholderRes(R.drawable.zhanweitu_1);
                         if (imageSize == 1) {
@@ -693,9 +698,6 @@ public class UserDiscussItemControl {
 //                                    !isInDetail, imageSize);
 //                            imageView.setImageResource(R.drawable.zhanweitu_1);
 
-                            imageView.setCheckGif(true);
-                            imageView.setAnimType(GlideImageView.AnimType.NONE);
-                            imageView.setShowGifImage(isInDetail);
 //                            imageView.setUrl((width > 0 && height > 0) ?
 //                                    OssHelper.getImageThumb(url, ScreenUtil.screenWidth / 3, ScreenUtil.screenWidth / 3) :
 //                                    url);
@@ -749,7 +751,7 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
-                        imageView.setShowGifTip(false);
+                        imageView.reset();
 //                        if (YImageControl.isYellowImage(url)) {
 //                            YImageControl.showYellowImageXiao(imageView);
 //                        } else {
@@ -768,9 +770,6 @@ public class UserDiscussItemControl {
 //                                    isFromInformation ? 0 : ScreenUtil.screenWidth / 3,
 //                                    !isInDetail, imageSize);
 //                            imageView.setImageResource(R.drawable.zhanweitu_1);
-
-                            imageView.setCheckGif(true);
-                            imageView.setShowGifImage(false);
                             if (isFromInformation) {
                                 imageView.setUrl(url);
                             } else {
@@ -806,6 +805,7 @@ public class UserDiscussItemControl {
                 videoTimeView.setVisibility(View.VISIBLE);
                 voiceTipView.setVisibility(View.VISIBLE);
                 mediaImageTypeView.setDrawMask(true);
+                mediaImageTypeView.setContainVideo(true);
 
                 String[] split = getVideoParams(url);
                 String thumbUrl = split[0];
@@ -826,6 +826,7 @@ public class UserDiscussItemControl {
                 //详情里面, 左下角显示播放按钮
                 FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) videoPlayView.getLayoutParams();
                 if (isInDetail) {
+                    //在详情中显示
                     params.gravity = Gravity.START | Gravity.BOTTOM;
                     if (MusicControl.isPlaying(videoUrl)) {
                         videoPlayView.setPlayType(HnVideoPlayView.PlayType.VOICE_PAUSE);
@@ -856,21 +857,25 @@ public class UserDiscussItemControl {
 
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
-                        imageView.setCheckGif(true);
-                        imageView.setShowGifTip(false);
-                        imageView.setShowGifImage(false);
-                        imageView.setTagUrl(url);
+                        imageView.reset();
                         imageView.setPlaceholderRes(R.drawable.default_vociecover);
-
-                        imageView.cancelRequest();
                         imageView.setImageResource(R.drawable.default_vociecover);
-                        imageView.setUrl(url);
 
                         if (YImageControl.isYellowImage(url)) {
                             YImageControl.showYellowImageXiao(imageView);
                         } else {
-                            UserDiscussItemControl.displayVoiceImage(imageView, url,
-                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, !isInDetail);
+//                            UserDiscussItemControl.displayVoiceImage(imageView, url,
+//                                    isFromInformation ? 0 : width, isFromInformation ? 0 : height, !isInDetail);
+
+                            if (!isInDetail) {
+                                imageView.setBitmapTransform(new GlideBlurTransformation(imageView.getContext()));
+                            }
+
+                            if (isFromInformation) {
+                                imageView.setUrl(url);
+                            } else {
+                                imageView.setUrl((width > 0 && height > 0) ? OssHelper.getImageThumb(url, width, height) : url);
+                            }
                         }
                     }
 

@@ -101,6 +101,7 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
                 videoView?.apply {
                     setScaleType(ScalableTextureView.ScaleType.TOP)
                     setVideoPath(path)
+                    mute()
                     start()
 
                     videoControlView?.let {
