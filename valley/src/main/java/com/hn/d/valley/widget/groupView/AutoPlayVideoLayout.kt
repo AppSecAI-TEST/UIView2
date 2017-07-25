@@ -5,10 +5,9 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import com.angcyo.github.utilcode.utils.NetworkUtils
 import com.angcyo.uiview.kotlin.v
-import com.angcyo.uiview.receiver.NetworkStateReceiver
 import com.hn.d.valley.R
+import com.m3b.rbvideolib.widget.ScalableTextureView
 import com.m3b.rbvideolib.widget.TextureVideoView
 
 /**
@@ -38,8 +37,10 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
         }
 
     fun stopPlay() {
-        videoView?.stop()
-        videoView?.visibility = View.GONE
+        videoView?.let {
+            it.stop()
+            it.visibility = View.GONE
+        }
     }
 
     fun setVideoPath(path: String) {
@@ -57,7 +58,6 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
         } else {
             videoView?.visibility = View.INVISIBLE
             if (AutoPlayVideoControl.canAutoPlay()) {
-                videoView?.setVideoPath(path)
                 post { AutoPlayVideoControl.checkPlay() }
             }
         }
@@ -66,8 +66,14 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
 
     fun startPlay() {
         try {
-            videoView?.visibility = View.VISIBLE
-            videoView?.start()
+            if (AutoPlayVideoControl.canAutoPlay()) {
+                videoView?.apply {
+                    setScaleType(ScalableTextureView.ScaleType.TOP)
+                    visibility = View.VISIBLE
+                    setVideoPath(path)
+                    start()
+                }
+            }
         } catch(e: Exception) {
             e.printStackTrace()
         }

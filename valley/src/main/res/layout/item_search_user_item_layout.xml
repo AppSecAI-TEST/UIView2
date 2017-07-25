@@ -82,11 +82,10 @@
             <!--tools:text="99"/>-->
 
             <!--视频大小固定-->
-            <com.m3b.rbvideolib.widget.TextureVideoView
+            <com.hn.d.valley.widget.AutoPlayVideoView
                 android:id="@+id/videoView"
                 android:layout_width="250dp"
                 android:layout_height="150dp"
-                android:background="@color/base_red_d85940"
                 android:visibility="gone"/>
 
         </com.hn.d.valley.widget.groupView.AutoPlayVideoLayout>
