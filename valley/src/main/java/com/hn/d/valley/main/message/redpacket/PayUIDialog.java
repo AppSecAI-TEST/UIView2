@@ -319,7 +319,7 @@ public class PayUIDialog extends UIIDialogImpl {
     public static class Params {
 
         int num; // 群红包个数
-        public float money;//金额
+        public float money;//金额 单位 分
         int random = 0;//红包类型 拼手气或普通
         int balance = -1;//钱包余额
         String to_gid;// 群id

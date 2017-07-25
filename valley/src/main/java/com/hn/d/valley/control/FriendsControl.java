@@ -198,8 +198,9 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
                         SessionHelper.startSession(getOtherLayout(), o.getUid(), SessionTypeEnum.P2P);
                     }
                 });
-                List<AbsContactItem> items = FuncItem.provide();
+                List<AbsContactItem> items = new ArrayList<>();
                 items.add(item);
+                items.addAll(FuncItem.provide());
 
                 items.add(new FuncItem<>("搜索", ItemTypes.SEARCH, new Action1<ILayout>() {
                     @Override

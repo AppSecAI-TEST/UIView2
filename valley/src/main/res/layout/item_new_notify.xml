@@ -24,15 +24,15 @@
             android:layout_height="@dimen/base_50dpi"
             android:layout_alignParentRight="true">
 
-            <com.facebook.drawee.view.SimpleDraweeView
+            <com.angcyo.uiview.widget.RImageView
                 android:id="@+id/media_image_view"
                 style="@style/UserMidIcoStyle"
                 android:layout_width="@dimen/base_50dpi"
                 android:layout_height="@dimen/base_50dpi"
                 android:layout_marginRight="@dimen/base_xhdpi"
                 android:visibility="gone"
-                app:placeholderImage="@drawable/zhanweitu_1"
-                app:roundAsCircle="false" />
+                android:scaleType="centerCrop"
+     />
 
             <com.hn.d.valley.widget.HnExTextView
                 android:id="@+id/content"

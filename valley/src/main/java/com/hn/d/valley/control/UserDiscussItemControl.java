@@ -628,6 +628,7 @@ public class UserDiscussItemControl {
         }
 
         RNineImageLayout mediaImageTypeView = (RNineImageLayout) mediaControlLayout.findViewById(R.id.media_image_view);
+        mediaImageTypeView.setContainVideo(false);
         TextView videoTimeView = (TextView) mediaControlLayout.findViewById(R.id.video_time_view);
         TextView bottomVideoTimeView = (TextView) mediaControlLayout.findViewById(R.id.bottom_video_time_view);
 
@@ -662,6 +663,11 @@ public class UserDiscussItemControl {
                 mediaImageTypeView.setNineImageConfig(new RNineImageLayout.NineImageConfig() {
                     @Override
                     public int[] getWidthHeight(int imageSize) {
+//                        final int[] widthHeightWithUrl = OssHelper.getWidthHeightWithUrl(YImageControl.url(url));
+//                        int[] displaySize2 = OssHelper.getThumbDisplaySize3(widthHeightWithUrl[0], widthHeightWithUrl[1]);
+//                        L.e("call: getWidthHeight([imageSize])-> url:" + url + " " + widthHeightWithUrl[0] + " " + widthHeightWithUrl[1] +
+//                                " display:" + displaySize2[0] + " " + displaySize2[1]);
+//                        return displaySize2;
                         return OssHelper.getImageThumbSize2(YImageControl.url(url));
                     }
 
@@ -721,6 +727,7 @@ public class UserDiscussItemControl {
                 videoPlayView.setPlayType(HnVideoPlayView.PlayType.VIDEO);
                 mediaImageTypeView.setDrawMask(false);
                 //DraweeViewUtil.setDraweeViewRes(mediaImageTypeView, R.drawable.video_release);
+                mediaImageTypeView.setContainVideo(true);
 
                 String[] videoParams = getVideoParams(url);
                 final String thumbUrl = videoParams[0];

@@ -399,7 +399,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    L.d("ChatUIView2","ontouch :ACTION_DOWN  event " + event.getAction() );
                     touched = true;
                     initAudioRecord();
                     onStartAudioRecord();
@@ -408,7 +407,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     touched = false;
                     onEndAudioRecord(isCancelled(v, event));
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    L.d("ChatUIView2","ontouch : event " + event.getAction() + "  value ACTION_MOVE  iscancelled " + isCancelled(v,event) );
                     touched = false;
                     cancelAudioRecord(isCancelled(v, event));
                 }
@@ -864,12 +862,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     public void onRecordStart(File audioFile, RecordType recordType) {
         L.d("chatuiview2","onRecordStart");
         started = true;
-
     }
 
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
         L.d("chatuiview2","onRecordSuccess");
+        started = false;
         IMMessage audioMessage = MessageBuilder.createAudioMessage(mSessionId, sessionType, audioFile, audioLength);
         sendMessage(audioMessage);
     }

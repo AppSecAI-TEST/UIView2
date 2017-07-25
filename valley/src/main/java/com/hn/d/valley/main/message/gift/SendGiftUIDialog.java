@@ -6,10 +6,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.dialog.UIDialog;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.GiftBean;
 import com.hn.d.valley.bean.realm.LoginBean;
@@ -72,20 +74,25 @@ public class SendGiftUIDialog extends UIIDialogImpl {
         if (gift == null) {
             return;
         }
-        HnGlideImageView iv_thumb = (HnGlideImageView) rootView.findViewById(R.id.iv_gift_thumb);
+        ImageView iv_thumb = (ImageView) rootView.findViewById(R.id.iv_gift_thumb);
         TextView tv_gift_name = (TextView) rootView.findViewById(R.id.tv_gift_name);
         TextView tv_gift_status = (TextView) rootView.findViewById(R.id.tv_git_status);
         TextView tv_cancel = (TextView) rootView.findViewById(R.id.tv_cancel);
         TextView tv_ok = (TextView) rootView.findViewById(R.id.tv_ok);
         TextView tv_more_gift = (TextView) rootView.findViewById(R.id.tv_more_gift);
 
-        iv_thumb.setImageUrl(gift.getThumb());
-        tv_gift_name.setText(gift.getName());
-        if (giftEnable) {
-            tv_gift_status.setText(gift.getCoins() .equals("0") ? "免费" : String.format("%s 龙币",gift.getCoins()));
-        } else {
-            tv_gift_status.setText("已下架");
-        }
+        Glide.with(mActivity).load(gift.getThumb())
+                .placeholder(R.drawable.zhanweitu_1)
+                .error(R.drawable.zhanweitu_1)
+                .into(iv_thumb);
+
+        tv_gift_name.setText(String.format("%s: %s",gift.getName(),gift.getCoins() .equals("0") ? "免费" : String.format("%s 龙币",gift.getCoins())));
+//        if (giftEnable) {
+//            tv_gift_status.setText(gift.getCoins() .equals("0") ? "免费" : String.format("%s 龙币",gift.getCoins()));
+//        } else {
+//            tv_gift_status.setText("已下架");
+//        }
+        tv_gift_status.setText(String.format("魅力:%s",gift.getCharm()));
         if (moreAction == null) {
             tv_more_gift.setVisibility(View.GONE);
         }
@@ -110,6 +117,9 @@ public class SendGiftUIDialog extends UIIDialogImpl {
         tv_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!giftEnable) {
+                    return;
+                }
                 // 发送礼物
                 if(Integer.valueOf(UserCache.instance().getLoginBean().getCoins())
                         < Integer.valueOf(gift.getCoins())){
@@ -150,6 +160,7 @@ public class SendGiftUIDialog extends UIIDialogImpl {
                 .setCancelListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                     }
                 })
                 .setOkListener(new View.OnClickListener() {

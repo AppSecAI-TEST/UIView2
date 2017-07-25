@@ -19,13 +19,24 @@ public class GiftBean {
      * thumb : http://avatorimg.klgwl.com/13/13933.png
      * coins : 10
      * is_vip : 0
+     * charm
      */
 
     private String gift_id;
     private String name;
     private String thumb;
+
+    public String getCharm() {
+        return charm;
+    }
+
+    public void setCharm(String charm) {
+        this.charm = charm;
+    }
+
     private String coins;
     private String is_vip;
+    private String charm;
 
     public static GiftBean create(GiftReceiveBean receiveBean) {
         GiftBean bean = new GiftBean();
@@ -34,6 +45,7 @@ public class GiftBean {
         bean.thumb = receiveBean.getThumb();
         bean.coins = receiveBean.getCoins();
         bean.is_vip = receiveBean.getIs_vip();
+        bean.charm = receiveBean.getCharm();
         return bean;
     }
 

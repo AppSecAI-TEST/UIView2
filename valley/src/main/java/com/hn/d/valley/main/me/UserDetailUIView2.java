@@ -40,6 +40,7 @@ import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.ThreadExecutor;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.view.RClickListener;
 import com.angcyo.uiview.widget.ExEditText;
@@ -229,7 +230,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                     .attention(Param.buildMap("to_uid:" + to_uid))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
-
                                         @Override
                                         public void onSucceed(String bean) {
                                             T_.show(commandView.getResources().getString(R.string.attention_successed_tip));
@@ -265,7 +265,6 @@ public class UserDetailUIView2 extends BaseContentUIView {
                                                 "tip:" + mExEditText.string()))
                                         .compose(Rx.transformer(String.class))
                                         .subscribe(new BaseSingleSubscriber<String>() {
-
                                             @Override
                                             public void onSucceed(String bean) {
                                                 T_.show(bean);
@@ -566,6 +565,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         //关注, 粉丝
         mViewHolder.tv(R.id.attention_count).setText(RUtils.getShortString(mUserInfoBean.getAttention_count()));
         mViewHolder.tv(R.id.fans_count).setText(RUtils.getShortString(mUserInfoBean.getFans_count()));
+        mViewHolder.tv(R.id.charm_count).setText(mUserInfoBean.getCharm());
 
         if (isMe() || mUserInfoBean.getLook_fans() == 1) {
             mViewHolder.click(R.id.attention_count, new View.OnClickListener() {
@@ -819,7 +819,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
                 final String avatarUrl = list.get(0);
 
                 add(RRetrofit.create(UserService.class)
-                        .editInfo(Param.buildMap((changeType == TYPE_CHANGE_BG_PHOTO ? "photos:" : "avatar:") + avatarUrl))
+                        .editInfo(Param.buildMap((changeType == TYPE_CHANGE_BG_PHOTO ? "cover:" : "avatar:") + avatarUrl))
                         .compose(Rx.transformer(UserInfoBean.class))
                         .subscribe(new BaseSingleSubscriber<UserInfoBean>() {
                             @Override
@@ -893,7 +893,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             }
             mAudioPlayHelper.initPlayImageView(voicePlayView);
 
-            voiceTimeView.setText(mUserInfoBean.getVoiceTime());
+            voiceTimeView.setText(Integer.valueOf(mUserInfoBean.getVoiceTime()) < 1 ? "1" : mUserInfoBean.getVoiceTime());
 
 //            controlLayout.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -932,7 +932,12 @@ public class UserDetailUIView2 extends BaseContentUIView {
 
                                 @Override
                                 public void onEndPlay(Playable playable) {
-                                    initVoiceView();
+                                    ThreadExecutor.instance().onMain(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            initVoiceView();
+                                        }
+                                    });
                                 }
 
                                 @Override

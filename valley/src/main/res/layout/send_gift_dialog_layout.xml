@@ -38,7 +38,7 @@
 
             <!--<View style="@style/BaseHLine" />-->
 
-            <com.hn.d.valley.widget.HnGlideImageView
+            <ImageView
                 android:id="@+id/iv_gift_thumb"
                 android:src="@drawable/zhanweitu_1"
                 android:layout_width="109dp"

@@ -46,10 +46,10 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
 
     public static final String TAG = ReceiveGiftUIDialog.class.getSimpleName();
 
-    String thumb;
+    GiftBean gift;
 
-    public ReceiveGiftUIDialog(String thumb) {
-        this.thumb = thumb;
+    public ReceiveGiftUIDialog(GiftBean gift) {
+        this.gift = gift;
     }
 
     @Override
@@ -71,9 +71,10 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
         final LinearLayout ll_shine = mViewHolder.v(R.id.ll_shine);
 
         BitmapTypeRequest<String> builder = Glide.with(mActivity)
-                .load(thumb)
+                .load(gift.getThumb())
                 .asBitmap();
-        ivTip.setText("送你一个呵呵大");
+
+        ivTip.setText(String.format("送你%s",gift.getName()));
 //        builder.placeholder(R.drawable.defauit_avatar_contact);
 //        builder.error(R.drawable.defauit_avatar_contact);
         builder.into(new SimpleTarget<Bitmap>() {

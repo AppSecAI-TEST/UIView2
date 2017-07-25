@@ -43,8 +43,6 @@ public class MsgVHWithDrawalMsg extends MsgViewHolderBase {
 
         ImageView imageView = (ImageView) findViewById(R.id.iv_item_head);
         TextView tv_pc_name = (TextView) findViewById(R.id.tv_pc_name);
-        TextView msgPcLayout = (TextView) findViewById(R.id.tv_pc_desc);
-        LinearLayout pc_layout = (LinearLayout) findViewById(R.id.msg_card_layout);
 
         WithDrawalAttachment attachment = (WithDrawalAttachment) message.getAttachment();
         if (attachment == null) {

@@ -562,30 +562,30 @@ class InformationDetailUIView : BaseContentUIView {
             detailBean.tagList.mapIndexed { index, string ->
                 LayoutInflater.from(mActivity).inflate(R.layout.no_like_selector_item, mItemContentLayout)
                 val view = mItemContentLayout.getChildAt(index)
-                val textView: RTextCheckView = view.v(R.id.text_view)
-                val cancelView: TextView = view.v(R.id.cancel_view)
+                val textView: RTextCheckView? = view.v(R.id.text_view)
+                val cancelView: TextView? = view.v(R.id.cancel_view)
 
-                textView.gravity = Gravity.LEFT
-                textView.setTextColor(ResUtil.generateTextColor(Color.parseColor("#CCCCCC"),
+                textView?.gravity = Gravity.LEFT
+                textView?.setTextColor(ResUtil.generateTextColor(Color.parseColor("#CCCCCC"),
                         Color.parseColor("#CCCCCC"),
                         Color.parseColor("#333333")))
 
-                textView.text = getString(R.string.no_like_format2, string)
-                cancelView.setTextColor(SkinHelper.getSkin().themeSubColor)
+                textView?.text = getString(R.string.no_like_format2, string)
+                cancelView?.setTextColor(SkinHelper.getSkin().themeSubColor)
 
-                textView.setOnCheckedChangeListener { _, isChecked ->
+                textView?.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
-                        textView.text = getString(R.string.is_no_like_format2, string)
-                        cancelView.visibility = View.VISIBLE
+                        textView?.text = getString(R.string.is_no_like_format2, string)
+                        cancelView?.visibility = View.VISIBLE
                         noLikePositionSet.add(index)
                     } else {
-                        textView.text = getString(R.string.no_like_format2, string)
-                        cancelView.visibility = View.GONE
+                        textView?.text = getString(R.string.no_like_format2, string)
+                        cancelView?.visibility = View.GONE
                         noLikePositionSet.remove(index)
                     }
                 }
 
-                textView.isChecked = noLikePositionSet.contains(index)
+                textView?.isChecked = noLikePositionSet.contains(index)
             }
 
             val okTextView = TextView(mActivity)

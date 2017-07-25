@@ -172,8 +172,10 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                         }
 
                         float amount = Float.valueOf(s.toString());
-                        if (amount < 10) {
-                            tv_note.setText(SpannableStringUtils.getBuilder(getString(R.string.text_refund_money_10)).setForegroundColor(getColor(R.color.base_red)).create());
+                        int doorsill = WalletHelper.getInstance().getWalletAccount().getCashout_doorsill() / 100;
+                        if (amount < doorsill) {
+                            tv_note.setText(SpannableStringUtils.getBuilder(String.format(getString(R.string.text_refund_money_10), doorsill))
+                                    .setForegroundColor(getColor(R.color.base_red)).create());
                             btn_next.setEnabled(false);
                             return;
                         }
@@ -188,7 +190,7 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                             et_money.setText(amount * (1 - INTEREST) + "");
                             // refuoundtotal 赋值在settext 后执行 因为settext 会执行回调 aftertextchange refoundtotal = false
                             refundTotal = true;
-                            tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate),  decimal(amount)));
+                            tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate), decimal(amount)));
                         }
 //                        amount * 0.0055  ,(1 - 0.0055) * amount;
                         tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate), decimal(amount)));
@@ -265,8 +267,8 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     }
 
     private float decimal(float amount) {
-        BigDecimal b   =   new   BigDecimal(amount * INTEREST);
-        return b.setScale(2,   RoundingMode.HALF_UP).floatValue();
+        BigDecimal b = new BigDecimal(amount * INTEREST);
+        return b.setScale(2, RoundingMode.HALF_UP).floatValue();
     }
 
     private void cashoutRequest() {
@@ -276,7 +278,8 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             return;
         }
         float amount = Float.valueOf(money);
-        float totalAmount = amount - decimal(amount);
+//        float totalAmount = amount - decimal(amount);
+        float totalAmount = amount;
         if (refundTotal) {
             totalAmount = WalletHelper.getInstance().getWalletAccount().getMoney() / 100f;
         }

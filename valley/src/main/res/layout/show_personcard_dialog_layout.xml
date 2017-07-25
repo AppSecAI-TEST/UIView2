@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/base_dialog_root_layout"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="@dimen/base_xxxhdpi"
+        android:layout_marginRight="@dimen/base_xxxhdpi"
+        android:background="@drawable/base_white_round_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_finish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:src="@drawable/delete_card" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_xhdpi">
+
+            <ImageView
+                android:id="@+id/iv_thumb"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/zhanweitu_1" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_thumb"
+                android:background="#33000000"
+                android:orientation="vertical"
+                android:padding="@dimen/base_xhdpi">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/username"
+                        style="@style/NameTextStyle"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="爱宠物的默默" />
+
+                    <com.hn.d.valley.widget.HnGenderView
+                        android:id="@+id/grade"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/base_ldpi"
+                        android:tag="g"
+                        tools:text="2" />
+
+                    <ImageView
+                        android:id="@+id/auth_iview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/base_ldpi"
+                        android:src="@drawable/certification_icon"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/fans_count"
+                        style="@style/MainTextStyle"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:tag="@string/attention_format"
+                        tools:text="120" />
+
+                    <com.angcyo.uiview.widget.RTextView
+                        android:id="@+id/chars_count"
+                        style="@style/MainTextStyle"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:tag="@string/fans_format"
+                        tools:text="120" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_xhdpi">
+
+            <TextView
+                android:padding="@dimen/base_xhdpi"
+                android:id="@+id/tv_cancel"
+                android:layout_marginLeft="@dimen/base_xhdpi"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/text_talk" />
+
+            <View
+                android:layout_weight="0.3"
+                style="@style/BaseVLine"
+                android:background="@null"
+                />
+
+            <TextView
+                android:padding="@dimen/base_xhdpi"
+                android:layout_marginRight="@dimen/base_xhdpi"
+                android:id="@+id/tv_ok"
+                android:layout_width="0dp"
+                android:textColor="@color/white"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/follow" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

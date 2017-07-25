@@ -84,7 +84,6 @@ class GiftListUIView : BaseContentUIView {
 
     }
 
-
     override fun getTitleBar(): TitleBarPattern {
         val titleBarPattern = super.getTitleBar()
                 .setShowBackImageView(true)
@@ -117,7 +116,7 @@ class GiftListUIView : BaseContentUIView {
             iv_switch?.setOnClickListener {
                 GroupMemberSelectUIVIew.start(mILayout, BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null, container?.proxy!!.gid
                         , Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback<Any>> { uiBaseRxView, items, callback ->
-                    if (items.size == 0) {
+                    if (items.isEmpty()) {
                         T_.show(getString(R.string.not_empty_tip))
                         return@Action3
                     }
@@ -163,9 +162,7 @@ class GiftListUIView : BaseContentUIView {
                     override fun onError(code: Int, msg: String?) {
                         super.onError(code, msg)
                     }
-
                 })
-
     }
 
     class GiftList : ListModel<GiftBean>()
@@ -282,7 +279,6 @@ class GiftListUIView : BaseContentUIView {
                 } else if (sessionType == SessionTypeEnum.Team) {
                     // 送给群里某群友
                     sendGift(account, container?.proxy!!.gid, gift.gift_id)
-
                 }
 
 //                val attachment = GiftReceiveAttachment(gift,account)

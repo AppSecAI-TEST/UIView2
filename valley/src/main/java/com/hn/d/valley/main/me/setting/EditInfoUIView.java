@@ -94,6 +94,7 @@ import com.netease.nimlib.sdk.media.record.RecordType;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.realm.Realm;
 import rx.Observable;
@@ -938,7 +939,8 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             public void call() {
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
-                tv_record_second.setText(String.format("%d″", mAudioRecordPlayable.getDuration() / 1000));
+                long duration = mAudioRecordPlayable.getDuration() / 1000;
+                tv_record_second.setText(String.format(Locale.CHINA,"%d″", duration < 1 ? 1 : duration));
             }
         };
 

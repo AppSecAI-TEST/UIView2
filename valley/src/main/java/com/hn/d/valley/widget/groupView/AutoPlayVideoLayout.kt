@@ -5,7 +5,9 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import com.angcyo.github.utilcode.utils.NetworkUtils
 import com.angcyo.uiview.kotlin.v
+import com.angcyo.uiview.receiver.NetworkStateReceiver
 import com.hn.d.valley.R
 import com.m3b.rbvideolib.widget.TextureVideoView
 
@@ -26,42 +28,46 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
 
     var videoRect = Rect()
         get() {
-            videoView.getGlobalVisibleRect(field)
+            videoView?.getGlobalVisibleRect(field)
             return field
         }
 
-    private val videoView: TextureVideoView
+    private val videoView: TextureVideoView?
         get() {
             return v(R.id.videoView)
         }
 
     fun stopPlay() {
-        videoView.stop()
-        videoView.visibility = View.GONE
+        videoView?.stop()
+        videoView?.visibility = View.GONE
     }
 
     fun setVideoPath(path: String) {
         this.path = path
 
-        videoView.mute()
-        if (videoView.isPlaying) {
-            videoView.stop()
+        videoView?.let {
+            it.mute()
+            if (it.isPlaying) {
+                it.stop()
+            }
         }
 
         if (path.isNullOrEmpty()) {
-            videoView.visibility = View.GONE
+            videoView?.visibility = View.GONE
         } else {
-            videoView.visibility = View.INVISIBLE
-            videoView.setVideoPath(path)
-            post { AutoPlayVideoControl.checkPlay() }
+            videoView?.visibility = View.INVISIBLE
+            if (AutoPlayVideoControl.canAutoPlay()) {
+                videoView?.setVideoPath(path)
+                post { AutoPlayVideoControl.checkPlay() }
+            }
         }
         //videoView.start()
     }
 
     fun startPlay() {
         try {
-            videoView.visibility = View.VISIBLE
-            videoView.start()
+            videoView?.visibility = View.VISIBLE
+            videoView?.start()
         } catch(e: Exception) {
             e.printStackTrace()
         }

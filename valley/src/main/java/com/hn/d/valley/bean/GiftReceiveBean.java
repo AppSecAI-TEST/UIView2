@@ -24,11 +24,22 @@ public class GiftReceiveBean {
      */
 
     private String gift_id;
+
+    public String getCharm() {
+        return charm;
+    }
+
+    public void setCharm(String charm) {
+        this.charm = charm;
+    }
+
     private String own_count;
     private String thumb;
     private String is_vip;
     private String enable;
     private String coins;
+    private String charm;
+
     /**
      * name : 冰淇淋
      */

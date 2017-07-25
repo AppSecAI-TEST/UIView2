@@ -23,6 +23,7 @@ import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.ScreenUtil;
+import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
@@ -311,7 +312,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 type = likeMsg.getType();
             } else if (attachment instanceof NoticeAttachment) {
                 final CustomBean customBean = getBean(dataBean);
-                holder.fillView(customBean);
+//                holder.fillView(customBean);
                 media = customBean.getMedia();
                 media_type = customBean.getMedia_type();
                 type = customBean.getType();
@@ -321,18 +322,18 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 created = String.valueOf(customBean.getCreated());
             }
 
-            SimpleDraweeView mediaImageView = holder.v(R.id.media_image_view);
+            RImageView mediaImageView = holder.v(R.id.media_image_view);
             MediaTypeControl.initMedia(media, media_type, mediaImageView, null);
 
             SimpleDraweeView avatarView = holder.v(R.id.avatar);
             DraweeViewUtil.resize(avatarView, avatar);
 
-            View contentView = holder.v(R.id.content);
-            contentView.setVisibility(View.GONE);
-            if ("1".equalsIgnoreCase(media_type)) {
-                mediaImageView.setVisibility(View.GONE);
-                contentView.setVisibility(View.VISIBLE);
-            }
+//            TextView contentView = holder.tv(R.id.content);
+//            contentView.setVisibility(View.GONE);
+//            if ("1".equalsIgnoreCase(media_type)) {
+//                mediaImageView.setVisibility(View.GONE);
+//                contentView.setVisibility(View.VISIBLE);
+//            }
 
             holder.tv(R.id.created).setText(created);
             holder.tv(R.id.msg).setText(msg);

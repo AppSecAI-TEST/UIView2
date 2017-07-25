@@ -36,6 +36,7 @@ import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.bean.realm.RelationDataBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.message.gift.GiftListUIView;
@@ -234,7 +235,11 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 @Override
                 public void onBindView(RBaseViewHolder holder, final int posInData, Item dataBean) {
                     RTextView tv = holder.v(R.id.tip_view);
-                    tv.setDefaultSKin("TA的礼物");
+                    if (mUserInfoBean.getUid().equals(UserCache.getUserAccount())) {
+                        tv.setDefaultSKin(getString(R.string.text_my_gift));
+                    } else {
+                        tv.setDefaultSKin(getString(R.string.text_ta_gift));
+                    }
                     holder.v(R.id.tv_more).setVisibility(View.GONE);
                     RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
                     if (mDecor == null) {

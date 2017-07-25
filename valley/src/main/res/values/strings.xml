@@ -33,6 +33,7 @@
     <string name="search">搜索</string>
     <string name="contacts">联系人</string>
     <string name="follower">粉丝</string>
+    <string name="text_charm">魅力</string>
     <string name="follow">关注</string>
     <string name="followed">已关注</string>
     <string name="add_follow">+关注</string>
@@ -884,7 +885,7 @@
     <string name="open_in_brower">在浏览器中打开</string>
     <string name="record_time_short_tip">录制时间太短!</string>
     <string name="text_third_login_can_not_login">你的账号暂时被锁定,无法登陆,点击联系客服!</string>
-    <string name="text_refund_money_10">提现金额最少10元</string>
+    <string name="text_refund_money_10">提现金额最少%1$d元</string>
     <string name="avchat_net_error_then_quit">网络异常,通话结束</string>
     <string name="avchat_call_finish">通话结束</string>
     <string name="avchat_peer_busy">对方正在通话中,请稍后再拨</string>
@@ -895,5 +896,8 @@
     <string name="text_send_gift2">赠送礼物</string>
     <string name="text_refund_service_change_rate">额外扣除 ￥%.2f元手续费</string>
     <string name="about_klg_copyright">Copyright © 2017 恐龙谷 All Rights Reserved</string>
+    <string name="text_ta_gift">TA的礼物</string>
+    <string name="text_my_gift">我的礼物</string>
+    <string name="text_talk">对话</string>
     <string name="game_list_title">游戏列表</string>
 </resources>

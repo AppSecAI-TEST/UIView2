@@ -271,7 +271,30 @@ public class OssHelper {
      */
     public static int[] getImageThumbSize2(String url) {
         final int[] widthHeightWithUrl = getWidthHeightWithUrl(url);
-        return getThumbDisplaySize2(widthHeightWithUrl[0], widthHeightWithUrl[1]);
+        return getThumbDisplaySize3(widthHeightWithUrl[0], widthHeightWithUrl[1]);
+    }
+
+    public static int[] getThumbDisplaySize3(float srcWidth, float srcHeight) {
+        int[] size = new int[2];
+        final float TARGET_WIDTH = 124 * ScreenUtil.density;//3f / 4 * ScreenUtil.screenWidth;
+        final float TARGET_HEIGHT = 180 * ScreenUtil.density;//3f / 4 * ScreenUtil.screenHeight;
+
+        float scale = 1f;
+        if (srcWidth > srcHeight) {
+            //宽图
+            if (srcWidth > TARGET_HEIGHT) {
+                scale = TARGET_HEIGHT / srcWidth;
+            }
+        } else {
+            //高图
+            if (srcHeight > TARGET_HEIGHT) {
+                scale = TARGET_HEIGHT / srcHeight;
+            }
+        }
+
+        size[0] = (int) (srcWidth * scale);
+        size[1] = (int) (srcHeight * scale);
+        return size;
     }
 
     public static int[] getThumbDisplaySize2(float srcWidth, float srcHeight) {

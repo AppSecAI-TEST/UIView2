@@ -13,6 +13,8 @@ import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
+import org.jsoup.Jsoup;
+
 import java.util.Map;
 
 /**
@@ -27,7 +29,7 @@ public class MsgViewHolderPushText extends MsgViewHolderBase {
 
     @Override
     public void convert(RBaseViewHolder holder, IMMessage data, int position, boolean isScrolling) {
-        super.convert(holder,data,position,isScrolling);
+        super.convert(holder, data, position, isScrolling);
     }
 
     @Override
@@ -46,12 +48,19 @@ public class MsgViewHolderPushText extends MsgViewHolderBase {
         TextView contentView = (TextView) findViewById(R.id.msg_text_view);
         Map<String, Object> extension = message.getRemoteExtension();
 //        String title = (String) extension.get("title");
-        final String link = (String) extension.get("link");
+        String ext = (String) extension.get("ext");
 //        String thumb = (String) extension.get("thumb");
+        final String link;
+        String title;
+        try {
+            link = Jsoup.parse(ext).select("a").attr("href");
+            title = Jsoup.parse(ext).select("a").get(0).text();
+        }catch (Exception e) {
+            return;
+        }
 
-        contentView.setText(SpannableStringUtils.getBuilder((String) extension.get("ext"))
-                .append(context.getString(R.string.text_click_look_detail))
-                .setForegroundColor(ContextCompat.getColor(context,R.color.blue_4777af))
+        contentView.setText(SpannableStringUtils.getBuilder(title)
+                .setForegroundColor(ContextCompat.getColor(context, R.color.blue_4777af))
                 .create());
 
         contentContainer.setOnClickListener(new View.OnClickListener() {
@@ -61,5 +70,9 @@ public class MsgViewHolderPushText extends MsgViewHolderBase {
             }
         });
 
+    }
+
+    private void matches(String value) {
+        value.matches("<a>([\\\\s\\\\S]*)</a>");
     }
 }

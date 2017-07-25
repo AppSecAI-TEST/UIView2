@@ -53,7 +53,7 @@ public class HnIcoRecyclerView extends RRecyclerView {
             }
 
             @Override
-            protected View createContentView(ViewGroup parent, int viewType) {
+            protected View createItemView(ViewGroup parent, int viewType) {
                 RelativeLayout layout = new RelativeLayout(context);
 
                 SimpleDraweeView simpleDraweeView = new SimpleDraweeView(context);

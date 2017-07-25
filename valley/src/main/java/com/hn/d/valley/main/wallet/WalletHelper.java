@@ -2,6 +2,7 @@ package com.hn.d.valley.main.wallet;
 
 import android.view.View;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
@@ -57,6 +58,7 @@ public class WalletHelper {
                             @Override
                             public String call(ResponseBody responseBody) {
                                 try {
+//                                    L.d("WalletHelper", "api result " + responseBody.string());
                                     return responseBody.string();
                                 } catch (IOException e) {
                                     e.printStackTrace();

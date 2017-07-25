@@ -16,9 +16,10 @@ import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.main.message.redpacket.Constants;
+import com.hn.d.valley.main.message.redpacket.GrabPacketHelper;
 import com.hn.d.valley.main.message.redpacket.GrabedRDResultUIView;
-import com.hn.d.valley.main.message.redpacket.P2PStatusRPUIView;
 import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
+import com.hn.d.valley.main.message.redpacket.P2PStatusRPUIView;
 import com.hn.d.valley.main.message.service.RedPacketService;
 import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -30,8 +31,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-
-import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.parseResult;
 
 /**
  * Created by hewking on 2017/4/25.
@@ -73,7 +72,8 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                 @Override
                 public void onClick(View v) {
                     if (!isChatGroup()) {
-                        mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),false));
+//                        mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),false));
+                        mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
                     } else {
                         checkRedPacketStatus(redPacket);
                     }
@@ -116,21 +116,21 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                 .map(new Func1<ResponseBody, Integer>() {
                     @Override
                     public Integer call(ResponseBody responseBody) {
-                        return parseResult(responseBody);
+                        return GrabPacketHelper.parseResult(responseBody);
                     }
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new BaseSingleSubscriber<Integer>() {
                     @Override
                     public void onSucceed(Integer code) {
                         if (Constants.ALREADY_GRAB == code) {
-                            if (!isChatGroup()) {
-                                if (message.getFromAccount().equals(UserCache.getUserAccount())) {
-                                    mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),true));
-                                    return;
-                                }
-                                mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
-                                return;
-                            }
+//                            if (!isChatGroup()) {
+//                                if (message.getFromAccount().equals(UserCache.getUserAccount())) {
+//                                    mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),true));
+//                                    return;
+//                                }
+//                                mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
+//                                return;
+//                            }
                             mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
                         } else if (Constants.CAN_BE_GRAB == code) {
                             mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redPacket.getRid()));
@@ -145,7 +145,6 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                             T_.show("很抱歉，不能抢了");
                         }
                     }
-
                 });
     }
 

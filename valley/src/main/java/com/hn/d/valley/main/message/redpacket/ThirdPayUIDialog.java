@@ -123,7 +123,6 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
             public void onClick(View v) {
 //                sendRedPacket();
                 pay();
-
             }
         });
 
@@ -236,7 +235,6 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                     public void onSucceed(String code) {
                         L.i(TAG, code);
                         alipay(code);
-
                     }
 
                 });
@@ -260,7 +258,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         JSONObject object = new JSONObject();
         try {
             object.put("uid", Integer.valueOf(UserCache.getUserAccount()));
-            object.put("money", params.money);
+            object.put("money", (int) params.money);
             if (type == 0) {
                 //充值
             } else if (type == 1) {

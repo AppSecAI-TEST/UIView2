@@ -435,7 +435,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             }
         }));
 
-        if (!isSelfAdmin) {
+//        if (!isSelfAdmin) {
             items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
                 @Override
                 public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
@@ -449,7 +449,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                     });
                 }
             }));
-        }
+//        }
         bindGroupOwnerFunc(items, line, left);
         jugeGroupOwner(items, line, left);
     }

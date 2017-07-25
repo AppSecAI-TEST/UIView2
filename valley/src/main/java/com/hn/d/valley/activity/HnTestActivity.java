@@ -115,7 +115,7 @@ public class HnTestActivity extends AppCompatActivity {
         }
 
         @Override
-        protected View createContentView(ViewGroup parent, int viewType) {
+        protected View createItemView(ViewGroup parent, int viewType) {
             TextView textView = new TextView(HnTestActivity.this);
             textView.setLayoutParams(new ViewGroup.LayoutParams(-1, 300));
             return textView;

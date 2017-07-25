@@ -26,6 +26,7 @@ public class WalletAccount {
      * fingerprint : 0
      * device : 1ASD23123SFESF2343XCVDGDFGFG3434
      * "cashout_rate":0.0055
+     "cashout_doorsill":1000
      */
 
     private int uid;
@@ -45,7 +46,17 @@ public class WalletAccount {
 
     private int fingerprint;
     private String device;
+
+    public int getCashout_doorsill() {
+        return cashout_doorsill;
+    }
+
+    public void setCashout_doorsill(int cashout_doorsill) {
+        this.cashout_doorsill = cashout_doorsill;
+    }
+
     private float cashout_rate;
+    private int cashout_doorsill;
 
     public boolean hasPin() {
         // 1 已设置 0 未设置

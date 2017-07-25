@@ -101,7 +101,7 @@ public class SimpleImageAdapter extends RBaseAdapter<SimpleImageAdapter.Image> {
     }
 
     @Override
-    protected View createContentView(ViewGroup parent, int viewType) {
+    protected View createItemView(ViewGroup parent, int viewType) {
         int screenWidth = ResUtil.getScreenWidth(mContext);
         float paddLeft = ResUtil.dpToPx(mContext.getResources(), 10);
         float paddRight = paddLeft;

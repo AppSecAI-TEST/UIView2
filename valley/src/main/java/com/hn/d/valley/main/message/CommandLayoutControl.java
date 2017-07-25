@@ -2,8 +2,6 @@ package com.hn.d.valley.main.message;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +10,8 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RecyclerViewPager;
-import com.angcyo.uiview.recycler.adapter.RecyclerViewPagerAdapter;
 import com.angcyo.uiview.recycler.RecyclerViewPagerIndicator;
+import com.angcyo.uiview.recycler.adapter.RecyclerViewPagerAdapter;
 import com.hn.d.valley.R;
 
 import java.util.List;
@@ -90,7 +88,7 @@ public class CommandLayoutControl {
         }
 
         @Override
-        protected View createContentView(ViewGroup parent, int viewType) {
+        protected View createItemView(ViewGroup parent, int viewType) {
             RelativeLayout relativeLayout = new RelativeLayout(mContext);
 
             TextView textView = new TextView(mContext);

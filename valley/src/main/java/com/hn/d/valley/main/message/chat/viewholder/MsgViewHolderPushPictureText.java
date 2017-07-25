@@ -52,6 +52,7 @@ public class MsgViewHolderPushPictureText extends MsgViewHolderBase {
 
         draweeView.setImageUrl(thumb);
         contentView.setText(title);
+
         contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

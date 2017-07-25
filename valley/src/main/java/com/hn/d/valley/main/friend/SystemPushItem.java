@@ -19,15 +19,16 @@ public class SystemPushItem extends AbsContactItem {
         this.friendBean = bean;
         this.action = action;
         itemType = ItemTypes.SYSTEMPUSH;
-        char ch = bean.getTrueName().charAt(0);
-        String letter = StringUtils.getAsciiLeadingUp(ch);
-        if (letter != null ) {
-            groupText = letter;
-        } else if (Pinyin.isChinese(ch)) {
-            groupText = String.valueOf(Pinyin.toPinyin(ch).toUpperCase().charAt(0));
-        } else {
-            groupText = "#";
-        }
+        groupText = "";
+//        char ch = bean.getTrueName().charAt(0);
+//        String letter = StringUtils.getAsciiLeadingUp(ch);
+//        if (letter != null ) {
+//            groupText = letter;
+//        } else if (Pinyin.isChinese(ch)) {
+//            groupText = String.valueOf(Pinyin.toPinyin(ch).toUpperCase().charAt(0));
+//        } else {
+//            groupText = "#";
+//        }
     }
 
     public <T> void onFuncClick(T t){

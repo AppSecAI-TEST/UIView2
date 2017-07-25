@@ -226,6 +226,13 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                         mParentILayout.startIView(new MyStatusUIView());
                     }
                 });
+                // 魅力
+                holder.v(R.id.charm_item_layout).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
 
                 if (userInfoBean != null) {
                     HnGlideImageView userIcoView = holder.v(R.id.user_ico_view);
@@ -237,11 +244,13 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     holder.tv(R.id.fans_count).setText(RUtils.getShortString(userInfoBean.getFans_count()));
                     holder.tv(R.id.attention_count).setText(RUtils.getShortString(userInfoBean.getAttention_count()));
                     holder.tv(R.id.status_count).setText(RUtils.getShortString(userInfoBean.getDiscuss_count()));
+                    holder.tv(R.id.charm_count).setText(userInfoBean.getCharm());
                 }
 
                 holder.tv(R.id.fans_count).setTextColor(SkinHelper.getSkin().getThemeSubColor());
                 holder.tv(R.id.attention_count).setTextColor(SkinHelper.getSkin().getThemeSubColor());
                 holder.tv(R.id.status_count).setTextColor(SkinHelper.getSkin().getThemeSubColor());
+                holder.tv(R.id.charm_count).setTextColor(SkinHelper.getSkin().getThemeSubColor());
 
 //                mTestImageView = holder.v(R.id.test_image_view);
 

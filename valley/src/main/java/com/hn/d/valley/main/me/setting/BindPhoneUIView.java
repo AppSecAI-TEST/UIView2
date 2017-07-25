@@ -19,9 +19,11 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.wallet.WalletAccountUpdateEvent;
 import com.hn.d.valley.service.OtherService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnLoading;
 
 import java.util.List;
@@ -135,6 +137,8 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                                             T_.show(s);
                                             finishIView();
                                             UserCache.instance().updateUserInfo();
+                                            // 拉取钱包信息
+                                            RBus.post(new WalletAccountUpdateEvent());
                                         }
 
                                         @Override

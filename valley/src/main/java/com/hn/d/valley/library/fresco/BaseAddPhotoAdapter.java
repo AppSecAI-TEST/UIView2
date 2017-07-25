@@ -112,7 +112,7 @@ public abstract class BaseAddPhotoAdapter<T> extends RBaseAdapter<T> {
     }
 
     @Override
-    protected View createContentView(ViewGroup parent, int viewType) {
+    protected View createItemView(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ADD) {
             return createAddView();
         } else {

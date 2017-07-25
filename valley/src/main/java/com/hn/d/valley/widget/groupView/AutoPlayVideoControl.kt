@@ -4,8 +4,10 @@ import android.graphics.Rect
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import com.angcyo.github.utilcode.utils.NetworkUtils
 import com.angcyo.library.utils.L
 import com.angcyo.uiview.kotlin.v
+import com.angcyo.uiview.receiver.NetworkStateReceiver
 import com.angcyo.uiview.utils.ScreenUtil
 import com.hn.d.valley.R
 import java.lang.ref.WeakReference
@@ -28,9 +30,9 @@ object AutoPlayVideoControl : RecyclerView.OnScrollListener(),
 
     override fun onChildViewDetachedFromWindow(view: View?) {
         view?.let {
-            val view: View? = it.v<View>(R.id.media_control_layout)
-            if (view != null && view is AutoPlayVideoLayout) {
-                view.stopPlay()
+            val autoPlayLayout: View? = it.v<View>(R.id.media_control_layout)
+            if (autoPlayLayout != null && autoPlayLayout is AutoPlayVideoLayout) {
+                autoPlayLayout.stopPlay()
                 L.i("call: onChildViewDetachedFromWindow -> 停止自动播放.")
             }
         }
@@ -53,8 +55,11 @@ object AutoPlayVideoControl : RecyclerView.OnScrollListener(),
 
     /**检查自动播放视频*/
     fun checkPlay() {
+        if (recyclerView == null || !canAutoPlay()) {
+            return
+        }
         L.i("call: checkPlay -> 开始检查自动播放.")
-        val manager = recyclerView.layoutManager
+        val manager = recyclerView?.layoutManager
         if (manager is LinearLayoutManager) {
             val firstVisibleItemPosition = manager.findFirstVisibleItemPosition()
 
@@ -63,7 +68,7 @@ object AutoPlayVideoControl : RecyclerView.OnScrollListener(),
 
             //拿到屏幕上, 所有视频的位置
             for (i in firstVisibleItemPosition..manager.itemCount - 1) {
-                val view: View? = recyclerView.findViewHolderForAdapterPosition(i)?.itemView?.v<View>(R.id.media_control_layout)
+                val view: View? = recyclerView?.findViewHolderForAdapterPosition(i)?.itemView?.v<View>(R.id.media_control_layout)
                 if (view != null && view is AutoPlayVideoLayout) {
                     if (view.haveVideo()) {
                         videoRectList.add(view.videoRect)
@@ -102,14 +107,16 @@ object AutoPlayVideoControl : RecyclerView.OnScrollListener(),
                 }
             } else {
                 L.i("call: checkPlay -> 自动播放位置:屏幕中未找到视频")
+                stopPlay()
             }
 
         }
     }
 
-    private lateinit var recyclerView: RecyclerView
+    private var recyclerView: RecyclerView? = null
 
     fun init(recyclerView: RecyclerView) {
+        stopPlay()
         this.recyclerView = recyclerView
         recyclerView.addOnScrollListener(this)
         recyclerView.addOnChildAttachStateChangeListener(this)
@@ -120,11 +127,12 @@ object AutoPlayVideoControl : RecyclerView.OnScrollListener(),
         lastPlayLayout = null
     }
 
+    /**只在WIFI下,自动播放*/
+    fun canAutoPlay(): Boolean {
+        return NetworkStateReceiver.getNetType() == NetworkUtils.NetworkType.NETWORK_WIFI
+    }
+
     private fun lastPlayLayout(): AutoPlayVideoLayout? {
-        if (lastPlayLayout != null) {
-            val autoPlayVideoLayout = lastPlayLayout!!.get()
-            return autoPlayVideoLayout
-        }
-        return null
+        return lastPlayLayout?.get()
     }
 }

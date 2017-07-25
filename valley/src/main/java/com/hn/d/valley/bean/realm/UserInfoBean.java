@@ -108,11 +108,21 @@ public class UserInfoBean extends RealmObject {
     private String county_name;
     private String is_auth;
     private String auth_type;
+
+    public String getCharm() {
+        return charm;
+    }
+
+    public void setCharm(String charm) {
+        this.charm = charm;
+    }
+
     private String auth_desc;
     private String introduce;
     private String job;
     private String industry;
     private String signature;
+    private String charm;
     private int is_set_password;
     private RealmList<NewestDiscussPicBean> newest_discuss_pic;
     /**

@@ -557,7 +557,7 @@ public class PublishDynamicUIView extends BaseContentUIView implements OssContro
         }
 
         @Override
-        protected View createContentView(ViewGroup parent, int viewType) {
+        protected View createItemView(ViewGroup parent, int viewType) {
             RelativeLayout relativeLayout = new RelativeLayout(mContext);
 
             RImageView imageView = new RImageView(mContext);

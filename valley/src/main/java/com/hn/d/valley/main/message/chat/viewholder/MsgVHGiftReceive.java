@@ -65,7 +65,7 @@ public class MsgVHGiftReceive extends MsgViewHolderBase {
             message.setLocalExtension(localExtension);
             msgService().updateIMMessage(message);
             if (getMsgAdapter().hasOnShow() && isReceivedMessage() && msg.getTo_uid().equals(UserCache.getUserAccount())) {
-                getUIBaseView().startIView(new ReceiveGiftUIDialog(msg.getGift_info().getThumb()));
+                getUIBaseView().startIView(new ReceiveGiftUIDialog(msg.getGift_info()));
             }
         }
 

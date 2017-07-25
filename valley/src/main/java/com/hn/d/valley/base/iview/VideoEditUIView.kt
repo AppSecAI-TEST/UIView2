@@ -298,7 +298,7 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
                 return 0
             }
 
-            override fun createContentView(parent: ViewGroup?, viewType: Int): View {
+            override fun createItemView(parent: ViewGroup?, viewType: Int): View {
                 val view = ImageView(mActivity)
                 view.id = R.id.image_view
                 view.layoutParams = ViewGroup.LayoutParams(getDimensionPixelOffset(R.dimen.base_xxxhdpi), -1)

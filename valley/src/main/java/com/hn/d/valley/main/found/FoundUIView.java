@@ -87,6 +87,20 @@ public class FoundUIView extends BaseItemUIView {
                 });
             }
         });
+
+        items.add(new SingleItem(SingleItem.Type.TOP) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
+                baseInitItem(holder, R.drawable.search, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainUIView uiView = (MainUIView) mParentILayout.getIViewWith(MainUIView.class);
+                        mParentILayout.startIView(new SearchUIView().setJumpToDynamicListAction(uiView));
+                    }
+                });
+            }
+        });
+
         //扫一扫
         items.add(new SingleItem(SingleItem.Type.TOP_LINE) {
 
@@ -117,19 +131,6 @@ public class FoundUIView extends BaseItemUIView {
             }
         });
 
-        //搜一搜
-        items.add(new SingleItem(SingleItem.Type.TOP) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
-                baseInitItem(holder, R.drawable.search, getString(R.string.search_title), mBaseOffsetSize, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainUIView uiView = (MainUIView) mParentILayout.getIViewWith(MainUIView.class);
-                        mParentILayout.startIView(new SearchUIView().setJumpToDynamicListAction(uiView));
-                    }
-                });
-            }
-        });
 
         //游戏
         items.add(new SingleItem(SingleItem.Type.TOP) {
