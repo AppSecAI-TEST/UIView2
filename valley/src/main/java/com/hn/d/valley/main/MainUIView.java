@@ -178,8 +178,8 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
 
     private void initTabLayout() {
         ArrayList<CustomTabEntity> tabs = new ArrayList<>();
-        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_message_text), R.drawable.message_s, R.drawable.message_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_home_text), R.drawable.konglonggu_s, R.drawable.konglonggu_n));
+        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_message_text), R.drawable.message_s, R.drawable.message_n));
 //        tabs.add(new TabEntity(true, mActivity.getString(R.string.friend), R.drawable.haoyou_s, R.drawable.haoyou_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_found_text), R.drawable.found_s, R.drawable.found_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_me_text), R.drawable.me_s, R.drawable.me_n));

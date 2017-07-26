@@ -202,19 +202,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     @Override
                     public Observable<Integer> call(Integer code) {
                         if (Constants.CAN_BE_GRAB == code) {
-                            return RRetrofit.create(RedPacketService.class)
-                                    .grabbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
-                                    .compose(new Observable.Transformer<ResponseBody, Integer>() {
-                                        @Override
-                                        public Observable<Integer> call(Observable<ResponseBody> responseBodyObservable) {
-                                            return responseBodyObservable.map(new Func1<ResponseBody, Integer>() {
-                                                @Override
-                                                public Integer call(ResponseBody responseBody) {
-                                                    return GrabPacketHelper.parseResult(responseBody);
-                                                }
-                                            }).subscribeOn(Schedulers.io());
-                                        }
-                                    });
+                            return grabRedBag(redId);
                         } else if (Constants.ALREADY_GRAB == code) {
 
                         }
@@ -286,6 +274,22 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     }
                 });
 
+    }
+
+    public static Observable<Integer> grabRedBag(long redId) {
+        return RRetrofit.create(RedPacketService.class)
+                .grabbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
+                .compose(new Observable.Transformer<ResponseBody, Integer>() {
+                    @Override
+                    public Observable<Integer> call(Observable<ResponseBody> responseBodyObservable) {
+                        return responseBodyObservable.map(new Func1<ResponseBody, Integer>() {
+                            @Override
+                            public Integer call(ResponseBody responseBody) {
+                                return GrabPacketHelper.parseResult(responseBody);
+                            }
+                        }).subscribeOn(Schedulers.io());
+                    }
+                });
     }
 
 

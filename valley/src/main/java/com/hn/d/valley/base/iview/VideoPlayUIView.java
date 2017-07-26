@@ -2,6 +2,7 @@ package com.hn.d.valley.base.iview;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -60,6 +61,11 @@ public class VideoPlayUIView extends UIIViewImpl {
     };
     boolean canSave = false;
     private boolean mIsLive;
+
+    /**
+     * 红包id
+     */
+    private String hotPackageId;
 
     public VideoPlayUIView(String path) {
         this.path = path;
@@ -120,6 +126,11 @@ public class VideoPlayUIView extends UIIViewImpl {
                          * 监听视频是否已经播放完成了
                          */
                         L.e("run: ");
+
+                        if (!TextUtils.isEmpty(hotPackageId)) {
+                            //弹出抢红包对话框
+
+                        }
                     }
                 })
                 .onInfo(new RBMediaController.OnInfoListener() {
@@ -214,6 +225,11 @@ public class VideoPlayUIView extends UIIViewImpl {
 
     public VideoPlayUIView setOnLongPress(RBMediaController.OnLongPress onLongPress) {
         mOnLongPress = onLongPress;
+        return this;
+    }
+
+    public VideoPlayUIView setHotPackageId(String hotPackageId) {
+        this.hotPackageId = hotPackageId;
         return this;
     }
 

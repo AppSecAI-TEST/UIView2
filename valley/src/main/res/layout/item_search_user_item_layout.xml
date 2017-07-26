@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.angcyo.uiview.viewgroup.RLinearLayout
+<com.hn.d.valley.widget.groupView.HnHotPackageLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/base_bg_selector"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:background="@color/base_red_d85940">
 
     <TextView
         android:id="@+id/is_me_view"
@@ -271,4 +272,10 @@
         </LinearLayout>
 
     </LinearLayout>
-</com.angcyo.uiview.viewgroup.RLinearLayout>
+
+    <com.hn.d.valley.widget.HotPackageView
+        android:id="@+id/hot_package_view"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:visibility="invisible"/>
+</com.hn.d.valley.widget.groupView.HnHotPackageLayout>

@@ -60,10 +60,10 @@ public interface Constant {
      * 需要更新未读消息数量
      */
     String TAG_NO_READ_NUM = "tag_no_read_num";
-    int POS_HOME = 1;//恐龙谷
+    int POS_HOME = 0;//恐龙谷
     int POS_FOUND = 2;//发现
     int POS_CONNECT = 4;//联系人
-    int POS_MESSAGE = 0;//消息
+    int POS_MESSAGE = 1;//消息
     int POS_ME = 3;//我
 
     /**

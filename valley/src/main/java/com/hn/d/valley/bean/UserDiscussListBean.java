@@ -572,6 +572,13 @@ public class UserDiscussListBean {
             return TextUtils.equals(uuid, ((DataListBean) obj).uuid);
         }
 
+        /**
+         * 是否有红包
+         */
+        public boolean haveHotPackage() {
+            return !TextUtils.isEmpty(getPackage_id());
+        }
+
         public String getPackage_id() {
             return package_id;
         }

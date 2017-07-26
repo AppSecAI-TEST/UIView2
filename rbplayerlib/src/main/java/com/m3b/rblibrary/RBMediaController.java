@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -52,6 +53,8 @@ public class RBMediaController extends RelativeLayout {
     private static final int MESSAGE_RESTART_PLAY = 5;
     GestureDetectorCompat mGestureDetectorCompat;
     OnLongPress mOnLongPress;
+    float downX, downY;
+    boolean isMoveTouch = false;
     private Activity activity;
     private Context context;
     private View contentView;
@@ -795,7 +798,6 @@ public class RBMediaController extends RelativeLayout {
         return position;
     }
 
-
     public void hide(boolean force) {
         if (force || isShowing) {
             handler.removeMessages(MESSAGE_SHOW_PROGRESS);
@@ -941,23 +943,82 @@ public class RBMediaController extends RelativeLayout {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (mOnLongPress == null) {
-            return super.onInterceptTouchEvent(ev);
-        }
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (mOnLongPress != null) {
 
-        if (mGestureDetectorCompat == null) {
-            mGestureDetectorCompat = new GestureDetectorCompat(getContext(), new GestureDetector.SimpleOnGestureListener() {
-                @Override
-                public void onLongPress(MotionEvent e) {
-                    mOnLongPress.onLongPress(url);
+            if (MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_DOWN) {
+                isMoveTouch = false;
+                downX = ev.getX();
+                downY = ev.getY();
+            } else {
+                if (!isMoveTouch) {
+                    float x = ev.getX();
+                    float y = ev.getY();
+                    
+                    if (Math.abs(downX - x) > 10 || Math.abs(downY - y) > 10) {
+                        isMoveTouch = true;
+                    }
                 }
-            });
-            mGestureDetectorCompat.setIsLongpressEnabled(true);
-        }
+            }
 
-        return mGestureDetectorCompat.onTouchEvent(ev) || super.onInterceptTouchEvent(ev);
+            if (mGestureDetectorCompat == null) {
+                mGestureDetectorCompat = new GestureDetectorCompat(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                        if (isMoveTouch) {
+
+                        } else {
+                            mOnLongPress.onLongPress(url);
+                        }
+                    }
+                });
+                mGestureDetectorCompat.setIsLongpressEnabled(true);
+            }
+
+            mGestureDetectorCompat.onTouchEvent(ev);
+        }
+        return super.dispatchTouchEvent(ev);
     }
+
+//    @Override
+//    public boolean onInterceptTouchEvent(MotionEvent ev) {
+//        if (mOnLongPress == null) {
+//            return super.onInterceptTouchEvent(ev);
+//        }
+//
+//        if (MotionEventCompat.getActionMasked(ev) == MotionEvent.ACTION_DOWN) {
+//            isMoveTouch = false;
+//            downX = ev.getX();
+//            downY = ev.getY();
+//        } else {
+//            if (!isMoveTouch) {
+//                float x = ev.getX();
+//                float y = ev.getY();
+//
+//                Log.e("angcyo", "call: onInterceptTouchEvent([ev])-> " + downX + " " + x + " " + downY + " " + y);
+//
+//                if (Math.abs(downX - x) > 10 || Math.abs(downY - y) > 10) {
+//                    isMoveTouch = true;
+//                }
+//            }
+//        }
+//
+//        if (mGestureDetectorCompat == null) {
+//            mGestureDetectorCompat = new GestureDetectorCompat(getContext(), new GestureDetector.SimpleOnGestureListener() {
+//                @Override
+//                public void onLongPress(MotionEvent e) {
+//                    if (isMoveTouch) {
+//
+//                    } else {
+//                        mOnLongPress.onLongPress(url);
+//                    }
+//                }
+//            });
+//            mGestureDetectorCompat.setIsLongpressEnabled(true);
+//        }
+//
+//        return mGestureDetectorCompat.onTouchEvent(ev) || super.onInterceptTouchEvent(ev);
+//    }
 
     public void setOnLongPress(OnLongPress onLongPress) {
         mOnLongPress = onLongPress;

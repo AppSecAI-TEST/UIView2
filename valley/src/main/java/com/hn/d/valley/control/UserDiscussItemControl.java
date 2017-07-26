@@ -43,6 +43,7 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.m3b.Audio;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
@@ -60,6 +61,7 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SettingService;
@@ -91,8 +93,10 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -243,8 +247,45 @@ public class UserDiscussItemControl {
         tagsNameTextView.setTags(dataListBean.getTags_name());
         tagsNameTextView.setVisibility(View.GONE);//不需要标签啦, 星期一 2017-6-26
 
+        //红包id
+        String hotPackageId = null;
+        try {
+            hotPackageId = dataListBean.getPackage_id();
+            holder.v(R.id.hot_package_view).setVisibility(TextUtils.isEmpty(hotPackageId) ? View.INVISIBLE : View.VISIBLE);
+            if (BuildConfig.SHOW_DEBUG && !TextUtils.isEmpty(hotPackageId)) {
+                OpenRedPacketUIDialog.grabRedBag(Long.valueOf(hotPackageId))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new BaseSingleSubscriber<Integer>() {
+
+                            @Override
+                            public void onSucceed(Integer beans) {
+                                switch (beans) {
+                                    case 0:
+                                        L.e("抢红包:SUCCESS");
+                                        break;
+                                    case 5:
+                                        L.e("抢红包:已经抢过");
+                                        break;
+                                    case 7:
+                                        L.e("抢红包:已经被抢光");
+                                        break;
+                                    case 8:
+                                        L.e("抢红包:没有权限");
+                                        break;
+                                    default:
+                                        L.e("抢红包:失败" + beans);
+                                        break;
+                                }
+                            }
+                        });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         //图片视频处理
-        updateMediaLayout(dataListBean, iLayout, holder, isInDetail, allowDownload);
+        updateMediaLayout(dataListBean, iLayout, holder, isInDetail, allowDownload, hotPackageId);
 
         HnItemTextView fav_cnt = holder.v(R.id.fav_cnt);
 
@@ -508,7 +549,7 @@ public class UserDiscussItemControl {
 
             initMediaLayout(media_type, medias,
                     holder.v(R.id.forward_media_control_layout),
-                    iLayout, isInDetail, original_info.isForwardInformation(), allowDownload);
+                    iLayout, isInDetail, original_info.isForwardInformation(), allowDownload, "");
         }
     }
 
@@ -574,13 +615,15 @@ public class UserDiscussItemControl {
 
     private static void updateMediaLayout(UserDiscussListBean.DataListBean dataListBean,
                                           final ILayout iLayout, RBaseViewHolder holder,
-                                          boolean isInDetail, final boolean allowDownload) {
+                                          boolean isInDetail, final boolean allowDownload,
+                                          final String hotPackageId) {
         //final TextView mediaCountView = holder.tV(R.id.media_count_view);//媒体数量
         final View mediaControlLayout = holder.v(R.id.media_control_layout);
 //        final SimpleDraweeView mediaImageTypeView = holder.v(R.id.media_image_view);//
 
         final List<String> medias = RUtils.split(dataListBean.getMedia());
-        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, iLayout, isInDetail, dataListBean.getDiscuss_id(), false, allowDownload);
+        initMediaLayout(dataListBean.getMedia_type(), medias, mediaControlLayout, iLayout,
+                isInDetail, dataListBean.getDiscuss_id(), false, allowDownload, hotPackageId);
     }
 
     public static void initMediaLayout(String mediaType, final List<String> medias,
@@ -588,8 +631,9 @@ public class UserDiscussItemControl {
                                        final ILayout iLayout,
                                        final boolean isInDetail,
                                        final boolean isFromInformation,
-                                       final boolean allowDownload) {
-        initMediaLayout(mediaType, medias, mediaControlLayout, iLayout, isInDetail, "", isFromInformation, allowDownload);
+                                       final boolean allowDownload,
+                                       final String hotPackageId) {
+        initMediaLayout(mediaType, medias, mediaControlLayout, iLayout, isInDetail, "", isFromInformation, allowDownload, hotPackageId);
     }
 
     /**
@@ -615,10 +659,11 @@ public class UserDiscussItemControl {
     public static void initMediaLayout(String mediaType, final List<String> medias,
                                        View mediaControlLayout,
                                        final ILayout iLayout,
-                                       final boolean isInDetail,
+                                       final boolean isInDetail /*是否来自动态详情*/,
                                        final String discuss_id,
-                                       final boolean isFromInformation,
-                                       final boolean allowDownload) {
+                                       final boolean isFromInformation /*是否来自资讯*/,
+                                       final boolean allowDownload /*是否允许下载媒体文件*/,
+                                       final String hotPackageId /*红包id,没有为空*/) {
 
         if (mediaControlLayout == null) {
             return;
@@ -786,6 +831,7 @@ public class UserDiscussItemControl {
                                     RImageView.copyDrawable(imageView),
                                     getWidthHeight(1)
                                     /*OssHelper.getWidthHeightWithUrl(thumbUrl)*/)
+                                    .setHotPackageId(hotPackageId)
                                     .setRelayVideoLongClickListener(new RelayVideoLongClickListener(iLayout, allowDownload)));
                         }
                         if (!isInDetail) {

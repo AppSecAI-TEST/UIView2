@@ -34,10 +34,6 @@ public class TextureVideoView extends ScalableTextureView
 
     private static final String TAG = "TextureVideoView";
     private static final boolean SHOW_LOGS = true;
-
-    private volatile int mCurrentState = STATE_IDLE;
-    private volatile int mTargetState = STATE_IDLE;
-
     private static final int STATE_ERROR = -1;
     private static final int STATE_IDLE = 0;
     private static final int STATE_PREPARING = 1;
@@ -45,44 +41,28 @@ public class TextureVideoView extends ScalableTextureView
     private static final int STATE_PLAYING = 3;
     private static final int STATE_PAUSED = 4;
     private static final int STATE_PLAYBACK_COMPLETED = 5;
-
     private static final int MSG_START = 0x0001;
     private static final int MSG_PAUSE = 0x0004;
     private static final int MSG_STOP = 0x0006;
-
-    private Uri mUri;
-    private Context mContext;
-    private Surface mSurface;
-    private MediaPlayer mMediaPlayer;
-    private AudioManager mAudioManager;
-
-    private MediaPlayerCallback mMediaPlayerCallback;
-    private Handler mHandler;
-    private Handler mVideoHandler;
-
-    private boolean mSoundMute;
-    private boolean mHasAudio;
-
     private static final HandlerThread sThread = new HandlerThread("VideoPlayThread");
 
     static {
         sThread.start();
     }
 
+    private volatile int mCurrentState = STATE_IDLE;
+    private volatile int mTargetState = STATE_IDLE;
+    private Uri mUri;
+    private Context mContext;
+    private Surface mSurface;
+    private MediaPlayer mMediaPlayer;
+    private AudioManager mAudioManager;
+    private MediaPlayerCallback mMediaPlayerCallback;
+    private Handler mHandler;
+    private Handler mVideoHandler;
+    private boolean mSoundMute;
+    private boolean mHasAudio;
 
-    public interface MediaPlayerCallback {
-        void onPrepared(MediaPlayer mp);
-
-        void onCompletion(MediaPlayer mp);
-
-        void onBufferingUpdate(MediaPlayer mp, int percent);
-
-        void onVideoSizeChanged(MediaPlayer mp, int width, int height);
-
-        boolean onInfo(MediaPlayer mp, int what, int extra);
-
-        boolean onError(MediaPlayer mp, int what, int extra);
-    }
 
     public TextureVideoView(Context context) {
         super(context);
@@ -143,10 +123,11 @@ public class TextureVideoView extends ScalableTextureView
         mCurrentState = STATE_IDLE;
         mTargetState = STATE_IDLE;
         mHandler = new Handler();
-        mVideoHandler = new Handler(sThread.getLooper(), this);
-        setSurfaceTextureListener(this);
+        if (!isInEditMode()) {
+            mVideoHandler = new Handler(sThread.getLooper(), this);
+            setSurfaceTextureListener(this);
+        }
     }
-
 
     // release the media player in any state
     private void release(boolean cleartargetstate) {
@@ -396,7 +377,7 @@ public class TextureVideoView extends ScalableTextureView
 
     @Override
     public void onSeekComplete(MediaPlayer mp) {
-        if (mMediaPlayer!=null){
+        if (mMediaPlayer != null) {
             mMediaPlayer.start();
         }
     }
@@ -456,7 +437,6 @@ public class TextureVideoView extends ScalableTextureView
         }
     }
 
-
     @Override
     public void onVideoSizeChanged(final MediaPlayer mp, final int width, final int height) {
         if (mMediaPlayerCallback != null) {
@@ -502,5 +482,19 @@ public class TextureVideoView extends ScalableTextureView
 
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
+    }
+
+    public interface MediaPlayerCallback {
+        void onPrepared(MediaPlayer mp);
+
+        void onCompletion(MediaPlayer mp);
+
+        void onBufferingUpdate(MediaPlayer mp, int percent);
+
+        void onVideoSizeChanged(MediaPlayer mp, int width, int height);
+
+        boolean onInfo(MediaPlayer mp, int what, int extra);
+
+        boolean onError(MediaPlayer mp, int what, int extra);
     }
 }
