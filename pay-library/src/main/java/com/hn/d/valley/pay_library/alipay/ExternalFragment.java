@@ -1,4 +1,4 @@
-package com.hn.pay_library.alipay;
+package com.hn.d.valley.pay_library.alipay;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,7 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import io.github.mayubao.pay_library.R;
+import com.hn.d.R;
+
 
 public class ExternalFragment extends Fragment {
 

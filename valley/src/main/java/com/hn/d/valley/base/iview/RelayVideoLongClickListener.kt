@@ -74,9 +74,9 @@ class RelayVideoLongClickListener(iLayout: ILayout<*>) : VideoPlayUIView.SaveVid
             }
 
             val mediaPlayer = getVideoMediaPlayer(ValleyApp.getApp().applicationContext, file)
-            val duration = (if (mediaPlayer == null) 0 else mediaPlayer!!.getDuration()).toLong()
-            val height = if (mediaPlayer == null) 0 else mediaPlayer!!.getVideoHeight()
-            val width = if (mediaPlayer == null) 0 else mediaPlayer!!.getVideoWidth()
+            val duration = (if (mediaPlayer == null) 0 else mediaPlayer.getDuration()).toLong()
+            val height = if (mediaPlayer == null) 0 else mediaPlayer.getVideoHeight()
+            val width = if (mediaPlayer == null) 0 else mediaPlayer.getVideoWidth()
             val md5 = MD5.getStreamMD5(path)
             val message = MessageBuilder.createVideoMessage(friendBean.uid, type, file, duration, width, height, md5)
             ChatUIView2.msgService().sendMessage(message, false)

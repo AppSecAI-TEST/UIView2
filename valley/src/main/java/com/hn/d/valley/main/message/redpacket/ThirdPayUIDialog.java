@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -26,11 +27,11 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.wallet.WalletService;
-import com.hn.pay_library.PayAPI;
-import com.hn.pay_library.WechatParam;
-import com.hn.pay_library.WechatPayReq;
-import com.hn.pay_library.alipay.PayConstants;
-import com.hn.pay_library.alipay.OrderInfoUtil2_0;
+import com.hn.d.valley.pay_library.PayAPI;
+import com.hn.d.valley.pay_library.WechatParam;
+import com.hn.d.valley.pay_library.WechatPayReq;
+import com.hn.d.valley.pay_library.alipay.PayConstants;
+import com.hn.d.valley.pay_library.alipay.OrderInfoUtil2_0;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,8 +47,8 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
-import static com.hn.pay_library.alipay.PayConstants.AliPay_APPID;
-import static com.hn.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
+import static com.hn.d.valley.pay_library.alipay.PayConstants.AliPay_APPID;
+import static com.hn.d.valley.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -155,6 +156,16 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
 
     }
 
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        L.d(TAG,"onViewShow : wechat pay");
+        if (type.equals(WECHAT)) {
+            // 微信支付成功或失败 WxPayEntryActivity
+
+        }
+
+    }
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -235,7 +246,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                     @Override
                     public Observable<String> call(String s) {
                         return RRetrofit.create(WalletService.class)
-                                .wechatPay(Param.buildInfoMap("money:" + (int)params.money,"ip:" + Network.getMobileIP(),"payid:" + s))
+                                .wechatPay(Param.buildInfoMap("money:" + (int)params.money,"ip:" + Network.getIPAddress(true),"payid:" + s))
                                 .compose(Rx.transformer(String.class));
                     }
                 })

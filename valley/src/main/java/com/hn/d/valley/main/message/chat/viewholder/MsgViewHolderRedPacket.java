@@ -4,8 +4,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.view.UIIViewImpl;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -75,7 +77,7 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 //                        mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),false));
                         mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
                     } else {
-                        checkRedPacketStatus(redPacket);
+                        checkRedPacketStatus(getUIBaseView(),redPacket.getRid());
                     }
                 }
             });
@@ -88,9 +90,9 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                     @Override
                     public void call(Void aVoid) {
                         if (!isChatGroup()) {
-                            checkRedPacketStatus(redPacket);
+                            checkRedPacketStatus(getUIBaseView(),redPacket.getRid());
                         } else {
-                            checkRedPacketStatus(redPacket);
+                            checkRedPacketStatus(getUIBaseView(),redPacket.getRid());
                         }
                     }
                 });
@@ -109,9 +111,9 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 
     }
 
-    private void checkRedPacketStatus(final RedPacket redPacket) {
+    public static void checkRedPacketStatus(final UIIViewImpl layout, final long redId) {
         RRetrofit.create(RedPacketService.class)
-                .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redPacket.getRid()))
+                .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<ResponseBody, Integer>() {
                     @Override
@@ -131,16 +133,17 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 //                                mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
 //                                return;
 //                            }
-                            mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
+                            layout.startIView(new GrabedRDResultUIView(redId));
                         } else if (Constants.CAN_BE_GRAB == code) {
-                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redPacket.getRid()));
+//                            layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redId));
+                            layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,redId));
                         } else if (Constants.CAN_NOTE_GRAB == code) {
 //                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB,redPacket.getRid()));
-                            mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
+                            layout.startIView(new GrabedRDResultUIView(redId));
                         } else if (Constants.EXPORE == code){
-                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.EXPORE,redPacket.getRid()));
+                            layout.startIView(new OpenRedPacketUIDialog(Constants.EXPORE,redId));
                         } else if (Constants.LOOT_OUT == code){
-                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.LOOT_OUT,redPacket.getRid()));
+                            layout.startIView(new OpenRedPacketUIDialog(Constants.LOOT_OUT,redId));
                         } else {
                             T_.show("很抱歉，不能抢了");
                         }

@@ -115,7 +115,7 @@ class GiftListUIView : BaseContentUIView {
             iv_switch?.visibility = View.VISIBLE
             iv_switch?.setOnClickListener {
                 GroupMemberSelectUIVIew.start(mILayout, BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null, container?.proxy!!.gid
-                        , Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback<Any>> { uiBaseRxView, items, callback ->
+                        , Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback<Any>> { _, items, callback ->
                     if (items.isEmpty()) {
                         T_.show(getString(R.string.not_empty_tip))
                         return@Action3
@@ -242,7 +242,7 @@ class GiftListUIView : BaseContentUIView {
 
             imageView.setThumbUrl(bean!!.thumb)
 //            username.setTextColor(R.color.main_text_color_dark)
-            username.text = bean!!.name
+            username.text = bean.name
             if (bean.coins.toInt() == 0) {
                 tv_klg_coin.text = "免费"
             } else {

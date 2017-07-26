@@ -29,7 +29,6 @@ import rx.functions.Action1;
  */
 public class GrabPacketHelper {
 
-
     @NonNull
     public static Integer parseResult(ResponseBody responseBody) {
         int code = -1;

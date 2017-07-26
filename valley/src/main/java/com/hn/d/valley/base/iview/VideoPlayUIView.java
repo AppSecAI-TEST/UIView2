@@ -17,6 +17,7 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderRedPacket;
 import com.liulishuo.FDown;
 import com.liulishuo.FDownListener;
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -129,7 +130,7 @@ public class VideoPlayUIView extends UIIViewImpl {
 
                         if (!TextUtils.isEmpty(hotPackageId)) {
                             //弹出抢红包对话框
-
+                            MsgViewHolderRedPacket.checkRedPacketStatus(VideoPlayUIView.this,Long.valueOf(hotPackageId));
                         }
                     }
                 })

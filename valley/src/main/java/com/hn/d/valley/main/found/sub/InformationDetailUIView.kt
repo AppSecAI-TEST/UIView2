@@ -575,11 +575,11 @@ class InformationDetailUIView : BaseContentUIView {
 
                 textView?.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
-                        textView?.text = getString(R.string.is_no_like_format2, string)
+                        textView.text = getString(R.string.is_no_like_format2, string)
                         cancelView?.visibility = View.VISIBLE
                         noLikePositionSet.add(index)
                     } else {
-                        textView?.text = getString(R.string.no_like_format2, string)
+                        textView.text = getString(R.string.no_like_format2, string)
                         cancelView?.visibility = View.GONE
                         noLikePositionSet.remove(index)
                     }

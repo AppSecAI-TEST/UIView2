@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.github.mayubao.pay_library">
+    package="com.hn.d">
 
     <!-- alipay sdk begin 需要权限	  -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -19,9 +19,19 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind"
-            android:windowSoftInputMode="adjustResize|stateHidden" >
+            android:windowSoftInputMode="adjustResize|stateHidden">
+
         </activity>
         <!-- alipay sdk end -->
+
+        <!-- wechatpay sdk begin -->
+        <activity
+            android:name="com.hn.d.valley.wxapi.WXPayEntryActivity"
+            android:theme="@style/BaseTranTheme"
+            android:exported="true"
+            android:launchMode="singleTop" />
+        <!-- wechatpay sdk end -->
+
     </application>
 
 </manifest>

@@ -265,11 +265,11 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     @Override
                     public void onSucceed(Integer beans) {
                         L.i(TAG, beans);
-                        if (mSessionId.equals(UserCache.getUserAccount())) {
-                            startIView(new P2PStatusRPUIView(mSessionId, redId, true));
-                        } else {
+//                        if (mSessionId.equals(UserCache.getUserAccount())) {
+//                            startIView(new P2PStatusRPUIView(mSessionId, redId, true));
+//                        } else {
                             startIView(new GrabedRDResultUIView(redId));
-                        }
+//                        }
                         finishDialog();
                     }
                 });
