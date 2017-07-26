@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
+import com.angcyo.library.utils.L
 import com.angcyo.uiview.kotlin.v
 import com.angcyo.uiview.resources.AnimUtil
 import com.angcyo.uiview.utils.ScreenUtil
@@ -60,6 +61,7 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
         }
 
     fun stopPlay() {
+        L.e("call: stopPlay -> 停止播放视频.")
         colorAnim?.let { it.cancel() }
         videoView?.let {
             it.stop()

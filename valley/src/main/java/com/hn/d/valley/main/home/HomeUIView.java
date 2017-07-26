@@ -18,6 +18,7 @@ import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
@@ -74,6 +75,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     private int lastPosition = -1;
     private EmptyView mEmptyView;
     private boolean isFirst = true;
+    private IView lastIView;
 
     @Override
     protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
@@ -121,6 +123,17 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
+        if (lastIView != null) {
+            lastIView.onViewShow(bundle);
+        }
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        if (lastIView != null) {
+            lastIView.onViewHide();
+        }
     }
 
     @Override
@@ -317,31 +330,34 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 mCircleUIView = new CircleUIView(this);
                 mCircleUIView.bindParentILayout(mParentILayout);
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.startIView(mCircleUIView, new UIParam(!isFirst));
+                mHomeLayout.startIView(mCircleUIView, new UIParam(!isFirst).setHideLastIView(true));
             } else {
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.showIView(mCircleUIView);
+                mHomeLayout.showIView(mCircleUIView, new UIParam().setHideLastIView(true));
             }
+            lastIView = mCircleUIView;
         } else if (position == 1) {
             if (mRecommendUIView3 == null) {
                 mRecommendUIView3 = new RecommendUIViewEx(this);
                 mRecommendUIView3.bindParentILayout(mParentILayout);
                 mRecommendUIView3.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.startIView(mRecommendUIView3, new UIParam(!isFirst));
+                mHomeLayout.startIView(mRecommendUIView3, new UIParam(!isFirst).setHideLastIView(true));
             } else {
                 mRecommendUIView3.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.showIView(mRecommendUIView3);
+                mHomeLayout.showIView(mRecommendUIView3, new UIParam().setHideLastIView(true));
             }
+            lastIView = mRecommendUIView3;
         } else if (position == 2) {
             if (mNearbyUIView == null) {
                 mNearbyUIView = new NearbyUIView();
                 mNearbyUIView.bindParentILayout(mParentILayout);
                 mNearbyUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.startIView(mNearbyUIView, new UIParam(!isFirst));
+                mHomeLayout.startIView(mNearbyUIView, new UIParam(!isFirst).setHideLastIView(true));
             } else {
                 mNearbyUIView.setIsRightJumpLeft(isRightToLeft);
-                mHomeLayout.showIView(mNearbyUIView);
+                mHomeLayout.showIView(mNearbyUIView, new UIParam().setHideLastIView(true));
             }
+            lastIView = mNearbyUIView;
         }
         lastPosition = position;
         isFirst = false;

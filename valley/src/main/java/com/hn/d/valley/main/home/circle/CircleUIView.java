@@ -347,5 +347,15 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
         AutoPlayVideoControl.INSTANCE.stopPlay();
     }
 
-
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        AutoPlayVideoControl.INSTANCE.init(getRecyclerView());
+        post(new Runnable() {
+            @Override
+            public void run() {
+                AutoPlayVideoControl.INSTANCE.checkPlay();
+            }
+        });
+    }
 }

@@ -17,6 +17,8 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.net.base.Network;
+import com.angcyo.uiview.utils.Json;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
@@ -24,7 +26,10 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.wallet.WalletService;
-import com.hn.pay_library.alipay.AlipayConstants;
+import com.hn.pay_library.PayAPI;
+import com.hn.pay_library.WechatParam;
+import com.hn.pay_library.WechatPayReq;
+import com.hn.pay_library.alipay.PayConstants;
 import com.hn.pay_library.alipay.OrderInfoUtil2_0;
 
 import org.json.JSONException;
@@ -41,7 +46,7 @@ import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
-import static com.hn.pay_library.alipay.AlipayConstants.APPID;
+import static com.hn.pay_library.alipay.PayConstants.AliPay_APPID;
 import static com.hn.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
 
 /**
@@ -190,7 +195,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         String missionParam = generateParam(missionType);
 
         builder = new OrderInfoUtil2_0.Builder()
-                .setAppId(APPID)
+                .setAppId(AliPay_APPID)
                 .setTimeout("30m")
                 .setProductCode("QUICK_MSECURITY_PAY")
                 .setTotalAmount(String.valueOf(params.money / 100))
@@ -210,8 +215,76 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
             .setBody("充龙币");
         }
 
+        switch (type) {
+            case ALIPAY:
+                alipayPrepare(missionParam);
+                break;
+            case WECHAT:
+                wechatPrepare(missionParam);
+                break;
+        }
+
+
+    }
+
+    private void wechatPrepare(String missionParam) {
         RRetrofit.create(WalletService.class)
-                .alipayPrepar(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
+                .prepare(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
+                .compose(Rx.transformer(String.class))
+                .flatMap(new Func1<String, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(String s) {
+                        return RRetrofit.create(WalletService.class)
+                                .wechatPay(Param.buildInfoMap("money:" + (int)params.money,"ip:" + Network.getMobileIP(),"payid:" + s))
+                                .compose(Rx.transformer(String.class));
+                    }
+                })
+                .subscribe(new BaseSingleSubscriber<String>() {
+                    @Override
+                    public void onSucceed(String param) {
+                        L.i(TAG, "wechat" + param);
+                        wechatPay(param);
+                    }
+                });
+
+    }
+
+    private void wechatPay(String param) {
+
+        WechatParam wechat = Json.from(param,WechatParam.class);
+
+        WechatPayReq wechatPayReq = new WechatPayReq.Builder()
+                .with(mActivity) //activity实例
+                .setAppId(PayConstants.WechatPay_APPID) //微信支付AppID
+                .setPartnerId(wechat.getPartnerid())//微信支付商户号
+                .setPrepayId(wechat.getPrepayid())//预支付码
+                .setNonceStr(wechat.getNoncestr())
+                .setTimeStamp(wechat.getTimestamp() + "")//时间戳
+                .setSign(wechat.getSign())//签名
+                .create();
+
+        wechatPayReq.setOnWechatPayListener(new WechatPayReq.OnWechatPayListener() {
+            @Override
+            public void onPaySuccess(int errorCode) {
+                T_.show(mActivity.getString(R.string.text_pay_success));
+                action.call("");
+                finishDialog();
+            }
+
+            @Override
+            public void onPayFailure(int errorCode) {
+                T_.show(mActivity.getString(R.string.text_pay_fail));
+                finishDialog();
+            }
+        });
+
+        PayAPI.getInstance().sendPayRequest(wechatPayReq);
+
+    }
+
+    private void alipayPrepare(String missionParam) {
+        RRetrofit.create(WalletService.class)
+                .prepare(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
                 .compose(Rx.transformer(String.class))
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override
@@ -224,9 +297,9 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                         builder.setOutTradeNo(s);
                         builder.setTimestamp(format);
                         return RRetrofit.create(WalletService.class)
-                                .rechargeAlipay(Param.buildPayMap("app_id:" + APPID, "biz_content:" + biz_content_Json(builder)
+                                .rechargeAlipay(Param.buildPayMap("app_id:" + AliPay_APPID, "biz_content:" + biz_content_Json(builder)
                                         , "charset:" + "utf-8", "method:" + "alipay.trade.app.pay", "sign_type:" + "RSA2"
-                                        , "version:" + "1.0", "notify_url:" + AlipayConstants.CALLBACKURL,"timestamp:" + time_stamp))
+                                        , "version:" + "1.0", "notify_url:" + PayConstants.CALLBACKURL,"timestamp:" + time_stamp))
                                 .compose(Rx.transformer(String.class));
                     }
                 })
@@ -236,7 +309,6 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                         L.i(TAG, code);
                         alipay(code);
                     }
-
                 });
     }
 

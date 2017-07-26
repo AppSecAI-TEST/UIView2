@@ -30,22 +30,23 @@ public class MainActivity extends AppCompatActivity {
                 .setSign(sign)//签名
                 .create();
 
+
         PayAPI.getInstance().sendPayRequest(wechatPayReq);
-//								.setOnWechatPayListener(new OnWechatPayListener() {
-//
-//									@Override
-//									public void onPaySuccess(int errorCode) {
+        wechatPayReq.setOnWechatPayListener(new WechatPayReq.OnWechatPayListener() {
+
+									@Override
+									public void onPaySuccess(int errorCode) {
 //										ToastUtil.show(mContext, "支付成功" + errorCode);
-//
-//									}
-//
-//									@Override
-//									public void onPayFailure(int errorCode) {
+
+									}
+
+									@Override
+									public void onPayFailure(int errorCode) {
 //										ToastUtil.show(mContext, "支付失败" + errorCode);
-//
-//									}
-//								});
-//        WechatPayAPI.getInstance().sendPayReq(wechatPayReq);
+
+									}
+								});
+        WechatPayAPI.getInstance().sendPayReq(wechatPayReq);
 
         PayAPI.getInstance().sendPayRequest(wechatPayReq);
 

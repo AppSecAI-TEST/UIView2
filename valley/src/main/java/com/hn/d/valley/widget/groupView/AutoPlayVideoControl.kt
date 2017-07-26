@@ -115,11 +115,15 @@ object AutoPlayVideoControl : RecyclerView.OnScrollListener(),
 
     private var recyclerView: RecyclerView? = null
 
-    fun init(recyclerView: RecyclerView) {
+    fun init(recyclerView: RecyclerView?) {
         stopPlay()
+        this.recyclerView?.let {
+            it.removeOnScrollListener(this)
+            it.removeOnChildAttachStateChangeListener(this)
+        }
         this.recyclerView = recyclerView
-        recyclerView.addOnScrollListener(this)
-        recyclerView.addOnChildAttachStateChangeListener(this)
+        this.recyclerView?.addOnScrollListener(this)
+        this.recyclerView?.addOnChildAttachStateChangeListener(this)
     }
 
     fun stopPlay() {

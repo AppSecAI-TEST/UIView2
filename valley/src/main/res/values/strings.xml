@@ -588,6 +588,7 @@
     <string name="re_record">重录</string>
     <string name="text_grabed_count_per_all">已领取 %1$d / %2$d个</string>
     <string name="text_all_amout">总金额 %1$.2f 元</string>
+    <string name="text_yuan_amout">%1$.2f 元</string>
     <string name="text_already_save">已存入</string>
     <string name="text_pay_fail">支付失败</string>
     <string name="text_pay_success">支付成功</string>
@@ -901,5 +902,10 @@
     <string name="text_my_gift">我的礼物</string>
     <string name="text_talk">对话</string>
     <string name="game_list_title">游戏列表</string>
+    <string name="text_bill_detail">账单详情</string>
+    <string name="text_transaction_number">交易单号</string>
+    <string name="text_transaction_time">交易时间</string>
+    <string name="text_redpacket_detail">红包详情</string>
+    <string name="text_transaction_type">交易类型</string>
     <string name="birthday_tip">生日:</string>
 </resources>

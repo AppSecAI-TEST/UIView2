@@ -50,11 +50,11 @@ public class WechatPayReq implements IWXAPIEventHandler {
 	 * 发送微信支付请求
 	 */
 	public void send() {
-        mWXApi = WXAPIFactory.createWXAPI(mActivity, null);
-        mWXApi.handleIntent(mActivity.getIntent(), this);
-        
+        mWXApi = WXAPIFactory.createWXAPI(mActivity, appId);
         mWXApi.registerApp(this.appId);
-        
+        mWXApi.handleIntent(mActivity.getIntent(), this);
+
+
         PayReq request = new PayReq();
 
         request.appId = this.appId;
@@ -193,6 +193,7 @@ public class WechatPayReq implements IWXAPIEventHandler {
 	
 	//微信支付监听
 	private OnWechatPayListener mOnWechatPayListener;
+
 	public WechatPayReq setOnWechatPayListener(OnWechatPayListener onWechatPayListener) {
 		this.mOnWechatPayListener = onWechatPayListener;
 		return this;

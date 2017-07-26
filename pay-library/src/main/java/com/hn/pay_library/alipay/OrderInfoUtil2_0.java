@@ -166,7 +166,7 @@ public class OrderInfoUtil2_0 {
 
         keyValues.put("timestamp", builder.timestamp);
 
-        keyValues.put("notify_url",AlipayConstants.CALLBACKURL);
+        keyValues.put("notify_url", PayConstants.CALLBACKURL);
 
         keyValues.put("version", "1.0");
 

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <com.angcyo.uiview.widget.ItemInfoLayout
+        android:id="@+id/info_amount"
+        style="@style/DefaultItemInfoStyle"
+        android:layout_margin="@dimen/base_xhdpi"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_65dpi"
+        app:item_dark_text="885222222"
+        app:item_textSize="@dimen/default_text_size16"
+        app:item_dark_textSize="@dimen/default_text_size16"
+        app:item_textColor="@color/main_text_color_dark"
+        app:item_dark_textColor="@color/main_text_color"
+        app:item_left_draw_padding="@dimen/base_xhdpi"
+        app:item_right_res="@null"
+        app:item_text="@string/text_amount"/>
+
+    <View
+        style="@style/BaseHLine"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_xhdpi"
+        android:dividerPadding="@dimen/base_xhdpi"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/info_transaction_type"
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            app:item_textColor="@color/main_text_color_dark"
+            app:item_dark_textColor="@color/main_text_color"
+            app:item_dark_text="885222222"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            app:item_text="@string/text_transaction_type"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/info_rp_detail"
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            app:item_dark_text="0755-26777170"
+            app:item_textColor="@color/main_text_color_dark"
+            app:item_dark_textColor="@color/main_text_color"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            app:item_text="@string/text_redpacket_detail"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/info_transaction_time"
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            app:item_textColor="@color/main_text_color_dark"
+            app:item_dark_textColor="@color/main_text_color"
+            app:item_dark_text="support@konglonggu.com"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            app:item_text="@string/text_transaction_time"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/info_transtaction_number"
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            app:item_textColor="@color/main_text_color_dark"
+            app:item_dark_textColor="@color/main_text_color"
+            app:item_dark_text="support@konglonggu.com"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            app:item_text="@string/text_transaction_number"/>
+
+    </LinearLayout>
+
+    <View
+        style="@style/BaseHLine"/>
+
+
+</LinearLayout>

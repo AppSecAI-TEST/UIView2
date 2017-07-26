@@ -18,11 +18,14 @@ import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
+import com.hn.pay_library.alipay.PayConstants;
 import com.liulishuo.FDown;
 import com.lzy.imagepicker.ImagePickerHelper;
 import com.orhanobut.hawk.Hawk;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.smtt.sdk.QbSdk;
 
 import cn.jpush.android.api.JPushInterface;
@@ -128,7 +131,6 @@ public class ValleyApp extends RApplication {
         UIBaseView.ENABLE_LAYOUT_CHANGE_ANIM = false;
 
         DraweeViewUtil.init(this);
-
     }
 
     @Override

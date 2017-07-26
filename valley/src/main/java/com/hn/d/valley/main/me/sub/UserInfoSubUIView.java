@@ -362,9 +362,9 @@ public class UserInfoSubUIView extends BaseItemUIView {
     }
 
     private void loadGift() {
-        if (isContact()) {
+//        if (isContact()) {
             mGiftList = new GiftList();
-        }
+//        }
         RRetrofit.create(GiftService.class)
                 .giftReceived(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
                 .compose(Rx.transformer(GiftList.class))
@@ -401,7 +401,8 @@ public class UserInfoSubUIView extends BaseItemUIView {
     }
 
     private boolean isContact() {
-        return mUserInfoBean.getIs_contact() == 1;
+//        return mUserInfoBean.getIs_contact() == 1;
+        return true;
     }
 
     class GiftListAdapter extends RExBaseAdapter<String, GiftReceiveBean, String> {
@@ -446,9 +447,39 @@ public class UserInfoSubUIView extends BaseItemUIView {
                 @Override
                 public void onClick(View v) {
                     //送礼物图标
-                    if (isContact() && posInData == 0) {
+                    int relationship = mUserInfoBean.getGetRelationship();
+
+                    if (relationship == 3) {
+                        //对方拉黑了我
+                        T_.error(getString(R.string.send_request_faild));
+                        return;
+                    } else if (relationship == 2) {
+                        //我拉黑了对方
+                        UIDialog.build()
+                                .setDialogContent(getString(R.string.in_blacklist_tip, mUserInfoBean.getUsername()))
+                                .setOkText(getString(R.string.cancel_blackList_tip))
+                                .setOkListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        add(RRetrofit.create(ContactService.class)
+                                                .cancelBlackList(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+                                                .compose(Rx.transformer(String.class))
+                                                .subscribe(new BaseSingleSubscriber<String>() {
+                                                    @Override
+                                                    public void onSucceed(String bean) {
+                                                        T_.show(bean);
+                                                        mUserInfoBean.setGetRelationship(0);
+                                                    }
+                                                }));
+                                    }
+                                })
+                                .showDialog(mILayout);
+                        return;
+                    }
+
+                    if (isContact() && posInData == 0 && !mUserInfoBean.getUid().equals(UserCache.getUserAccount())) {
                         mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
-                    } else if (isContact()) {
+                    } else if (isContact() &&!mUserInfoBean.getUid().equals(UserCache.getUserAccount())) {
                         SendGiftUIDialog dialog = new SendGiftUIDialog(GiftBean.create(bean), new Action0() {
                             @Override
                             public void call() {

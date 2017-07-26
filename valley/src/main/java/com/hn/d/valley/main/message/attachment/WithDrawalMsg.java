@@ -15,20 +15,20 @@ public class WithDrawalMsg extends BaseCustomMsg {
 
 
     /**
-     * msg : 提现失败
-     * caccounting_date : 142983729
-     * money : 200
+     * msg : 提现成功
+     * caccounting_date : 1500946952
+     * money : 1000
+     * cashoutid : 44944891473559552
      * account_type : 0
-     * account : 13888888888
-     * cashoutid : 13
+     * account : 18165793363
      */
 
     private String msg;
     private int caccounting_date;
     private int money;
+    private String cashoutid;
     private int account_type;
     private String account;
-    private int cashoutid;
 
     public String getMsg() {
         return msg;
@@ -54,6 +54,14 @@ public class WithDrawalMsg extends BaseCustomMsg {
         this.money = money;
     }
 
+    public String getCashoutid() {
+        return cashoutid;
+    }
+
+    public void setCashoutid(String cashoutid) {
+        this.cashoutid = cashoutid;
+    }
+
     public int getAccount_type() {
         return account_type;
     }
@@ -68,13 +76,5 @@ public class WithDrawalMsg extends BaseCustomMsg {
 
     public void setAccount(String account) {
         this.account = account;
-    }
-
-    public int getCashoutid() {
-        return cashoutid;
-    }
-
-    public void setCashoutid(int cashoutid) {
-        this.cashoutid = cashoutid;
     }
 }

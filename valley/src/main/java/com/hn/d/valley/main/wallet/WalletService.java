@@ -318,8 +318,9 @@ public interface WalletService {
      * @param map
      * @return
      */
-    @POST("wallet/balance/recharge/alipay/prepare")
-    Observable<ResponseBody> alipayPrepar(@QueryMap Map<String, String> map);
+//    @POST("wallet/balance/recharge/alipay/prepare")
+    @POST("wallet/balance/recharge/prepare")
+    Observable<ResponseBody> prepare(@QueryMap Map<String, String> map);
 
     /**
      *客户端通过该接口获取支付宝接口签名
@@ -333,6 +334,10 @@ public interface WalletService {
      */
     @POST("wallet/balance/recharge/alipay")
     Observable<ResponseBody> rechargeAlipay(@QueryMap Map<String, String> map);
+
+
+    @POST("http://service.klgwl.com/wallet/balance/recharge/wechat/unifiedorder")
+    Observable<ResponseBody> wechatPay(@QueryMap Map<String, String> map);
 
 
     /**客户端将第三方充值结果和服务器进行确认

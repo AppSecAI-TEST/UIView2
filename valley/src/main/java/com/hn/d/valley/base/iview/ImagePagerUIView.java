@@ -106,7 +106,7 @@ public class ImagePagerUIView extends UIIViewImpl {
         imagePagerUIView.mStartY = rt[1];
         imagePagerUIView.mStartW = (int) w;
         imagePagerUIView.mStartH = (int) h;
-        iLayout.startIView(imagePagerUIView, new UIParam(true).setHideLastIView(true /*false*/));
+        iLayout.startIView(imagePagerUIView, new UIParam(true));
 
         return imagePagerUIView;
     }

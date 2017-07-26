@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.home.recommend;
 
+import android.os.Bundle;
 import android.view.View;
 
 import com.angcyo.uiview.container.ILayout;
@@ -91,6 +92,18 @@ public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
     public void onViewHide() {
         super.onViewHide();
         AutoPlayVideoControl.INSTANCE.stopPlay();
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        AutoPlayVideoControl.INSTANCE.init(getRecyclerView());
+        post(new Runnable() {
+            @Override
+            public void run() {
+                AutoPlayVideoControl.INSTANCE.checkPlay();
+            }
+        });
     }
 
     @Override

@@ -132,7 +132,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, int posInData, BillRecord dataBean) {
+        protected void onBindDataView(RBaseViewHolder holder, int posInData, final BillRecord dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
 
             TextView tv_bill_type = holder.tv(R.id.tv_bill_type);
@@ -140,15 +140,21 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
             TextView tv_bill_moncy = holder.tv(R.id.tv_bill_moncy);
 
             tv_bill_type.setText(dataBean.getDescription());
-            tv_time.setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000l,true));
+            tv_time.setText(TimeUtil.getDatetime(dataBean.getCreated() * 1000l));
             if (dataBean.getType() == 0) {
                 tv_bill_moncy.setText(SpannableStringUtils.getBuilder("+" + dataBean.getMoney() / 100f)
                         .setForegroundColor(mActivity.getResources().getColor(R.color.base_red))
                         .create());
             } else if(dataBean.getType() == 1) {
                 tv_bill_moncy.setText("-" + dataBean.getMoney() / 100f);
-
             }
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new BillDetailUIView(dataBean));
+                }
+            });
 
         }
     }

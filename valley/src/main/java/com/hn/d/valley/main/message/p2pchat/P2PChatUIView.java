@@ -40,6 +40,7 @@ import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -81,7 +82,7 @@ public class P2PChatUIView extends ChatUIView2 {
             @Override
             public void onClick(View v) {
 //                startIView(new P2PInfoUIView());
-                if (mSessionId == Constant.klj) {
+                if (mSessionId.equals(Constant.klj)) {
                     startIView(new KLJUIView());
                     return;
                 }
@@ -144,6 +145,11 @@ public class P2PChatUIView extends ChatUIView2 {
         });
     }
 
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+    }
+
     private void initContactFocus() {
         // 当前对象恐龙君不显示
         if (mSessionId.equals(Constant.klj)) {
@@ -167,6 +173,7 @@ public class P2PChatUIView extends ChatUIView2 {
                                   collapseFocuslayout();
                                 }
                             },5000);
+
                             tv_focus.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
