@@ -954,7 +954,7 @@ public class RBMediaController extends RelativeLayout {
                 if (!isMoveTouch) {
                     float x = ev.getX();
                     float y = ev.getY();
-                    
+
                     if (Math.abs(downX - x) > 10 || Math.abs(downY - y) > 10) {
                         isMoveTouch = true;
                     }

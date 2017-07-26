@@ -18,6 +18,8 @@ import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.EmptyView;
@@ -448,7 +450,9 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                                 new Action1<Boolean>() {
                                     @Override
                                     public void call(Boolean aBoolean) {
-                                        if (aBoolean) {
+                                        if (aBoolean &&
+                                                RUtils.isAudioRecordable() &&
+                                                RUtils.isCameraUseable()) {
                                             Action.publishAction_Video();
                                             mParentILayout.startIView(new VideoRecordUIView(new Action3<UIIViewImpl, String, String>() {
                                                 @Override
@@ -458,6 +462,8 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                                                     );
                                                 }
                                             }));
+                                        } else {
+                                            T_.error("对应权限没有打开.");
                                         }
                                     }
                                 });
@@ -472,9 +478,11 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                                 new Action1<Boolean>() {
                                     @Override
                                     public void call(Boolean aBoolean) {
-                                        if (aBoolean) {
+                                        if (aBoolean && RUtils.isAudioRecordable()) {
                                             Action.publishAction_Audio();
                                             mParentILayout.startIView(new PublishVoiceDynamicUIView().setPublishAction(getPublishAction()));
+                                        } else {
+                                            T_.error("对应权限没有打开.");
                                         }
                                     }
                                 });
