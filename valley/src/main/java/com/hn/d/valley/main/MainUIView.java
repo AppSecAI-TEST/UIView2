@@ -205,18 +205,18 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
             RGestureDetector.onDoubleTap(group.getChildAt(1), new RGestureDetector.OnDoubleTapListener() {
                 @Override
                 public void onDoubleTap() {
-                    //首页tab双击
-                    if (mHomeUIView != null) {
-                        mHomeUIView.scrollToTop();
+                    //消息tab双击
+                    if (mMessageUIView != null) {
+                        mMessageUIView.scrollToTop();
                     }
                 }
             });
             RGestureDetector.onDoubleTap(group.getChildAt(0), new RGestureDetector.OnDoubleTapListener() {
                 @Override
                 public void onDoubleTap() {
-                    //消息tab双击
-                    if (mMessageUIView != null) {
-                        mMessageUIView.scrollToTop();
+                    //首页tab双击
+                    if (mHomeUIView != null) {
+                        mHomeUIView.scrollToTop();
                     }
                 }
             });
@@ -480,7 +480,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
 
     @Override
     public void onJumpToDynamicListAction() {
-        mBottomNavLayout.setCurrentTab(1);
+        mBottomNavLayout.setCurrentTab(Constant.POS_HOME);
         if (mHomeUIView != null) {
             mHomeUIView.onJumpToDynamicListAction();
         }
