@@ -66,7 +66,6 @@ public class BillDetailUIView extends BaseItemUIView {
 
                 //充值
                 if (billRecord.getSub_type() == 1) {
-
                     info_rp_detail.setItemText("充值时间");
                     info_rp_detail.setItemDarkText(TimeUtil.getDatetime(billRecord.getCreated() * 1000l));
                     info_transaction_time.setItemText("支付方式");

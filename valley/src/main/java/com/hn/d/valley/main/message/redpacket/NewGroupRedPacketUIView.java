@@ -59,8 +59,8 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
     TextView tv_image;
     TextView cb_switch;
 
-    public NewGroupRedPacketUIView(String to_gid,int groupNum) {
-       this.to_gid = to_gid;
+    public NewGroupRedPacketUIView(String to_gid, int groupNum) {
+        this.to_gid = to_gid;
         this.groupNum = groupNum;
     }
 
@@ -125,7 +125,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                 final LinearLayout layout_input = holder.v(R.id.item_input);
                 TextView tv_notice = holder.v(R.id.item_notice);
 
-                ResUtil.setBgDrawable(btn_send,ResUtil.generateRippleRoundMaskDrawable(RApplication.getApp()
+                ResUtil.setBgDrawable(btn_send, ResUtil.generateRippleRoundMaskDrawable(RApplication.getApp()
                                 .getResources()
                                 .getDimensionPixelOffset(com.angcyo.uiview.R.dimen.base_round_little_radius),
                         Color.WHITE, mActivity.getResources().getColor(R.color.base_red_d85940), mActivity.getResources().getColor(R.color.base_red_c8381f)));
@@ -167,7 +167,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
 //                });
 
 
-                tv_groupNum.setText(String.format(mActivity.getString(R.string.text_group_num),groupNum));
+                tv_groupNum.setText(String.format(mActivity.getString(R.string.text_group_num), groupNum));
 
                 UI.setViewHeight(item_input_note, mActivity.getResources().getDimensionPixelOffset(R.dimen.base_100dpi));
 
@@ -263,9 +263,13 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
     }
 
     private void performClick(int count, float money, String content) {
-        final PayUIDialog.Params params = new PayUIDialog.Params(count
-                ,money,content,null,to_gid,rp_type);
-        params.setType(1);
+        final PayUIDialog.Params params = new PayUIDialog.Params();
+        params.setType(1)
+                .setNum(count)
+                .setMoney(money)
+                .setContent(content)
+                .setRandom(rp_type)
+                .setTo_gid(to_gid);
         // 红包发送成功回调
         final Action1 action = new Action1() {
             @Override
@@ -281,9 +285,9 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                 //参数设置余额
                 params.setBalance(money);
                 if (money >= params.money) {
-                    mParentILayout.startIView(new PayUIDialog(action,params));
+                    mParentILayout.startIView(new PayUIDialog(action, params));
                 } else {
-                    mParentILayout.startIView(new ChoosePayWayUIDialog(action,params));
+                    mParentILayout.startIView(new ChoosePayWayUIDialog(action, params));
                 }
             }
         });
@@ -315,7 +319,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
             if (rp_type == 1) {
                 rp_type = 0;
                 tv_image.setText(R.string.text_single_money);
-                tv_image.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+                tv_image.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                 cb_switch.setText(SpannableStringUtils.getBuilder(mActivity.getString(R.string.text_current_normal_rp))
                         .append(mActivity.getString(R.string.text_random_redpacket))
                         .setClickSpan(switchRPType)

@@ -168,7 +168,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
             });
             if (userInfoBean.getIs_attention() == 1) {
                 //已关注
-                if (userInfoBean.getIs_contact() == 1) {
+//                if (userInfoBean.getIs_contact() == 1) {
                     //是联系人
                     tv_chat.setVisibility(View.GONE);
                     commandView.setText(R.string.send_message);
@@ -179,17 +179,17 @@ public class UserDetailUIView2 extends BaseContentUIView {
                             SessionHelper.startP2PSession(iLayout, to_uid, SessionTypeEnum.P2P);
                         }
                     });
-                } else {
-                    //不是联系人
-                    //commandView.setImageResource(R.drawable.add_contact2_selector);
-                    commandView.setText(R.string.add_friend);
-                    commandView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            onAddFriend(iLayout, userInfoBean, subscription);
-                        }
-                    });
-                }
+//                } else {
+//                    //不是联系人
+//                    //commandView.setImageResource(R.drawable.add_contact2_selector);
+//                    commandView.setText(R.string.add_friend);
+//                    commandView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            onAddFriend(iLayout, userInfoBean, subscription);
+//                        }
+//                    });
+//                }
             } else {
                 //未关注
                 // commandView.setImageResource(R.drawable.attention_selector);

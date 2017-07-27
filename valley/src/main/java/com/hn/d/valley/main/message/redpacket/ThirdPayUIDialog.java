@@ -26,6 +26,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.net.base.Network;
 import com.angcyo.uiview.utils.Json;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -335,9 +336,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                     @Override
                     public Observable<String> call(String s) {
                         long time = System.currentTimeMillis();
-                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" +
-                                "", Locale.getDefault());
-                        String format = formatter.format(new Date(time));
+                        String format = TimeUtil.getDatetime(time);
                         long time_stamp = time / 1000;
                         builder.setOutTradeNo(s);
                         builder.setTimestamp(format);

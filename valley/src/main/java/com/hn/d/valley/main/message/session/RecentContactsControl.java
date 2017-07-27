@@ -49,6 +49,7 @@ import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
 import com.hn.d.valley.main.message.attachment.KLGCoinConsumeAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
+import com.hn.d.valley.main.message.attachment.OnlineVideoForwardAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.RechargeMsg;
@@ -503,7 +504,7 @@ public class RecentContactsControl {
             if (card != null) {
                 return card.getMsg();
             }
-            return "个人名片";
+            return "[名片]";
         } else if (attachment instanceof RedPacketAttachment) {
             return "红包消息";
         } else if (attachment instanceof GrabedMsgAttachment) {
@@ -552,6 +553,8 @@ public class RecentContactsControl {
             }
         } else if (attachment instanceof ShareNewsAttachment) {
             return "[分享资讯]" + ((ShareNewsAttachment) attachment).getNewsMsg().getTitle();
+        } else if (attachment instanceof OnlineVideoForwardAttachment) {
+            return "[视频]";
         }
         return "[自定义消息]";
     }

@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -298,10 +299,12 @@ public class PayUIDialog extends UIIDialogImpl {
     }
 
     private String checkType() {
-        if (params.to_uid != null) {
+        if (!TextUtils.isEmpty(params.to_uid)) {
             return "to_uid:" + params.to_uid;
-        } else if (params.to_gid != null) {
+        } else if (!TextUtils.isEmpty(params.to_gid)) {
             return "to_gid:" + params.to_gid;
+        } else if (!TextUtils.isEmpty(params.to_square)) {
+            return "to_square:" + params.to_square;
         }
         return "to_uid:" + params.to_uid;
     }
@@ -323,13 +326,22 @@ public class PayUIDialog extends UIIDialogImpl {
         int random = 0;//红包类型 拼手气或普通
         int balance = -1;//钱包余额
         String to_gid;// 群id
-        String content;// 红包附带信息
         String to_uid;//uid
+        String to_square; //是否广场红包【1是、0不是】，私包和群红包可忽略
+        String content;// 红包附带信息
         int coin;//龙币数
         int way;// 充值龙币途径 余额 或支付宝
         //默认1 发红包 2 充值龙币 3 充值 4 提现
         int missionType = 1;
         boolean enableBalance = true; // 是否显示余额选项
+
+        public String getTo_square() {
+            return to_square;
+        }
+
+        public void setTo_square(String to_square) {
+            this.to_square = to_square;
+        }
 
         public void enableBalance(boolean enableBalance) {
             this.enableBalance = enableBalance;

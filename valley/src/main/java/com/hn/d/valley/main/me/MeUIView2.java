@@ -564,27 +564,27 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         }));
 
         //好友推荐
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
-
-            @Override
-            public void setItemOffsets(Rect rect) {
-                super.setItemOffsets(rect);
-                if (!BuildConfig.SHOW_DEBUG) {
-                    rect.bottom = size / 2;
-                }
-            }
-
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                initItemLayout(itemInfoLayout, R.string.friends_recommend_tip, R.drawable.icon_intrduction, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mParentILayout.startIView(new FriendsRecommendUIView(false));
-                    }
-                });
-            }
-        }));
+//        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+//
+//            @Override
+//            public void setItemOffsets(Rect rect) {
+//                super.setItemOffsets(rect);
+//                if (!BuildConfig.SHOW_DEBUG) {
+//                    rect.bottom = size / 2;
+//                }
+//            }
+//
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+//                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+//                initItemLayout(itemInfoLayout, R.string.friends_recommend_tip, R.drawable.icon_intrduction, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mParentILayout.startIView(new FriendsRecommendUIView(false));
+//                    }
+//                });
+//            }
+//        }));
 
         if (BuildConfig.SHOW_DEBUG) {
             //版本 编译时间

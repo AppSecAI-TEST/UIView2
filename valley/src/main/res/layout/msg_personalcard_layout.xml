@@ -1,59 +1,102 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout--><!--xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:id="@+id/msg_card_layout"--><!--android:layout_width="220dp"--><!--android:layout_height="wrap_content"--><!--android:layout_gravity="center_vertical"--><!--android:layoutDirection="ltr"--><!--android:orientation="vertical"--><!--android:background="@drawable/base_white_round_bg"--><!--tools:background="@drawable/base_rect_solid_shape">-->
+
+<!--<LinearLayout--><!--android:gravity="center_vertical"--><!--android:orientation="horizontal"--><!--android:layout_marginBottom="@dimen/base_xhdpi"--><!--android:layout_marginTop="@dimen/base_xhdpi"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content">-->
+
+<!--<com.hn.d.valley.widget.HnGlideImageView--><!--android:id="@+id/iv_item_head"--><!--android:layout_width="@dimen/avatar_image_size_little"--><!--android:layout_height="@dimen/avatar_image_size_little"--><!--android:src="@drawable/default_avatar"--><!--android:layout_marginStart="@dimen/base_xhdpi"--><!--android:contentDescription="@string/is_circle"--><!--android:scaleType="centerCrop"--><!--/>-->
+
+<!--<TextView--><!--android:id="@+id/tv_pc_name"--><!--android:text="@string/about_me"--><!--android:layout_marginStart="@dimen/base_xhdpi"--><!--android:gravity="center_vertical"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content" />-->
+
+<!--</LinearLayout>-->
+
+
+<!--<include--><!--layout="@layout/item_divider_line"--><!--/>-->
+
+<!--<TextView--><!--android:id="@+id/tv_pc_desc"--><!--android:text="@string/str_text_pd"--><!--android:padding="@dimen/base_ldpi"--><!--android:layout_marginStart="@dimen/base_xhdpi"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content" />-->
+
+
+<!--</LinearLayout>-->
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/msg_card_layout"
-    android:layout_width="220dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical"
-    android:layoutDirection="ltr"
-    android:orientation="vertical"
-    android:background="@drawable/base_white_round_bg"
-    tools:background="@drawable/base_rect_solid_shape">
+    android:padding="@dimen/base_xhdpi">
+
+    <com.hn.d.valley.widget.HnGlideImageView
+        android:id="@+id/iv_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/zhanweitu_1" />
+
 
     <LinearLayout
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginBottom="@dimen/base_xhdpi"
-        android:layout_marginTop="@dimen/base_xhdpi"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_thumb"
+        android:background="#33000000"
+        android:orientation="vertical"
+        android:padding="@dimen/base_xhdpi">
 
-        <com.hn.d.valley.widget.HnGlideImageView
-            android:id="@+id/iv_item_head"
-            android:layout_width="@dimen/avatar_image_size_little"
-            android:layout_height="@dimen/avatar_image_size_little"
-            android:src="@drawable/default_avatar"
-            android:layout_marginStart="@dimen/base_xhdpi"
-            android:contentDescription="@string/is_circle"
-            android:scaleType="centerCrop"
-            />
-
-        <TextView
-            android:id="@+id/tv_pc_name"
-            android:text="@string/about_me"
-            android:layout_marginStart="@dimen/base_xhdpi"
-            android:gravity="center_vertical"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/username"
+                style="@style/NameTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                tools:text="爱宠物的默默" />
+
+            <com.hn.d.valley.widget.HnGenderView
+                android:id="@+id/grade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/base_ldpi"
+                android:tag="g"
+                tools:text="2" />
+
+            <ImageView
+                android:id="@+id/auth_iview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/base_ldpi"
+                android:src="@drawable/certification_icon"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/fans_count"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="@string/attention_format"
+                android:textColor="@color/white"
+                tools:text="120" />
+
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/chars_count"
+                style="@style/MainTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="@string/fans_format"
+                android:textColor="@color/white"
+                tools:text="120" />
+
+
+        </LinearLayout>
 
     </LinearLayout>
 
-
-
-    <include
-        layout="@layout/item_divider_line"
-        />
-
-    <TextView
-        android:id="@+id/tv_pc_desc"
-        android:text="@string/str_text_pd"
-        android:padding="@dimen/base_ldpi"
-        android:layout_marginStart="@dimen/base_xhdpi"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-
-</LinearLayout>
+</RelativeLayout>

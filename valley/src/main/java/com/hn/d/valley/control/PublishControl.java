@@ -406,7 +406,9 @@ public class PublishControl {
                         "allow_download:" + task.getAllow_download(),
                         "scan_type:" + task.getScan_type(),
                         "scan_user:" + task.getScan_user(),
-                        "lat:" + task.getLat()))
+                        "lat:" + task.getLat(),
+                        "package_id:" + task.getPackage_id()
+                ))
                 .compose(Rx.transformer(String.class))
                 .subscribe(new BaseSingleSubscriber<String>() {
                                @Override

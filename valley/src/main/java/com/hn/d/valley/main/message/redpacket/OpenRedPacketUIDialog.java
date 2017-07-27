@@ -78,6 +78,22 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
         this(redpacketStatus, null, redId);
     }
 
+    public static Observable<Integer> grabRedBag(long redId, String extend) {
+        return RRetrofit.create(RedPacketService.class)
+                .grabbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId, "extend:" + extend))
+                .compose(new Observable.Transformer<ResponseBody, Integer>() {
+                    @Override
+                    public Observable<Integer> call(Observable<ResponseBody> responseBodyObservable) {
+                        return responseBodyObservable.map(new Func1<ResponseBody, Integer>() {
+                            @Override
+                            public Integer call(ResponseBody responseBody) {
+                                return GrabPacketHelper.parseResult(responseBody);
+                            }
+                        }).subscribeOn(Schedulers.io());
+                    }
+                });
+    }
+
     @Override
     protected View inflateDialogView(FrameLayout dialogRootLayout, LayoutInflater inflater) {
         setGravity(Gravity.CENTER);
@@ -169,7 +185,6 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
         });
     }
 
-
     /**
      * 1.初始化动画
      */
@@ -202,7 +217,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     @Override
                     public Observable<Integer> call(Integer code) {
                         if (Constants.CAN_BE_GRAB == code) {
-                            return grabRedBag(redId);
+                            return grabRedBag(redId, "");
                         } else if (Constants.ALREADY_GRAB == code) {
 
                         }
@@ -268,28 +283,12 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
 //                        if (mSessionId.equals(UserCache.getUserAccount())) {
 //                            startIView(new P2PStatusRPUIView(mSessionId, redId, true));
 //                        } else {
-                            startIView(new GrabedRDResultUIView(redId));
+                        startIView(new GrabedRDResultUIView(redId));
 //                        }
                         finishDialog();
                     }
                 });
 
-    }
-
-    public static Observable<Integer> grabRedBag(long redId) {
-        return RRetrofit.create(RedPacketService.class)
-                .grabbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
-                .compose(new Observable.Transformer<ResponseBody, Integer>() {
-                    @Override
-                    public Observable<Integer> call(Observable<ResponseBody> responseBodyObservable) {
-                        return responseBodyObservable.map(new Func1<ResponseBody, Integer>() {
-                            @Override
-                            public Integer call(ResponseBody responseBody) {
-                                return GrabPacketHelper.parseResult(responseBody);
-                            }
-                        }).subscribeOn(Schedulers.io());
-                    }
-                });
     }
 
 

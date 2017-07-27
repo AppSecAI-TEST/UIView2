@@ -413,56 +413,57 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
      */
     private void startUpload() {
         mUrls.clear();
-        final List<Luban.ImageItem> allDatas = mHnAddImageAdapter.getAllDatas();
-        final List<String> needUploadFiles = new ArrayList<>();
+//        final List<Luban.ImageItem> allDatas = mHnAddImageAdapter.getAllDatas();
+//        final List<String> needUploadFiles = new ArrayList<>();
 
         HnLoading.show(mParentILayout, false);
+        checkAudioRecord();
 
-        if (allDatas.isEmpty()) {
-//            checkUserIco();
-            checkAudioRecord();
-            return;
-        }
+//        if (allDatas.isEmpty()) {
+////            checkUserIco();
+//            checkAudioRecord();
+//            return;
+//        }
 
-        for (int i = 0; i < allDatas.size(); i++) {
-            Luban.ImageItem imageItem = allDatas.get(i);
-            if (TextUtils.isEmpty(imageItem.url)) {
-                needUploadFiles.add(imageItem.thumbPath);
-            } else {
-                mUrls.put(i, imageItem.url);
-            }
-        }
+//        for (int i = 0; i < allDatas.size(); i++) {
+//            Luban.ImageItem imageItem = allDatas.get(i);
+//            if (TextUtils.isEmpty(imageItem.url)) {
+//                needUploadFiles.add(imageItem.thumbPath);
+//            } else {
+//                mUrls.put(i, imageItem.url);
+//            }
+//        }
 
-        mOssControl = new OssControl2(new OssControl2.OnUploadListener() {
-            @Override
-            public void onUploadStart() {
-
-            }
-
-            @Override
-            public void onUploadSucceed(List<String> list) {
-                //得到上传成功的文件在图片墙中的位置
-                for (String upload : list) {
-                    String[] split = upload.split("\\|");
-                    String thumbPath = split[0];
-                    for (int i = 0; i < allDatas.size(); i++) {
-                        Luban.ImageItem imageItem = allDatas.get(i);
-                        if (TextUtils.equals(imageItem.thumbPath, thumbPath)) {
-                            mUrls.put(i, split[1]);
-                        }
-                    }
-                }
-//                checkUserIco();
-                checkAudioRecord();
-            }
-
-            @Override
-            public void onUploadFailed(int code, String msg) {
-                T_.show(msg);
-                HnLoading.hide();
-            }
-        });
-        mOssControl.uploadCircleImg(needUploadFiles, true);
+//        mOssControl = new OssControl2(new OssControl2.OnUploadListener() {
+//            @Override
+//            public void onUploadStart() {
+//
+//            }
+//
+//            @Override
+//            public void onUploadSucceed(List<String> list) {
+//                //得到上传成功的文件在图片墙中的位置
+//                for (String upload : list) {
+//                    String[] split = upload.split("\\|");
+//                    String thumbPath = split[0];
+//                    for (int i = 0; i < allDatas.size(); i++) {
+//                        Luban.ImageItem imageItem = allDatas.get(i);
+//                        if (TextUtils.equals(imageItem.thumbPath, thumbPath)) {
+//                            mUrls.put(i, split[1]);
+//                        }
+//                    }
+//                }
+////                checkUserIco();
+//                checkAudioRecord();
+//            }
+//
+//            @Override
+//            public void onUploadFailed(int code, String msg) {
+//                T_.show(msg);
+//                HnLoading.hide();
+//            }
+//        });
+//        mOssControl.uploadCircleImg(needUploadFiles, true);
     }
 
     private void checkAudioRecord() {
@@ -520,11 +521,11 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        if (viewType == 0) {
-            return R.layout.item_drag_recycler_view;
-        }
+//        if (viewType == 0) {
+//            return R.layout.item_drag_recycler_view;
+//        }
 
-        if (viewType == 1) {
+        if (viewType == 6) {
             return R.layout.item_profile_recordvoice;
         }
 
@@ -755,20 +756,12 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
 
         //照片墙...
-        items.add(ViewItemInfo.build(new ItemCallback() {
-            @Override
-            public void onBindView(RBaseViewHolder holder, final int posInData, ViewItemInfo dataBean) {
-                bindPhoneWallItem(holder, size);
-            }
-        }));
-
-        //语音录制
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                bindAudioIntroduce(holder, userInfoBean);
-            }
-        }));
+//        items.add(ViewItemInfo.build(new ItemCallback() {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, final int posInData, ViewItemInfo dataBean) {
+//                bindPhoneWallItem(holder, size);
+//            }
+//        }));
 
         //头像
         items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
@@ -893,6 +886,14 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
                 bindSignatureItem(holder, userInfoBean);
+            }
+        }));
+
+        //语音录制
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                bindAudioIntroduce(holder, userInfoBean);
             }
         }));
     }
@@ -1583,21 +1584,21 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         public boolean isChanged(UserInfoBean userInfoBean) {
             boolean changed = false;
 
-            List<Luban.ImageItem> allDatas = mHnAddImageAdapter.getAllDatas();
-            for (int i = 0; i < allDatas.size(); i++) {
-                //照片墙给变了
-                try {
-                    Luban.ImageItem imageItem = allDatas.get(i);
-                    String url = mPhotos.get(i);
-                    if (!TextUtils.equals(url, imageItem.url)) {
-                        changed = true;
-                        return changed;
-                    }
-                } catch (Exception e) {
-                    changed = true;
-                    return changed;
-                }
-            }
+//            List<Luban.ImageItem> allDatas = mHnAddImageAdapter.getAllDatas();
+//            for (int i = 0; i < allDatas.size(); i++) {
+//                //照片墙给变了
+//                try {
+//                    Luban.ImageItem imageItem = allDatas.get(i);
+//                    String url = mPhotos.get(i);
+//                    if (!TextUtils.equals(url, imageItem.url)) {
+//                        changed = true;
+//                        return changed;
+//                    }
+//                } catch (Exception e) {
+//                    changed = true;
+//                    return changed;
+//                }
+//            }
 
             if (!TextUtils.isEmpty(mUserSetIco)) {
                 //头像改变了

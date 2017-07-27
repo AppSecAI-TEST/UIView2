@@ -1,7 +1,9 @@
 package com.hn.d.valley.sub.user;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -37,6 +39,8 @@ import com.angcyo.uiview.widget.RExTextView;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.SoftRelativeLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
+import com.github.florent37.viewanimator.AnimationListener;
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.adapter.HnAddImageAdapter2;
@@ -81,6 +85,7 @@ import com.hn.d.valley.widget.HnExEditText;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnTopImageView;
+import com.hn.d.valley.x5.X5WebUIView;
 import com.lzy.imagepicker.ImagePickerHelper;
 
 import java.util.ArrayList;
@@ -130,7 +135,6 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     private PublishTaskRealm mPublishTaskRealm;
     private List<String> visiableFriends = new ArrayList<>();//可见或不可见好友
     private DynamicVisiableLevelUIView.LevelType levelType = DynamicVisiableLevelUIView.LevelType.PUBLIC;// 可见类型 默认公开
-
 
     /**
      * 发布动态
@@ -267,7 +271,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                         if (mPublishTaskRealm != null) {
                                             mPublishTaskRealm.deleteFromRealm();
                                         }
-                                        PublishTaskRealm.save(getPublishTaskRealm());
+                                        PublishTaskRealm.save(getPublishTaskRealm(""));
                                         finishIView(PublishDynamicUIView2.this, new UIParam(true, true, false));
                                     }
                                 });
@@ -320,8 +324,31 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         }
 
                         checkDynamicType();
+                        if (mDynamicType == DynamicType.VIDEO) {
+                            ExEditText hotMoneyView = mViewHolder.v(R.id.hot_money_view);
+                            ExEditText hotNumView = mViewHolder.v(R.id.hot_num_view);
+
+                            if (isHotPackageLayoutExpand()) {
+                                if (hotMoneyView.checkEmpty()) {
+                                    scrollToBottom(hotMoneyView);
+                                    return;
+                                }
+                                if (hotNumView.checkEmpty()) {
+                                    scrollToBottom(hotNumView);
+                                    return;
+                                }
+                                if (Float.valueOf(hotMoneyView.string()) / Float.valueOf(hotNumView.string()) < 0.01) {
+                                    T_.error("平均红包金额需要大于0.01元");
+                                    return;
+                                }
+                                Action.publishAction();
+                                // TODO: 2017/07/27 0027 调用发布红包接口
+                                return;
+                            }
+                        }
+
                         Action.publishAction();
-                        onPublish();
+                        onPublish("");
                     }
                 }));
     }
@@ -544,6 +571,63 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                             .setOnLongPress(new RelayVideoLongClickListener(mParentILayout)));
                 }
             });
+
+            //红包规则
+            mViewHolder.click(R.id.hot_package_help_view, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startIView(new X5WebUIView("http://wap.klgwl.com/agreement/rule/package.html"));
+                }
+            });
+
+            //展开/关闭,红包金额/数量
+            mViewHolder.click(R.id.hot_package_extend_view, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final View controlView = mViewHolder.v(R.id.hot_package_control_view);
+                    if (!isHotPackageLayoutExpand()) {
+                        //展开
+                        ViewAnimator.animate(controlView)
+                                .translationY(-controlView.getMeasuredHeight(), 0)
+                                .onStart(new AnimationListener.Start() {
+                                    @Override
+                                    public void onStart() {
+                                        controlView.setVisibility(View.VISIBLE);
+                                    }
+                                })
+                                .start();
+
+                        ViewAnimator.animate(v).rotation(0, 180).start();
+                    } else {
+                        //关闭
+                        ViewAnimator.animate(controlView)
+                                .translationY(0, -controlView.getMeasuredHeight())
+                                .onStop(new AnimationListener.Stop() {
+                                    @Override
+                                    public void onStop() {
+                                        controlView.setVisibility(View.INVISIBLE);
+                                    }
+                                })
+                                .start();
+                        ViewAnimator.animate(v).rotation(180, 0).start();
+                    }
+                }
+            });
+
+            //输入框焦点, 自动滚动
+            ExEditText hotMoneyView = mViewHolder.v(R.id.hot_money_view);
+            ExEditText hotNumView = mViewHolder.v(R.id.hot_num_view);
+
+            View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(final View v, boolean hasFocus) {
+                    if (hasFocus) {
+                        scrollToBottom((ExEditText) v);
+                    }
+                }
+            };
+            hotMoneyView.setOnFocusChangeListener(focusChangeListener);
+            hotNumView.setOnFocusChangeListener(focusChangeListener);
         }
 
         //转发动态
@@ -649,6 +733,33 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 }
             });
         }
+    }
+
+    /**
+     * 滚动到最底部, 方便键盘输入
+     */
+    private void scrollToBottom(final ExEditText v) {
+        v.post(new Runnable() {
+            @Override
+            public void run() {
+                v.setSelectionLast();
+            }
+        });
+
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NestedScrollView scrollView = mViewHolder.v(R.id.scroll_view);
+                scrollView.smoothScrollBy(0, scrollView.getChildAt(0).getMeasuredHeight());
+            }
+        }, 300);
+    }
+
+    /**
+     * 红包布局是否展开, 展开表示需要发送红包
+     */
+    private boolean isHotPackageLayoutExpand() {
+        return mViewHolder.v(R.id.hot_package_extend_view).getRotation() == 180;
     }
 
     private String getContent(String content) {
@@ -926,7 +1037,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     /**
      * 点击发布动态
      */
-    private void onPublish() {
+    private void onPublish(String package_id) {
         //创建发布任务, 在后台进行发布
         HnTopImageView hnTopImageView = mViewHolder.v(R.id.ico_top);
         CheckBox allowDownloadView = mViewHolder.v(R.id.allow_box_view);
@@ -942,7 +1053,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             }
 
             //小于6,表示是发布动态
-            PublishTaskRealm publishTask = getPublishTaskRealm();
+            PublishTaskRealm publishTask = getPublishTaskRealm(package_id);
             PublishControl.instance().addTask(publishTask, true);
 
             finishIView();
@@ -1022,7 +1133,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     }
 
     @NonNull
-    private PublishTaskRealm getPublishTaskRealm() {
+    private PublishTaskRealm getPublishTaskRealm(String package_id) {
         checkDynamicType();
 
         HnTopImageView hnTopImageView = mViewHolder.v(R.id.ico_top);
@@ -1068,6 +1179,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         return "";
                     }
                 }))
+                .setPackage_id(package_id)
         ;
         return publishTask;
     }
@@ -1155,6 +1267,16 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 //                    })
 //            );
 //        }
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
     }
 
     /**

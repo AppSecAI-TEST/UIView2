@@ -81,6 +81,7 @@ public class PublishTaskRealm extends RealmObject {
     private int publishStatus = STATUS_NORMAL;
 
     private long createTime = 0l;
+    private String package_id = "";
 
     /**
      * 构建一个图文动态的任务
@@ -190,6 +191,10 @@ public class PublishTaskRealm extends RealmObject {
         return images;
     }
 
+    public void setPhotos2(RealmList<ImageItemRealm> photos) {
+        this.photos = photos;
+    }
+
     public PublishTaskRealm setPhotos2(final List<Luban.ImageItem> photos) {
         RRealm.exe(new Realm.Transaction() {
             @Override
@@ -206,16 +211,16 @@ public class PublishTaskRealm extends RealmObject {
         return this;
     }
 
-    public void setPhotos2(RealmList<ImageItemRealm> photos) {
-        this.photos = photos;
-    }
-
     public List<Tag> getSelectorTags2() {
         List<Tag> tags = new ArrayList<>();
         for (TagRealm t : mSelectorTags) {
             tags.add(new Tag(t.getId(), t.getName()));
         }
         return tags;
+    }
+
+    public void setSelectorTags2(RealmList<TagRealm> selectorTags) {
+        mSelectorTags = selectorTags;
     }
 
     public PublishTaskRealm setSelectorTags2(final List<Tag> selectorTags) {
@@ -231,10 +236,6 @@ public class PublishTaskRealm extends RealmObject {
             }
         });
         return this;
-    }
-
-    public void setSelectorTags2(RealmList<TagRealm> selectorTags) {
-        mSelectorTags = selectorTags;
     }
 
     public RealmList<ImageItemRealm> getPhotos() {
@@ -416,6 +417,15 @@ public class PublishTaskRealm extends RealmObject {
         } else {
             return TimeUtil.getDateTimeString(createTime, "yyyy-MM-dd HH:mm");
         }
+    }
+
+    public String getPackage_id() {
+        return package_id;
+    }
+
+    public PublishTaskRealm setPackage_id(String package_id) {
+        this.package_id = package_id;
+        return this;
     }
 
     @Override

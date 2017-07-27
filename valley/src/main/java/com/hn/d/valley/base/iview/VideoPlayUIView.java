@@ -56,7 +56,7 @@ public class VideoPlayUIView extends UIIViewImpl {
             L.e("call: onLongPress([videoUrl])-> " + videoUrl + " " + path);
 
             if (mRelayVideoLongClickListener != null) {
-                mRelayVideoLongClickListener.onLongPress(videoUrl);
+                mRelayVideoLongClickListener.onLongPress(videoUrl,thumbImagePath);
             }
         }
     };

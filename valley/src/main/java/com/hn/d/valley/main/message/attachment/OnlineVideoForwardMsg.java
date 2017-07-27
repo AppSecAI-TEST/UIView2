@@ -26,6 +26,25 @@ public class OnlineVideoForwardMsg extends BaseCustomMsg {
     private String msg;
     private String cover;
 
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    private int width;
+    private int height;
+
     public String getVideoURL() {
         return videoURL;
     }

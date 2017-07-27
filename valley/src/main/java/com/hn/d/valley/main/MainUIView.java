@@ -49,6 +49,7 @@ import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.ChooseTagsUIView;
+import com.hn.d.valley.start.RecommendUser2UIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.widget.HnLoading;
@@ -364,7 +365,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
 
         if (LoginControl.instance().isFirstRegister()) {
             //// TODO: 2017/5/19
-            mParentILayout.startIView(new ChooseTagsUIView());
+            mParentILayout.startIView(new RecommendUser2UIView());
             LoginControl.instance().setFirstRegister(false);
         }
     }

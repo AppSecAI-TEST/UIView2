@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.angcyo.uiview.widget.RSoftInputLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/soft_input_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/base_100dpi">
 
                 <!--输入框-->
                 <RelativeLayout
@@ -82,40 +84,184 @@
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:tag="GV3"/>
+                        android:tag="GV3"
+                        tools:visibility="gone"/>
 
                     <!--显示视频-->
-                    <FrameLayout
+                    <LinearLayout
                         android:id="@+id/video_control_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp"
-                        android:visibility="gone">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
 
-                        <com.angcyo.uiview.widget.RImageView
-                            android:id="@+id/video_thumb_view"
+                        <FrameLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/zhanweitu_1"/>
+                            android:layout_height="180dp">
 
-                        <ImageView
-                            android:id="@+id/video_play_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:src="@drawable/play_redianzixun"/>
+                            <com.angcyo.uiview.widget.RImageView
+                                android:id="@+id/video_thumb_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/zhanweitu_1"/>
 
-                        <TextView
-                            android:id="@+id/video_time_view"
-                            style="@style/WhiteColorTextStyle"
-                            android:layout_width="wrap_content"
+                            <ImageView
+                                android:id="@+id/video_play_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:src="@drawable/play_redianzixun"/>
+
+                            <TextView
+                                android:id="@+id/video_time_view"
+                                style="@style/WhiteColorTextStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right|bottom"
+                                android:layout_marginEnd="@dimen/base_ldpi"
+                                tools:text="00:07"/>
+                        </FrameLayout>
+
+                        <!--视频红包-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right|bottom"
-                            android:layout_marginEnd="@dimen/base_ldpi"
-                            tools:text="00:07"/>
-                    </FrameLayout>
+                            android:background="@color/chat_bg_color"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/base_xhdpi">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@drawable/hongbao_xiao_konglongjun"/>
+
+                            <TextView
+                                style="@style/MainTextStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/base_hdpi"
+                                android:text="视频红包"/>
+
+                            <ImageView
+                                android:id="@+id/hot_package_help_view"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginStart="@dimen/base_hdpi"
+                                android:src="@drawable/jieshi_shipinghongbao"/>
+
+                            <Space
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"/>
+
+                            <ImageView
+                                android:id="@+id/hot_package_extend_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/base_ldpi"
+                                android:rotation="0"
+                                android:src="@drawable/zhankai_shiping_lujing"/>
+
+                        </LinearLayout>
+
+                        <!--动画束缚层-->
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <!--红包金额, 数量-->
+                            <LinearLayout
+                                android:id="@+id/hot_package_control_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/chat_bg_color"
+                                android:orientation="vertical"
+                                android:visibility="invisible"
+                                tools:visibility="visible">
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/base_line"
+                                    android:background="@color/line_color"/>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:padding="@dimen/base_xhdpi">
+
+                                    <TextView
+                                        style="@style/MainTextStyle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="总金额"/>
+
+                                    <com.hn.d.valley.widget.HnExEditText
+                                        android:id="@+id/hot_money_view"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:background="@null"
+                                        android:gravity="right"
+                                        android:hint="0.00"
+                                        android:inputType="numberDecimal"
+                                        app:r_decimal_count="2"
+                                        app:r_max_number="20000"/>
+
+                                    <TextView
+                                        style="@style/MainTextStyle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:paddingStart="@dimen/base_ldpi"
+                                        android:text="元"/>
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/base_line"
+                                    android:background="@color/line_color"/>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:padding="@dimen/base_xhdpi">
+
+                                    <TextView
+                                        style="@style/MainTextStyle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="红包个数"/>
+
+                                    <com.hn.d.valley.widget.HnExEditText
+                                        android:id="@+id/hot_num_view"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:background="@null"
+                                        android:gravity="right"
+                                        android:hint="填写个数"
+                                        android:inputType="number"
+                                        app:r_max_number="100"/>
+
+                                    <TextView
+                                        style="@style/MainTextStyle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:paddingStart="@dimen/base_ldpi"
+                                        android:text="个"/>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </FrameLayout>
+                    </LinearLayout>
+
                 </FrameLayout>
-
 
                 <!--转发动态控制-->
                 <RelativeLayout
@@ -169,7 +315,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
             android:orientation="vertical">
 
             <FrameLayout
@@ -323,7 +469,7 @@
             </LinearLayout>
 
         </LinearLayout>
-    </RelativeLayout>
+    </FrameLayout>
 
     <!--表情布局-->
     <include

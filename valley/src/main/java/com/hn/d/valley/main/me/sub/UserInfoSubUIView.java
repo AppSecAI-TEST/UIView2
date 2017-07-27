@@ -104,17 +104,17 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
     @Override
     protected int getItemLayoutId(int viewType) {
-        if (viewType == 0) {
-            return R.layout.item_search_layout_user_recommend;
-        }
+//        if (viewType == 0) {
+//            return R.layout.item_search_layout_user_recommend;
+//        }
 
-        if (mGiftList != null && viewType == 1) {
+        if (mGiftList != null && viewType == 0) {
             return R.layout.item_search_layout_user_recommend;
-        } else if (viewType == 1) {
+        } else if (viewType == 0) {
             return R.layout.item_user_info_sub_view;
         }
 
-        if (mGiftList != null && viewType == 2) {
+        if (mGiftList != null && viewType == 1) {
             return R.layout.item_user_info_sub_view;
         }
 
@@ -124,110 +124,110 @@ public class UserInfoSubUIView extends BaseItemUIView {
     @Override
     protected void createItems(final List<SingleItem> items) {
         //照片墙
-        items.add(new SingleItem(SingleItem.Type.TOP) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, final int posInData, Item dataBean) {
-                RTextView tv = holder.v(R.id.tip_view);
-                tv.setDefaultSKin(R.string.photo_wall);
-
-                holder.v(R.id.tv_more).setVisibility(View.GONE);
-
-                RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
-                if (mDecor == null) {
-                    mDecor = new RBaseItemDecoration((int) (density() * 10), Color.TRANSPARENT);
-                } else {
-                    recyclerView.removeItemDecoration(mDecor);
-                }
-                recyclerView.addItemDecoration(mDecor);
-                final List<String> stringList = RUtils.split(mUserInfoBean.getPhotos());
-                stringList.add("");
-
-                recyclerView.setAdapter(new ImageAdapter(mActivity, new ImageAdapter.ImageAdapterConfig() {
-                    @Override
-                    public List<String> getDatas() {
-                        return stringList;
-                    }
-
-                    @Override
-                    public void onItemClick(RBaseViewHolder holder, RImageView view, int position, String bean) {
-                        ImagePagerUIView.start(mParentILayout,
-                                view,
-                                PhotoPager.getImageItems(stringList, view.copyDrawable(), position),
-                                position);
-                    }
-
-                    @Override
-                    public boolean onBindView(final RBaseViewHolder holder, final int position, final String bean) {
-                        // 设置宽高
-                        UI.setViewHeight(holder.itemView, ScreenUtil.dip2px(100));
-                        UI.setViewWidth(holder.itemView, ScreenUtil.dip2px(100));
-                        if (RUtils.isLast(stringList, position)) {
-                            if (mUserInfoBean.isMe()) {
-                                holder.imgV(R.id.image_view).setImageResource(R.drawable.shangchuanzhaopian_zhaopianqiang);
-                                holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        mParentILayout.startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), mAction0));
-                                    }
-                                });
-                            } else {
-                                holder.imgV(R.id.image_view).setImageResource(R.drawable.yaoqingshangchuan_zhaopianqiang);
-                                holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        int relationship = mUserInfoBean.getGetRelationship();
-                                        if (relationship == 3) {
-                                            //对方拉黑了我
-                                            T_.error(getString(R.string.send_request_faild));
-                                        } else if (relationship == 2) {
-                                            //我拉黑了对方
-                                            UIDialog.build()
-                                                    .setDialogContent(getString(R.string.in_blacklist_tip, mUserInfoBean.getUsername()))
-                                                    .setOkText(getString(R.string.cancel_blackList_tip))
-                                                    .setOkListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View v) {
-                                                            add(RRetrofit.create(ContactService.class)
-                                                                    .cancelBlackList(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
-                                                                    .compose(Rx.transformer(String.class))
-                                                                    .subscribe(new BaseSingleSubscriber<String>() {
-
-                                                                        @Override
-                                                                        public void onSucceed(String bean) {
-                                                                            T_.show(bean);
-                                                                            mUserInfoBean.setGetRelationship(0);
-                                                                        }
-                                                                    }));
-                                                        }
-                                                    })
-                                                    .showDialog(mParentILayout)
-                                            ;
-                                        } else {
-                                            //邀请上传
-                                            add(RRetrofit.create(UserService.class)
-                                                    .inviteUploadPhotos(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
-                                                    .compose(Rx.transformer(String.class))
-                                                    .subscribe(new BaseSingleSubscriber<String>() {
-                                                        @Override
-                                                        public void onSucceed(String bean) {
-                                                            super.onSucceed(bean);
-                                                            T_.show(bean);
-                                                        }
-                                                    })
-                                            );
-                                        }
-
-
-                                    }
-                                });
-                            }
-                            return true;
-                        }
-                        return false;
-                    }
-                }));
-            }
-        });
+//        items.add(new SingleItem(SingleItem.Type.TOP) {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, final int posInData, Item dataBean) {
+//                RTextView tv = holder.v(R.id.tip_view);
+//                tv.setDefaultSKin(R.string.photo_wall);
+//
+//                holder.v(R.id.tv_more).setVisibility(View.GONE);
+//
+//                RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
+//                if (mDecor == null) {
+//                    mDecor = new RBaseItemDecoration((int) (density() * 10), Color.TRANSPARENT);
+//                } else {
+//                    recyclerView.removeItemDecoration(mDecor);
+//                }
+//                recyclerView.addItemDecoration(mDecor);
+//                final List<String> stringList = RUtils.split(mUserInfoBean.getPhotos());
+//                stringList.add("");
+//
+//                recyclerView.setAdapter(new ImageAdapter(mActivity, new ImageAdapter.ImageAdapterConfig() {
+//                    @Override
+//                    public List<String> getDatas() {
+//                        return stringList;
+//                    }
+//
+//                    @Override
+//                    public void onItemClick(RBaseViewHolder holder, RImageView view, int position, String bean) {
+//                        ImagePagerUIView.start(mParentILayout,
+//                                view,
+//                                PhotoPager.getImageItems(stringList, view.copyDrawable(), position),
+//                                position);
+//                    }
+//
+//                    @Override
+//                    public boolean onBindView(final RBaseViewHolder holder, final int position, final String bean) {
+//                        // 设置宽高
+//                        UI.setViewHeight(holder.itemView, ScreenUtil.dip2px(100));
+//                        UI.setViewWidth(holder.itemView, ScreenUtil.dip2px(100));
+//                        if (RUtils.isLast(stringList, position)) {
+//                            if (mUserInfoBean.isMe()) {
+//                                holder.imgV(R.id.image_view).setImageResource(R.drawable.shangchuanzhaopian_zhaopianqiang);
+//                                holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        mParentILayout.startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), mAction0));
+//                                    }
+//                                });
+//                            } else {
+//                                holder.imgV(R.id.image_view).setImageResource(R.drawable.yaoqingshangchuan_zhaopianqiang);
+//                                holder.imgV(R.id.image_view).setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View v) {
+//                                        int relationship = mUserInfoBean.getGetRelationship();
+//                                        if (relationship == 3) {
+//                                            //对方拉黑了我
+//                                            T_.error(getString(R.string.send_request_faild));
+//                                        } else if (relationship == 2) {
+//                                            //我拉黑了对方
+//                                            UIDialog.build()
+//                                                    .setDialogContent(getString(R.string.in_blacklist_tip, mUserInfoBean.getUsername()))
+//                                                    .setOkText(getString(R.string.cancel_blackList_tip))
+//                                                    .setOkListener(new View.OnClickListener() {
+//                                                        @Override
+//                                                        public void onClick(View v) {
+//                                                            add(RRetrofit.create(ContactService.class)
+//                                                                    .cancelBlackList(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+//                                                                    .compose(Rx.transformer(String.class))
+//                                                                    .subscribe(new BaseSingleSubscriber<String>() {
+//
+//                                                                        @Override
+//                                                                        public void onSucceed(String bean) {
+//                                                                            T_.show(bean);
+//                                                                            mUserInfoBean.setGetRelationship(0);
+//                                                                        }
+//                                                                    }));
+//                                                        }
+//                                                    })
+//                                                    .showDialog(mParentILayout)
+//                                            ;
+//                                        } else {
+//                                            //邀请上传
+//                                            add(RRetrofit.create(UserService.class)
+//                                                    .inviteUploadPhotos(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
+//                                                    .compose(Rx.transformer(String.class))
+//                                                    .subscribe(new BaseSingleSubscriber<String>() {
+//                                                        @Override
+//                                                        public void onSucceed(String bean) {
+//                                                            super.onSucceed(bean);
+//                                                            T_.show(bean);
+//                                                        }
+//                                                    })
+//                                            );
+//                                        }
+//
+//
+//                                    }
+//                                });
+//                            }
+//                            return true;
+//                        }
+//                        return false;
+//                    }
+//                }));
+//            }
+//        });
 
         // 礼物
         if (mGiftList != null) {
@@ -497,8 +497,6 @@ public class UserInfoSubUIView extends BaseItemUIView {
                     }
                 }
             });
-
-
         }
     }
 

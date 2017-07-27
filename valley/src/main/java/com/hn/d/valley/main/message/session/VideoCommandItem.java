@@ -40,7 +40,6 @@ public class VideoCommandItem extends CommandItemInfo {
 
     @Override
     protected void onClick() {
-
         getContainer().activity.checkPermissions(new String[]{
                         Manifest.permission.CAMERA,
                         Manifest.permission.RECORD_AUDIO},

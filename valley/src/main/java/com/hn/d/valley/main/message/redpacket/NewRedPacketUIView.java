@@ -213,9 +213,14 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         }
         float money = Float.valueOf(etMoney.getText().toString()) * 100;
 
-        PayUIDialog.Params params = new PayUIDialog.Params(1,money,content,to_uid,null,0);
-        params.setBalance(account.getMoney());
-        params.setType(1);
+        PayUIDialog.Params params = new PayUIDialog.Params();
+        params.setBalance(account.getMoney())
+                .setMoney(money)
+                .setNum(1)
+                .setContent(content)
+                .setTo_uid(to_uid)
+                .setRandom(0)
+                .setType(1);
         if (money > account.getMoney()) {
             T_.show(getString(R.string.text_balance_not_enough));
 

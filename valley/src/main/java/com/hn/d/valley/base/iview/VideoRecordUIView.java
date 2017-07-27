@@ -189,6 +189,7 @@ public class VideoRecordUIView extends UIBaseView {
         super.loadContentView(rootView);
         //mRecordView = v(R.id.record_view);
         mRecordLayout = v(R.id.record_layout);
+        mRecordLayout.setTextOffset(40 * density());
         mLoopRecyclerView = v(R.id.loop_recycler_view);
     }
 
@@ -428,7 +429,7 @@ public class VideoRecordUIView extends UIBaseView {
                 } else {
                     stopRecord();
                     if (BuildConfig.DEBUG) {
-                        T_.info(progress + " s" + mRecordFile.getAbsolutePath());
+                        T_.info(progress + "s " + mRecordFile.getAbsolutePath());
                     }
                     fixVideoPath(mRecordFile.getAbsolutePath(), null, progress, DefaultLevel.getWidth(), DefaultLevel.getHeight(), rotationRecord);
                 }
