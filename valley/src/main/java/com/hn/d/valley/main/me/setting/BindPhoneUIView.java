@@ -20,6 +20,7 @@ import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.wallet.WalletAccountUpdateEvent;
+import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.OtherService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
@@ -27,6 +28,8 @@ import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnLoading;
 
 import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -137,6 +140,12 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                                             T_.show(s);
                                             finishIView();
                                             UserCache.instance().updateUserInfo();
+                                            RRealm.exe(new Realm.Transaction() {
+                                                @Override
+                                                public void execute(Realm realm) {
+                                                    UserCache.instance().getLoginBean().setPhone(mPhoneEdit.string());
+                                                }
+                                            });
                                             // 拉取钱包信息
                                             RBus.post(new WalletAccountUpdateEvent());
                                         }
