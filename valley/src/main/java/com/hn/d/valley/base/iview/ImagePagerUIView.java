@@ -420,14 +420,59 @@ public class ImagePagerUIView extends UIIViewImpl {
         Rect viewLocation = mImageItems.get(mMViewPager.getCurrentItem()).mViewLocation;
         viewLocation = AnimUtil.ensureRect(viewLocation);
 
+        View currentImageView = mImagePageAdapter.getCurrentImageView();
         View targetView = null;//mImagePageAdapter.getCurrentImageView();//mMViewPager;
         if (targetView == null) {
             targetView = mMViewPager;
         }
-        AnimUtil.startToMinAnim(viewLocation,
+
+        int animWidth = targetView.getMeasuredWidth();
+        int animHeight = targetView.getMeasuredHeight();
+
+//        if (currentImageView instanceof DragPhotoView) {
+//            int imageHeight = ((DragPhotoView) currentImageView).getCurrentImageHeight();
+//            int imageWidth = ((DragPhotoView) currentImageView).getCurrentImageWidth();
+//
+//            if (imageWidth < animWidth) {
+//                viewLocation.inset((animWidth - imageWidth) / 2, 0);
+//            }
+//
+//            if (imageHeight < animHeight) {
+//                viewLocation.inset(0, (animHeight - imageHeight) / 2);
+//            }
+//        }
+//        AnimUtil.startToMinAnim(viewLocation,
+//                targetView, new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
+//                new Point(viewLocation.centerX(), viewLocation.centerY()),
+//                animWidth, animHeight,
+//                new RAnimListener() {
+//                    @Override
+//                    public void onAnimationProgress(Animator animation, float progress) {
+//                        super.onAnimationProgress(animation, progress);
+//                        mMRootLayout.setBackgroundColor(AnimUtil.evaluateColor(progress, mLastTranColor, Color.TRANSPARENT));
+////                        mMViewPager.setAlpha(0.6f + 1 - progress);
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animator animation) {
+//                        super.onAnimationEnd(animation);
+//                        isToFinish = false;
+//                        finishIView(ImagePagerUIView.this, false);
+//                    }
+//                });
+
+        if (currentImageView instanceof DragPhotoView) {
+            int imageHeight = ((DragPhotoView) currentImageView).getCurrentImageHeight();
+            int imageWidth = ((DragPhotoView) currentImageView).getCurrentImageWidth();
+
+            animWidth = Math.min(animWidth, imageWidth);
+            animHeight = Math.min(animHeight, imageHeight);
+        }
+
+        AnimUtil.startToMinAnim(
                 targetView, new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
                 new Point(viewLocation.centerX(), viewLocation.centerY()),
-                targetView.getMeasuredWidth(), targetView.getMeasuredHeight(),
+                viewLocation.width() * 1f / animWidth, viewLocation.height() * 1f / animHeight,
                 new RAnimListener() {
                     @Override
                     public void onAnimationProgress(Animator animation, float progress) {
