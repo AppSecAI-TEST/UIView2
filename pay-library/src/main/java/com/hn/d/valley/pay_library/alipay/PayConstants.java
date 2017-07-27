@@ -19,4 +19,8 @@ public interface PayConstants {
 
     String CALLBACKURL = "http://api.klgwl.com/wallet/alipay/callback";
 
+    String WECHATPAY_ACTION = "com.hn.d.valley.wechatpay";
+
+    String WECHATPAY_CODE = "wechatpay_code";
+
 }

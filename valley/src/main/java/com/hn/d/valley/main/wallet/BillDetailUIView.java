@@ -1,21 +1,20 @@
 package com.hn.d.valley.main.wallet;
 
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
+import com.angcyo.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
-import com.hn.d.valley.main.me.setting.FeedBackUIView;
 import com.hn.d.valley.main.message.redpacket.GrabedRDResultUIView;
-import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
 
@@ -92,7 +91,13 @@ public class BillDetailUIView extends BaseItemUIView {
                 }
 
                 info_transtaction_number.setItemDarkText(billRecord.getPayid());
-
+                info_transtaction_number.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipboardUtils.copyText(billRecord.getPayid());
+                        T_.info("交易单号已复制.");
+                    }
+                });
 
             }
         });

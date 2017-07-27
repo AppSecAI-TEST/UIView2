@@ -29,6 +29,8 @@ import java.util.Set;
 
 import io.realm.Realm;
 
+import static com.hn.d.valley.base.constant.Constant.POS_HOME;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -95,7 +97,7 @@ public class SystemNotifyManager {
             case SystemNotifyType.NEW_DISCUSS:
                 // 设置是否发送圈子提醒
                 if (MsgNotifySetting.instance().isCircleCNotify()) {
-                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, 1));
+                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, POS_HOME));
                 }
                 break;
             case SystemNotifyType.NEW_VISITOR:

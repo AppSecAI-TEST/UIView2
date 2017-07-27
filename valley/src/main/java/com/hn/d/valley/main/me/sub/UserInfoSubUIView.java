@@ -402,7 +402,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
     private boolean isContact() {
 //        return mUserInfoBean.getIs_contact() == 1;
-        return true;
+        return !mUserInfoBean.getUid().equals(UserCache.getUserAccount());
     }
 
     class GiftListAdapter extends RExBaseAdapter<String, GiftReceiveBean, String> {

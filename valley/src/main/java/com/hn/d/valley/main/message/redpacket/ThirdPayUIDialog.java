@@ -1,9 +1,14 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -49,6 +54,7 @@ import rx.functions.Func1;
 
 import static com.hn.d.valley.pay_library.alipay.PayConstants.AliPay_APPID;
 import static com.hn.d.valley.pay_library.alipay.OrderInfoUtil2_0.biz_content_Json;
+import static com.hn.d.valley.pay_library.alipay.PayConstants.WECHATPAY_ACTION;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -162,7 +168,6 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
         L.d(TAG,"onViewShow : wechat pay");
         if (type.equals(WECHAT)) {
             // 微信支付成功或失败 WxPayEntryActivity
-
         }
 
     }
@@ -262,6 +267,8 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
 
     private void wechatPay(String param) {
 
+        observerWechatPay();
+
         WechatParam wechat = Json.from(param,WechatParam.class);
 
         WechatPayReq wechatPayReq = new WechatPayReq.Builder()
@@ -291,6 +298,33 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
 
         PayAPI.getInstance().sendPayRequest(wechatPayReq);
 
+    }
+
+    private void observerWechatPay() {
+        // 监听微信支付成功失败 广播
+        final LocalBroadcastManager manager = LocalBroadcastManager.getInstance(mActivity);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(WECHATPAY_ACTION);
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(WECHATPAY_ACTION)){
+                    int resultCode = intent.getIntExtra(PayConstants.WECHATPAY_CODE,-1);
+                    if (resultCode == 0) {
+                        // 成功
+                        T_.show(mActivity.getString(R.string.text_pay_success));
+                        action.call(0);
+                        finishDialog();
+                    } else {
+                        // -1  -2 用户取消
+                        T_.show(mActivity.getString(R.string.text_pay_fail));
+                        finishDialog();
+                    }
+                }
+                manager.unregisterReceiver(this);
+            }
+        };
+        manager.registerReceiver(receiver,filter);
     }
 
     private void alipayPrepare(String missionParam) {

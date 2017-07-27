@@ -14,17 +14,17 @@
     android:paddingStart="@dimen/base_xhdpi"
     android:paddingTop="@dimen/base_ldpi">
 
-    <ImageView
-        android:src="@drawable/icon_hongbao_notice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <TextView
         android:id="@+id/tv_hongbao_notice"
-        android:layout_marginStart="@dimen/base_xhdpi_5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         tools:text="群公告啊" />
+    <ImageView
+        android:src="@drawable/icon_hongbao_notice"
+        android:layout_marginStart="@dimen/base_xhdpi_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 
 </LinearLayout>

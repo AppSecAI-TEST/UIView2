@@ -18,7 +18,7 @@ public class InviteUploadProfileAttachment extends CustomAttachment {
     private InviteUploadMsg inviteUploadMsg;
 
     public InviteUploadProfileAttachment(String content) {
-        super(CustomAttachmentType.SHARE_DYNAMIC);
+        super(CustomAttachmentType.INVITE_UPLOAD);
         inviteUploadMsg = Json.from(content,InviteUploadMsg.class);
     }
 

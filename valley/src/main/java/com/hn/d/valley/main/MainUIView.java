@@ -62,6 +62,9 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action0;
 
+import static com.hn.d.valley.base.constant.Constant.POS_HOME;
+import static com.hn.d.valley.base.constant.Constant.POS_MESSAGE;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -154,22 +157,22 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     private void resetTabLayoutIco(ArrayList<CustomTabEntity> tabs) {
         switch (SkinUtils.getSkin()) {
             case SkinManagerUIView.SKIN_BLUE:
-                tabs.get(0).setTabSelectedIcon(R.drawable.message_blue_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_blue_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.message_blue_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(0).setTabSelectedIcon(R.drawable.konglonggu_blue_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
                 tabs.get(2).setTabSelectedIcon(R.drawable.found_blue_s).setTabUnselectedIcon(R.drawable.found_black_n);
                 tabs.get(3).setTabSelectedIcon(R.drawable.me_blue_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             case SkinManagerUIView.SKIN_GREEN:
-                tabs.get(0).setTabSelectedIcon(R.drawable.message_green_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_green_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.message_green_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(0).setTabSelectedIcon(R.drawable.konglonggu_green_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
                 tabs.get(2).setTabSelectedIcon(R.drawable.found_green_s).setTabUnselectedIcon(R.drawable.found_black_n);
                 tabs.get(3).setTabSelectedIcon(R.drawable.me_green_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             default:
-                tabs.get(0).setTabSelectedIcon(R.drawable.message_black_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(1).setTabSelectedIcon(R.drawable.konglonggu_black_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(1).setTabSelectedIcon(R.drawable.message_black_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(0).setTabSelectedIcon(R.drawable.konglonggu_black_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
                 tabs.get(2).setTabSelectedIcon(R.drawable.found_black_s).setTabUnselectedIcon(R.drawable.found_black_n);
                 tabs.get(3).setTabSelectedIcon(R.drawable.me_black_s).setTabUnselectedIcon(R.drawable.me_black_n);
                 break;
@@ -231,7 +234,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     protected void changePage(int position) {
         boolean isRightToLeft = position < lastPosition;
 
-        if (position == Constant.POS_HOME) {
+        if (position == POS_HOME) {
             //首页 恐龙谷界面
             Action.tap_klg();
             if (mHomeUIView == null) {
@@ -266,7 +269,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
                 mMainUILayout.showIView(mFriend2UIView);
             }
 
-        } else if (position == Constant.POS_MESSAGE) {
+        } else if (position == POS_MESSAGE) {
 //                    HnChatActivity.launcher(mActivity, "50033");
             //消息
             if (mMessageUIView == null) {
@@ -390,7 +393,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     public void onEvent(UpdateDataEvent event) {
         if (event.num == 0) {
             mBottomNavLayout.hideMsg(event.position);
-        } else if (event.position == 1) {
+        } else if (event.position == POS_HOME) {
             mBottomNavLayout.showDot(event.position);
         } else {
             mBottomNavLayout.showMsg(event.position, event.num);

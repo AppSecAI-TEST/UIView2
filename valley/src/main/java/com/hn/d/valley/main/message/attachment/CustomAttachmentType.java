@@ -30,8 +30,6 @@ public interface CustomAttachmentType {
 
     int WITHDRAWAL = 8;
 
-    int WITHDRAWAL_FAIL = 16;
-
     int EXPRESSIONMSG = 9;
 
     int LIKEMSG = 10;
@@ -46,13 +44,18 @@ public interface CustomAttachmentType {
 
     int GIFT_RECEIVE = 15;
 
-    int DISCUSS_RECOMM_TYPE = 16;
+    int WITHDRAWAL_FAIL = 16;
 
     int KLG_CONSUME = 17;
 
     int RECHARGE_CODE = 18;
 
     int SHARE_NEWS_CODE = 19;
+
+    int DISCUSS_RECOMM_TYPE = 20;
+
+    int ONLINE_FORWARD_CODE = 21;
+
 
     int SP_SINGLE_TEXT = 31;
 
@@ -99,6 +102,8 @@ public interface CustomAttachmentType {
     String INVITE_UPLOAD_PHOTOS  = "invite_upload_photos";
 
     String GIFT = "gift";
+
+    String ONLINE_FORWARD_VIDEO = "video";
 
     String DISCUSS_RECOMM = "discuss_recommend";
 

@@ -40,6 +40,8 @@ import java.util.Map;
 import rx.functions.Action0;
 import rx.functions.Action1;
 
+import static com.hn.d.valley.base.constant.Constant.POS_HOME;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -232,7 +234,7 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                                 onUILoadDataEnd(newDatas, userDiscussListBean.getData_count());
                                 //下拉刷新
                                 if (Integer.valueOf(page) == 1) {
-                                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(0, 1));
+                                    RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(0, POS_HOME));
                                 }
                             }
                         }

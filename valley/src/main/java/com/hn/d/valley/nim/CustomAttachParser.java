@@ -13,6 +13,7 @@ import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
 import com.hn.d.valley.main.message.attachment.KLGCoinConsumeAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
+import com.hn.d.valley.main.message.attachment.OnlineVideoForwardAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
@@ -102,6 +103,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.DISCUSS_RECOMM:
                     attachment = new DiscussRecommAttachment(json);
+                    break;
+                case CustomAttachmentType.ONLINE_FORWARD_VIDEO:
+                    attachment = new OnlineVideoForwardAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);
