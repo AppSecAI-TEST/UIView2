@@ -40,6 +40,7 @@ import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
+import com.hn.d.valley.main.found.FoundUIView2;
 import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
@@ -85,7 +86,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     /*首页*/
     HomeUIView mHomeUIView;
     /*发现*/
-    FoundUIView mFoundUIView;
+    FoundUIView2 mFoundUIView;
     /*消息*/
     MessageUIView mMessageUIView;
     /*我的*/
@@ -249,7 +250,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
         } else if (position == Constant.POS_FOUND) {
             //发现
             if (mFoundUIView == null) {
-                mFoundUIView = new FoundUIView();
+                mFoundUIView = new FoundUIView2();
                 mFoundUIView.bindParentILayout(mILayout);
                 mFoundUIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.startIView(mFoundUIView);

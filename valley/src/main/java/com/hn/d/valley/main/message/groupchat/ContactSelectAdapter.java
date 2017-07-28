@@ -64,7 +64,6 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
                 }
             });
 
-
         } else if (getItemType(position) == ItemTypes.FRIEND){
             ContactItem item = (ContactItem) bean;
 

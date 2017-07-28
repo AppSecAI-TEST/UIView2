@@ -144,6 +144,8 @@ public class GroupMemberUIVIew extends SingleRecyclerUIView<GroupMemberBean> {
                             onUILoadDataEnd();
                         } else {
                             onUILoadDataEnd(beans.getData_list());
+                            onUILoadDataFinish();
+                            mRExBaseAdapter.setEnableLoadMore(false);
                         }
                     }
                 });
@@ -175,6 +177,11 @@ public class GroupMemberUIVIew extends SingleRecyclerUIView<GroupMemberBean> {
                         .showDialog(mParentILayout);
             }
         });
+    }
+
+    @Override
+    public boolean hasNext() {
+        return false;
     }
 
     private void animBottom(boolean show) {
@@ -256,6 +263,8 @@ public class GroupMemberUIVIew extends SingleRecyclerUIView<GroupMemberBean> {
             mGroupMemberAdapter.slideClose();
         }
     }
+
+
 
     @Override
     protected RecyclerView.ItemDecoration initItemDecoration() {

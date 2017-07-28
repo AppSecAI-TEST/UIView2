@@ -13,6 +13,7 @@ import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.event.SelectedUserNumEvent;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
@@ -20,9 +21,12 @@ import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.GroupBean;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.friend.SearchUserUIView;
+import com.hn.d.valley.main.friend.SystemPushItem;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.main.other.ContactSearchAdapter;
 import com.hn.d.valley.main.other.ContactSearchUIView;
 import com.hwangjr.rxbus.annotation.Subscribe;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -169,6 +173,15 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
                             });
                 }
             }, R.drawable.group_chat_n));
+        }
+
+        // 发送名片增加本人显示再第一列
+        if (options.showDialog) {
+            FriendBean bean = new FriendBean();
+            bean.setDefaultMark(UserCache.instance().getUserInfoBean().getUsername());
+            bean.setUid(UserCache.getUserAccount());
+            bean.setAvatar(UserCache.getUserAvatar());
+            datas.add(new ContactItem(bean,false));
         }
 
         datas.add(new FuncItem<>(mActivity.getString(R.string.search), ItemTypes.SEARCH, new Action1<ILayout>() {

@@ -474,7 +474,7 @@ public class VideoRecordUIView extends UIBaseView {
             if (rotationRecord < 0) {
                 rotationRecord = Integer.parseInt(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION));
             }
-            L.i("videoTime:" + videoTime + " videoWidth:" + videoWidth + " videoHeight:" + videoHeight + " rotationRecord:" + rotationRecord);
+            L.i("fixVideoPath--> videoTime:" + videoTime + " videoWidth:" + videoWidth + " videoHeight:" + videoHeight + " rotationRecord:" + rotationRecord);
         } finally {
             try {
                 retriever.release();
@@ -690,7 +690,7 @@ public class VideoRecordUIView extends UIBaseView {
                                     uiview.replaceIView(new VideoEditUIView(item, new Action1<EditVideoInfo>() {
                                         @Override
                                         public void call(EditVideoInfo editVideoInfo) {
-                                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
+                                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, -0);
                                         }
                                     }));
                                 }
@@ -710,7 +710,7 @@ public class VideoRecordUIView extends UIBaseView {
                                     uiview.replaceIView(new VideoEditUIView(item, new Action1<EditVideoInfo>() {
                                         @Override
                                         public void call(EditVideoInfo editVideoInfo) {
-                                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, 0);
+                                            fixVideoPath(editVideoInfo.getVideoPath(), null, (int) editVideoInfo.getVideoDuration() / 1000, 0, 0, -0);
                                         }
                                     }));
                                 }
@@ -725,7 +725,10 @@ public class VideoRecordUIView extends UIBaseView {
                                     finishIView(uiview, new UIParam(false).setUnloadRunnable(new Runnable() {
                                         @Override
                                         public void run() {
-                                            fixVideoPath(item.path, new File(item.videoThumbPath), (int) (item.videoDuration / 1000), 0, 0, 0);
+                                            fixVideoPath(item.path, new File(item.videoThumbPath),
+                                                    (int) (item.videoDuration / 1000),
+                                                    item.width, item.height,
+                                                    0);
                                         }
                                     }));
                                 }

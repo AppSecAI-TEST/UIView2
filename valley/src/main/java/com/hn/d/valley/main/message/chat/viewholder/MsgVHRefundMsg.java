@@ -45,20 +45,26 @@ public class MsgVHRefundMsg extends MsgViewHolderBase {
 
         ImageView imageView = (ImageView) findViewById(R.id.iv_item_head);
         TextView tv_pc_name = (TextView) findViewById(R.id.tv_pc_name);
-        TextView msgPcLayout = (TextView) findViewById(R.id.tv_pc_desc);
-        LinearLayout pc_layout = (LinearLayout) findViewById(R.id.msg_card_layout);
 
         RefundMsgAttachment attachment = (RefundMsgAttachment) message.getAttachment();
         if (attachment == null) {
             return;
         }
 
-        RefundMsgAttachment refundMsgAttachment = attachment;
-        RefundMsg refundMsg = refundMsgAttachment.getRefundMsg();
+        RefundMsg refundMsg = attachment.getRefundMsg();
 
         imageView.setImageResource(R.drawable.hongbao_xiao_konglongjun);
         NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+
+        contentContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUIBaseView.startIView(new BillUIView());
+            }
+        });
+
         if (refundMsg.getExtend() == null ) {
+            tv_pc_name.setText(refundMsg.getMsg());
             return;
         }
         if (refundMsg.getExtend().getTo_uid() == 0) {
@@ -68,13 +74,6 @@ public class MsgVHRefundMsg extends MsgViewHolderBase {
             tv_pc_name.setText(String.format(Locale.CHINA,context.getString(R.string.text_msg_notice_refund),refundMsg.getReason()
                     ,userInfoCache.getUserDisplayNameEx(refundMsg.getExtend().getTo_uid() + ""),refundMsg.getMoney() / 100f));
         }
-
-        contentContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mUIBaseView.startIView(new BillUIView());
-            }
-        });
 
     }
 

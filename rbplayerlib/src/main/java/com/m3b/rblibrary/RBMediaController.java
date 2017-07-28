@@ -582,7 +582,7 @@ public class RBMediaController extends RelativeLayout {
     /**
      * 隐藏全部的控件
      */
-    private void hideAll() {
+    public void hideAll() {
         $.id(R.id.view_jky_player_center_control).gone();
         $.id(R.id.app_video_loading).gone();
         $.id(R.id.view_jky_player_tip_control).gone();

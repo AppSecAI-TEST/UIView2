@@ -286,8 +286,8 @@ public class PayUIDialog extends UIIDialogImpl {
             code = jsonObject.optInt("code");
 
             int successCode = Constants.SUCCESS;
-            if (params.missionType == 2) {
-                // 购买龙币
+            if (params.missionType == 2 ) {
+                // missiontype  =2 购买龙币
                 successCode = 200;
             }
 

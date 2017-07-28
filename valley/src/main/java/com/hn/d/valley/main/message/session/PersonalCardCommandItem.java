@@ -50,6 +50,7 @@ public class PersonalCardCommandItem extends CommandItemInfo {
         //个人名片
         if (getContainer().sessionType == SessionTypeEnum.P2P) {
             //
+            option.showDialog(true);
             option.showUnSelectUids(true);
             ContactSelectUIVIew.start(getContainer().mLayout, option
                     , null,null, Arrays.asList(getContainer().account),false, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
@@ -59,6 +60,7 @@ public class PersonalCardCommandItem extends CommandItemInfo {
                         }
                     });
         } else if(getContainer().sessionType == SessionTypeEnum.Team){
+            option.showDialog(true);
             ContactSelectUIVIew.start(getContainer().mLayout, option
                     , null, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                         @Override
@@ -67,8 +69,6 @@ public class PersonalCardCommandItem extends CommandItemInfo {
                         }
                     });
         }
-
-
     }
 
     private void sendCardMsg(List<AbsContactItem> absContactItems, RequestCallback requestCallback) {

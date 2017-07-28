@@ -345,7 +345,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                     scrollToBottom(hotNumView);
                                     return;
                                 }
-                                if (Float.valueOf(hotMoneyView.string()) / Float.valueOf(hotNumView.string()) < 0.01F) {
+                                if (Float.valueOf(hotMoneyView.string()) < 0.01f * Integer.valueOf(hotNumView.string())) {
                                     T_.error("平均红包金额需要大于0.01元");
                                     return;
                                 }
@@ -398,8 +398,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
     }
 
     private void sendRedbag(ExEditText hotMoneyView, ExEditText hotNumView, String extend) {
-        Float money = Float.valueOf(hotMoneyView.getText().toString()) * 100;
-        int num = Integer.valueOf(hotNumView.getText().toString());
+        Float money = Float.valueOf(hotMoneyView.string()) * 100;
+        int num = Integer.valueOf(hotNumView.string());
         PayUIDialog.Params params = new PayUIDialog.Params();
         params.setBalance(WalletHelper.getInstance().getWalletAccount().getMoney())
                 .setMoney(money)
@@ -407,6 +407,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 .setExtend(extend)
                 .setRandom(0)
                 .setType(1)
+                .setContent("视频红包")
                 .setNum(num);
 
         if (money > WalletHelper.getInstance().getWalletAccount().getMoney()) {
@@ -426,14 +427,18 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             public void call(Object o) {
                 if (mPublishAction != null) {
                     // 插入一条临时动态
-                    UserDiscussListBean.DataListBean dynamicContentBean = PublishControl.createBean(getPublishTaskRealm(""));
-                    PublishControl.instance().getDataListBeen().add(dynamicContentBean);
-                    mPublishAction.call();
-                    PublishControl.instance().getDataListBeen().remove(dynamicContentBean);
-                    RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
-
+//                    UserDiscussListBean.DataListBean dynamicContentBean = PublishControl.createBean(getPublishTaskRealm(""));
+//                    PublishControl.instance().getDataListBeen().add(dynamicContentBean);
+//                    mPublishAction.call();
+//                    PublishControl.instance().getDataListBeen().remove(dynamicContentBean);
+                    // 刷新视频红包动态
+                    finishIView(PublishDynamicUIView2.this, new UIParam().setUnloadRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
+                        }
+                    }));
                 }
-                finishIView();
             }
         }, params));
     }

@@ -261,6 +261,11 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
     }
 
     @Override
+    public boolean hasNext() {
+        return false;
+    }
+
+    @Override
     protected RBaseItemDecoration initItemDecoration() {
         RBaseItemDecoration itemDecoration = new RBaseItemDecoration() {
             @Override

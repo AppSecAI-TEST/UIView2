@@ -20,14 +20,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="210dp"
     android:layout_height="wrap_content"
-    android:padding="@dimen/base_xhdpi">
+    android:padding="3dp">
 
     <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/iv_thumb"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="270dp"
         android:scaleType="centerCrop"
         android:src="@drawable/zhanweitu_1" />
 
@@ -38,26 +38,32 @@
         android:layout_alignBottom="@id/iv_thumb"
         android:background="#33000000"
         android:orientation="vertical"
-        android:padding="@dimen/base_xhdpi">
+        android:paddingTop="@dimen/base_xhdpi"
+        android:paddingBottom="@dimen/base_xhdpi"
+        android:paddingStart="5dp"
+        >
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/username"
+            style="@style/NameTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            tools:text="爱宠物的默默" />
 
         <LinearLayout
+            android:layout_marginTop="@dimen/base_xhdpi_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <com.angcyo.uiview.widget.RTextView
-                android:id="@+id/username"
-                style="@style/NameTextStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                tools:text="爱宠物的默默" />
 
             <com.hn.d.valley.widget.HnGenderView
                 android:id="@+id/grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/base_ldpi"
+                android:gravity="center_vertical"
+                android:visibility="visible"
                 android:tag="g"
                 tools:text="2" />
 
@@ -72,6 +78,7 @@
 
         <LinearLayout
             android:id="@+id/ll_desc"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">

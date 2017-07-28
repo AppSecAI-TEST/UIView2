@@ -11,6 +11,7 @@ import com.angcyo.uiview.net.RSubscriber;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.RTextView;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.realm.UserInfoBean;
@@ -91,7 +92,11 @@ public class MsgViewHolderPersonCard extends MsgViewHolderBase {
                 PersonalCardAttachment pcAttachment = (PersonalCardAttachment) attachment;
                 final PersonalCard from = PersonalCardAttachment.from(pcAttachment.toJson(true));
                 tv_pc_name.setText(from.getUsername());
-                imageView.setImageUrl(from.getAvatar());
+//                imageView.setImageUrl(from.getAvatar());
+                Glide.with(context)
+                        .load(from.getAvatar())
+                        .placeholder(R.drawable.zhanweitu_1)
+                        .into(imageView);
 
                 contentContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -126,7 +131,7 @@ public class MsgViewHolderPersonCard extends MsgViewHolderBase {
     private void fillView(UserInfoBean bean) {
         fans_count.setText(bean.getFans_count() + "");
         chars_count.setText(bean.getCharm());
-        grade.setGender(bean.getSex(),bean.getGrade());
+        grade.setGender(bean.getSex(), bean.getGrade(),bean.getConstellation(),bean.getCharm());
     }
 
 }

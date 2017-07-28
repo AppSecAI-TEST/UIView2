@@ -369,10 +369,10 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 infoLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startInputView(infoLayout, mGroupDescBean.getNick(), new Action1<String>() {
+                        startInputView(infoLayout, infoLayout.getDarkTextView().getText().toString(), new Action1<String>() {
                             @Override
                             public void call(String s) {
-                                editNickName(UserCache.getUserAccount(), s);
+                                editNickName( s);
                             }
                         });
                     }
@@ -592,7 +592,6 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         super.onNoNetwork();
                     }
                 }));
-
     }
 
     private void dissolveGroup() {
@@ -636,7 +635,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 if (!isSelfAdmin) {
                     return;
                 }
-                startInputView(infoLayout, currentName, new Action1<String>() {
+                startInputView(infoLayout, infoLayout.getDarkTextView().getText().toString(), new Action1<String>() {
                     @Override
                     public void call(String s) {
                         editGroupName(s);
@@ -670,7 +669,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 }));
     }
 
-    private void editNickName(String to_uid, String name) {
+    private void editNickName(String name) {
         if (mGroupDescBean == null) {
             return;
         }

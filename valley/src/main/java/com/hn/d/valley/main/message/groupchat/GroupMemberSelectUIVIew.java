@@ -122,7 +122,7 @@ public class GroupMemberSelectUIVIew extends BaseContactSelectUIVIew {
                         } else {
                             onUILoadDataEnd();
 
-                            List<AbsContactItem> datas = new ArrayList();
+                            List<AbsContactItem> datas = new ArrayList<>();
                             datas.add(new FuncItem<>("搜索", ItemTypes.SEARCH,new Action1<ILayout>() {
                                 @Override
                                 public void call(ILayout o) {

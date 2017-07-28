@@ -151,6 +151,11 @@ public class BaseContactSelectAdapter extends RModelAdapter<AbsContactItem> {
          */
         boolean showDialog = false;
 
+        public Options showDialog(boolean showDialog) {
+            this.showDialog = showDialog;
+            return this;
+        }
+
         public void setShowMe(boolean showMe) {
             this.showMe = showMe;
         }

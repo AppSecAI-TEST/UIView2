@@ -233,6 +233,7 @@ public class VideoPlayUIView extends UIIViewImpl {
     public void onViewUnload() {
         super.onViewUnload();
         if (mMediaController != null) {
+            mMediaController.hideAll();
             mMediaController.onDestroy();
         }
         fullscreen(false, true);
@@ -281,9 +282,9 @@ public class VideoPlayUIView extends UIIViewImpl {
                     }
 
                     @Override
-                    public void onAnimationEnd(Animator animation) {
-                        super.onAnimationEnd(animation);
-                        //finishIView(VideoPlayUIView.this, false);
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                        mMediaController.hideAll();
                     }
                 });
     }

@@ -78,6 +78,7 @@ public class UserInfoBean extends RealmObject {
      * signature :
      * is_set_password : 1
      * is_login_protect : 1
+     * constellation
      */
 
     private int is_attention;
@@ -108,6 +109,16 @@ public class UserInfoBean extends RealmObject {
     private String county_name;
     private String is_auth;
     private String auth_type;
+
+    public String getConstellation() {
+        return constellation;
+    }
+
+    public void setConstellation(String constellation) {
+        this.constellation = constellation;
+    }
+
+    private String constellation;
 
     public String getCharm() {
         return charm;

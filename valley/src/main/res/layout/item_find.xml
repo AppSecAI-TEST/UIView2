@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:padding="@dimen/base_xhdpi_15"
+        android:background="@drawable/base_white_bg_selector"
+        android:layout_width="match_parent"
+        android:layout_height="108dp"
+        android:layout_marginBottom="-10dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:layout_alignBottom="@+id/iv_find"
+        android:layout_alignParentEnd="true">
+
+        <TextView
+            android:id="@+id/tv_friend_name"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
+            android:layout_marginTop="@dimen/base_dpi"
+            android:textColor="@color/base_text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="hewking" />
+
+        <TextView
+            android:id="@+id/tv_func_desc"
+            android:layout_marginTop="@dimen/base_ldpi"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/default_text_little_size"
+            android:textColor="@color/default_base_bg_disable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="hewking" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_find"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/base_ldpi"
+        android:src="@drawable/img_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>
