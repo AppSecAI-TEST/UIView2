@@ -130,6 +130,7 @@ public class LikeUserInfoBean {
     private String media;
     private String share_type;
     private String constellation;//星座
+    private String charm;//魅力值
 
     /**
      * 新的朋友字段
@@ -482,5 +483,13 @@ public class LikeUserInfoBean {
 
     public void setConstellation(String constellation) {
         this.constellation = constellation;
+    }
+
+    public String getCharm() {
+        return charm;
+    }
+
+    public void setCharm(String charm) {
+        this.charm = charm;
     }
 }

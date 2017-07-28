@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.UI;
+import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 
 /**
@@ -29,6 +30,7 @@ public class HnGenderView extends LinearLayout {
     private ImageView mSexImageView;
     private ImageView mLevelImageView;
     private TextView mConstellationTextView;
+    private TextView mCharmTextView;
 
     public HnGenderView(Context context) {
         super(context);
@@ -67,6 +69,18 @@ public class HnGenderView extends LinearLayout {
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.base_mdpi);
         mConstellationTextView.setPadding(((int) (2 * density)), (int) (1 * density), (int) (2 * density), (int) (1 * density));
         addView(mConstellationTextView, params);
+
+        mCharmTextView = new RTextView(getContext());
+        mCharmTextView.setVisibility(GONE);
+        mCharmTextView.setTextSize(9);
+        mCharmTextView.setTextColor(Color.WHITE);
+        mCharmTextView.setTag("魅力%1$s");
+        UI.setBackgroundDrawable(mCharmTextView,
+                ResUtil.createDrawable(Color.parseColor("#51D4E0"), 1 * density));
+        params = new LayoutParams(-2, -2);
+        params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.base_mdpi);
+        mCharmTextView.setPadding(((int) (2 * density)), (int) (1 * density), (int) (2 * density), (int) (1 * density));
+        addView(mCharmTextView, params);
     }
 
 //    @Override
@@ -99,13 +113,13 @@ public class HnGenderView extends LinearLayout {
      * 设置行性别和等级
      */
     public void setGender(String sex, String level) {
-        setGender(sex, level, "");
+        setGender(sex, level, "", "");
     }
 
     /**
      * 星座
      */
-    public void setGender(String sex, String level, String constellation) {
+    public void setGender(String sex, String level, String constellation, String charm) {
         //setTag(sex);
         //setText(level);
         if (TextUtils.isEmpty(sex)) {
@@ -148,6 +162,13 @@ public class HnGenderView extends LinearLayout {
         } else {
             mConstellationTextView.setVisibility(VISIBLE);
             mConstellationTextView.setText(constellation);
+        }
+
+        if (TextUtils.isEmpty(charm)) {
+            mCharmTextView.setVisibility(GONE);
+        } else {
+            mCharmTextView.setVisibility(VISIBLE);
+            mCharmTextView.setText(charm);
         }
     }
 
