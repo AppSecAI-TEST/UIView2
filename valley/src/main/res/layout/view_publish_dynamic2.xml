@@ -66,6 +66,7 @@
                         android:paddingBottom="@dimen/base_ldpi"
                         android:paddingEnd="@dimen/base_hdpi"
                         android:paddingStart="@dimen/base_hdpi"
+                        android:visibility="gone"
                         android:paddingTop="@dimen/base_ldpi"
                         android:tag="# %1$s"
                         android:textColor="@color/base_mention_color"
