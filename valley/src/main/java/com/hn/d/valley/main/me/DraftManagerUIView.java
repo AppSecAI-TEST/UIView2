@@ -277,6 +277,8 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
         int size = (int) (density() * 100);
         final int[] mediaSize = new int[]{size, size};
 
+        mediaImageTypeView.setContainVideo(true);
+
         mediaImageTypeView.setVisibility(View.VISIBLE);
         if (DynamicType.isImage(mediaType)) {
             //图片类型
