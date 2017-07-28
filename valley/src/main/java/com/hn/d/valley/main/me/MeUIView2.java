@@ -36,7 +36,6 @@ import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
-import com.hn.d.valley.sub.other.FriendsRecommendUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.other.KLGCoinUIVIew;
 import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
@@ -586,7 +585,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //            }
 //        }));
 
-        if (BuildConfig.SHOW_DEBUG) {
+        if (BuildConfig.DEBUG) {
             //版本 编译时间
             items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
 
