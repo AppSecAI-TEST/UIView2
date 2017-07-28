@@ -827,9 +827,10 @@ public class UserDiscussItemControl {
                     public void onImageItemClick(GlideImageView imageView, List<String> urlList, List<GlideImageView> imageList, int index) {
                         //T_.info(videoUrl);
                         if (!TextUtils.isEmpty(videoUrl)) {
-                            iLayout.startIView(new VideoPlayUIView(thumbUrl,
-                                    videoUrl
-                                    /*OssHelper.getWidthHeightWithUrl(thumbUrl)*/)
+                            iLayout.startIView(new VideoPlayUIView(videoUrl,
+                                    thumbUrl, imageView.copyDrawable(),
+                                    OssHelper.getWidthHeightWithUrl(thumbUrl))
+                                    .resetViewLocation(imageView)
                                     .setHotPackageId(hotPackageId)
                                     .setRelayVideoLongClickListener(new RelayVideoLongClickListener(iLayout, allowDownload)));
                         }

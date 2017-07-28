@@ -775,6 +775,14 @@ public class RBMediaController extends RelativeLayout {
 
         long position = videoView.getCurrentPosition();
         long duration = videoView.getDuration();
+        if (duration <= 0) {
+            Log.e("media controller", "视频时长获取失败:" + url);
+            if (seekBar != null) {
+                seekBar.setProgress(1000);
+            }
+            return 0;
+        }
+
         long pos = 1000L * position / duration;
         if (seekBar != null) {
             if (duration > 0) {

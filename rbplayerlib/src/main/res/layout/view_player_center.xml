@@ -117,8 +117,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:scaleType="fitXY"
-        tools:background="@android:color/holo_red_dark"/>
+        android:scaleType="fitCenter"
+        />
+
+    <!--tools:background="@android:color/holo_red_dark"-->
 
     <ProgressBar
         android:id="@+id/app_video_loading"

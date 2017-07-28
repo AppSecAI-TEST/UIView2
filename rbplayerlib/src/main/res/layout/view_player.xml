@@ -3,7 +3,7 @@
     android:id="@+id/app_video_box"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000" >
+    android:background="#00000000" >
 
     <com.m3b.rblibrary.media.IjkVideoView
         android:id="@+id/video_view"

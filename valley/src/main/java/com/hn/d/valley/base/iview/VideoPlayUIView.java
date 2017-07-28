@@ -1,21 +1,34 @@
 package com.hn.d.valley.base.iview;
 
+import android.animation.Animator;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.Root;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
+import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.resources.AnimUtil;
+import com.angcyo.uiview.resources.RAnimListener;
+import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.view.UIIViewImpl;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.message.chat.viewholder.MsgViewHolderRedPacket;
 import com.liulishuo.FDown;
@@ -56,7 +69,7 @@ public class VideoPlayUIView extends UIIViewImpl {
             L.e("call: onLongPress([videoUrl])-> " + videoUrl + " " + path);
 
             if (mRelayVideoLongClickListener != null) {
-                mRelayVideoLongClickListener.onLongPress(videoUrl,thumbImagePath);
+                mRelayVideoLongClickListener.onLongPress(videoUrl, thumbImagePath);
             }
         }
     };
@@ -67,6 +80,9 @@ public class VideoPlayUIView extends UIIViewImpl {
      * 红包id
      */
     private String hotPackageId;
+
+    private Rect mViewLocation = new Rect();
+    private View mPreviewImageView;
 
     public VideoPlayUIView(String path) {
         this.path = path;
@@ -81,6 +97,13 @@ public class VideoPlayUIView extends UIIViewImpl {
         this.path = path;
         this.thumbDrawable = thumbDrawable;
         this.thumbSize = thumbSize;
+    }
+
+    public VideoPlayUIView(String path, String thumbImagePath, Drawable thumbDrawable, int[] thumbSize) {
+        this.path = path;
+        this.thumbDrawable = thumbDrawable;
+        this.thumbSize = thumbSize;
+        this.thumbImagePath = thumbImagePath;
     }
 
     @Override
@@ -109,7 +132,8 @@ public class VideoPlayUIView extends UIIViewImpl {
             mMediaController.setLive(true);//设置该地址是直播的地址, 主播状态下, 不会显示播放控制按钮
         }
         mMediaController.setScaleType("fitParent");
-        final ImageView previewImageView = mMediaController.getPreviewImageView();
+        ImageView previewImageView = mMediaController.getPreviewImageView();
+        mPreviewImageView = previewImageView;
         mMediaController
                 .onPrepared(new RBMediaController.OnPreparedListener() {
                     @Override
@@ -130,7 +154,7 @@ public class VideoPlayUIView extends UIIViewImpl {
 
                         if (!TextUtils.isEmpty(hotPackageId)) {
                             //弹出抢红包对话框
-                            MsgViewHolderRedPacket.checkRedPacketStatus(VideoPlayUIView.this,Long.valueOf(hotPackageId));
+                            MsgViewHolderRedPacket.checkRedPacketStatus(VideoPlayUIView.this, Long.valueOf(hotPackageId));
                         }
                     }
                 })
@@ -142,7 +166,7 @@ public class VideoPlayUIView extends UIIViewImpl {
                          */
                         L.e("onInfo: ");
                         if (what == IMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                            previewImageView.setVisibility(View.GONE);
+                            mPreviewImageView.setVisibility(View.GONE);
                         }
                     }
                 })
@@ -156,17 +180,22 @@ public class VideoPlayUIView extends UIIViewImpl {
                         L.e("Error happened, errorCode = " + what);
                         L.e("onError: ");
                     }
-                })
-                .play(path);//开始播放视频
+                });
+        //.play(path);//开始播放视频
 
-//        if (!TextUtils.isEmpty(thumbImagePath) && previewImageView != null) {
-//            Glide.with(mActivity)
-//                    .load(thumbImagePath)
-//                    .into(previewImageView);
-//        }
-        if (thumbDrawable != null && previewImageView != null) {
-            UI.setView(previewImageView, thumbSize[0], thumbSize[1]);
-            previewImageView.setImageDrawable(thumbDrawable);
+        if (previewImageView != null) {
+            if (thumbSize != null && thumbSize.length == 2 && thumbSize[0] > 0 && thumbSize[1] > 0) {
+                //UI.setView(previewImageView, thumbSize[0], thumbSize[1]);
+            }
+
+            if (thumbDrawable != null) {
+                previewImageView.setImageDrawable(thumbDrawable);
+            } else if (!TextUtils.isEmpty(thumbImagePath)) {
+                Glide.with(mActivity)
+                        .load(thumbImagePath)
+                        .fitCenter()
+                        .into(previewImageView);
+            }
         }
     }
 
@@ -176,6 +205,12 @@ public class VideoPlayUIView extends UIIViewImpl {
         if (mMediaController != null) {
             mMediaController.onPause();
         }
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        //mMediaController.play(path);//开始播放视频
     }
 
     @Override
@@ -191,6 +226,7 @@ public class VideoPlayUIView extends UIIViewImpl {
         super.onViewLoad();
         fullscreen(true, true);
         mRootView.setKeepScreenOn(true);
+        animToMax();
     }
 
     @Override
@@ -208,7 +244,114 @@ public class VideoPlayUIView extends UIIViewImpl {
         if (mMediaController != null && mMediaController.onBackPressed()) {
             return false;
         }
-        return super.onBackPressed();
+        animToMin();
+        finishIView(this, new UIParam(true, true, false));
+        return false;
+    }
+
+    /**
+     * 退出动画
+     */
+    private void animToMin() {
+        mViewLocation = AnimUtil.ensureRect(mViewLocation);
+
+        int[] widthHeight;
+        if (mMediaController.isPlaying()) {
+            if (thumbSize != null && thumbSize.length == 2 && thumbSize[0] > 0 && thumbSize[1] > 0) {
+                widthHeight = RUtils.getCenterRectWidthHeight(new RectF(0, 0, thumbSize[0], thumbSize[1]),
+                        new RectF(0, 0, mPreviewImageView.getMeasuredWidth(), mPreviewImageView.getMeasuredHeight()));
+            } else {
+                widthHeight = new int[]{ScreenUtil.screenWidth, ScreenUtil.screenHeight};
+            }
+        } else {
+            widthHeight = RUtils.getCenterRectWidthHeight(new RectF(mViewLocation.left, mViewLocation.top, mViewLocation.right, mViewLocation.bottom),
+                    new RectF(0, 0, mPreviewImageView.getMeasuredWidth(), mPreviewImageView.getMeasuredHeight()));
+        }
+
+        AnimUtil.startToMinAnim(mViewLocation,
+                mMediaController.getChildAt(0), new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
+                new Point(mViewLocation.centerX(), mViewLocation.centerY()),
+                widthHeight[0], widthHeight[1],
+                new RAnimListener() {
+                    @Override
+                    public void onAnimationProgress(Animator animation, float progress) {
+                        super.onAnimationProgress(animation, progress);
+                        mMediaController.setBackgroundColor(AnimUtil.evaluateColor(progress, Color.BLACK, Color.TRANSPARENT));
+//                        mMViewPager.setAlpha(0.6f + 1 - progress);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        //finishIView(VideoPlayUIView.this, false);
+                    }
+                });
+    }
+
+    /**
+     * 进入动画
+     */
+    private void animToMax() {
+//        hideIndicator();
+//        Rect viewLocation = mImageItems.get(startPosition).mViewLocation;
+        mViewLocation = AnimUtil.ensureRect(mViewLocation);
+
+        if (mPreviewImageView == null) {
+            mPreviewImageView = mMediaController;
+        }
+
+        if (mPreviewImageView.getMeasuredWidth() == 0 || mPreviewImageView.getMeasuredHeight() == 0) {
+            mPreviewImageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                @Override
+                public boolean onPreDraw() {
+                    mPreviewImageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                    startAnimInner();
+                    return false;
+                }
+            });
+        } else {
+            startAnimInner();
+        }
+    }
+
+    private void startAnimInner() {
+//        mMViewPager.setBackgroundColor(Color.RED);
+        if (mPreviewImageView == null) {
+            mPreviewImageView = mMediaController;
+        }
+
+        int[] widthHeight = RUtils.getCenterRectWidthHeight(new RectF(mViewLocation.left, mViewLocation.top, mViewLocation.right, mViewLocation.bottom),
+                new RectF(0, 0, mPreviewImageView.getMeasuredWidth(), mPreviewImageView.getMeasuredHeight()));
+
+        AnimUtil.startToMaxAnim(mViewLocation,
+                mPreviewImageView,
+                new Point(mViewLocation.centerX(), mViewLocation.centerY()),
+                new Point(ScreenUtil.screenWidth / 2, ScreenUtil.screenHeight / 2),
+                widthHeight[0],
+                widthHeight[1], 60, new RAnimListener() {
+                    @Override
+                    public void onAnimationProgress(Animator animation, float progress) {
+                        super.onAnimationProgress(animation, progress);
+                        mMediaController.setBackgroundColor(AnimUtil.evaluateColor(progress, Color.TRANSPARENT, Color.BLACK));
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mMediaController.play(path);
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        super.onAnimationStart(animation);
+                    }
+
+                    @Override
+                    public void onDelayBeforeStart(Animator animation) {
+                        super.onDelayBeforeStart(animation);
+//                        mPreviewImageView.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     /**
@@ -232,6 +375,36 @@ public class VideoPlayUIView extends UIIViewImpl {
     public VideoPlayUIView setHotPackageId(String hotPackageId) {
         this.hotPackageId = hotPackageId;
         return this;
+    }
+
+    public VideoPlayUIView setViewLocation(Rect viewLocation) {
+        mViewLocation = viewLocation;
+        return this;
+    }
+
+    public VideoPlayUIView resetViewLocation(View view) {
+        view.getGlobalVisibleRect(mViewLocation);
+        return this;
+    }
+
+    @Override
+    public Animation loadStartAnimation() {
+        return UIBaseView.createClipEnterAnim(1f);
+    }
+
+    @Override
+    public Animation loadFinishAnimation() {
+        return UIBaseView.createClipExitAnim(1f);
+    }
+
+    @Override
+    public Animation loadOtherEnterAnimation() {
+        return UIBaseView.createClipEnterAnim(1f);
+    }
+
+    @Override
+    public Animation loadOtherExitAnimation() {
+        return UIBaseView.createClipExitAnim(1f);
     }
 
     /**
