@@ -56,6 +56,8 @@ public interface CustomAttachmentType {
 
     int ONLINE_FORWARD_CODE = 21;
 
+    int SHOW_CHAMPION_TYPE = 22;
+
 
     int SP_SINGLE_TEXT = 31;
 
@@ -106,5 +108,7 @@ public interface CustomAttachmentType {
     String ONLINE_FORWARD_VIDEO = "video";
 
     String DISCUSS_RECOMM = "discuss_recommend";
+
+    String SHOW_CHAMPION = "show_champion";
 
 }

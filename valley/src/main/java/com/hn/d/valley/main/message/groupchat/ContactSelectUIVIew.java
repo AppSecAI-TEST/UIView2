@@ -149,7 +149,7 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 
         refreshLayout.setRefreshEnd();
 
-        final List<AbsContactItem> datas = new ArrayList();
+        final List<AbsContactItem> datas = new ArrayList<>();
 
         //转发等需要转发到群聊 需要添加群聊funcItem
         if (onShowGroup) {

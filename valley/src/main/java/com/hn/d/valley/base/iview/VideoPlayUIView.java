@@ -74,13 +74,12 @@ public class VideoPlayUIView extends UIIViewImpl {
         }
     };
     boolean canSave = false;
+    boolean isPlayStart = false;
     private boolean mIsLive;
-
     /**
      * 红包id
      */
     private String hotPackageId;
-
     private Rect mViewLocation = new Rect();
     private View mPreviewImageView;
 
@@ -141,6 +140,7 @@ public class VideoPlayUIView extends UIIViewImpl {
                         /**
                          * 监听视频是否已经准备完成开始播放
                          */
+                        isPlayStart = true;
                         L.e("onPrepared: ");
                     }
                 })
@@ -257,7 +257,7 @@ public class VideoPlayUIView extends UIIViewImpl {
         mViewLocation = AnimUtil.ensureRect(mViewLocation);
 
         int[] widthHeight;
-        if (mMediaController.isPlaying()) {
+        if (isPlayStart()) {
             if (thumbSize != null && thumbSize.length == 2 && thumbSize[0] > 0 && thumbSize[1] > 0) {
                 widthHeight = RUtils.getCenterRectWidthHeight(new RectF(0, 0, thumbSize[0], thumbSize[1]),
                         new RectF(0, 0, mPreviewImageView.getMeasuredWidth(), mPreviewImageView.getMeasuredHeight()));
@@ -386,6 +386,10 @@ public class VideoPlayUIView extends UIIViewImpl {
     public VideoPlayUIView resetViewLocation(View view) {
         view.getGlobalVisibleRect(mViewLocation);
         return this;
+    }
+
+    public boolean isPlayStart() {
+        return isPlayStart;
     }
 
     @Override

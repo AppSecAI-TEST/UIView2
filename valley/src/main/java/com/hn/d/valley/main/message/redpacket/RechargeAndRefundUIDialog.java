@@ -75,6 +75,13 @@ public class RechargeAndRefundUIDialog extends UIIDialogImpl {
     }
 
     @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        showSoftInput(passcodeView.getEditText());
+
+    }
+
+    @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
     }
