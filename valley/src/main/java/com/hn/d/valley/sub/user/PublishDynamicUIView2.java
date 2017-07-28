@@ -70,11 +70,17 @@ import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
+import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.message.redpacket.PayUIDialog;
+import com.hn.d.valley.main.message.redpacket.ThirdPayUIDialog;
 import com.hn.d.valley.main.message.session.EmojiLayoutControl;
 import com.hn.d.valley.main.other.AmapUIView;
+import com.hn.d.valley.main.wallet.SetPayPwdUIView;
+import com.hn.d.valley.main.wallet.WalletAccount;
+import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.utils.HnGlide;
@@ -325,8 +331,8 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
                         checkDynamicType();
                         if (mDynamicType == DynamicType.VIDEO) {
-                            ExEditText hotMoneyView = mViewHolder.v(R.id.hot_money_view);
-                            ExEditText hotNumView = mViewHolder.v(R.id.hot_num_view);
+                            final ExEditText hotMoneyView = mViewHolder.v(R.id.hot_money_view);
+                            final ExEditText hotNumView = mViewHolder.v(R.id.hot_num_view);
 
                             if (isHotPackageLayoutExpand()) {
                                 if (hotMoneyView.checkEmpty()) {
@@ -337,12 +343,47 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                     scrollToBottom(hotNumView);
                                     return;
                                 }
-                                if (Float.valueOf(hotMoneyView.string()) / Float.valueOf(hotNumView.string()) < 0.01) {
+                                if (Float.valueOf(hotMoneyView.string()) / Float.valueOf(hotNumView.string()) < 0.01F) {
                                     T_.error("平均红包金额需要大于0.01元");
                                     return;
                                 }
                                 Action.publishAction();
                                 // TODO: 2017/07/27 0027 调用发布红包接口
+                                HnLoading.show(mILayout);
+                                PublishControl.uploadDynamicVideo(getPublishTaskRealm(""),new Action1<String>(){
+                                    @Override
+                                    public void call(final String extend) {
+                                        HnLoading.hide();
+                                        if (WalletHelper.getInstance().getWalletAccount() == null) {
+                                            WalletHelper.getInstance().fetchWallet(new RequestCallback<WalletAccount>() {
+                                                @Override
+                                                public void onStart() {
+
+                                                }
+
+                                                @Override
+                                                public void onSuccess(WalletAccount o) {
+                                                    if (o.hasPin()) {
+                                                        sendRedbag(hotMoneyView, hotNumView, extend);
+                                                    } else {
+                                                        showPinDialog();
+                                                    }
+                                                }
+                                                @Override
+                                                public void onError(String msg) {
+
+                                                }
+                                            });
+                                            return;
+                                        }
+
+                                        if (!WalletHelper.getInstance().getWalletAccount().hasPin()) {
+                                            showPinDialog();
+                                        } else {
+                                            sendRedbag(hotMoneyView, hotNumView, extend);
+                                        }
+                                    }
+                                });
                                 return;
                             }
                         }
@@ -351,6 +392,67 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                         onPublish("");
                     }
                 }));
+    }
+
+    private void sendRedbag(ExEditText hotMoneyView, ExEditText hotNumView, String extend) {
+        Float money = Float.valueOf(hotMoneyView.getText().toString()) * 100;
+        int num = Integer.valueOf(hotNumView.getText().toString());
+        PayUIDialog.Params params = new PayUIDialog.Params();
+        params.setBalance(WalletHelper.getInstance().getWalletAccount().getMoney())
+                .setMoney(money)
+                .setTo_square("1")
+                .setExtend(extend)
+                .setRandom(0)
+                .setType(1)
+                .setNum(num);
+
+        if (money > WalletHelper.getInstance().getWalletAccount().getMoney()) {
+            T_.show(getString(R.string.text_balance_not_enough));
+            params.enableBalance(false);
+            startIView(new ThirdPayUIDialog(new Action1() {
+                @Override
+                public void call(Object o) {
+                    finishIView();
+                }
+            },params, ThirdPayUIDialog.ALIPAY,1));
+            return;
+        }
+
+        startIView(new PayUIDialog(new Action1() {
+            @Override
+            public void call(Object o) {
+                if (mPublishAction != null) {
+                    // 插入一条临时动态
+                    UserDiscussListBean.DataListBean dynamicContentBean = PublishControl.createBean(getPublishTaskRealm(""));
+                    PublishControl.instance().getDataListBeen().add(dynamicContentBean);
+                    mPublishAction.call();
+                    PublishControl.instance().getDataListBeen().remove(dynamicContentBean);
+                    RBus.post(Constant.TAG_UPDATE_CIRCLE, new UpdateDataEvent());
+
+                }
+                finishIView();
+            }
+        },params));
+    }
+
+    private void showPinDialog() {
+        UIDialog.build()
+                .setDialogContent(mActivity.getString(R.string.text_no_set_pwd_please_set_pwd))
+                .setOkText(mActivity.getString(R.string.text_set_pay_pwd))
+                .setOkListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 先判断是否绑定手机
+                        if (!UserCache.instance().isBindPhone()) {
+                            startIView(new BindPhoneUIView());
+                            T_.show(mActivity.getString(R.string.text_unselected_phonenumber));
+                        } else {
+                            startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
+                        }
+                    }
+                })
+                .setCancelText(getString(R.string.cancel))
+                .showDialog(mParentILayout);
     }
 
     protected void checkDynamicType() {

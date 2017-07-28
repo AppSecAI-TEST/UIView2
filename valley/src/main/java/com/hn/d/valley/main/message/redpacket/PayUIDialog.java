@@ -238,7 +238,8 @@ public class PayUIDialog extends UIIDialogImpl {
         String type = checkType();
         RRetrofit.create(RedPacketService.class)
                 .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num,
-                        "money:" + (int) params.money, "content:" + params.content, type, "random:" + params.random))
+                        "money:" + (int) params.money, "content:" + params.content, type
+                        , "random:" + params.random,"extend:" + params.extend))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -334,13 +335,25 @@ public class PayUIDialog extends UIIDialogImpl {
         //默认1 发红包 2 充值龙币 3 充值 4 提现
         int missionType = 1;
         boolean enableBalance = true; // 是否显示余额选项
+        private String extend;//当为广场红包时，content表示动态的参数集json，具体见下
+
 
         public String getTo_square() {
             return to_square;
         }
 
-        public void setTo_square(String to_square) {
+        public String getExtend() {
+            return extend;
+        }
+
+        public Params setExtend(String extend) {
+            this.extend = extend;
+            return this;
+        }
+
+        public Params setTo_square(String to_square) {
             this.to_square = to_square;
+            return this;
         }
 
         public void enableBalance(boolean enableBalance) {

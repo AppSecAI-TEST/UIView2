@@ -230,7 +230,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 public void call(Object o) {
                     finishIView();
                 }
-            },params, ThirdPayUIDialog.ALIPAY,0));
+            },params, ThirdPayUIDialog.ALIPAY,1));
 
             return;
         }

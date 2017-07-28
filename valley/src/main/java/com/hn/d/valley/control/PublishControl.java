@@ -10,6 +10,8 @@ import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.receiver.NetworkStateReceiver;
 import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
+import com.google.gson.JsonObject;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.constant.Constant;
@@ -24,9 +26,14 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.utils.RBus;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -342,7 +349,83 @@ public class PublishControl {
         }).uploadVideo(publishTask.getVideoStatusInfo().getVideoPath());
     }
 
-    UserDiscussListBean.DataListBean createBean(final PublishTaskRealm task) {
+
+    public static void uploadDynamicVideo(final PublishTaskRealm publishTask, final Action1<String> action) {
+        new OssControl2(new OssControl2.OnUploadListener() {
+            @Override
+            public void onUploadStart() {
+
+            }
+
+            @Override
+            public void onUploadSucceed(List<String> list) {
+                if (list == null || list.isEmpty()) {
+                    T_.show("上传失败!");
+                } else {
+                    //视频上传成功后, 再上传图片
+                    final String videoUrl = list.get(0);
+                    L.e("视频上传成功:" + videoUrl);
+
+                    List<String> files = new ArrayList<>();
+                    files.add(publishTask.getVideoStatusInfo().getVideoThumbPath());
+
+                    new OssControl(new OssControl.OnUploadListener() {
+                        @Override
+                        public void onUploadStart() {
+
+                        }
+
+                        @Override
+                        public void onUploadSucceed(List<String> list) {
+                            List<String> media = new ArrayList<>();
+                            String videoThumbUrl = list.get(0);
+                            media.add(videoThumbUrl + "?" + videoUrl);
+                            L.e("视频缩略图上传成功:" + videoThumbUrl);
+                            publishRedBagVideo(publishTask, media,action);
+                        }
+
+                        @Override
+                        public void onUploadFailed(int code, String msg) {
+//                            onPublishStart(true);
+                            T_.show("上传失败!");
+                        }
+                    }).uploadCircleImg(files);
+                }
+            }
+
+            @Override
+            public void onUploadFailed(int code, String msg) {
+//                onPublishStart(true);
+                T_.show("上传失败!");
+            }
+        }).uploadVideo(publishTask.getVideoStatusInfo().getVideoPath());
+    }
+
+    private static void publishRedBagVideo(PublishTaskRealm task, List<String> media,Action1<String> action) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("tags",RUtils.connect(task.getSelectorTags2()));
+            json.put("media_type",task.getType());
+            json.put("media",RUtils.connect(media));
+            json.put("is_top",(task.isTop() ? "1" : "0"));
+            json.put("open_location",(task.isShareLocation() ? "1" : "0"));
+            json.put("content",task.getContent());
+            json.put("address",task.getAddress());
+            json.put("lng",task.getLng());
+            json.put("allow_download",task.getAllow_download() + "");
+            json.put("scan_type",task.getScan_type() + "");
+            json.put("scan_user",task.getScan_user());
+            json.put("lat",task.getLat());
+            json.put("uid",UserCache.getUserAccount());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        L.d("publishRedBagVideo : " + json.toString());
+        action.call(json.toString());
+    }
+
+
+    public static UserDiscussListBean.DataListBean createBean(final PublishTaskRealm task) {
         UserDiscussListBean.DataListBean bean = new UserDiscussListBean.DataListBean();
         bean.uuid = task.getUuid();
         bean.publishStatus = task.getPublishStatus();

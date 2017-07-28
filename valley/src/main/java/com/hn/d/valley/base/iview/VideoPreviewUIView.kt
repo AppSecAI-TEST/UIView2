@@ -100,7 +100,7 @@ class VideoPreviewUIView(val viewConfig: UIViewConfig) : BaseContentUIView() {
 
     fun pauseVideo() {
         if (isPlaying()) {
-            videoView.pause()
+            videoView.stop()
         }
 
         uiTitleBarContainer.show(true)

@@ -384,6 +384,9 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 object.put("to_uid", TextUtils.isEmpty(params.to_uid) ? 0 : Integer.valueOf(params.to_uid));
                 object.put("to_gid", TextUtils.isEmpty(params.to_gid) ? 0 : Integer.valueOf(params.to_gid));
                 object.put("content", params.content);
+                if (!TextUtils.isEmpty(params.getExtend())) {
+                    object.put("extend",params.getExtend());
+                }
             } else if (type == 2) {
                 // 购买龙币
                 object.put("coin",params.coin);
