@@ -36,6 +36,7 @@ import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RExTextView;
+import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.angcyo.uiview.widget.SoftRelativeLayout;
 import com.angcyo.uiview.widget.viewpager.TextIndicator;
@@ -51,6 +52,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.iview.RelayVideoLongClickListener;
 import com.hn.d.valley.base.iview.VideoPlayUIView;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.bean.HotInfoListBean;
@@ -350,7 +352,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                 Action.publishAction();
                                 // TODO: 2017/07/27 0027 调用发布红包接口
                                 HnLoading.show(mILayout);
-                                PublishControl.uploadDynamicVideo(getPublishTaskRealm(""),new Action1<String>(){
+                                PublishControl.uploadDynamicVideo(getPublishTaskRealm(""), new Action1<String>() {
                                     @Override
                                     public void call(final String extend) {
                                         HnLoading.hide();
@@ -369,6 +371,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                                         showPinDialog();
                                                     }
                                                 }
+
                                                 @Override
                                                 public void onError(String msg) {
 
@@ -414,7 +417,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 public void call(Object o) {
                     finishIView();
                 }
-            },params, ThirdPayUIDialog.ALIPAY,1));
+            }, params, ThirdPayUIDialog.ALIPAY, 1));
             return;
         }
 
@@ -432,7 +435,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 }
                 finishIView();
             }
-        },params));
+        }, params));
     }
 
     private void showPinDialog() {
@@ -660,7 +663,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             recyclerView.setVisibility(View.GONE);
             videoControlLayout.setVisibility(View.VISIBLE);
 
-            ImageView videoThumbView = mViewHolder.v(R.id.video_thumb_view);
+            final ImageView videoThumbView = mViewHolder.v(R.id.video_thumb_view);
             HnGlide.displayFile(videoThumbView, mVideoStatusInfo.getVideoThumbPath());
 
             TextView videoTimeView = mViewHolder.v(R.id.video_time_view);
@@ -669,7 +672,11 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             videoThumbView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoThumbPath(), mVideoStatusInfo.getVideoPath())
+                    startIView(new VideoPlayUIView(mVideoStatusInfo.getVideoPath(),
+                            mVideoStatusInfo.getVideoThumbPath(),
+                            RImageView.copyDrawable(videoThumbView),
+                            OssHelper.getWidthHeightWithUrl(mVideoStatusInfo.getVideoThumbPath()))
+                            .resetViewLocation(videoThumbView)
                             .setOnLongPress(new RelayVideoLongClickListener(mParentILayout)));
                 }
             });
