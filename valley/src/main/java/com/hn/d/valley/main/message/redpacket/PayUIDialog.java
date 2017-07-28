@@ -86,6 +86,17 @@ public class PayUIDialog extends UIIDialogImpl {
     }
 
     @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+//        post(new Runnable() {
+//            @Override
+//            public void run() {
+                showSoftInput(passcodeView.getEditText());
+//            }
+//        });
+    }
+
+    @Override
     public void loadContentView(View rootView) {
         super.loadContentView(rootView);
         ivCancel = v(R.id.iv_cancel);
@@ -239,7 +250,7 @@ public class PayUIDialog extends UIIDialogImpl {
         RRetrofit.create(RedPacketService.class)
                 .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num,
                         "money:" + (int) params.money, "content:" + params.content, type
-                        , "random:" + params.random,"extend:" + params.extend))
+                        , "random:" + params.random, "extend:" + params.extend))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -322,8 +333,8 @@ public class PayUIDialog extends UIIDialogImpl {
 
     public static class Params {
 
-        int num; // 群红包个数
         public float money;//金额 单位 分
+        int num; // 群红包个数
         int random = 0;//红包类型 拼手气或普通
         int balance = -1;//钱包余额
         String to_gid;// 群id
@@ -338,8 +349,25 @@ public class PayUIDialog extends UIIDialogImpl {
         private String extend;//当为广场红包时，content表示动态的参数集json，具体见下
 
 
+        public Params(int num, float money, String content, String to_uid, String to_gid, int random) {
+            this.num = num;
+            this.money = money;
+            this.content = content;
+            this.to_uid = to_uid;
+            this.to_gid = to_gid;
+            this.random = random;
+        }
+
+        public Params() {
+        }
+
         public String getTo_square() {
             return to_square;
+        }
+
+        public Params setTo_square(String to_square) {
+            this.to_square = to_square;
+            return this;
         }
 
         public String getExtend() {
@@ -348,11 +376,6 @@ public class PayUIDialog extends UIIDialogImpl {
 
         public Params setExtend(String extend) {
             this.extend = extend;
-            return this;
-        }
-
-        public Params setTo_square(String to_square) {
-            this.to_square = to_square;
             return this;
         }
 
@@ -412,18 +435,6 @@ public class PayUIDialog extends UIIDialogImpl {
         public Params setWay(int way) {
             this.way = way;
             return this;
-        }
-
-        public Params(int num, float money, String content, String to_uid, String to_gid, int random) {
-            this.num = num;
-            this.money = money;
-            this.content = content;
-            this.to_uid = to_uid;
-            this.to_gid = to_gid;
-            this.random = random;
-        }
-
-        public Params() {
         }
     }
 

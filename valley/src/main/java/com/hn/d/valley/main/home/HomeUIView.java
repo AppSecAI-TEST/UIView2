@@ -14,7 +14,10 @@ import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIItemDialog;
+import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.SegmentTabLayout;
+import com.angcyo.uiview.github.tablayout.TabEntity;
+import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
@@ -24,6 +27,7 @@ import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
+import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Action;
@@ -68,7 +72,8 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     //    @BindView(R.id.view_pager)
 //    UIViewPager mViewPager;
     UILayoutImpl mHomeLayout;
-    SegmentTabLayout mHomeNavLayout;
+    //    SegmentTabLayout mHomeNavLayout;
+    View mHomeNavLayout;
     private ViewPager.SimpleOnPageChangeListener mPageChangeListener;
     private RecommendUIViewEx mRecommendUIView3;
     private Tag currentTag;
@@ -219,7 +224,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 //            }
 //        });
 
-        mHomeNavLayout.setOnTabSelectListener(new SegmentTabLayout.OnTabSelectListenerEx() {
+        SegmentTabLayout.OnTabSelectListenerEx tabSelectListenerEx = new SegmentTabLayout.OnTabSelectListenerEx() {
             @Override
             public void onTabAdd(int position, View tabView) {
                 //updateTabStyle(position);
@@ -264,9 +269,22 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 }
             }
 
-        });
-        mHomeNavLayout.setTabData(new String[]{getString(R.string.circle_title), getString(R.string.tag_recommend)});
-        mHomeNavLayout.setCurrentTab(1, true);
+        };
+
+        if (mHomeNavLayout instanceof CommonTabLayout) {
+            ((CommonTabLayout) mHomeNavLayout).setOnTabSelectListener(tabSelectListenerEx);
+            List<CustomTabEntity> tabs = new ArrayList<>();
+            tabs.add(new TabEntity(getString(R.string.circle_title)));
+            tabs.add(new TabEntity(getString(R.string.tag_recommend)));
+            ((CommonTabLayout) mHomeNavLayout).setHaveItemBackground(false);
+            ((CommonTabLayout) mHomeNavLayout).setTabData(tabs);
+            ((CommonTabLayout) mHomeNavLayout).setCurrentTab(1, true);
+        } else if (mHomeNavLayout instanceof SegmentTabLayout) {
+            ((SegmentTabLayout) mHomeNavLayout).setOnTabSelectListener(tabSelectListenerEx);
+            ((SegmentTabLayout) mHomeNavLayout).setTabData(new String[]{getString(R.string.circle_title), getString(R.string.tag_recommend)});
+
+            ((SegmentTabLayout) mHomeNavLayout).setCurrentTab(1, true);
+        }
 
         updateSkin();
     }
@@ -278,9 +296,14 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
 
     private void updateTabStyle(int position) {
         if (position == 1) {
-            updateTabStyle(position,
-                    mHomeNavLayout.getTabView(position),
-                    mHomeNavLayout.getCurrentTab() == position);
+            if (mHomeNavLayout instanceof CommonTabLayout) {
+
+            } else if (mHomeNavLayout instanceof SegmentTabLayout) {
+                updateTabStyle(position,
+                        ((SegmentTabLayout) mHomeNavLayout).getTabView(position),
+                        ((SegmentTabLayout) mHomeNavLayout).getCurrentTab() == position);
+            }
+
         }
     }
 
@@ -373,7 +396,8 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         if (mHomeNavLayout == null) {
             return;
         }
-        int currentItem = mHomeNavLayout.getCurrentTab();
+        int currentItem = getCurrentTab();
+
         if (currentItem == 0 && mCircleUIView != null) {
             mCircleUIView.scrollToTop();
         } else if (currentItem == 1 && mRecommendUIView3 != null) {
@@ -381,6 +405,16 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
         } else if (currentItem == 2 && mNearbyUIView != null) {
             mNearbyUIView.scrollToTop();
         }
+    }
+
+    private int getCurrentTab() {
+        int currentItem = 0;
+        if (mHomeNavLayout instanceof CommonTabLayout) {
+            currentItem = ((CommonTabLayout) mHomeNavLayout).getCurrentTab();
+        } else if (mHomeNavLayout instanceof SegmentTabLayout) {
+            currentItem = ((SegmentTabLayout) mHomeNavLayout).getCurrentTab();
+        }
+        return currentItem;
     }
 
     @Override
@@ -402,9 +436,16 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 .setOnInitTitleLayout(new TitleBarPattern.SingleTitleInit() {
                     @Override
                     public void onInitLayout(RTitleCenterLayout parent) {
-                        mHomeNavLayout = (SegmentTabLayout) LayoutInflater.from(mActivity)
-                                .inflate(R.layout.segment_tab_layout, parent)
-                                .findViewById(R.id.tab_layout);
+                        if (!BuildConfig.DEBUG) {
+                            mHomeNavLayout = LayoutInflater.from(mActivity)
+                                    .inflate(R.layout.home_common_tab_layout, parent)
+                                    .findViewById(R.id.tab_layout);
+                        } else {
+                            mHomeNavLayout = LayoutInflater.from(mActivity)
+                                    .inflate(R.layout.segment_tab_layout, parent)
+                                    .findViewById(R.id.tab_layout);
+                        }
+
                         parent.setTitleView(mHomeNavLayout);
                     }
                 });
@@ -420,7 +461,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
      * 发布了动态之后, 插入到第一条
      */
     public void onPublishStart() {
-        if (mHomeNavLayout.getCurrentTab() == 0 && mCircleUIView != null) {
+        if (getCurrentTab() == 0 && mCircleUIView != null) {
             mCircleUIView.onPublishStart();
         }
     }
@@ -429,7 +470,7 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
      * 发布失败
      */
     public void onPublishError() {
-        if (mHomeNavLayout.getCurrentTab() == 0 && mCircleUIView != null) {
+        if (getCurrentTab() == 0 && mCircleUIView != null) {
             mCircleUIView.onPublishError();
         }
     }
@@ -589,14 +630,22 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     public void onSkinChanged(ISkin skin) {
         super.onSkinChanged(skin);
         if (mHomeNavLayout != null) {
-            mHomeNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
+            if (mHomeNavLayout instanceof CommonTabLayout) {
+            } else if (mHomeNavLayout instanceof SegmentTabLayout) {
+                ((SegmentTabLayout) mHomeNavLayout).setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
+            }
             updateTabStyle(1);
         }
     }
 
     public void onJumpToDynamicListAction() {
         if (mHomeNavLayout != null) {
-            mHomeNavLayout.setCurrentTab(1);
+
+            if (mHomeNavLayout instanceof CommonTabLayout) {
+                ((CommonTabLayout) mHomeNavLayout).setCurrentTab(1);
+            } else if (mHomeNavLayout instanceof SegmentTabLayout) {
+                ((SegmentTabLayout) mHomeNavLayout).setCurrentTab(1);
+            }
 
             if (mRecommendUIView3 != null) {
                 mRecommendUIView3.scrollToTop();

@@ -48,7 +48,6 @@ import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.skin.SkinUtils;
-import com.hn.d.valley.start.ChooseTagsUIView;
 import com.hn.d.valley.start.RecommendUser2UIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
 import com.hn.d.valley.utils.Image;
@@ -242,7 +241,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
                 mHomeUIView = new HomeUIView();
                 mHomeUIView.bindParentILayout(mILayout);
                 mHomeUIView.setIsRightJumpLeft(isRightToLeft);
-                mMainUILayout.startIView(mHomeUIView);
+                mMainUILayout.startIView(mHomeUIView, new UIParam(!isFirst));
             } else {
                 mHomeUIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.showIView(mHomeUIView);

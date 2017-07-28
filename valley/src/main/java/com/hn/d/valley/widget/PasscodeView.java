@@ -327,6 +327,10 @@ public class PasscodeView extends ViewGroup {
         mEditText.setSelection(savedState.editTextValue.length());
     }
 
+    public EditText getEditText() {
+        return mEditText;
+    }
+
     static class SavedState extends BaseSavedState {
 
         public static final Parcelable.Creator<SavedState> CREATOR =

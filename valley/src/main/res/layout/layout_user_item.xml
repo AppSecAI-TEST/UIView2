@@ -128,8 +128,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/base_70dpi"
-        android:src="@drawable/tuijian"
+        android:layout_marginEnd="@dimen/base_45dpi"
+        android:src="@drawable/hot"
         android:visibility="gone"
         tools:visibility="visible"/>
 

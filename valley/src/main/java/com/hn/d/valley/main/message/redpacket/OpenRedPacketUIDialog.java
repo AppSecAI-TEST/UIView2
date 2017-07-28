@@ -1,7 +1,5 @@
 package com.hn.d.valley.main.message.redpacket;
 
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorSet;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -12,10 +10,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.anim.RotateAnimation;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.view.DelayClick;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -66,7 +66,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     private int redpacketStatus;
     private GrabedRDDetail grabedRDDetail;
 
-    private AnimatorSet mFrontAnimator;
+//    private AnimatorSet mFrontAnimator;
 
     public OpenRedPacketUIDialog(int redpacketStatus, String sessionId, long redId) {
         this.redId = redId;
@@ -176,10 +176,10 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
             }
             return;
         }
-        ivOpen.setOnClickListener(new View.OnClickListener() {
+        ivOpen.setOnClickListener(new DelayClick() {
             @Override
-            public void onClick(View v) {
-                startAnimation(v);
+            public void onRClick(View view) {
+                startAnimation(view);
                 grabRedpacket();
             }
         });
@@ -189,8 +189,8 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
      * 1.初始化动画
      */
     private void initAnimator() {
-        mFrontAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(mActivity,
-                R.animator.anim_in);
+//        mFrontAnimator = (AnimatorSet) AnimatorInflater.loadAnimator(mActivity,
+//                R.animator.anim_in);
     }
 
     /**
@@ -199,8 +199,10 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
      * @param view
      */
     public void startAnimation(View view) {
-        mFrontAnimator.setTarget(ivOpen);
-        mFrontAnimator.start();
+//        mFrontAnimator.setTarget(ivOpen);
+//        mFrontAnimator.start();
+        view.clearAnimation();
+        view.startAnimation(new RotateAnimation(view.getMeasuredWidth() / 2, view.getMeasuredHeight() / 2));
     }
 
     private void grabRedpacket() {
