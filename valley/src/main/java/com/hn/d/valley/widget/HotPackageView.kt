@@ -6,6 +6,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.View
@@ -40,31 +41,7 @@ class HotPackageView(context: Context, attributeSet: AttributeSet? = null) : Vie
 
     private var hotAnim = false //hot 动画阶段
 
-    private val animator: ValueAnimator by lazy {
-        val anim = ObjectAnimator.ofFloat(0f, 10f, -10F, 10f, 0f)
-        anim.duration = 400
-        anim.interpolator = LinearInterpolator()
-        anim.addUpdateListener { animation ->
-            val value: Float = animation.animatedValue as Float
-            if (hotAnim) {
-                rotate = 0f
-                showHot2 = false
-            } else {
-                showHot2 = true
-                rotate = value
-            }
-            postInvalidateOnAnimation()
-        }
-        anim.addListener(object : RAnimListener() {
-            override fun onAnimationRepeat(animation: Animator?) {
-                super.onAnimationRepeat(animation)
-                hotAnim = !hotAnim
-            }
-        })
-        anim.repeatCount = ObjectAnimator.INFINITE
-        anim.repeatMode = ObjectAnimator.RESTART
-        anim
-    }
+    private var animator: ValueAnimator? = null
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         //super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -106,22 +83,65 @@ class HotPackageView(context: Context, attributeSet: AttributeSet? = null) : Vie
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         isAttached = true
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            startAnim()
+        }
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         isAttached = false
-        animator.cancel()
+        stopAnim()
     }
 
     override fun onVisibilityChanged(changedView: View?, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
         if (isAttached && visibility == VISIBLE) {
-            if (!animator.isStarted) {
-                animator.start()
-            }
+            startAnim()
         } else {
-            animator.cancel()
+            stopAnim()
         }
     }
+
+    private fun startAnim() {
+        if (animator == null) {
+            val anim = ObjectAnimator.ofFloat(0f, 10f, -10F, 10f, 0f)
+            anim.duration = 400
+            anim.interpolator = LinearInterpolator()
+            anim.addUpdateListener { animation ->
+                val value: Float = animation.animatedValue as Float
+                if (hotAnim) {
+                    rotate = 0f
+                    showHot2 = false
+                } else {
+                    showHot2 = true
+                    rotate = value
+                }
+                postInvalidateOnAnimation()
+            }
+            anim.addListener(object : RAnimListener() {
+                override fun onAnimationRepeat(animation: Animator?) {
+                    super.onAnimationRepeat(animation)
+                    hotAnim = !hotAnim
+                }
+            })
+            anim.repeatCount = ObjectAnimator.INFINITE
+            anim.repeatMode = ObjectAnimator.RESTART
+            animator = anim
+        }
+
+        animator?.let {
+            if (!it.isStarted) {
+                it.start()
+            }
+        }
+    }
+
+    private fun stopAnim() {
+        animator?.let {
+            it.cancel()
+        }
+    }
+
 }

@@ -129,6 +129,7 @@ public class LikeUserInfoBean {
     private int media_type;
     private String media;
     private String share_type;
+    private String constellation;//星座
 
     /**
      * 新的朋友字段
@@ -473,5 +474,13 @@ public class LikeUserInfoBean {
 
     public void setMedia(String media) {
         this.media = media;
+    }
+
+    public String getConstellation() {
+        return constellation;
+    }
+
+    public void setConstellation(String constellation) {
+        this.constellation = constellation;
     }
 }

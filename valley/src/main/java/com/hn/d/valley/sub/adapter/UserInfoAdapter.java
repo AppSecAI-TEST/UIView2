@@ -56,7 +56,7 @@ public abstract class UserInfoAdapter extends RExBaseAdapter<String, LikeUserInf
 
         //等级性别
         HnGenderView hnGenderView = holder.v(R.id.grade);
-        hnGenderView.setGender(dataBean.getSex(), dataBean.getGrade());
+        hnGenderView.setGender(dataBean.getSex(), dataBean.getGrade(), dataBean.getConstellation());
     }
 
     public static void initSignatureItem(TextView signatureView, LikeUserInfoBean dataBean) {

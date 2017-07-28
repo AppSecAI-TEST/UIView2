@@ -1,12 +1,16 @@
 package com.hn.d.valley.widget;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
 
 /**
@@ -24,6 +28,7 @@ public class HnGenderView extends LinearLayout {
 
     private ImageView mSexImageView;
     private ImageView mLevelImageView;
+    private TextView mConstellationTextView;
 
     public HnGenderView(Context context) {
         super(context);
@@ -50,6 +55,18 @@ public class HnGenderView extends LinearLayout {
         LinearLayout.LayoutParams params = new LayoutParams(-2, -2);
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.base_mdpi);
         addView(mLevelImageView, params);
+
+        float density = getResources().getDisplayMetrics().density;
+        mConstellationTextView = new TextView(getContext());
+        mConstellationTextView.setVisibility(GONE);
+        mConstellationTextView.setTextSize(9);
+        mConstellationTextView.setTextColor(Color.WHITE);
+        UI.setBackgroundDrawable(mConstellationTextView,
+                ResUtil.createDrawable(Color.parseColor("#bd74e8"), 1 * density));
+        params = new LayoutParams(-2, -2);
+        params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.base_mdpi);
+        mConstellationTextView.setPadding(((int) (2 * density)), (int) (1 * density), (int) (2 * density), (int) (1 * density));
+        addView(mConstellationTextView, params);
     }
 
 //    @Override
@@ -82,6 +99,13 @@ public class HnGenderView extends LinearLayout {
      * 设置行性别和等级
      */
     public void setGender(String sex, String level) {
+        setGender(sex, level, "");
+    }
+
+    /**
+     * 星座
+     */
+    public void setGender(String sex, String level, String constellation) {
         //setTag(sex);
         //setText(level);
         if (TextUtils.isEmpty(sex)) {
@@ -119,6 +143,12 @@ public class HnGenderView extends LinearLayout {
                 break;
         }
 
+        if (TextUtils.isEmpty(constellation)) {
+            mConstellationTextView.setVisibility(GONE);
+        } else {
+            mConstellationTextView.setVisibility(VISIBLE);
+            mConstellationTextView.setText(constellation);
+        }
     }
 
 //    @Override
