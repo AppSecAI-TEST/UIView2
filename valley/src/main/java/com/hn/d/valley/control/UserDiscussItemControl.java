@@ -252,7 +252,7 @@ public class UserDiscussItemControl {
         try {
             hotPackageId = dataListBean.getPackage_id();
             holder.v(R.id.hot_package_view).setVisibility(TextUtils.isEmpty(hotPackageId) ? View.INVISIBLE : View.VISIBLE);
-            if ((BuildConfig.DEBUG || BuildConfig.SHOW_DEBUG) && !TextUtils.isEmpty(hotPackageId)) {
+            if ((BuildConfig.DEBUG /*|| BuildConfig.SHOW_DEBUG*/) && !TextUtils.isEmpty(hotPackageId)) {
                 OpenRedPacketUIDialog.grabRedBag(Long.valueOf(hotPackageId), "{\"discuss_id\":\"" + dataListBean.getDiscuss_id() + "\"}")
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

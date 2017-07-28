@@ -405,7 +405,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 .setMoney(money)
                 .setTo_square("1")
                 .setExtend(extend)
-                .setRandom(0)
+                .setRandom(1)
                 .setType(1)
                 .setContent("视频红包")
                 .setNum(num);
