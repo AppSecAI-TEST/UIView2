@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;

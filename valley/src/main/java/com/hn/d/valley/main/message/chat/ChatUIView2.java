@@ -81,7 +81,6 @@ import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.StickerEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
-import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
@@ -342,7 +341,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 }
 
                 if (isEmojiShow) {
-                    mChatControl.scrollToEnd();
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mChatControl.scrollToEnd();
+                        }
+                    });
 //                    mCommandLayoutControl.fixHeight(height);
                     mCommandLayoutControl.init();
 //                    post(new Runnable() {
@@ -795,6 +799,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 mLastId = R.id.message_add_view;
 
                 mCommandControlLayout.setVisibility(View.VISIBLE);
+                //mCommandControlLayout.setBackgroundColor(Color.RED);
                 mEmojiControlLayout.setVisibility(View.GONE);
                 mCommandLayoutControl.requestLayout();
                 break;
@@ -860,13 +865,13 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     @Override
     public void onRecordStart(File audioFile, RecordType recordType) {
-        L.d("chatuiview2","onRecordStart");
+        L.d("chatuiview2", "onRecordStart");
         started = true;
     }
 
     @Override
     public void onRecordSuccess(File audioFile, long audioLength, RecordType recordType) {
-        L.d("chatuiview2","onRecordSuccess");
+        L.d("chatuiview2", "onRecordSuccess");
         started = false;
         IMMessage audioMessage = MessageBuilder.createAudioMessage(mSessionId, sessionType, audioFile, audioLength);
         sendMessage(audioMessage);
