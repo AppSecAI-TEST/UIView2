@@ -1,6 +1,7 @@
 package com.hn.d.valley.start.mvp;
 
 import com.angcyo.uiview.mvp.presenter.BasePresenter;
+import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.rsa.RSA;
 import com.hn.d.valley.base.Bean;
@@ -41,6 +42,14 @@ public class Register2Presenter extends BasePresenter<Start.IRegister2View> impl
             public void onSuccess(Bean<String> stringBean) {
                 super.onSuccess(stringBean);
                 mBaseView.onRegisterSuccess(stringBean);
+            }
+
+            @Override
+            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                super.onEnd(isError, isNoNetwork, e);
+                if (isError) {
+                    mBaseView.onRequestError(e.getCode(), e.getMsg());
+                }
             }
         };
 

@@ -93,6 +93,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
      * 是否自动播放语音
      */
     private boolean autoPlayAudio = false;
+    private boolean autoShowInputDialog = false;
 
     public DynamicDetailUIView2(String discuss_id) {
         this.discuss_id = discuss_id;
@@ -237,17 +238,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             mViewHolder.v(R.id.input_tip_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startIView(new CommentInputDialog(new CommentInputDialog.InputConfig() {
-                        @Override
-                        public void onInitDialogLayout(RBaseViewHolder viewHolder) {
-
-                        }
-
-                        @Override
-                        public void onSendClick(String imagePath, String content) {
-                            comment(imagePath, content);
-                        }
-                    }));
+                    showInputDialog();
                 }
             });
 
@@ -274,6 +265,20 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             //收藏按钮
             initCollectView();
         }
+    }
+
+    private void showInputDialog() {
+        startIView(new CommentInputDialog(new CommentInputDialog.InputConfig() {
+            @Override
+            public void onInitDialogLayout(RBaseViewHolder viewHolder) {
+
+            }
+
+            @Override
+            public void onSendClick(String imagePath, String content) {
+                comment(imagePath, content);
+            }
+        }));
     }
 
     private void initCollectView() {
@@ -435,10 +440,19 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
         });
     }
 
+    public DynamicDetailUIView2 setAutoShowInputDialog(boolean autoShowInputDialog) {
+        this.autoShowInputDialog = autoShowInputDialog;
+        return this;
+    }
+
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
         loadData();
+
+        if (autoShowInputDialog) {
+            showInputDialog();
+        }
     }
 
     /**

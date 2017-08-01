@@ -20,6 +20,7 @@ import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.view.DelayClick;
 import com.angcyo.uiview.view.IView;
 import com.angcyo.uiview.widget.ExEditText;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -27,7 +28,6 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.Bean;
 import com.hn.d.valley.base.constant.Action;
-import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.base.rx.BeforeSubscriber;
@@ -39,15 +39,10 @@ import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.mvp.Register2Presenter;
 import com.hn.d.valley.start.mvp.Start;
 import com.hn.d.valley.widget.HnLoading;
-import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImagePickerHelper;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -156,16 +151,24 @@ public class Register2UIView<B extends Bean<String>> extends BaseUIView<Start.IR
             }
         });
 
-        RxView.clicks(mFinishView)
-                .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Void>() {
-                    @Override
-                    public void call(Void aVoid) {
-                        Action.phone_register();
-                        onFinishClick();
-                    }
-                });
+        mFinishView.setOnClickListener(new DelayClick() {
+            @Override
+            public void onRClick(View view) {
+                Action.phone_register();
+                onFinishClick();
+            }
+        });
+
+//        RxView.clicks(mFinishView)
+//                .debounce(Constant.DEBOUNCE_TIME, TimeUnit.MILLISECONDS)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Action1<Void>() {
+//                    @Override
+//                    public void call(Void aVoid) {
+//                        Action.phone_register();
+//                        onFinishClick();
+//                    }
+//                });
 
         ResUtil.setBgDrawable(mFinishView, LoginUIView.createLoginDrawable(mActivity));
         SkinUtils.setEditText(mNameView);

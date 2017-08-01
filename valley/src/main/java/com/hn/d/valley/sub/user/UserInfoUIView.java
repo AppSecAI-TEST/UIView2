@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import rx.functions.Action0;
 import rx.functions.Action1;
 
 /**
@@ -323,11 +322,12 @@ public class UserInfoUIView extends BaseRecyclerUIView<SearchUserBean, UserDiscu
                 public void call(UserDiscussListBean.DataListBean dataListBean) {
                     loadData();//星期五 2017-2-10
                 }
-            }, new Action0() {
+            }, new Action1<Boolean>() {
                 @Override
-                public void call() {
+                public void call(Boolean aBoolean) {
                     //mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
-                    UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(), false, false, false);
+                    UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(),
+                            false, false, false, aBoolean);
                 }
             }, mParentILayout);
         }

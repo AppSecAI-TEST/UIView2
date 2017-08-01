@@ -123,14 +123,14 @@ public class UserDiscussItemControl {
      */
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
                                 UserDiscussListBean.DataListBean dataListBean,
-                                final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
+                                final Action1<UserDiscussListBean.DataListBean> commandAction, final Action1<Boolean> itemRootAction,
                                 final ILayout iLayout) {
         initItem(subscription, holder, dataListBean, commandAction, itemRootAction, iLayout, false);
     }
 
     public static void initItem(CompositeSubscription subscription, RBaseViewHolder holder,
                                 UserDiscussListBean.DataListBean dataListBean,
-                                final Action1<UserDiscussListBean.DataListBean> commandAction, final Action0 itemRootAction,
+                                final Action1<UserDiscussListBean.DataListBean> commandAction, final Action1<Boolean> itemRootAction,
                                 final ILayout iLayout, boolean isInDetail) {
         initItem(holder, dataListBean, itemRootAction, iLayout, isInDetail, "1".equalsIgnoreCase(dataListBean.getAllow_download()));
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
@@ -144,7 +144,7 @@ public class UserDiscussItemControl {
      * @see com.hn.d.valley.main.home.UserDiscussAdapter
      */
     public static void initItem(final RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
-                                final Action0 itemRootAction, final ILayout iLayout, boolean isInDetail, final boolean allowDownload) {
+                                final Action1<Boolean> itemRootAction, final ILayout iLayout, boolean isInDetail, final boolean allowDownload) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
 
         //holder.fillView(dataListBean, true);
@@ -393,7 +393,7 @@ public class UserDiscussItemControl {
                 @Override
                 public void onClick(View v) {
                     if (TextUtils.isEmpty(dataListBean.uuid)) {
-                        itemRootAction.call();
+                        itemRootAction.call(false);
                     } else {
                         T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
                     }
@@ -404,7 +404,7 @@ public class UserDiscussItemControl {
                 @Override
                 public void onClick(View v) {
                     if (TextUtils.isEmpty(dataListBean.uuid)) {
-                        itemRootAction.call();
+                        itemRootAction.call(true);
                     } else {
                         T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
                     }
@@ -966,8 +966,18 @@ public class UserDiscussItemControl {
     }
 
     public static void jumpToDynamicDetailUIView(ILayout iLayout, String discuss_id,
-                                                 boolean isForward, boolean isInDetail, boolean autoPlayAudio) {
-        iLayout.startIView(new DynamicDetailUIView2(discuss_id).setAutoPlayAudio(autoPlayAudio));
+                                                 boolean isForward, boolean isInDetail,
+                                                 boolean autoPlayAudio) {
+        jumpToDynamicDetailUIView(iLayout, discuss_id, isForward, isInDetail, autoPlayAudio, false);
+    }
+
+    public static void jumpToDynamicDetailUIView(ILayout iLayout, String discuss_id,
+                                                 boolean isForward, boolean isInDetail,
+                                                 boolean autoPlayAudio /*是否自动播放语音*/,
+                                                 boolean autoShowInputDialog /*是否自动弹出输入对话框*/) {
+        iLayout.startIView(new DynamicDetailUIView2(discuss_id)
+                .setAutoPlayAudio(autoPlayAudio)
+                .setAutoShowInputDialog(autoShowInputDialog));
         if (!isForward && !isInDetail) {
             updateDiscussReadCnt(discuss_id);
         }

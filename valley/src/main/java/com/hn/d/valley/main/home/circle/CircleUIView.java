@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import rx.functions.Action0;
 import rx.functions.Action1;
 
 import static com.hn.d.valley.base.constant.Constant.POS_HOME;
@@ -98,11 +97,14 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
                     public void call(UserDiscussListBean.DataListBean dataListBean) {
                         loadData();
                     }
-                }, new Action0() {
+                }, new Action1<Boolean>() {
                     @Override
-                    public void call() {
+                    public void call(Boolean aBoolean) {
                         //mParentILayout.startIView(new DynamicDetailUIView2(dataBean.getDiscuss_id()));
-                        UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout, dataBean.getDiscuss_id(), false, false, false);
+
+                        UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout,
+                                dataBean.getDiscuss_id(),
+                                false, false, false, aBoolean);
                     }
                 }, getILayout());
 
