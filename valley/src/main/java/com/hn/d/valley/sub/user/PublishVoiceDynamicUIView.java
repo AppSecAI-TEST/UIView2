@@ -246,6 +246,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
             public void call(MusicRealm musicRealm) {
                 //选中后
                 initMusicLayout(musicRealm);
+
             }
         }));
     }

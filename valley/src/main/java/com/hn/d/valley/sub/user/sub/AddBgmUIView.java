@@ -200,7 +200,7 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
                     holder.tv(R.id.time_view).setText(RecordTimeView.formatMMSS(Long.parseLong(dataBean.getTime())));
 
                     /**添加*/
-                    holder.v(R.id.add_music_view).setOnClickListener(new View.OnClickListener() {
+                    View.OnClickListener listener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             finishIView();
@@ -208,7 +208,11 @@ public class AddBgmUIView extends SingleRecyclerUIView<MusicRealm> {
                                 selectorAction.call(dataBean);
                             }
                         }
-                    });
+                    };
+
+                    /**添加*/
+                    holder.v(R.id.add_music_view).setOnClickListener(listener);
+                    holder.itemView.setOnClickListener(listener);
 
                     /**试听*/
                     final HnPlayTextView playTextView = holder.v(R.id.play_text_view);
