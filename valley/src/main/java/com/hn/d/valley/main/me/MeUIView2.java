@@ -120,7 +120,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
         if (viewType == 0) {
             return R.layout.item_user_top_layout;
         }
-        if (BuildConfig.SHOW_DEBUG && mRExBaseAdapter.isLast(viewType)) {
+        if (BuildConfig.DEBUG && mRExBaseAdapter.isLast(viewType)) {
             return R.layout.item_version_layout;
         }
         return R.layout.item_info_layout;
@@ -519,7 +519,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //                });
 //            }
 //        }));
-
+//
 //        //等级
 //        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
 //            @Override
@@ -538,7 +538,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //            }
 //        }));
 
-        //邀请好友
+        /*邀请好友*/
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {

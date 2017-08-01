@@ -2,6 +2,7 @@ package com.hn.d.valley.main;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -39,7 +40,6 @@ import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishControl;
-import com.hn.d.valley.main.found.FoundUIView;
 import com.hn.d.valley.main.found.FoundUIView2;
 import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
@@ -202,7 +202,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
         });
 
         mBottomNavLayout.setTabData(tabs);
-        onSkinChanged(SkinHelper.getSkin());
+        updateSkin();
 
         try {
             ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
@@ -473,8 +473,13 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
         if (mBottomNavLayout != null) {
             ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
             for (int i = 0; i < (group).getChildCount(); i++) {
-                ResUtil.setBgDrawable(group.getChildAt(i), skin.getThemeTranBackgroundSelector());
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    ResUtil.setBgDrawable(group.getChildAt(i), null);
+                } else {
+                    ResUtil.setBgDrawable(group.getChildAt(i), skin.getThemeTranBackgroundSelector());
+                }
             }
+
             mBottomNavLayout.setTextSelectColor(SkinHelper.getSkin().getThemeSubColor());
 
             resetTabLayoutIco(mBottomNavLayout.getTabEntitys());

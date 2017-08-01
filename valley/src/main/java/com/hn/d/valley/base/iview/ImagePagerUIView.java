@@ -515,6 +515,7 @@ public class ImagePagerUIView extends UIIViewImpl {
 
     private void startAnimInner(Rect viewLocation) {
 //        mMViewPager.setBackgroundColor(Color.RED);
+
         AnimUtil.startToMaxAnim(viewLocation,
                 mMViewPager,
                 new Point(viewLocation.centerX(), viewLocation.centerY()),
