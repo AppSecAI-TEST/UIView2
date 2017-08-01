@@ -59,14 +59,13 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     RelativeLayout baseDialogRootLayout;
     ImageView ivOpen;
     TextView tvRedToDetail;
-
+    String discuss_id = "";
     private long redId;
     private String mSessionId;
-
     private int redpacketStatus;
-    private GrabedRDDetail grabedRDDetail;
 
-//    private AnimatorSet mFrontAnimator;
+    //    private AnimatorSet mFrontAnimator;
+    private GrabedRDDetail grabedRDDetail;
 
     public OpenRedPacketUIDialog(int redpacketStatus, String sessionId, long redId) {
         this.redId = redId;
@@ -205,6 +204,11 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
         view.startAnimation(new RotateAnimation(view.getMeasuredWidth() / 2, view.getMeasuredHeight() / 2));
     }
 
+    public OpenRedPacketUIDialog setDiscuss_id(String discuss_id) {
+        this.discuss_id = discuss_id;
+        return this;
+    }
+
     private void grabRedpacket() {
         RRetrofit.create(RedPacketService.class)
                 .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
@@ -219,7 +223,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                     @Override
                     public Observable<Integer> call(Integer code) {
                         if (Constants.CAN_BE_GRAB == code) {
-                            return grabRedBag(redId, "");
+                            return grabRedBag(redId, discuss_id);
                         } else if (Constants.ALREADY_GRAB == code) {
 
                         }

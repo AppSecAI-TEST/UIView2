@@ -57,6 +57,11 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
     companion object {
         val shuiyinPath: String = "${Root.getAppExternalFolder("cache")}/shui_yin_logo.jpeg"
 
+        fun getVideoOutFilePath(): String {
+            val path = "${Root.getAppExternalFolder("videos")}/${Root.createFileName(".mp4")}"
+            return path
+        }
+
         fun initShuiYin(resources: Resources) {
             //检查水印是否存在SD卡上
             val file = File(shuiyinPath)
@@ -136,7 +141,7 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
     }
 
     private fun getOutFilePath(): String {
-        outPath = "${Root.getAppExternalFolder("videos")}/${Root.createFileName(".mp4")}"
+        outPath = getVideoOutFilePath()
         return outPath!!
     }
 

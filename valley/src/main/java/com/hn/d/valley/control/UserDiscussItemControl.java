@@ -832,6 +832,7 @@ public class UserDiscussItemControl {
                                     OssHelper.getWidthHeightWithUrl(thumbUrl))
                                     .resetViewLocation(imageView)
                                     .setHotPackageId(hotPackageId)
+                                    .setDiscuss_id(discuss_id)
                                     .setRelayVideoLongClickListener(new RelayVideoLongClickListener(iLayout, allowDownload)));
                         }
                         if (!isInDetail) {

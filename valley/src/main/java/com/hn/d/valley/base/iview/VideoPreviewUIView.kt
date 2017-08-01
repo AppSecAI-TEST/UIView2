@@ -55,6 +55,7 @@ class VideoPreviewUIView(val viewConfig: UIViewConfig) : BaseContentUIView() {
         videoView = mViewHolder.v(R.id.videoView)
         videoPlayView = mViewHolder.v(R.id.play_view)
 
+        videoView.setRepeatPlay(false)
         videoView.setScaleType(ScalableTextureView.ScaleType.CENTER_CROP)
         videoView.setMediaPlayerCallback(object : TextureVideoView.MediaPlayerCallback {
             override fun onCompletion(mp: MediaPlayer?) {
@@ -100,7 +101,7 @@ class VideoPreviewUIView(val viewConfig: UIViewConfig) : BaseContentUIView() {
 
     fun pauseVideo() {
         if (isPlaying()) {
-            videoView.stop()
+            videoView.pause()
         }
 
         uiTitleBarContainer.show(true)
@@ -149,5 +150,10 @@ class VideoPreviewUIView(val viewConfig: UIViewConfig) : BaseContentUIView() {
                 .translationY(mViewHolder.v<View>(R.id.root_layout).measuredHeight.toFloat())
                 .setDuration(300)
                 .start()
+    }
+
+    override fun onViewUnload() {
+        super.onViewUnload()
+        videoView.stop()
     }
 }

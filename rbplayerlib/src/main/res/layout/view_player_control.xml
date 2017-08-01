@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <include layout="@layout/view_player_center" />
+    <!-- loading -->
+    <ImageView
+        android:id="@+id/preview_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"/>
+
+    <include layout="@layout/view_player_center"/>
 
     <!-- bottom -->
 
-    <include layout="@layout/view_player_bottom" />
-
+    <include layout="@layout/view_player_bottom"/>
 
 </RelativeLayout>

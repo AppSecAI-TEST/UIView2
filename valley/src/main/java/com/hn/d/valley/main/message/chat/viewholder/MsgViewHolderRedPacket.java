@@ -4,7 +4,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.UIIViewImpl;
@@ -21,7 +20,6 @@ import com.hn.d.valley.main.message.redpacket.Constants;
 import com.hn.d.valley.main.message.redpacket.GrabPacketHelper;
 import com.hn.d.valley.main.message.redpacket.GrabedRDResultUIView;
 import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
-import com.hn.d.valley.main.message.redpacket.P2PStatusRPUIView;
 import com.hn.d.valley.main.message.service.RedPacketService;
 import com.jakewharton.rxbinding.view.RxView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -42,6 +40,50 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 
     public MsgViewHolderRedPacket(BaseMultiAdapter adapter) {
         super(adapter);
+    }
+
+    public static void checkRedPacketStatus(final UIIViewImpl layout, final long redId) {
+        checkRedPacketStatus(layout, redId, "");
+    }
+
+    public static void checkRedPacketStatus(final UIIViewImpl layout, final long redId, final String discuss_id) {
+        RRetrofit.create(RedPacketService.class)
+                .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
+                .subscribeOn(Schedulers.io())
+                .map(new Func1<ResponseBody, Integer>() {
+                    @Override
+                    public Integer call(ResponseBody responseBody) {
+                        return GrabPacketHelper.parseResult(responseBody);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new BaseSingleSubscriber<Integer>() {
+                    @Override
+                    public void onSucceed(Integer code) {
+                        if (Constants.ALREADY_GRAB == code) {
+//                            if (!isChatGroup()) {
+//                                if (message.getFromAccount().equals(UserCache.getUserAccount())) {
+//                                    mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),true));
+//                                    return;
+//                                }
+//                                mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
+//                                return;
+//                            }
+                            layout.startIView(new GrabedRDResultUIView(redId));
+                        } else if (Constants.CAN_BE_GRAB == code) {
+//                            layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redId));
+                            layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB, redId).setDiscuss_id(discuss_id));
+                        } else if (Constants.CAN_NOTE_GRAB == code) {
+//                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB,redPacket.getRid()));
+                            layout.startIView(new GrabedRDResultUIView(redId));
+                        } else if (Constants.EXPORE == code) {
+                            layout.startIView(new OpenRedPacketUIDialog(Constants.EXPORE, redId).setDiscuss_id(discuss_id));
+                        } else if (Constants.LOOT_OUT == code) {
+                            layout.startIView(new OpenRedPacketUIDialog(Constants.LOOT_OUT, redId).setDiscuss_id(discuss_id));
+                        } else {
+                            T_.show("很抱歉，不能抢了");
+                        }
+                    }
+                });
     }
 
     @Override
@@ -77,7 +119,7 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 //                        mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),false));
                         mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
                     } else {
-                        checkRedPacketStatus(getUIBaseView(),redPacket.getRid());
+                        checkRedPacketStatus(getUIBaseView(), redPacket.getRid());
                     }
                 }
             });
@@ -90,9 +132,9 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
                     @Override
                     public void call(Void aVoid) {
                         if (!isChatGroup()) {
-                            checkRedPacketStatus(getUIBaseView(),redPacket.getRid());
+                            checkRedPacketStatus(getUIBaseView(), redPacket.getRid());
                         } else {
-                            checkRedPacketStatus(getUIBaseView(),redPacket.getRid());
+                            checkRedPacketStatus(getUIBaseView(), redPacket.getRid());
                         }
                     }
                 });
@@ -109,46 +151,6 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 //            }
 //        });
 
-    }
-
-    public static void checkRedPacketStatus(final UIIViewImpl layout, final long redId) {
-        RRetrofit.create(RedPacketService.class)
-                .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
-                .subscribeOn(Schedulers.io())
-                .map(new Func1<ResponseBody, Integer>() {
-                    @Override
-                    public Integer call(ResponseBody responseBody) {
-                        return GrabPacketHelper.parseResult(responseBody);
-                    }
-                }).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new BaseSingleSubscriber<Integer>() {
-                    @Override
-                    public void onSucceed(Integer code) {
-                        if (Constants.ALREADY_GRAB == code) {
-//                            if (!isChatGroup()) {
-//                                if (message.getFromAccount().equals(UserCache.getUserAccount())) {
-//                                    mUIBaseView.startIView(new P2PStatusRPUIView(message.getSessionId(),redPacket.getRid(),true));
-//                                    return;
-//                                }
-//                                mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
-//                                return;
-//                            }
-                            layout.startIView(new GrabedRDResultUIView(redId));
-                        } else if (Constants.CAN_BE_GRAB == code) {
-//                            layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redId));
-                            layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,redId));
-                        } else if (Constants.CAN_NOTE_GRAB == code) {
-//                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB,redPacket.getRid()));
-                            layout.startIView(new GrabedRDResultUIView(redId));
-                        } else if (Constants.EXPORE == code){
-                            layout.startIView(new OpenRedPacketUIDialog(Constants.EXPORE,redId));
-                        } else if (Constants.LOOT_OUT == code){
-                            layout.startIView(new OpenRedPacketUIDialog(Constants.LOOT_OUT,redId));
-                        } else {
-                            T_.show("很抱歉，不能抢了");
-                        }
-                    }
-                });
     }
 
     private boolean isChatGroup() {

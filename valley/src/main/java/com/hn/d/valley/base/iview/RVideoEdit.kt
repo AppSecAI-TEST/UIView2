@@ -95,7 +95,9 @@ object RVideoEdit {
     }
 
     /**压缩视频*/
-    fun compressVideo(activity: Activity, _cutPath: String, _outPath: String, _logoPath: String?, videoLength: Long /**秒*/, listener: OnExecCommandListener?) {
+    fun compressVideo(activity: Activity, _cutPath: String /*需要压缩的视频路径*/,
+                      _outPath: String /*输出的视频路径*/, _logoPath: String? /*水印的路径*/,
+                      videoLength: Long /*视频时长,秒*/, listener: OnExecCommandListener?) {
         if (TextUtils.isEmpty(_cutPath)) {
             T_.error("视频路径不能为空")
             listener?.onExecFail("视频路径不能为空")

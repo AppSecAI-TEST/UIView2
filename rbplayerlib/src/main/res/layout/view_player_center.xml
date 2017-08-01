@@ -80,10 +80,11 @@
         android:id="@+id/view_jky_player_tip_control"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#33000000"
+        android:background="#80000000"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/view_jky_player_tip_text"
@@ -110,15 +111,6 @@
             android:textColor="@android:color/white"/>
     </LinearLayout>
 
-    <!-- loading -->
-
-    <ImageView
-        android:id="@+id/preview_image_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:scaleType="fitCenter"
-        />
 
     <!--tools:background="@android:color/holo_red_dark"-->
 

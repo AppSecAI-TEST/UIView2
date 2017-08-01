@@ -62,7 +62,7 @@ public class TextureVideoView extends ScalableTextureView
     private Handler mVideoHandler;
     private boolean mSoundMute;
     private boolean mHasAudio;
-
+    private boolean repeatPlay = true;
 
     public TextureVideoView(Context context) {
         super(context);
@@ -356,6 +356,13 @@ public class TextureVideoView extends ScalableTextureView
                 mCurrentState != STATE_PREPARING);
     }
 
+    /**
+     * 播放完是否重复播放
+     */
+    public void setRepeatPlay(boolean repeatPlay) {
+        this.repeatPlay = repeatPlay;
+    }
+
     @Override
     public void onCompletion(final MediaPlayer mp) {
         mCurrentState = STATE_PLAYBACK_COMPLETED;
@@ -364,8 +371,10 @@ public class TextureVideoView extends ScalableTextureView
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (mMediaPlayer != null) {
-                        mMediaPlayer.start();
+                    if (repeatPlay) {
+                        if (mMediaPlayer != null) {
+                            mMediaPlayer.start();
+                        }
                     }
                     if (mMediaPlayerCallback != null) {
                         mMediaPlayerCallback.onCompletion(mp);

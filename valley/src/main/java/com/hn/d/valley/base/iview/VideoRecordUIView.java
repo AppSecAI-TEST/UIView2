@@ -25,6 +25,7 @@ import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.base.UIViewConfig;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.container.UIParam;
+import com.angcyo.uiview.dialog.UIProgressDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RLoopRecyclerView;
@@ -722,15 +723,47 @@ public class VideoRecordUIView extends UIBaseView {
                             viewHolder.click(R.id.ok_view, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    finishIView(uiview, new UIParam(false).setUnloadRunnable(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            fixVideoPath(item.path, new File(item.videoThumbPath),
-                                                    (int) (item.videoDuration / 1000),
-                                                    item.width, item.height,
-                                                    0);
-                                        }
-                                    }));
+                                    final UIProgressDialog progressDialog = UIProgressDialog.build().setTipText(getString(R.string.handing_tip));
+                                    progressDialog.setCanCancel(false).setDimBehind(false);
+                                    progressDialog.showDialog(mParentILayout);
+
+                                    final String videoOutFilePath = VideoEditUIView.Companion.getVideoOutFilePath();
+                                    RVideoEdit.INSTANCE.compressVideo(mActivity, item.path,
+                                            videoOutFilePath,
+                                            VideoEditUIView.Companion.getShuiyinPath(),
+                                            item.videoDuration / 1000l, new OnExecCommandListener() {
+                                                @Override
+                                                public void onExecProgress(int progress) {
+                                                    progressDialog.setProgress(progress);
+                                                }
+
+                                                @Override
+                                                public void onExecSuccess(String message) {
+                                                    progressDialog.finishDialog();
+                                                    finishIView(uiview, new UIParam(false).setUnloadRunnable(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            fixVideoPath(videoOutFilePath, new File(item.videoThumbPath),
+                                                                    (int) (item.videoDuration / 1000l),
+                                                                    item.width, item.height,
+                                                                    0);
+                                                        }
+                                                    }));
+                                                }
+
+                                                @Override
+                                                public void onExecStart() {
+
+                                                }
+
+                                                @Override
+                                                public void onExecFail(String reason) {
+                                                    progressDialog.finishDialog();
+                                                    T_.error(getString(R.string.handing_error_tip));
+                                                }
+                                            });
+
+
                                 }
                             });
                         }

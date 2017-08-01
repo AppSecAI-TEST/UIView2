@@ -75,6 +75,7 @@ public class VideoPlayUIView extends UIIViewImpl {
     };
     boolean canSave = false;
     boolean isPlayStart = false;
+    String discuss_id = "";
     private boolean mIsLive;
     /**
      * 红包id
@@ -103,6 +104,11 @@ public class VideoPlayUIView extends UIIViewImpl {
         this.thumbDrawable = thumbDrawable;
         this.thumbSize = thumbSize;
         this.thumbImagePath = thumbImagePath;
+    }
+
+    public VideoPlayUIView setDiscuss_id(String discuss_id) {
+        this.discuss_id = discuss_id;
+        return this;
     }
 
     @Override
@@ -154,7 +160,7 @@ public class VideoPlayUIView extends UIIViewImpl {
 
                         if (!TextUtils.isEmpty(hotPackageId)) {
                             //弹出抢红包对话框
-                            MsgViewHolderRedPacket.checkRedPacketStatus(VideoPlayUIView.this, Long.valueOf(hotPackageId));
+                            MsgViewHolderRedPacket.checkRedPacketStatus(VideoPlayUIView.this, Long.valueOf(hotPackageId), discuss_id);
                         }
                     }
                 })
