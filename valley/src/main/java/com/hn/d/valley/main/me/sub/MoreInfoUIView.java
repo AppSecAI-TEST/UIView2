@@ -1,15 +1,21 @@
 package com.hn.d.valley.main.me.sub;
 
+import android.view.View;
+
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.control.UserControl;
+import com.hn.d.valley.main.me.setting.EditInfoUIView;
 
 import java.util.List;
 import java.util.Locale;
+
+import static com.hn.d.valley.main.me.UserDetailUIView2.isMe;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -28,6 +34,21 @@ public class MoreInfoUIView extends BaseItemUIView {
 
     public MoreInfoUIView(UserInfoBean userInfoBean) {
         mUserInfoBean = userInfoBean;
+    }
+
+    @Override
+    protected TitleBarPattern getTitleBar() {
+        TitleBarPattern titleBar = super.getTitleBar();
+        if (isMe(mUserInfoBean.getUid())) {
+            titleBar.addRightItem(TitleBarPattern.buildImage(R.drawable.editor, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                startIView(new EditInfoUIView(MeUIView2.initPhotos(mUserInfoBean), null));
+                    startIView(new EditInfoUIView());
+                }
+            }));
+        }
+        return titleBar;
     }
 
     @Override

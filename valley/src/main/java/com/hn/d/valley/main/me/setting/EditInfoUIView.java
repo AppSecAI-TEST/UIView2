@@ -191,6 +191,10 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
     };
     private AudioRecordPlayable mAudioRecordPlayable;
 
+    public EditInfoUIView() {
+        this(new ArrayList<String>(), null);
+    }
+
     public EditInfoUIView(List<String> urls, Action0 onFinishAction) {
         for (String url : urls) {
             mOldItems.add(new Luban.ImageItem(url));
@@ -941,7 +945,7 @@ public class EditInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 iv_play.setVisibility(View.VISIBLE);
                 tv_record_second.setVisibility(View.VISIBLE);
                 long duration = mAudioRecordPlayable.getDuration() / 1000;
-                tv_record_second.setText(String.format(Locale.CHINA,"%d″", duration < 1 ? 1 : duration));
+                tv_record_second.setText(String.format(Locale.CHINA, "%d″", duration < 1 ? 1 : duration));
             }
         };
 

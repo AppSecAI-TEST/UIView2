@@ -13,7 +13,7 @@
         style="@style/MainTextStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="2"
+        android:layout_weight="2.5"
         android:text="@string/signature"/>
 
     <com.angcyo.uiview.widget.RTextView
@@ -21,7 +21,7 @@
         style="@style/DarkTextStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="8"
+        android:layout_weight="7.5"
         android:ellipsize="end"
         android:maxLines="1"
         tools:text="保密保密保密保密保密保密保密保密保密保密"/>

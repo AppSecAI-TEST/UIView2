@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
+import android.media.MediaPlayer
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -27,7 +28,39 @@ import com.m3b.rbvideolib.widget.TextureVideoView
  * 修改备注：
  * Version: 1.0.0
  */
-class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) : FrameLayout(context, attributeSet) {
+class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) : FrameLayout(context, attributeSet),
+        TextureVideoView.MediaPlayerCallback {
+    override fun onPrepared(mp: MediaPlayer?) {
+        //L.e("call:自动播放视频解析完成 onPrepared -> $mp")
+
+        videoControlView?.let {
+            it.alpha = 1f
+            colorAnim = AnimUtil.startArgb(it, Color.TRANSPARENT, Color.BLACK, 300)
+            //colorAnim = AnimUtil.startArgb(it, Color.TRANSPARENT, Color.BLACK, 300)
+        }
+    }
+
+    override fun onCompletion(mp: MediaPlayer?) {
+        //L.e("call: onCompletion -> ")
+    }
+
+    override fun onBufferingUpdate(mp: MediaPlayer?, percent: Int) {
+        L.e("call: onBufferingUpdate -> $percent")
+    }
+
+    override fun onVideoSizeChanged(mp: MediaPlayer?, width: Int, height: Int) {
+        //L.e("call: onVideoSizeChanged -> ")
+    }
+
+    override fun onInfo(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        //L.e("call: onInfo -> ")
+        return false
+    }
+
+    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        //L.e("call: onError -> ")
+        return false
+    }
 
     var path: String = ""
 
@@ -64,6 +97,7 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
         L.e("call: stopPlay -> 停止播放视频.")
         colorAnim?.let { it.cancel() }
         videoView?.let {
+            it.setMediaPlayerCallback(null)
             it.stop()
             videoControlView?.visibility = View.GONE
         }
@@ -101,14 +135,16 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
         try {
             if (AutoPlayVideoControl.canAutoPlay()) {
                 videoView?.apply {
+                    setMediaPlayerCallback(this@AutoPlayVideoLayout)
+
                     setScaleType(ScalableTextureView.ScaleType.TOP)
                     setVideoPath(path)
                     mute()
-                    start()
 
                     videoControlView?.let {
                         it.visibility = View.VISIBLE
-                        colorAnim = AnimUtil.startArgb(it, Color.TRANSPARENT, Color.BLACK, 300)
+                        it.alpha = 0f
+                        //colorAnim = AnimUtil.startArgb(it, Color.TRANSPARENT, Color.BLACK, 300)
                     }
 
                     val lp = layoutParams as FrameLayout.LayoutParams
@@ -117,6 +153,9 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
                     lp.height = (150 * ScreenUtil.density).toInt()
                     lp.width = (videoSize[0] * (lp.height * 1f / videoSize[1])).toInt()
                     layoutParams = lp
+
+                    //L.e("call: startPlay -> 自动播放视频:$path")
+                    start()
                 }
             }
         } catch(e: Exception) {
