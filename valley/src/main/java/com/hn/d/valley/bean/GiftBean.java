@@ -38,6 +38,10 @@ public class GiftBean {
     private String is_vip;
     private String charm;
 
+
+    //打赏列表需要用到的礼物id
+    private String id;
+
     public static GiftBean create(GiftReceiveBean receiveBean) {
         GiftBean bean = new GiftBean();
         bean.gift_id = receiveBean.getGift_id();
@@ -47,6 +51,14 @@ public class GiftBean {
         bean.is_vip = receiveBean.getIs_vip();
         bean.charm = receiveBean.getCharm();
         return bean;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getGift_id() {

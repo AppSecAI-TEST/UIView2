@@ -255,7 +255,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         });
 
         //内容
-        if (mListType != ListType.REPLY_TYPE) {
+        if (mListType != ListType.REPLY_TYPE && mListType != ListType.FORWARD_TYPE) {
             hnExTextView.setMaxShowLine(3);
         }
         hnExTextView.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mParentILayout));

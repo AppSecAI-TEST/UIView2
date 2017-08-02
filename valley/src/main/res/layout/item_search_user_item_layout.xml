@@ -117,7 +117,7 @@
                 android:paddingBottom="@dimen/base_ldpi"
                 android:paddingEnd="@dimen/base_ldpi"
                 android:paddingStart="@dimen/base_ldpi"
-                android:paddingTop="@dimen/base_hdpi">
+                android:paddingTop="@dimen/base_ldpi">
 
                 <!--转发动态-->
                 <com.angcyo.uiview.viewgroup.RLinearLayout
@@ -254,6 +254,13 @@
                 android:layout_marginStart="@dimen/base_xxhdpi"
                 android:drawableStart="@drawable/collection_icon_n"
                 android:visibility="gone"
+                tools:text="40"/>
+
+            <com.hn.d.valley.widget.HnItemTextView
+                android:id="@+id/reward_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/dashang_dongtai_n"
                 tools:text="40"/>
 
             <View

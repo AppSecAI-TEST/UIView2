@@ -110,6 +110,7 @@ public class UserDiscussListBean {
         private String comment_cnt = "0";
         private String forward_cnt = "0";
         private String view_cnt = "0";
+        private String reward_cnt = "0";
         private String share_original_type;
         private String share_original_item_id;
         private String parent_item_id;
@@ -593,6 +594,14 @@ public class UserDiscussListBean {
 
         public void setIs_recommend(String is_recommend) {
             this.is_recommend = is_recommend;
+        }
+
+        public String getReward_cnt() {
+            return reward_cnt;
+        }
+
+        public void setReward_cnt(String reward_cnt) {
+            this.reward_cnt = reward_cnt;
         }
 
         public static class OriginalInfo {

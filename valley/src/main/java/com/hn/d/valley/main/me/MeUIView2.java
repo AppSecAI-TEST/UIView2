@@ -237,7 +237,7 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                     holder.tv(R.id.fans_count).setText(RUtils.getShortString(userInfoBean.getFans_count()));
                     holder.tv(R.id.attention_count).setText(RUtils.getShortString(userInfoBean.getAttention_count()));
                     holder.tv(R.id.status_count).setText(RUtils.getShortString(userInfoBean.getDiscuss_count()));
-                    holder.tv(R.id.charm_count).setText(userInfoBean.getCharm());
+                    holder.tv(R.id.charm_count).setText(RUtils.getShortString(userInfoBean.getCharm()));
                 }
 
                 holder.tv(R.id.fans_count).setTextColor(SkinHelper.getSkin().getThemeSubColor());

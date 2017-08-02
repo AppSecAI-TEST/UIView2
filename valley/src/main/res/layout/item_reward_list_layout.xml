@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/base_xhdpi">
+
+    <!--头像, 用户信息-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.angcyo.uiview.widget.GlideImageView
+            android:id="@+id/user_avatar_view"
+            android:layout_width="@dimen/base_xxxhdpi"
+            android:layout_height="@dimen/base_xxxhdpi"
+            android:scaleType="centerCrop"
+            app:r_show_type="CIRCLE"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/user_name_view"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_hdpi"/>
+
+        <com.hn.d.valley.widget.HnGenderView
+            android:id="@+id/gender_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_ldpi"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/time_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"/>
+
+    </LinearLayout>
+
+    <!--礼物, 红包展示-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/base_40dpi"
+        android:paddingTop="@dimen/base_hdpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/gift_name_view"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/yellow_ffac2d"
+            android:textSize="16sp"/>
+
+        <com.angcyo.uiview.widget.GlideImageView
+            android:id="@+id/gift_url_view"
+            android:layout_width="@dimen/base_xxxhdpi"
+            android:layout_height="@dimen/base_xxxhdpi"
+            android:layout_marginStart="@dimen/base_hdpi"
+            android:scaleType="centerInside"
+            tools:src="@drawable/hongbao_xiao_60"/>
+
+    </LinearLayout>
+
+</LinearLayout>

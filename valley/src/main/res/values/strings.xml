@@ -139,7 +139,8 @@
     <string name="forward_dynamic">转发动态</string>
     <string name="forward_information">转发资讯</string>
     <string name="forward">转发</string>
-    <string name="forward_format">转发 %1$s</string>
+    <string name="reward">打赏</string>
+    <string name="reward_format">打赏 %1$s</string>
     <string name="fans_title">粉丝</string>
     <string name="followers_title">关注</string>
     <string name="cancel_followers">取消关注</string>

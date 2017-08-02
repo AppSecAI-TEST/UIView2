@@ -116,6 +116,10 @@ public class HnGenderView extends LinearLayout {
         setGender(sex, level, "", "");
     }
 
+    public void setGender(String sex) {
+        setGender(sex, "", "", "");
+    }
+
     /**
      * 星座
      */

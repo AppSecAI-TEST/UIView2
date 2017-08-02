@@ -30,6 +30,15 @@
             android:text="@string/add_comment_hint"/>
 
         <ImageView
+            android:id="@+id/reward_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/base_ldpi"
+            android:background="@drawable/base_bg2_selector"
+            android:padding="@dimen/base_xhdpi"
+            android:src="@drawable/dashang_n"/>
+
+        <ImageView
             android:id="@+id/bottom_forward_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,6 +54,7 @@
             android:layout_marginLeft="@dimen/base_ldpi"
             android:background="@drawable/base_bg2_selector"
             android:padding="@dimen/base_xhdpi"
+            android:visibility="gone"
             android:src="@drawable/shouchang_pinglun_n"/>
 
         <ImageView

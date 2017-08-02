@@ -134,10 +134,11 @@ public class UserDiscussItemControl {
                                 final ILayout iLayout, boolean isInDetail) {
         initItem(holder, dataListBean, itemRootAction, iLayout, isInDetail, "1".equalsIgnoreCase(dataListBean.getAllow_download()));
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
-        bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout, isInDetail);
-        bindFavItemView(subscription, holder, dataListBean, isInDetail);
+        bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout, isInDetail);//更多按钮初始化
+        bindFavItemView(subscription, holder, dataListBean, isInDetail);//收藏按钮初始化
         bindLikeItemView(subscription, holder, dataListBean, new InitLikeViewCallback() {
-        }, isInDetail);
+        }, isInDetail);//点赞按钮
+        bindRewardItemView(iLayout, holder, dataListBean, isInDetail);//打赏按钮
     }
 
     /**
@@ -1526,6 +1527,53 @@ public class UserDiscussItemControl {
         } else {
             initUnFavView(fav_cnt, tBean, subscription, isInDetail);
         }
+    }
+
+    /**
+     * 打赏按钮
+     */
+    private static void bindRewardItemView(final ILayout iLayout,
+                                           RBaseViewHolder holder,
+                                           UserDiscussListBean.DataListBean tBean,
+                                           boolean isInDetail) {
+
+        HnItemTextView reward_cnt = holder.v(R.id.reward_cnt);
+        reward_cnt.setText(tBean.getReward_cnt());
+
+        //打赏成功之后, 需要数值加1. reward_cnt.setText(tBean.getReward_cnt());
+        reward_cnt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRewardDialog(iLayout, new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 显示打赏对话框, 在动态列表和动态详情 会被调用
+     */
+    public static void showRewardDialog(final ILayout iLayout, Runnable onRewardSuccess /*打赏成功的回调*/) {
+        UIItemDialog.build()
+                .setShowCancelButton(true)
+                .setUseFullItem(true)
+                .addItem("打赏红包", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .addItem("打赏礼物", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                })
+                .showDialog(iLayout);
     }
 
     /**

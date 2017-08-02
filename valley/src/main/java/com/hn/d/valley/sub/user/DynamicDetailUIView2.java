@@ -49,6 +49,7 @@ import com.hn.d.valley.sub.user.sub.BaseDynamicListUIView;
 import com.hn.d.valley.sub.user.sub.CommentInputDialog;
 import com.hn.d.valley.sub.user.sub.CommentListUIView;
 import com.hn.d.valley.sub.user.sub.ForwardListUIView;
+import com.hn.d.valley.sub.user.sub.RewardListUIView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnPlayTimeView;
 import com.hn.d.valley.widget.HnVideoPlayView;
@@ -87,6 +88,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     private View likeUserControlLayout;
     private CommentListUIView mCommentListUIView;
     private ForwardListUIView mForwardListUIView;
+    private RewardListUIView mRewardListUIView;
     private Player.OnPlayListener mOnPlayListener;
 
     /**
@@ -243,10 +245,11 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             });
 
             //转发按钮,语音不允许转发
-            if (mDataListBean.isVoiceMediaType()) {
-                mViewHolder.v(R.id.bottom_forward_item).setVisibility(View.GONE);
-            }
+//            if (mDataListBean.isVoiceMediaType()) {
+//                mViewHolder.v(R.id.bottom_forward_item).setVisibility(View.GONE);
+//            }
 
+            //转发按钮
             mViewHolder.v(R.id.bottom_forward_item).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -259,6 +262,19 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                     } else {
                         T_.error(getString(R.string.cant_forward_tip));
                     }
+                }
+            });
+
+            //打赏按钮
+            mViewHolder.v(R.id.reward_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserDiscussItemControl.showRewardDialog(mParentILayout, new Runnable() {
+                        @Override
+                        public void run() {
+
+                        }
+                    });
                 }
             });
 
@@ -386,6 +402,7 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     }
 
     private void initViewPager() {
+        mUiViewPager.setOffscreenPageLimit(5);
         mUiViewPager.setPageTransformer(true, new FadeInOutPageTransformer());
         mUiViewPager.setAdapter(new UIPagerAdapter() {
             @Override
@@ -409,17 +426,25 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                         });
                     }
                     return mCommentListUIView;
+                } else if (position == 1) {
+                    if (mForwardListUIView == null) {
+                        mForwardListUIView = new ForwardListUIView(mDataListBean.getDiscuss_id());
+                        mForwardListUIView.bindParentILayout(mParentILayout);
+                    }
+                    return mForwardListUIView;
+                } else if (position == 2) {
+                    if (mRewardListUIView == null) {
+                        mRewardListUIView = new RewardListUIView(mDataListBean.getDiscuss_id());
+                        mRewardListUIView.bindParentILayout(mParentILayout);
+                    }
+                    return mRewardListUIView;
                 }
-                if (mForwardListUIView == null) {
-                    mForwardListUIView = new ForwardListUIView(mDataListBean.getDiscuss_id());
-                    mForwardListUIView.bindParentILayout(mParentILayout);
-                }
-                return mForwardListUIView;
+                return null;
             }
 
             @Override
             public int getCount() {
-                return 2;
+                return 3;
             }
 
             @Override
@@ -430,12 +455,20 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                         return getString(R.string.comment);
                     }
                     return getString(R.string.comment) + " " + comment_cnt;
+                } else if (position == 1) {
+                    String forward_cnt = mDataListBean.getForward_cnt();
+                    if (Integer.valueOf(forward_cnt) <= 0) {
+                        return getString(R.string.forward);
+                    }
+                    return getString(R.string.forward) + " " + forward_cnt;
+                } else if (position == 2) {
+                    String reward_cnt = mDataListBean.getReward_cnt();
+                    if (Integer.valueOf(reward_cnt) <= 0) {
+                        return getString(R.string.reward);
+                    }
+                    return getString(R.string.reward) + " " + reward_cnt;
                 }
-                String forward_cnt = mDataListBean.getForward_cnt();
-                if (Integer.valueOf(forward_cnt) <= 0) {
-                    return getString(R.string.forward);
-                }
-                return getString(R.string.forward) + " " + forward_cnt;
+                return "";
             }
         });
     }
