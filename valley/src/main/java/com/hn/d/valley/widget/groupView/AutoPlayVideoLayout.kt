@@ -45,7 +45,7 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
     }
 
     override fun onBufferingUpdate(mp: MediaPlayer?, percent: Int) {
-        L.e("call: onBufferingUpdate -> $percent")
+        //L.e("call: onBufferingUpdate -> $percent")
     }
 
     override fun onVideoSizeChanged(mp: MediaPlayer?, width: Int, height: Int) {
@@ -144,6 +144,7 @@ class AutoPlayVideoLayout(context: Context, attributeSet: AttributeSet? = null) 
                     videoControlView?.let {
                         it.visibility = View.VISIBLE
                         it.alpha = 0f
+                        it.setBackgroundColor(Color.TRANSPARENT)
                         //colorAnim = AnimUtil.startArgb(it, Color.TRANSPARENT, Color.BLACK, 300)
                     }
 
