@@ -176,6 +176,20 @@ public class Record {
         return this;
     }
 
+    /**
+     * @param noMic true 没有人声
+     */
+    public void setNoMic(boolean noMic) {
+        this.noMic = noMic;
+    }
+
+    /**
+     * @param noMusic true 没有音乐
+     */
+    public void setNoMusic(boolean noMusic) {
+        this.noMusic = noMusic;
+    }
+
     private void StartMixThread() {
         Thread MixEncodeThread = new Thread(new Runnable() {
             @Override
@@ -303,6 +317,10 @@ public class Record {
         }
     }
 
+    public boolean isRecording() {
+        return recording;
+    }
+
     private long getTime() {
         return System.currentTimeMillis() - startRecordTime;
     }
@@ -335,6 +353,10 @@ public class Record {
     }
 
     private void drawWavefrom(byte[] _RecorderBuffer) {
+        if (noMic) {
+            return;
+        }
+
         short[] shorts = new short[_RecorderBuffer.length / 2];
         ByteBuffer.wrap(_RecorderBuffer).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(shorts);
         if (mRecordListener != null) {

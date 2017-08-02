@@ -29,7 +29,7 @@ import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.hn.d.valley.sub.user.DynamicType;
 import com.hn.d.valley.sub.user.PublishDynamicUIView2;
-import com.hn.d.valley.sub.user.PublishVoiceNextDynamicUIView;
+import com.hn.d.valley.sub.user.PublishVoiceNextDynamicUIView2;
 import com.hn.d.valley.widget.HnExTextView;
 import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnPlayTimeView;
@@ -175,7 +175,7 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
                             return;
                         }
                         if (DynamicType.isVoice(bean.getType())) {
-                            startIView(new PublishVoiceNextDynamicUIView(bean));
+                            startIView(new PublishVoiceNextDynamicUIView2(bean));
                         } else {
                             startIView(new PublishDynamicUIView2(bean));
                         }

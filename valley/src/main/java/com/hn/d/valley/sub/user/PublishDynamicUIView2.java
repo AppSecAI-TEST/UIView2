@@ -729,8 +729,23 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
             });
 
             //输入框焦点, 自动滚动
-            ExEditText hotMoneyView = mViewHolder.v(R.id.hot_money_view);
-            ExEditText hotNumView = mViewHolder.v(R.id.hot_num_view);
+            final ExEditText hotMoneyView = mViewHolder.v(R.id.hot_money_view);
+            final ExEditText hotNumView = mViewHolder.v(R.id.hot_num_view);
+
+            hotMoneyView.addTextChangedListener(new SingleTextWatcher() {
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    super.afterTextChanged(s);
+                    int maxNumber = (int) (100 * hotMoneyView.getInputNumber());
+                    if (maxNumber > 0) {
+                        hotNumView.setMaxNumber(maxNumber);
+                        hotNumView.setText(String.valueOf(maxNumber));
+                    } else {
+                        hotNumView.setText("");
+                    }
+                }
+            });
 
             View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
                 @Override

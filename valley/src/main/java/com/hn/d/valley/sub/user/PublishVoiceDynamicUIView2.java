@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.angcyo.github.ripple.RippleBackground;
@@ -13,7 +14,6 @@ import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ContentLayout;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.view.RClickListener;
 import com.angcyo.uiview.widget.RSeekBar;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
@@ -41,7 +41,8 @@ import rx.functions.Action1;
  * 修改备注：
  * Version: 1.0.0
  */
-public class PublishVoiceDynamicUIView extends BaseContentUIView {
+@Deprecated
+public class PublishVoiceDynamicUIView2 extends BaseContentUIView {
 
     private static int progress = 50;
     Action0 mPublishAction;
@@ -53,10 +54,10 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     private WaveCanvas mwaveCanvas;
     private MusicIntentReceiver mMusicIntentReceiver;
 
-    public PublishVoiceDynamicUIView() {
+    public PublishVoiceDynamicUIView2() {
     }
 
-    public PublishVoiceDynamicUIView(MusicRealm musicRealm) {
+    public PublishVoiceDynamicUIView2(MusicRealm musicRealm) {
         mMusicRealm = musicRealm;
     }
 
@@ -69,7 +70,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
 
     @Override
     protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
-        inflate(R.layout.view_publish_voice_dynamic);
+        inflate(R.layout.view_publish_voice_dynamic2);
     }
 
     @Override
@@ -103,34 +104,22 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
         mRippleBackground = mViewHolder.v(R.id.ripple_layout);
         mHnRecordTimeView = mViewHolder.v(R.id.record_time_view);
         mHnRecTextView = mViewHolder.v(R.id.rec_view);
-
-        mViewHolder.v(R.id.mic_view).setOnClickListener(new RClickListener(1500, false) {
+        mViewHolder.v(R.id.mic_view).setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onRClick(View view) {
-                if (Record.instance().isRecording()) {
-                    recordStop();
-                } else {
-                    recordStart();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        recordStart();
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        recordStop();
+                        mViewHolder.v(R.id.mic_view).setEnabled(false);
+                        break;
                 }
+                return true;
             }
         });
-
-//        mViewHolder.v(R.id.mic_view).setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        recordStart();
-//                        break;
-//                    case MotionEvent.ACTION_CANCEL:
-//                    case MotionEvent.ACTION_UP:
-//                        recordStop();
-//                        mViewHolder.v(R.id.mic_view).setEnabled(false);
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
 
         mSeekBar = mViewHolder.v(R.id.seek_bar);
 
@@ -140,7 +129,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     }
 
     protected void recordStop() {
-        mViewHolder.v(R.id.modify_view).setEnabled(true);
+        mViewHolder.v(R.id.music_root_layout).setEnabled(true);
         mHnRecTextView.setRec(false);
         mViewHolder.tv(R.id.voice_tip_view).setText(R.string.record_voice_tip);
         mRippleBackground.stopRippleAnimation();
@@ -150,7 +139,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
     }
 
     protected void recordStart() {
-        mViewHolder.v(R.id.modify_view).setEnabled(false);
+        mViewHolder.v(R.id.music_root_layout).setEnabled(false);
         mHnRecTextView.setRec(true);
         mViewHolder.tv(R.id.voice_tip_view).setText(R.string.recording_voice_tip);
         mRippleBackground.startRippleAnimation();
@@ -160,8 +149,6 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                 recordStop();
             }
         });
-
-        playBmg();
     }
 
     /**
@@ -233,7 +220,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
                         });
     }
 
-    public PublishVoiceDynamicUIView setPublishAction(Action0 publishAction) {
+    public PublishVoiceDynamicUIView2 setPublishAction(Action0 publishAction) {
         mPublishAction = publishAction;
         return this;
     }
@@ -288,7 +275,7 @@ public class PublishVoiceDynamicUIView extends BaseContentUIView {
         mSeekBar.addOnProgressChangeListener(new RSeekBar.OnProgressChangeListener() {
             @Override
             public void onProgress(int progress) {
-                PublishVoiceDynamicUIView.progress = progress;
+                PublishVoiceDynamicUIView2.progress = progress;
                 volumeView.setText(progress + "");
                 Record.instance().setMusicVol(mSeekBar.getCurProgress() / 100f);
             }

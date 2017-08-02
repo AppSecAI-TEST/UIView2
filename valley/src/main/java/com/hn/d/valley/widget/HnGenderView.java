@@ -135,7 +135,7 @@ public class HnGenderView extends LinearLayout {
             mSexImageView.setVisibility(GONE);
         }
 
-        mLevelImageView.setVisibility(VISIBLE);
+        //mLevelImageView.setVisibility(VISIBLE);//取消等级显示,星期三 2017-8-2
         switch (level) {
             case "2":
                 mLevelImageView.setImageResource(R.drawable.level_2);

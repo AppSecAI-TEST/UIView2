@@ -121,6 +121,7 @@ public class PublishTaskRealm extends RealmObject {
         uuid = UUID.randomUUID().toString();
         type = DynamicType.VOICE.getValueString();
         mVoiceStatusInfo = voiceStatusInfo;
+        this.content = mVoiceStatusInfo.getVoiceTitle();
         createTime = System.currentTimeMillis();
     }
 
@@ -191,10 +192,6 @@ public class PublishTaskRealm extends RealmObject {
         return images;
     }
 
-    public void setPhotos2(RealmList<ImageItemRealm> photos) {
-        this.photos = photos;
-    }
-
     public PublishTaskRealm setPhotos2(final List<Luban.ImageItem> photos) {
         RRealm.exe(new Realm.Transaction() {
             @Override
@@ -211,16 +208,16 @@ public class PublishTaskRealm extends RealmObject {
         return this;
     }
 
+    public void setPhotos2(RealmList<ImageItemRealm> photos) {
+        this.photos = photos;
+    }
+
     public List<Tag> getSelectorTags2() {
         List<Tag> tags = new ArrayList<>();
         for (TagRealm t : mSelectorTags) {
             tags.add(new Tag(t.getId(), t.getName()));
         }
         return tags;
-    }
-
-    public void setSelectorTags2(RealmList<TagRealm> selectorTags) {
-        mSelectorTags = selectorTags;
     }
 
     public PublishTaskRealm setSelectorTags2(final List<Tag> selectorTags) {
@@ -236,6 +233,10 @@ public class PublishTaskRealm extends RealmObject {
             }
         });
         return this;
+    }
+
+    public void setSelectorTags2(RealmList<TagRealm> selectorTags) {
+        mSelectorTags = selectorTags;
     }
 
     public RealmList<ImageItemRealm> getPhotos() {

@@ -1,9 +1,11 @@
 package com.hn.d.valley.sub.user;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.container.ContentLayout;
@@ -11,6 +13,7 @@ import com.angcyo.uiview.container.UIParam;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RecordTimeView;
 import com.example.m3b.Audio;
 import com.example.m3b.audiocachedemo.Player;
@@ -25,7 +28,6 @@ import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.PublishTaskRealm;
 import com.hn.d.valley.control.VoiceStatusInfo;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.widget.HnBigPlayView;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.lzy.imagepicker.ImagePickerHelper;
@@ -51,8 +53,7 @@ import static com.hn.d.valley.control.UserDiscussItemControl.getVideoTimeLong;
  * 修改备注：
  * Version: 1.0.0
  */
-@Deprecated
-public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
+public class PublishVoiceNextDynamicUIView2 extends BaseContentUIView {
 
     private static PublishTaskRealm mPublishTaskRealm;
     String filePath;
@@ -63,8 +64,11 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     private OssControl mOssControl;
     private RecordTimeView mTimeView;
     private Player.OnPlayListener mOnPlayListener;
+    private ExEditText mTitleView;
 
-    public PublishVoiceNextDynamicUIView(String filePath, long recordTime, MusicRealm musicRealm) {
+    private String title;
+
+    public PublishVoiceNextDynamicUIView2(String filePath, long recordTime, MusicRealm musicRealm) {
         this.recordTime = (int) (Math.floor(recordTime / 1000f));
         final String newName = filePath + OssHelper.createVoiceFileName(this.recordTime);
         new File(filePath).renameTo(new File(newName));
@@ -72,11 +76,12 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
         mMusicRealm = musicRealm;
     }
 
-    public PublishVoiceNextDynamicUIView(PublishTaskRealm publishTaskRealm) {
+    public PublishVoiceNextDynamicUIView2(PublishTaskRealm publishTaskRealm) {
         mPublishTaskRealm = publishTaskRealm;
         this.filePath = publishTaskRealm.getVoiceStatusInfo().getVoicePath();
         this.mImagePath = publishTaskRealm.getVoiceStatusInfo().getVoiceImagePath();
         this.recordTime = getVideoTimeLong(this.filePath);
+        title = publishTaskRealm.getVoiceStatusInfo().getVoiceTitle();
     }
 
     @Override
@@ -93,7 +98,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                 }));
     }
 
-    public PublishVoiceNextDynamicUIView setPublishAction(Action0 publishAction) {
+    public PublishVoiceNextDynamicUIView2 setPublishAction(Action0 publishAction) {
         mPublishAction = publishAction;
         return this;
     }
@@ -122,7 +127,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
 
     @Override
     protected void inflateContentLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
-        inflate(R.layout.view_publish_voice_dynamic_next);
+        inflate(R.layout.view_publish_voice_dynamic_next2);
     }
 
     @Override
@@ -141,21 +146,26 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     protected void initOnShowContentLayout() {
         super.initOnShowContentLayout();
 
-        showPreview();
-
         mTimeView = mViewHolder.v(R.id.time_view);
         mTimeView.setSumTime(recordTime);
 
-        final HnBigPlayView playView = mViewHolder.v(R.id.play_view);
+        mTitleView = v(R.id.edit_text_view);
+        mTitleView.setText(title);
+
+        showPreview();
+
+        final ImageView playView = mViewHolder.v(R.id.play_view);
         playView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (playView.isPlaying()) {
-                    playView.setPlaying(false);
+                if (playView.getTag() != null) {
+                    playView.setTag(null);
+                    playView.setImageResource(R.drawable.icon_play_big_n);
                     MusicControl.pausePlay(filePath);
                     mTimeView.stopRecord(false);
                 } else {
-                    playView.setPlaying(true);
+                    playView.setTag("play");
+                    playView.setImageResource(R.drawable.icon_pause_big_n);
                     MusicControl.play(filePath);
                     if (mTimeView.getTime() == -1 ||
                             mTimeView.getTime() == recordTime) {
@@ -175,7 +185,8 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
             @Override
             public void onPlayEnd(String url) {
                 mTimeView.setTime(recordTime);
-                playView.setPlaying(false);
+                playView.setTag(null);
+                playView.setImageResource(R.drawable.icon_play_big_n);
                 mTimeView.stopRecord(false);
             }
         };
@@ -254,7 +265,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
     }
 
     private void showPreview() {
-        if (TextUtils.isEmpty(mImagePath)) {
+        if (TextUtils.isEmpty(mImagePath) || VoiceStatusInfo.NOPIC.equalsIgnoreCase(mImagePath)) {
             return;
         }
         HnGlideImageView glideImageView = mViewHolder.v(R.id.image_view);
@@ -276,7 +287,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                                     mPublishTaskRealm.deleteFromRealm();
                                 }
                                 PublishTaskRealm.save(getPublishTaskRealm());
-                                finishIView(PublishVoiceNextDynamicUIView.this, new UIParam(true, true, false));
+                                finishIView(PublishVoiceNextDynamicUIView2.this, new UIParam(true, true, false));
                             }
                         });
                     }
@@ -284,7 +295,7 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
                 .setCancelClick(new UIDialog.OnDialogClick() {
                     @Override
                     public void onDialogClick(UIDialog dialog, View clickView) {
-                        finishIView(PublishVoiceNextDynamicUIView.this, new UIParam(true, true, false));
+                        finishIView(PublishVoiceNextDynamicUIView2.this, new UIParam(true, true, false));
                     }
                 })
                 .showDialog(mParentILayout);
@@ -293,7 +304,20 @@ public class PublishVoiceNextDynamicUIView extends BaseContentUIView {
 
     private PublishTaskRealm getPublishTaskRealm() {
         PublishTaskRealm publishTask = new PublishTaskRealm(
-                new VoiceStatusInfo(mImagePath, filePath));
+                new VoiceStatusInfo(mImagePath, filePath, mTitleView.string()));
+        publishTask.setShowContent(mTitleView.string());
         return publishTask;
+    }
+
+    @Override
+    public void onViewShow(Bundle bundle) {
+        super.onViewShow(bundle);
+        adjustPan(true);
+    }
+
+    @Override
+    public void onViewHide() {
+        super.onViewHide();
+        adjustPan(false);
     }
 }
