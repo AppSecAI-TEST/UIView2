@@ -1534,7 +1534,7 @@ public class UserDiscussItemControl {
      */
     private static void bindRewardItemView(final ILayout iLayout,
                                            RBaseViewHolder holder,
-                                           UserDiscussListBean.DataListBean tBean,
+                                           final UserDiscussListBean.DataListBean tBean,
                                            boolean isInDetail) {
 
         HnItemTextView reward_cnt = holder.v(R.id.reward_cnt);
@@ -1544,7 +1544,7 @@ public class UserDiscussItemControl {
         reward_cnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showRewardDialog(iLayout, new Runnable() {
+                showRewardDialog(iLayout, tBean.getDiscuss_id(), new Runnable() {
                     @Override
                     public void run() {
 
@@ -1557,7 +1557,20 @@ public class UserDiscussItemControl {
     /**
      * 显示打赏对话框, 在动态列表和动态详情 会被调用
      */
-    public static void showRewardDialog(final ILayout iLayout, Runnable onRewardSuccess /*打赏成功的回调*/) {
+    public static void showRewardDialog(final ILayout iLayout,
+                                        final String item_id,
+                                        final Runnable onRewardSuccess /*打赏成功的回调*/) {
+        Runnable onSuccess = new Runnable() {
+            @Override
+            public void run() {
+                //打赏成功, 更新阅读数
+                updateDiscussReadCnt(item_id);
+                if (onRewardSuccess != null) {
+                    onRewardSuccess.run();
+                }
+            }
+        };
+
         UIItemDialog.build()
                 .setShowCancelButton(true)
                 .setUseFullItem(true)
