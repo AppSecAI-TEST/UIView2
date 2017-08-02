@@ -168,7 +168,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         } else if ("2".equalsIgnoreCase(mediaType)) {
             mDynamicType = DynamicType.FORWARD_VIDEO;
         } else if ("4".equalsIgnoreCase(mediaType)) {
-            mDynamicType = DynamicType.FORWARD_VOICE;//不允许转发语音
+            mDynamicType = DynamicType.FORWARD_VOICE;//允许转发语音, 星期三 2017-8-2
         } else if ("1".equalsIgnoreCase(mediaType)) {
             mDynamicType = DynamicType.FORWARD_TEXT;
         } else {
@@ -825,7 +825,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                 MoonUtil.show(mActivity, contentView, shareDes);
 
             } else if ("0".equalsIgnoreCase(mDataListBean.getShare_original_item_id())) {
-                //不是转发的动态
+                //不是已经被转发过的动态
                 if (mDynamicType == DynamicType.FORWARD_TEXT) {
                     imageView.setContentDescription(getString(R.string.is_circle));
                     imageView.setImageThumbUrl(mDataListBean.getUser_info().getAvatar());
@@ -837,6 +837,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
 
                 MoonUtil.show(mActivity, contentView, getContent(mDataListBean.getContent()));
             } else {
+                //已经被转发过的动态
                 if (mDynamicType == DynamicType.FORWARD_TEXT) {
                     imageView.setContentDescription(getString(R.string.is_circle));
                     imageView.setImageThumbUrl(mDataListBean.getOriginal_info().getAvatar());

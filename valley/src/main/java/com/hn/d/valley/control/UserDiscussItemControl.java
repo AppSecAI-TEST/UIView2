@@ -324,8 +324,8 @@ public class UserDiscussItemControl {
 //                        getColorStateList(R.color.base_main_color_border_selector_color));
 //            }
 //
-            //语音动态不允许转发
-            forwardView.setVisibility("4".equalsIgnoreCase(dataListBean.getMedia_type()) ? View.GONE : View.VISIBLE);
+            //语音动态不允许转发, 允许转发星期三 2017-8-2
+            //forwardView.setVisibility("4".equalsIgnoreCase(dataListBean.getMedia_type()) ? View.GONE : View.VISIBLE);
 //            if (UserCache.getUserAccount().equalsIgnoreCase(user_info.getUid())) {
 //                //自己的动态不允许转发
 //                forwardView.setClickable(false);
