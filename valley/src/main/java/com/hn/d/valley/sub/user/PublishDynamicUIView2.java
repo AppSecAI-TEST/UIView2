@@ -755,7 +755,7 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                     }
                 }
             };
-            
+
             hotMoneyView.setOnFocusChangeListener(focusChangeListener);
             hotNumView.setOnFocusChangeListener(focusChangeListener);
         }
