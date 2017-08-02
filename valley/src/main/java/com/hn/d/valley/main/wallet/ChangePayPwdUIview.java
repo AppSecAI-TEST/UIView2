@@ -167,6 +167,9 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                             @Override
                             public void call(Object o) {
                                 finishIView();
+                                // 保存 密码已设置
+                                WalletHelper.getInstance().getWalletAccount().setHas_pin(1);
+                                // 钱包数据更新
                                 RBus.post(new WalletAccountUpdateEvent());
                                 T_.show(getString(R.string.modify_successed));
                             }

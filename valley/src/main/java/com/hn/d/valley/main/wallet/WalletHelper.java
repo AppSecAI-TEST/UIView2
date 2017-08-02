@@ -154,7 +154,7 @@ public class WalletHelper {
             mWalletAccount = Json.from(data, WalletAccount.class);
         } else if (code == 404) {
             //未开户
-            openAccount(UserCache.getUserAccount(), callback);
+//            openAccount(UserCache.getUserAccount(), callback);
         } else if (code == 400) {
             //参数缺失
         }
@@ -188,7 +188,7 @@ public class WalletHelper {
     }
 
     public void openAccount(String uid) {
-        openAccount(uid, null);
+//        openAccount(uid, null);
     }
 
     private static class Holder {

@@ -97,9 +97,9 @@ public class LoginUIView2 extends BaseContentUIView {
         WalletHelper.getInstance().clean();
 
         //第一次登录开户
-        if (LoginControl.instance().isFirstRegister()) {
-            WalletHelper.getInstance().openAccount(loginBean.getUid());
-        }
+//        if (LoginControl.instance().isFirstRegister()) {
+//            WalletHelper.getInstance().openAccount(loginBean.getUid());
+//        }
 
         //登录成功, 保存用户的头像
         Hawk.put(loginBean.getPhone(), loginBean.getAvatar());

@@ -35,20 +35,20 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean>{
+public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean> {
 
-    private int type = 0 ;//默认 全部
+    private int type = 0;//默认 全部
 
     @Override
     protected TitleBarPattern getTitleBar() {
-        ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_suaixuan)).setListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMoreDialog();
-            }
-        }));
-        return super.getTitleBar().setTitleString(getString(R.string.text_klgcoin_record)).setRightItems(rightItems);
+//        ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
+//        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_suaixuan)).setListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showMoreDialog();
+//            }
+//        }));
+        return super.getTitleBar().setTitleString(getString(R.string.text_klgcoin_record))/*.setRightItems(rightItems)*/;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean>{
         super.onUILoadData(page);
 
         add(RRetrofit.create(WalletService.class)
-                .records(Param.buildMap("uid:" + UserCache.getUserAccount(),"type:" + type))
+                .records(Param.buildMap("uid:" + UserCache.getUserAccount(), "type:" + type))
                 .compose(Rx.transformer(KLGCoinList.class))
                 .subscribe(new BaseSingleSubscriber<KLGCoinList>() {
 
@@ -123,7 +123,7 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean>{
 
     }
 
-    private class BillRecordAdapter extends RExBaseAdapter<String,KlgCoinBean,String> {
+    private class BillRecordAdapter extends RExBaseAdapter<String, KlgCoinBean, String> {
 
         public BillRecordAdapter(Context context) {
             super(context);
@@ -143,12 +143,12 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean>{
             TextView tv_bill_moncy = holder.tv(R.id.tv_bill_moncy);
 
             tv_bill_type.setText(dataBean.getAction_desc());
-            tv_time.setText(TimeUtil.getTimeShowString(Long.valueOf(dataBean.getDetail().getPay_time()) * 1000l,true));
-            if (dataBean.getIn_out() .equals("1")) {
+            tv_time.setText(TimeUtil.getTimeShowString(Long.valueOf(dataBean.getDetail().getPay_time()) * 1000l, true));
+            if (dataBean.getIn_out().equals("1")) {
                 tv_bill_moncy.setText(SpannableStringUtils.getBuilder("+" + dataBean.getDetail().getCoin())
                         .setForegroundColor(mActivity.getResources().getColor(R.color.base_red))
                         .create());
-            } else if(dataBean.getIn_out() == "2") {
+            } else if (dataBean.getIn_out().equals("2")) {
                 tv_bill_moncy.setText("-" + dataBean.getDetail().getCoin());
             }
 

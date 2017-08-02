@@ -21,6 +21,7 @@ import com.hn.d.valley.main.message.attachment.RechargeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.ShareNewsAttachment;
+import com.hn.d.valley.main.message.attachment.ShowChampionAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalFailAttachment;
@@ -106,6 +107,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.ONLINE_FORWARD_VIDEO:
                     attachment = new OnlineVideoForwardAttachment(json);
+                    break;
+                case CustomAttachmentType.SHOW_CHAMPION:
+                    attachment = new ShowChampionAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

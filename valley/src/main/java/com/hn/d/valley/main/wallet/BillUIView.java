@@ -17,6 +17,7 @@ import com.angcyo.uiview.utils.TimeUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.BillRecord;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 

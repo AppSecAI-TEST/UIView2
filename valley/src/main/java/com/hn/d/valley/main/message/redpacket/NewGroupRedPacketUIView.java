@@ -38,6 +38,8 @@ import java.util.List;
 
 import rx.functions.Action1;
 
+import static com.hn.d.valley.main.message.redpacket.GrabPacketHelper.MAX_REDBAG;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -195,7 +197,7 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                             return;
                         }
                         float money = Float.valueOf(value);
-                        if (money > 200) {
+                        if (money > MAX_REDBAG) {
                             enable = false;
                             T_.show(mActivity.getString(R.string.text_hongbao_lower_200));
                         }

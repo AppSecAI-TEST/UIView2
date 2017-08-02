@@ -199,9 +199,9 @@ public class LoginControl {
                         }
 
                         //第一次登录钱包开户
-                        if (LoginControl.instance().isFirstRegister()) {
-                            WalletHelper.getInstance().openAccount(bean.getUid());
-                        }
+//                        if (LoginControl.instance().isFirstRegister()) {
+//                            WalletHelper.getInstance().openAccount(bean.getUid());
+//                        }
 
                         if (mOnLoginListener != null) {
                             mOnLoginListener.onLoginSuccess(bean);

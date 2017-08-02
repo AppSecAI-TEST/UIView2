@@ -277,9 +277,9 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             T_.show(getString(R.string.text_input_error));
             return;
         }
-        float amount = Float.valueOf(money);
+//        float amount = Float.valueOf(money);
 //        float totalAmount = amount - decimal(amount);
-        float totalAmount = amount;
+        float totalAmount = Float.valueOf(money);
         if (refundTotal) {
             totalAmount = WalletHelper.getInstance().getWalletAccount().getMoney() / 100f;
         }

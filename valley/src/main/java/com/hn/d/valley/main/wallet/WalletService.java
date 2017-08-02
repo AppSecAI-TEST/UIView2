@@ -335,9 +335,26 @@ public interface WalletService {
     @POST("wallet/balance/recharge/alipay")
     Observable<ResponseBody> rechargeAlipay(@QueryMap Map<String, String> map);
 
+    /**
+     * 客户端通过该接口获取支付宝接口签名
+     * @param map
+     * @return
+     */
+    @POST("wallet/balance/recharge/alipay/getsign")
+    Observable<ResponseBody> getsign(@QueryMap Map<String, String> map);
+
 
     @POST("http://service.klgwl.com/wallet/balance/recharge/wechat/unifiedorder")
     Observable<ResponseBody> wechatPay(@QueryMap Map<String, String> map);
+
+
+    /**
+     * 通过支付宝授权方式绑定支付宝
+     * @param map
+     * @return
+     */
+    @POST("wallet/account/bind/alipay/account")
+    Observable<ResponseBody> bindAlipay(@QueryMap Map<String, String> map);
 
 
     /**客户端将第三方充值结果和服务器进行确认
@@ -375,5 +392,16 @@ public interface WalletService {
      */
     @POST("wallet/balance/consume")
     Observable<ResponseBody> rechargeKlgcoin(@QueryMap Map<String, String> map);
+
+    /**
+     * 查询资金动向记录详情
+     * @param map
+     * @return
+     */
+    @POST("wallet/record/detail")
+    Observable<ResponseBody> recordDetail(@QueryMap Map<String, String> map);
+
+
+
 
 }

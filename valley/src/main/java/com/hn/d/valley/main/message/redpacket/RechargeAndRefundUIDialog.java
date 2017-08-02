@@ -155,11 +155,18 @@ public class RechargeAndRefundUIDialog extends UIIDialogImpl {
      }
      */
     private void refund() {
+        int type = WalletHelper.getInstance().getWalletAccount().bindType();
+        String account = "";
+        if (type == 0) {
+            account =  WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0];
+        } else if (type == 1) {
+            account = WalletHelper.getInstance().getWalletAccount().getAlipay_userid().split(";;;")[0];
+        }
         RRetrofit.create(WalletService.class)
                 .cashoutRequest(Param.buildInfoMap(
                         "uid:" + UserCache.getUserAccount(),
-                        "type:" + 0,
-                        "account:" + WalletHelper.getInstance().getWalletAccount().getAlipay().split(";;;")[0],
+                        "type:" + type,
+                        "account:" + account,
                         "money:" + (int) (params.money * 100)))
                 .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {

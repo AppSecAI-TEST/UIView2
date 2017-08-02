@@ -64,6 +64,9 @@ public class OrderInfoUtil2_0 {
         // 签名类型
         keyValues.put("sign_type", rsa2 ? "RSA2" : "RSA");
 
+        keyValues.put("method","alipay.open.auth.sdk.code.get");
+
+        //接口名称，常量值为alipay.open.auth.sdk.code.get
         return keyValues;
     }
 

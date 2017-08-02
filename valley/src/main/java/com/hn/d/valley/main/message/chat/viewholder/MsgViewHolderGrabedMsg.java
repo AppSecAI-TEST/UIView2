@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.github.utilcode.utils.SpannableStringUtils;
@@ -12,6 +13,7 @@ import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
+import com.hn.d.valley.main.message.redpacket.GrabedRDResultUIView;
 
 /**
  * Created by hewking on 2017/4/9.
@@ -44,7 +46,14 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
         }
 
         GrabedMsgAttachment pcAttachment = (GrabedMsgAttachment) attachment;
-        RedPacketGrabedMsg redPacket = pcAttachment.getGrabedMsg();
+        final RedPacketGrabedMsg redPacket = pcAttachment.getGrabedMsg();
+
+        tv_hongbao_notice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUIBaseView.startIView(new GrabedRDResultUIView(redPacket.getRid()));
+            }
+        });
 
         NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
         if (redPacket.getOwner() == (redPacket.getGraber()) && UserCache.getUserAccount().equals(redPacket.getOwner() + "")) {

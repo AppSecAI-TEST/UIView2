@@ -1,22 +1,34 @@
 package com.hn.d.valley.main.wallet;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.angcyo.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
+import com.angcyo.uiview.utils.string.StringUtil;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.bean.BillRecord;
+import com.hn.d.valley.bean.BillRecordDetailBean;
 import com.hn.d.valley.main.message.redpacket.GrabedRDResultUIView;
 
 import java.util.List;
+
+import retrofit2.Retrofit;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -32,9 +44,15 @@ import java.util.List;
 public class BillDetailUIView extends BaseItemUIView {
 
     private BillRecord billRecord;
+    private String id;
+    private BillRecordDetailBean billDetail;
 
     public BillDetailUIView(BillRecord billRecord) {
         this.billRecord = billRecord;
+    }
+
+    public BillDetailUIView(String id) {
+        this.id = id;
     }
 
     @Override
@@ -50,6 +68,36 @@ public class BillDetailUIView extends BaseItemUIView {
     }
 
     @Override
+    protected void initOnShowContentLayout() {
+        super.initOnShowContentLayout();
+    }
+
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
+        loadData();
+    }
+
+    private void loadData() {
+        add(RRetrofit.create(WalletService.class)
+        .recordDetail(Param.build("id:" + id))
+        .compose(Rx.transformer(BillRecordDetailBean.class))
+                .subscribe(new BaseSingleSubscriber<BillRecordDetailBean>() {
+                    @Override
+                    public void onError(int code, String msg) {
+                        super.onError(code, msg);
+                    }
+
+                    @Override
+                    public void onSucceed(BillRecordDetailBean bean) {
+                        super.onSucceed(bean);
+                        billDetail = bean;
+                        showContentLayout();
+                    }
+                }));
+    }
+
+    @Override
     protected void createItems(List<SingleItem> items) {
         items.add(new SingleItem() {
             @Override
@@ -61,7 +109,7 @@ public class BillDetailUIView extends BaseItemUIView {
                 ItemInfoLayout info_transtaction_number = holder.v(R.id.info_transtaction_number);
 
                 info_amount.getDarkTextView().setTextColor(SkinHelper.getSkin().getThemeDarkColor());
-                info_amount.setItemDarkText(String.format(getString(R.string.text_yuan_amout),billRecord.getMoney() / 100f));
+                info_amount.setItemDarkText(String.format(getString(R.string.text_yuan_amout), billRecord.getMoney() / 100f));
                 info_transaction_type.setItemDarkText(billRecord.getDescription());
 
                 //充值
@@ -71,7 +119,7 @@ public class BillDetailUIView extends BaseItemUIView {
                     info_transaction_time.setItemText("支付方式");
                     info_transaction_time.setItemDarkText(billRecord.getTransferway());
 
-                } else if (billRecord.getSub_type() == 2){
+                } else if (billRecord.getSub_type() == 2) {
                     //提现
                     info_rp_detail.setItemText("提现时间");
                     info_rp_detail.setItemDarkText(TimeUtil.getDatetime(billRecord.getCreated() * 1000l));
@@ -85,7 +133,8 @@ public class BillDetailUIView extends BaseItemUIView {
                     info_rp_detail.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            startIView(new GrabedRDResultUIView(Long.valueOf(billRecord.getPayid())));                        }
+                            startIView(new GrabedRDResultUIView(Long.valueOf(billRecord.getPayid())));
+                        }
                     });
                 }
 
@@ -102,8 +151,14 @@ public class BillDetailUIView extends BaseItemUIView {
         });
     }
 
+    @NonNull
+    @Override
+    protected LayoutState getDefaultLayoutState() {
+        return LayoutState.LOAD;
+    }
+
     @Override
     public int getDefaultBackgroundColor() {
-        return ContextCompat.getColor(mActivity,R.color.base_white);
+        return ContextCompat.getColor(mActivity, R.color.base_white);
     }
 }

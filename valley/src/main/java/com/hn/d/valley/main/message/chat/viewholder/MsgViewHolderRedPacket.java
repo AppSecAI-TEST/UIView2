@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -88,7 +89,7 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 
     @Override
     protected int getContentResId() {
-        return R.layout.msg_redpacket_layout;
+        return R.layout.msg_redpacket_layout_two;
     }
 
     @Override
@@ -98,9 +99,8 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 
     @Override
     protected void bindContentView() {
-        contentContainer.setBackground(null);
         TextView tv_content = (TextView) findViewById(R.id.tv_red_content);
-        RelativeLayout rl_container = (RelativeLayout) findViewById(R.id.rl_red_packet);
+        LinearLayout rl_container = (LinearLayout) findViewById(R.id.msg_card_layout);
 
         CustomAttachment attachment = (CustomAttachment) message.getAttachment();
         if (attachment == null) {

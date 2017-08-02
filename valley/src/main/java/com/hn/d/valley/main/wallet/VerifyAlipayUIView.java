@@ -129,7 +129,8 @@ public class VerifyAlipayUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
             return;
         }
         RRetrofit.create(WalletService.class)
-                .cashaccountRemove(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "type:" + 0))
+                .cashaccountRemove(Param.buildInfoMap("uid:" + UserCache.getUserAccount()
+                        , "type:" + WalletHelper.getInstance().getWalletAccount().bindType()))
                 .compose(WalletHelper.getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 

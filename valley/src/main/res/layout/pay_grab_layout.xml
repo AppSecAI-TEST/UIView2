@@ -81,7 +81,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/base_25dpi"
         android:text="查看详情"
-        android:textColor="@color/blue_4777af"
+        android:textColor="@color/yellow_fccd82"
         android:textSize="@dimen/default_text_little_size"
         android:visibility="gone"/>
 

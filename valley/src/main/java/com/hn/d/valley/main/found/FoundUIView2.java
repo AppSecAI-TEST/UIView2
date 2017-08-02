@@ -65,7 +65,7 @@ public class FoundUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                bindInitView(holder, getString(R.string.hot_information), "全球资讯轻松浏览热点资讯", R.drawable.img_news, new View.OnClickListener() {
+                bindInitView(holder, getString(R.string.hot_information), "全球资讯轻松浏览", R.drawable.img_news, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         mParentILayout.startIView(new HotInformationUIView());
@@ -78,7 +78,7 @@ public class FoundUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
             @Override
             public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                bindInitView(holder, getString(R.string.search_title), "全网检索,即刻呈现", R.drawable.img_search, new View.OnClickListener() {
+                bindInitView(holder, getString(R.string.search_title), "全网检索，即刻呈现", R.drawable.img_search, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         MainUIView uiView = (MainUIView) mParentILayout.getIViewWith(MainUIView.class);

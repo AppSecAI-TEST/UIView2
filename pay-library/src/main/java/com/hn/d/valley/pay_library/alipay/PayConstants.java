@@ -15,6 +15,8 @@ public interface PayConstants {
 
     String AliPay_APPID = "2017032106319102";
 
+    String AliPay_PID = "2088621460937877";
+
     String WechatPay_APPID = "wx813dd6b4a7b4a9ff";
 
     String CALLBACKURL = "http://api.klgwl.com/wallet/alipay/callback";

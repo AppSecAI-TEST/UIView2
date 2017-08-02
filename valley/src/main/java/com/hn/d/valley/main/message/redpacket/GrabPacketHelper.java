@@ -29,6 +29,8 @@ import rx.functions.Action1;
  */
 public class GrabPacketHelper {
 
+    public static final int MAX_REDBAG = 500;
+
     @NonNull
     public static Integer parseResult(ResponseBody responseBody) {
         int code = -1;

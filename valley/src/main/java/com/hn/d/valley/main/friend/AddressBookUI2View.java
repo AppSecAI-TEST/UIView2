@@ -55,6 +55,7 @@ import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.widget.HnFollowImageView;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.hn.d.valley.widget.HnLoading;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.tbruyelle.rxpermissions.RxPermissions;
@@ -253,6 +254,10 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
     }
 
     private void checkPhoneMatch(final List<AbsContactItem> absContactItems) {
+        if (absContactItems.size() == 0) {
+            hideLoadView();
+            return;
+        }
         String phones = buildJsonParam(absContactItems);
         RRetrofit.create(ContactService.class)
                 .phoneUser3(Param.buildMap("uid:" + UserCache.getUserAccount(), "phones:" + phones

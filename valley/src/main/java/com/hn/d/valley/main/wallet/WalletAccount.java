@@ -27,14 +27,25 @@ public class WalletAccount {
      * device : 1ASD23123SFESF2343XCVDGDFGFG3434
      * "cashout_rate":0.0055
      "cashout_doorsill":1000
+     alipay_userid
      */
 
     private int uid;
+
+    public String getAlipay_userid() {
+        return alipay_userid;
+    }
+
+    public void setAlipay_userid(String alipay_userid) {
+        this.alipay_userid = alipay_userid;
+    }
+
     private int money;
     private int freeze;
     private String alipay;
     private String wechatpay;
     private int has_pin;
+    private String alipay_userid;
 
     public float getCashout_rate() {
         return cashout_rate;
@@ -63,8 +74,16 @@ public class WalletAccount {
         return has_pin == 1;
     }
 
+    public int bindType() {
+        if (!TextUtils.isEmpty(alipay_userid)) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
     public boolean hasAlipay() {
-        return !TextUtils.isEmpty(alipay);
+        return !TextUtils.isEmpty(alipay) || !TextUtils.isEmpty(alipay_userid);
     }
 
     public boolean hasMoney() {
