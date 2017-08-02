@@ -41,7 +41,6 @@ import com.hn.d.valley.sub.other.KLGCoinUIVIew;
 import com.hn.d.valley.sub.other.MyVisitorUserUIView2;
 import com.hn.d.valley.sub.user.NewNotifyUIView;
 import com.hn.d.valley.widget.HnGlideImageView;
-import com.hn.d.valley.x5.VipWebUIView;
 import com.lzy.imagepicker.ImageDataSource;
 import com.lzy.imagepicker.ImagePickerHelper;
 
@@ -392,24 +391,24 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
             }
         }));
 
-        //会员中心
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                itemInfoLayout.setItemText(getString(R.string.vip_tip));
-
-                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_vipcenter);
-                itemInfoLayout.setLeftDrawPadding(mDrawPadding);
-
-                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mParentILayout.startIView(new VipWebUIView());
-                    }
-                });
-            }
-        }));
+//        //会员中心
+//        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+//                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+//                itemInfoLayout.setItemText(getString(R.string.vip_tip));
+//
+//                itemInfoLayout.setLeftDrawableRes(R.drawable.icon_vipcenter);
+//                itemInfoLayout.setLeftDrawPadding(mDrawPadding);
+//
+//                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mParentILayout.startIView(new VipWebUIView());
+//                    }
+//                });
+//            }
+//        }));
 
 
         if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet() || BuildConfig.SHOW_DEBUG) {
