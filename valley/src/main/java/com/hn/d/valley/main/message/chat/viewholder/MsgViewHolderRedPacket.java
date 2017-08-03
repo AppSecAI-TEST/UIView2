@@ -109,6 +109,13 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
         RedPacketAttachment pcAttachment = (RedPacketAttachment) attachment;
         final RedPacket redPacket = pcAttachment.getRedPacket();
 
+        if (isReceivedMessage()) {
+            contentContainer.setBackgroundResource(R.drawable.hongbao_bg_left);
+        } else {
+            contentContainer.setBackgroundResource(R.drawable.hongbao_bg_right);
+        }
+
+
         tv_content.setText(redPacket.getMsg());
 
         if (message.getFromAccount().equals(UserCache.getUserAccount())) {

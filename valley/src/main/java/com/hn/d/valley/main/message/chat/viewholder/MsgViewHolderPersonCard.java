@@ -66,13 +66,14 @@ public class MsgViewHolderPersonCard extends MsgViewHolderBase {
     @Override
     protected void bindContentView() {
 
-
         HnGlideImageView imageView = (HnGlideImageView) findViewById(R.id.iv_thumb);
         TextView tv_pc_name = (TextView) findViewById(R.id.username);
         chars_count = (RTextView) findViewById(R.id.chars_count);
         auth_iview = (ImageView) findViewById(R.id.auth_iview);
         fans_count = (RTextView) findViewById(R.id.fans_count);
         grade = (HnGenderView) findViewById(R.id.grade);
+        LinearLayout ll_user_detail = (LinearLayout) findViewById(R.id.ll_user_detail);
+        ll_user_detail.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 
 //        LinearLayout pc_layout = (LinearLayout) findViewById(R.id.msg_card_layout);
 //        contentContainer.setBackgroundResource(0);

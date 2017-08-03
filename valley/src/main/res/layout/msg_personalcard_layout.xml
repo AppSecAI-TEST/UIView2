@@ -33,6 +33,7 @@
 
 
     <LinearLayout
+        android:id="@+id/ll_user_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/iv_thumb"
@@ -52,7 +53,7 @@
             tools:text="爱宠物的默默" />
 
         <LinearLayout
-            android:layout_marginTop="@dimen/base_xhdpi_15"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -94,10 +95,11 @@
 
             <com.angcyo.uiview.widget.RTextView
                 android:id="@+id/chars_count"
-                style="@style/MainTextStyle"
+                style="@style/DarkTextStyle"
+                android:layout_marginStart="@dimen/base_xxhdpi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:tag="@string/fans_format"
+                android:tag="魅力值 %1$s"
                 android:textColor="@color/white"
                 tools:text="120" />
 

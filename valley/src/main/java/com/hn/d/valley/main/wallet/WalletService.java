@@ -402,6 +402,11 @@ public interface WalletService {
     Observable<ResponseBody> recordDetail(@QueryMap Map<String, String> map);
 
 
+    // 余额打赏
+    @POST("balance/reward")
+    Observable<ResponseBody> balanceReward(@QueryMap Map<String, String> map);
+
+
 
 
 }

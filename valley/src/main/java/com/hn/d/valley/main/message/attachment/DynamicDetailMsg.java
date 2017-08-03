@@ -67,7 +67,7 @@ public class DynamicDetailMsg extends BaseCustomMsg {
                 detailMsg.cover = dataListBean.getOriginal_info().getMedia();
             }
             detailMsg.vedioURL = split[1];
-            detailMsg.msg = "分享视频";
+            detailMsg.msg = dataListBean.getContent();
 
         } else if (dataListBean.isVoiceMediaType()) {
             detailMsg.msg = "分享音乐";

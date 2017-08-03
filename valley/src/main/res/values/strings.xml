@@ -871,6 +871,7 @@
     <string name="text_recharge_now">立即充值</string>
     <string name="blacklist_title">黑名单</string>
     <string name="text_send_gift">送礼物</string>
+    <string name="text_gift_record">礼物往来</string>
     <string name="input_group_announcement_hint">请输入群公告</string>
     <string name="avchat_switch_video_reject">对方不同意音频切换为视频！</string>
     <string name="avchat_peer_reject">对方正忙</string>
@@ -909,4 +910,7 @@
     <string name="text_redpacket_detail">红包详情</string>
     <string name="text_transaction_type">交易类型</string>
     <string name="birthday_tip">生日:</string>
+    <string name="text_gain_rebag">领取红包</string>
+    <string name="text_check_redbag">查看红包</string>
+    <string name="text_redbag_reward">打赏红包</string>
 </resources>

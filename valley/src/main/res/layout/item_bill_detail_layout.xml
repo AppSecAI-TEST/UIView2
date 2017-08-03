@@ -70,6 +70,42 @@
             app:item_textColor="@color/main_text_color_dark"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/info_refund_time"
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            app:item_dark_text="support@konglonggu.com"
+            app:item_dark_textColor="@color/main_text_color"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            android:visibility="gone"
+            app:item_text="提现账户"
+            app:item_textColor="@color/main_text_color_dark"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/info_refund_number"
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            app:item_dark_text="support@konglonggu.com"
+            app:item_dark_textColor="@color/main_text_color"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            android:visibility="gone"
+            app:item_text="提现申请时间"
+            app:item_textColor="@color/main_text_color_dark"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/info_refund_account"
+            style="@style/DefaultItemInfoStyle"
+            android:layout_width="match_parent"
+            app:item_dark_text="support@konglonggu.com"
+            app:item_dark_textColor="@color/main_text_color"
+            app:item_left_draw_padding="@dimen/base_xhdpi"
+            app:item_right_res="@null"
+            android:visibility="gone"
+            app:item_text="提现到账时间"
+            app:item_textColor="@color/main_text_color_dark"/>
+
+        <com.angcyo.uiview.widget.ItemInfoLayout
             android:id="@+id/info_transtaction_number"
             style="@style/DefaultItemInfoStyle"
             android:layout_width="match_parent"
@@ -79,6 +115,7 @@
             app:item_right_res="@null"
             app:item_text="@string/text_transaction_number"
             app:item_textColor="@color/main_text_color_dark"/>
+
 
     </LinearLayout>
 

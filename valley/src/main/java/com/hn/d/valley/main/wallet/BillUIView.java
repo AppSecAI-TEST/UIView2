@@ -38,6 +38,7 @@ import java.util.List;
 public class BillUIView extends SingleRecyclerUIView<BillRecord>{
 
     private int type = 0 ;//默认 全部
+    private int lastId;
 
     @Override
     protected TitleBarPattern getTitleBar() {
@@ -91,9 +92,8 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
-
         add(RRetrofit.create(WalletService.class)
-                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"type:" + type))
+                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"type:" + type,"limit:20" ,"lastid:" + lastId))
                 .compose(Rx.transformerList(BillRecord.class))
                 .subscribe(new BaseSingleSubscriber<List<BillRecord>>() {
 
@@ -114,6 +114,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
                         if (beans == null || beans.size() == 0) {
                             onUILoadDataEnd();
                         } else {
+                            lastId = beans.get(beans.size() - 1).getId();
                             onUILoadDataEnd(beans);
                         }
                     }
@@ -163,5 +164,10 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
     @Override
     protected RecyclerView.ItemDecoration initItemDecoration() {
         return super.createBaseItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
+    }
+
+    @Override
+    public boolean hasNext() {
+        return true;
     }
 }

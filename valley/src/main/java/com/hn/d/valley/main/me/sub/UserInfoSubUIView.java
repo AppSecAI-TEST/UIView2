@@ -40,6 +40,9 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.message.gift.GiftListUIView;
+import com.hn.d.valley.main.message.gift.GiftListUIView2;
+import com.hn.d.valley.main.message.gift.GiftRecordTabUIView;
+import com.hn.d.valley.main.message.gift.GiftRecordUIView;
 import com.hn.d.valley.main.message.gift.GiftService;
 import com.hn.d.valley.main.message.gift.SendGiftUIDialog;
 import com.hn.d.valley.service.ContactService;
@@ -436,8 +439,8 @@ public class UserInfoSubUIView extends BaseItemUIView {
             TextView username = holder.tv(R.id.tv_username);
 
             if (isContact() && posInData == 0) {
-                image_view.setImageResource(R.drawable.songliwu_icon);
-                username.setText(R.string.text_send_gift);
+                image_view.setImageResource(R.drawable.songliwu_wanglai_icon);
+                username.setText(R.string.text_gift_record);
             } else {
                 image_view.setImageUrl(bean.getThumb());
                 username.setText(String.format("%s(%s)", bean.getName(), bean.getOwn_count()));
@@ -478,12 +481,14 @@ public class UserInfoSubUIView extends BaseItemUIView {
                     }
 
                     if (isContact() && posInData == 0 && !mUserInfoBean.getUid().equals(UserCache.getUserAccount())) {
-                        mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
+                        // 礼物往来
+//                        mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
+                        mParentILayout.startIView(new GiftRecordTabUIView(mUserInfoBean.getUid()));
                     } else if (isContact() &&!mUserInfoBean.getUid().equals(UserCache.getUserAccount())) {
                         SendGiftUIDialog dialog = new SendGiftUIDialog(GiftBean.create(bean), new Action0() {
                             @Override
                             public void call() {
-                                GiftListUIView.Companion.sendGift(mUserInfoBean.getUid(),"", bean.getGift_id());
+                                GiftListUIView2.Companion.sendGift(mUserInfoBean.getUid(),"", bean.getGift_id());
                             }
                         });
                         dialog.setMoreAction(new Action0() {

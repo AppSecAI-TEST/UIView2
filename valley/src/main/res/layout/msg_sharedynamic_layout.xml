@@ -12,7 +12,7 @@
     tools:background="@drawable/base_rect_solid_shape">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/base_ldpi"
         android:layout_marginTop="@dimen/base_ldpi"
@@ -46,7 +46,7 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/base_xhdpi"
         android:layout_marginTop="@dimen/base_xhdpi"

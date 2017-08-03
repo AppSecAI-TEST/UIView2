@@ -6,6 +6,7 @@ import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.message.gift.GiftListUIView;
+import com.hn.d.valley.main.message.gift.GiftListUIView2;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.GroupMemberItem;
 import com.hn.d.valley.main.message.groupchat.GroupMemberSelectUIVIew;
@@ -43,7 +44,7 @@ public class GiftCommandItem extends CommandItemInfo {
     protected void onClick() {
         //礼物
         if (getContainer().sessionType == SessionTypeEnum.P2P) {
-            getContainer().mLayout.startIView(new GiftListUIView(getContainer()));
+            getContainer().mLayout.startIView(new GiftListUIView2(getContainer()));
         } else if(getContainer().sessionType == SessionTypeEnum.Team) {
             GroupMemberSelectUIVIew.start(getContainer().mLayout, new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_SINGLE), null,getContainer().proxy.getGid() , new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                 @Override
@@ -56,7 +57,7 @@ public class GiftCommandItem extends CommandItemInfo {
                     callback.onSuccess("");
 
                     GroupMemberItem item = (GroupMemberItem) items.get(0);
-                    getContainer().mLayout.startIView(new GiftListUIView(item.getMemberBean().getUserId(),getContainer()));
+                    getContainer().mLayout.startIView(new GiftListUIView2(item.getMemberBean().getUserId(),getContainer()));
 
                 }
             });

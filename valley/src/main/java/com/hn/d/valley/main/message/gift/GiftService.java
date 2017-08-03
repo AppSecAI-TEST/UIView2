@@ -43,6 +43,14 @@ public interface GiftService {
     @POST("gift/received")
     Observable<ResponseBody> giftReceived(@QueryMap Map<String, String> map);
 
+    /**
+     * 礼物往来记录
+     * @param map
+     * @return
+     */
+    @POST("gift/history")
+    Observable<ResponseBody> giftHistory(@QueryMap Map<String, String> map);
+
 
 
 }

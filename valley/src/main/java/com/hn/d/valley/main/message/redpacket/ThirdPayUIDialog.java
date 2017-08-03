@@ -393,6 +393,10 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 // 购买龙币
                 object.put("coin",params.coin);
                 object.put("way",params.way);
+            } else if (type == 5) {
+                // 打赏
+                object.put("to_uid", TextUtils.isEmpty(params.to_uid) ? 0 : Integer.valueOf(params.to_uid));
+                object.put("discussid",params.discussid);
             }
         } catch (JSONException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.redpacket;
 
+import android.app.Activity;
 import android.text.Editable;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
@@ -166,7 +168,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                                     if (o.hasPin()) {
                                         performClick(etContent, etMoney,o);
                                     } else {
-                                        showPinDialog();
+                                        showPinDialog(mActivity,mILayout);
                                     }
                                 }
 
@@ -179,7 +181,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                         }
 
                         if (!WalletHelper.getInstance().getWalletAccount().hasPin()) {
-                            showPinDialog();
+                            showPinDialog(mActivity,mILayout);
                         } else {
                             performClick(etContent,etMoney,WalletHelper.getInstance().getWalletAccount());
                         }
@@ -189,24 +191,24 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
         }));
     }
 
-    private void showPinDialog() {
+    public static void showPinDialog(final Activity activity, final ILayout mlayout) {
         UIDialog.build()
-                .setDialogContent(mActivity.getString(R.string.text_no_set_pwd_please_set_pwd))
-                .setOkText(mActivity.getString(R.string.text_set_pay_pwd))
+                .setDialogContent(activity.getString(R.string.text_no_set_pwd_please_set_pwd))
+                .setOkText(activity.getString(R.string.text_set_pay_pwd))
                 .setOkListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // 先判断是否绑定手机
                         if (!UserCache.instance().isBindPhone()) {
-                            startIView(new BindPhoneUIView());
-                            T_.show(mActivity.getString(R.string.text_unselected_phonenumber));
+                            mlayout.startIView(new BindPhoneUIView());
+                            T_.show(activity.getString(R.string.text_unselected_phonenumber));
                         } else {
-                            startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
+                            mlayout.startIView(new SetPayPwdUIView(SetPayPwdUIView.SETPAYPWD));
                         }
                     }
                 })
-                .setCancelText(getString(R.string.cancel))
-                .showDialog(mParentILayout);
+                .setCancelText(activity.getString(R.string.cancel))
+                .showDialog(mlayout);
     }
 
     private void performClick(EditText etContent, EditText etMoney,WalletAccount account) {
@@ -224,6 +226,7 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 .setTo_uid(to_uid)
                 .setRandom(0)
                 .setType(1);
+
         if (money > account.getMoney()) {
             T_.show(getString(R.string.text_balance_not_enough));
 

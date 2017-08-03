@@ -28,6 +28,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.sub.other.KLGCoinUIVIew;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import rx.functions.Action0;
 
@@ -46,10 +47,12 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
 
     public static final String TAG = ReceiveGiftUIDialog.class.getSimpleName();
 
-    GiftBean gift;
+    private GiftBean gift;
+    private SessionTypeEnum mSessionType;
 
-    public ReceiveGiftUIDialog(GiftBean gift) {
+    public ReceiveGiftUIDialog(GiftBean gift, SessionTypeEnum sessionType) {
         this.gift = gift;
+        this.mSessionType = sessionType;
     }
 
     @Override
@@ -74,30 +77,42 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
                 .load(gift.getThumb())
                 .asBitmap();
 
-        ivTip.setText(String.format("送你%s",gift.getName()));
+        ivTip.setText(String.format("送你%s", gift.getName()));
 //        builder.placeholder(R.drawable.defauit_avatar_contact);
 //        builder.error(R.drawable.defauit_avatar_contact);
+
+        final Animation.AnimationListener animListener = new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                finishDialog();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        };
+
+        if (mSessionType == SessionTypeEnum.P2P) {
+            ivShine.setVisibility(View.GONE);
+            Animation animShine = AnimationUtils.loadAnimation(mActivity, R.anim.up_scale_dismiss);
+            animShine.setAnimationListener(animListener);
+            ivTip.startAnimation(animShine);
+            return;
+        }
+
         builder.into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 ivShine.setImageBitmap(resource);
                 Animation animShine = AnimationUtils.loadAnimation(mActivity, R.anim.shine);
-                animShine.setAnimationListener(new Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(Animation animation) {
 
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        finishDialog();
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
+                animShine.setAnimationListener(animListener);
                 ivShine.startAnimation(animShine);
 //                ivTip.startAnimation(animShine);
 //                ll_shine.startAnimation(animShine);

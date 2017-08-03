@@ -165,12 +165,42 @@ public class PayUIDialog extends UIIDialogImpl {
                             @Override
                             public void call(Object o) {
                                 if (params.missionType == 1) {
+                                    // 发红包
                                     sendRedPacket();
                                 } else if (params.missionType == 2) {
+                                    //购买龙币
                                     buyKlgCoin();
+                                } else if (params.missionType == 5) {
+                                    // 打赏
+                                    rewardRedBag();
                                 }
                             }
                         });
+                    }
+                });
+    }
+
+    /**
+     * uid	是	int	用户id
+     to_uid	是	int	被打赏用户id
+     money	是	int	金额，单位为分
+     discussid	是	int64	动态id
+     */
+    private void rewardRedBag() {
+        RRetrofit.create(WalletService.class)
+                .balanceReward(Param.buildInfoMap("to_uid:" + UserCache.getUserAccount()
+                        , "data:" + "money:" + (int) params.money, "discussid:" + params.discussid))
+                .compose(getTransformer())
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onError(int code, String msg) {
+                        finishDialog();
+                    }
+
+                    @Override
+                    public void onSucceed(String beans) {
+                        parseResult(beans);
                     }
                 });
     }
@@ -341,9 +371,10 @@ public class PayUIDialog extends UIIDialogImpl {
         String to_uid;//uid
         String to_square; //是否广场红包【1是、0不是】，私包和群红包可忽略
         String content;// 红包附带信息
+        String discussid;
         int coin;//龙币数
         int way;// 充值龙币途径 余额 或支付宝
-        //默认1 发红包 2 充值龙币 3 充值 4 提现
+        //默认1 发红包 2 充值龙币 3 充值 4 提现 5 打赏
         int missionType = 1;
         boolean enableBalance = true; // 是否显示余额选项
         private String extend;//当为广场红包时，content表示动态的参数集json，具体见下
@@ -376,6 +407,11 @@ public class PayUIDialog extends UIIDialogImpl {
 
         public Params setExtend(String extend) {
             this.extend = extend;
+            return this;
+        }
+
+        public Params setDiscussId(String discussid) {
+            this.discussid = discussid;
             return this;
         }
 
