@@ -152,7 +152,11 @@ public class CommentListBean {
         private int status;
         private int is_official;
         private int is_hot;
+        /**
+         * parent : {"id":"793","uid":"60006","content":"换啦换啦","status":"1","images":"","username":"宋大哥"}
+         */
 
+        private ParentBean parent;
 
         public boolean isHot() {
             return isHot;
@@ -436,6 +440,14 @@ public class CommentListBean {
             this.is_hot = is_hot;
         }
 
+        public ParentBean getParent() {
+            return parent;
+        }
+
+        public void setParent(ParentBean parent) {
+            this.parent = parent;
+        }
+
         public static class ReplyListBean {
             private String uid;
             private String content;
@@ -513,6 +525,73 @@ public class CommentListBean {
 
             public void setTo_username(String to_username) {
                 this.to_username = to_username;
+            }
+        }
+
+        public static class ParentBean {
+
+            /**
+             * id : 793
+             * uid : 60006
+             * content : 换啦换啦
+             * status : 1
+             * images :
+             * username : 宋大哥
+             */
+
+            private String id;
+            private String uid;
+            private String content;
+            private String status;
+            private String images;
+            private String username;
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public String getUid() {
+                return uid;
+            }
+
+            public void setUid(String uid) {
+                this.uid = uid;
+            }
+
+            public String getContent() {
+                return content;
+            }
+
+            public void setContent(String content) {
+                this.content = content;
+            }
+
+            public String getStatus() {
+                return status;
+            }
+
+            public void setStatus(String status) {
+                this.status = status;
+            }
+
+            public String getImages() {
+                return images;
+            }
+
+            public void setImages(String images) {
+                this.images = images;
+            }
+
+            public String getUsername() {
+                return username;
+            }
+
+            public void setUsername(String username) {
+                this.username = username;
             }
         }
     }

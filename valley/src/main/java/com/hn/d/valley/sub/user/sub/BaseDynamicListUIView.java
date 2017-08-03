@@ -22,6 +22,7 @@ import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.CommentListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
@@ -301,22 +302,77 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         }
 
         //回复列表
-        initReplyLayout(holder, dataBean);
+        initReplyLayout2(holder, dataBean);
 
         //
         if (mListType == ListType.COMMENT_TYPE) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mParentILayout.startIView(new ReplyListUIView(dataBean));
+                    //mParentILayout.startIView(new ReplyListUIView(dataBean));
+                    mParentILayout.startIView(new CommentInputDialog(new CommentInputDialog.InputConfig() {
+                        @Override
+                        public void onInitDialogLayout(RBaseViewHolder viewHolder) {
+                            viewHolder.tv(R.id.input_view).setHint(getHintString(dataBean.getUsername()));
+                        }
+
+                        @Override
+                        public void onSendClick(String imagePath, String content) {
+                            reply(imagePath, content, dataBean.getComment_id());
+                        }
+                    }));
                 }
             });
         }
     }
 
     /**
+     * 文本框提示文本
+     */
+    private String getHintString(String userName) {
+        return getString(R.string.reply) + "  " + userName;
+    }
+
+
+    /**
      * 回复列表布局
      */
+    protected void initReplyLayout2(RBaseViewHolder holder, final CommentListBean.DataListBean dataBean) {
+        View replyControlLayout = holder.v(R.id.reply_control_layout);
+        if (mListType == ListType.COMMENT_TYPE) {
+            CommentListBean.DataListBean.ParentBean parentBean = dataBean.getParent();
+
+            if (parentBean == null || TextUtils.isEmpty(parentBean.getUid())) {
+                replyControlLayout.setVisibility(View.GONE);
+            } else {
+                replyControlLayout.setVisibility(View.VISIBLE);
+                holder.tv(R.id.reply_count_view).setVisibility(View.GONE);
+
+                //第一条回复
+                HnExTextView tv1 = holder.v(R.id.reply_text_view1);
+                tv1.setVisibility(View.VISIBLE);
+
+                if ("1".equalsIgnoreCase(parentBean.getStatus())) {
+                    tv1.setImageSpanTextColor(SkinHelper.getSkin().getThemeSubColor());
+                    tv1.setOnImageSpanClick(UserDiscussItemControl.createSpanClick(mParentILayout));
+                    tv1.setImage(parentBean.getImages());
+                    tv1.setText(
+                            UserDiscussItemControl.createMention(parentBean.getUid(), parentBean.getUsername()) +
+                                    ": " + parentBean.getContent()
+                    );
+                } else {
+                    tv1.setText("内容已被删.");
+                }
+            }
+        } else {
+            replyControlLayout.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * 回复列表布局
+     */
+    @Deprecated
     protected void initReplyLayout(RBaseViewHolder holder, final CommentListBean.DataListBean dataBean) {
         View replyControlLayout = holder.v(R.id.reply_control_layout);
         if (mListType == ListType.COMMENT_TYPE) {
@@ -398,6 +454,26 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         if (mOnCommentListener != null) {
             mOnCommentListener.onComment();
         }
+    }
+
+    /**
+     * 发布回复
+     */
+    private void reply(String imagePath, String content, String comment_id) {
+        add(RRetrofit.create(SocialService.class)
+                .reply(Param.buildMap("type:discuss", "comment_id:" + comment_id,
+                        "content:" + content, "images:" + imagePath))
+                .compose(Rx.transformer(String.class))
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onSucceed(String bean) {
+                        T_.show(bean);
+                        loadData();
+                        scrollToTop();
+                    }
+
+                }));
     }
 
     protected String getUserId() {
