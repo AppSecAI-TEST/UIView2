@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -168,7 +169,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                 tvRedToDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(new GrabedRDResultUIView(redId));
+                        toResultUIView();
                         finishDialog();
                     }
                 });
@@ -289,12 +290,20 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
 //                        if (mSessionId.equals(UserCache.getUserAccount())) {
 //                            startIView(new P2PStatusRPUIView(mSessionId, redId, true));
 //                        } else {
-                        startIView(new GrabedRDResultUIView(redId));
+                        toResultUIView();
 //                        }
                         finishDialog();
                     }
                 });
 
+    }
+
+    private void toResultUIView() {
+        if (TextUtils.isEmpty(discuss_id)){
+            startIView(new GrabedRDResultUIView(redId));
+        } else {
+            startIView(new GrabedRDResultUIView(redId).setSqureRedbag(true));
+        }
     }
 
 

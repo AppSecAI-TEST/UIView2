@@ -62,6 +62,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
+import com.hn.d.valley.main.message.redpacket.RewardUIVIew;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SettingService;
@@ -1577,7 +1578,7 @@ public class UserDiscussItemControl {
                 .addItem("打赏红包", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        iLayout.startIView(new RewardUIVIew("","",item_id));
                     }
                 })
                 .addItem("打赏礼物", new View.OnClickListener() {

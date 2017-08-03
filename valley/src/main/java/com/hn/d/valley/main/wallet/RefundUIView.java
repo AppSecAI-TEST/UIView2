@@ -47,6 +47,8 @@ import java.util.List;
 
 import rx.functions.Action1;
 
+import static com.hn.d.valley.utils.MathUtils.decimal;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -190,10 +192,10 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                             et_money.setText(amount * (1 - INTEREST) + "");
                             // refuoundtotal 赋值在settext 后执行 因为settext 会执行回调 aftertextchange refoundtotal = false
                             refundTotal = true;
-                            tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate), decimal(amount)));
+                            tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate), decimal(amount * INTEREST,2)));
                         }
 //                        amount * 0.0055  ,(1 - 0.0055) * amount;
-                        tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate), decimal(amount)));
+                        tv_note.setText(String.format(getString(R.string.text_refund_service_change_rate), decimal(amount * INTEREST,2)));
                         btn_next.setEnabled(true);
                     }
                 });
@@ -264,11 +266,6 @@ public class RefundUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             }
         }));
 
-    }
-
-    private float decimal(float amount) {
-        BigDecimal b = new BigDecimal(amount * INTEREST);
-        return b.setScale(2, RoundingMode.HALF_UP).floatValue();
     }
 
     private void cashoutRequest() {

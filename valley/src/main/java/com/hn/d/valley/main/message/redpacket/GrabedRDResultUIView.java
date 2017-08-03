@@ -55,12 +55,18 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
     private GrabedRDDetail grabedRDDetail;
 
     private long red_id;
+    private boolean isSqureRedbag;
 
     private TextView tv_money;
     private TextView tv_red_to_wallet;
 
     public GrabedRDResultUIView(long redId) {
         this.red_id = redId;
+    }
+
+    public GrabedRDResultUIView setSqureRedbag(boolean squreRedbag) {
+        isSqureRedbag = squreRedbag;
+        return this;
     }
 
     @Override
@@ -190,7 +196,12 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 RTextView tv_left = holder.v(R.id.text_view);
                 RTextView tv_right = holder.v(R.id.right_text_view);
 
-                tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count_per_all),grabedRDDetail.getResult().size(),grabedRDDetail.getNum()));
+                // 广场领取的视频红包只显示已领取个数
+                if (isSqureRedbag) {
+                    tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count),grabedRDDetail.getResult().size()));
+                } else {
+                    tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count_per_all),grabedRDDetail.getResult().size(),grabedRDDetail.getNum()));
+                }
                 tv_right.setText(String.format(mContext.getString(R.string.text_all_amout),grabedRDDetail.getMoney() / 100f));
 
             } else {

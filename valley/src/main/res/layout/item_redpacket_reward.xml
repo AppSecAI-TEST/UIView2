@@ -63,15 +63,20 @@
         tools:text="50.00元"
         />
 
-    <ImageView
-        android:id="@+id/iv_refresh"
+    <TextView
+        android:id="@+id/tv_refresh"
         android:layout_marginTop="26dp"
-        android:src="@drawable/gengxing"
+        android:text="元"
+        android:textSize="25sp"
+        android:drawableEnd="@drawable/gengxing"
+        android:textColor="@color/black"
+        android:drawablePadding="@dimen/base_ldpi"
         android:layout_width="wrap_content"
+        android:background="@null"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/tv_money"
         android:layout_toEndOf="@+id/tv_money"
-        android:layout_marginStart="19dp" />
+        android:layout_marginStart="10dp" />
 
 
     <ImageView

@@ -366,7 +366,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
     private void loadGift() {
 //        if (isContact()) {
-            mGiftList = new GiftList();
+        mGiftList = new GiftList();
 //        }
         RRetrofit.create(GiftService.class)
                 .giftReceived(Param.buildMap("to_uid:" + mUserInfoBean.getUid()))
@@ -439,6 +439,9 @@ public class UserInfoSubUIView extends BaseItemUIView {
             TextView username = holder.tv(R.id.tv_username);
 
             if (isContact() && posInData == 0) {
+                image_view.setImageResource(R.drawable.songliwu_icon);
+                username.setText(R.string.text_send_gift);
+            } else if (posInData == 0){
                 image_view.setImageResource(R.drawable.songliwu_wanglai_icon);
                 username.setText(R.string.text_gift_record);
             } else {
@@ -480,15 +483,16 @@ public class UserInfoSubUIView extends BaseItemUIView {
                         return;
                     }
 
-                    if (isContact() && posInData == 0 && !mUserInfoBean.getUid().equals(UserCache.getUserAccount())) {
+                    if (!isContact() && posInData == 0) {
                         // 礼物往来
-//                        mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
                         mParentILayout.startIView(new GiftRecordTabUIView(mUserInfoBean.getUid()));
-                    } else if (isContact() &&!mUserInfoBean.getUid().equals(UserCache.getUserAccount())) {
+                    } else if (isContact() && posInData == 0) {
+                        mParentILayout.startIView(new GiftListUIView2(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
+                    } else if (isContact()) {
                         SendGiftUIDialog dialog = new SendGiftUIDialog(GiftBean.create(bean), new Action0() {
                             @Override
                             public void call() {
-                                GiftListUIView2.Companion.sendGift(mUserInfoBean.getUid(),"", bean.getGift_id());
+                                GiftListUIView2.Companion.sendGift(mUserInfoBean.getUid(), "", bean.getGift_id());
                             }
                         });
                         dialog.setMoreAction(new Action0() {
