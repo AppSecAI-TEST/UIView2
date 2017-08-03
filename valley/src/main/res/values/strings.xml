@@ -24,7 +24,7 @@
     <string name="register_add_ico">添加头像</string>
     <string name="register_name_tip">昵称:</string>
     <string name="register_name_hint">请输入昵称</string>
-    <string name="nav_home_text">恐龙谷</string>
+    <string name="nav_home_text">首页</string>
     <string name="nav_found_text">发现</string>
     <string name="nav_message_text">消息</string>
     <string name="nav_me_text">我</string>

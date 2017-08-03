@@ -41,7 +41,6 @@ import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.main.found.FoundUIView;
-import com.hn.d.valley.main.found.FoundUIView2;
 import com.hn.d.valley.main.found.sub.SearchUIView;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.home.HomeUIView;
@@ -49,6 +48,7 @@ import com.hn.d.valley.main.me.MeUIView2;
 import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.main.message.MessageUIView;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
+import com.hn.d.valley.main.seek.SeekUIView;
 import com.hn.d.valley.skin.SkinUtils;
 import com.hn.d.valley.start.RecommendUser2UIView;
 import com.hn.d.valley.sub.user.PublishDynamicUIView;
@@ -65,7 +65,9 @@ import rx.Subscription;
 import rx.functions.Action0;
 
 import static com.hn.d.valley.base.constant.Constant.POS_HOME;
+import static com.hn.d.valley.base.constant.Constant.POS_ME;
 import static com.hn.d.valley.base.constant.Constant.POS_MESSAGE;
+import static com.hn.d.valley.base.constant.Constant.POS_SEEK;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -92,6 +94,8 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     MessageUIView mMessageUIView;
     /*我的*/
     MeUIView2 mMeUIView;
+    /*寻觅*/
+    SeekUIView mSeekUIView;
     /*好友*/
     FriendUIView mFriend2UIView;
 
@@ -159,24 +163,24 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     private void resetTabLayoutIco(ArrayList<CustomTabEntity> tabs) {
         switch (SkinUtils.getSkin()) {
             case SkinManagerUIView.SKIN_BLUE:
-                tabs.get(1).setTabSelectedIcon(R.drawable.message_blue_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(0).setTabSelectedIcon(R.drawable.konglonggu_blue_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
-                tabs.get(2).setTabSelectedIcon(R.drawable.found_blue_s).setTabUnselectedIcon(R.drawable.found_black_n);
-                tabs.get(3).setTabSelectedIcon(R.drawable.me_blue_s).setTabUnselectedIcon(R.drawable.me_black_n);
+                tabs.get(POS_MESSAGE).setTabSelectedIcon(R.drawable.message_blue_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.konglonggu_blue_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(POS_SEEK).setTabSelectedIcon(R.drawable.found_blue_s).setTabUnselectedIcon(R.drawable.found_black_n);
+                tabs.get(POS_ME).setTabSelectedIcon(R.drawable.me_blue_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             case SkinManagerUIView.SKIN_GREEN:
-                tabs.get(1).setTabSelectedIcon(R.drawable.message_green_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(0).setTabSelectedIcon(R.drawable.konglonggu_green_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
-                tabs.get(2).setTabSelectedIcon(R.drawable.found_green_s).setTabUnselectedIcon(R.drawable.found_black_n);
-                tabs.get(3).setTabSelectedIcon(R.drawable.me_green_s).setTabUnselectedIcon(R.drawable.me_black_n);
+                tabs.get(POS_MESSAGE).setTabSelectedIcon(R.drawable.message_green_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.konglonggu_green_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(POS_SEEK).setTabSelectedIcon(R.drawable.found_green_s).setTabUnselectedIcon(R.drawable.found_black_n);
+                tabs.get(POS_ME).setTabSelectedIcon(R.drawable.me_green_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             default:
-                tabs.get(1).setTabSelectedIcon(R.drawable.message_black_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(0).setTabSelectedIcon(R.drawable.konglonggu_black_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
-                tabs.get(2).setTabSelectedIcon(R.drawable.found_black_s).setTabUnselectedIcon(R.drawable.found_black_n);
-                tabs.get(3).setTabSelectedIcon(R.drawable.me_black_s).setTabUnselectedIcon(R.drawable.me_black_n);
+                tabs.get(POS_MESSAGE).setTabSelectedIcon(R.drawable.message_black_s).setTabUnselectedIcon(R.drawable.message_black_n);
+                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.konglonggu_black_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(POS_SEEK).setTabSelectedIcon(R.drawable.found_black_s).setTabUnselectedIcon(R.drawable.found_black_n);
+                tabs.get(POS_ME).setTabSelectedIcon(R.drawable.me_black_s).setTabUnselectedIcon(R.drawable.me_black_n);
                 break;
         }
     }
@@ -184,9 +188,10 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     private void initTabLayout() {
         ArrayList<CustomTabEntity> tabs = new ArrayList<>();
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_home_text), R.drawable.konglonggu_s, R.drawable.konglonggu_n));
+        tabs.add(new TabEntity(true, "寻觅", R.drawable.konglonggu_s, R.drawable.konglonggu_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_message_text), R.drawable.message_s, R.drawable.message_n));
 //        tabs.add(new TabEntity(true, mActivity.getString(R.string.friend), R.drawable.haoyou_s, R.drawable.haoyou_n));
-        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_found_text), R.drawable.found_s, R.drawable.found_n));
+//        tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_found_text), R.drawable.found_s, R.drawable.found_n));
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_me_text), R.drawable.me_s, R.drawable.me_n));
         resetTabLayoutIco(tabs);
 
@@ -207,7 +212,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
 
         try {
             ViewGroup group = (ViewGroup) mBottomNavLayout.getChildAt(0);
-            RGestureDetector.onDoubleTap(group.getChildAt(1), new RGestureDetector.OnDoubleTapListener() {
+            RGestureDetector.onDoubleTap(group.getChildAt(POS_MESSAGE), new RGestureDetector.OnDoubleTapListener() {
                 @Override
                 public void onDoubleTap() {
                     //消息tab双击
@@ -216,12 +221,22 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
                     }
                 }
             });
-            RGestureDetector.onDoubleTap(group.getChildAt(0), new RGestureDetector.OnDoubleTapListener() {
+            RGestureDetector.onDoubleTap(group.getChildAt(POS_HOME), new RGestureDetector.OnDoubleTapListener() {
                 @Override
                 public void onDoubleTap() {
                     //首页tab双击
                     if (mHomeUIView != null) {
                         mHomeUIView.scrollToTop();
+                    }
+                }
+            });
+
+            RGestureDetector.onDoubleTap(group.getChildAt(POS_SEEK), new RGestureDetector.OnDoubleTapListener() {
+                @Override
+                public void onDoubleTap() {
+                    //首页tab双击
+                    if (mSeekUIView != null) {
+                        mSeekUIView.scrollToTop();
                     }
                 }
             });
@@ -293,6 +308,17 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
             } else {
                 mMeUIView.setIsRightJumpLeft(isRightToLeft);
                 mMainUILayout.showIView(mMeUIView);
+            }
+        } else if (position == Constant.POS_SEEK) {
+            //寻觅
+            if (mSeekUIView == null) {
+                mSeekUIView = new SeekUIView();
+                mSeekUIView.bindParentILayout(mILayout);
+                mSeekUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.startIView(mSeekUIView);
+            } else {
+                mSeekUIView.setIsRightJumpLeft(isRightToLeft);
+                mMainUILayout.showIView(mSeekUIView);
             }
         }
         lastPosition = position;

@@ -61,10 +61,11 @@ public interface Constant {
      */
     String TAG_NO_READ_NUM = "tag_no_read_num";
     int POS_HOME = 0;//恐龙谷
-    int POS_FOUND = 2;//发现
-    int POS_CONNECT = 4;//联系人
-    int POS_MESSAGE = 1;//消息
+    int POS_FOUND = 200;//发现, 已经被废弃 星期四 2017-8-3
+    int POS_CONNECT = 400;//联系人
+    int POS_MESSAGE = 2;//消息
     int POS_ME = 3;//我
+    int POS_SEEK = 1;//寻觅
 
     /**
      * Amap
@@ -87,37 +88,37 @@ public interface Constant {
     /**
      * 键盘的高度
      */
-     String KEYBOARD_HEIGHT = "keyboard_height";
+    String KEYBOARD_HEIGHT = "keyboard_height";
 
     /**
      * 关注了对方且不是好友，发送添加为联系人请求给对方
      */
-     String add_contact = "15";
+    String add_contact = "15";
     /**
      * 单方面关注时 发送给对方消息
      */
-     String attenion = "15";
+    String attenion = "15";
     /**
      * 点赞【动态/评论、回复】
      */
-     String like = "14";
+    String like = "14";
     /**
      * 评论
      */
-     String comment = "14";
+    String comment = "14";
     /**
      * 回复
      */
-     String reply = "14";
+    String reply = "14";
     /**
      * 转发
      */
-     String forward = "14";
+    String forward = "14";
 
     /**
      * 恐龙君消息
      */
-     String klj = "13";
+    String klj = "13";
 
     /**
      * 钱包消息

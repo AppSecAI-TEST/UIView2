@@ -275,9 +275,16 @@ public class OssHelper {
     }
 
     public static int[] getThumbDisplaySize3(float srcWidth, float srcHeight) {
-        int[] size = new int[2];
         final float TARGET_WIDTH = 124 * ScreenUtil.density;//3f / 4 * ScreenUtil.screenWidth;
         final float TARGET_HEIGHT = 180 * ScreenUtil.density;//3f / 4 * ScreenUtil.screenHeight;
+
+        return getThumbDisplaySize3(srcWidth, srcHeight, TARGET_WIDTH, TARGET_HEIGHT);
+    }
+
+    public static int[] getThumbDisplaySize3(float srcWidth, float srcHeight, float maxWidth, float maxHeight) {
+        int[] size = new int[2];
+        final float TARGET_WIDTH = maxWidth;
+        final float TARGET_HEIGHT = maxHeight;
 
         float scale = 1f;
         if (srcWidth > srcHeight) {

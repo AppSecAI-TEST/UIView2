@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.RTextView;
+import com.angcyo.uiview.widget.SexView;
 import com.hn.d.valley.R;
 
 /**
@@ -28,6 +30,7 @@ import com.hn.d.valley.R;
 public class HnGenderView extends LinearLayout {
 
     private ImageView mSexImageView;
+    private SexView mSexView;
     private ImageView mLevelImageView;
     private TextView mConstellationTextView;
     private TextView mCharmTextView;
@@ -48,38 +51,47 @@ public class HnGenderView extends LinearLayout {
     }
 
     private void initLayout() {
+        float density = getResources().getDisplayMetrics().density;
+
+        int height = (int) (14 * density);
+
         mSexImageView = new ImageView(getContext());
         mSexImageView.setVisibility(GONE);
-        addView(mSexImageView, new ViewGroup.LayoutParams(-2, -2));
+        addView(mSexImageView, new ViewGroup.LayoutParams(-2, height));
+
+        mSexView = new SexView(getContext(), null);
+        mSexView.setVisibility(GONE);
+        addView(mSexView, new ViewGroup.LayoutParams(-2, height));
 
         mLevelImageView = new ImageView(getContext());
         mLevelImageView.setVisibility(GONE);
-        LinearLayout.LayoutParams params = new LayoutParams(-2, -2);
+        LinearLayout.LayoutParams params = new LayoutParams(-2, height);
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.base_mdpi);
         addView(mLevelImageView, params);
 
-        float density = getResources().getDisplayMetrics().density;
         mConstellationTextView = new TextView(getContext());
         mConstellationTextView.setVisibility(GONE);
         mConstellationTextView.setTextSize(9);
+        mConstellationTextView.setGravity(Gravity.CENTER_VERTICAL);
         mConstellationTextView.setTextColor(Color.WHITE);
         UI.setBackgroundDrawable(mConstellationTextView,
                 ResUtil.createDrawable(Color.parseColor("#bd74e8"), 1 * density));
-        params = new LayoutParams(-2, -2);
+        params = new LayoutParams(-2, height);
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.base_mdpi);
-        mConstellationTextView.setPadding(((int) (2 * density)), (int) (1 * density), (int) (2 * density), (int) (1 * density));
+        mConstellationTextView.setPadding(((int) (2 * density)), 0 /*(int) (1 * density)*/, (int) (2 * density), 0 /*(int) (1 * density)*/);
         addView(mConstellationTextView, params);
 
         mCharmTextView = new RTextView(getContext());
         mCharmTextView.setVisibility(GONE);
         mCharmTextView.setTextSize(9);
+        mCharmTextView.setGravity(Gravity.CENTER_VERTICAL);
         mCharmTextView.setTextColor(Color.WHITE);
         mCharmTextView.setTag("魅力%1$s");
         UI.setBackgroundDrawable(mCharmTextView,
                 ResUtil.createDrawable(Color.parseColor("#51D4E0"), 1 * density));
-        params = new LayoutParams(-2, -2);
+        params = new LayoutParams(-2, height);
         params.leftMargin = getResources().getDimensionPixelOffset(R.dimen.base_mdpi);
-        mCharmTextView.setPadding(((int) (2 * density)), (int) (1 * density), (int) (2 * density), (int) (1 * density));
+        mCharmTextView.setPadding(((int) (2 * density)), 0 /*(int) (1 * density)*/, (int) (2 * density), 0 /*(int) (1 * density)*/);
         addView(mCharmTextView, params);
     }
 
@@ -123,7 +135,7 @@ public class HnGenderView extends LinearLayout {
     /**
      * 星座
      */
-    public void setGender(String sex, String level, String constellation, String charm) {
+    public void setGender(String sex, String level, String constellation /*星座*/, String charm /*魅力*/) {
         //setTag(sex);
         //setText(level);
         if (TextUtils.isEmpty(sex)) {
@@ -173,6 +185,34 @@ public class HnGenderView extends LinearLayout {
         } else {
             mCharmTextView.setVisibility(VISIBLE);
             mCharmTextView.setText(charm);
+        }
+    }
+
+    /**
+     * 秀场专用
+     */
+    public void setGender2(String sex, int age /*年龄*/, String constellation /*星座*/) {
+        //setTag(sex);
+        //setText(level);
+        if (TextUtils.isEmpty(sex)) {
+            return;
+        }
+        if (sex.equals("1")) {
+            mSexView.setVisibility(VISIBLE);
+            mSexView.setSex(SexView.MALE);
+        } else if (sex.equals("2")) {
+            mSexView.setVisibility(VISIBLE);
+            mSexView.setSex(SexView.FEMALE);
+        } else {
+            mSexView.setVisibility(GONE);
+        }
+        mSexView.setAge(age);
+
+        if (TextUtils.isEmpty(constellation)) {
+            mConstellationTextView.setVisibility(GONE);
+        } else {
+            mConstellationTextView.setVisibility(VISIBLE);
+            mConstellationTextView.setText(constellation);
         }
     }
 

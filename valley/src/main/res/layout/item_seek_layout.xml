@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/base_ldpi">
+
+        <LinearLayout
+            android:id="@+id/card_root_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/base_bg_selector"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <!--背景图-->
+            <com.hn.d.valley.main.seek.HnSeekGlideImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/default_image"/>
+
+            <!--排名, 魅力信息-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/base_ldpi"
+                android:paddingStart="@dimen/base_ldpi"
+                android:paddingTop="@dimen/base_ldpi">
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/charm_view"
+                    style="@style/MainTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="魅力值:%1$s"
+                    android:textSize="12sp"
+                    tools:text="2551"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/rank_view"
+                    style="@style/MainTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/base_xhdpi"
+                    android:tag="附近排名:%1$s"
+                    android:textSize="12sp"
+                    tools:text="2551"/>
+            </LinearLayout>
+
+            <!--等级星座-->
+            <com.hn.d.valley.widget.HnGenderView
+                android:id="@+id/gender_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/base_ldpi"
+                android:paddingStart="@dimen/base_ldpi"
+                android:paddingTop="@dimen/base_ldpi"/>
+
+            <!--用户信息-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="@dimen/base_xhdpi"
+                android:paddingEnd="@dimen/base_ldpi"
+                android:paddingStart="@dimen/base_ldpi"
+                android:paddingTop="@dimen/base_ldpi">
+
+                <com.hn.d.valley.widget.HnGlideImageView
+                    android:id="@+id/user_ico_view"
+                    android:layout_width="@dimen/base_25dpi"
+                    android:layout_height="@dimen/base_25dpi"
+                    android:contentDescription="@string/is_circle"
+                    android:src="@drawable/defauit_avatar_contact"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/user_name_view"
+                    style="@style/MainTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/base_ldpi"
+                    android:textSize="14sp"
+                    tools:text="米默默"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/view_control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/base_ldpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_ldpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="开启秀场展示你的风采, 快来开启吧"/>
+
+        <com.angcyo.uiview.widget.Button
+            android:id="@+id/button_view"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:paddingEnd="@dimen/base_xhdpi"
+            android:paddingStart="@dimen/base_xhdpi"
+            android:text="开启"
+            app:r_button_style="ROUND_BORDER"/>
+
+        <ImageView
+            android:id="@+id/delete_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/base_hdpi"
+            android:src="@drawable/icon_delete"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/xiehou_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="@dimen/base_70dpi"
+        android:layout_marginEnd="@dimen/base_xxhdpi"
+        android:src="@drawable/xiehou_ren_selector"/>
+
+</FrameLayout>
