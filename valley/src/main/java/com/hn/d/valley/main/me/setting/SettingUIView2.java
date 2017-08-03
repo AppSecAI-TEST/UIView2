@@ -12,6 +12,7 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RExItemDecoration;
 import com.angcyo.uiview.resources.ResUtil;
+import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
@@ -20,7 +21,6 @@ import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.start.LoginUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.hn.d.valley.x5.X5WebUIView;
 import com.netease.nimlib.sdk.StatusCode;
 
 import java.util.List;
@@ -188,4 +188,9 @@ public class SettingUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
         return mActivity.getString(R.string.settting);
     }
 
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        refreshLayout();
+    }
 }

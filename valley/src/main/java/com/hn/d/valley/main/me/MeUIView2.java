@@ -265,6 +265,40 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //            }
 //        }));
 
+        int lin2 = size;
+        if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet() || BuildConfig.SHOW_DEBUG) {
+            lin2 = line;
+            //我的钱包
+            items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+                @Override
+                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                    ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                    initItemLayout(itemInfoLayout, R.string.my_wallet_tip, R.drawable.icon_wallet, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mParentILayout.startIView(new MyWalletUIView());
+                        }
+                    });
+                }
+            }));
+        }
+
+        //龙币
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(lin2) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                initItemLayout(itemInfoLayout, R.string.klg_coin, R.drawable.icon_purchase, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mParentILayout.startIView(new KLGCoinUIVIew());
+                    }
+                });
+                itemInfoLayout.setItemDarkText(UserCache.instance().getLoginBean().getCoins());
+                itemInfoLayout.getDarkTextView().setTextColor(getColor(R.color.yellow_ffac2d));
+                itemInfoLayout.setDarkDrawableRes(R.drawable.longbi);
+            }
+        }));
 
         //动态通知
         items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
@@ -410,53 +444,19 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
 //            }
 //        }));
 
-
-        if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet() || BuildConfig.SHOW_DEBUG) {
-            //我的钱包
-            items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
-                @Override
-                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                    ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                    initItemLayout(itemInfoLayout, R.string.my_wallet_tip, R.drawable.icon_wallet, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mParentILayout.startIView(new MyWalletUIView());
-                        }
-                    });
-                }
-            }));
-        }
-
-        //龙币
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                initItemLayout(itemInfoLayout, R.string.klg_coin, R.drawable.icon_purchase, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mParentILayout.startIView(new KLGCoinUIVIew());
-                    }
-                });
-                itemInfoLayout.setItemDarkText(UserCache.instance().getLoginBean().getCoins());
-                itemInfoLayout.getDarkTextView().setTextColor(getColor(R.color.yellow_ffac2d));
-                itemInfoLayout.setDarkDrawableRes(R.drawable.longbi);
-            }
-        }));
-
-        //个性装扮
-        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
-            @Override
-            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
-                initItemLayout(itemInfoLayout, R.string.personalized_dress, R.drawable.icon_skin, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mParentILayout.startIView(new SkinManagerUIView());
-                    }
-                });
-            }
-        }));
+//        //个性装扮
+//        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {
+//            @Override
+//            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+//                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+//                initItemLayout(itemInfoLayout, R.string.personalized_dress, R.drawable.icon_skin, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        mParentILayout.startIView(new SkinManagerUIView());
+//                    }
+//                });
+//            }
+//        }));
 
 //        //我的身份
 //        items.add(ViewItemInfo.build(new ItemOffsetCallback(line) {

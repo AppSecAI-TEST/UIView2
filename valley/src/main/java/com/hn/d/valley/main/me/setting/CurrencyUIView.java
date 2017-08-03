@@ -8,9 +8,11 @@ import android.widget.TextView;
 import com.angcyo.library.glide.GlideCacheUtil;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.me.SkinManagerUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.widget.HnLoading;
 import com.netease.nimlib.sdk.NIMClient;
@@ -90,6 +92,25 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                     @Override
                     public void onClick(View v) {
                         startIView(new LanguageUIView());
+                    }
+                });
+            }
+        }));
+        //个性装扮
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(size) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
+                CompoundButton switchCompat = holder.v(R.id.switch_view);
+                switchCompat.setVisibility(View.GONE);
+
+                itemInfoLayout.setItemText(mActivity.getString(R.string.personalized_dress));
+                itemInfoLayout.setRightDrawableRes(R.drawable.base_next);
+
+                itemInfoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(new SkinManagerUIView());
                     }
                 });
             }
@@ -204,4 +225,9 @@ public class CurrencyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIt
                 .showDialog(mParentILayout);
     }
 
+    @Override
+    public void onSkinChanged(ISkin skin) {
+        super.onSkinChanged(skin);
+        refreshLayout();
+    }
 }
