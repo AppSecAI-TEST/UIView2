@@ -136,7 +136,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
 
     private void show() {
         if (listener == null) {
-            L.i("sticker", "show picker view when listener is null");
+            L.i("sticker", "show picker view when onDataLoadListener is null");
         }
         if (!withSticker) {
             showEmojiGridView();
@@ -285,7 +285,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
         if (listener != null) {
             this.listener = listener;
         } else {
-            L.i("sticker", "listener is null");
+            L.i("sticker", "onDataLoadListener is null");
         }
     }
 

@@ -49,13 +49,13 @@
 //        ArrayList<TitleBarPattern.TitleBarItem> leftItems = new ArrayList<>();
 //        ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
 //
-//        leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_add_friends).setListener(new View.OnClickListener() {
+//        leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_add_friends).setOnDataLoadListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                //T_.show(mActivity.getString(R.string.searchUser));
 //            }
 //        }));
-//        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.contacts)).setListener(new View.OnClickListener() {
+//        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.contacts)).setOnDataLoadListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                T_.show(mActivity.getString(R.string.contacts));

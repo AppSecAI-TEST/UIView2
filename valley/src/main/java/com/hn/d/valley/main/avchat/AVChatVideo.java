@@ -302,10 +302,10 @@ public class AVChatVideo implements View.OnClickListener {
 
                 break;
 //            case R.id.avchat_close_camera:
-//                listener.closeCamera();
+//                onDataLoadListener.closeCamera();
 //                break;
 //            case R.id.avchat_video_record:
-//                listener.toggleRecord();
+//                onDataLoadListener.toggleRecord();
 //                break;
             default:
                 break;
@@ -345,7 +345,7 @@ public class AVChatVideo implements View.OnClickListener {
 //        recordToggle.setSelected(recordOn);
     }
 
-    /******************************* toggle listener *************************/
+    /******************************* toggle onDataLoadListener *************************/
 //    @Override
 //    public void toggleOn(View v) {
 //        onClick(v);

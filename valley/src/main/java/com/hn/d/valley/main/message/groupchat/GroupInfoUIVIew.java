@@ -73,7 +73,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
     private boolean isSelfAdmin = false;
     private boolean isSelfManager = false;
 
-    //listener
+    //onDataLoadListener
     private GroupInfoUpdatelistener infoUpdatelistener;
 
     public GroupInfoUIVIew(GroupInfoUpdatelistener listener) {

@@ -456,8 +456,8 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
 //     * 激活定位
 //     */
 //    @Override
-//    public void activate(OnLocationChangedListener listener) {
-//        mListener = listener;
+//    public void activate(OnLocationChangedListener onDataLoadListener) {
+//        mListener = onDataLoadListener;
 //        if (mLocationClient == null) {
 //            mLocationClient = new AMapLocationClient(mActivity);
 //            AMapLocationClientOption mLocationOption = RAmap.getDefaultOption();

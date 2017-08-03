@@ -43,7 +43,7 @@ public class ChatAdapter2 extends BaseMultiAdapter<RBaseViewHolder> {
     // ui observable
     private MsgUIObservable mMsgUIObservable;
 
-    //listener
+    //onDataLoadListener
     private ViewHolderEventListener eventListener;
 
     // 头像长按grupchatuiview 监听

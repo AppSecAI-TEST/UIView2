@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/base_xhdpi">
+
+    <com.angcyo.uiview.widget.GlideImageView
+        android:id="@+id/user_avatar_view"
+        android:layout_width="@dimen/base_40dpi"
+        android:layout_height="@dimen/base_40dpi"
+        android:scaleType="centerCrop"
+        app:r_show_type="CIRCLE"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/base_xhdpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/user_name_view"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/base_ldpi"
+            tools:text="安逸安逸"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/time_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="06-15 21:22"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="vertical">
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/money_view"
+            style="@style/MainTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/base_ldpi"
+            android:paddingBottom="@dimen/base_hdpi"
+            android:tag="%1$s元"
+            tools:text="0.07"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/best_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/shouqizuijia_hongbao"
+            android:text="手气最佳"
+            android:textColor="#F3AC00"
+            android:visibility="invisible"
+            tools:visibility="visible"/>
+    </LinearLayout>
+
+</LinearLayout>

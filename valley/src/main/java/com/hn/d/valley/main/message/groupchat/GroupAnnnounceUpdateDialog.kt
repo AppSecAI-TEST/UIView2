@@ -131,7 +131,7 @@ class GroupAnnnounceUpdateDialog(sessionid : String ,notification : GroupAnnounc
         }
     }
 
-//    val listener : DialogInterface.OnClickListener by lazy {
+//    val onDataLoadListener : DialogInterface.OnClickListener by lazy {
 //
 //
 //    }

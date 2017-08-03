@@ -238,6 +238,12 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         }
     }
 
+    @Override
+    public void onViewUnload() {
+        super.onViewUnload();
+        onCancel();
+    }
+
     /**
      * 2次加载数据的时间间隔是否大于60秒
      */

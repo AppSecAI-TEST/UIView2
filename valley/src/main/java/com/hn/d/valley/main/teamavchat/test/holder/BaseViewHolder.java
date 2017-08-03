@@ -308,9 +308,9 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the on click listener of the view.
+     * Sets the on click onDataLoadListener of the view.
      * @param viewId   The view id.
-     * @param listener The on click listener;
+     * @param listener The on click onDataLoadListener;
      * @return The BaseViewHolder for chaining.
      */
     @Deprecated
@@ -342,10 +342,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
 
 
     /**
-     * Sets the on touch listener of the view.
+     * Sets the on touch onDataLoadListener of the view.
      *
      * @param viewId   The view id.
-     * @param listener The on touch listener;
+     * @param listener The on touch onDataLoadListener;
      * @return The BaseViewHolder for chaining.
      */
     public BaseViewHolder setOnTouchListener(int viewId, View.OnTouchListener listener) {
@@ -355,10 +355,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the on long click listener of the view.
+     * Sets the on long click onDataLoadListener of the view.
      *
      * @param viewId   The view id.
-     * @param listener The on long click listener;
+     * @param listener The on long click onDataLoadListener;
      * @return The BaseViewHolder for chaining.
      */
     public BaseViewHolder setOnLongClickListener(int viewId, View.OnLongClickListener listener) {
@@ -368,10 +368,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the listview or gridview's item click listener of the view
+     * Sets the listview or gridview's item click onDataLoadListener of the view
      *
      * @param viewId   The view id.
-     * @param listener The item on click listener;
+     * @param listener The item on click onDataLoadListener;
      * @return The BaseViewHolder for chaining.
      */
     public BaseViewHolder setOnItemClickListener(int viewId, AdapterView.OnItemClickListener listener) {
@@ -381,10 +381,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the listview or gridview's item long click listener of the view
+     * Sets the listview or gridview's item long click onDataLoadListener of the view
      *
      * @param viewId   The view id.
-     * @param listener The item long click listener;
+     * @param listener The item long click onDataLoadListener;
      * @return The BaseViewHolder for chaining.
      */
     public BaseViewHolder setOnItemLongClickListener(int viewId, AdapterView.OnItemLongClickListener listener) {
@@ -394,10 +394,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the listview or gridview's item selected click listener of the view
+     * Sets the listview or gridview's item selected click onDataLoadListener of the view
      *
      * @param viewId   The view id.
-     * @param listener The item selected click listener;
+     * @param listener The item selected click onDataLoadListener;
      * @return The BaseViewHolder for chaining.
      */
     public BaseViewHolder setOnItemSelectedClickListener(int viewId, AdapterView.OnItemSelectedListener listener) {
@@ -407,10 +407,10 @@ public class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     /**
-     * Sets the on checked change listener of the view.
+     * Sets the on checked change onDataLoadListener of the view.
      *
      * @param viewId   The view id.
-     * @param listener The checked change listener of compound button.
+     * @param listener The checked change onDataLoadListener of compound button.
      * @return The BaseViewHolder for chaining.
      */
     public BaseViewHolder setOnCheckedChangeListener(int viewId, CompoundButton.OnCheckedChangeListener listener) {

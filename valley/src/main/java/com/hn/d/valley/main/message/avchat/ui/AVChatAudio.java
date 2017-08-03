@@ -62,7 +62,7 @@
 //
 //    // data
 //    private AVChatControl manager;
-//    private AVChatUIListener listener;
+//    private AVChatUIListener onDataLoadListener;
 //
 //    // state
 //    private boolean init = false;
@@ -72,11 +72,11 @@
 //
 //    private boolean isEnabled = false;
 //
-//    public AVChatAudio(Context ctx , View view , AVChatControl control,AVChatUIListener listener) {
+//    public AVChatAudio(Context ctx , View view , AVChatControl control,AVChatUIListener onDataLoadListener) {
 //        this.context = ctx;
 //        rootView = view;
 //        manager = control;
-//        this.listener = listener;
+//        this.onDataLoadListener = onDataLoadListener;
 //    }
 //
 //    public void onCallStateChange(CallStateEnum state) {
@@ -291,33 +291,33 @@
 //    public void onClick(View v) {
 //        switch (v.getId()) {
 ////            case R.id.avchat_video_logout:
-////                listener.onHangUp();
+////                onDataLoadListener.onHangUp();
 ////                break;
 //            case R.id.refuse:
-//                listener.onRefuse();
+//                onDataLoadListener.onRefuse();
 //                break;
 //            case R.id.receive:
-//                listener.onReceive();
+//                onDataLoadListener.onReceive();
 //                break;
 ////            case R.id.avchat_video_mute:
-////                listener.toggleMute();
-////                listener.onHangUp();
+////                onDataLoadListener.toggleMute();
+////                onDataLoadListener.onHangUp();
 ////                break;
 //            case R.id.avchat_video_switch_audio:
 //                if(isInSwitch) {
 ////                    Toast.makeText(context, R.string.avchat_in_switch, Toast.LENGTH_SHORT).show();
 //                } else {
-//                    listener.videoSwitchAudio();
+//                    onDataLoadListener.videoSwitchAudio();
 //                }
 //                break;
 //            case R.id.avchat_switch_camera:
-//                listener.switchCamera();
+//                onDataLoadListener.switchCamera();
 //                break;
 ////            case R.id.avchat_close_camera:
-////                listener.closeCamera();
+////                onDataLoadListener.closeCamera();
 ////                break;
 ////            case R.id.avchat_video_record:
-////                listener.toggleRecord();
+////                onDataLoadListener.toggleRecord();
 ////                break;
 //            default:
 //                break;

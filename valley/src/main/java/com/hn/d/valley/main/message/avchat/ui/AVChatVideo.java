@@ -62,7 +62,7 @@
 //    //摄像头权限提示显示
 //    private View permissionRoot;
 //
-//    private AVChatUIListener listener;
+//    private AVChatUIListener onDataLoadListener;
 //
 //    private boolean init = false;
 //
@@ -72,11 +72,11 @@
 //    private int topRootHeight = 0;
 //    private int bottomRootHeight = 0;
 //
-//    public AVChatVideo(Context ctx , View view , AVChatControl control, AVChatUIListener listener){
+//    public AVChatVideo(Context ctx , View view , AVChatControl control, AVChatUIListener onDataLoadListener){
 //        this.mContext = ctx;
 //        this.chatVideoRoot = view;
 //        this.avChatControl = control;
-//        this.listener = listener;
+//        this.onDataLoadListener = onDataLoadListener;
 //    }
 //
 //
@@ -251,32 +251,32 @@
 //    public void onClick(View v) {
 //        switch (v.getId()) {
 //            case R.id.avchat_video_logout:
-//                listener.onHangUp();
+//                onDataLoadListener.onHangUp();
 //                break;
 //            case R.id.refuse:
-//                listener.onRefuse();
+//                onDataLoadListener.onRefuse();
 //                break;
 //            case R.id.receive:
-//                listener.onReceive();
+//                onDataLoadListener.onReceive();
 //                break;
 //            case R.id.avchat_video_mute:
-//                listener.toggleMute();
+//                onDataLoadListener.toggleMute();
 //                break;
 //            case R.id.avchat_video_switch_audio:
 //                if(isInSwitch) {
 ////                    Toast.makeText(context, R.string.avchat_in_switch, Toast.LENGTH_SHORT).show();
 //                } else {
-//                    listener.videoSwitchAudio();
+//                    onDataLoadListener.videoSwitchAudio();
 //                }
 //                break;
 //            case R.id.avchat_switch_camera:
-//                listener.switchCamera();
+//                onDataLoadListener.switchCamera();
 //                break;
 //            case R.id.avchat_close_camera:
-//                listener.closeCamera();
+//                onDataLoadListener.closeCamera();
 //                break;
 //            case R.id.avchat_video_record:
-//                listener.toggleRecord();
+//                onDataLoadListener.toggleRecord();
 //                break;
 //            default:
 //                break;

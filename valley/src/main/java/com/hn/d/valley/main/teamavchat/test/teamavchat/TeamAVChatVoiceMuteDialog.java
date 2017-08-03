@@ -23,7 +23,7 @@
 //public class TeamAVChatVoiceMuteDialog extends CustomAlertDialog {
 //
 //    private TeamAVChatVoiceMuteAdapter adapter;
-//    private TeamVoiceMuteListener listener;
+//    private TeamVoiceMuteListener onDataLoadListener;
 //    private List<Pair<String, Boolean>> beforeMutes;
 //
 //    public TeamAVChatVoiceMuteDialog(Context context, String teamId, List<Pair<String, Boolean>> voiceMutes) {
@@ -59,8 +59,8 @@
 //        });
 //    }
 //
-//    public void setTeamVoiceMuteListener(TeamVoiceMuteListener listener) {
-//        this.listener = listener;
+//    public void setTeamVoiceMuteListener(TeamVoiceMuteListener onDataLoadListener) {
+//        this.onDataLoadListener = onDataLoadListener;
 //    }
 //
 //    public interface TeamVoiceMuteListener {
@@ -80,7 +80,7 @@
 //        positiveButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if (listener != null) {
+//                if (onDataLoadListener != null) {
 //                    List<Pair<String, Boolean>> items = new ArrayList<>();
 //                    List<TeamAVChatVoiceMuteItem> afterItems = adapter.getItems();
 //
@@ -90,7 +90,7 @@
 //                        }
 //                    }
 //
-//                    listener.onVoiceMuteChange(items);
+//                    onDataLoadListener.onVoiceMuteChange(items);
 //                }
 //                dismiss();
 //            }

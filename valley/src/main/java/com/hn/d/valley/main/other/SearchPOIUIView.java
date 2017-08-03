@@ -59,7 +59,7 @@ public class SearchPOIUIView extends BaseUIView<IPOISearchPresenter> implements 
 
     AmapBean mLastBean, mTargetBean;
 
-    //listener
+    //onDataLoadListener
     private PoiSearch.OnPoiSearchListener onPoiSearchListener;
 
     //action

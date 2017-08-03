@@ -20,6 +20,7 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.UI;
+import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -484,6 +485,19 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         return "";
     }
 
+    @Override
+    public void onShowInPager(UIViewPager viewPager) {
+        showInPagerCount++;
+        if (showInPagerCount == 1) {
+            loadData();
+        }
+    }
+
+    @Override
+    public void onHideInPager(UIViewPager viewPager) {
+        //super.onHideInPager(viewPager);
+    }
+
     public enum ListType {
         FORWARD_TYPE,//转发列表
         COMMENT_TYPE,//评论列表
@@ -491,7 +505,6 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
         INFO_COMMENT_REPLY_TYPE,//资讯评论回复列表
         REPLY_TYPE//回复列表
     }
-
 
     public interface OnCommentListener {
 

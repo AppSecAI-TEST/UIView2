@@ -134,8 +134,8 @@ public class AVChatAudio implements View.OnClickListener{
                 setRefuseReceive(true);
                 // 直接开启视频聊天 不需要点击同意
                 showWaitingUI();
-//                if(listener != null) {
-//                    listener.onReceive();
+//                if(onDataLoadListener != null) {
+//                    onDataLoadListener.onReceive();
 //                }
 //                receiveTV.setText(R.string.text_av_receive);
                 break;
@@ -462,7 +462,7 @@ public class AVChatAudio implements View.OnClickListener{
         }
     }
 
-//    /******************************* toggle listener *************************/
+//    /******************************* toggle onDataLoadListener *************************/
 //    @Override
 //    public void toggleOn(View v) {
 //        onClick(v);

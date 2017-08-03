@@ -18,15 +18,15 @@ import com.angcyo.uiview.widget.viewpager.UIViewPager
 import com.hn.d.valley.R
 import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
-import com.hn.d.valley.bean.RewardModel
-import com.hn.d.valley.service.RewardService
+import com.hn.d.valley.main.message.redpacket.GrabedRDDetail
+import com.hn.d.valley.main.message.service.RedPacketService
 import com.hn.d.valley.sub.other.SingleRecyclerUIView
-import com.hn.d.valley.widget.HnGenderView
+import java.util.*
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：动态详情, 打赏列表
+ * 类的描述：动态详情, 红包领取详情
  * 创建人员：Robi
  * 创建时间：2017/08/02 17:38
  * 修改人员：Robi
@@ -34,7 +34,7 @@ import com.hn.d.valley.widget.HnGenderView
  * 修改备注：
  * Version: 1.0.0
  */
-class RewardListUIView(val item_id: String /*动态id*/) : SingleRecyclerUIView<RewardModel.DataListBean>() {
+class RedbagListUIView(val red_id: String /*红包id*/) : SingleRecyclerUIView<GrabedRDDetail.ResultBean>() {
 
     override fun getTitleBar(): TitleBarPattern? {
         return null
@@ -44,52 +44,36 @@ class RewardListUIView(val item_id: String /*动态id*/) : SingleRecyclerUIView<
         return true
     }
 
-    override fun initRExBaseAdapter(): RExBaseAdapter<String, RewardModel.DataListBean, String> {
-        return object : RExBaseAdapter<String, RewardModel.DataListBean, String>(mActivity) {
+    override fun initRExBaseAdapter(): RExBaseAdapter<String, GrabedRDDetail.ResultBean, String> {
+        return object : RExBaseAdapter<String, GrabedRDDetail.ResultBean, String>(mActivity) {
 
             override fun getItemLayoutId(viewType: Int): Int {
-                return R.layout.item_reward_list_layout
+                return R.layout.item_redbag_list_layout
             }
 
-            override fun onBindDataView(holder: RBaseViewHolder, posInData: Int, dataBean: RewardModel.DataListBean) {
+            override fun onBindDataView(holder: RBaseViewHolder, posInData: Int, dataBean: GrabedRDDetail.ResultBean) {
                 super.onBindDataView(holder, posInData, dataBean)
                 val userAvatarView: GlideImageView = holder.v(R.id.user_avatar_view)
-                val giftUrlView: GlideImageView = holder.v(R.id.gift_url_view)
 
                 val userNameView: RTextView = holder.v(R.id.user_name_view)
-                val giftNameView: RTextView = holder.v(R.id.gift_name_view)
                 val timeView: RTextView = holder.v(R.id.time_view)
 
-                val genderView: HnGenderView = holder.v(R.id.gender_view)
+                val bestView: View = holder.v(R.id.best_view)
+
+                val moneyView: RTextView = holder.v(R.id.money_view)
 
                 //时间
                 timeView.text = TimeUtil.getTimeShowString(dataBean.created.toLong() * 1000, false)
-                //性别
-                genderView.setGender(dataBean.user_info.sex)
                 //用户名
-                userNameView.text = dataBean.user_info.username
+                userNameView.text = dataBean.username
                 //用户头像
                 userAvatarView.apply {
                     reset()
-                    url = dataBean.user_info.avatar
+                    url = dataBean.avatar
                 }
 
-                giftUrlView.setImageResource(R.drawable.hongbao_xiao_60)
-
-                // type 打赏类型 1 - 礼物 2-红包
-                if ("1".equals(dataBean.type, true)) {
-                    giftUrlView.apply {
-                        reset()
-                        url = dataBean.gift_info.thumb
-                    }
-                    giftNameView.text = dataBean.gift_info.name
-                } else {
-                    giftUrlView.apply {
-                        reset()
-                        setImageResource(R.drawable.hongbao_xiao_60)
-                    }
-                    giftNameView.text = "¥${dataBean.package_info.money.toFloat()}红包"
-                }
+                bestView.visibility = if (dataBean.best == 1) View.VISIBLE else View.INVISIBLE
+                moneyView.text = String.format(Locale.CHINA, "%.2f", dataBean.money / 100f)
             }
         }
     }
@@ -108,7 +92,7 @@ class RewardListUIView(val item_id: String /*动态id*/) : SingleRecyclerUIView<
     }
 
     override fun getEmptyTipString(): String {
-        return "暂无打赏"
+        return "暂无记录"
     }
 
     override fun initRefreshLayout() {
@@ -118,18 +102,17 @@ class RewardListUIView(val item_id: String /*动态id*/) : SingleRecyclerUIView<
 
     override fun onUILoadData(page: String) {
         super.onUILoadData(page)
-        add(RRetrofit
-                .create(RewardService::class.java)
-                .list(Param.buildMap("item_type:discuss", "item_id:$item_id", "page:$page"))
-                .compose(Rx.transformer(RewardModel::class.java))
-                .subscribe(object : BaseSingleSubscriber<RewardModel>() {
+        add(RRetrofit.create(RedPacketService::class.java)
+                .resultlist(Param.buildInfoMap("redid:$red_id", "limit:20", "lastid:$last_id"))
+                .compose(Rx.transformerList(GrabedRDDetail.ResultBean::class.java, 0))
+                .subscribe(object : BaseSingleSubscriber<List<GrabedRDDetail.ResultBean>>() {
 
-                    override fun onSucceed(bean: RewardModel?) {
-                        if (bean == null) {
-                            onUILoadDataEnd(null)
-                        } else {
-                            onUILoadDataEnd(bean.data_list)
+                    override fun onSucceed(bean: List<GrabedRDDetail.ResultBean>) {
+                        onUILoadDataEnd(bean)
+                        if (bean.isNotEmpty()) {
+                            last_id = bean.last().id.toString()
                         }
+                        onDataLoadListener?.onLoadData(mRExBaseAdapter.rawItemCount)
                     }
 
                     override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException) {
@@ -139,8 +122,7 @@ class RewardListUIView(val item_id: String /*动态id*/) : SingleRecyclerUIView<
                             showNonetLayout { loadData() }
                         }
                     }
-                })
-        )
+                }))
     }
 
     override fun onShowInPager(viewPager: UIViewPager) {
@@ -150,11 +132,13 @@ class RewardListUIView(val item_id: String /*动态id*/) : SingleRecyclerUIView<
         }
     }
 
+    var onDataLoadListener: OnDataLoadListener? = null
+
     override fun onHideInPager(viewPager: UIViewPager) {
         //super.onHideInPager(viewPager);
     }
 
-    interface OnRewardListener {
-
+    interface OnDataLoadListener {
+        fun onLoadData(dataCount: Int)
     }
 }

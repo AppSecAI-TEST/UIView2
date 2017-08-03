@@ -2,6 +2,7 @@ package com.hn.d.valley.sub.user;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,6 +42,8 @@ import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.main.message.redpacket.GrabedRDDetail;
+import com.hn.d.valley.main.message.service.RedPacketService;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.sub.other.LikeUserRecyclerUIView;
@@ -49,6 +52,7 @@ import com.hn.d.valley.sub.user.sub.BaseDynamicListUIView;
 import com.hn.d.valley.sub.user.sub.CommentInputDialog;
 import com.hn.d.valley.sub.user.sub.CommentListUIView;
 import com.hn.d.valley.sub.user.sub.ForwardListUIView;
+import com.hn.d.valley.sub.user.sub.RedbagListUIView;
 import com.hn.d.valley.sub.user.sub.RewardListUIView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.widget.HnPlayTimeView;
@@ -75,6 +79,10 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
 
     UserDiscussListBean.DataListBean mDataListBean;
     /**
+     * 红包领取数量
+     */
+    int redbagCount = 0;
+    /**
      * 动态id
      */
     private String discuss_id;
@@ -89,8 +97,8 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     private CommentListUIView mCommentListUIView;
     private ForwardListUIView mForwardListUIView;
     private RewardListUIView mRewardListUIView;
+    private RedbagListUIView mRedbagListUIView;
     private Player.OnPlayListener mOnPlayListener;
-
     /**
      * 是否自动播放语音
      */
@@ -280,6 +288,29 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
 
             //收藏按钮
             initCollectView();
+
+            //如果是红包动态, 拉取红包领取数量
+            if (havePackager()) {
+                add(RRetrofit.create(RedPacketService.class)
+                        .detail(Param.buildInfoMap("redid:" + mDataListBean.getPackage_id()))
+                        .compose(Rx.transformRedPacket(GrabedRDDetail.class))
+                        .subscribe(new BaseSingleSubscriber<GrabedRDDetail>() {
+                            @Override
+                            public void onStart() {
+                                super.onStart();
+                            }
+
+                            @Override
+                            public void onSucceed(GrabedRDDetail bean) {
+                                if (bean == null) {
+
+                                } else {
+                                    redbagCount = bean.getGrabnum();
+                                    mTabLayout.updateTabTitle();
+                                }
+                            }
+                        }));
+            }
         }
     }
 
@@ -401,6 +432,13 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
         });
     }
 
+    /**
+     * 详情是否有红包
+     */
+    private boolean havePackager() {
+        return !TextUtils.isEmpty(mDataListBean.getPackage_id());
+    }
+
     private void initViewPager() {
         mUiViewPager.setOffscreenPageLimit(5);
         mUiViewPager.setPageTransformer(true, new FadeInOutPageTransformer());
@@ -438,12 +476,21 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                         mRewardListUIView.bindParentILayout(mParentILayout);
                     }
                     return mRewardListUIView;
+                } else if (position == 3) {
+                    if (mRedbagListUIView == null) {
+                        mRedbagListUIView = new RedbagListUIView(mDataListBean.getPackage_id());
+                        mRedbagListUIView.bindParentILayout(mParentILayout);
+                    }
+                    return mRedbagListUIView;
                 }
                 return null;
             }
 
             @Override
             public int getCount() {
+                if (havePackager()) {
+                    return 4;
+                }
                 return 3;
             }
 
@@ -467,6 +514,11 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                         return getString(R.string.reward);
                     }
                     return getString(R.string.reward) + " " + reward_cnt;
+                } else if (position == 3) {
+                    if (redbagCount <= 0) {
+                        return "领取";
+                    }
+                    return "领取 " + redbagCount;
                 }
                 return "";
             }

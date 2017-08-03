@@ -35,6 +35,15 @@ public class GrabedRDDetail {
     private String avatar;
     private String username;
     private List<ResultBean> result;
+    /**
+     * grabnum : 2
+     * type : 1
+     * random : 1
+     */
+
+    private int grabnum;
+    private int type;
+    private int random;
 
     public int getNum() {
         return num;
@@ -98,6 +107,30 @@ public class GrabedRDDetail {
 
     public void setResult(List<ResultBean> result) {
         this.result = result;
+    }
+
+    public int getGrabnum() {
+        return grabnum;
+    }
+
+    public void setGrabnum(int grabnum) {
+        this.grabnum = grabnum;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getRandom() {
+        return random;
+    }
+
+    public void setRandom(int random) {
+        this.random = random;
     }
 
     public static class ResultBean {

@@ -198,6 +198,19 @@ public class CommentListUIView extends BaseDynamicListUIView {
                                 last_id = beans.get(beans.size() - 1).getId();
                             }
                         }
+
+                        @Override
+                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                            super.onEnd(isError, isNoNetwork, e);
+                            if (isError) {
+                                showNonetLayout(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        loadData();
+                                    }
+                                });
+                            }
+                        }
                     }));
         } else if (mListType == ListType.COMMENT_TYPE) {
             add(RRetrofit.create(SocialService.class)
@@ -230,6 +243,19 @@ public class CommentListUIView extends BaseDynamicListUIView {
                                 } else {
                                     onUILoadDataEnd(bean.getData_list());
                                 }
+                            }
+                        }
+
+                        @Override
+                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                            super.onEnd(isError, isNoNetwork, e);
+                            if (isError) {
+                                showNonetLayout(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        loadData();
+                                    }
+                                });
                             }
                         }
                     }));

@@ -380,7 +380,7 @@ public class GroupMemberUIVIew extends SingleRecyclerUIView<GroupMemberBean> {
             };
 
             checkBox.setOnClickListener(listener);
-//            holder.itemView.setOnClickListener(listener);
+//            holder.itemView.setOnClickListener(onDataLoadListener);
             checkBox.setChecked(mCheckStats.get(position, false));
         }
 

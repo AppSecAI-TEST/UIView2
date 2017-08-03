@@ -42,7 +42,7 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean> {
     @Override
     protected TitleBarPattern getTitleBar() {
 //        ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-//        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_suaixuan)).setListener(new View.OnClickListener() {
+//        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_suaixuan)).setOnDataLoadListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
 //                showMoreDialog();
