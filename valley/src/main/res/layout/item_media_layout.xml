@@ -32,6 +32,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/base_xxxhdpi"
+        android:shadowColor="@color/default_base_bg_press"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
         android:visibility="gone"
         tools:text="00:07"/>
 
