@@ -403,7 +403,7 @@ public interface WalletService {
 
 
     // 余额打赏
-    @POST("balance/reward")
+    @POST("http://service.klgwl.com/wallet/balance/reward")
     Observable<ResponseBody> balanceReward(@QueryMap Map<String, String> map);
 
 

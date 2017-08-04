@@ -170,7 +170,7 @@ public class PayUIDialog extends UIIDialogImpl {
                                 } else if (params.missionType == 2) {
                                     //购买龙币
                                     buyKlgCoin();
-                                } else if (params.missionType == 5) {
+                                } else if (params.missionType == 3) {
                                     // 打赏
                                     rewardRedBag();
                                 }
@@ -188,8 +188,8 @@ public class PayUIDialog extends UIIDialogImpl {
      */
     private void rewardRedBag() {
         RRetrofit.create(WalletService.class)
-                .balanceReward(Param.buildInfoMap("to_uid:" + UserCache.getUserAccount()
-                        , "data:" + "money:" + (int) params.money, "discussid:" + params.discussid))
+                .balanceReward(Param.buildInfoMap("uid:" + UserCache.getUserAccount() ,"to_uid:" + params.to_uid,
+                         "money:" + (int) params.money, "discussid:" + params.discussid))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -316,8 +316,9 @@ public class PayUIDialog extends UIIDialogImpl {
             code = jsonObject.optInt("code");
 
             int successCode = Constants.SUCCESS;
-            if (params.missionType == 2 ) {
-                // missiontype  =2 购买龙币
+            if (params.missionType == 2
+                    || params.missionType == 3) {
+                // missiontype  =2 购买龙币 5 打赏
                 successCode = 200;
             }
 

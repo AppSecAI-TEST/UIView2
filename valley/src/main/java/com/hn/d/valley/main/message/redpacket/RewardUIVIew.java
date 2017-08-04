@@ -43,6 +43,7 @@ import java.util.Random;
 import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -68,8 +69,16 @@ public class RewardUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
     private String username;
     private String discussId;
 
-    public RewardUIVIew(String avatar , String uid,String disscussId) {
+    private Action0 action;
+
+    public RewardUIVIew setAction(Action0 action) {
+        this.action = action;
+        return this;
+    }
+
+    public RewardUIVIew(String avatar ,String username, String uid, String disscussId) {
         this.uid = uid;
+        this.username = username;
         this.avatar = avatar;
         this.discussId = disscussId;
     }
@@ -170,10 +179,6 @@ public class RewardUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                     }
                 });
 
-//                tv_money.setText(SpannableStringUtils.getBuilder(grabedRDDetail.getMoney() / 100f + " ")
-//                        .append("元").setProportion(0.5f)
-//                        .create());
-
             }
         }));
 
@@ -193,7 +198,7 @@ public class RewardUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 .setContent("打赏")
                 .setDiscussId(discussId)// 动态id
                 .setTo_uid(uid)
-                .setType(5);
+                .setType(3);
 
         if (money > account.getMoney()) {
             T_.show(getString(R.string.text_balance_not_enough));
@@ -204,7 +209,7 @@ public class RewardUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
                 public void call(Object o) {
                     finishIView();
                 }
-            },params, ThirdPayUIDialog.ALIPAY,1));
+            },params, ThirdPayUIDialog.ALIPAY,3));
 
             return;
         }

@@ -28,6 +28,7 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.setting.BindPhoneUIView;
 import com.hn.d.valley.sub.other.KLGCoinUIVIew;
 import com.hn.d.valley.widget.HnGlideImageView;
+import com.hn.d.valley.widget.NumberAnimTextView;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import rx.functions.Action0;
@@ -72,6 +73,7 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
         final ImageView ivShine = mViewHolder.imgV(R.id.iv_gift_anim);
         final TextView ivTip = mViewHolder.tv(R.id.tv_tip_anim);
         final LinearLayout ll_shine = mViewHolder.v(R.id.ll_shine);
+        NumberAnimTextView tv_charm = mViewHolder.v(R.id.tv_charm);
 
         BitmapTypeRequest<String> builder = Glide.with(mActivity)
                 .load(gift.getThumb())
@@ -104,16 +106,30 @@ public class ReceiveGiftUIDialog extends UIIDialogImpl {
             animShine.setAnimationListener(animListener);
             ivTip.startAnimation(animShine);
             return;
+        } else if (mSessionType == SessionTypeEnum.Team) {
+            tv_charm.setAnimatorListener(new NumberAnimTextView.OnAnimatorListener() {
+                @Override
+                public void onAnimationStart() {
+
+                }
+
+                @Override
+                public void onAnimationEnd() {
+                    finishDialog();
+                }
+            });
+            tv_charm.setPrefixString("魅力值: +");
+            tv_charm.setNumberString(gift.getCharm());
         }
 
         builder.into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                 ivShine.setImageBitmap(resource);
-                Animation animShine = AnimationUtils.loadAnimation(mActivity, R.anim.shine);
-
-                animShine.setAnimationListener(animListener);
-                ivShine.startAnimation(animShine);
+//                Animation animShine = AnimationUtils.loadAnimation(mActivity, R.anim.shine);
+//
+//                animShine.setAnimationListener(animListener);
+//                ivShine.startAnimation(animShine);
 //                ivTip.startAnimation(animShine);
 //                ll_shine.startAnimation(animShine);
             }

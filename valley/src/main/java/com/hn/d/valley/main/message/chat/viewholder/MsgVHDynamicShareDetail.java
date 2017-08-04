@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -31,6 +32,7 @@ import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnVideoPlayView;
+import com.hn.d.valley.widget.HotPackageView;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 /**
@@ -68,6 +70,7 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
         LinearLayout pc_layout = (LinearLayout) findViewById(R.id.msg_card_layout);
         RImageView iv_content = (RImageView) findViewById(R.id.iv_item_content);
         HnVideoPlayView videoPlayView = (HnVideoPlayView) findViewById(R.id.video_play_view);
+        HotPackageView hot_package_view = (HotPackageView) findViewById(R.id.hot_package_view);
 
 //        contentContainer.setBackgroundResource(0);
 
@@ -120,6 +123,9 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
             videoPlayView.setVisibility(View.VISIBLE);
             thumbUrl = detailMsg.getCover();
             videoPlayView.setPlayType(HnVideoPlayView.PlayType.VIDEO);
+            if (!TextUtils.isEmpty(detailMsg.getPackage_id())) {
+                hot_package_view.setVisibility(View.VISIBLE);
+            }
 
         } else if (detailMsg.isTextMediaType()) {
             videoPlayView.setVisibility(View.GONE);

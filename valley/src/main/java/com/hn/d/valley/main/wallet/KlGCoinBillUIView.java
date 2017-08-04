@@ -93,7 +93,7 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean> {
         super.onUILoadData(page);
 
         add(RRetrofit.create(WalletService.class)
-                .records(Param.buildMap("uid:" + UserCache.getUserAccount(), "type:" + type))
+                .records(Param.buildMap("uid:" + UserCache.getUserAccount(), "type:" + type,"page:" + page))
                 .compose(Rx.transformer(KLGCoinList.class))
                 .subscribe(new BaseSingleSubscriber<KLGCoinList>() {
 
@@ -143,13 +143,14 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean> {
             TextView tv_bill_moncy = holder.tv(R.id.tv_bill_moncy);
 
             tv_bill_type.setText(dataBean.getAction_desc());
-            tv_time.setText(TimeUtil.getTimeShowString(Long.valueOf(dataBean.getDetail().getPay_time()) * 1000l, true));
             if (dataBean.getIn_out().equals("1")) {
+                tv_time.setText(TimeUtil.getDateString(Long.valueOf(dataBean.getDetail().getPay_time()) * 1000l));
                 tv_bill_moncy.setText(SpannableStringUtils.getBuilder("+" + dataBean.getDetail().getCoin())
                         .setForegroundColor(mActivity.getResources().getColor(R.color.base_red))
                         .create());
             } else if (dataBean.getIn_out().equals("2")) {
-                tv_bill_moncy.setText("-" + dataBean.getDetail().getCoin());
+                tv_bill_moncy.setText("-" + dataBean.getValue());
+                tv_time.setText(TimeUtil.getDateString(Long.valueOf(dataBean.getCreated()) * 1000l));
             }
 
         }

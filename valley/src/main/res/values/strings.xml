@@ -588,7 +588,7 @@
     <string name="play_tip">点击播放</string>
     <string name="re_record">重录</string>
     <string name="text_grabed_count_per_all">已领取 %1$d / %2$d个</string>
-    <string name="text_grabed_count">已领取 %1$d</string>
+    <string name="text_grabed_count">已领取 %1$d个</string>
     <string name="text_all_amout">总金额 %1$.2f 元</string>
     <string name="text_yuan_amout">%1$.2f 元</string>
     <string name="text_already_save">已存入</string>

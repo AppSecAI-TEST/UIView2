@@ -230,6 +230,10 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
             // 充龙币
             builder.setSubject("充龙币")
             .setBody("充龙币");
+        }  else if (missionType == 3) {
+            // 打赏
+            builder.setSubject("打赏")
+                    .setBody("打赏");
         }
 
         switch (type) {
@@ -393,10 +397,10 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 // 购买龙币
                 object.put("coin",params.coin);
                 object.put("way",params.way);
-            } else if (type == 5) {
+            } else if (type == 3) {
                 // 打赏
                 object.put("to_uid", TextUtils.isEmpty(params.to_uid) ? 0 : Integer.valueOf(params.to_uid));
-                object.put("discussid",params.discussid);
+                object.put("discussid",Integer.valueOf(params.discussid));
             }
         } catch (JSONException e) {
             e.printStackTrace();

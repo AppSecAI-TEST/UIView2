@@ -51,6 +51,7 @@ public interface GiftService {
     @POST("gift/history")
     Observable<ResponseBody> giftHistory(@QueryMap Map<String, String> map);
 
-
+    @POST("reward/to")
+    Observable<ResponseBody> giftRewardd(@QueryMap Map<String, String> map);
 
 }

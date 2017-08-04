@@ -24,4 +24,6 @@ public interface RewardService {
      */
     @POST("reward/list")
     Observable<ResponseBody> list(@QueryMap Map<String, String> map);
+
+
 }

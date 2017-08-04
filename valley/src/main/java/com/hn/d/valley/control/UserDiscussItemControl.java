@@ -61,6 +61,7 @@ import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.main.message.gift.GiftListUIView2;
 import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
 import com.hn.d.valley.main.message.redpacket.RewardUIVIew;
 import com.hn.d.valley.service.ContactService;
@@ -86,6 +87,7 @@ import com.hn.d.valley.x5.X5WebUIView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImageUtils;
 import com.lzy.imagepicker.YImageControl;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
 import java.io.File;
 import java.util.HashSet;
@@ -1538,17 +1540,18 @@ public class UserDiscussItemControl {
                                            final UserDiscussListBean.DataListBean tBean,
                                            boolean isInDetail) {
 
-        HnItemTextView reward_cnt = holder.v(R.id.reward_cnt);
+        final HnItemTextView reward_cnt = holder.v(R.id.reward_cnt);
         reward_cnt.setText(tBean.getReward_cnt());
 
         //打赏成功之后, 需要数值加1. reward_cnt.setText(tBean.getReward_cnt());
         reward_cnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showRewardDialog(iLayout, tBean.getDiscuss_id(), new Runnable() {
+                showRewardDialog(iLayout,tBean.getUser_info().getAvatar()
+                        ,tBean.getUser_info().getUsername(),tBean.getUid(), tBean.getDiscuss_id(), new Runnable() {
                     @Override
                     public void run() {
-
+                        reward_cnt.setText(Integer.valueOf(tBean.getReward_cnt()) + 1 + "");
                     }
                 });
             }
@@ -1559,9 +1562,12 @@ public class UserDiscussItemControl {
      * 显示打赏对话框, 在动态列表和动态详情 会被调用
      */
     public static void showRewardDialog(final ILayout iLayout,
+                                        final String avatar,
+                                        final String username,
+                                        final String uid,
                                         final String item_id,
                                         final Runnable onRewardSuccess /*打赏成功的回调*/) {
-        Runnable onSuccess = new Runnable() {
+        final Runnable onSuccess = new Runnable() {
             @Override
             public void run() {
                 //打赏成功, 更新阅读数
@@ -1578,13 +1584,26 @@ public class UserDiscussItemControl {
                 .addItem("打赏红包", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        iLayout.startIView(new RewardUIVIew("","",item_id));
+                        iLayout.startIView(new RewardUIVIew(avatar,username,uid,item_id).setAction(new Action0() {
+                            @Override
+                            public void call() {
+                                onSuccess.run();
+                            }
+                        }));
                     }
                 })
                 .addItem("打赏礼物", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        iLayout.startIView(new GiftListUIView2(uid, SessionTypeEnum.P2P)
+                                .setType(1)
+                                .setDiscussid(item_id)
+                                .setAction0(new Action0() {
+                                    @Override
+                                    public void call() {
+                                        onSuccess.run();
+                                    }
+                                }));
                     }
                 })
                 .showDialog(iLayout);

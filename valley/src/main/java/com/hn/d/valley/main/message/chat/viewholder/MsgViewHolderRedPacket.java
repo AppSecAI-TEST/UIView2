@@ -69,13 +69,13 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
 //                                mUIBaseView.startIView(new P2PStatusRPUIView(UserCache.getUserAccount(),redPacket.getRid(),true));
 //                                return;
 //                            }
-                            layout.startIView(new GrabedRDResultUIView(redId));
+                            layout.startIView(new GrabedRDResultUIView(redId).setSqureRedbag(true));
                         } else if (Constants.CAN_BE_GRAB == code) {
 //                            layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB,message.getSessionId(),redId));
                             layout.startIView(new OpenRedPacketUIDialog(Constants.CAN_BE_GRAB, redId).setDiscuss_id(discuss_id));
                         } else if (Constants.CAN_NOTE_GRAB == code) {
 //                            mUIBaseView.startIView(new OpenRedPacketUIDialog(Constants.CAN_NOTE_GRAB,redPacket.getRid()));
-                            layout.startIView(new GrabedRDResultUIView(redId));
+                            layout.startIView(new GrabedRDResultUIView(redId).setSqureRedbag(true));
                         } else if (Constants.EXPORE == code) {
                             layout.startIView(new OpenRedPacketUIDialog(Constants.EXPORE, redId).setDiscuss_id(discuss_id));
                         } else if (Constants.LOOT_OUT == code) {

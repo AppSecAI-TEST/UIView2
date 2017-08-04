@@ -277,7 +277,8 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             mViewHolder.v(R.id.reward_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    UserDiscussItemControl.showRewardDialog(mParentILayout, discuss_id, new Runnable() {
+                    UserDiscussItemControl.showRewardDialog(mParentILayout, mDataListBean.getUser_info().getAvatar()
+                            ,mDataListBean.getUser_info().getUsername(),mDataListBean.getUid(),discuss_id, new Runnable() {
                         @Override
                         public void run() {
 

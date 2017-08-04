@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.hn.d.valley.R;
@@ -65,6 +66,9 @@ public class MsgVHGiftReceive extends MsgViewHolderBase {
             message.setLocalExtension(localExtension);
             msgService().updateIMMessage(message);
             if (getMsgAdapter().hasOnShow() && isReceivedMessage() && msg.getTo_uid().equals(UserCache.getUserAccount())) {
+                if (TextUtils.isEmpty(msg.getGift_info().getCharm()) && msg.getGift_info().getCharm().equals("0")) {
+                    return;
+                }
                 getUIBaseView().startIView(new ReceiveGiftUIDialog(msg.getGift_info(),message.getSessionType()));
             }
         }

@@ -3,6 +3,7 @@ package com.hn.d.valley.main.message.redpacket;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,6 +57,7 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
 
     private long red_id;
     private boolean isSqureRedbag;
+    private int lastId ;
 
     private TextView tv_money;
     private TextView tv_red_to_wallet;
@@ -92,8 +94,13 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
 
     }
 
+    @Override
+    public void onViewShowFirst(Bundle bundle) {
+        super.onViewShowFirst(bundle);
 
-        @Override
+    }
+
+    @Override
     protected boolean isLoadInViewPager() {
         return false;
     }
@@ -120,6 +127,38 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                     }
 
                 }));
+//
+//        add(RRetrofit.create(RedPacketService.class)
+//                .detail(Param.buildInfoMap("redid:" + red_id))
+//                .compose(Rx.transformRedPacket(GrabedRDDetail.class))
+//                .subscribe(new SingleRSubscriber<GrabedRDDetail>(this) {
+//                    @Override
+//                    protected void onResult(GrabedRDDetail bean) {
+//                        if (bean == null || bean.getResult().size() == 0) {
+//                            grabedRDDetail = bean;
+//                            onUILoadDataFinish();
+//                            mRExBaseAdapter.resetData(null);
+//                            mRExBaseAdapter.notifyDataSetChanged();
+//                        } else {
+//                            grabedRDDetail = bean;
+//                        }
+//                    }
+//                }));
+//
+//        add(RRetrofit.create(RedPacketService.class)
+//                .resultlist(Param.buildInfoMap("redid:" + red_id,"limit:20","lastid:" + lastId))
+//                .compose(Rx.transformerList(GrabedRDDetail.ResultBean.class))
+//                .subscribe(new SingleRSubscriber<List<GrabedRDDetail.ResultBean>>(this) {
+//                    @Override
+//                    protected void onResult(List<GrabedRDDetail.ResultBean> bean) {
+//                        if (bean == null || bean.size() == 0) {
+//
+//                        } else {
+//                            lastId = bean.get(bean.size() - 1).getId();
+//                            onUILoadDataEnd(bean);
+//                        }
+//                    }
+//                }));
     }
 
     public List<GrabedRDDetail.ResultBean> onPreProvider() {

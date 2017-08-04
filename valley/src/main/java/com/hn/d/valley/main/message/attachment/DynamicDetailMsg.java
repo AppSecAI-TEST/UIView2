@@ -28,17 +28,28 @@ public class DynamicDetailMsg extends BaseCustomMsg {
      * vedioURL : http://video.klgwl.com/50017/701495981369_t_12.mp4
      * item_id : 4110
      * apnsText : 分享了乔宝丰的动态
+     * package_id
      */
 
     private String avatar;
     private String media_type;
     private String picture;
+
+    public String getPackage_id() {
+        return package_id;
+    }
+
+    public void setPackage_id(String package_id) {
+        this.package_id = package_id;
+    }
+
     private String username;
     private String msg;
     private String cover;
     private String vedioURL;
     private String item_id;
     private String apnsText;
+    private String package_id;
 
     public static DynamicDetailMsg create(UserDiscussListBean.DataListBean dataListBean) {
         DynamicDetailMsg detailMsg = new DynamicDetailMsg();
@@ -48,6 +59,7 @@ public class DynamicDetailMsg extends BaseCustomMsg {
         detailMsg.item_id = dataListBean.getDiscuss_id();
         detailMsg.apnsText = detailMsg.username;
         detailMsg.extend_type = CustomAttachmentType.SHARE_DYNAMIC_MSG;
+        detailMsg.package_id = dataListBean.getPackage_id();
 
         String itemType = dataListBean.getShare_original_item_id();
 

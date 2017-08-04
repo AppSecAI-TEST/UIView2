@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_signup">
+    android:background="@drawable/bg_signup_2">
 
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/tip_view"

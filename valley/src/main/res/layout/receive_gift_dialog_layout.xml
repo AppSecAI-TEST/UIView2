@@ -30,6 +30,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
+        <com.hn.d.valley.widget.NumberAnimTextView
+            android:id="@+id/tv_charm"
+            tools:text="魅力值: +10"
+            android:textColor="@color/yellow_ffac2d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 

@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.angcyo.uiview.base.UIBaseRxView
 import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
+import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
@@ -36,10 +37,12 @@ import com.hn.d.valley.main.message.groupchat.GroupMemberSelectUIVIew
 import com.hn.d.valley.main.message.groupchat.RequestCallback
 import com.hn.d.valley.main.message.session.Container
 import com.hn.d.valley.main.message.setThumbUrl
+import com.hn.d.valley.service.RewardService
 import com.hn.d.valley.start.SpaceItemDecoration
 import com.hn.d.valley.sub.other.KLGCoinUIVIew
 import com.hn.d.valley.widget.HnGlideImageView
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
+import org.json.JSONObject
 import rx.functions.Action0
 import rx.functions.Action3
 
@@ -69,6 +72,10 @@ class GiftListUIView2 : BaseContentUIView {
     var sessionType: SessionTypeEnum
     var container: Container? = null
 
+    var type : Int? = -1
+    var discussId : String? = null
+    var action : Action0? = null
+
     constructor(account: String, sessionType: SessionTypeEnum) : super() {
         this.account = account
         this.sessionType = sessionType
@@ -84,6 +91,21 @@ class GiftListUIView2 : BaseContentUIView {
 
     }
 
+    fun setType(type : Int) : GiftListUIView2{
+        this.type = type
+        return this
+    }
+
+    fun setDiscussid(discussId : String) : GiftListUIView2{
+        this.discussId = discussId
+        return this
+    }
+
+    fun setAction0(action : Action0) : GiftListUIView2{
+        this.action = action
+        return this
+    }
+
     override fun getTitleBar(): TitleBarPattern {
         val titleBarPattern = super.getTitleBar()
                 .setShowBackImageView(true)
@@ -92,6 +114,7 @@ class GiftListUIView2 : BaseContentUIView {
                 .setTitleBarBGColor(Color.TRANSPARENT)
         return titleBarPattern
     }
+
 
     override fun inflateContentLayout(baseContentLayout: ContentLayout?, inflater: LayoutInflater?) {
         inflate(R.layout.view_gift_list2)
@@ -160,7 +183,7 @@ class GiftListUIView2 : BaseContentUIView {
         recycler_view?.setOverScrollMode(View.OVER_SCROLL_NEVER)
         recycler_view?.setLayoutManager(GridLayoutManager(container?.activity, 3))
 
-        adapter = GiftListAdapter(container?.activity, itemHeight)
+        adapter = GiftListAdapter(mActivity, itemHeight)
         recycler_view?.adapter = adapter
 
     }
@@ -244,8 +267,14 @@ class GiftListUIView2 : BaseContentUIView {
         private fun sendGift(gift: GiftBean) {
             startIView(SendGiftUIDialog(gift, Action0 {
                 if (sessionType == SessionTypeEnum.P2P) {
-
-                    sendGift(account, "", gift.gift_id)
+                    // type = 1 礼物打赏
+                    if (type == 1) {
+                        val json = JSONObject()
+                        json.put("id",gift.gift_id)
+                        reward(account,json.toString(),discussId,action)
+                    }else {
+                        sendGift(account, "", gift.gift_id)
+                    }
 
                 } else if (sessionType == SessionTypeEnum.Team) {
                     // 送给群里某群友
@@ -282,6 +311,22 @@ class GiftListUIView2 : BaseContentUIView {
 
                         override fun onError(code: Int, msg: String) {
                             super.onError(code, msg)
+                        }
+                    })
+        }
+
+        fun reward(touid : String , giftInfo : String , item_id : String?,action : Action0?) {
+            RRetrofit.create(GiftService::class.java)
+                    .giftRewardd(Param.buildMap("to_uid:$touid","item_id:$item_id","gift_info:$giftInfo"))
+                    .compose(Rx.transformer(String::class.java))
+                    .subscribe(object : BaseSingleSubscriber<String>() {
+                        override fun onSucceed(bean: String?) {
+                            action?.call()
+                            T_.show(bean)
+                        }
+
+                        override fun onEnd(isError: Boolean, isNoNetwork: Boolean, e: RException) {
+                            super.onEnd(isError, isNoNetwork, e)
                         }
                     })
         }
