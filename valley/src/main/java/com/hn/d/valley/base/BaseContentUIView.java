@@ -49,7 +49,7 @@ public abstract class BaseContentUIView extends UIContentView {
 //            ButterKnife.bind(this, mBaseContentLayout);
 //            initOnShowContentLayout();
 //        }
-//        OnShowContentLayout();
+//        onShowContentLayout();
 //        changeState(mLayoutState, LayoutState.CONTENT);
 //    }
 

@@ -81,8 +81,8 @@ public class RAmap {
                 }
 
                 //解析定位结果
-//                String result = getLocationStr(location);
-//                Log.i(TAG, "onLocationChanged: " + result);
+                String result = getLocationStr(location);
+                L.i(TAG, "onLocationChanged: 定位" + result);
             } else {
                 L.i(TAG, "onLocationChanged: 定位失败，location is null");
                 RBus.post(new AmapBean(false));

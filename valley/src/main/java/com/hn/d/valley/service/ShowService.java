@@ -34,4 +34,14 @@ public interface ShowService {
      */
     @POST("show/list")
     Observable<ResponseBody> list(@QueryMap Map<String, String> map);
+
+    /**
+     * 秀场详情
+     * <p>
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * to_uid	是	int	查看谁的
+     */
+    @POST("show/detail")
+    Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
 }

@@ -168,8 +168,8 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
     }
 
     @Override
-    protected void OnShowContentLayout() {
-        super.OnShowContentLayout();
+    protected void onShowContentLayout() {
+        super.onShowContentLayout();
         if (mDataListBean != null) {
             //媒体内容
             initMediaLayout();

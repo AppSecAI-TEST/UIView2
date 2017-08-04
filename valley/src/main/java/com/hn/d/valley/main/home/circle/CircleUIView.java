@@ -338,8 +338,8 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
     }
 
     @Override
-    protected void OnShowContentLayout() {
-        super.OnShowContentLayout();
+    protected void onShowContentLayout() {
+        super.onShowContentLayout();
         if (!isInSubUIView) {
             AutoPlayVideoControl.INSTANCE.init(getRecyclerView());
         }

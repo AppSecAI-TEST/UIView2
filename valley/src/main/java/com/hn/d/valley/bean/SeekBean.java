@@ -46,6 +46,20 @@ public class SeekBean {
     private String charm;
     private int rank;
     private int fans_count;
+    /**
+     * like_cnt : 182
+     * dislike_cnt : 1
+     * enable : 1
+     * is_like : 0
+     * is_dislike : 1
+     */
+
+    private String like_cnt;
+    private String dislike_cnt;
+    private String enable;
+    private int is_like;
+    private int is_dislike;
+
 
     public String getUid() {
         return uid;
@@ -165,5 +179,45 @@ public class SeekBean {
 
     public void setFans_count(int fans_count) {
         this.fans_count = fans_count;
+    }
+
+    public String getLike_cnt() {
+        return like_cnt;
+    }
+
+    public void setLike_cnt(String like_cnt) {
+        this.like_cnt = like_cnt;
+    }
+
+    public String getDislike_cnt() {
+        return dislike_cnt;
+    }
+
+    public void setDislike_cnt(String dislike_cnt) {
+        this.dislike_cnt = dislike_cnt;
+    }
+
+    public String getEnable() {
+        return enable;
+    }
+
+    public void setEnable(String enable) {
+        this.enable = enable;
+    }
+
+    public int getIs_like() {
+        return is_like;
+    }
+
+    public void setIs_like(int is_like) {
+        this.is_like = is_like;
+    }
+
+    public int getIs_dislike() {
+        return is_dislike;
+    }
+
+    public void setIs_dislike(int is_dislike) {
+        this.is_dislike = is_dislike;
     }
 }

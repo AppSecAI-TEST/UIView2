@@ -82,8 +82,8 @@ public class RecommendUIViewEx extends HomeBaseRecyclerUIView {
     }
 
     @Override
-    protected void OnShowContentLayout() {
-        super.OnShowContentLayout();
+    protected void onShowContentLayout() {
+        super.onShowContentLayout();
         AutoPlayVideoControl.INSTANCE.init(getRecyclerView());
     }
 

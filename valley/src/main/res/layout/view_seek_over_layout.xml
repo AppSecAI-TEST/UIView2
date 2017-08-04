@@ -15,7 +15,8 @@
         android:paddingBottom="@dimen/base_ldpi"
         android:paddingEnd="@dimen/base_xhdpi"
         android:paddingStart="@dimen/base_xhdpi"
-        android:paddingTop="@dimen/base_ldpi">
+        android:paddingTop="@dimen/base_ldpi"
+        android:visibility="invisible">
 
         <com.angcyo.uiview.widget.RTextView
             style="@style/DarkTextStyle"

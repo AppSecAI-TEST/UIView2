@@ -1,7 +1,9 @@
 package com.hn.d.valley.main.seek
 
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import com.angcyo.uiview.container.ContentLayout
@@ -23,6 +25,7 @@ import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.SeekBean
 import com.hn.d.valley.bean.realm.AmapBean
+import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.service.ShowService
 import com.hn.d.valley.sub.other.SingleRecyclerUIView
 import com.hn.d.valley.utils.RAmap
@@ -133,7 +136,45 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
             //邂逅,打招呼
             T_.info("测试....")
         }
+
+        checkDetail()
     }
+
+    private fun checkDetail() {
+        val controlLayout: View = mViewHolder.v(R.id.view_control_layout) ?: return
+        add(RRetrofit.create(ShowService::class.java)
+                .detail(Param.buildMap("to_uid:${UserCache.getUserAccount()}"))
+                .compose(Rx.transformer(SeekBean::class.java))
+                .subscribe(object : BaseSingleSubscriber<SeekBean>() {
+                    override fun onSucceed(bean: SeekBean?) {
+                        super.onSucceed(bean)
+                        if (bean != null && "1".equals(bean!!.enable, true) && !TextUtils.isEmpty(bean!!.enable)) {
+                            //秀场开启了
+                            controlLayout.let {
+                                it.animate()
+                                        .translationY((-it.measuredHeight).toFloat())
+                                        .setDuration(300)
+                                        .start()
+                            }
+                        } else {
+                            controlLayout.let {
+                                ViewCompat.setTranslationY(it, (-it.measuredHeight).toFloat())
+                                it.visibility = View.VISIBLE
+                                it.animate()
+                                        .translationY(0f)
+                                        .setDuration(300)
+                                        .start()
+                            }
+                        }
+                    }
+                }))
+    }
+
+    override fun onViewShow(bundle: Bundle?) {
+        super.onViewShow(bundle)
+        checkDetail()
+    }
+
 
     override fun initRExBaseAdapter(): RExBaseAdapter<String, SeekBean, String> {
         return object : RExBaseAdapter<String, SeekBean, String>(mActivity) {
