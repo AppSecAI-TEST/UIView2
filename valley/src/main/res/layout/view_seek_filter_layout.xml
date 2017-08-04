@@ -1,7 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/base_xhdpi">
 
+    <com.angcyo.uiview.widget.RTextView
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="性别"/>
+
+    <com.angcyo.uiview.widget.RCheckGroup
+        android:id="@+id/sex_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        app:checked_id="@+id/all">
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:tag="skin"
+            android:text="全部"/>
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="1dp"/>
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/male"
+            android:layout_width="0dp"
+
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:tag="skin"
+            android:text="男"/>
+
+        <View
+            android:layout_width="20dp"
+            android:layout_height="1dp"/>
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/female"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:tag="skin"
+            android:text="女"/>
+    </com.angcyo.uiview.widget.RCheckGroup>
+
+    <com.angcyo.uiview.widget.RTextView
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:text="距离"/>
+
+    <com.angcyo.uiview.widget.RCheckGroup
+        android:id="@+id/km_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        app:checked_id="@+id/km_1">
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/km_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:tag="skin"
+            android:text="1km"/>
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp"/>
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/km_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:tag="skin"
+            android:text="3km"/>
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp"/>
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/km_5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:tag="skin"
+            android:text="5km"/>
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="1dp"/>
+
+        <com.angcyo.uiview.widget.RTextCheckView
+            android:id="@+id/km_10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:tag="skin"
+            android:text="10km"/>
+    </com.angcyo.uiview.widget.RCheckGroup>
+
+    <com.angcyo.uiview.widget.RTextView
+        style="@style/MainTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:text="年龄"/>
+
+    <com.angcyo.uiview.widget.RRangeBar
+        android:id="@+id/range_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        app:r_min_range="5"/>
+
+    <LinearLayout
+        android:id="@+id/constellation_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xxhdpi"
+        android:background="@drawable/base_bg_selector"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/base_xhdpi"
+        android:paddingTop="@dimen/base_xhdpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/MainTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="星座"/>
+
+        <com.angcyo.uiview.widget.RTextView
+            android:id="@+id/constellation_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/next"
+            android:drawablePadding="@dimen/base_hdpi"
+            android:text="不限"/>
+
+    </LinearLayout>
 </LinearLayout>

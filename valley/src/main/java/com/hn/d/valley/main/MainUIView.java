@@ -5,12 +5,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
 
-import com.angcyo.library.utils.L;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ContentLayout;
@@ -21,7 +22,7 @@ import com.angcyo.uiview.github.luban.Luban;
 import com.angcyo.uiview.github.tablayout.CommonTabLayout;
 import com.angcyo.uiview.github.tablayout.TabEntity;
 import com.angcyo.uiview.github.tablayout.listener.CustomTabEntity;
-import com.angcyo.uiview.github.tablayout.listener.OnTabSelectListener;
+import com.angcyo.uiview.github.tablayout.listener.SimpleTabSelectListener;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.resources.ResUtil;
@@ -195,15 +196,29 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
         tabs.add(new TabEntity(true, mActivity.getString(R.string.nav_me_text), R.drawable.me_s, R.drawable.me_n));
         resetTabLayoutIco(tabs);
 
-        mBottomNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
+//        mBottomNavLayout.setOnTabSelectListener(new OnTabSelectListener() {
+//            @Override
+//            public void onTabSelect(int position) {
+//                changePage(position);
+//            }
+//
+//            @Override
+//            public void onTabReselect(int position) {
+//                //L.e("");
+//            }
+//        });
+        mBottomNavLayout.setOnTabSelectListener(new SimpleTabSelectListener() {
             @Override
-            public void onTabSelect(int position) {
+            public void onTabSelect(View tabView, int position) {
+                super.onTabSelect(tabView, position);
                 changePage(position);
+                scaleView(tabView.findViewById(R.id.iv_tab_icon));
             }
 
             @Override
-            public void onTabReselect(int position) {
-                L.e("");
+            public void onTabReselect(View tabView, int position) {
+                super.onTabReselect(tabView, position);
+                scaleView(tabView.findViewById(R.id.iv_tab_icon));
             }
         });
 
@@ -243,6 +258,17 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void scaleView(View view) {
+        ViewCompat.setScaleX(view, 0.5f);
+        ViewCompat.setScaleY(view, 0.5f);
+        view.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setInterpolator(new BounceInterpolator())
+                .setDuration(300)
+                .start();
     }
 
     /**

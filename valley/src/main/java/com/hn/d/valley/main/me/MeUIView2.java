@@ -11,9 +11,7 @@ import android.widget.TextView;
 
 import com.angcyo.github.utilcode.utils.AppUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
-import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.RSubscriber;
-import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
@@ -21,7 +19,6 @@ import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.R;
-import com.hn.d.valley.base.Param;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.DraftControl;
@@ -32,7 +29,6 @@ import com.hn.d.valley.main.me.sub.InviteFriendsUIDialog;
 import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.realm.RRealm;
-import com.hn.d.valley.service.NewsService;
 import com.hn.d.valley.sub.MyStatusUIView;
 import com.hn.d.valley.sub.other.FansRecyclerUIView;
 import com.hn.d.valley.sub.other.FollowersRecyclerUIView;
@@ -168,16 +164,17 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
     }
 
     private void loadCollectCount() {
-        add(RRetrofit.create(NewsService.class)
-                .collectcount(Param.buildInfoMap("uid:" + UserCache.getUserAccount()))
-                .compose(Rx.transformer(String.class))
-                .subscribe(new RSubscriber<String>() {
-                    @Override
-                    public void onSucceed(final String bean) {
-                        super.onSucceed(bean);
-                        mCollectCount = Integer.parseInt(bean);
-                    }
-                }));
+//        add(RRetrofit.create(NewsService.class)
+//                .collectcount(Param.buildInfoMap("uid:" + UserCache.getUserAccount()))
+//                .compose(Rx.transformer(String.class))
+//                .subscribe(new RSubscriber<String>() {
+//                    @Override
+//                    public void onSucceed(final String bean) {
+//                        super.onSucceed(bean);
+//                        mCollectCount = Integer.parseInt(bean);
+//                    }
+//                }));
+        mCollectCount = 0;
     }
 
     @Override
@@ -397,7 +394,8 @@ public class MeUIView2 extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItemInf
                 initItemLayout(itemInfoLayout, R.string.my_collect_tip, R.drawable.icon_collection, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mParentILayout.startIView(new MyCollectUIView());
+                        //mParentILayout.startIView(new MyCollectUIView());
+                        mParentILayout.startIView(new MyCollectDynamicStateUIView());
                     }
                 });
             }

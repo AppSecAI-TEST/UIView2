@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
+import com.angcyo.uiview.Root;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -13,11 +14,14 @@ import com.angcyo.umeng.UM;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Action;
+import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.receiver.JPushReceiver;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.realm.LoginBean;
-import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.start.service.StartService;
+import com.liulishuo.FDown;
+import com.liulishuo.FDownListener;
+import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -102,7 +106,7 @@ public class LoginControl {
             }
 
             @Override
-            public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+            public void onComplete(SHARE_MEDIA share_media, int i, final Map<String, String> map) {
                 if (isCancel) {
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginCancel();
@@ -130,7 +134,45 @@ public class LoginControl {
                     Action.wechat_register();
                 }
 
-                login(map.get("openid"), map.get("name"), map.get("profile_image_url"), sex);
+                final String finalSex = sex;
+                FDown.build(map.get("profile_image_url"))
+                        .setFullPath(Root.getAppInternalFolder("image") + "/" + Root.createFileName(".jpg"))
+                        .download(new FDownListener() {
+                            @Override
+                            public void onCompleted(BaseDownloadTask task) {
+                                super.onCompleted(task);
+                                OssHelper.uploadAvatorImg(task.getPath())
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+                                            @Override
+                                            public void onSucceed(String s) {
+                                                login(map.get("openid"), map.get("name"), s, finalSex);
+                                            }
+
+                                            @Override
+                                            public void onError(int code, String msg) {
+
+                                            }
+
+                                            @Override
+                                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                super.onEnd(isError, isNoNetwork, e);
+                                                if (isError) {
+                                                    if (mOnLoginListener != null) {
+                                                        mOnLoginListener.onLoginError(e);
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+
+                            @Override
+                            public void onError(BaseDownloadTask task, Throwable e) {
+                                super.onError(task, e);
+                                if (mOnLoginListener != null) {
+                                    mOnLoginListener.onLoginError(e);
+                                }
+                            }
+                        });
             }
 
             @Override

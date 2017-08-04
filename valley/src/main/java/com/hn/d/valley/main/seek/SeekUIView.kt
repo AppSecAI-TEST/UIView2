@@ -42,7 +42,16 @@ import com.hn.d.valley.widget.HnGlideImageView
  */
 class SeekUIView : SingleRecyclerUIView<SeekBean>() {
 
-    private var sex = 0//	否	int	1-男 2-女 0-全部【默认0】
+    //private var sex = 0//	否	int	1-男 2-女 0-全部【默认0】
+    private val defaultFilterBean = FilterBean("1", "0", "100", "0", "0")
+
+    private fun resetFilter() {
+        defaultFilterBean.distance = "1"
+        defaultFilterBean.age_start = "0"
+        defaultFilterBean.age_end = "100"
+        defaultFilterBean.sex = "0"
+        defaultFilterBean.c = "0"
+    }
 
     override fun getTitleBar(): TitleBarPattern {
         return super.getTitleBar()
@@ -51,25 +60,42 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                 .addRightItem(TitleBarPattern.TitleBarItem(R.drawable.top_shaixuan_icon) {
                     UIBottomItemDialog.build()
                             .addItem("全部") {
-                                sex = 0
-                                scrollToTop()
-                                loadData()
+                                resetFilter()
+                                defaultFilterBean.sex = "0"
+                                refreshData()
                             }
                             .addItem("只看男") {
-                                sex = 1
-                                scrollToTop()
-                                loadData()
+                                resetFilter()
+                                defaultFilterBean.sex = "1"
+                                refreshData()
                             }
                             .addItem("只看女") {
-                                sex = 2
-                                scrollToTop()
-                                loadData()
+                                resetFilter()
+                                defaultFilterBean.sex = "2"
+                                refreshData()
                             }
                             .addItem("自定义") {
-                                scrollToTop()
+                                mParentILayout.startIView(SeekFilterUIView(defaultFilterBean) { filterBean ->
+                                    //                                    filterBean.copy(distance = defaultFilterBean.distance,
+//                                            age_start = defaultFilterBean.age_start,
+//                                            age_end = defaultFilterBean.age_end,
+//                                            sex = defaultFilterBean.sex,
+//                                            c = defaultFilterBean.c)
+                                    defaultFilterBean.distance = filterBean.distance
+                                    defaultFilterBean.age_start = filterBean.age_start
+                                    defaultFilterBean.age_end = filterBean.age_end
+                                    defaultFilterBean.sex = filterBean.sex
+                                    defaultFilterBean.c = filterBean.c
+                                    refreshData()
+                                })
                             }
                             .showDialog(mParentILayout)
                 })
+    }
+
+    private fun refreshData() {
+        scrollToTop()
+        loadData()
     }
 
     override fun hasDecoration(): Boolean {
@@ -208,8 +234,11 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
         add(RRetrofit.create(ShowService::class.java)
                 .list(Param.buildMap("page:$page",
                         "lng:${getLongitude()}", "lat:${getLatitude()}",
-                        "distance:1",
-                        "sex:$sex"))
+                        "distance:${defaultFilterBean.distance}",
+                        "age_start:${defaultFilterBean.age_start}",
+                        "age_end:${defaultFilterBean.age_end}",
+                        "c:${defaultFilterBean.c}",
+                        "sex:${defaultFilterBean.sex}"))
                 .compose(Rx.transformerList(SeekBean::class.java))
                 .doOnSubscribe { showLoadView() }
                 .subscribe(object : BaseSingleSubscriber<List<SeekBean>>() {
@@ -217,6 +246,7 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                         super.onSucceed(bean)
                         if (bean.isEmpty() && "1".equals(page, true)) {
                             showEmptyLayout()
+                            onUILoadDataFinish()
                         } else {
                             onUILoadDataEnd(bean)
                         }

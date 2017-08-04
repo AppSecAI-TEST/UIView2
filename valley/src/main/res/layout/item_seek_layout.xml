@@ -41,7 +41,7 @@
                     style="@style/MainTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:tag="魅力值:%1$s"
+                    android:tag="魅力:%1$s"
                     android:textSize="12sp"
                     tools:text="2551"/>
 
@@ -50,8 +50,8 @@
                     style="@style/MainTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/base_xhdpi"
-                    android:tag="附近排名:%1$s"
+                    android:layout_marginStart="@dimen/base_xxhdpi"
+                    android:tag="人气:%1$s"
                     android:textSize="12sp"
                     tools:text="2551"/>
             </LinearLayout>
