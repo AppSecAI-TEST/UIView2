@@ -113,7 +113,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/base_bg_selector"
+                    android:background="@null"
                     android:clickable="true"
                     android:gravity="end"
                     android:text="@string/tel_register"/>
@@ -132,7 +132,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/base_bg_selector"
+                    android:background="@null"
                     android:clickable="true"
                     android:gravity="start"
                     android:text="@string/other_login_tip"/>

@@ -38,7 +38,6 @@ import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AutoLoginControl;
-import com.hn.d.valley.control.LoginControl;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.nim.RNim;
@@ -81,7 +80,7 @@ public class LoginUIView2 extends BaseContentUIView {
     /**
      * 跳转至主页
      */
-    private static void jumpToMain(Activity activity) {
+    public static void jumpToMain(Activity activity) {
         //replaceIView(new MainUIView(500));
         HnUIMainActivity.launcher(activity, true);
 //        HnMainActivity.launcher(mActivity);

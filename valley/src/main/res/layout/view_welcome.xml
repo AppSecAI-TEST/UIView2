@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_signup">
+    android:background="@drawable/bg_signup_2">
+
+    <ImageView
+        android:id="@+id/logo_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/logo_login"/>
 
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/tip_view"
@@ -15,13 +24,16 @@
         android:textColor="@color/base_white"
         android:textSize="32sp"/>
 
+    <!--第三方登录-->
     <LinearLayout
+        android:id="@+id/login_control_layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/base_120dpi">
+        android:paddingBottom="@dimen/base_120dpi"
+        tools:visibility="gone">
 
         <com.angcyo.uiview.widget.RTextView
             android:id="@+id/qq_view"
@@ -67,7 +79,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/base_bg_selector"
+                android:background="@null"
                 android:clickable="true"
                 android:gravity="end"
                 android:text="@string/tel_register"/>
@@ -84,11 +96,11 @@
                 android:id="@+id/login_view"
                 style="@style/WhiteColorTextButtonStyle"
                 android:layout_width="0dp"
-                android:gravity="start"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/base_bg_selector"
+                android:background="@null"
                 android:clickable="true"
+                android:gravity="start"
                 android:text="@string/have_account"/>
 
 
@@ -96,4 +108,139 @@
 
     </LinearLayout>
 
+    <!--帐号登录-->
+    <com.angcyo.uiview.widget.RSoftInputLayout
+        android:id="@+id/login_control_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7"/>
+
+            <!--登录 注册部分-->
+            <LinearLayout
+                android:id="@+id/control_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/base_xxxhdpi"
+                android:layout_marginRight="@dimen/base_xxxhdpi"
+                android:layout_marginTop="@dimen/base_xhdpi"
+                android:clipChildren="false"
+                android:orientation="vertical">
+
+                <com.angcyo.uiview.widget.ExEditText
+                    android:id="@+id/phone_view"
+                    style="@style/PhoneEditStyle"
+                    android:background="@drawable/frame_s"
+                    android:drawableStart="@drawable/cell_phone_icon"
+                    android:hint="@string/phone_number_hint"
+                    android:textColorHint="@color/white_hint"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_xhdpi">
+
+                    <com.angcyo.uiview.widget.ExEditText
+                        android:id="@+id/password_view"
+                        style="@style/PasswordEditStyle"
+                        android:background="@drawable/frame_s"
+                        android:drawableStart="@drawable/password_icon"
+                        android:hint="@string/password_hint"
+                        android:imeOptions="actionDone"
+                        android:textColorHint="@color/white_hint"/>
+
+                    <com.hn.d.valley.widget.HnPasswordSeeBox
+                        android:id="@+id/show_password_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/base_ldpi"
+                        android:button="@drawable/password_checkbox_selector"
+                        android:contentDescription="no_color"/>
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_xhdpi">
+
+                    <TextView
+                        android:id="@+id/forget_view"
+                        style="@style/WhiteColorTextButtonStyle"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/forget_password"/>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/login_view2"
+                    style="@style/MainColorRoundButtonStyle"
+                    android:layout_marginTop="@dimen/base_xxhdpi"
+                    android:background="@drawable/base_white_bg_round_selector"
+                    android:text="@string/login_button"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/base_xxxhdpi"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/register_view2"
+                    style="@style/WhiteColorTextButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:gravity="end"
+                    android:text="@string/tel_register"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/base_xxhdpi"
+                    android:layout_marginStart="@dimen/base_xxhdpi"
+                    android:scaleType="center"
+                    android:src="@drawable/gap"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/other_login_view"
+                    style="@style/WhiteColorTextButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:clickable="true"
+                    android:gravity="start"
+                    android:text="@string/other_login_tip"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"/>
+
+        </LinearLayout>
+
+    </com.angcyo.uiview.widget.RSoftInputLayout>
 </RelativeLayout>
