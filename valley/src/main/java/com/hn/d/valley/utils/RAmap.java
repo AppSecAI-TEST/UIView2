@@ -95,6 +95,7 @@ public class RAmap {
     };
     private AMapLocationClientOption locationOption = new AMapLocationClientOption();
     private Context mContext;
+    private AmapBean lastAmapBean = null;
 
     private RAmap(Context context) {
         mContext = context;
@@ -219,6 +220,8 @@ public class RAmap {
         return null;
     }
 
+    //------------------------------------无关内容---------------------------------------
+
     /**
      * 根据定位结果返回定位信息的字符串
      *
@@ -272,8 +275,6 @@ public class RAmap {
         return sb.toString();
     }
 
-    //------------------------------------无关内容---------------------------------------
-
     public synchronized static String formatUTC(long l, String strPattern) {
         if (TextUtils.isEmpty(strPattern)) {
             strPattern = "yyyy-MM-dd HH:mm:ss";
@@ -297,6 +298,8 @@ public class RAmap {
         L.d("开始定位...");
         amap.startLocationInner(autoStop);
     }
+
+    //---------------------------------------------------------------------------
 
     /**
      * 默认的定位参数
@@ -323,8 +326,6 @@ public class RAmap {
 
         return mOption;
     }
-
-    //---------------------------------------------------------------------------
 
     public void queryLatLngAddress(final LatLng latlng, final Action1<AmapBean> action1) {
         RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(latlng.latitude, latlng.longitude),
@@ -420,4 +421,30 @@ public class RAmap {
         locationClient.setLocationListener(locationListener);
     }
 
+    public AmapBean getLastAmapBean() {
+        if (lastAmapBean == null) {
+            lastAmapBean = RAmap.getLastLocation();
+        }
+        return lastAmapBean;
+    }
+
+    public Double getLatitude() {
+        if (lastAmapBean == null) {
+            lastAmapBean = RAmap.getLastLocation();
+        }
+        if (lastAmapBean == null) {
+            return 116.32715863448607;
+        }
+        return lastAmapBean.getLatitude();
+    }
+
+    public Double getLongitude() {
+        if (lastAmapBean == null) {
+            lastAmapBean = RAmap.getLastLocation();
+        }
+        if (lastAmapBean == null) {
+            return 39.990912172420714;
+        }
+        return lastAmapBean.getLongitude();
+    }
 }

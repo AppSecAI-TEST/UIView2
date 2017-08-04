@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/base_xxhdpi"
+    android:layout_marginStart="@dimen/base_xxhdpi"
+    android:layout_marginTop="@dimen/base_xxhdpi"
+    android:minHeight="400dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp"
+    app:contentPadding="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/avatar"
+                style="@style/ImageStyle"/>
+
+            <TextView
+                android:id="@+id/msg"
+                style="@style/SingleWhiteTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/base_xxxhdpi"
+                android:background="@drawable/base_left_tip_shape"
+                android:padding="@dimen/base_hdpi"
+                android:visibility="gone"
+                tools:text="我要添加你为好友...."/>
+
+            <TextView
+                android:id="@+id/show_distance_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="@dimen/base_ldpi"
+                android:background="@drawable/base_dark_round_little"
+                android:drawableLeft="@drawable/location_xiuchang_xiao"
+                android:padding="@dimen/base_mdpi"
+                android:textColor="@color/base_white"
+                android:textSize="9sp"
+                tools:text="1km"/>
+
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/base_100dpi">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/base_xhdpi">
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/username"
+                    style="@style/NameTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="爱宠物的默默"/>
+
+                <com.hn.d.valley.widget.HnGenderView
+                    android:id="@+id/grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_ldpi"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/base_ldpi"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/fans_count_view"
+                        style="@style/MainTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        tools:text="粉丝值"/>
+
+                    <TextView
+                        android:id="@+id/charm_view"
+                        style="@style/MainTextStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/base_xxxhdpi"
+                        android:textSize="12sp"
+                        android:visibility="visible"
+                        tools:text="魅力值"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--语音介绍布局-->
+            <LinearLayout
+                android:id="@+id/voice_control_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:background="@drawable/base_left_round_selector"
+                android:gravity="center_vertical"
+                android:minWidth="@dimen/base_80dpi"
+                android:orientation="horizontal"
+                android:padding="@dimen/base_ldpi"
+                android:visibility="invisible"
+                tools:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/voice_play_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/voice_playing_blue"/>
+
+                <com.angcyo.uiview.widget.RTextView
+                    android:id="@+id/voice_time_view"
+                    style="@style/MainTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/base_ldpi"
+                    android:tag="%1$s″"
+                    tools:text="13"/>
+
+            </LinearLayout>
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

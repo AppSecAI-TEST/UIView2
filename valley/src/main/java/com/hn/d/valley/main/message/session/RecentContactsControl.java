@@ -9,7 +9,6 @@ import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.library.utils.L;
 import com.angcyo.uiview.github.swipe.RBaseMenuAdapter;
 import com.angcyo.uiview.github.swipe.recyclerview.Closeable;
@@ -37,13 +36,13 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.helper.TeamNotificationHelper;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
-import com.hn.d.valley.main.message.attachment.GiftReceiveMsg;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
@@ -52,17 +51,13 @@ import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.OnlineVideoForwardAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCard;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
-import com.hn.d.valley.main.message.attachment.RechargeMsg;
 import com.hn.d.valley.main.message.attachment.RechargeMsgAttachment;
 import com.hn.d.valley.main.message.attachment.RedPacketAttachment;
-import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
-import com.hn.d.valley.main.message.attachment.RefundMsg;
 import com.hn.d.valley.main.message.attachment.RefundMsgAttachment;
 import com.hn.d.valley.main.message.attachment.ShareNewsAttachment;
 import com.hn.d.valley.main.message.attachment.SystemPushAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalAttachment;
 import com.hn.d.valley.main.message.attachment.WithDrawalFailAttachment;
-import com.hn.d.valley.main.message.attachment.WithDrawalFailMsg;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
@@ -89,6 +84,9 @@ import java.util.List;
 import io.realm.Realm;
 import rx.functions.Action0;
 import rx.functions.Action1;
+
+import static com.hn.d.valley.helper.TeamNotificationHelper.buildGiftReceiveMsgNotification;
+import static com.hn.d.valley.helper.TeamNotificationHelper.buildGrabedMsgNotification;
 
 /**
  * Created by angcyo on 2016-12-25.
@@ -501,25 +499,14 @@ public class RecentContactsControl {
             }
         } else if (attachment instanceof PersonalCardAttachment) {
             PersonalCard card = ((PersonalCardAttachment) attachment).getPersonalCard();
-            if (card != null) {
+            if (card != null && !TextUtils.isEmpty(card.getMsg())) {
                 return card.getMsg();
             }
             return "[名片]";
         } else if (attachment instanceof RedPacketAttachment) {
             return "红包消息";
         } else if (attachment instanceof GrabedMsgAttachment) {
-            NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-            GrabedMsgAttachment msgAttachment = (GrabedMsgAttachment) attachment;
-            RedPacketGrabedMsg grabedMsg = msgAttachment.getGrabedMsg();
-            if (grabedMsg.getOwner() == (grabedMsg.getGraber()) && UserCache.getUserAccount().equals(grabedMsg.getOwner() + "")) {
-                return mContext.getString(R.string.text_get_redpacket_myself) + mContext.getString(R.string.text_redpacket);
-            }else if (UserCache.getUserAccount().equals(grabedMsg.getOwner() + "")) {
-                return String.format(mContext.getString(R.string.text_get_your), userInfoCache.getUserDisplayName(grabedMsg.getGraber() + "")) + mContext.getString(R.string.text_redpacket);
-            }else if (UserCache.getUserAccount().equals(grabedMsg.getGraber() + "")) {
-                return String.format(mContext.getString(R.string.text_you_already_get), userInfoCache.getUserDisplayName(grabedMsg.getOwner() + "")) + mContext.getString(R.string.text_redpacket);
-            } else {
-                return String.format(mContext.getString(R.string.text_two_user_already_get),userInfoCache.getUserDisplayName(grabedMsg.getGraber() + ""), userInfoCache.getUserDisplayName(grabedMsg.getOwner() + ""))+ mContext.getString(R.string.text_redpacket);
-            }
+            return buildGrabedMsgNotification(mContext,(GrabedMsgAttachment) attachment);
         } else if (attachment instanceof HotSpotInfoAttachment) {
             return ((HotSpotInfoAttachment) attachment).getHotSpotInfo().getMsg();
         } else if (attachment instanceof DynamicDetailAttachment) {
@@ -543,14 +530,8 @@ public class RecentContactsControl {
         } else if (attachment instanceof RechargeMsgAttachment) {
             return ((RechargeMsgAttachment)attachment).getRechargeMsg().getMsg();
         } else if (attachment instanceof GiftReceiveAttachment) {
-            GiftReceiveMsg msg = ((GiftReceiveAttachment)attachment).getGiftReceiveMsg();
-            if (recent.getSessionType() == SessionTypeEnum.P2P) {
-                return String.format("送你 %s", msg.getGift_info().getName());
-            }else if (recent.getSessionType() == SessionTypeEnum.Team) {
-                NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
-                return String.format("%s 送 %s  %s", userInfoCache.getUserDisplayName(recent.getFromAccount())
-                        , userInfoCache.getUserDisplayName(msg.getTo_uid()), msg.getGift_info().getName());
-            }
+            String msg = buildGiftReceiveMsgNotification(recent, (GiftReceiveAttachment) attachment);
+            if (msg != null) return msg;
         } else if (attachment instanceof ShareNewsAttachment) {
             return "[分享资讯]" + ((ShareNewsAttachment) attachment).getNewsMsg().getTitle();
         } else if (attachment instanceof OnlineVideoForwardAttachment) {
@@ -558,6 +539,7 @@ public class RecentContactsControl {
         }
         return "[自定义消息]";
     }
+
 
     public static class RecentContactsInfo {
 

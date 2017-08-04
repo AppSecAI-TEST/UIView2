@@ -44,4 +44,18 @@ public interface ShowService {
      */
     @POST("show/detail")
     Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
+
+
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * lng	是	string	当前经度
+     * lat	是	string	当前纬度
+     * page	否	int	第几页【默认1】
+     * limit	否	int	每页显示的数量【默认20】
+     */
+    @POST("recommend/match")
+    Observable<ResponseBody> match(@QueryMap Map<String, String> map);
+
+
 }

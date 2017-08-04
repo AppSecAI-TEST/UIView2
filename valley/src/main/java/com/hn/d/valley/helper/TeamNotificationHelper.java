@@ -1,13 +1,23 @@
 package com.hn.d.valley.helper;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
+import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.cache.TeamDataCache;
+import com.hn.d.valley.cache.UserCache;
+import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
+import com.hn.d.valley.main.message.attachment.GiftReceiveMsg;
+import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
+import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.netease.nimlib.sdk.msg.attachment.NotificationAttachment;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.team.constant.TeamAllMuteModeEnum;
 import com.netease.nimlib.sdk.team.constant.TeamFieldEnum;
 import com.netease.nimlib.sdk.team.constant.TeamTypeEnum;
@@ -125,6 +135,18 @@ public class TeamNotificationHelper {
 
         StringBuilder sb = new StringBuilder();
         String selfName = getTeamMemberDisplayName(fromAccount);
+
+
+        // 二维码扫描加群
+        if (extension != null && extension.size()== 2) {
+            if (extension.get("extend_type").equals("join_group")) {
+                sb.append(buildMemberListString(a.getTargets(), fromAccount));
+                sb.append("通过扫描");
+                sb.append(getTeamMemberDisplayName((String)extension.get("username")))
+                        .append("的二维码加入群聊");
+                return sb.toString();
+            }
+        }
 
         sb.append(selfName);
         sb.append("邀请 ");
@@ -272,5 +294,35 @@ public class TeamNotificationHelper {
         sb.append(a.isMute() ? "禁言" : "解除禁言");
 
         return sb.toString();
+    }
+
+
+    @NonNull
+    public static String buildGrabedMsgNotification(Context mContext , GrabedMsgAttachment attachment) {
+        NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+        GrabedMsgAttachment msgAttachment = attachment;
+        RedPacketGrabedMsg grabedMsg = msgAttachment.getGrabedMsg();
+        if (grabedMsg.getOwner() == (grabedMsg.getGraber()) && UserCache.getUserAccount().equals(grabedMsg.getOwner() + "")) {
+            return mContext.getString(R.string.text_get_redpacket_myself) + mContext.getString(R.string.text_redpacket);
+        }else if (UserCache.getUserAccount().equals(grabedMsg.getOwner() + "")) {
+            return String.format(mContext.getString(R.string.text_get_your), userInfoCache.getUserDisplayName(grabedMsg.getGraber() + "")) + mContext.getString(R.string.text_redpacket);
+        }else if (UserCache.getUserAccount().equals(grabedMsg.getGraber() + "")) {
+            return String.format(mContext.getString(R.string.text_you_already_get), userInfoCache.getUserDisplayName(grabedMsg.getOwner() + "")) + mContext.getString(R.string.text_redpacket);
+        } else {
+            return String.format(mContext.getString(R.string.text_two_user_already_get),userInfoCache.getUserDisplayName(grabedMsg.getGraber() + ""), userInfoCache.getUserDisplayName(grabedMsg.getOwner() + ""))+ mContext.getString(R.string.text_redpacket);
+        }
+    }
+
+    @Nullable
+    public static String buildGiftReceiveMsgNotification(RecentContact recent, GiftReceiveAttachment attachment) {
+        GiftReceiveMsg msg = attachment.getGiftReceiveMsg();
+        if (recent.getSessionType() == SessionTypeEnum.P2P) {
+            return String.format("送你 %s", msg.getGift_info().getName());
+        }else if (recent.getSessionType() == SessionTypeEnum.Team) {
+            NimUserInfoCache userInfoCache = NimUserInfoCache.getInstance();
+            return String.format("%s 送 %s  %s", userInfoCache.getUserDisplayName(recent.getFromAccount())
+                    , userInfoCache.getUserDisplayName(msg.getTo_uid()), msg.getGift_info().getName());
+        }
+        return null;
     }
 }

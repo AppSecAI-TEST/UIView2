@@ -11,6 +11,7 @@ import com.hn.d.valley.main.message.uinfo.DynamicFuncManager2;
 import com.hn.d.valley.main.other.KLJUIView;
 import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
+import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -55,6 +56,11 @@ public class SessionHelper {
 
             }
         };
+    }
+
+    public static void sendTextMsg(String sessionId , String text){
+        IMMessage msg = MessageBuilder.createTextMessage(sessionId, SessionTypeEnum.P2P, text);
+        ChatUIView2.msgService().sendMessage(msg,true);
     }
 
     public interface GroupHeadAitListener {

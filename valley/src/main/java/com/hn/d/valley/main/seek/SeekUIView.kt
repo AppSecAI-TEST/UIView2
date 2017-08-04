@@ -24,7 +24,6 @@ import com.hn.d.valley.R
 import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.SeekBean
-import com.hn.d.valley.bean.realm.AmapBean
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.service.ShowService
 import com.hn.d.valley.sub.other.SingleRecyclerUIView
@@ -134,7 +133,8 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
         }
         mViewHolder.click(R.id.xiehou_view) {
             //邂逅,打招呼
-            T_.info("测试....")
+            //T_.info("测试....")
+            mParentILayout.startIView(MatchUIView().setEnableClipMode(ClipMode.CLIP_BOTH, it))
         }
 
         checkDetail()
@@ -158,6 +158,9 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                             }
                         } else {
                             controlLayout.let {
+                                if (it.visibility == View.VISIBLE) {
+                                    return@let
+                                }
                                 ViewCompat.setTranslationY(it, (-it.measuredHeight).toFloat())
                                 it.visibility = View.VISIBLE
                                 it.animate()
@@ -241,40 +244,11 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
         RAmap.stopLocation()
     }
 
-    private var lastAmapBean: AmapBean? = null
-
-    private fun getLastAmapBean(): AmapBean? {
-        if (lastAmapBean == null) {
-            lastAmapBean = RAmap.getLastLocation()
-        }
-        return lastAmapBean
-    }
-
-    private fun getLatitude(): Double {
-        if (lastAmapBean == null) {
-            lastAmapBean = RAmap.getLastLocation()
-        }
-        if (lastAmapBean == null) {
-            return 116.32715863448607
-        }
-        return lastAmapBean!!.latitude
-    }
-
-    private fun getLongitude(): Double {
-        if (lastAmapBean == null) {
-            lastAmapBean = RAmap.getLastLocation()
-        }
-        if (lastAmapBean == null) {
-            return 39.990912172420714
-        }
-        return lastAmapBean!!.longitude
-    }
-
     override fun onUILoadData(page: String?) {
         super.onUILoadData(page)
         add(RRetrofit.create(ShowService::class.java)
                 .list(Param.buildMap("page:$page",
-                        "lng:${getLongitude()}", "lat:${getLatitude()}",
+                        "lng:${RAmap.instance().longitude}", "lat:${RAmap.instance().latitude}",
                         "distance:${defaultFilterBean.distance}",
                         "age_start:${defaultFilterBean.age_start}",
                         "age_end:${defaultFilterBean.age_end}",
