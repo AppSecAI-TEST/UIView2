@@ -1,5 +1,6 @@
 package com.hn.d.valley.nim;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.utils.Json;
 import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
@@ -38,6 +39,7 @@ public class CustomAttachParser implements MsgAttachmentParser {
     // 根据解析到的消息类型，确定附件对象类型
     @Override
     public MsgAttachment parse(String json) {
+        L.d("CustomAttachParser  json : " + json);
         CustomAttachment attachment = null;
         try {
             JSONObject object = new JSONObject(json);

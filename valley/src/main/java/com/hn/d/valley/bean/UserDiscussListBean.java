@@ -604,6 +604,11 @@ public class UserDiscussListBean {
             this.reward_cnt = reward_cnt;
         }
 
+        public void addRewrdCnt(int value) {
+            this.reward_cnt = Integer.valueOf(reward_cnt) + value + "";
+
+        }
+
         public static class OriginalInfo {
 
             boolean isForwardInformation = false;

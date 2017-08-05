@@ -41,6 +41,7 @@ import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.file.FileUtil;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
@@ -53,6 +54,7 @@ import com.hn.d.valley.cache.NimUserInfoCache;
 import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.emoji.IEmoticonSelectedListener;
 import com.hn.d.valley.emoji.MoonUtil;
+import com.hn.d.valley.emoji.StickerUtil;
 import com.hn.d.valley.main.avchat.AVChatDelegete;
 import com.hn.d.valley.main.avchat.AVChatFloatEvent;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
@@ -292,9 +294,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             @Override
             public void onStickerSelected(String categoryName, String stickerName) {
 //                T_.show(categoryName + ": " + stickerName);
-                CustomExpressionMsg expressionMsg = new CustomExpressionMsg(FileUtil.getFileNameNoEx(stickerName));
-                expressionMsg.setType(StickerEnum.Companion.valueOfType(categoryName).getValue());
-                CustomExpressionAttachment attachment = new CustomExpressionAttachment(expressionMsg);
+                CustomExpressionAttachment attachment = new CustomExpressionAttachment(StickerUtil.stickerSelected(categoryName,stickerName));
                 IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "[动画表情]", attachment);
                 sendMessage(message);
             }

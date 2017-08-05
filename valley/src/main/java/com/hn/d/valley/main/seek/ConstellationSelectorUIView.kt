@@ -45,6 +45,7 @@ class ConstellationSelectorUIView(val default: Int, val onSelector: (String) -> 
 
     override fun initRefreshLayout() {
         super.initRefreshLayout()
+        mRefreshLayout.setPlaceholderView()
         mRefreshLayout.setRefreshDirection(RefreshLayout.BOTH)
         mRefreshLayout.setNotifyListener(false)
     }

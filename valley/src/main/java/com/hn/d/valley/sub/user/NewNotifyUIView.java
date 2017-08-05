@@ -37,8 +37,10 @@ import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.message.attachment.DynamicMsg;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
+import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsg;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
+import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.main.message.slide.ISlideHelper;
 import com.hn.d.valley.main.message.slide.holder.OneSlideViewHolder;
 import com.hn.d.valley.main.message.slide.holder.SlideViewHolder;
@@ -320,6 +322,10 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 msg = customBean.getMsg();
                 avatar = customBean.getAvatar();
                 created = String.valueOf(customBean.getCreated());
+            } else if (attachment instanceof GrabedMsgAttachment) {
+                RedPacketGrabedMsg grabedMsg = ((GrabedMsgAttachment) attachment).getGrabedMsg();
+                msg = grabedMsg.getMsg();
+                type = grabedMsg.getExtend_type();
             }
 
             RImageView mediaImageView = holder.v(R.id.media_image_view);

@@ -9,6 +9,8 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.bean.UserDiscussListBean;
 import com.hn.d.valley.control.UserDiscussItemControl;
 
+import rx.subscriptions.CompositeSubscription;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -33,7 +35,7 @@ public abstract class UserDiscussAdapter extends RExBaseAdapter<String, UserDisc
     @Override
     protected void onBindDataView(RBaseViewHolder holder, int posInData, UserDiscussListBean.DataListBean dataBean) {
         super.onBindDataView(holder, posInData, dataBean);
-        UserDiscussItemControl.initItem(holder, dataBean, null, getILayout(), false, "1".equalsIgnoreCase(dataBean.getAllow_download()));
+        UserDiscussItemControl.initItem(holder, dataBean, new CompositeSubscription(), null, getILayout(), false, "1".equalsIgnoreCase(dataBean.getAllow_download()));
     }
 
     protected abstract ILayout getILayout();

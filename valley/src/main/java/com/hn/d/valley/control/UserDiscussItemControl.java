@@ -2,6 +2,7 @@ package com.hn.d.valley.control;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -72,8 +73,8 @@ import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.ReadListUserUIView;
 import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hn.d.valley.sub.user.DynamicType;
-import com.hn.d.valley.sub.user.PublishDynamicUIView2;
 import com.hn.d.valley.sub.user.ReportUIView;
+import com.hn.d.valley.sub.user.dialog.DynamicShareDialog;
 import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnExTextView;
 import com.hn.d.valley.widget.HnGenderView;
@@ -135,7 +136,7 @@ public class UserDiscussItemControl {
                                 UserDiscussListBean.DataListBean dataListBean,
                                 final Action1<UserDiscussListBean.DataListBean> commandAction, final Action1<Boolean> itemRootAction,
                                 final ILayout iLayout, boolean isInDetail) {
-        initItem(holder, dataListBean, itemRootAction, iLayout, isInDetail, "1".equalsIgnoreCase(dataListBean.getAllow_download()));
+        initItem(holder, dataListBean, subscription, itemRootAction, iLayout, isInDetail, "1".equalsIgnoreCase(dataListBean.getAllow_download()));
 //        bindAttentionItemView(subscription, holder, dataListBean, commandAction);
         bindAttentionItemView2(subscription, holder, dataListBean, commandAction, iLayout, isInDetail);//更多按钮初始化
         bindFavItemView(subscription, holder, dataListBean, isInDetail);//收藏按钮初始化
@@ -148,6 +149,7 @@ public class UserDiscussItemControl {
      * @see com.hn.d.valley.main.home.UserDiscussAdapter
      */
     public static void initItem(final RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
+                                @NonNull final CompositeSubscription subscription,
                                 final Action1<Boolean> itemRootAction, final ILayout iLayout, boolean isInDetail, final boolean allowDownload) {
         LikeUserInfoBean user_info = dataListBean.getUser_info();
 
@@ -341,17 +343,21 @@ public class UserDiscussItemControl {
                 @Override
                 public void onClick(View v) {
 
-                    if (dataListBean.canForward()) {
-                        if (dataListBean.isForwardInformation()) {
-                            iLayout.startIView(new PublishDynamicUIView2(HotInfoListBean.from(dataListBean.getOriginal_info())));
-                        } else if (TextUtils.isEmpty(dataListBean.uuid)) {
-                            iLayout.startIView(new PublishDynamicUIView2(dataListBean));
-                        } else {
-                            T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
-                        }
-                    } else {
-                        T_.error(holder.itemView.getResources().getString(R.string.cant_forward_tip));
-                    }
+                    iLayout.startIView(new DynamicShareDialog(dataListBean, subscription)
+                            .setCanShare(dataListBean.canForward()));
+
+
+//                    if (dataListBean.canForward()) {
+//                        if (dataListBean.isForwardInformation()) {
+//                            iLayout.startIView(new PublishDynamicUIView2(HotInfoListBean.from(dataListBean.getOriginal_info())));
+//                        } else if (TextUtils.isEmpty(dataListBean.uuid)) {
+//                            iLayout.startIView(new PublishDynamicUIView2(dataListBean));
+//                        } else {
+//                            T_.show(holder.itemView.getResources().getString(R.string.publishing_tip));
+//                        }
+//                    } else {
+//                        T_.error(holder.itemView.getResources().getString(R.string.cant_forward_tip));
+//                    }
                 }
             });
 //            }

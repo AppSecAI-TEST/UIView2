@@ -37,6 +37,7 @@ import java.util.List;
  */
 public class BillUIView extends SingleRecyclerUIView<BillRecord>{
 
+    //0全部、1充值、2提现、3红包、4消费、5打赏
     private int type = 0 ;//默认 全部
     private int lastId;
 
@@ -67,17 +68,38 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
                         loadData();
                     }
                 })
-                .addItem(getString(R.string.text_income), new View.OnClickListener() {
+                .addItem("充值", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         type = 1;
                         loadData();
                     }
                 })
-                .addItem(getString(R.string.text_outcome), new View.OnClickListener() {
+                .addItem("提现", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         type = 2;
+                        loadData();
+                    }
+                })
+                .addItem("红包", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        type = 3;
+                        loadData();
+                    }
+                })
+                .addItem("消费", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        type = 4;
+                        loadData();
+                    }
+                })
+                .addItem("打赏", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        type = 5;
                         loadData();
                     }
                 })
@@ -93,7 +115,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(WalletService.class)
-                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"type:" + type,"limit:20" ,"lastid:" + lastId))
+                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"subtype:" + type,"limit:20" ,"lastid:" + lastId))
                 .compose(Rx.transformerList(BillRecord.class))
                 .subscribe(new BaseSingleSubscriber<List<BillRecord>>() {
 

@@ -29,12 +29,14 @@ import com.hn.d.valley.bean.SeekBean
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.control.UserDiscussItemControl
 import com.hn.d.valley.control.VideoStatusInfo
+import com.hn.d.valley.main.message.gift.GiftListUIView2
 import com.hn.d.valley.main.seek.HnSeekGlideImageView
 import com.hn.d.valley.main.seek.OpenSeekUIView
 import com.hn.d.valley.service.ShowService
 import com.hn.d.valley.sub.other.SingleRecyclerUIView
 import com.hn.d.valley.utils.PhotoPager
 import com.hn.d.valley.x5.X5WebUIView
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -224,7 +226,7 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
 
                 //送礼物
                 mViewHolder.click(R.id.show_gift_view) {
-
+                    mParentILayout.startIView(GiftListUIView2(to_uid, SessionTypeEnum.P2P))
                 }
             }
         }

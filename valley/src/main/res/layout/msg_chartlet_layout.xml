@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:id="@+id/msg_image_view"
         android:layout_width="@dimen/base_90dpi"
@@ -29,10 +29,19 @@
         android:id="@+id/diceLayout"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/base_90dpi"
+        android:layout_height="wrap_content"
         >
 
     </com.hn.d.valley.widget.DiceLayout>
+
+    <com.hn.d.valley.widget.PokerLayout
+        android:id="@+id/pokerlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:horizontal_spacing="15dp"
+        app:vertical_spacing="0dp"
+        >
+    </com.hn.d.valley.widget.PokerLayout>
 
 
 </FrameLayout>

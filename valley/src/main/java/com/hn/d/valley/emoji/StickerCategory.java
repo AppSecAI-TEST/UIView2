@@ -12,7 +12,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hn.d.valley.emoji.StickerManager.CATEGORY_EXPRESSION;
 import static com.hn.d.valley.emoji.StickerManager.CATEGORY_HN;
+import static com.hn.d.valley.emoji.StickerManager.DICE;
+import static com.hn.d.valley.emoji.StickerManager.POCKER;
 
 public class StickerCategory implements Serializable {
     private static final long serialVersionUID = -81692490861539040L;
@@ -104,8 +107,27 @@ public class StickerCategory implements Serializable {
     }
 
     public List<StickerItem> loadStickerData() {
-        String[] meanArray = name.equals(CATEGORY_HN)?RApplication.getApp().getResources().getStringArray(R.array.hn_sticker)
-                :RApplication.getApp().getResources().getStringArray(R.array.gifsticker);
+//        String[] meanArray = name.equals(CATEGORY_HN)?RApplication.getApp().getResources().getStringArray(R.array.hn_sticker)
+//                :RApplication.getApp().getResources().getStringArray(R.array.gifsticker);
+
+        String[] meanArray = RApplication.getApp().getResources().getStringArray(R.array.gifsticker);
+        switch (name) {
+            case DICE:
+                meanArray = RApplication.getApp().getResources().getStringArray(R.array.dice_sticker);
+                break;
+            case POCKER:
+                meanArray = RApplication.getApp().getResources().getStringArray(R.array.poker_sticker);
+                break;
+            case CATEGORY_EXPRESSION:
+                meanArray = RApplication.getApp().getResources().getStringArray(R.array.gifsticker);
+                break;
+            case CATEGORY_HN:
+                meanArray = RApplication.getApp().getResources().getStringArray(R.array.hn_sticker);
+                break;
+        }
+
+//        String[] meanArray = StickerManager.getInstance().genNameArray(name);
+
         List<StickerItem> stickers = new ArrayList<>();
         AssetManager assetManager = RApplication.getApp().getResources().getAssets();
         try {

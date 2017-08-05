@@ -110,9 +110,9 @@ public class MsgViewHolderRedPacket extends MsgViewHolderBase {
         final RedPacket redPacket = pcAttachment.getRedPacket();
 
         if (isReceivedMessage()) {
-            contentContainer.setBackgroundResource(R.drawable.hongbao_bg_left);
+            contentContainer.setBackgroundResource(R.drawable.hognbao_bg_left);
         } else {
-            contentContainer.setBackgroundResource(R.drawable.hongbao_bg_right);
+            contentContainer.setBackgroundResource(R.drawable.hognbao_bg_right);
         }
 
 

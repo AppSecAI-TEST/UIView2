@@ -34,6 +34,7 @@ import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.user.DynamicType;
+import com.hn.d.valley.sub.user.PublishDynamicUIView2;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
@@ -104,6 +105,24 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
         //动态分享
         if (mDataListBean != null) {
+            //分享动态
+            mViewHolder.v(R.id.klg).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishDialog();
+                    if (!canShare) {
+                        T_.error(getString(R.string.cant_share_tip));
+                        return;
+                    }
+                    if (mDataListBean.isForwardInformation()) {
+                        mParentILayout.startIView(new PublishDynamicUIView2(HotInfoListBean.from(mDataListBean.getOriginal_info())));
+                    } else if (TextUtils.isEmpty(mDataListBean.uuid)) {
+                        mParentILayout.startIView(new PublishDynamicUIView2(mDataListBean));
+                    }
+                }
+            });
+
+
             //关注
             mViewHolder.v(R.id.follow_view).setOnClickListener(new View.OnClickListener() {
                 @Override

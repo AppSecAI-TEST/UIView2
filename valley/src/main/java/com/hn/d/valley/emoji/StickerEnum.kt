@@ -29,7 +29,12 @@ enum class StickerEnum (val type: String,val value: Int) {
     /**
      * 骰子
      */
-    DICE_EXPRESSION(DICE,2);
+    DICE_EXPRESSION(DICE,3),
+
+    /**
+     * 扑克牌
+     */
+    POCKER_EXPRESSION(POCKER,4);
 
 
     companion object {

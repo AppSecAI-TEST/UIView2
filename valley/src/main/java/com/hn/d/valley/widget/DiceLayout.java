@@ -3,8 +3,9 @@ package com.hn.d.valley.widget;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.angcyo.uiview.utils.ScreenUtil;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -37,14 +38,18 @@ public class DiceLayout extends LinearLayout {
         this.context = context;
     }
 
-    public void init(int diceCount , int[] values){
+    public void init(int diceCount , int[] values,boolean anim){
         this.diceCount = diceCount;
         this.diceValues = values;
-
-//        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        params.setLayoutDirection(HORIZONTAL);
+        removeAllViews();
+        LayoutParams params = new LayoutParams(ScreenUtil.dip2px(60),ScreenUtil.dip2px(60));
+        params.setLayoutDirection(HORIZONTAL);
         for (int i = 0 ; i < diceCount; i ++) {
-            addView(new DiceView(context).setDiceValue(values[i]));
+            addView(new DiceView(context),params);
+        }
+
+        for (int i = 0 ; i < diceCount ; i ++) {
+            ((DiceView)getChildAt(i)).setAnim(anim).setDiceValue(values[i]);
         }
 
     }
@@ -58,11 +63,6 @@ public class DiceLayout extends LinearLayout {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-//        int count = getChildCount();
-//        int width = r / diceCount;
-//        for (int i = 0 ;i < diceCount ; i ++) {
-//            layout(width * i,t,width * (1 + i),b);
-//        }
     }
 
 

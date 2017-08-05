@@ -110,5 +110,18 @@
         <item>OK</item>
     </string-array>
 
+    <string-array name="dice_sticker">
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+
+    <string-array name="poker_sticker">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+
 
 </resources>

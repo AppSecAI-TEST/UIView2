@@ -180,7 +180,7 @@ public class BillDetailUIView extends BaseItemUIView {
 
                 } else if (billRecord.getSub_type() == 3
                         || billRecord.getSub_type() == 0
-                        || billRecord.getSub_type() == 5) {
+                        || billRecord.getSub_type() == 4) {
                     // 红包
                     info_rp_detail.setItemDarkText("查看");
                     info_rp_detail.getDarkTextView().setTextColor(SkinHelper.getSkin().getThemeDarkColor());
@@ -194,6 +194,13 @@ public class BillDetailUIView extends BaseItemUIView {
                             startIView(new GrabedRDResultUIView(Long.valueOf(billRecord.getPayid())));
                         }
                     });
+                } else if (billRecord.getSub_type() == 5) {
+                    // 打赏
+                    info_transaction_type.setItemDarkText("打赏");
+                    info_rp_detail.setItemText("交易时间");
+                    info_rp_detail.setItemDarkText(TimeUtil.getDatetime(billRecord.getCreated() * 1000l));
+                    info_transaction_time.setItemText("交易信息");
+                    info_transaction_time.setItemDarkText(billRecord.getDescription());
                 }
 
                 info_transtaction_number.setItemDarkText(billRecord.getPayid());

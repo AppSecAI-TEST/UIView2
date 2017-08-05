@@ -281,7 +281,9 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                             , mDataListBean.getUser_info().getUsername(), mDataListBean.getUid(), discuss_id, new Runnable() {
                                 @Override
                                 public void run() {
-
+                                    mDataListBean.addRewrdCnt(1);
+                                    mTabLayout.updateTabTitle();
+                                    mRewardListUIView.loadData();
                                 }
                             });
                 }

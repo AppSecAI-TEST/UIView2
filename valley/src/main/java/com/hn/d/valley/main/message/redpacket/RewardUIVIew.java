@@ -184,7 +184,7 @@ public class RewardUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
 
     }
 
-    private void perfromClick(ExEditText etMoney ,WalletAccount account) {
+    private void perfromClick(ExEditText etMoney , final WalletAccount account) {
         if (TextUtils.isEmpty(etMoney.string())) {
             return;
         }
@@ -207,17 +207,21 @@ public class RewardUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewItem
             startIView(new ThirdPayUIDialog(new Action1() {
                 @Override
                 public void call(Object o) {
+                    if (action != null) {
+                        action.call();
+                    }
                     finishIView();
                 }
             },params, ThirdPayUIDialog.ALIPAY,3));
-
             return;
         }
-
 
         mParentILayout.startIView(new PayUIDialog(new Action1() {
             @Override
             public void call(Object o) {
+                if(action != null) {
+                    action.call();
+                }
                 finishIView();
             }
         },params));

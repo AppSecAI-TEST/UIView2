@@ -45,7 +45,8 @@
             android:layout_marginLeft="@dimen/base_ldpi"
             android:background="@drawable/base_bg2_selector"
             android:padding="@dimen/base_xhdpi"
-            android:src="@drawable/forwarding_pinglun"/>
+            android:src="@drawable/forwarding_pinglun"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/collect_view"
@@ -54,8 +55,8 @@
             android:layout_marginLeft="@dimen/base_ldpi"
             android:background="@drawable/base_bg2_selector"
             android:padding="@dimen/base_xhdpi"
-            android:visibility="gone"
-            android:src="@drawable/shouchang_pinglun_n"/>
+            android:src="@drawable/shouchang_pinglun_n"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/like_cnt"
@@ -127,12 +128,12 @@
                 </LinearLayout>
 
                 <View
-                    android:visibility="gone"
                     android:id="@+id/click_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/base_bg_selector"
-                    android:clickable="true"/>
+                    android:clickable="true"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
             <View
