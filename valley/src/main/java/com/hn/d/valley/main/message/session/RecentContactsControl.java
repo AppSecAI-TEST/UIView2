@@ -244,8 +244,8 @@ public class RecentContactsControl {
                 if (teamById == null) {
                     info.name = contactId + fromAccount;
                 } else {
-                    info.name = teamDataCache.getTeamName(contactId) +
-                            teamDataCache.getTeamMemberDisplayName(contactId, fromAccount);
+                    info.name = teamDataCache.getTeamName(contactId) /*+
+                            teamDataCache.getTeamMemberDisplayName(contactId, fromAccount)*/;
                     info.icoUrl = teamById.getIcon();
                 }
 

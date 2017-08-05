@@ -390,12 +390,12 @@ public class AddressBookUI2View extends BaseUIView implements RefreshLayout.OnRe
 
         String encodeInfo = RSA.encode(Param.safe(sb)).replaceAll("/", "_a").replaceAll("\\+", "_b").replaceAll("=", "_c");
         sb = new StringBuilder();
-        sb.append("【恐龙谷】")
-                .append(UserCache.getUserAccount())
-                .append("通过手机通讯录邀请你加入恐龙谷,快点击 ")
-                .append("wap.klgwl.com/user/register?spm=")
-                .append(encodeInfo)
-                .append(" 下载吧");
+//        sb.append("【恐龙谷】")
+//                .append(UserCache.getUserAccount())
+                sb.append("Hi~我发现了一个好玩的闲余时间共享社交软件，还有海量动态红包可以抢哦~快来跟我一起加入恐龙谷吧~点击")
+                .append("http://wap.klgwl.com/Downloads/share")
+//                .append(encodeInfo)
+                .append("即可下载。");
 
         RUtils.sendSMS(mActivity, sb.toString(), item.getContactsInfo().phone);
     }

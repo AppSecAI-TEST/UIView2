@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/show_empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_40dpi"
+        android:background="#F7F7F7"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi">
+
+        <com.angcyo.uiview.widget.RTextView
+            style="@style/DarkTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="秀场展示"
+            android:textColor="#666666"/>
+
+        <LinearLayout
+            android:id="@+id/show_data_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            tools:visibility="visible">
+
+            <TextView
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="("/>
+
+            <TextView
+                android:id="@+id/like_cnt"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="赞: 342"/>
+
+            <TextView
+                android:id="@+id/dislike_cnt"
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/base_xhdpi"
+                android:text="踩: 342"/>
+
+            <TextView
+                style="@style/DarkTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=")"/>
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/show_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/annotation"/>
+
+    </LinearLayout>
+
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/show_empty_text_tip"
+        style="@style/DarkTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_40dpi"
+        android:text="还未开启秀场哦~"
+        android:textColor="#666666"
+        tools:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/me_control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/show_edit_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/xiuchang_bianji"/>
+
+        <ImageView
+            android:id="@+id/show_close_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xxhdpi"
+            android:src="@drawable/xiuchang_guanbi"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/other_control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xxxhdpi"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/show_like_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/xiuchang_dianzhan_n"/>
+
+        <ImageView
+            android:id="@+id/show_dislike_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xxhdpi"
+            android:src="@drawable/xiuchang_cai_n"/>
+
+        <ImageView
+            android:id="@+id/show_gift_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/base_xxhdpi"
+            android:src="@drawable/xiuchang_songli"/>
+
+    </LinearLayout>
+
+    <com.angcyo.uiview.widget.Button
+        android:id="@+id/show_empty_button_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:layout_marginTop="@dimen/base_40dpi"
+        android:text="去开启"/>
+
+</LinearLayout>

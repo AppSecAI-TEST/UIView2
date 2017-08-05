@@ -2,6 +2,7 @@ package com.hn.d.valley.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Random;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -18,6 +19,12 @@ public class MathUtils {
 
     public static float nextFloat(float min , float max) {
         return min + ((float)Math.random() * (max - min));
+    }
+
+    public static int nextInt(int min , int max) {
+        long seed1 = System.nanoTime();
+        Random random = new Random(seed1);
+        return min + random.nextInt(max - min);
     }
 
     public static float decimal(float amount,int scale) {

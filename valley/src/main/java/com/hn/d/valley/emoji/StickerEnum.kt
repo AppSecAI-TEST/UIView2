@@ -1,7 +1,6 @@
 package com.netease.nimlib.sdk.msg.constant
 
-import com.hn.d.valley.emoji.StickerManager.CATEGORY_EXPRESSION
-import com.hn.d.valley.emoji.StickerManager.CATEGORY_HN
+import com.hn.d.valley.emoji.StickerManager.*
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -17,7 +16,6 @@ import com.hn.d.valley.emoji.StickerManager.CATEGORY_HN
 enum class StickerEnum (val type: String,val value: Int) {
     None("none",-1),
 
-
     /**
      * 红鸟表情
      */
@@ -26,7 +24,12 @@ enum class StickerEnum (val type: String,val value: Int) {
     /**
      * 恐龙谷表情
      */
-    KLG_EXPRESSION(CATEGORY_EXPRESSION,0);
+    KLG_EXPRESSION(CATEGORY_EXPRESSION,0),
+
+    /**
+     * 骰子
+     */
+    DICE_EXPRESSION(DICE,2);
 
 
     companion object {

@@ -17,7 +17,6 @@ import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter
 import com.angcyo.uiview.utils.RUtils
-import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.widget.GlideImageView
 import com.angcyo.uiview.widget.RTextView
 import com.hn.d.valley.R
@@ -25,6 +24,7 @@ import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.SeekBean
 import com.hn.d.valley.cache.UserCache
+import com.hn.d.valley.main.me.UserDetailUIView2
 import com.hn.d.valley.service.ShowService
 import com.hn.d.valley.sub.other.SingleRecyclerUIView
 import com.hn.d.valley.utils.RAmap
@@ -129,7 +129,8 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
 
         mViewHolder.click(R.id.button_view) {
             //开启秀场
-            T_.info("测试....")
+            //T_.info("测试....")
+            mParentILayout.startIView(OpenSeekUIView())
         }
         mViewHolder.click(R.id.xiehou_view) {
             //邂逅,打招呼
@@ -217,6 +218,10 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                 genderView.setGender2(dataBean.sex, DateDialog.getBirthday(dataBean.birthday), dataBean.constellation)
                 userIcoView.setImageThumbUrl(dataBean.avatar)
                 userNameView.text = dataBean.username
+
+                holder.click(R.id.card_root_layout) {
+                    mParentILayout.startIView(UserDetailUIView2(dataBean.uid).setJumpToShowDetail(true))
+                }
             }
         }
     }

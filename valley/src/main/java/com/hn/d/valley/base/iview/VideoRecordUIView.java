@@ -701,7 +701,7 @@ public class VideoRecordUIView extends UIBaseView {
                             viewHolder.tv(R.id.tip_view).setText("视频时长需要大于3秒.");
                             viewHolder.tv(R.id.ok_view).setEnabled(false);
                             viewHolder.tv(R.id.ok_view).setText("完成");
-                        } else if (item.size / 1024f > 50 * 1024) {
+                        } else if (item.size / 1024f > 6 * 1024) {
                             viewHolder.tv(R.id.tip_view).setText("视频过大,请先编辑.");
                             viewHolder.tv(R.id.ok_view).setText("编辑");
 

@@ -13,6 +13,12 @@ package com.hn.d.valley.main.message.attachment;
  */
 public class CustomExpressionMsg extends BaseCustomMsg {
 
+    /**
+     * extend : {"pokercount":"0x19,0x45,0x34,0x51,0x52"}
+     */
+
+    private String extend;
+
     public CustomExpressionMsg(String msg) {
         this.msg = msg;
         this.extend_type = CustomAttachmentType.KLGGIF_MSG;
@@ -40,5 +46,16 @@ public class CustomExpressionMsg extends BaseCustomMsg {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getExtend() {
+        return extend;
+    }
+
+    public void setExtend(String extend) {
+        this.extend = extend;
+    }
+
+    public static class ExtendBean {
     }
 }

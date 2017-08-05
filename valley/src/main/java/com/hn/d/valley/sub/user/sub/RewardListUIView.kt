@@ -88,7 +88,7 @@ class RewardListUIView(val item_id: String /*动态id*/) : SingleRecyclerUIView<
                         reset()
                         setImageResource(R.drawable.hongbao_xiao_60)
                     }
-                    giftNameView.text = "¥${dataBean.package_info.money.toFloat()}红包"
+                    giftNameView.text = "打赏¥${dataBean.package_info.money.toFloat() / 100}红包"
                 }
             }
         }

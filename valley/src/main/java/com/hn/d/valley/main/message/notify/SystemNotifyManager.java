@@ -162,6 +162,9 @@ public class SystemNotifyManager {
     private void notifyNewVisitor() {
         // 设置新的访客通知
         final UserInfoBean userInfoBean = UserCache.instance().getUserInfoBean();
+        if (userInfoBean == null) {
+            return;
+        }
         RRealm.exe(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {

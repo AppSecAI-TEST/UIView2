@@ -40,6 +40,9 @@ import com.hn.d.valley.widget.HnGlideImageView;
 import java.util.ArrayList;
 import java.util.List;
 
+import rx.Observable;
+import rx.functions.Func2;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -57,7 +60,7 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
 
     private long red_id;
     private boolean isSqureRedbag;
-    private int lastId ;
+    private String lastId = "";
 
     private TextView tv_money;
     private TextView tv_red_to_wallet;
@@ -109,25 +112,6 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
 
-        add(RRetrofit.create(RedPacketService.class)
-                .detail(Param.buildInfoMap("redid:" + red_id))
-                .compose(Rx.transformRedPacket(GrabedRDDetail.class))
-                .subscribe(new SingleRSubscriber<GrabedRDDetail>(this) {
-                    @Override
-                    protected void onResult(GrabedRDDetail bean) {
-                        if (bean == null || bean.getResult().size() == 0) {
-                            grabedRDDetail = bean;
-                            onUILoadDataFinish();
-                            mRExBaseAdapter.resetData(null);
-                            mRExBaseAdapter.notifyDataSetChanged();
-                        } else {
-                            grabedRDDetail = bean;
-                            onUILoadDataEnd(bean.getResult());
-                        }
-                    }
-
-                }));
-//
 //        add(RRetrofit.create(RedPacketService.class)
 //                .detail(Param.buildInfoMap("redid:" + red_id))
 //                .compose(Rx.transformRedPacket(GrabedRDDetail.class))
@@ -141,24 +125,46 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
 //                            mRExBaseAdapter.notifyDataSetChanged();
 //                        } else {
 //                            grabedRDDetail = bean;
+//                            onUILoadDataEnd(bean.getResult());
 //                        }
 //                    }
-//                }));
 //
-//        add(RRetrofit.create(RedPacketService.class)
-//                .resultlist(Param.buildInfoMap("redid:" + red_id,"limit:20","lastid:" + lastId))
-//                .compose(Rx.transformerList(GrabedRDDetail.ResultBean.class))
-//                .subscribe(new SingleRSubscriber<List<GrabedRDDetail.ResultBean>>(this) {
-//                    @Override
-//                    protected void onResult(List<GrabedRDDetail.ResultBean> bean) {
-//                        if (bean == null || bean.size() == 0) {
-//
-//                        } else {
-//                            lastId = bean.get(bean.size() - 1).getId();
-//                            onUILoadDataEnd(bean);
-//                        }
-//                    }
 //                }));
+
+
+        Observable detail = RRetrofit.create(RedPacketService.class)
+                .detail(Param.buildInfoMap("redid:" + red_id))
+                .compose(Rx.transformRedPacket(GrabedRDDetail.class));
+
+        Observable resultList = RRetrofit.create(RedPacketService.class)
+                .resultlist(Param.buildInfoMap("redid:" + red_id,"limit:20","lastid:" + lastId))
+                .compose(Rx.transformerList(GrabedRDDetail.ResultBean.class,0));
+
+        add(Observable.zip(detail, resultList, new Func2<GrabedRDDetail, List<GrabedRDDetail.ResultBean>, List<GrabedRDDetail.ResultBean>>() {
+            @Override
+            public List<GrabedRDDetail.ResultBean> call(GrabedRDDetail bean, List<GrabedRDDetail.ResultBean> o2) {
+                if (bean == null || bean.getResult().size() == 0) {
+                    grabedRDDetail = bean;
+                } else {
+                    grabedRDDetail = bean;
+                }
+                return o2;
+            }
+        }).subscribe(new SingleRSubscriber<List<GrabedRDDetail.ResultBean>>(this) {
+
+            @Override
+            protected void onResult(List<GrabedRDDetail.ResultBean> bean) {
+                if (bean == null || bean.size() == 0) {
+                    onUILoadDataFinish();
+                    mRExBaseAdapter.resetData(null);
+                    mRExBaseAdapter.notifyDataSetChanged();
+                } else {
+                    lastId = bean.get(bean.size() - 1).getId() + "";
+                    onUILoadDataEnd(bean);
+                }
+            }
+        }));
+
     }
 
     public List<GrabedRDDetail.ResultBean> onPreProvider() {

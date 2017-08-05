@@ -45,6 +45,12 @@ public interface ShowService {
     @POST("show/detail")
     Observable<ResponseBody> detail(@QueryMap Map<String, String> map);
 
+    @POST("show/like")
+    Observable<ResponseBody> like(@QueryMap Map<String, String> map);
+
+    @POST("show/dislike")
+    Observable<ResponseBody> dislike(@QueryMap Map<String, String> map);
+
 
     /**
      * 参数名	必选	类型	说明

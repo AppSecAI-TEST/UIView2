@@ -264,6 +264,11 @@ class MatchUIView : BaseContentUIView() {
         return "0"
     }
 
+    override fun onViewHide() {
+        super.onViewHide()
+        mAudioPlayHelper?.stopAudio()
+    }
+
     inner class FriendAdapter(context: Context) : RBaseAdapter<MatchBean>(context) {
 
         override fun getItemLayoutId(viewType: Int): Int {

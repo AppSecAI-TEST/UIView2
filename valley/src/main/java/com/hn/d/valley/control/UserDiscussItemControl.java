@@ -1552,6 +1552,7 @@ public class UserDiscussItemControl {
                     @Override
                     public void run() {
                         reward_cnt.setText(Integer.valueOf(tBean.getReward_cnt()) + 1 + "");
+                        tBean.setReward_cnt(Integer.valueOf(tBean.getReward_cnt()) + 1 + "");
                     }
                 });
             }

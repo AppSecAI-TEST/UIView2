@@ -14,6 +14,7 @@ import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
+import com.angcyo.uiview.net.RSubscriber
 import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.recycler.RRecyclerView
@@ -28,6 +29,7 @@ import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.GiftBean
 import com.hn.d.valley.bean.ListModel
+import com.hn.d.valley.bean.realm.UserInfoBean
 import com.hn.d.valley.cache.NimUserInfoCache
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.main.friend.AbsContactItem
@@ -38,6 +40,7 @@ import com.hn.d.valley.main.message.groupchat.RequestCallback
 import com.hn.d.valley.main.message.session.Container
 import com.hn.d.valley.main.message.setThumbUrl
 import com.hn.d.valley.service.RewardService
+import com.hn.d.valley.service.UserService
 import com.hn.d.valley.start.SpaceItemDecoration
 import com.hn.d.valley.sub.other.KLGCoinUIVIew
 import com.hn.d.valley.widget.HnGlideImageView
@@ -165,6 +168,18 @@ class GiftListUIView2 : BaseContentUIView {
             val avatar = userInfo.getAvatar()
             user_ico_view!!.setImageThumbUrl(avatar)
             tv_interest_desc!!.text = String.format("送给 %s", userInfo.name)
+        } else {
+            RRetrofit.create(UserService::class.java)
+                    .userInfo(Param.buildMap("to_uid:" + account))
+                    .compose(Rx.transformer(UserInfoBean::class.java))
+                    .subscribe(object : RSubscriber<UserInfoBean>() {
+                        override fun onSucceed(bean: UserInfoBean?) {
+                            if (bean != null) {
+                                user_ico_view!!.setImageThumbUrl(bean.avatar)
+                                tv_interest_desc!!.text = String.format("送给 %s", bean.username)
+                            }
+                        }
+                    })
         }
 
         tv_selected!!.text = String.format("龙币:%s", UserCache.instance().getLoginBean().getCoins())
@@ -255,13 +270,18 @@ class GiftListUIView2 : BaseContentUIView {
             holder!!.itemView.setOnClickListener {
                 sendGift(bean!!)
                 setSelectorPosition(position)
-                notifyDataSetChanged()
+//                notifyDataSetChanged()
             }
             if (isPositionSelector(position)) {
                 holder.itemView.setBackgroundResource(R.drawable.base_pink_rect_shape)
             } else {
                 holder.itemView.background = null
             }
+        }
+
+        override fun onUnSelectorPosition(viewHolder: RBaseViewHolder?, position: Int, isSelector: Boolean): Boolean {
+            viewHolder?.itemView?.background = null
+            return true
         }
 
         private fun sendGift(gift: GiftBean) {

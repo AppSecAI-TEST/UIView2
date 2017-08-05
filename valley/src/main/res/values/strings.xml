@@ -770,7 +770,7 @@
     <string name="relation_count_format">你们有%1$s位共同的关注的人</string>
     <string name="my_qrcode_tip">扫一扫上面的二维码图案, 加我好友</string>
     <string name="text_group_qrcode_tip">扫一扫上面的二维码图案,进群</string>
-    <string name="text_add_s">加入</string>
+    <string name="text_add_s">加入该群聊</string>
     <string name="text_delete_audio_introduce">是否删除语音介绍?</string>
     <string name="text_select_group_member">选择群成员</string>
     <string name="scan_result_title">扫描结果</string>

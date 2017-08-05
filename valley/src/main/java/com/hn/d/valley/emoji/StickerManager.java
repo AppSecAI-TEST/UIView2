@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.util.Log;
 
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.utils.file.FileUtil;
 
@@ -23,8 +24,10 @@ public class StickerManager {
     private final String TAG = "StickerManager";
 
     private static StickerManager instance;
+
     public static final String CATEGORY_EXPRESSION = "expression";
     public static final String CATEGORY_HN = "hn_expression";
+    public static final String DICE = "dice";
 
     /**
      * 数据源
@@ -54,6 +57,7 @@ public class StickerManager {
         // 默认贴图顺序
         stickerOrder.put(CATEGORY_EXPRESSION, 1);
         stickerOrder.put(CATEGORY_HN,2);
+        stickerOrder.put(DICE,3);
     }
 
     private boolean isSystemSticker(String category) {
@@ -108,11 +112,18 @@ public class StickerManager {
         }
 
 //        if (isSystemSticker(categoryName)) {
-            if (!stickerName.contains(".gif")) {
-                stickerName += ".gif";
+            if(categoryName.equals(DICE)) {
+                if (!stickerName.contains(".png")) {
+                    stickerName += ".png";
+                }
+            } else {
+                if (!stickerName.contains(".gif")) {
+                    stickerName += ".gif";
+                }
             }
 
             String path = "sticker/" + category.getName() + "/" + stickerName;
+        L.d("stickermanager getStickerBitmap : path " + path);
             return "file:///android_asset/" + path;
 //        }
 

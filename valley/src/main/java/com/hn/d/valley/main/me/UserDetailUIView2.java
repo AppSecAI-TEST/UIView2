@@ -63,6 +63,7 @@ import com.hn.d.valley.helper.AudioPlayHelper;
 import com.hn.d.valley.main.home.circle.CircleUIView;
 import com.hn.d.valley.main.me.setting.DynamicPermissionUIView;
 import com.hn.d.valley.main.me.setting.EditInfoUIView;
+import com.hn.d.valley.main.me.sub.ShowDetailUIView;
 import com.hn.d.valley.main.me.sub.UserDetailMoreUIView;
 import com.hn.d.valley.main.me.sub.UserInfoSubUIView;
 import com.hn.d.valley.main.message.audio.BaseAudioControl;
@@ -111,6 +112,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     boolean isFollower = false;
     LastAuthInfoBean mLastAuthInfoBean;
     int getRelationship = 0;
+    boolean isJumpToShowDetail = false;
     private TextView mCommandItemView;
     private TextView tv_chat;
     private String to_uid;
@@ -169,16 +171,16 @@ public class UserDetailUIView2 extends BaseContentUIView {
             if (userInfoBean.getIs_attention() == 1) {
                 //已关注
 //                if (userInfoBean.getIs_contact() == 1) {
-                    //是联系人
-                    tv_chat.setVisibility(View.GONE);
-                    commandView.setText(R.string.send_message);
-                    //commandView.setImageResource(R.drawable.send_message_selector);
-                    commandView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            SessionHelper.startP2PSession(iLayout, to_uid, SessionTypeEnum.P2P);
-                        }
-                    });
+                //是联系人
+                tv_chat.setVisibility(View.GONE);
+                commandView.setText(R.string.send_message);
+                //commandView.setImageResource(R.drawable.send_message_selector);
+                commandView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SessionHelper.startP2PSession(iLayout, to_uid, SessionTypeEnum.P2P);
+                    }
+                });
 //                } else {
 //                    //不是联系人
 //                    //commandView.setImageResource(R.drawable.add_contact2_selector);
@@ -477,7 +479,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
     }
 
     private void initViewPager() {
-        mViewPager.setOffscreenPageLimit(2);
+        mViewPager.setOffscreenPageLimit(4);
         mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -497,19 +499,28 @@ public class UserDetailUIView2 extends BaseContentUIView {
                     mCircleUIView.setInSubUIView(true);
                     mCircleUIView.setNeedRefresh(false);
                     return mCircleUIView;
-                } else {
+                } else if (position == 2) {
                     MyAlbumUIView myAlbumUIView = new MyAlbumUIView(mUserInfoBean.getUid());
                     myAlbumUIView.bindParentILayout(mParentILayout);
                     return myAlbumUIView;
+                } else {
+                    ShowDetailUIView showDetailUIView = new ShowDetailUIView(mUserInfoBean.getUid());
+                    showDetailUIView.bindParentILayout(mParentILayout);
+                    return showDetailUIView;
                 }
             }
 
             @Override
             public int getCount() {
-                return 3;
+                return 4;
             }
         });
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(isJumpToShowDetail ? 3 : 1);
+    }
+
+    public UserDetailUIView2 setJumpToShowDetail(boolean jumpToShowDetail) {
+        isJumpToShowDetail = jumpToShowDetail;
+        return this;
     }
 
     private void initTabLayout() {
@@ -518,6 +529,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         tabs.add(new TabEntity(getString(R.string.info)));
         tabs.add(new TabEntity(getString(R.string.status)));
         tabs.add(new TabEntity(getString(R.string.photo)));
+        tabs.add(new TabEntity("秀场"));
         TabLayoutUtil.initCommonTab(mCommonTabLayout, tabs, new OnTabSelectListener() {
             @Override
             public void onTabSelect(int position) {
@@ -534,7 +546,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         mCommonTabLayout.setTextUnselectColor(getColor(R.color.main_text_color));
         onSkinChanged(SkinHelper.getSkin());
 
-        mCommonTabLayout.setCurrentTab(1);
+        mCommonTabLayout.setCurrentTab(isJumpToShowDetail ? 3 : 1);
         TabLayoutUtil.setCommonTabDivider(mCommonTabLayout,
                 getColor(R.color.line_color),
                 LinearLayout.SHOW_DIVIDER_MIDDLE, getDimensionPixelOffset(R.dimen.base_hdpi));

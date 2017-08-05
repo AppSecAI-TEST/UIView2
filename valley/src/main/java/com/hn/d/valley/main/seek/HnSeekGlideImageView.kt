@@ -3,6 +3,8 @@ package com.hn.d.valley.main.seek
 import android.content.Context
 import android.text.TextUtils
 import android.util.AttributeSet
+import com.angcyo.uiview.kotlin.density
+import com.angcyo.uiview.utils.ScreenUtil
 import com.angcyo.uiview.widget.GlideImageView
 import com.hn.d.valley.base.oss.OssHelper
 import com.lzy.imagepicker.YImageControl
@@ -34,7 +36,11 @@ class HnSeekGlideImageView(context: Context, attributeSet: AttributeSet? = null)
                 val thumbDisplaySize = OssHelper.getThumbDisplaySize3(thumbSize[0].toFloat(), thumbSize[1].toFloat(),
                         widthSize.toFloat(), (2 * widthSize).toFloat())
 
-                setMeasuredDimension(widthSize, Math.min(thumbDisplaySize[1], 2 * widthSize))
+                if (widthSize == ScreenUtil.screenWidth) {
+                    setMeasuredDimension(widthSize, Math.max(Math.min(thumbDisplaySize[1], 2 * widthSize), 80 * density.toInt()))
+                } else {
+                    setMeasuredDimension(widthSize, Math.min(thumbDisplaySize[1], 2 * widthSize))
+                }
             }
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)

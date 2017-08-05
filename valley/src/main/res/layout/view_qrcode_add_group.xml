@@ -44,8 +44,10 @@
         <com.hn.d.valley.widget.HnButton
             android:id="@+id/tv_add_group"
             style="@style/WhiteColorTextStyle"
-            android:layout_width="@dimen/base_80dpi"
-            android:layout_height="@dimen/base_item_size"
+            android:textSize="@dimen/default_text_little_size"
+            android:padding="@dimen/base_xhdpi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/base_xhdpi_15"
             android:gravity="center"
