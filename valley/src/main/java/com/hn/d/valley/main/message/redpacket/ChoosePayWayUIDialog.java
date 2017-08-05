@@ -33,7 +33,7 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
     TextView baseDialogTitleView;
     LinearLayout baseDialogRootLayout;
     ItemInfoLayout infoAlipay;
-    ItemInfoLayout infoWechat;
+//    ItemInfoLayout infoWechat;
     ItemInfoLayout infoBalance;
 
     private PayUIDialog.Params params;
@@ -58,7 +58,7 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
         baseDialogTitleView = v(R.id.base_dialog_title_view);
         baseDialogRootLayout = v(R.id.base_dialog_root_layout);
         infoAlipay = v(R.id.info_alipay);
-        infoWechat = v(R.id.info_wechat);
+//        infoWechat = v(R.id.info_wechat);
         infoBalance = v(R.id.info_balance);
 
         ivCancel.setOnClickListener(new View.OnClickListener() {
@@ -97,8 +97,8 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
         infoAlipay.setLeftDrawableRes(R.drawable.icon_alipay_wallet);
         infoAlipay.setItemText(mActivity.getString(R.string.text_alipay));
 
-        infoWechat.setLeftDrawableRes(R.drawable.icon_wechat_wallet);
-        infoWechat.setItemText(mActivity.getString(R.string.text_wechat));
+//        infoWechat.setLeftDrawableRes(R.drawable.icon_wechat_wallet);
+//        infoWechat.setItemText(mActivity.getString(R.string.text_wechat));
 
         infoAlipay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,13 +108,13 @@ public class ChoosePayWayUIDialog extends UIIDialogImpl {
             }
         });
 
-        infoWechat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.WECHAT,params.missionType));
-                finishDialog();
-            }
-        });
+//        infoWechat.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startIView(new ThirdPayUIDialog(action,params,ThirdPayUIDialog.WECHAT,params.missionType));
+//                finishDialog();
+//            }
+//        });
 
 
     }

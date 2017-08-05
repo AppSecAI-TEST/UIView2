@@ -41,8 +41,6 @@ import com.angcyo.uiview.rsen.PlaceholderView;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
-import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.utils.file.FileUtil;
 import com.angcyo.uiview.utils.string.SingleTextWatcher;
 import com.angcyo.uiview.widget.ExEditText;
 import com.angcyo.uiview.widget.RSoftInputLayout;
@@ -58,7 +56,6 @@ import com.hn.d.valley.emoji.StickerUtil;
 import com.hn.d.valley.main.avchat.AVChatDelegete;
 import com.hn.d.valley.main.avchat.AVChatFloatEvent;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
-import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
 import com.hn.d.valley.main.message.session.CommandItemInfo;
 import com.hn.d.valley.main.message.session.CommandLayoutControl;
 import com.hn.d.valley.main.message.session.Container;
@@ -80,7 +77,6 @@ import com.netease.nimlib.sdk.media.record.RecordType;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
-import com.netease.nimlib.sdk.msg.constant.StickerEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
 import com.orhanobut.hawk.Hawk;
@@ -330,7 +326,12 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
                 L.w("表情:" + isEmojiShow + " 键盘:" + isKeyboardShow + " 高度:" + height);
                 if (isKeyboardShow) {
-                    mChatControl.scrollToEnd();
+                    post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mChatControl.scrollToEnd();
+                        }
+                    });
                     Hawk.put(Constant.KEYBOARD_HEIGHT, height);
                 }
 

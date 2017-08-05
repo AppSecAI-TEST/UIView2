@@ -147,7 +147,7 @@ public class WelcomeUIView extends BaseContentUIView {
                                             .setOkListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    PhoneUtils.call("0755-26777170");
+                                                    PhoneUtils.dial("0755-26777170");
                                                 }
                                             })
                                             .setGravity(Gravity.CENTER));

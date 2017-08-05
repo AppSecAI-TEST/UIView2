@@ -201,6 +201,8 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                                         beans.add(message);
                                     } else if (attachment instanceof DynamicMsgAttachment) {
                                         beans.add(message);
+                                    } else if (attachment instanceof GrabedMsgAttachment) {
+//                                        beans.add(message);
                                     }
                                 }
                             }
@@ -326,6 +328,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 RedPacketGrabedMsg grabedMsg = ((GrabedMsgAttachment) attachment).getGrabedMsg();
                 msg = grabedMsg.getMsg();
                 type = grabedMsg.getExtend_type();
+                int graber = grabedMsg.getGraber();
             }
 
             RImageView mediaImageView = holder.v(R.id.media_image_view);
@@ -359,7 +362,6 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                     }
                 }
             });
-
         }
 
         @Override

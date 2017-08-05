@@ -154,10 +154,10 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                 baseItemInfoLayout.setLeftDrawableRes(R.drawable.icon_alipay_wallet);
                 baseItemInfoLayout.setItemText(mActivity.getString(R.string.text_alipay));
                 break;
-            case WECHAT:
-                baseItemInfoLayout.setLeftDrawableRes(R.drawable.icon_wechat_wallet);
-                baseItemInfoLayout.setItemText(mActivity.getString(R.string.text_wechat));
-                break;
+//            case WECHAT:
+//                baseItemInfoLayout.setLeftDrawableRes(R.drawable.icon_wechat_wallet);
+//                baseItemInfoLayout.setItemText(mActivity.getString(R.string.text_wechat));
+//                break;
         }
 
 

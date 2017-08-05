@@ -1,8 +1,8 @@
 package com.hn.d.valley.control
 
-import com.angcyo.library.utils.L
 import com.angcyo.github.utilcode.utils.AppUtils
 import com.angcyo.github.utilcode.utils.FileUtils
+import com.angcyo.library.utils.L
 import com.angcyo.uiview.net.RException
 import com.angcyo.uiview.net.RRetrofit
 import com.angcyo.uiview.net.Rx
@@ -72,9 +72,9 @@ object VersionControl {
         try {
             val versionName: String? = AppUtils.getAppVersionName(ValleyApp.getApp())
             if (versionName != null) {
-                val vName = versionName.toSubFloat()
-                var dName = versionBean.version.toSubFloat()
-                versionBean.forceUpdate = versionBean.limit_version.toSubFloat() >= vName
+                val vName = versionName.toVersionFloat()
+                var dName = versionBean.version.toVersionFloat()
+                versionBean.forceUpdate = versionBean.limit_version.toVersionFloat() >= vName
 
                 if (dName > vName) {
                     //有版本更新
@@ -131,7 +131,7 @@ object VersionControl {
         }
     }
 
-    fun String.toSubFloat(): Float {
+    fun String.toVersionFloat(): Float {
         if (this.isEmpty()) {
             return 0f
         }

@@ -59,14 +59,14 @@
                 android:id="@+id/info_alipay"
                 style="@style/BaseItemInfoStyle" />
 
-            <View
-                style="@style/BaseHLine"
-                android:layout_marginEnd="@dimen/base_xhdpi"
-                android:layout_marginStart="@dimen/base_xhdpi" />
+            <!--<View-->
+                <!--style="@style/BaseHLine"-->
+                <!--android:layout_marginEnd="@dimen/base_xhdpi"-->
+                <!--android:layout_marginStart="@dimen/base_xhdpi" />-->
 
-            <com.angcyo.uiview.widget.ItemInfoLayout
-                android:id="@+id/info_wechat"
-                style="@style/BaseItemInfoStyle" />
+            <!--<com.angcyo.uiview.widget.ItemInfoLayout-->
+                <!--android:id="@+id/info_wechat"-->
+                <!--style="@style/BaseItemInfoStyle" />-->
 
             <View
                 android:padding="@dimen/base_xhdpi_15"
