@@ -14,6 +14,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter
 import com.angcyo.uiview.rsen.RefreshLayout
 import com.angcyo.uiview.utils.RUtils
+import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.view.IView
 import com.angcyo.uiview.view.OnUIViewListener
 import com.hn.d.valley.R
@@ -27,6 +28,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.SeekBean
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.control.UserDiscussItemControl
+import com.hn.d.valley.control.VideoStatusInfo
 import com.hn.d.valley.main.seek.HnSeekGlideImageView
 import com.hn.d.valley.main.seek.OpenSeekUIView
 import com.hn.d.valley.service.ShowService
@@ -71,22 +73,43 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
     }
 
     override fun onEmptyData(isEmpty: Boolean) {
+        mViewHolder.v<View>(R.id.show_data_layout).visibility = View.INVISIBLE
+        mViewHolder.v<View>(R.id.show_empty_text_tip).visibility = View.VISIBLE
+        mViewHolder.v<View>(R.id.show_empty_button_tip).visibility = View.VISIBLE
+        mViewHolder.v<View>(R.id.me_control_layout).visibility = View.GONE
+        mViewHolder.v<View>(R.id.other_control_layout).visibility = View.GONE
+
+        //秀场协议
+        mViewHolder.click(R.id.show_help) {
+            mParentILayout.startIView(X5WebUIView("http://wap.klgwl.com/article/detail/MaT2UxwnMdD2Iw1-NjgwMw-- ")
+                    .setShowDefaultMenu(false))
+        }
         if (isEmpty) {
-            //秀场协议
-            mViewHolder.click(R.id.show_help) {
-                mParentILayout.startIView(X5WebUIView("http://wap.klgwl.com/article/detail/MaT2UxwnMdD2Iw1-NjgwMw-- ")
-                        .setShowDefaultMenu(false))
-            }
             if (isMe(to_uid)) {
                 mViewHolder.tv(R.id.show_empty_text_tip).text = "你还未开启秀场哦~"
+
+                //开启秀场
                 mViewHolder.click(R.id.show_empty_button_tip) {
-                    mParentILayout.startIView(OpenSeekUIView().apply {
-                        setOnUIViewListener(object : OnUIViewListener() {
-                            override fun onViewUnload(uiview: IView) {
-                                loadData()
-                            }
+                    if (needUploadShow) {
+                        mParentILayout.startIView(OpenSeekUIView().apply {
+                            setOnUIViewListener(object : OnUIViewListener() {
+                                override fun onViewUnload(uiview: IView) {
+                                    loadData()
+                                }
+                            })
                         })
-                    })
+                    } else {
+                        add(RRetrofit.create(ShowService::class.java)
+                                .open(Param.buildMap())
+                                .compose(Rx.transformer(String::class.java))
+                                .subscribe(object : BaseSingleSubscriber<String>() {
+                                    override fun onSucceed(bean: String?) {
+                                        super.onSucceed(bean)
+                                        T_.show(bean)
+                                        loadData()
+                                    }
+                                }))
+                    }
                 }
             } else {
                 mViewHolder.v<View>(R.id.show_empty_layout).visibility = View.INVISIBLE
@@ -110,6 +133,40 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
 
             if (isMe(to_uid)) {
                 mViewHolder.v<View>(R.id.me_control_layout).visibility = View.VISIBLE
+
+                //关闭秀场
+                mViewHolder.click(R.id.show_close_view) {
+                    add(RRetrofit.create(ShowService::class.java)
+                            .close(Param.buildMap())
+                            .compose(Rx.transformer(String::class.java))
+                            .subscribe(object : BaseSingleSubscriber<String>() {
+                                override fun onSucceed(bean: String?) {
+                                    super.onSucceed(bean)
+                                    T_.show(bean)
+                                    loadData()
+                                }
+                            }))
+                }
+
+                //编辑秀场
+                mViewHolder.click(R.id.show_edit_view) {
+                    mParentILayout.startIView(OpenSeekUIView().apply {
+                        if (!seekBean.isVideoEmpty) {
+                            oldVideoInfo = VideoStatusInfo(seekBean.videoThumbUrl, seekBean.videoUrl)
+                        }
+
+                        if (!seekBean.isImagesEmpty) {
+                            oldImages = RUtils.split(seekBean.images)
+                        }
+
+                        setOnUIViewListener(object : OnUIViewListener() {
+                            override fun onViewUnload(uiview: IView) {
+                                loadData()
+                            }
+                        })
+                    })
+                }
+
             } else {
                 mViewHolder.v<View>(R.id.other_control_layout).visibility = View.VISIBLE
 
@@ -229,6 +286,8 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
 
     private lateinit var seekBean: SeekBean
     private var haveVideo = false
+    /**第一次开启秀场, 需要上传资源, 第二次则不要*/
+    private var needUploadShow = true
 
     override fun onUILoadData(page: String?) {
         super.onUILoadData(page)
@@ -238,6 +297,7 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
                 .subscribe(object : BaseSingleSubscriber<SeekBean>() {
                     override fun onSucceed(bean: SeekBean?) {
                         super.onSucceed(bean)
+                        needUploadShow = bean == null || bean.isEmpty
                         if (bean != null && "1".equals(bean!!.enable, true) && !TextUtils.isEmpty(bean!!.enable)) {
                             //秀场开启了
                             seekBean = bean

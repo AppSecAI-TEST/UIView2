@@ -123,6 +123,8 @@ public class GlobalSearchUIView2 extends BaseUIView<GlobalSearch.ISearchPresente
         // 搜索变化回调
         mSearchUserAdapter.setTextChangeListener(this);
         buildSearchView();
+
+        showSoftInput(mSearchInputView);
     }
 
     protected void buildSearchView() {

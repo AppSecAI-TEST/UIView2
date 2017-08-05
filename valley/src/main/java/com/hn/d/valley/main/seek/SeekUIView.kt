@@ -17,6 +17,7 @@ import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter
 import com.angcyo.uiview.utils.RUtils
+import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.widget.GlideImageView
 import com.angcyo.uiview.widget.RTextView
 import com.hn.d.valley.R
@@ -130,7 +131,26 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
         mViewHolder.click(R.id.button_view) {
             //开启秀场
             //T_.info("测试....")
-            mParentILayout.startIView(OpenSeekUIView())
+            if (needUploadShow) {
+                mParentILayout.startIView(OpenSeekUIView())
+            } else {
+                add(RRetrofit.create(ShowService::class.java)
+                        .open(Param.buildMap())
+                        .compose(Rx.transformer(String::class.java))
+                        .subscribe(object : BaseSingleSubscriber<String>() {
+                            override fun onSucceed(bean: String?) {
+                                super.onSucceed(bean)
+                                T_.show(bean)
+                                //秀场开启了
+                                controlLayout?.let {
+                                    it.animate()
+                                            .translationY((-it.measuredHeight).toFloat())
+                                            .setDuration(300)
+                                            .start()
+                                }
+                            }
+                        }))
+            }
         }
         mViewHolder.click(R.id.xiehou_view) {
             //邂逅,打招呼
@@ -141,6 +161,9 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
         checkDetail()
     }
 
+    /**第一次开启秀场, 需要上传资源, 第二次则不要*/
+    private var needUploadShow = true
+
     private fun checkDetail() {
         val controlLayout: View = mViewHolder.v(R.id.view_control_layout) ?: return
         add(RRetrofit.create(ShowService::class.java)
@@ -149,6 +172,7 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                 .subscribe(object : BaseSingleSubscriber<SeekBean>() {
                     override fun onSucceed(bean: SeekBean?) {
                         super.onSucceed(bean)
+                        needUploadShow = bean == null || bean.isEmpty
                         if (bean != null && "1".equals(bean!!.enable, true) && !TextUtils.isEmpty(bean!!.enable)) {
                             //秀场开启了
                             controlLayout.let {

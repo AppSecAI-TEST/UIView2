@@ -1,5 +1,9 @@
 package com.hn.d.valley.bean;
 
+import android.text.TextUtils;
+
+import com.hn.d.valley.control.UserDiscussItemControl;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -219,5 +223,25 @@ public class SeekBean {
 
     public void setIs_dislike(int is_dislike) {
         this.is_dislike = is_dislike;
+    }
+
+    public boolean isVideoEmpty() {
+        return TextUtils.isEmpty(video) || "null".equalsIgnoreCase(video);
+    }
+
+    public boolean isImagesEmpty() {
+        return TextUtils.isEmpty(images) || "null".equalsIgnoreCase(images);
+    }
+
+    public boolean isEmpty() {
+        return isVideoEmpty() && isImagesEmpty();
+    }
+
+    public String getVideoThumbUrl() {
+        return UserDiscussItemControl.getVideoParams(video)[0];
+    }
+
+    public String getVideoUrl() {
+        return UserDiscussItemControl.getVideoParams(video)[1];
     }
 }

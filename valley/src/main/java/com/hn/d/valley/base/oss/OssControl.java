@@ -123,70 +123,76 @@ public class OssControl {
         if (upload == null) {
             L.d("准备上传图片:" + path);
 
-            OssHelper.checkUrl(path, new Action1<String>() {
-                @Override
-                public void call(String s) {
-                    if (TextUtils.isEmpty(s)) {
-                        if (isAvatar) {
-                            mSubscribe = OssHelper.uploadAvatorImg(path)
-                                    .subscribe(new BaseSingleSubscriber<String>() {
-                                        @Override
-                                        public void onSucceed(String s) {
-                                            String circleUrl = OssHelper.getAvatorUrl(s);
-                                            if (BuildConfig.DEBUG) {
-                                                L.i(path + " 上传成功至->" + circleUrl);
+            if (path.startsWith("http")) {
+                //已经是网络图片
+                urlMap.put(path, path);
+                succeed(path);
+            } else {
+                OssHelper.checkUrl(path, new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        if (TextUtils.isEmpty(s)) {
+                            if (isAvatar) {
+                                mSubscribe = OssHelper.uploadAvatorImg(path)
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+                                            @Override
+                                            public void onSucceed(String s) {
+                                                String circleUrl = OssHelper.getAvatorUrl(s);
+                                                if (BuildConfig.DEBUG) {
+                                                    L.i(path + " 上传成功至->" + circleUrl);
+                                                }
+                                                OssHelper.saveUrl(path, circleUrl);
+
+                                                urlMap.put(path, circleUrl);
+                                                succeed(circleUrl);
+
+                                                //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(path), path, circleUrl));
                                             }
-                                            OssHelper.saveUrl(path, circleUrl);
 
-                                            urlMap.put(path, circleUrl);
-                                            succeed(circleUrl);
-
-                                            //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(path), path, circleUrl));
-                                        }
-
-                                        @Override
-                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
-                                            super.onEnd(isError, isNoNetwork, e);
-                                            if (isError) {
-                                                mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                            @Override
+                                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                super.onEnd(isError, isNoNetwork, e);
+                                                if (isError) {
+                                                    mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                            } else {
+                                mSubscribe = OssHelper.uploadCircleImg(path)
+                                        .subscribe(new BaseSingleSubscriber<String>() {
+                                            @Override
+                                            public void onSucceed(String s) {
+                                                String circleUrl = OssHelper.getCircleUrl(s);
+                                                if (BuildConfig.DEBUG) {
+                                                    L.i(path + " 上传成功至->" + circleUrl);
+                                                }
+                                                OssHelper.saveUrl(path, circleUrl);
+
+                                                urlMap.put(path, circleUrl);
+                                                succeed(circleUrl);
+
+                                                //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(path), path, circleUrl));
+                                            }
+
+                                            @Override
+                                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                super.onEnd(isError, isNoNetwork, e);
+                                                if (isError) {
+                                                    mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
+                                                }
+                                            }
+                                        });
+                            }
                         } else {
-                            mSubscribe = OssHelper.uploadCircleImg(path)
-                                    .subscribe(new BaseSingleSubscriber<String>() {
-                                        @Override
-                                        public void onSucceed(String s) {
-                                            String circleUrl = OssHelper.getCircleUrl(s);
-                                            if (BuildConfig.DEBUG) {
-                                                L.i(path + " 上传成功至->" + circleUrl);
-                                            }
-                                            OssHelper.saveUrl(path, circleUrl);
-
-                                            urlMap.put(path, circleUrl);
-                                            succeed(circleUrl);
-
-                                            //RRealm.save(new FileUrlRealm(MD5.getStreamMD5(path), path, circleUrl));
-                                        }
-
-                                        @Override
-                                        public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
-                                            super.onEnd(isError, isNoNetwork, e);
-                                            if (isError) {
-                                                mUploadListener.onUploadFailed(e.getCode(), e.getMsg());
-                                            }
-                                        }
-                                    });
+                            if (BuildConfig.DEBUG) {
+                                L.i("图片已上传过 秒传->" + s);
+                            }
+                            urlMap.put(path, s);
+                            succeed(s);
                         }
-                    } else {
-                        if (BuildConfig.DEBUG) {
-                            L.i("图片已上传过 秒传->" + s);
-                        }
-                        urlMap.put(path, s);
-                        succeed(s);
                     }
-                }
-            });
+                });
+            }
         } else {
             if (BuildConfig.DEBUG) {
                 L.i("图片已上传过->" + upload);

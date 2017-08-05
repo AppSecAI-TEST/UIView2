@@ -51,6 +51,20 @@ public interface ShowService {
     @POST("show/dislike")
     Observable<ResponseBody> dislike(@QueryMap Map<String, String> map);
 
+    @POST("show/open")
+    Observable<ResponseBody> open(@QueryMap Map<String, String> map);
+
+    @POST("show/close")
+    Observable<ResponseBody> close(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * video	否	string	视频 【清空视频 传empty】
+     * images	是	string	图片【最多6张】【必传】【多张图片以英文,分割】
+     */
+    @POST("show/upload")
+    Observable<ResponseBody> upload(@QueryMap Map<String, String> map);
 
     /**
      * 参数名	必选	类型	说明

@@ -1538,7 +1538,7 @@ public class UserDiscussItemControl {
     private static void bindRewardItemView(final ILayout iLayout,
                                            RBaseViewHolder holder,
                                            final UserDiscussListBean.DataListBean tBean,
-                                           boolean isInDetail) {
+                                           final boolean isInDetail) {
 
         final HnItemTextView reward_cnt = holder.v(R.id.reward_cnt);
         reward_cnt.setText(tBean.getReward_cnt());
@@ -1547,14 +1547,18 @@ public class UserDiscussItemControl {
         reward_cnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showRewardDialog(iLayout,tBean.getUser_info().getAvatar()
-                        ,tBean.getUser_info().getUsername(),tBean.getUid(), tBean.getDiscuss_id(), new Runnable() {
-                    @Override
-                    public void run() {
-                        reward_cnt.setText(Integer.valueOf(tBean.getReward_cnt()) + 1 + "");
-                        tBean.setReward_cnt(Integer.valueOf(tBean.getReward_cnt()) + 1 + "");
-                    }
-                });
+                showRewardDialog(iLayout, isInDetail,
+                        tBean.getUser_info().getAvatar(),
+                        tBean.getUser_info().getUsername(),
+                        tBean.getUid(),
+                        tBean.getDiscuss_id(),
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                reward_cnt.setText(Integer.valueOf(tBean.getReward_cnt()) + 1 + "");
+                                tBean.setReward_cnt(Integer.valueOf(tBean.getReward_cnt()) + 1 + "");
+                            }
+                        });
             }
         });
     }
@@ -1563,6 +1567,7 @@ public class UserDiscussItemControl {
      * 显示打赏对话框, 在动态列表和动态详情 会被调用
      */
     public static void showRewardDialog(final ILayout iLayout,
+                                        final boolean isInDetail, //在详情页面, 打赏不更新阅读数量
                                         final String avatar,
                                         final String username,
                                         final String uid,
@@ -1572,7 +1577,9 @@ public class UserDiscussItemControl {
             @Override
             public void run() {
                 //打赏成功, 更新阅读数
-                updateDiscussReadCnt(item_id);
+                if (!isInDetail) {
+                    updateDiscussReadCnt(item_id);
+                }
                 if (onRewardSuccess != null) {
                     onRewardSuccess.run();
                 }
@@ -1585,7 +1592,7 @@ public class UserDiscussItemControl {
                 .addItem("打赏红包", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        iLayout.startIView(new RewardUIVIew(avatar,username,uid,item_id).setAction(new Action0() {
+                        iLayout.startIView(new RewardUIVIew(avatar, username, uid, item_id).setAction(new Action0() {
                             @Override
                             public void call() {
                                 onSuccess.run();

@@ -363,6 +363,7 @@ public class BaseDynamicListUIView extends SingleRecyclerUIView<CommentListBean.
                     );
                 } else {
                     tv1.setText("内容已被删.");
+                    replyControlLayout.setVisibility(View.GONE);
                 }
             }
         } else {
