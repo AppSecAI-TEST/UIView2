@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
@@ -35,10 +35,10 @@ import java.util.List;
  * 修改备注：
  * Version: 1.0.0
  */
-public class BillUIView extends SingleRecyclerUIView<BillRecord>{
+public class BillUIView extends SingleRecyclerUIView<BillRecord> {
 
     //0全部、1充值、2提现、3红包、4消费、5打赏
-    private int type = 0 ;//默认 全部
+    private int type = 0;//默认 全部
     private int lastId;
 
     @Override
@@ -115,7 +115,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(WalletService.class)
-                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount(),"subtype:" + type,"limit:20" ,"lastid:" + lastId))
+                .recordCheck(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "subtype:" + type, "limit:20", "lastid:" + lastId))
                 .compose(Rx.transformerList(BillRecord.class))
                 .subscribe(new BaseSingleSubscriber<List<BillRecord>>() {
 
@@ -134,7 +134,12 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
                     @Override
                     public void onSucceed(List<BillRecord> beans) {
                         if (beans == null || beans.size() == 0) {
-                            onUILoadDataEnd();
+                            if (mRExBaseAdapter.isItemEmpty()) {
+                                onUILoadDataEnd();
+                            } else {
+                                onUILoadDataFinish();
+                                mRExBaseAdapter.setNoMore(true);
+                            }
                         } else {
                             lastId = beans.get(beans.size() - 1).getId();
                             onUILoadDataEnd(beans);
@@ -144,7 +149,17 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
 
     }
 
-    private class BillRecordAdapter extends RExBaseAdapter<String,BillRecord,String> {
+    @Override
+    protected RecyclerView.ItemDecoration initItemDecoration() {
+        return super.createBaseItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
+    }
+
+    @Override
+    public boolean hasNext() {
+        return true;
+    }
+
+    private class BillRecordAdapter extends RExBaseAdapter<String, BillRecord, String> {
 
         public BillRecordAdapter(Context context) {
             super(context);
@@ -169,7 +184,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
                 tv_bill_moncy.setText(SpannableStringUtils.getBuilder("+" + dataBean.getMoney() / 100f)
                         .setForegroundColor(mActivity.getResources().getColor(R.color.base_red))
                         .create());
-            } else if(dataBean.getType() == 1) {
+            } else if (dataBean.getType() == 1) {
                 tv_bill_moncy.setText("-" + dataBean.getMoney() / 100f);
             }
 
@@ -181,15 +196,5 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord>{
             });
 
         }
-    }
-
-    @Override
-    protected RecyclerView.ItemDecoration initItemDecoration() {
-        return super.createBaseItemDecoration().setMarginStart(mActivity.getResources().getDimensionPixelSize(R.dimen.base_xhdpi));
-    }
-
-    @Override
-    public boolean hasNext() {
-        return true;
     }
 }
