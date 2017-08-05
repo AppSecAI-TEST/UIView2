@@ -96,13 +96,14 @@ class SeekFilterUIView(val defaultFilterBean: FilterBean, val onFilter: (FilterB
 
                 //年龄
                 val rangeBar: RRangeBar = holder.v(R.id.range_bar)
-                rangeBar.currentMinValue = defaultFilterBean.age_start!!.toInt()
-                rangeBar.currentMaxValue = defaultFilterBean.age_end!!.toInt()
+
+                rangeBar.currentMinValue = defaultFilterBean.age_start!!.toInt() * 2
+                rangeBar.currentMaxValue = defaultFilterBean.age_end!!.toInt() * 2
 
                 rangeBar.rangeListener = object : RRangeBar.OnRangeListener {
                     override fun onRangeChange(minValue: Int, maxValue: Int) {
-                        filterBean.age_start = minValue.toString()
-                        filterBean.age_end = maxValue.toString()
+                        filterBean.age_start = (minValue / 2).toString()
+                        filterBean.age_end = (maxValue / 2).toString()
                     }
 
                     override fun getProgressText(progress: Int): String {

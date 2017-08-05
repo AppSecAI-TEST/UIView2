@@ -46,12 +46,12 @@ import com.hn.d.valley.widget.HnGlideImageView
 class SeekUIView : SingleRecyclerUIView<SeekBean>() {
 
     //private var sex = 0//	否	int	1-男 2-女 0-全部【默认0】
-    private val defaultFilterBean = FilterBean("1", "0", "100", "0", "0")
+    private val defaultFilterBean = FilterBean("1", "0", "50", "0", "0")
 
     private fun resetFilter() {
         defaultFilterBean.distance = "1"
         defaultFilterBean.age_start = "0"
-        defaultFilterBean.age_end = "100"
+        defaultFilterBean.age_end = "50"
         defaultFilterBean.sex = "0"
         defaultFilterBean.c = "0"
     }
@@ -238,7 +238,7 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                 }
 
                 charmView.text = dataBean.charm
-                rankView.text = dataBean.rank.toString()
+                rankView.text = dataBean.score
                 genderView.setGender2(dataBean.sex, DateDialog.getBirthday(dataBean.birthday), dataBean.constellation)
                 userIcoView.setImageThumbUrl(dataBean.avatar)
                 userNameView.text = dataBean.username
@@ -280,7 +280,7 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                         "lng:${RAmap.instance().longitude}", "lat:${RAmap.instance().latitude}",
                         "distance:${defaultFilterBean.distance}",
                         "age_start:${defaultFilterBean.age_start}",
-                        "age_end:${defaultFilterBean.age_end}",
+                        "age_end:${if (defaultFilterBean.age_end!!.toInt() == 50) "" else defaultFilterBean.age_end}",
                         "c:${defaultFilterBean.c}",
                         "sex:${defaultFilterBean.sex}"))
                 .compose(Rx.transformerList(SeekBean::class.java))

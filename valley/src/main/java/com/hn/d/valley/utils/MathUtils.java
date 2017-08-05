@@ -2,6 +2,8 @@ package com.hn.d.valley.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -30,6 +32,18 @@ public class MathUtils {
     public static float decimal(float amount,int scale) {
         BigDecimal b = new BigDecimal(amount);
         return b.setScale(scale, RoundingMode.HALF_UP).floatValue();
+    }
+
+    public static List<Integer> buildPokers(int count) {
+        List<Integer> values = new ArrayList<>();
+        Random random = new Random(System.nanoTime());
+        while (values.size() != count) {
+            int anInt = random.nextInt(54);
+            if (!values.contains(anInt)) {
+                values.add(anInt);
+            }
+        }
+        return values;
     }
 
 }

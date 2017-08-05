@@ -54,8 +54,11 @@ public class StickerUtil {
         } else if (type == 4) {
             String count = expressionMsg.getMsg().split("_")[1];
             List<String> values = new ArrayList<>();
-            for (int i = 0 ; i < Integer.valueOf(count);i++){
-                int value = MathUtils.nextInt(1,54);
+
+            List<Integer> pokers = MathUtils.buildPokers(Integer.valueOf(count));
+
+            for (int i = 0 ; i < pokers.size();i++){
+                int value = pokers.get(i);
                 if (value < 10) {
                     values.add("0x0" + value);
                 }else {
@@ -71,5 +74,35 @@ public class StickerUtil {
         }
         return expressionMsg;
     }
+
+//    public List<Integer> buildPokers(int count) {
+//        List<Integer> values = new ArrayList<>();
+//
+//        for (int i = 0 ; i < count ; i ++) {
+//
+//            int value = MathUtils.nextInt(1,54);
+//            boolean isSame = false;
+//
+//           while (isSame) {
+//
+//               for (int k : values) {
+//                   if (value != k) {
+//                       isSame = false;
+//                   }else {
+//                       isSame = true;
+//                   }
+//               }
+//
+//               if (!isSame) {
+//                   values.add(value);
+//               }
+//
+//
+//           }
+//
+//        }
+//        return values;
+//    }
+
 
 }
