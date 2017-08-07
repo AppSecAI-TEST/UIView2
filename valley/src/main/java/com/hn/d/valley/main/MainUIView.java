@@ -165,21 +165,21 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
         switch (SkinUtils.getSkin()) {
             case SkinManagerUIView.SKIN_BLUE:
                 tabs.get(POS_MESSAGE).setTabSelectedIcon(R.drawable.message_blue_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.konglonggu_blue_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.home_blue_s).setTabUnselectedIcon(R.drawable.home_black_n);
                 tabs.get(POS_SEEK).setTabSelectedIcon(R.drawable.xunmi_blue_s).setTabUnselectedIcon(R.drawable.xunmi_black_n);
                 tabs.get(POS_ME).setTabSelectedIcon(R.drawable.me_blue_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             case SkinManagerUIView.SKIN_GREEN:
                 tabs.get(POS_MESSAGE).setTabSelectedIcon(R.drawable.message_green_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.konglonggu_green_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.home_green_s).setTabUnselectedIcon(R.drawable.home_black_n);
                 tabs.get(POS_SEEK).setTabSelectedIcon(R.drawable.xunmi_green_s).setTabUnselectedIcon(R.drawable.xunmi_black_n);
                 tabs.get(POS_ME).setTabSelectedIcon(R.drawable.me_green_s).setTabUnselectedIcon(R.drawable.me_black_n);
 
                 break;
             default:
                 tabs.get(POS_MESSAGE).setTabSelectedIcon(R.drawable.message_black_s).setTabUnselectedIcon(R.drawable.message_black_n);
-                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.konglonggu_black_s).setTabUnselectedIcon(R.drawable.konglonggu_black_n);
+                tabs.get(POS_HOME).setTabSelectedIcon(R.drawable.home_black_s).setTabUnselectedIcon(R.drawable.home_black_n);
                 tabs.get(POS_SEEK).setTabSelectedIcon(R.drawable.xunmi_black_s).setTabUnselectedIcon(R.drawable.xunmi_black_n);
                 tabs.get(POS_ME).setTabSelectedIcon(R.drawable.me_black_s).setTabUnselectedIcon(R.drawable.me_black_n);
                 break;

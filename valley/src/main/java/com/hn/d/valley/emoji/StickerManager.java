@@ -32,6 +32,7 @@ public class StickerManager {
     public static final String CATEGORY_HN = "hn_expression";
     public static final String DICE = "dice";
     public static final String POCKER = "pocker";
+    public static final String BIG_SMALL = "big";
 
     /**
      * 数据源

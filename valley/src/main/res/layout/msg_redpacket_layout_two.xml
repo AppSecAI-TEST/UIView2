@@ -72,7 +72,7 @@
             android:layout_weight="1"
             android:paddingLeft="@dimen/base_ldpi"
             android:paddingRight="@dimen/base_ldpi"
-            android:paddingTop="6dp"
+            android:paddingTop="@dimen/base_ldpi"
             android:text="@string/text_klg_redpacket"
             android:textColor="@color/main_text_color_dark" />
 

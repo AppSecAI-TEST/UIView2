@@ -34,6 +34,11 @@ public class MathUtils {
         return b.setScale(scale, RoundingMode.HALF_UP).floatValue();
     }
 
+    /**
+     * 生成 0 - 53  互不相同的 count 个数字
+     * @param count
+     * @return
+     */
     public static List<Integer> buildPokers(int count) {
         List<Integer> values = new ArrayList<>();
         Random random = new Random(System.nanoTime());

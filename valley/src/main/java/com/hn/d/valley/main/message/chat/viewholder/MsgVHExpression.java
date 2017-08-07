@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.angcyo.library.utils.L;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
@@ -30,6 +31,8 @@ import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
  */
 
 public class MsgVHExpression extends MsgViewHolderBase {
+
+    private boolean animrunning;
 
     public MsgVHExpression(BaseMultiAdapter adapter) {
         super(adapter);
@@ -61,6 +64,7 @@ public class MsgVHExpression extends MsgViewHolderBase {
         }
 
         CustomExpressionMsg expressionMsg = expressionAttachment.getExpressionMsg();
+        L.d("MsgVHExpression  ; ");
 
         if (expressionMsg.getType() == 3) {
             // 骰子
@@ -81,7 +85,7 @@ public class MsgVHExpression extends MsgViewHolderBase {
                 for (String count : split) {
                     counts[i++] = Integer.valueOf(count);
                 }
-
+                L.d("MsgVHExpression dice ; " + dicecount);
                 Map<String, Object> localExtension = message.getLocalExtension();
                 if (localExtension == null) {
                     localExtension = new HashMap<>();
@@ -90,8 +94,18 @@ public class MsgVHExpression extends MsgViewHolderBase {
                     msgService().updateIMMessage(message);
                     // 动画启动
                     diceLayout.init(split.length, counts,true);
+//                    animrunning = true;
+//                    view.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            animrunning = false;
+//                        }
+//                    },3000);
                 } else {
-                    diceLayout.init(split.length, counts,false);
+//                    if (animrunning) {
+//                        return;
+//                    }
+                    diceLayout.init(split.length, counts,true);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -111,7 +125,6 @@ public class MsgVHExpression extends MsgViewHolderBase {
                 JSONObject object = new JSONObject(extend);
                 String pokercount = object.optString("pokercount");
                 pokerLayout.init(pokercount);
-
 
             } catch (JSONException e) {
                 e.printStackTrace();

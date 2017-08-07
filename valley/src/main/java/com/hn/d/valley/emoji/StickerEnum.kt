@@ -32,9 +32,15 @@ enum class StickerEnum (val type: String,val value: Int) {
     DICE_EXPRESSION(DICE,3),
 
     /**
-     * 扑克牌
+     * 扑克牌BIG_SMALL_EXPRESSION(DIC);
      */
-    POCKER_EXPRESSION(POCKER,4);
+    POCKER_EXPRESSION(POCKER,4),
+
+    /**
+     * 比大小
+     */
+    BIG_EXPERSSION(DICE,5);
+
 
 
     companion object {

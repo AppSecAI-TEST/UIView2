@@ -71,10 +71,16 @@ public class DiceView extends android.support.v7.widget.AppCompatImageView {
     }
 
     private void init() {
-//        if (!anim) {
-//            setBackgroundResource(cover_res[diceValue - 1]);
-//            return;
-//        }
+        if (!anim) {
+            if (getBackground() != null && getBackground() instanceof AnimationDrawable) {
+                AnimationDrawable drawable = (AnimationDrawable)getBackground();
+                if (drawable.isRunning()) {
+                    return;
+                }
+            }
+            setBackgroundResource(cover_res[diceValue - 1]);
+            return;
+        }
         setBackgroundResource(R.drawable.dice_anim);
 
         final AnimationDrawable drawable = (AnimationDrawable)getBackground();
@@ -89,6 +95,7 @@ public class DiceView extends android.support.v7.widget.AppCompatImageView {
             @Override
             public void run() {
                 drawable.stop();
+                anim = false;
                 setBackgroundResource(cover_res[diceValue - 1]);
             }
         },duration);

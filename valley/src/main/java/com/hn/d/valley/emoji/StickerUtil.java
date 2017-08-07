@@ -38,6 +38,15 @@ public class StickerUtil {
         JSONObject object = new JSONObject();
         // 骰子
         if (type == 3) {
+            // 包含dice 比大小
+            if (stickerName.contains("t_dice")) {
+                String value = expressionMsg.getMsg().substring(2);
+                expressionMsg.setMsg(value);
+                expressionMsg.setType(5);
+                expressionMsg.setExtend("");
+                return expressionMsg;
+            }
+
             String count = expressionMsg.getMsg().split("_")[1];
             List<Integer> values = new ArrayList<>();
             for (int i = 0 ; i < Integer.valueOf(count);i++){
@@ -71,6 +80,8 @@ public class StickerUtil {
                 e.printStackTrace();
             }
             expressionMsg.setExtend(object.toString());
+        } else if (type == 5) {
+            // 比大小
         }
         return expressionMsg;
     }

@@ -43,7 +43,7 @@ public class PokerLayout extends ViewGroup{
         super(context, attrs);
         this.context = context;
         taArray = context.obtainStyledAttributes(R.styleable.PokerLayout);
-        w = taArray.getDimensionPixelSize(R.styleable.PokerLayout_horizontal_spacing, 40);
+        w = taArray.getDimensionPixelSize(R.styleable.PokerLayout_horizontal_spacing, 50);
         h = taArray.getDimensionPixelSize(R.styleable.PokerLayout_vertical_spacing, 0);
         taArray.recycle();
     }
