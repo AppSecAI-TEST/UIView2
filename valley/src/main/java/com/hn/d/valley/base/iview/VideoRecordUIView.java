@@ -18,6 +18,7 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.utils.L;
@@ -192,6 +193,9 @@ public class VideoRecordUIView extends UIBaseView {
         mRecordLayout = v(R.id.record_layout);
         mRecordLayout.setTextOffset(40 * density());
         mLoopRecyclerView = v(R.id.loop_recycler_view);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) v(R.id.pretty_layout).getLayoutParams();
+        params.topMargin = (int) getTitleBarHeight();
+        v(R.id.pretty_layout).setLayoutParams(params);
     }
 
     @Override
@@ -205,7 +209,7 @@ public class VideoRecordUIView extends UIBaseView {
                 .addRightItem(TitleBarPattern.buildImage(R.drawable.meiyan, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (prettyLayout.getVisibility() == View.GONE) {
+                        if (prettyLayout.getVisibility() != View.VISIBLE) {
                             animShowPrettyLayout();
                         } else {
                             animHidePrettyLayout();
@@ -615,7 +619,7 @@ public class VideoRecordUIView extends UIBaseView {
                 .withEndAction(new Runnable() {
                     @Override
                     public void run() {
-                        prettyLayout.setVisibility(View.GONE);
+                        prettyLayout.setVisibility(View.INVISIBLE);
                     }
                 })
                 .setDuration(300)
