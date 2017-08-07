@@ -33,6 +33,7 @@ import com.hn.d.valley.main.message.attachment.ShareNewsMsg;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.user.DynamicType;
@@ -67,6 +68,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
     HotInfoListBean mHotInfoListBean;
 
     boolean canShare = true;
+    OnCommandCallListener mOnCommandCallListener;
 
     public DynamicShareDialog(UserDiscussListBean.DataListBean dataListBean,
                               CompositeSubscription subscription) {
@@ -96,7 +98,56 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
         //标题
         //mViewHolder.tv(R.id.title_view).setText(getString(R.string.dynamic_share_, mDataListBean.getAuthor()));
+        if (isMe(mDataListBean.getUid())) {
+            mViewHolder.v(R.id.me_control_layout).setVisibility(View.VISIBLE);
+            mViewHolder.v(R.id.other_control_layout).setVisibility(View.GONE);
 
+            //置顶
+            initTopView();
+
+            //删除
+            mViewHolder.v(R.id.me_delete_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mSubscription.add(RRetrofit.create(DiscussService.class)
+                            .delete(Param.buildMap("discuss_id:" + mDataListBean.getDiscuss_id()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+
+                                @Override
+                                public void onSucceed(String bean) {
+                                    try {
+                                        T_.show(bean);
+                                        finishDialog();
+                                        if (mOnCommandCallListener != null) {
+                                            mOnCommandCallListener.onDynamicDelete();
+                                        }
+                                    } catch (Exception e) {
+
+                                    }
+                                }
+                            }));
+                }
+            });
+
+            //复制
+            mViewHolder.v(R.id.me_copy_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finishDialog();
+                    if (!canShare) {
+                        T_.error(getString(R.string.cant_share_tip));
+                        return;
+                    }
+                    ClipboardUtils.copyText("http://wap.klgwl.com/discuss/detail?item_id=" + mDataListBean.getDiscuss_id());
+                    T_.show(getString(R.string.copy_tip));
+                }
+            });
+
+        } else {
+            mViewHolder.v(R.id.me_control_layout).setVisibility(View.GONE);
+            mViewHolder.v(R.id.other_control_layout).setVisibility(View.GONE);
+        }
 
         //取消
         mViewHolder.v(R.id.cancel_view).setOnClickListener(new View.OnClickListener() {
@@ -334,6 +385,68 @@ public class DynamicShareDialog extends UIIDialogImpl {
     }
 
     /**
+     * 置顶
+     */
+    private void initTopView() {
+        RTextView textView = mViewHolder.v(R.id.me_top_view);
+        if ("1".equalsIgnoreCase(mDataListBean.getIs_top())) {
+            textView.setText("取消置顶");
+            textView.setTopIco(R.drawable.share_quxiaozhiding_n);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //取消置顶
+                    mSubscription.add(RRetrofit.create(DiscussService.class)
+                            .top(Param.buildMap("discuss_id:" + mDataListBean.getDiscuss_id(), "is_top:0"))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    try {
+                                        T_.show(bean);
+                                        mDataListBean.setIs_top("0");
+                                        initTopView();
+
+                                        if (mOnCommandCallListener != null) {
+                                            mOnCommandCallListener.onDynamicTop("0");
+                                        }
+                                    } catch (Exception e) {
+                                    }
+                                }
+                            }));
+                }
+            });
+        } else {
+            textView.setText("置顶");
+            textView.setTopIco(R.drawable.share_zhiding_n);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //置顶
+                    mSubscription.add(RRetrofit.create(DiscussService.class)
+                            .top(Param.buildMap("discuss_id:" + mDataListBean.getDiscuss_id(), "is_top:1"))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+                                @Override
+                                public void onSucceed(String bean) {
+                                    try {
+                                        T_.show(bean);
+                                        mDataListBean.setIs_top("1");
+                                        initTopView();
+
+                                        if (mOnCommandCallListener != null) {
+                                            mOnCommandCallListener.onDynamicTop("1");
+                                        }
+                                    } catch (Exception e) {
+                                    }
+                                }
+                            }));
+                }
+            });
+        }
+    }
+
+    /**
      * 收藏,取消收藏
      */
     private void initCollectView() {
@@ -434,5 +547,22 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 }
             });
         }
+    }
+
+    public DynamicShareDialog setOnCommandCallListener(OnCommandCallListener onCommandCallListener) {
+        mOnCommandCallListener = onCommandCallListener;
+        return this;
+    }
+
+    public interface OnCommandCallListener {
+        /**
+         * 动态置顶被调用了
+         */
+        void onDynamicTop(String top);
+
+        /**
+         * 动态被删除了
+         */
+        void onDynamicDelete();
     }
 }

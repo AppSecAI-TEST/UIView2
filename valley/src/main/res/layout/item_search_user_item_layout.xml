@@ -281,8 +281,9 @@
                 android:id="@+id/command_item_view"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/base_xhdpi_"
                 android:background="@drawable/base_bg2_selector"
-                android:paddingStart="@dimen/base_xhdpi"
+                android:padding="@dimen/base_xhdpi"
                 android:src="@drawable/more_dongtai"/>
 
         </LinearLayout>

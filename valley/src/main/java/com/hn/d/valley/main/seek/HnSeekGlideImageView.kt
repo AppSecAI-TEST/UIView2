@@ -33,7 +33,7 @@ class HnSeekGlideImageView(context: Context, attributeSet: AttributeSet? = null)
 //                var heightSize = MeasureSpec.getSize(heightMeasureSpec)
 //                val heightMode = MeasureSpec.getMode(heightMeasureSpec)
 
-                val thumbDisplaySize = OssHelper.getThumbDisplaySize3(thumbSize[0].toFloat(), thumbSize[1].toFloat(),
+                val thumbDisplaySize = getThumbDisplaySize3(thumbSize[0].toFloat(), thumbSize[1].toFloat(),
                         widthSize.toFloat(), (2 * widthSize).toFloat())
 
                 if (widthSize == ScreenUtil.screenWidth) {
@@ -45,5 +45,32 @@ class HnSeekGlideImageView(context: Context, attributeSet: AttributeSet? = null)
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         }
+    }
+
+    fun getThumbDisplaySize3(srcWidth: Float, srcHeight: Float, maxWidth: Float, maxHeight: Float): IntArray {
+        val size = IntArray(2)
+        val TARGET_WIDTH = maxWidth
+        val TARGET_HEIGHT = maxHeight
+
+        var scale = 1f
+        if (srcWidth > srcHeight) {
+            //宽图
+            if (srcWidth > TARGET_HEIGHT) {
+                scale = TARGET_HEIGHT / srcWidth
+            } else {
+                scale = TARGET_WIDTH / srcWidth
+            }
+        } else {
+            //高图
+            if (srcHeight > TARGET_HEIGHT) {
+                scale = TARGET_HEIGHT / srcHeight
+            } else {
+                scale = TARGET_WIDTH / srcWidth
+            }
+        }
+
+        size[0] = (srcWidth * scale).toInt()
+        size[1] = (srcHeight * scale).toInt()
+        return size
     }
 }

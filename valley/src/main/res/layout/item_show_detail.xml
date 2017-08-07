@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <com.hn.d.valley.main.seek.HnSeekGlideImageView
-        android:id="@+id/image_view"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"/>
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/play_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/play"
-        android:visibility="invisible"/>
+        <com.hn.d.valley.main.seek.HnSeekGlideImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"/>
 
-</FrameLayout>
+        <ImageView
+            android:id="@+id/play_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/play"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_mdpi"/>
+</LinearLayout>

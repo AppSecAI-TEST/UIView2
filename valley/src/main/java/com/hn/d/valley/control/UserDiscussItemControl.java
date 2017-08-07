@@ -1003,16 +1003,19 @@ public class UserDiscussItemControl {
         jumpToDynamicDetailUIView(iLayout, discuss_id, isForward, isInDetail, autoPlayAudio, false);
     }
 
-    public static void jumpToDynamicDetailUIView(ILayout iLayout, String discuss_id,
-                                                 boolean isForward, boolean isInDetail,
-                                                 boolean autoPlayAudio /*是否自动播放语音*/,
-                                                 boolean autoShowInputDialog /*是否自动弹出输入对话框*/) {
-        iLayout.startIView(new DynamicDetailUIView2(discuss_id)
+    public static DynamicDetailUIView2 jumpToDynamicDetailUIView(ILayout iLayout, String discuss_id,
+                                                                 boolean isForward, boolean isInDetail,
+                                                                 boolean autoPlayAudio /*是否自动播放语音*/,
+                                                                 boolean autoShowInputDialog /*是否自动弹出输入对话框*/) {
+        DynamicDetailUIView2 dynamicDetailUIView2 = new DynamicDetailUIView2(discuss_id)
                 .setAutoPlayAudio(autoPlayAudio)
-                .setAutoShowInputDialog(autoShowInputDialog));
+                .setAutoShowInputDialog(autoShowInputDialog);
+
+        iLayout.startIView(dynamicDetailUIView2);
         if (!isForward && !isInDetail) {
             updateDiscussReadCnt(discuss_id);
         }
+        return dynamicDetailUIView2;
     }
 
     public static void initVideoTimeView(TextView videoTimeView, String url) {
@@ -1158,6 +1161,11 @@ public class UserDiscussItemControl {
                                     try {
                                         T_.show(bean);
                                         tBean.setIs_top("0");
+                                        try {
+                                            commandAction.call(tBean);
+                                        } catch (Exception e) {
+
+                                        }
                                         bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
                                     } catch (Exception e) {
                                     }
@@ -1185,6 +1193,11 @@ public class UserDiscussItemControl {
                                                 try {
                                                     T_.show(bean);
                                                     tBean.setIs_top("1");
+                                                    try {
+                                                        commandAction.call(tBean);
+                                                    } catch (Exception e) {
+
+                                                    }
                                                     bindAttentionItemView2(subscription, holder, tBean, commandAction, iLayout, isInDetail);
                                                 } catch (Exception e) {
                                                 }

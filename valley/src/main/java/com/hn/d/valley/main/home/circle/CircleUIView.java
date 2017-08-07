@@ -28,6 +28,7 @@ import com.hn.d.valley.main.home.UserDiscussAdapter;
 import com.hn.d.valley.main.home.recommend.LoadStatusCallback;
 import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.MyStatusUIView;
+import com.hn.d.valley.sub.user.dialog.DynamicShareDialog;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.groupView.AutoPlayVideoControl;
 import com.hwangjr.rxbus.annotation.Subscribe;
@@ -90,7 +91,7 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
     protected RExBaseAdapter<String, UserDiscussListBean.DataListBean, String> initRExBaseAdapter() {
         return new UserDiscussAdapter(mActivity) {
             @Override
-            protected void onBindDataView(RBaseViewHolder holder, int posInData, final UserDiscussListBean.DataListBean dataBean) {
+            protected void onBindDataView(RBaseViewHolder holder, final int posInData, final UserDiscussListBean.DataListBean dataBean) {
                 //super.onBindDataView(holder, posInData, tBean);
                 UserDiscussItemControl.initItem(mSubscriptions, holder, dataBean, new Action1<UserDiscussListBean.DataListBean>() {
                     @Override
@@ -104,7 +105,19 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
 
                         UserDiscussItemControl.jumpToDynamicDetailUIView(mParentILayout,
                                 dataBean.getDiscuss_id(),
-                                false, false, false, aBoolean);
+                                false, false, false, aBoolean)
+                                .setOnCommandCallListener(new DynamicShareDialog.OnCommandCallListener() {
+                                    @Override
+                                    public void onDynamicTop(String top) {
+                                        dataBean.setIs_top(top);
+                                        notifyItemChanged(posInData);
+                                    }
+
+                                    @Override
+                                    public void onDynamicDelete() {
+                                        deleteItem(posInData);
+                                    }
+                                });
                     }
                 }, getILayout());
 

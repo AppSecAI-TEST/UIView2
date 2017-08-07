@@ -25,6 +25,7 @@ import com.angcyo.uiview.skin.ISkin;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
+import com.angcyo.uiview.view.OnUIViewListener;
 import com.angcyo.uiview.widget.RNineImageLayout;
 import com.angcyo.uiview.widget.viewpager.FadeInOutPageTransformer;
 import com.angcyo.uiview.widget.viewpager.UIPagerAdapter;
@@ -82,6 +83,8 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
      * 红包领取数量
      */
     int redbagCount = 0;
+    boolean isDelete = false;
+    DynamicShareDialog.OnCommandCallListener mOnCommandCallListener;
     /**
      * 动态id
      */
@@ -129,8 +132,40 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
                 ;
     }
 
+    public DynamicDetailUIView2 setOnCommandCallListener(DynamicShareDialog.OnCommandCallListener onCommandCallListener) {
+        mOnCommandCallListener = onCommandCallListener;
+        return this;
+    }
+
     private void showShareDialog() {
-        startIView(new DynamicShareDialog(mDataListBean, mSubscriptions).setCanShare(mDataListBean != null && mDataListBean.canForward()));
+        startIView(new DynamicShareDialog(mDataListBean, mSubscriptions)
+                .setCanShare(mDataListBean != null && mDataListBean.canForward())
+                .setOnCommandCallListener(new DynamicShareDialog.OnCommandCallListener() {
+                    @Override
+                    public void onDynamicTop(String top) {
+                        if (mOnCommandCallListener != null) {
+                            mOnCommandCallListener.onDynamicTop(top);
+                        }
+                    }
+
+                    @Override
+                    public void onDynamicDelete() {
+                        isDelete = true;
+                        if (mOnCommandCallListener != null) {
+                            mOnCommandCallListener.onDynamicDelete();
+                        }
+                    }
+                })
+                .setOnUIViewListener(new OnUIViewListener() {
+                    @Override
+                    public void onViewUnload(IView uiview) {
+                        super.onViewUnload(uiview);
+                        if (isDelete) {
+                            finishIView();
+                        }
+                    }
+                })
+        );
     }
 
     @NonNull
