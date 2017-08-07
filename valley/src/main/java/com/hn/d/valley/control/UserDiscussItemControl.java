@@ -254,40 +254,15 @@ public class UserDiscussItemControl {
         tagsNameTextView.setVisibility(View.GONE);//不需要标签啦, 星期一 2017-6-26
 
         //红包id
-        String hotPackageId = null;
-        try {
-            hotPackageId = dataListBean.getPackage_id();
-            holder.v(R.id.hot_package_view).setVisibility(TextUtils.isEmpty(hotPackageId) ? View.INVISIBLE : View.VISIBLE);
-            if ((BuildConfig.DEBUG /*|| BuildConfig.SHOW_DEBUG*/) && !TextUtils.isEmpty(hotPackageId)) {
-                OpenRedPacketUIDialog.grabRedBag(Long.valueOf(hotPackageId), "{\"discuss_id\":\"" + dataListBean.getDiscuss_id() + "\"}")
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new BaseSingleSubscriber<Integer>() {
+        String hotPackageId = dataListBean.getPackage_id();
+        holder.v(R.id.hot_package_view).setVisibility(TextUtils.isEmpty(hotPackageId) ? View.INVISIBLE : View.VISIBLE);
+        grabRedBag(hotPackageId, dataListBean.getDiscuss_id());
 
-                            @Override
-                            public void onSucceed(Integer beans) {
-                                switch (beans) {
-                                    case 0:
-                                        L.e("抢红包:SUCCESS");
-                                        break;
-                                    case 5:
-                                        L.e("抢红包:已经抢过");
-                                        break;
-                                    case 7:
-                                        L.e("抢红包:已经被抢光");
-                                        break;
-                                    case 8:
-                                        L.e("抢红包:没有权限");
-                                        break;
-                                    default:
-                                        L.e("抢红包:失败" + beans);
-                                        break;
-                                }
-                            }
-                        });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        //转发动态红包id
+        if (isForwardDynamic(dataListBean)) {
+            String hotPackageId2 = dataListBean.getOriginal_info().getPackage_id();
+            holder.v(R.id.forward_hot_package_view).setVisibility(TextUtils.isEmpty(hotPackageId2) ? View.INVISIBLE : View.VISIBLE);
+            grabRedBag(hotPackageId2, dataListBean.getDiscuss_id());
         }
 
         //图片视频处理
@@ -369,8 +344,8 @@ public class UserDiscussItemControl {
         //转发的动态处理
 //        TextView infoView = holder.v(R.id.copy_info_view);
 //        infoView.setVisibility(View.GONE);
-        UserDiscussListBean.DataListBean.OriginalInfo originalInfo = dataListBean.getOriginal_info();
-        if (originalInfo != null && !"0".equalsIgnoreCase(dataListBean.getShare_original_item_id())) {
+        if (isForwardDynamic(dataListBean)) {
+            UserDiscussListBean.DataListBean.OriginalInfo originalInfo = dataListBean.getOriginal_info();
             originalInfo.setForwardInformation(dataListBean.isForwardInformation());
 //            infoView.setVisibility(View.VISIBLE);
 //            String content = originalInfo.getContent();
@@ -425,6 +400,50 @@ public class UserDiscussItemControl {
             holder.v(R.id.comment_cnt).setClickable(false);//不允许评价
         }
 
+    }
+
+    public static void grabRedBag(String hotPackageId, String discuss_id) {
+        if ((BuildConfig.DEBUG /*|| BuildConfig.SHOW_DEBUG*/) && !TextUtils.isEmpty(hotPackageId)) {
+            OpenRedPacketUIDialog.grabRedBag(Long.valueOf(hotPackageId), "{\"discuss_id\":\"" + discuss_id + "\"}")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new BaseSingleSubscriber<Integer>() {
+
+                        @Override
+                        public void onSucceed(Integer beans) {
+                            switch (beans) {
+                                case 0:
+                                    L.e("抢红包:SUCCESS");
+                                    break;
+                                case 5:
+                                    L.e("抢红包:已经抢过");
+                                    break;
+                                case 7:
+                                    L.e("抢红包:已经被抢光");
+                                    break;
+                                case 8:
+                                    L.e("抢红包:没有权限");
+                                    break;
+                                default:
+                                    L.e("抢红包:失败" + beans);
+                                    break;
+                            }
+                        }
+                    });
+        }
+    }
+
+    /**
+     * 是否是转发的动态
+     */
+    private static boolean isForwardDynamic(UserDiscussListBean.DataListBean dataBean) {
+        UserDiscussListBean.DataListBean.OriginalInfo originalInfo = dataBean.getOriginal_info();
+        if (originalInfo != null &&
+                !"0".equalsIgnoreCase(dataBean.getShare_original_item_id())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -559,7 +578,7 @@ public class UserDiscussItemControl {
 
             initMediaLayout(media_type, medias,
                     holder.v(R.id.forward_media_control_layout),
-                    iLayout, isInDetail, original_info.isForwardInformation(), allowDownload, "");
+                    iLayout, isInDetail, original_info.isForwardInformation(), allowDownload, original_info.getPackage_id());
         }
     }
 

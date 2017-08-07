@@ -162,7 +162,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
                         T_.error(getString(R.string.cant_share_tip));
                         return;
                     }
-                    ClipboardUtils.copyText(mDataListBean.getContent());
+                    ClipboardUtils.copyText("http://wap.klgwl.com/discuss/detail?item_id=" + mDataListBean.getDiscuss_id());
                     T_.show(getString(R.string.copy_tip));
                 }
             });

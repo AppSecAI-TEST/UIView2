@@ -497,7 +497,7 @@
     <string name="text_bind_phonenum">请先绑定手机号</string>
     <string name="send_input_tip">说点什么吧</string>
     <string name="copy">复制</string>
-    <string name="copy_tip">内容已复制至剪切板</string>
+    <string name="copy_tip">已复制至剪切板</string>
     <string name="phone_title_tip">%1$s\n可能是一个电话号码或恐龙谷ID, 你可以</string>
     <string name="text_please_bind_phone">请先绑定手机号码</string>
     <string name="text_bind_phone">绑定手机</string>

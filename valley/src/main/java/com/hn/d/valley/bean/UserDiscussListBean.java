@@ -646,6 +646,16 @@ public class UserDiscussListBean {
             private String logo;
             private String author;
 
+            private String package_id;
+
+            public String getPackage_id() {
+                return package_id;
+            }
+
+            public void setPackage_id(String package_id) {
+                this.package_id = package_id;
+            }
+
             public String getInformationVideoUrl() {
                 try {
                     String media = getMedia();

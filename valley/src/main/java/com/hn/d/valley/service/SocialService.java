@@ -3,6 +3,8 @@ package com.hn.d.valley.service;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
@@ -113,8 +115,9 @@ public interface SocialService {
      * item_id	是	int	数据id【动态id/资讯id/用户id/群id】
      * content	否	string	转发的内容
      */
+    @FormUrlEncoded
     @POST("social/forward")
-    Observable<ResponseBody> forward(@QueryMap Map<String, String> map);
+    Observable<ResponseBody> forward(@FieldMap Map<String, String> map);
 
     /**
      * 举报原因列表

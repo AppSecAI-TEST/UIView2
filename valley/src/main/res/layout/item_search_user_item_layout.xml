@@ -101,7 +101,7 @@
         </com.hn.d.valley.widget.groupView.AutoPlayVideoLayout>
 
         <!--转发动态控制-->
-        <LinearLayout
+        <com.hn.d.valley.widget.groupView.HnForwardHotPackageLayout
             android:id="@+id/forward_control_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
                     android:orientation="vertical"
                     tools:visibility="visible">
 
-                    <!--转发动态的内容-->
+                    <!--转发资讯的内容-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -192,6 +192,7 @@
                     android:visibility="gone"
                     tools:text="@string/dynamic_delete_tip"/>
 
+
             </FrameLayout>
 
             <!--<com.angcyo.uiview.widget.RTextView-->
@@ -203,7 +204,14 @@
             <!--android:visibility="gone"-->
             <!--tools:text="据说据说据说据说据说据说据说据说据说据说据说据说"/>-->
 
-        </LinearLayout>
+
+            <com.hn.d.valley.widget.HotPackageView
+                android:id="@+id/forward_hot_package_view"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:visibility="invisible"/>
+
+        </com.hn.d.valley.widget.groupView.HnForwardHotPackageLayout>
 
         <TextView
             android:id="@+id/address"

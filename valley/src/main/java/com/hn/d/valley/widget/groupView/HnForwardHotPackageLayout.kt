@@ -12,7 +12,7 @@ import com.hn.d.valley.R
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
- * 类的描述：广场红包视图自动布局控制
+ * 类的描述：转发红包视图自动布局控制
  * 创建人员：Robi
  * 创建时间：2017/07/26 13:49
  * 修改人员：Robi
@@ -20,7 +20,7 @@ import com.hn.d.valley.R
  * 修改备注：
  * Version: 1.0.0
  */
-class HnHotPackageLayout(context: Context, attributeSet: AttributeSet? = null) : FrameLayout(context, attributeSet) {
+class HnForwardHotPackageLayout(context: Context, attributeSet: AttributeSet? = null) : FrameLayout(context, attributeSet) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -55,7 +55,7 @@ class HnHotPackageLayout(context: Context, attributeSet: AttributeSet? = null) :
             }
         }
         val mediaImageView: View? = v(R.id.media_image_view)//显示视频缩略图的视图
-        val hotPackageView: View? = v(R.id.hot_package_view)//红包提示视图
+        val hotPackageView: View? = v(R.id.forward_hot_package_view)//红包提示视图
         if (mediaImageView != null && hotPackageView != null) {
             if (hotPackageView.visibility == View.VISIBLE) {
                 getLocationInParent(mediaImageView, mediaRect)
