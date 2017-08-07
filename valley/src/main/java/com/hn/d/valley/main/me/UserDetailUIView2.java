@@ -372,6 +372,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         tv_chat = mViewHolder.v(R.id.tv_chat);
         initTabLayout();
         mViewPager = mViewHolder.v(R.id.view_pager);
+        mViewPager.setParentUIView(this);
         mViewPager.setBackgroundColor(Color.WHITE);
 
         stickLayout.setOnScrollListener(new StickLayout.OnScrollListener() {
