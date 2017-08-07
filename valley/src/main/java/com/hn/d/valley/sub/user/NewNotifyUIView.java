@@ -289,7 +289,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         }
 
         @Override
-        protected void onBindDataView(RBaseViewHolder holder, int posInData, IMMessage dataBean) {
+        protected void onBindDataView(final RBaseViewHolder holder, final int posInData, IMMessage dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
             String media = "", media_type = "", item_id = "", msg = "", created = "", avatar = "",type = "";
             MsgAttachment attachment = dataBean.getAttachment();
@@ -353,12 +353,25 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 @Override
                 public void onClick(View v) {
                     //startIView(new DynamicDetailUIView2(customBean.getItem_id()));
-                    //资讯
-                    if ("news".equals(finalType)) {
-                        startIView(new InformationDetailUIView(finalItem_id));
-                    } else if("discuss".equals(finalType)) {
-                        // 动态
-                        UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false, false);
+                    if (isInEditModel()) {
+                        final CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
+                        setSelectorPosition(posInData, checkBox);
+                        int tag = (int) checkBox.getTag();
+                        boolean selector = isPositionSelector(posInData);
+                        if (selector) {
+                            mCheckStats.put(tag,true);
+                        } else {
+                            mCheckStats.delete(tag);
+                        }
+                        tv_selected.setText(String.format(getString(R.string.text_already_selected_item),mCheckStats.size()));
+                    } else {
+                        //资讯
+                        if ("news".equals(finalType)) {
+                            startIView(new InformationDetailUIView(finalItem_id));
+                        } else if("discuss".equals(finalType)) {
+                            // 动态
+                            UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false, false);
+                        }
                     }
                 }
             });
@@ -426,6 +439,12 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             selectNum.setText(getString(R.string.text_edit));
             mNotifyAdapter.slideClose();
         }
+    }
+
+    /**是否处于编辑模式*/
+    private boolean isInEditModel() {
+        TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
+        return getString(R.string.cancel).equals(selectNum.getText().toString());
     }
 
 }
