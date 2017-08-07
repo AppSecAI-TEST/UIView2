@@ -334,11 +334,17 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
         last_id = "";
         hasNext = true;
         onCancel();//刷新数据,取消之前的加载更多请求
+        if (mOnUIViewListener != null) {
+            mOnUIViewListener.onViewLoadData(String.valueOf(page));
+        }
         onUILoadData(getPage());
     }
 
     public void loadMoreData() {
         page++;
+        if (mOnUIViewListener != null) {
+            mOnUIViewListener.onViewLoadData(String.valueOf(page));
+        }
         onUILoadData(getPage());
     }
 
@@ -419,6 +425,9 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
             isEmptyData = true;
         } else {
             isEmptyData = false;
+            if (mOnUIViewListener != null) {
+                mOnUIViewListener.onViewLoadDataSuccess();
+            }
         }
 
         if (datas == null || datas.isEmpty()) {

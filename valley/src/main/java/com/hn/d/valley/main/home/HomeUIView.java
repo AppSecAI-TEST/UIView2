@@ -24,6 +24,7 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.view.IView;
+import com.angcyo.uiview.view.OnUIViewListener;
 import com.angcyo.uiview.view.UIIViewImpl;
 import com.angcyo.uiview.widget.EmptyView;
 import com.angcyo.uiview.widget.RTitleCenterLayout;
@@ -32,6 +33,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.iview.VideoRecordUIView;
+import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.Tag;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.TagsControl;
@@ -53,6 +55,8 @@ import java.util.List;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.functions.Action3;
+
+import static com.hn.d.valley.base.constant.Constant.POS_HOME;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -355,6 +359,14 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                 mCircleUIView = new CircleUIView(this);
                 mCircleUIView.bindParentILayout(mParentILayout);
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
+                mCircleUIView.setOnUIViewListener(new OnUIViewListener() {
+                    @Override
+                    public void onViewLoadDataSuccess() {
+                        super.onViewLoadDataSuccess();
+                        onEvent(new UpdateDataEvent(0, POS_HOME));
+                    }
+                });
+
                 mHomeLayout.startIView(mCircleUIView, new UIParam(!isFirst).setHideLastIView(true));
             } else {
                 mCircleUIView.setIsRightJumpLeft(isRightToLeft);
@@ -650,6 +662,25 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
             if (mRecommendUIView3 != null) {
                 mRecommendUIView3.scrollToTop();
                 mRecommendUIView3.loadData();
+            }
+        }
+    }
+
+    /**
+     * 更新小红点
+     */
+    public void onEvent(UpdateDataEvent event) {
+        if (event.num == 0) {
+            if (mHomeNavLayout instanceof CommonTabLayout) {
+                ((CommonTabLayout) mHomeNavLayout).hideMsg(event.position);
+            } else if (mHomeNavLayout instanceof SegmentTabLayout) {
+                ((SegmentTabLayout) mHomeNavLayout).hideMsg(event.position);
+            }
+        } else if (event.position == POS_HOME) {
+            if (mHomeNavLayout instanceof CommonTabLayout) {
+                ((CommonTabLayout) mHomeNavLayout).showDot(event.position);
+            } else if (mHomeNavLayout instanceof SegmentTabLayout) {
+                ((SegmentTabLayout) mHomeNavLayout).showDot(event.position);
             }
         }
     }

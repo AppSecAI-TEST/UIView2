@@ -11,6 +11,7 @@ import com.angcyo.umeng.UM;
 import com.example.m3b.Audio;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
+import com.github.moduth.blockcanary.BlockCanary;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
@@ -60,13 +61,13 @@ public class ValleyApp extends RApplication {
 
         UM.init(this, BuildConfig.DEBUG);
 
-//        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
 //            Takt.stock(this)
 //                    .seat(Seat.TOP_LEFT)
 //                    .play();
-//
-//            BlockCanary.install(this, new AppBlockCanaryContext()).start();
-//        }
+
+            BlockCanary.install(this, new AppBlockCanaryContext()).start();
+        }
 
         //getMainLooper().setMessageLogging(new LogPrinter(Log.ERROR, "Looooooooper...."));
     }
