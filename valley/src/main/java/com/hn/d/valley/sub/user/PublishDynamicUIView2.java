@@ -943,7 +943,11 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         if (mTargetLocation == null) {
             addressView.setText(R.string.where_are_you);
         } else {
-            addressView.setText(mTargetLocation.title);
+            if (TextUtils.isEmpty(mTargetLocation.title)) {
+                addressView.setText(mTargetLocation.address);
+            } else {
+                addressView.setText(mTargetLocation.title);
+            }
         }
     }
 

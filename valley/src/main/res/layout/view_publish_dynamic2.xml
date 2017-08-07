@@ -66,11 +66,11 @@
                         android:paddingBottom="@dimen/base_ldpi"
                         android:paddingEnd="@dimen/base_hdpi"
                         android:paddingStart="@dimen/base_hdpi"
-                        android:visibility="gone"
                         android:paddingTop="@dimen/base_ldpi"
                         android:tag="# %1$s"
                         android:textColor="@color/base_mention_color"
                         android:textSize="@dimen/default_text_size10"
+                        android:visibility="gone"
                         tools:text="生活"/>
                 </RelativeLayout>
 
@@ -335,6 +335,8 @@
                     android:background="@drawable/base_tag_selector"
                     android:drawableLeft="@drawable/address_fabudongtai"
                     android:drawablePadding="@dimen/base_ldpi"
+                    android:ellipsize="middle"
+                    android:maxLength="20"
                     android:paddingBottom="@dimen/base_ldpi"
                     android:paddingEnd="@dimen/base_hdpi"
                     android:paddingStart="@dimen/base_hdpi"
