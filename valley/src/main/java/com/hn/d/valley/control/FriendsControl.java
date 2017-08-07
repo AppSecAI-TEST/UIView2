@@ -62,6 +62,7 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class FriendsControl implements RefreshLayout.OnRefreshListener {
 
+    public static final String KLGWL = "klgwl";
     RBaseViewHolder mViewHolder;
 
     RRecyclerView rRecyclerView;
@@ -190,7 +191,7 @@ public class FriendsControl implements RefreshLayout.OnRefreshListener {
                 FriendBean bean = new FriendBean();
                 bean.setDefaultMark("恐龙君");
                 bean.setUid("13");
-                bean.setAvatar("http://avatorimg.klgwl.com/13/13915.png");
+                bean.setAvatar(KLGWL);
 
                 SystemPushItem item = new SystemPushItem(bean, new Action1<FriendBean>() {
                     @Override

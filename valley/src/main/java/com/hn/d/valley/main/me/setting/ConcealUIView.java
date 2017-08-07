@@ -3,9 +3,15 @@ package com.hn.d.valley.main.me.setting;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.rx.BaseSingleSubscriber;
+import com.hn.d.valley.service.SettingService;
 import com.hn.d.valley.sub.other.BlackListUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 
@@ -50,6 +56,16 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         MsgNotifySetting.instance().enableBindContacts(isChecked);
+                        add(RRetrofit.create(SettingService.class)
+                                .set(Param.buildMap("key:look_fans", "val:" + (isChecked ? "0" : "1")))
+                                .compose(Rx.transformer(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onSucceed(String bean) {
+                                        super.onSucceed(bean);
+                                        T_.ok(bean);
+                                    }
+                                }));
                     }
                 });
                 itemInfoLayout.setItemText("不允许查看我的粉丝及关注列表");
@@ -66,6 +82,16 @@ public class ConcealUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         MsgNotifySetting.instance().enableBindContacts(isChecked);
+                        add(RRetrofit.create(SettingService.class)
+                                .set(Param.buildMap("key:hide_location", "val:" + (isChecked ? "1" : "0")))
+                                .compose(Rx.transformer(String.class))
+                                .subscribe(new BaseSingleSubscriber<String>() {
+                                    @Override
+                                    public void onSucceed(String bean) {
+                                        super.onSucceed(bean);
+                                        T_.ok(bean);
+                                    }
+                                }));
                     }
                 });
                 itemInfoLayout.setItemText("不出现在附近");

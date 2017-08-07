@@ -71,5 +71,14 @@ public interface SettingService {
      */
     @POST("app/setting")
     Observable<ResponseBody> setting(@QueryMap Map<String, String> map);
+
+    /**
+     * 参数名	必选	类型	说明
+     * uid	是	int	用户id
+     * key	是	string	look_fans-查看粉丝及关注列表; hide_location-隐藏自己的位置【0-不隐藏 1-隐藏】
+     * val	是	string	0-不允许 1-允许
+     */
+    @POST("setting/set")
+    Observable<ResponseBody> set(@QueryMap Map<String, String> map);
 }
 

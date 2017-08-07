@@ -4,13 +4,13 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import com.hn.d.valley.library.fresco.DraweeViewUtil;
-import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
+import com.hn.d.valley.library.fresco.DraweeViewUtil;
 
 import java.util.List;
 
@@ -35,7 +35,6 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
     }
 
 
-
     @Override
     public int getItemType(int position) {
         //根据position获取每个AbsFriendItem 的itemtype
@@ -53,7 +52,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
         }
         if (viewType == ItemTypes.FUNC) {
             return R.layout.item_friends_item;
-        }else if(viewType == ItemTypes.FRIEND ) {
+        } else if (viewType == ItemTypes.FRIEND) {
             return R.layout.item_friends_item;
         }
         return R.layout.item_friends_item;
@@ -82,7 +81,11 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             final FriendBean friendBean = pushItem.getFriendBean();
 
 //            iv_head.setImageUrl(friendBean.getAvatar());
-            DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
+            if (FriendsControl.KLGWL.equalsIgnoreCase(friendBean.getAvatar())) {
+                DraweeViewUtil.setDraweeViewRes(iv_head, R.drawable.konglongjun);
+            } else {
+                DraweeViewUtil.setDraweeViewHttp(iv_head, friendBean.getAvatar());
+            }
             tv_friend_name.setText(friendBean.getTrueName());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,14 +95,14 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             });
         }
 
-        if(holder.getItemViewType() == ItemTypes.FUNC) {
+        if (holder.getItemViewType() == ItemTypes.FUNC) {
             final FuncItem funcItem = (FuncItem) bean;
             iv_head.setImageResource(funcItem.getDrawableRes());
             tv_friend_name.setText(funcItem.text);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mFrendsControl.getOtherLayout() != null ){
+                    if (mFrendsControl.getOtherLayout() != null) {
                         funcItem.onFuncClick(mFrendsControl.getOtherLayout());
                     }
                 }
@@ -109,7 +112,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             ContactItem friendItem = (ContactItem) bean;
             final FriendBean friendBean = friendItem.getFriendBean();
 //            iv_head.setImageThumbUrl(friendBean.getAvatar());
-            DraweeViewUtil.setDraweeViewHttp(iv_head,friendBean.getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(iv_head, friendBean.getAvatar());
             tv_friend_name.setText(friendBean.getTrueName());
 
             iv_head.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +125,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mFrendsControl.getToUserDetailAction() != null ) {
+                    if (mFrendsControl.getToUserDetailAction() != null) {
                         mFrendsControl.getToUserDetailAction().call(friendBean);
                     }
                 }
@@ -140,13 +143,13 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
     }
 
     //实例化重写 获取数据
-    protected List<? extends AbsContactItem> onPreProvide(){
-       return null;
+    protected List<? extends AbsContactItem> onPreProvide() {
+        return null;
     }
 
     public void reset(List<FriendBean> beanList) {
         //checkNotNull
-        if(beanList == null || beanList.size() == 0) {
+        if (beanList == null || beanList.size() == 0) {
             getAllDatas().clear();
             getAllDatas().addAll(onPreProvide());
             FriendsControl.sort(getAllDatas());
@@ -157,19 +160,18 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
         getAllDatas().clear();
         //增加FUNC 类型数据
         getAllDatas().addAll(onPreProvide());
-        for(FriendBean bean : beanList){
+        for (FriendBean bean : beanList) {
             ContactItem item = new ContactItem(bean);
             getAllDatas().add(item);
         }
         FriendsControl.sort(getAllDatas());
 
-        if (mSideAction != null ) {
+        if (mSideAction != null) {
             mSideAction.call(FriendsControl.generateIndexLetter(getAllDatas()));
         }
 
         resetData(getAllDatas());
     }
-
 
 
     @Override
