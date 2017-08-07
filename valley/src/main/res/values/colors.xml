@@ -55,6 +55,7 @@
     <color name="yellow_FB9C3E">#FB9C3E</color>
     <color name="pink_fa758a">#fa758a</color>
     <color name="pink_f5b8c2">#f5b8c2</color>
-    <color name="top_background_color">#FFFCF3</color>
+    <color name="top_background_color">#FFF6F6</color>
+    <color name="top_forward_background_color">#F6EDED</color>
 
 </resources>

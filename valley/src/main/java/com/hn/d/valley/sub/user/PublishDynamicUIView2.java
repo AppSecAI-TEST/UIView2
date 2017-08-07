@@ -345,6 +345,16 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
                                     scrollToBottom(hotNumView);
                                     return;
                                 }
+                                if (Float.valueOf(hotMoneyView.string()) < 0.01f) {
+                                    T_.error("红包金额至少需要0.01元");
+                                    scrollToBottom(hotMoneyView);
+                                    return;
+                                }
+                                if (Float.valueOf(hotNumView.string()) < 1f) {
+                                    T_.error("红包个数至少需要1个");
+                                    scrollToBottom(hotNumView);
+                                    return;
+                                }
                                 if (Float.valueOf(hotMoneyView.string()) < 0.01f * Integer.valueOf(hotNumView.string())) {
                                     T_.error("平均红包金额需要大于0.01元");
                                     return;

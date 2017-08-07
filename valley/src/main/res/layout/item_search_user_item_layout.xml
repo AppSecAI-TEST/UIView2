@@ -111,6 +111,7 @@
             android:paddingStart="@dimen/base_xhdpi">
 
             <FrameLayout
+                android:id="@+id/forward_bg_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/forward_bg_color"

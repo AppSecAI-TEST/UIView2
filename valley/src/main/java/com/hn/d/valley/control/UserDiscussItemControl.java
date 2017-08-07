@@ -29,7 +29,6 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
-import com.angcyo.uiview.viewgroup.RLinearLayout;
 import com.angcyo.uiview.widget.GlideImageView;
 import com.angcyo.uiview.widget.ImageTextView;
 import com.angcyo.uiview.widget.RExTextView;
@@ -84,6 +83,7 @@ import com.hn.d.valley.widget.HnPlayTimeView;
 import com.hn.d.valley.widget.HnTagsNameTextView;
 import com.hn.d.valley.widget.HnVideoPlayView;
 import com.hn.d.valley.widget.groupView.AutoPlayVideoLayout;
+import com.hn.d.valley.widget.groupView.HnHotPackageLayout;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.lzy.imagepicker.ImageUtils;
@@ -636,9 +636,11 @@ public class UserDiscussItemControl {
     public static void showTopView(RBaseViewHolder holder, UserDiscussListBean.DataListBean dataListBean) {
         //置顶动态
         if ("1".equalsIgnoreCase(dataListBean.getIs_top())) {
-            ((RLinearLayout) holder.itemView).setRBackgroundDrawable(ContextCompat.getColor(holder.getContext(), R.color.top_background_color));
+            ((HnHotPackageLayout) holder.itemView).setRBackgroundDrawable(ContextCompat.getColor(holder.getContext(), R.color.top_background_color));
+            holder.v(R.id.forward_bg_layout).setBackgroundColor(ContextCompat.getColor(holder.getContext(), R.color.top_forward_background_color));
         } else {
-            ((RLinearLayout) holder.itemView).setRBackgroundDrawable(ContextCompat.getColor(holder.getContext(), R.color.base_white));
+            ((HnHotPackageLayout) holder.itemView).setRBackgroundDrawable(ContextCompat.getColor(holder.getContext(), R.color.base_white));
+            holder.v(R.id.forward_bg_layout).setBackgroundColor(ContextCompat.getColor(holder.getContext(), R.color.forward_bg_color));
         }
     }
 

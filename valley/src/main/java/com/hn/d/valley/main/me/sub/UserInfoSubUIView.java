@@ -19,16 +19,15 @@ import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
-import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
-import com.angcyo.uiview.widget.RImageView;
+import com.angcyo.uiview.view.IView;
+import com.angcyo.uiview.view.OnUIViewListener;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.iview.ImagePagerUIView;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GiftBean;
 import com.hn.d.valley.bean.GiftReceiveBean;
@@ -37,19 +36,13 @@ import com.hn.d.valley.bean.realm.IcoInfoBean;
 import com.hn.d.valley.bean.realm.RelationDataBean;
 import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.UserCache;
-import com.hn.d.valley.main.me.MeUIView2;
-import com.hn.d.valley.main.me.setting.EditInfoUIView;
 import com.hn.d.valley.main.message.gift.GiftListUIView;
 import com.hn.d.valley.main.message.gift.GiftListUIView2;
 import com.hn.d.valley.main.message.gift.GiftRecordTabUIView;
-import com.hn.d.valley.main.message.gift.GiftRecordUIView;
 import com.hn.d.valley.main.message.gift.GiftService;
 import com.hn.d.valley.main.message.gift.SendGiftUIDialog;
 import com.hn.d.valley.service.ContactService;
-import com.hn.d.valley.service.UserService;
-import com.hn.d.valley.sub.adapter.ImageAdapter;
 import com.hn.d.valley.sub.other.RelationListUIView;
-import com.hn.d.valley.utils.PhotoPager;
 import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnIcoRecyclerView;
 import com.hn.d.valley.x5.X5WebUIView;
@@ -77,6 +70,7 @@ public class UserInfoSubUIView extends BaseItemUIView {
     Action0 mAction0;
 
     private GiftList mGiftList;
+    private RRecyclerView mGiftRecyclerView;
 
     public UserInfoSubUIView(UserInfoBean userInfoBean, Action0 action0) {
         mUserInfoBean = userInfoBean;
@@ -244,14 +238,14 @@ public class UserInfoSubUIView extends BaseItemUIView {
                         tv.setDefaultSKin(getString(R.string.text_ta_gift));
                     }
                     holder.v(R.id.tv_more).setVisibility(View.GONE);
-                    RRecyclerView recyclerView = holder.reV(R.id.recycler_view);
+                    mGiftRecyclerView = holder.reV(R.id.recycler_view);
                     if (mDecor == null) {
                         mDecor = new RBaseItemDecoration((int) (density() * 10), Color.TRANSPARENT);
                     } else {
-                        recyclerView.removeItemDecoration(mDecor);
+                        mGiftRecyclerView.removeItemDecoration(mDecor);
                     }
-                    recyclerView.addItemDecoration(mDecor);
-                    recyclerView.setAdapter(new GiftListAdapter(mActivity, mGiftList));
+                    mGiftRecyclerView.addItemDecoration(mDecor);
+                    mGiftRecyclerView.setAdapter(new GiftListAdapter(mActivity, mGiftList));
 
                 }
             });
@@ -379,6 +373,9 @@ public class UserInfoSubUIView extends BaseItemUIView {
                         if (bean != null && bean.getData_list().size() != 0) {
                             mGiftList = bean;
                         }
+                        if (getLayoutState() == LayoutState.CONTENT && mGiftRecyclerView != null) {
+                            mGiftRecyclerView.setAdapter(new GiftListAdapter(mActivity, mGiftList));
+                        }
                         showContentLayout();
                     }
 
@@ -441,13 +438,26 @@ public class UserInfoSubUIView extends BaseItemUIView {
             if (isContact() && posInData == 0) {
                 image_view.setImageResource(R.drawable.songliwu_icon);
                 username.setText(R.string.text_send_gift);
-            } else if (posInData == 0){
+            } else if (posInData == 0) {
                 image_view.setImageResource(R.drawable.songliwu_wanglai_icon);
                 username.setText(R.string.text_gift_record);
             } else {
                 image_view.setImageUrl(bean.getThumb());
                 username.setText(String.format("%s(%s)", bean.getName(), bean.getOwn_count()));
             }
+
+            final OnUIViewListener onUIViewListener = new OnUIViewListener() {
+                @Override
+                public void onViewUnload(IView uiview) {
+                    super.onViewUnload(uiview);
+                    postDelayed(300, new Runnable() {
+                        @Override
+                        public void run() {
+                            loadGift();
+                        }
+                    });
+                }
+            };
 
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -487,7 +497,8 @@ public class UserInfoSubUIView extends BaseItemUIView {
                         // 礼物往来
                         mParentILayout.startIView(new GiftRecordTabUIView(mUserInfoBean.getUid()));
                     } else if (isContact() && posInData == 0) {
-                        mParentILayout.startIView(new GiftListUIView2(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
+                        mParentILayout.startIView(new GiftListUIView2(mUserInfoBean.getUid(), SessionTypeEnum.P2P)
+                                .setOnUIViewListener(onUIViewListener));
                     } else if (isContact()) {
                         SendGiftUIDialog dialog = new SendGiftUIDialog(GiftBean.create(bean), new Action0() {
                             @Override
@@ -495,10 +506,12 @@ public class UserInfoSubUIView extends BaseItemUIView {
                                 GiftListUIView2.Companion.sendGift(mUserInfoBean.getUid(), "", bean.getGift_id());
                             }
                         });
+                        dialog.setOnUIViewListener(onUIViewListener);
                         dialog.setMoreAction(new Action0() {
                             @Override
                             public void call() {
-                                mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(), SessionTypeEnum.P2P));
+                                mParentILayout.startIView(new GiftListUIView(mUserInfoBean.getUid(), SessionTypeEnum.P2P)
+                                        .setOnUIViewListener(onUIViewListener));
                             }
                         });
                         dialog.setGiftEnable(bean.getEnable().equals("1"));

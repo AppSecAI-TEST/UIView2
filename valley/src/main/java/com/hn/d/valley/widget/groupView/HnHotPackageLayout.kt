@@ -1,7 +1,11 @@
 package com.hn.d.valley.widget.groupView
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -63,5 +67,23 @@ class HnHotPackageLayout(context: Context, attributeSet: AttributeSet? = null) :
                         mediaRect.right + hotPackageView.measuredWidth / 2, mediaRect.top + hotPackageView.measuredHeight / 2)
             }
         }
+    }
+
+    private var mBackgroundDrawable: Drawable? = null
+
+    override fun draw(canvas: Canvas) {
+        if (mBackgroundDrawable != null) {
+            mBackgroundDrawable?.bounds = canvas.clipBounds
+            mBackgroundDrawable?.draw(canvas)
+        }
+        super.draw(canvas)
+    }
+
+    fun setRBackgroundDrawable(@ColorInt color: Int) {
+        setRBackgroundDrawable(ColorDrawable(color))
+    }
+
+    fun setRBackgroundDrawable(drawable: Drawable) {
+        mBackgroundDrawable = drawable
     }
 }
