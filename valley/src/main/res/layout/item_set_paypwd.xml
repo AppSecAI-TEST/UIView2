@@ -5,26 +5,25 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/base_xhdpi">
 
-
     <EditText
         android:id="@+id/edit_text_view"
         style="@style/VerityEditStyle"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:drawablePadding="@dimen/base_80dpi"
         android:background="@color/default_base_white"
+        android:drawablePadding="@dimen/base_80dpi"
+        android:hint="@string/input_code_hint"
         android:imeOptions="actionDone"
         android:paddingEnd="@dimen/base_100dpi"
         android:paddingStart="@dimen/base_80dpi"
-        android:hint="@string/input_code_hint"
         android:textColor="@color/main_text_color"
         android:textColorHint="@color/main_text_color_dark"/>
 
     <TextView
         android:id="@+id/tip_text_view"
         style="@style/DarkTextStyle"
-        android:text="@string/code_text_tip"
-        android:layout_marginStart="@dimen/base_hdpi"/>
+        android:layout_marginStart="@dimen/base_hdpi"
+        android:text="@string/code_text_tip"/>
 
     <com.angcyo.uiview.widget.SkinLineView
         android:layout_width="@dimen/base_line"

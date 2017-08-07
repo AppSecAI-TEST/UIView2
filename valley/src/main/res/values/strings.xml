@@ -19,7 +19,7 @@
     <string name="register">注册</string>
     <string name="account_exception">你的账号已被暂停使用,请解锁后使用.</string>
     <string name="finish">完成</string>
-    <string name="register_password_hint">数字和字母,6-12位</string>
+    <string name="register_password_hint">6-16位长度</string>
     <string name="register_password_tip">密码:</string>
     <string name="register_add_ico">添加头像</string>
     <string name="register_name_tip">昵称:</string>
@@ -198,11 +198,11 @@
     <string name="old_password_tip">旧密码:</string>
     <string name="old_password_hint">请输入旧密码</string>
     <string name="new_password_tip">新密码:</string>
-    <string name="new_password_hint">6-12位字母或数字组成</string>
+    <string name="new_password_hint">6-16位长度</string>
     <string name="confirm_password_tip">确认新密码:</string>
     <string name="confirm_password_hint">再次输入新密码</string>
     <string name="password_tip">密码:</string>
-    <string name="password_hint2">请输入6-16位字母或数字组成</string>
+    <string name="password_hint2">6-16位长度</string>
     <string name="confirm_password_tip2">确认密码:</string>
     <string name="confirm_password_hint2">再次输入密码</string>
     <string name="login_protect_title">登录保护</string>

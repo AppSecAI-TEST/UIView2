@@ -145,7 +145,7 @@ public class LoginControl {
                                         .subscribe(new BaseSingleSubscriber<String>() {
                                             @Override
                                             public void onSucceed(String s) {
-                                                login(map.get("openid"), map.get("name"), s, finalSex);
+                                                login(map.get("openid"), map.get("name"), OssHelper.getAvatorUrl(s), finalSex);
                                             }
 
                                             @Override
@@ -254,6 +254,8 @@ public class LoginControl {
                     public void onError(int code, String msg) {
                         // 用户账号被封
                         if (code == 1067) {
+
+                        } else if (code == 1068) {
 
                         } else {
                             super.onError(code, msg);

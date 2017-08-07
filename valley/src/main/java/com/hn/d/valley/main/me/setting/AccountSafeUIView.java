@@ -51,8 +51,22 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
         } else if (posInData == 1) {
             if (TextUtils.isEmpty(phone)) {
                 infoLayout.setItemDarkText(mActivity.getString(R.string.not_bind_phone));
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //绑定手机号码
+                        startIView(new BindPhoneUIView());
+                    }
+                });
             } else {
                 infoLayout.setItemDarkText(phone);
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //修改手机号码
+                        startIView(new BindPhoneUIView().setOldPhone(phone));
+                    }
+                });
             }
         } else if (posInData == 2) {
             if (UserCache.instance().getUserInfoBean().getIs_set_password() == 1) {
@@ -136,12 +150,7 @@ public class AccountSafeUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vie
     @Override
     protected void createItems(List<ViewItemInfo> items) {
         items.add(new ViewItemInfo(mActivity.getString(R.string.id), null));
-        items.add(new ViewItemInfo(mActivity.getString(R.string.phone_number2), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startIView(new BindPhoneUIView());
-            }
-        }));
+        items.add(new ViewItemInfo(mActivity.getString(R.string.phone_number2), null));
         items.add(new ViewItemInfo(mActivity.getString(R.string.password), null));
         items.add(new ViewItemInfo(mActivity.getString(R.string.login_safe), null));
     }

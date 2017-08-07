@@ -22,7 +22,6 @@ import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
 import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.viewgroup.RRelativeLayout;
 import com.angcyo.uiview.widget.ExEditText;
-import com.angcyo.uiview.widget.RSoftInputLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseUIView;
 import com.hn.d.valley.base.constant.Constant;
@@ -108,7 +107,12 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
 
         mSearchInputView.setHint(R.string.search_hint);
 
-        RSoftInputLayout.showSoftInput(mSearchInputView);
+        post(new Runnable() {
+            @Override
+            public void run() {
+                showSoftInput(mSearchInputView);
+            }
+        });
 
         RxTextView.textChanges(mSearchInputView)
                 .debounce(Constant.DEBOUNCE_TIME_700, TimeUnit.MILLISECONDS)
@@ -198,7 +202,7 @@ public class SearchUserUIView extends BaseUIView<Search.ISearchPresenter> implem
 
         @Override
         protected int getItemLayoutId(int viewType) {
-            return R.layout.item_user_info_new;
+            return R.layout.item_user_info_new_friend;
         }
 
         @Override

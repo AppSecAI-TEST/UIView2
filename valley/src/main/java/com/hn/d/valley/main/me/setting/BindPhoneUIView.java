@@ -47,9 +47,24 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
     String code = "";
     ExEditText mPhoneEdit, mCodeEdit;
 
+    String oldPhone;
+
+    public BindPhoneUIView setOldPhone(String oldPhone) {
+        this.oldPhone = oldPhone;
+        return BindPhoneUIView.this;
+    }
+
+    private boolean isModifyPhone() {
+        return !TextUtils.isEmpty(oldPhone);
+    }
+
     @Override
     protected String getTitleString() {
-        return mActivity.getString(R.string.bind_phone);
+        if (isModifyPhone()) {
+            return "修改手机号";
+        } else {
+            return mActivity.getString(R.string.bind_phone);
+        }
     }
 
     @Override
@@ -64,6 +79,11 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
             mPhoneEdit = holder.v(R.id.edit_text_view);
             mPhoneEdit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
             mPhoneEdit.setMaxLength(mActivity.getResources().getInteger(R.integer.phone_number_count));
+        } else if (posInData == 1) {
+            holder.tv(R.id.tip_text_view).setText(R.string.code_text_tip);
+            mCodeEdit = holder.v(R.id.edit_text_view);
+            mCodeEdit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
+            mCodeEdit.setMaxLength(mActivity.getResources().getInteger(R.integer.code_count));
             final VerifyButton verifyButton = holder.v(R.id.verify_view);
             verifyButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,7 +95,8 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                     }
                     verifyButton.run();
                     add(RRetrofit.create(OtherService.class)
-                            .sendPhoneVerifyCode(Param.buildMap("phone:" + mPhoneEdit.string(), "type:bind"))
+                            .sendPhoneVerifyCode(Param.buildMap("phone:" + mPhoneEdit.string(),
+                                    "type:" + (isModifyPhone() ? "change" : "bind")))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
                                 @Override
@@ -95,11 +116,6 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                     );
                 }
             });
-        } else if (posInData == 1) {
-            holder.tv(R.id.tip_text_view).setText(R.string.code_text_tip);
-            mCodeEdit = holder.v(R.id.edit_text_view);
-            mCodeEdit.setImeOptions(EditorInfo.IME_ACTION_NEXT);
-            mCodeEdit.setMaxLength(mActivity.getResources().getInteger(R.integer.code_count));
         } else if (posInData == 2) {
             TextView textView = holder.tv(R.id.text_view);
             RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) textView.getLayoutParams();
@@ -125,7 +141,9 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                         if (TextUtils.equals(code, mCodeEdit.string())) {
                             //调用绑定手机号码
                             add(RRetrofit.create(UserService.class)
-                                    .bindPhone(Param.buildMap("phone:" + mPhoneEdit.string(), "code:" + mCodeEdit.string(), "is_bind:1"))
+                                    .bindPhone(Param.buildMap("phone:" + mPhoneEdit.string(),
+                                            "code:" + mCodeEdit.string(),
+                                            "is_bind:" + (isModifyPhone() ? "0" : "1")))
                                     .compose(Rx.transformer(String.class))
                                     .subscribe(new BaseSingleSubscriber<String>() {
 
@@ -175,7 +193,8 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
                         return;
                     }
                     add(RRetrofit.create(OtherService.class)
-                            .sendPhoneVerifyCode(Param.buildMap("phone:" + mPhoneEdit.string(), "type:bind", "is_voice:1"))
+                            .sendPhoneVerifyCode(Param.buildMap("phone:" + mPhoneEdit.string(),
+                                    "type:" + (isModifyPhone() ? "change" : "bind"), "is_voice:1"))
                             .compose(Rx.transformer(String.class))
                             .subscribe(new BaseSingleSubscriber<String>() {
                                 @Override
@@ -193,10 +212,10 @@ public class BindPhoneUIView extends ItemRecyclerUIView<String> {
     @Override
     protected int getItemLayoutId(int viewType) {
         if (viewType == 0) {
-            return R.layout.item_edit_and_code;
+            return R.layout.item_edit_view;
         }
         if (viewType == 1) {
-            return R.layout.item_edit_view;
+            return R.layout.item_edit_and_code;
         }
         if (viewType == 2) {
             return R.layout.item_button_view;
