@@ -65,6 +65,8 @@ import java.util.List;
 
 import rx.functions.Action0;
 
+import static com.hn.d.valley.main.me.UserDetailUIView2.isMe;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -312,6 +314,11 @@ public class DynamicDetailUIView2 extends BaseContentUIView {
             mViewHolder.v(R.id.reward_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (isMe(mDataListBean.getUid())) {
+                        T_.error("亲, 自己无法给自己打赏哦!");
+                        return;
+                    }
+
                     UserDiscussItemControl.showRewardDialog(mParentILayout, true, mDataListBean.getUser_info().getAvatar()
                             , mDataListBean.getUser_info().getUsername(), mDataListBean.getUid(), discuss_id, new Runnable() {
                                 @Override

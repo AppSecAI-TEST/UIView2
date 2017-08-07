@@ -1,21 +1,15 @@
 package com.hn.d.valley.sub.other
 
-import android.view.View
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.widget.ItemInfoLayout
 import com.hn.d.valley.R
 import com.hn.d.valley.cache.UserCache
-import com.hn.d.valley.main.me.setting.MyQrCodeUIView
 import com.hn.d.valley.main.message.redpacket.ChoosePayWayUIDialog
 import com.hn.d.valley.main.message.redpacket.GrabPacketHelper
 import com.hn.d.valley.main.message.redpacket.PayUIDialog
-import com.hn.d.valley.main.message.redpacket.ThirdPayUIDialog
 import com.hn.d.valley.main.wallet.KlGCoinBillUIView
-import com.hn.d.valley.main.wallet.WalletAccountUpdateEvent
-import com.hn.d.valley.main.wallet.WalletHelper
-import com.hn.d.valley.utils.RBus
 import rx.functions.Action1
 
 /**

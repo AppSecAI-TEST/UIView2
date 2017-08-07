@@ -579,20 +579,26 @@ public class UserDetailUIView2 extends BaseContentUIView {
         mViewHolder.tv(R.id.fans_count).setText(RUtils.getShortString(mUserInfoBean.getFans_count()));
         mViewHolder.tv(R.id.charm_count).setText(mUserInfoBean.getCharm());
 
-        if (isMe() || mUserInfoBean.getLook_fans() == 1) {
-            mViewHolder.click(R.id.attention_count, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        mViewHolder.click(R.id.attention_count, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMe() || mUserInfoBean.getLook_fans() == 1) {
                     startIView(new FollowersRecyclerUIView(mUserInfoBean.getUid()));
+                } else {
+                    T_.error("对方设置不允许查看关注/粉丝列表");
                 }
-            });
-            mViewHolder.click(R.id.fans_count, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            }
+        });
+        mViewHolder.click(R.id.fans_count, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMe() || mUserInfoBean.getLook_fans() == 1) {
                     startIView(new FansRecyclerUIView(mUserInfoBean.getUid()));
+                } else {
+                    T_.error("对方设置不允许查看关注/粉丝列表");
                 }
-            });
-        }
+            }
+        });
 
         //可见性图标控制
         if (!isMe()) {

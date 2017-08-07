@@ -103,6 +103,8 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.hn.d.valley.main.me.UserDetailUIView2.isMe;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -1587,6 +1589,11 @@ public class UserDiscussItemControl {
         reward_cnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isMe(tBean.getUid())) {
+                    T_.error("亲, 自己无法给自己打赏哦!");
+                    return;
+                }
+
                 showRewardDialog(iLayout, isInDetail,
                         tBean.getUser_info().getAvatar(),
                         tBean.getUser_info().getUsername(),
