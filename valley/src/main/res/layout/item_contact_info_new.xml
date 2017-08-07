@@ -9,7 +9,7 @@
     >
 
     <include
-        layout="@layout/item_user_info_new"
+        layout="@layout/item_user_info_new_friend"
         />
 
 

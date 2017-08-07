@@ -220,6 +220,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                 super.onBindDataView(holder, posInData, dataBean);
 //                holder.itemView.setBackgroundResource(R.color.white);
                 CustomMessageBean.BodyBean bodyBean = dataBean.getBodyBean();
+                holder.tv(R.id.signature).setVisibility(View.VISIBLE);
                 holder.tv(R.id.signature).setText(bodyBean.getMsg());
 
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
