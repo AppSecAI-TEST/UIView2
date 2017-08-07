@@ -227,6 +227,7 @@ public class TextureVideoView extends ScalableTextureView
                     }
                 });
             }
+        } catch (Exception ex) {
         }
     }
 

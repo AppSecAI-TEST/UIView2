@@ -264,6 +264,8 @@ public class WelcomeUIView extends BaseContentUIView {
     }
 
     private void animToLogin1() {
+        hideSoftInput();
+
         View control1 = mViewHolder.v(R.id.login_control_layout1);
         control1
                 .animate()

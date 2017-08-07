@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
+        android:layout_marginTop="70dp"
         android:src="@drawable/logo_login"/>
 
     <com.angcyo.uiview.widget.RTextView
@@ -19,20 +19,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="140dp"
         android:text="@string/welcome"
         android:textColor="@color/base_white"
-        android:textSize="32sp"/>
+        android:textSize="20sp"/>
 
     <!--第三方登录-->
     <LinearLayout
         android:id="@+id/login_control_layout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="220dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/base_120dpi"
         tools:visibility="gone">
 
         <com.angcyo.uiview.widget.RTextView
@@ -119,14 +118,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.7"/>
+                android:layout_weight="0.4"/>
 
             <!--登录 注册部分-->
             <LinearLayout
@@ -238,7 +236,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.3"/>
+                android:layout_weight="0.6"/>
 
         </LinearLayout>
 
