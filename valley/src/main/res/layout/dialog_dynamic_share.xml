@@ -101,26 +101,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/copy_view"
-            style="@style/DarkTextStyle"
-            android:layout_width="@dimen/share_item_width"
-            android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/base_ldpi"
-            android:drawableTop="@drawable/share_fuzhi_selector"
-            android:gravity="center"
-            android:text="@string/copy"/>
-
-        <TextView
-            android:id="@+id/report_view"
-            style="@style/DarkTextStyle"
-            android:layout_width="@dimen/share_item_width"
-            android:layout_height="wrap_content"
-            android:drawablePadding="@dimen/base_ldpi"
-            android:drawableTop="@drawable/share_jubao_selector"
-            android:gravity="center"
-            android:text="@string/report"/>
-
-        <TextView
             android:id="@+id/follow_view"
             style="@style/DarkTextStyle"
             android:layout_width="@dimen/share_item_width"
@@ -139,8 +119,27 @@
             android:drawableTop="@drawable/share_shouchang_selector"
             android:gravity="center"
             android:text="@string/collect"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
+        <TextView
+            android:id="@+id/copy_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="@dimen/share_item_width"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/base_ldpi"
+            android:drawableTop="@drawable/share_fuzhi_selector"
+            android:gravity="center"
+            android:text="@string/copy"/>
+
+        <TextView
+            android:id="@+id/report_view"
+            style="@style/DarkTextStyle"
+            android:layout_width="@dimen/share_item_width"
+            android:layout_height="wrap_content"
+            android:drawablePadding="@dimen/base_ldpi"
+            android:drawableTop="@drawable/share_jubao_selector"
+            android:gravity="center"
+            android:text="@string/report"/>
 
     </LinearLayout>
 

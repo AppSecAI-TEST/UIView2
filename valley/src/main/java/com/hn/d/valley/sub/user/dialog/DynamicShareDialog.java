@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.angcyo.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.uiview.base.UIBaseRxView;
@@ -11,6 +12,7 @@ import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.T_;
+import com.angcyo.uiview.view.DelayClick;
 import com.angcyo.uiview.widget.RTextView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
@@ -45,6 +47,7 @@ import java.util.List;
 import rx.functions.Action3;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.hn.d.valley.main.me.UserDetailUIView2.isMe;
 import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
 /**
@@ -122,25 +125,8 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 }
             });
 
-
-            //关注
-            mViewHolder.v(R.id.follow_view).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finishDialog();
-                    mSubscription.add(RRetrofit.create(UserService.class)
-                            .attention(Param.buildMap("to_uid:" + mDataListBean.getUid()))
-                            .compose(Rx.transformer(String.class))
-                            .subscribe(new BaseSingleSubscriber<String>() {
-
-                                @Override
-                                public void onSucceed(String bean) {
-                                    T_.show(getString(R.string.handle_success));
-                                }
-                            }));
-                }
-            });
-
+            //关注/取消关注
+            initAttentionView();
             //收藏/取消收藏
             initCollectView();
 
@@ -347,6 +333,9 @@ public class DynamicShareDialog extends UIIDialogImpl {
         }
     }
 
+    /**
+     * 收藏,取消收藏
+     */
     private void initCollectView() {
         RTextView textView = mViewHolder.v(R.id.collect_view);
         if (mDataListBean.getIs_collect() == 1) {
@@ -385,6 +374,61 @@ public class DynamicShareDialog extends UIIDialogImpl {
                                     T_.show(bean);
                                     mDataListBean.setIs_collect(1);
                                     initCollectView();
+                                }
+                            }));
+                }
+            });
+        }
+    }
+
+    /**
+     * 关注/取消关注
+     */
+    private void initAttentionView() {
+        TextView textView = mViewHolder.v(R.id.follow_view);
+
+        if (isMe(mDataListBean.getUid())) {
+            textView.setVisibility(View.GONE);
+        }
+
+        if (mDataListBean.getUser_info().getIs_attention() == 1) {
+            //已关注
+            textView.setText("取消关注");
+
+            mViewHolder.delayClick(R.id.follow_view, new DelayClick() {
+                @Override
+                public void onRClick(View view) {
+                    finishDialog();
+                    mDataListBean.getUser_info().setIs_attention(0);
+                    mSubscription.add(RRetrofit.create(UserService.class)
+                            .unAttention(Param.buildMap("to_uid:" + mDataListBean.getUid()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+
+                                @Override
+                                public void onSucceed(String bean) {
+                                    T_.show(getString(R.string.handle_success));
+                                }
+                            }));
+                }
+            });
+        } else {
+            //未关注
+            textView.setText("关注");
+
+            mViewHolder.delayClick(R.id.follow_view, new DelayClick() {
+                @Override
+                public void onRClick(View view) {
+                    finishDialog();
+                    mDataListBean.getUser_info().setIs_attention(1);
+                    mSubscription.add(RRetrofit.create(UserService.class)
+                            .attention(Param.buildMap("to_uid:" + mDataListBean.getUid()))
+                            .compose(Rx.transformer(String.class))
+                            .subscribe(new BaseSingleSubscriber<String>() {
+
+                                @Override
+                                public void onSucceed(String bean) {
+                                    T_.show(getString(R.string.handle_success));
                                 }
                             }));
                 }

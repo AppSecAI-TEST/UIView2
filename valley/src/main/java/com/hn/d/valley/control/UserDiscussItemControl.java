@@ -1399,9 +1399,9 @@ public class UserDiscussItemControl {
                 public void onClick(View v) {
                     iLayout.startIView(UIBottomItemDialog.build()
                             .setShowCancelButton(false)
-                            .addItem(followItem)
+//                            .addItem(followItem)
                             .addItem(favItem)
-                            .addItem(notSeeItem)
+//                            .addItem(notSeeItem)
                             .addItem(reportItem));
                 }
             };
