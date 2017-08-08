@@ -6,10 +6,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.angcyo.github.utilcode.utils.NetworkUtils
 import com.angcyo.library.utils.L
+import com.angcyo.uiview.RApplication
 import com.angcyo.uiview.kotlin.v
 import com.angcyo.uiview.receiver.NetworkStateReceiver
 import com.angcyo.uiview.utils.ScreenUtil
-import com.angcyo.uiview.view.UIIViewImpl
 import com.hn.d.valley.R
 import java.lang.ref.WeakReference
 
@@ -134,7 +134,7 @@ object AutoPlayVideoControl : RecyclerView.OnScrollListener(),
 
     /**只在WIFI下,自动播放*/
     fun canAutoPlay(): Boolean {
-        return !UIIViewImpl.isLowDevice() && NetworkStateReceiver.getNetType() == NetworkUtils.NetworkType.NETWORK_WIFI
+        return !RApplication.isLowDevice && NetworkStateReceiver.getNetType() == NetworkUtils.NetworkType.NETWORK_WIFI
     }
 
     private fun lastPlayLayout(): AutoPlayVideoLayout? {

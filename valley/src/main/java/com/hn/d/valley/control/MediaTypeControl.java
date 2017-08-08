@@ -9,10 +9,13 @@ import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.angcyo.uiview.utils.RUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
+import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 
 import java.util.List;
 
 import rx.functions.Action1;
+
+import static com.hn.d.valley.main.message.attachment.CustomAttachmentType.GRABREDBAG;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -75,7 +78,18 @@ public class MediaTypeControl {
                         .placeholder(R.drawable.zhanweitu_1)
                         .into(mediaImageView);
                 mediaImageView.setPlayDrawable(R.drawable.play_redianzixun);
-            } else {
+            } else if ("4".equalsIgnoreCase(media_type)){
+                // 语音
+                mediaImageView.setVisibility(View.VISIBLE);
+                mediaImageView.setImageResource(R.drawable.luyin_caogaoxiangi_morentu);
+                mediaImageView.setPlayDrawable(R.drawable.play_redianzixun);
+
+            } else if(GRABREDBAG.equals(media_type) || CustomAttachmentType.DISCUSS_REWARD.equals(media_type)) {
+                mediaImageView.setVisibility(View.VISIBLE);
+                mediaImageView.setImageResource(R.drawable.hongbao_xiao_60);
+                mediaImageView.setPlayDrawable(null);
+
+            }else {
                 mediaImageView.setPlayDrawable(null);
             }
         }

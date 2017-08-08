@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import io.realm.Realm;
 
@@ -96,7 +95,7 @@ public class SystemNotifyManager {
                 break;
             case SystemNotifyType.NEW_DISCUSS:
                 // 设置是否发送圈子提醒
-                if (MsgNotifySetting.instance().isCircleCNotify()) {
+                if (MsgNotifySetting.instance().isCircleNotify()) {
                     RBus.post(Constant.TAG_NO_READ_NUM, new UpdateDataEvent(1, POS_HOME));
                 }
                 break;

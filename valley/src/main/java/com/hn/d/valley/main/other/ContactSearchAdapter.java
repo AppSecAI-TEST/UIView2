@@ -37,7 +37,6 @@ public class ContactSearchAdapter extends RModelAdapter<FriendBean> {
     public ContactSearchAdapter(Context context, OnContactSelecteListener contactSelecteListener) {
         super(context);
         mSelectListener = contactSelecteListener;
-        setEnableLoadMore(true);
         setModel(MODEL_SINGLE);
     }
 
@@ -96,6 +95,7 @@ public class ContactSearchAdapter extends RModelAdapter<FriendBean> {
     protected void onBindNormalView(RBaseViewHolder holder, int position, FriendBean bean) {
 
     }
+
 
 
 

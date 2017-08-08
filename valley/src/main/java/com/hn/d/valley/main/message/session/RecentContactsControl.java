@@ -40,6 +40,7 @@ import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
+import com.hn.d.valley.main.message.attachment.DiscussRewardAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
@@ -62,6 +63,7 @@ import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
 import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.realm.RRealm;
+import com.hn.d.valley.sub.user.DiscussRewardMsg;
 import com.hn.d.valley.widget.HnExTextView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
@@ -536,6 +538,9 @@ public class RecentContactsControl {
             return "[分享资讯]" + ((ShareNewsAttachment) attachment).getNewsMsg().getTitle();
         } else if (attachment instanceof OnlineVideoForwardAttachment) {
             return "[视频]";
+        } else if (attachment instanceof DiscussRewardAttachment) {
+            DiscussRewardMsg rewardMsg = ((DiscussRewardAttachment) attachment).getDiscussRewardMsg();
+            return rewardMsg.getMsg();
         }
         return "[自定义消息]";
     }

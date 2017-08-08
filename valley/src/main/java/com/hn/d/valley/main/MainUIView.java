@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.BounceInterpolator;
 
+import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.base.UIIDialogImpl;
 import com.angcyo.uiview.container.ContentLayout;
@@ -212,13 +213,17 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
             public void onTabSelect(View tabView, int position) {
                 super.onTabSelect(tabView, position);
                 changePage(position);
-                scaleView(tabView.findViewById(R.id.iv_tab_icon));
+                if (RApplication.isHighDevice) {
+                    scaleView(tabView.findViewById(R.id.iv_tab_icon));
+                }
             }
 
             @Override
             public void onTabReselect(View tabView, int position) {
                 super.onTabReselect(tabView, position);
-                scaleView(tabView.findViewById(R.id.iv_tab_icon));
+                if (RApplication.isHighDevice) {
+                    scaleView(tabView.findViewById(R.id.iv_tab_icon));
+                }
             }
         });
 

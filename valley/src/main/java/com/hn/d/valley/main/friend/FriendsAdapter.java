@@ -11,6 +11,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.control.FriendsControl;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
+import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             });
         }
 
-        SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
+        HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
         TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
         iv_head.setOnClickListener(null);
         iv_head.setClickable(false);
@@ -82,10 +83,13 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
 
 //            iv_head.setImageUrl(friendBean.getAvatar());
             if (FriendsControl.KLGWL.equalsIgnoreCase(friendBean.getAvatar())) {
-                DraweeViewUtil.setDraweeViewRes(iv_head, R.drawable.konglongjun);
+//                DraweeViewUtil.setDraweeViewRes(iv_head, R.drawable.konglongjun);
+                iv_head.setImageResource(R.drawable.konglongjun);
             } else {
-                DraweeViewUtil.setDraweeViewHttp(iv_head, friendBean.getAvatar());
+//                DraweeViewUtil.setDraweeViewHttp(iv_head, friendBean.getAvatar());
+                iv_head.setImageUrl(friendBean.getAvatar());
             }
+            iv_head.setAuth(friendBean.getIsAuth());
             tv_friend_name.setText(friendBean.getTrueName());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,9 +116,10 @@ public class FriendsAdapter extends RBaseAdapter<AbsContactItem> {
             ContactItem friendItem = (ContactItem) bean;
             final FriendBean friendBean = friendItem.getFriendBean();
 //            iv_head.setImageThumbUrl(friendBean.getAvatar());
-            DraweeViewUtil.setDraweeViewHttp(iv_head, friendBean.getAvatar());
+//            DraweeViewUtil.setDraweeViewHttp(iv_head, friendBean.getAvatar());
+            iv_head.setImageUrl(friendBean.getAvatar());
             tv_friend_name.setText(friendBean.getTrueName());
-
+            iv_head.setAuth(friendBean.getIsAuth());
             iv_head.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

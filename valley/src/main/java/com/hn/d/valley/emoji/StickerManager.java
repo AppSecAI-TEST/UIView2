@@ -141,6 +141,9 @@ public class StickerManager {
 
 //        if (isSystemSticker(categoryName)) {
         if (categoryName.equals(DICE) || categoryName.equals(POCKER)) {
+            if (stickerName.contains("dice") && !stickerName.contains("t_")) {
+                stickerName = "t_" + stickerName;
+            }
             if (!stickerName.contains(".png")) {
                 stickerName += ".png";
             }

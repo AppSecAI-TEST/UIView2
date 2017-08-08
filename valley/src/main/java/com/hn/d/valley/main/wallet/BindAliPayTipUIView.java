@@ -97,8 +97,7 @@ public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                             if (WalletHelper.getInstance().getWalletAccount().getMoney() > 0) {
                                 mParentILayout.startIView(new UnableUnBindUIView());
                             } else {
-                                replaceIView(new VerifyAlipayUIView(false));
-                            }
+                                unBindAlipay();                            }
                         }
                     });
                 } else {
@@ -129,7 +128,6 @@ public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                                             super.onStart();
                                             HnLoading.show(mILayout);
                                         }
-
                                         @Override
                                         public void onSucceed(String bean) {
                                             super.onSucceed(bean);
@@ -144,6 +142,22 @@ public class BindAliPayTipUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
             }
         }));
     }
+
+    private void unBindAlipay() {
+        RRetrofit.create(WalletService.class)
+                .cashaccountRemove(Param.buildInfoMap("uid:" + UserCache.getUserAccount()
+                        , "type:" + WalletHelper.getInstance().getWalletAccount().bindType()))
+                .compose(WalletHelper.getTransformer())
+                .subscribe(new BaseSingleSubscriber<String>() {
+
+                    @Override
+                    public void onSucceed(String beans) {
+                        finishIView();
+                        T_.show(mActivity.getString(R.string.text_unbind_success));
+                    }
+                });
+    }
+
 
     private void auth2(String sign,String info) {
         String encodedSign = "";

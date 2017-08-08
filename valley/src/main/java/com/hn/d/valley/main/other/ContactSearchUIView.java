@@ -177,6 +177,7 @@ public class ContactSearchUIView extends BaseUIView<IPOISearchPresenter> impleme
         return mActivity.getResources().getColor(R.color.default_base_bg_dark2);
     }
 
+
     @NonNull
     @Override
     protected LayoutState getDefaultLayoutState() {

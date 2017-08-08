@@ -33,6 +33,9 @@ import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 public class MsgVHExpression extends MsgViewHolderBase {
 
     private boolean animrunning;
+    ImageView draweeView;
+    DiceLayout diceLayout;
+    PokerLayout pokerLayout;
 
     public MsgVHExpression(BaseMultiAdapter adapter) {
         super(adapter);
@@ -45,16 +48,27 @@ public class MsgVHExpression extends MsgViewHolderBase {
 
     @Override
     protected void inflateContentView() {
+        L.d("MsgVHExpression  inflateContentView; ");
+//        if (draweeView == null) {
+            draweeView = (ImageView) findViewById(R.id.msg_image_view);
+//        }
+
+//        if (diceLayout == null) {
+            diceLayout = (DiceLayout) findViewById(R.id.diceLayout);
+
+//        }
+
+//        if (pokerLayout == null) {
+            pokerLayout = (PokerLayout) findViewById(R.id.pokerlayout);
+
+//        }
+//        DiceView diceView = (DiceView) findViewById(R.id.diceView);
 
     }
 
     @Override
     protected void bindContentView() {
-        ImageView draweeView = (ImageView) findViewById(R.id.msg_image_view);
-//        DiceView diceView = (DiceView) findViewById(R.id.diceView);
 
-        DiceLayout diceLayout = (DiceLayout) findViewById(R.id.diceLayout);
-        PokerLayout pokerLayout = (PokerLayout) findViewById(R.id.pokerlayout);
 
         contentContainer.setBackground(null);
 
@@ -64,7 +78,7 @@ public class MsgVHExpression extends MsgViewHolderBase {
         }
 
         CustomExpressionMsg expressionMsg = expressionAttachment.getExpressionMsg();
-        L.d("MsgVHExpression  ; ");
+        L.d("MsgVHExpression  bindContentView; ");
 
         if (expressionMsg.getType() == 3) {
             // 骰子
@@ -93,19 +107,20 @@ public class MsgVHExpression extends MsgViewHolderBase {
                     message.setLocalExtension(localExtension);
                     msgService().updateIMMessage(message);
                     // 动画启动
+                    diceLayout.setFirst(true);
                     diceLayout.init(split.length, counts,true);
-//                    animrunning = true;
+                    animrunning = true;
 //                    view.postDelayed(new Runnable() {
 //                        @Override
 //                        public void run() {
 //                            animrunning = false;
 //                        }
-//                    },3000);
+//                    },1000);
                 } else {
 //                    if (animrunning) {
 //                        return;
 //                    }
-                    diceLayout.init(split.length, counts,true);
+                    diceLayout.init(split.length, counts,false);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

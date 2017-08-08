@@ -6,6 +6,7 @@ import com.hn.d.valley.main.message.attachment.CustomAttachment;
 import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
 import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
 import com.hn.d.valley.main.message.attachment.DiscussRecommAttachment;
+import com.hn.d.valley.main.message.attachment.DiscussRewardAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicDetailAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GiftReceiveAttachment;
@@ -112,6 +113,9 @@ public class CustomAttachParser implements MsgAttachmentParser {
                     break;
                 case CustomAttachmentType.SHOW_CHAMPION:
                     attachment = new ShowChampionAttachment(json);
+                    break;
+                case CustomAttachmentType.DISCUSS_REWARD:
+                    attachment = new DiscussRewardAttachment(json);
                     break;
                 default:
                     attachment = new NoticeAttachment(json);

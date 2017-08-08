@@ -60,23 +60,23 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
             //自己抢到了自己红包
             tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(context.getString(R.string.text_get_redpacket_myself))
                     .append(context.getString(R.string.text_redpacket))
-                    .setForegroundColor(ContextCompat.getColor(context, R.color.yellow_ffe2b1))
+                    .setForegroundColor(ContextCompat.getColor(context, R.color.base_red_d85940))
                     .create());
             return;
         } else if (UserCache.getUserAccount().equals(redPacket.getOwner() + "")) {
             tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(String.format(context.getString(R.string.text_get_your), userInfoCache.getUserDisplayName(redPacket.getGraber() + "")))
                     .append(context.getString(R.string.text_redpacket))
-                    .setForegroundColor(ContextCompat.getColor(context, R.color.yellow_ffe2b1))
+                    .setForegroundColor(ContextCompat.getColor(context, R.color.base_red_d85940))
                     .create());
             return;
         } else if (UserCache.getUserAccount().equals(redPacket.getGraber() + "")) {
             tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(String.format(context.getString(R.string.text_you_already_get), userInfoCache.getUserDisplayName(redPacket.getOwner() + "")))
-                    .append(context.getString(R.string.text_redpacket)).setForegroundColor(ContextCompat.getColor(context, R.color.yellow_ffe2b1))
+                    .append(context.getString(R.string.text_redpacket)).setForegroundColor(ContextCompat.getColor(context, R.color.base_red_d85940))
                     .create());
         } else {
             tv_hongbao_notice.setText(SpannableStringUtils.getBuilder(String.format(context.getString(R.string.text_two_user_already_get),userInfoCache.getUserDisplayName(redPacket.getGraber() + ""),
                     userInfoCache.getUserDisplayName(redPacket.getOwner() + "")))
-                    .append(context.getString(R.string.text_redpacket)).setForegroundColor(ContextCompat.getColor(context, R.color.yellow_ffe2b1))
+                    .append(context.getString(R.string.text_redpacket)).setForegroundColor(ContextCompat.getColor(context, R.color.base_red_d85940))
                     .create());
         }
 

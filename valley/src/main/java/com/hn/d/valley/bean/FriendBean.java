@@ -40,6 +40,11 @@ public class FriendBean extends RealmObject{
     private String introduce;
     private String signature;
     private String grade;
+    /**
+     * created : 1501816426
+     */
+
+    private String created;
 
     public static FriendBean create(GroupBean group) {
         FriendBean friend = new FriendBean();
@@ -151,4 +156,11 @@ public class FriendBean extends RealmObject{
     }
 
 
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
 }

@@ -58,6 +58,8 @@ public interface CustomAttachmentType {
 
     int SHOW_CHAMPION_TYPE = 22;
 
+    int DISCUSS_REWARD_TYPE = 23;
+
 
     int SP_SINGLE_TEXT = 31;
 
@@ -110,5 +112,7 @@ public interface CustomAttachmentType {
     String DISCUSS_RECOMM = "discuss_recommend";
 
     String SHOW_CHAMPION = "show_champion";
+
+    String DISCUSS_REWARD= "discuss_reward";
 
 }

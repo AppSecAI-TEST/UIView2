@@ -12,10 +12,6 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
-import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.RequestCallback;
-import com.netease.nimlib.sdk.ResponseCode;
-import com.netease.nimlib.sdk.mixpush.MixPushService;
 
 import java.util.List;
 
@@ -189,7 +185,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
                 ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
                 infoLayout.setItemText(mActivity.getString(R.string.text_friend_circle_dynamic_notify));
                 CompoundButton switchCompat = holder.v(R.id.switch_view);
-                switchCompat.setChecked(MsgNotifySetting.instance().isCircleCNotify());
+                switchCompat.setChecked(MsgNotifySetting.instance().isCircleNotify());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -218,7 +214,7 @@ public class MessageNotifyUIView extends ItemRecyclerUIView<ItemRecyclerUIView.V
 //                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
 //                infoLayout.setItemText(mActivity.getString(R.string.text_subscribe_redpacket_notify));
 //                CompoundButton switchCompat = holder.v(R.id.switch_view);
-//                switchCompat.setChecked(MsgNotifySetting.instance().isCircleCNotify());
+//                switchCompat.setChecked(MsgNotifySetting.instance().isCircleNotify());
 //                switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 //                    @Override
 //                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

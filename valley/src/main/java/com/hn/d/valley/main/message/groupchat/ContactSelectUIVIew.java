@@ -146,7 +146,8 @@ public class ContactSelectUIVIew extends BaseContactSelectUIVIew {
 
     private void processResult(final List<FriendBean> beanList) {
         showContentLayout();
-
+        // 清除已选中
+        mGroupAdapter.getSelectedUsers().clear();
         refreshLayout.setRefreshEnd();
 
         final List<AbsContactItem> datas = new ArrayList<>();

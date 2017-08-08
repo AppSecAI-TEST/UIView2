@@ -146,7 +146,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
         } else {
             mViewHolder.v(R.id.me_control_layout).setVisibility(View.GONE);
-            mViewHolder.v(R.id.other_control_layout).setVisibility(View.GONE);
+            mViewHolder.v(R.id.other_control_layout).setVisibility(View.VISIBLE);
         }
 
         //取消

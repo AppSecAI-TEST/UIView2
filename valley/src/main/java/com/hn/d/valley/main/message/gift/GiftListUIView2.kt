@@ -293,12 +293,20 @@ class GiftListUIView2 : BaseContentUIView {
                         json.put("id",gift.gift_id)
                         reward(account,json.toString(),discussId,action)
                     }else {
-                        sendGift(account, "", gift.gift_id)
+                        sendGift(account, "", gift.gift_id,object : Action0{
+                            override fun call() {
+                                tv_selected!!.text = String.format("龙币:%d", UserCache.instance().getLoginBean().getCoins().toInt() - gift.coins.toInt())
+                            }
+                        })
                     }
 
                 } else if (sessionType == SessionTypeEnum.Team) {
                     // 送给群里某群友
-                    sendGift(account, container?.proxy!!.gid, gift.gift_id)
+                    sendGift(account, container?.proxy!!.gid, gift.gift_id,object : Action0{
+                        override fun call() {
+                            tv_selected!!.text = String.format("龙币:%d", UserCache.instance().getLoginBean().getCoins().toInt() - gift.coins.toInt())
+                        }
+                    })
                 }
 
 //                val attachment = GiftReceiveAttachment(gift,account)
@@ -315,22 +323,15 @@ class GiftListUIView2 : BaseContentUIView {
     }
 
     companion object {
-        fun sendGift(account: String, gid: String, giftId: String) {
+        fun sendGift(account: String, gid: String, giftId: String,action: Action0) {
             RRetrofit.create(GiftService::class.java)
                     .giving(Param.buildMap("to_uid:" + account, "gift_id:" + giftId, "gid:" + gid))
                     .compose(Rx.transformer(String::class.java))
                     .subscribe(object : BaseSingleSubscriber<String>() {
                         override fun onSucceed(bean: String) {
                             super.onSucceed(bean)
+                            action.call()
                             T_.show(bean)
-                        }
-
-                        override fun onStart() {
-                            super.onStart()
-                        }
-
-                        override fun onError(code: Int, msg: String) {
-                            super.onError(code, msg)
                         }
                     })
         }

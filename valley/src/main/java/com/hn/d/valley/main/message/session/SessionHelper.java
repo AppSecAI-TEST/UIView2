@@ -3,7 +3,10 @@ package com.hn.d.valley.main.message.session;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.me.UserDetailUIView2;
+import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
+import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.groupchat.GroupChatUIView;
 import com.hn.d.valley.main.message.p2pchat.P2PChatUIView;
@@ -12,6 +15,7 @@ import com.hn.d.valley.main.other.KLJUIView;
 import com.hn.d.valley.main.teamavchat.TeamAVChatHelper;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
@@ -61,6 +65,21 @@ public class SessionHelper {
     public static void sendTextMsg(String sessionId , String text){
         IMMessage msg = MessageBuilder.createTextMessage(sessionId, SessionTypeEnum.P2P, text);
         ChatUIView2.msgService().sendMessage(msg,true);
+    }
+
+    public static boolean messageFilter(IMMessage message) {
+        MsgAttachment attachment = message.getAttachment();
+        if (attachment instanceof GrabedMsgAttachment) {
+            GrabedMsgAttachment pcAttachment = (GrabedMsgAttachment) attachment;
+            final RedPacketGrabedMsg redPacket = pcAttachment.getGrabedMsg();
+            if (Integer.valueOf(UserCache.getUserAccount()) == (redPacket.getOwner())
+                    || Integer.valueOf(UserCache.getUserAccount()) == (redPacket.getGraber())) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
     }
 
     public interface GroupHeadAitListener {

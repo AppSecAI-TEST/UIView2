@@ -3,6 +3,7 @@ package com.hn.d.valley.control;
 import android.view.View;
 
 import com.angcyo.github.utilcode.utils.AppUtils;
+import com.angcyo.library.utils.L;
 import com.angcyo.uiview.RCrashHandler;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
@@ -103,6 +104,9 @@ public class MainControl {
         VersionControl.INSTANCE.checkVersion(new Function1<VersionBean, Unit>() {
             @Override
             public Unit invoke(final VersionBean versionBean) {
+
+                L.d("MainControl versioncheck " +  versionBean.getVersion() + "..." + versionBean.getLimit_version() );
+
                 UIDialog.build()
                         .setDialogTitle("发现新版本:" + versionBean.getVersion())
                         .setDialogContent(versionBean.getDetail())

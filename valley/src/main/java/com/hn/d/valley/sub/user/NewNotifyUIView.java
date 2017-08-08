@@ -14,7 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.angcyo.uiview.container.ContentLayout;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
+import com.angcyo.uiview.net.RRetrofit;
+import com.angcyo.uiview.net.RSubscriber;
+import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
@@ -27,7 +31,9 @@ import com.angcyo.uiview.widget.RImageView;
 import com.angcyo.uiview.widget.RTextView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
+import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Constant;
+import com.hn.d.valley.bean.realm.UserInfoBean;
 import com.hn.d.valley.cache.MsgCache;
 import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.control.MediaTypeControl;
@@ -35,6 +41,8 @@ import com.hn.d.valley.control.UnreadMessageControl;
 import com.hn.d.valley.control.UserDiscussItemControl;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.main.found.sub.InformationDetailUIView;
+import com.hn.d.valley.main.message.attachment.CustomAttachmentType;
+import com.hn.d.valley.main.message.attachment.DiscussRewardAttachment;
 import com.hn.d.valley.main.message.attachment.DynamicMsg;
 import com.hn.d.valley.main.message.attachment.DynamicMsgAttachment;
 import com.hn.d.valley.main.message.attachment.GrabedMsgAttachment;
@@ -46,6 +54,7 @@ import com.hn.d.valley.main.message.slide.holder.OneSlideViewHolder;
 import com.hn.d.valley.main.message.slide.holder.SlideViewHolder;
 import com.hn.d.valley.nim.CustomBean;
 import com.hn.d.valley.nim.NoticeAttachment;
+import com.hn.d.valley.service.UserService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
@@ -138,7 +147,7 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
 
     @Override
     protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
-        View root = inflater.inflate(R.layout.view_member_select,baseContentLayout);
+        View root = inflater.inflate(R.layout.view_member_select, baseContentLayout);
         mRefreshLayout = (RefreshLayout) root.findViewById(R.id.refresh_layout);
         mRecyclerView = (RRecyclerView) root.findViewById(R.id.recycler_view);
         ll_bottom = (LinearLayout) root.findViewById(R.id.ll_bottom);
@@ -147,18 +156,21 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UnreadMessageControl.removeMessageUnread(Constant.comment);
-                MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount()
-                        + UnreadMessageControl.getUnreadCount());
-                List<IMMessage> imMessages = mNotifyAdapter.getSelectorData();
-                mNotifyAdapter.deleteItems(imMessages);
-                if (mNotifyAdapter.getDataCount() == 0) {
-                    onUILoadDataEnd();
-                    animBottom(false);
-                    getUITitleBarContainer().getRightControlLayout().getChildAt(0).setVisibility(View.GONE);
-                }
+                deleteIMMessage(mNotifyAdapter.getSelectorData());
             }
         });
+    }
+
+    private void deleteIMMessage(List<IMMessage> imMessages) {
+        UnreadMessageControl.removeMessageUnread(Constant.comment);
+        MsgCache.notifyNoreadNum(RecentContactsCache.instance().getTotalUnreadCount()
+                + UnreadMessageControl.getUnreadCount());
+        mNotifyAdapter.deleteItems(imMessages);
+        if (mNotifyAdapter.getDataCount() == 0) {
+            onUILoadDataEnd();
+            animBottom(false);
+            getUITitleBarContainer().getRightControlLayout().getChildAt(0).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -202,7 +214,9 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                                     } else if (attachment instanceof DynamicMsgAttachment) {
                                         beans.add(message);
                                     } else if (attachment instanceof GrabedMsgAttachment) {
-//                                        beans.add(message);
+                                        beans.add(message);
+                                    } else if (attachment instanceof DiscussRewardAttachment) {
+                                        beans.add(message);
                                     }
                                 }
                             }
@@ -234,28 +248,58 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         return customBean;
     }
 
+    private void animBottom(boolean show) {
+        if (ll_bottom.getVisibility() == View.GONE) {
+            ll_bottom.setVisibility(View.VISIBLE);
+        }
+
+        float start = show ? ScreenUtil.dip2px(48) : 0;
+        float end = show ? 0 : ScreenUtil.dip2px(48);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_bottom, "translationY", start, end);
+        animator.setDuration(300);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.start();
+    }
+
+    private void editItems() {
+        TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
+        if (getString(R.string.text_edit).equals(selectNum.getText().toString())) {
+            selectNum.setText(getString(R.string.cancel));
+            mNotifyAdapter.slideOpen();
+        } else if (getString(R.string.cancel).equals(selectNum.getText().toString())) {
+            selectNum.setText(getString(R.string.text_edit));
+            mNotifyAdapter.slideClose();
+        }
+    }
+
+    /**
+     * 是否处于编辑模式
+     */
+    private boolean isInEditModel() {
+        TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
+        return getString(R.string.cancel).equals(selectNum.getText().toString());
+    }
+
     public class NotifyAdapter extends RExBaseAdapter<String, IMMessage, String> {
+
+        private SparseBooleanArray mCheckStats = new SparseBooleanArray();
+        private ISlideHelper mISlideHelper = new ISlideHelper();
+        private boolean isEditable = true;
 
         public NotifyAdapter(Context context) {
             super(context);
             setModel(RModelAdapter.MODEL_MULTI);
         }
 
-        private SparseBooleanArray mCheckStats = new SparseBooleanArray();
-
-        private ISlideHelper mISlideHelper = new ISlideHelper();
-
-        private boolean isEditable = true;
-
         public void slideOpen() {
             isEditable = true;
             mISlideHelper.slideOpen();
-            tv_selected.setText(String.format(getString(R.string.text_already_selected_item),0));
+            tv_selected.setText(String.format(getString(R.string.text_already_selected_item), 0));
             animBottom(true);
         }
 
         public void slideClose() {
-            tv_selected.setText(String.format(getString(R.string.text_already_selected_item),0));
+            tv_selected.setText(String.format(getString(R.string.text_already_selected_item), 0));
             mISlideHelper.slideClose();
             isEditable = true;
             animBottom(false);
@@ -263,12 +307,14 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             unSelectorAll(true);
         }
 
-        public void deleteItems(List<IMMessage> msgs){
-            for(IMMessage msg : msgs) {
+        public void deleteItems(List<IMMessage> msgs) {
+            for (IMMessage msg : msgs) {
                 NIMClient.getService(MsgService.class).deleteChattingHistory(msg);
                 mNotifyAdapter.deleteItem(msg);
             }
-            editItems();
+            if (isInEditModel()) {
+                editItems();
+            }
         }
 
         public void clearSelected() {
@@ -283,16 +329,18 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
         @NonNull
         @Override
         protected RBaseViewHolder createBaseViewHolder(int viewType, View itemView) {
-            SlideViewHolder slideViewHolder = new OneSlideViewHolder(itemView,viewType);
+            SlideViewHolder slideViewHolder = new OneSlideViewHolder(itemView, viewType);
             mISlideHelper.add(slideViewHolder);
             return slideViewHolder;
         }
 
         @Override
-        protected void onBindDataView(final RBaseViewHolder holder, final int posInData, IMMessage dataBean) {
+        protected void onBindDataView(final RBaseViewHolder holder, final int posInData, final IMMessage dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
-            String media = "", media_type = "", item_id = "", msg = "", created = "", avatar = "",type = "";
+            String media = "", media_type = "", item_id = "", msg = "", created = "", avatar = "", type = "";
             MsgAttachment attachment = dataBean.getAttachment();
+            RImageView mediaImageView = holder.v(R.id.media_image_view);
+            final SimpleDraweeView avatarView = holder.v(R.id.avatar);
 
             ((OneSlideViewHolder) holder).bind();
 
@@ -329,12 +377,25 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 msg = grabedMsg.getMsg();
                 type = grabedMsg.getExtend_type();
                 int graber = grabedMsg.getGraber();
+
+                media ="grabedmsg";
+                created = String.valueOf(grabedMsg.getCreated());
+                media_type = type;
+                item_id = grabedMsg.getExtend().getDiscuss_id();
+                fillAvatar(avatarView, graber);
+            } else if (attachment instanceof DiscussRewardAttachment) {
+                DiscussRewardMsg rewardmsg = ((DiscussRewardAttachment)attachment).getDiscussRewardMsg();
+                media = rewardmsg.getExtend_type();
+                media_type = rewardmsg.getExtend_type();
+                type = rewardmsg.getExtend_type();
+                item_id = rewardmsg.getDiscuss_id();
+                msg = rewardmsg.getMsg();
+                avatar = rewardmsg.getAvatar();
+                created = String.valueOf(rewardmsg.getCreated());
             }
 
-            RImageView mediaImageView = holder.v(R.id.media_image_view);
             MediaTypeControl.initMedia(media, media_type, mediaImageView, null);
 
-            SimpleDraweeView avatarView = holder.v(R.id.avatar);
             DraweeViewUtil.resize(avatarView, avatar);
 
 //            TextView contentView = holder.tv(R.id.content);
@@ -349,6 +410,25 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
 
             final String finalItem_id = item_id;
             final String finalType = type;
+            ((OneSlideViewHolder) holder).itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (isInEditModel()) {
+                        return false;
+                    }
+                    UIBottomItemDialog.build()
+                            .addItem(getString(R.string.delete_text), new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    List<IMMessage> datas = new ArrayList<>();
+                                    datas.add(dataBean);
+                                    deleteIMMessage(datas);
+                                }
+                            })
+                            .showDialog(mParentILayout);
+                    return true;
+                }
+            });
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -359,22 +439,37 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                         int tag = (int) checkBox.getTag();
                         boolean selector = isPositionSelector(posInData);
                         if (selector) {
-                            mCheckStats.put(tag,true);
+                            mCheckStats.put(tag, true);
                         } else {
                             mCheckStats.delete(tag);
                         }
-                        tv_selected.setText(String.format(getString(R.string.text_already_selected_item),mCheckStats.size()));
+                        tv_selected.setText(String.format(getString(R.string.text_already_selected_item), mCheckStats.size()));
                     } else {
                         //资讯
                         if ("news".equals(finalType)) {
                             startIView(new InformationDetailUIView(finalItem_id));
-                        } else if("discuss".equals(finalType)) {
+                        } else if ("discuss".equals(finalType)) {
                             // 动态
+                            UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false, false);
+                        } else if (CustomAttachmentType.GRABREDBAG.equals(finalType) || CustomAttachmentType.DISCUSS_REWARD.equals(finalType)) {
                             UserDiscussItemControl.jumpToDynamicDetailUIView(mILayout, finalItem_id, false, false, false);
                         }
                     }
                 }
             });
+        }
+
+        private void fillAvatar(final SimpleDraweeView avatarView, int graber) {
+            RRetrofit.create(UserService.class)
+                .userInfo(Param.buildMap("to_uid:" + graber))
+                    .compose(Rx.transformer(UserInfoBean.class))
+                .subscribe(new RSubscriber<UserInfoBean>() {
+                    @Override
+                    public void onSucceed(UserInfoBean bean) {
+                        super.onSucceed(bean);
+                        DraweeViewUtil.resize(avatarView, bean.getAvatar());
+                    }
+                });
         }
 
         @Override
@@ -390,20 +485,20 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setSelectorPosition(position,checkBox);
+                    setSelectorPosition(position, checkBox);
                     int tag = (int) checkBox.getTag();
                     boolean selector = isPositionSelector(position);
                     if (selector) {
-                        mCheckStats.put(tag,true);
+                        mCheckStats.put(tag, true);
                     } else {
                         mCheckStats.delete(tag);
                     }
-                    tv_selected.setText(String.format(getString(R.string.text_already_selected_item),mCheckStats.size()));
+                    tv_selected.setText(String.format(getString(R.string.text_already_selected_item), mCheckStats.size()));
                 }
             };
 
             checkBox.setOnClickListener(listener);
-            checkBox.setChecked(mCheckStats.get(position,false));
+            checkBox.setChecked(mCheckStats.get(position, false));
         }
 
         @Override
@@ -415,36 +510,6 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
             return true;
         }
 
-    }
-
-    private void animBottom(boolean show) {
-        if (ll_bottom.getVisibility() == View.GONE) {
-            ll_bottom.setVisibility(View.VISIBLE);
-        }
-
-        float start = show? ScreenUtil.dip2px(48):0;
-        float end = show?0:ScreenUtil.dip2px(48);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(ll_bottom,"translationY",start,end);
-        animator.setDuration(300);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.start();
-    }
-
-    private void editItems() {
-        TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
-        if (getString(R.string.text_edit).equals(selectNum.getText().toString())) {
-            selectNum.setText(getString(R.string.cancel));
-            mNotifyAdapter.slideOpen();
-        } else if (getString(R.string.cancel).equals(selectNum.getText().toString())) {
-            selectNum.setText(getString(R.string.text_edit));
-            mNotifyAdapter.slideClose();
-        }
-    }
-
-    /**是否处于编辑模式*/
-    private boolean isInEditModel() {
-        TextView selectNum = (TextView) getUITitleBarContainer().getRightControlLayout().getChildAt(0);
-        return getString(R.string.cancel).equals(selectNum.getText().toString());
     }
 
 }

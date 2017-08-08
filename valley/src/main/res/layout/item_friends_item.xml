@@ -17,7 +17,7 @@
         <!--android:scaleType="centerCrop"-->
         <!--android:layout_alignParentStart="true" />-->
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/iv_item_head"
         style="@style/UserLittleIcoStyle"
         android:layout_width="@dimen/avatar_image_size_x_little"
@@ -26,6 +26,7 @@
         android:layout_marginLeft="@dimen/base_xhdpi"
         android:layout_centerVertical="true"
         android:scaleType="centerCrop"
+        android:contentDescription="@string/is_circle"
         android:layout_alignParentStart="true" />
 
     <RelativeLayout

@@ -20,6 +20,7 @@ import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.FuncItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.utils.RBus;
+import com.hn.d.valley.widget.HnGlideImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
         } else if (getItemType(position) == ItemTypes.FUNC) {
             final FuncItem item = (FuncItem) bean;
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
+            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
             iv_head.setImageResource(item.getDrawableRes());
             tv_friend_name.setText(item.getText());
             CheckBox checkBox = holder.v(R.id.cb_friend_addfirend);
@@ -67,9 +68,11 @@ public class ContactSelectAdapter extends BaseContactSelectAdapter {
         } else if (getItemType(position) == ItemTypes.FRIEND){
             ContactItem item = (ContactItem) bean;
 
-            SimpleDraweeView imageView = holder.v(R.id.iv_item_head);
+            HnGlideImageView imageView = holder.v(R.id.iv_item_head);
             TextView nickName = holder.tv(R.id.tv_friend_name);
-            DraweeViewUtil.setDraweeViewHttp(imageView,item.getFriendBean().getAvatar());
+//            DraweeViewUtil.setDraweeViewHttp(imageView,item.getFriendBean().getAvatar());
+            imageView.setImageUrl(item.getFriendBean().getAvatar());
+            imageView.setAuth(item.getFriendBean().getIsAuth());
             nickName.setText(item.getFriendBean().getTrueName());
         }
 

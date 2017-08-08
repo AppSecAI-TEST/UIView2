@@ -3,6 +3,7 @@ package com.hn.d.valley.widget;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.angcyo.uiview.utils.ScreenUtil;
@@ -25,6 +26,8 @@ public class DiceLayout extends LinearLayout {
 
     private Context context;
 
+    private boolean first;
+
     public DiceLayout(Context context) {
         this(context,null);
     }
@@ -38,18 +41,37 @@ public class DiceLayout extends LinearLayout {
         this.context = context;
     }
 
-    public void init(int diceCount , int[] values,boolean anim){
+    public void setFirst(boolean first) {
+        this.first = first;
+    }
+
+    public void init(int diceCount , int[] values, boolean anim){
+        Log.v("DiceLayout anim", anim + " first " + first);
+
+        // 如果是第一次 进来  first true 执行动画 anim true 两者ture 执行动画
+
+        // 如果第二进进来 first true  anim false return
+
+
+        if(first && !anim) {
+            return;
+        }
+
+        // first false anim false 不执行动画
+
+
+
         this.diceCount = diceCount;
         this.diceValues = values;
         removeAllViews();
         LayoutParams params = new LayoutParams(ScreenUtil.dip2px(60),ScreenUtil.dip2px(60));
         params.setLayoutDirection(HORIZONTAL);
         for (int i = 0 ; i < diceCount; i ++) {
-            addView(new DiceView(context),params);
+            addView(new DiceView2(context),params);
         }
 
         for (int i = 0 ; i < diceCount ; i ++) {
-            ((DiceView)getChildAt(i)).setAnim(anim).setDiceValue(values[i]);
+            ((DiceView2)getChildAt(i)).setAnim(anim).setDiceValue(values[i]);
         }
 
     }

@@ -633,6 +633,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
             @Override
             public void onClick(View v) {
                 if (!isSelfAdmin) {
+                    T_.show("群主才有权限修改群名称");
                     return;
                 }
                 startInputView(infoLayout, infoLayout.getDarkTextView().getText().toString(), new Action1<String>() {

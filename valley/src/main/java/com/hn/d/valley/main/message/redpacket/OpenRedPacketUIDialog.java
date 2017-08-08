@@ -118,19 +118,35 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                         if (bean == null) {
 
                         } else {
-                            grabedRDDetail = bean;
-                            ivIconHead.setImageUrl(bean.getAvatar());
-                            tvUsername.setText(bean.getUsername());
-                            tvTip.setText(R.string.text_send_you_a_packet);
-                            if (redpacketStatus == CAN_BE_GRAB) {
-                                tvRedContent.setText(bean.getContent());
-                            } else if (redpacketStatus == CAN_NOTE_GRAB) {
-                                tvTip.setText("");
-                            }
+                            initData(bean);
                         }
                     }
                 });
 
+    }
+
+    private void initData(GrabedRDDetail bean) {
+        grabedRDDetail = bean;
+        ivIconHead.setImageUrl(bean.getAvatar());
+        tvUsername.setText(bean.getUsername());
+        tvTip.setText(R.string.text_send_you_a_packet);
+        if (bean.getUid() == Integer.valueOf(UserCache.getUserAccount())) {
+            tvTip.setText("");
+            tvRedToDetail.setVisibility(View.VISIBLE);
+            tvRedToDetail.setText("查看领取详情>");
+            tvRedToDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toResultUIView();
+                    finishDialog();
+                }
+            });
+        }
+        if (redpacketStatus == CAN_BE_GRAB) {
+            tvRedContent.setText(bean.getContent());
+        } else if (redpacketStatus == CAN_NOTE_GRAB) {
+            tvTip.setText("");
+        }
     }
 
     @Override
@@ -226,7 +242,9 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                         if (Constants.CAN_BE_GRAB == code) {
                             return grabRedBag(redId, discuss_id);
                         } else if (Constants.ALREADY_GRAB == code) {
-
+                            return Observable.just(Constants.ALREADY_GRAB);
+                        } else if (Constants.LOOT_OUT == code) {
+                            return Observable.just(Constants.LOOT_OUT);
                         }
                         return Observable.empty();
                     }
@@ -261,6 +279,10 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                                     return Constants.IN_QUEUE != code;
                                 }
                             });
+                } else if (Constants.ALREADY_GRAB == code) {
+                    return Observable.just(Constants.ALREADY_GRAB);
+                } else if (Constants.LOOT_OUT == code) {
+                    return Observable.just(Constants.LOOT_OUT);
                 }
                 return Observable.empty();
             }
@@ -280,29 +302,34 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                         if (isError) {
                             L.i(TAG, e.getMsg());
                             finishDialog();
-
                         }
                     }
 
                     @Override
                     public void onSucceed(Integer beans) {
                         L.i(TAG, beans);
+                        if (beans == Constants.ALREADY_GRAB) {
+                            startIView(new OpenRedPacketUIDialog(Constants.LOOT_OUT, redId).setDiscuss_id(discuss_id));
+                        }  else if (Constants.LOOT_OUT == beans) {
+                            startIView(new OpenRedPacketUIDialog(Constants.LOOT_OUT, redId).setDiscuss_id(discuss_id));
+                        }else {
+                            toResultUIView();
+                        }
 //                        if (mSessionId.equals(UserCache.getUserAccount())) {
-//                            startIView(new P2PStatusRPUIView(mSessionId, redId, true));
+//                            replaceIView(new P2PStatusRPUIView(mSessionId, redId, true));
 //                        } else {
-                        toResultUIView();
 //                        }
-                        finishDialog();
+//                        finishDialog();
                     }
                 });
 
     }
 
     private void toResultUIView() {
-        if (TextUtils.isEmpty(discuss_id)){
-            startIView(new GrabedRDResultUIView(redId));
+        if (TextUtils.isEmpty(discuss_id)) {
+            replaceIView(new GrabedRDResultUIView(redId));
         } else {
-            startIView(new GrabedRDResultUIView(redId).setSqureRedbag(true));
+            replaceIView(new GrabedRDResultUIView(redId).setSqureRedbag(true));
         }
     }
 

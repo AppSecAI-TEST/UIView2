@@ -27,6 +27,7 @@ import com.hn.d.valley.main.message.audio.MessageAudioControl;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.MyGroupUIView;
+import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnRefreshLayout;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -121,7 +122,13 @@ public class ChatControl2 {
 
 
     public void resetData(List<IMMessage> messages) {
-        mChatAdapter.resetData(messages);
+        List<IMMessage> filterMsgs = new ArrayList<>();
+        for (IMMessage message : messages) {
+            if(!filterMessages(message)) {
+                filterMsgs.add(message);
+            }
+        }
+        mChatAdapter.resetData(filterMsgs);
         scrollToEnd();
     }
 
@@ -538,8 +545,12 @@ public class ChatControl2 {
             // 处理新收到的消息，为了上传处理方便，SDK 保证参数 messages 全部来自同一个聊天对象。
             for (IMMessage message : messages) {
                 if (TextUtils.equals(mSessionId, message.getSessionId())) {
-                    mChatAdapter.appendData(messages);
-                    mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount());
+                    // 过滤不需要的消息
+                    if(!filterMessages(message)) {
+                        mChatAdapter.appendData(messages);
+                        mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount());
+                    }
+
                 } else {
                     RBus.post(new LastMessageEvent(message));
                 }
@@ -551,6 +562,10 @@ public class ChatControl2 {
 
         }
     };
+
+    private boolean filterMessages(IMMessage messages) {
+        return SessionHelper.messageFilter(messages);
+    }
 
     private void sendMsgReceipt() {
 

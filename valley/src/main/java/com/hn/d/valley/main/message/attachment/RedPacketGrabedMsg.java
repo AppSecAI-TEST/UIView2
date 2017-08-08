@@ -27,6 +27,11 @@ public class RedPacketGrabedMsg extends BaseCustomMsg {
     private int created;
     private int owner;
     private int graber;
+    /**
+     * extend : {"discuss_id":"6277"}
+     */
+
+    private ExtendBean extend;
 
     public String getMsg() {
         return msg;
@@ -66,5 +71,29 @@ public class RedPacketGrabedMsg extends BaseCustomMsg {
 
     public void setGraber(int graber) {
         this.graber = graber;
+    }
+
+    public ExtendBean getExtend() {
+        return extend;
+    }
+
+    public void setExtend(ExtendBean extend) {
+        this.extend = extend;
+    }
+
+    public static class ExtendBean {
+        /**
+         * discuss_id : 6277
+         */
+
+        private String discuss_id;
+
+        public String getDiscuss_id() {
+            return discuss_id;
+        }
+
+        public void setDiscuss_id(String discuss_id) {
+            this.discuss_id = discuss_id;
+        }
     }
 }

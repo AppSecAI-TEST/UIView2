@@ -122,7 +122,7 @@ public class MsgNotifySetting {
         mSPUtils.putBoolean(CIRCLE_NOTIFY,enable);
     }
 
-    public boolean isCircleCNotify() {
+    public boolean isCircleNotify() {
         return mSPUtils.getBoolean(CIRCLE_NOTIFY,true);
     }
 

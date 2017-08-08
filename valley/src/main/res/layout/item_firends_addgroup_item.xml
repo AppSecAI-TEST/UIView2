@@ -30,7 +30,7 @@
         <!--android:contentDescription="@string/is_circle"-->
         <!--android:scaleType="centerCrop" />-->
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <com.hn.d.valley.widget.HnGlideImageView
         android:id="@+id/iv_item_head"
         style="@style/UserLittleIcoStyle"
         android:layout_toRightOf="@id/cb_friend_addfirend"
