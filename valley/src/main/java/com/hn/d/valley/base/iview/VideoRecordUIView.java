@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -18,7 +19,6 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.utils.L;
@@ -198,9 +198,9 @@ public class VideoRecordUIView extends UIBaseView {
         mRecordLayout = v(R.id.record_layout);
         mRecordLayout.setTextOffset(40 * density());
         mLoopRecyclerView = v(R.id.loop_recycler_view);
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) v(R.id.pretty_layout).getLayoutParams();
-        params.topMargin = (int) getTitleBarHeight();
-        v(R.id.pretty_layout).setLayoutParams(params);
+//        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) v(R.id.pretty_layout).getLayoutParams();
+//        params.topMargin = (int) getTitleBarHeight();
+//        v(R.id.pretty_layout).setLayoutParams(params);
     }
 
     @Override
@@ -210,6 +210,7 @@ public class VideoRecordUIView extends UIBaseView {
                 .setShowBackImageView(true)
                 .setFloating(true)
                 .setTitleString("")
+                .setTitleBarBGColor(Color.TRANSPARENT)
                 .setBackImageRes(R.drawable.quxiao_paishiping)
                 .addRightItem(TitleBarPattern.buildImage(R.drawable.meiyan, new View.OnClickListener() {
                     @Override

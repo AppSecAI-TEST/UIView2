@@ -28,53 +28,58 @@
     <!--android:gravity="center"-->
     <!--android:text="@string/record_tip"/>-->
 
-    <LinearLayout
+    <com.angcyo.uiview.widget.TitleBarLayout
         android:id="@+id/pretty_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_item_size"
+        android:layout_height="wrap_content"
         android:background="@color/transparent_dark"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/base_xxxhdpi"
-        android:paddingStart="@dimen/base_xxxhdpi"
         android:visibility="invisible"
-        tools:background="@color/base_red_dark"
         tools:visibility="visible">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/pretty_tip"
-            android:textColor="@color/base_white"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/base_xxxhdpi"
+            android:paddingStart="@dimen/base_xxxhdpi"
+            android:paddingTop="@dimen/base_40dpi"
+            tools:background="@color/base_red_dark">
 
-        <com.angcyo.uiview.widget.RSeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="@dimen/base_xhdpi"
-            app:r_cur_progress="50"
-            app:r_thumb_color="@color/base_white"
-            app:r_thumb_type="CIRCLE"
-            app:r_track_bg_color="@color/base_white_tran2"
-            app:r_track_color="@color/base_white"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pretty_tip"
+                android:textColor="@color/base_white"/>
 
-        <com.angcyo.uiview.widget.RTextView
-            android:id="@+id/seek_tip_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="@dimen/base_40dpi"
-            android:text="0"
-            android:textColor="@color/base_white"
-            tools:text="999%"/>
+            <com.angcyo.uiview.widget.RSeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/base_xhdpi"
+                app:r_cur_progress="50"
+                app:r_thumb_color="@color/base_white"
+                app:r_thumb_type="CIRCLE"
+                app:r_track_bg_color="@color/base_white_tran2"
+                app:r_track_color="@color/base_white"/>
 
-    </LinearLayout>
+            <com.angcyo.uiview.widget.RTextView
+                android:id="@+id/seek_tip_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="@dimen/base_40dpi"
+                android:text="0"
+                android:textColor="@color/base_white"
+                tools:text="999%"/>
+
+        </LinearLayout>
+    </com.angcyo.uiview.widget.TitleBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="170dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/base_white">
+        android:layout_alignParentBottom="true">
 
         <ImageView
             android:id="@+id/lj_selector_view"
@@ -83,7 +88,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/base_xxxhdpi"
-            android:src="@drawable/lvjing_selector"/>
+            android:src="@drawable/lvjing_s"/>
 
         <ImageView
             android:id="@+id/video_selector_view"
@@ -109,7 +114,6 @@
             android:id="@+id/lj_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="140dp"
-            android:background="@color/base_white"
             android:paddingTop="@dimen/base_xxxhdpi"
             android:tag="H"/>
 
