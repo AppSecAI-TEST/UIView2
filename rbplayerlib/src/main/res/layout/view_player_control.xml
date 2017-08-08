@@ -4,7 +4,7 @@
                 android:layout_height="match_parent">
 
     <!-- loading -->
-    <ImageView
+    <com.m3b.rblibrary.ShapeImageView
         android:id="@+id/preview_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

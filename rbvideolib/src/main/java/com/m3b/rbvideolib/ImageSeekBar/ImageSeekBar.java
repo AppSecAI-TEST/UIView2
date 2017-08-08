@@ -24,9 +24,9 @@ public class ImageSeekBar extends View {
 
     private static final String Tag = "ImageSeekBar";
     private static final int DEFAULT_HEIGHT = 50;//默认高度，单位dp
-    private static final int DEFAULT_DURATION = 30;//默认最长裁剪时间长度
-    private static final int DEFAULT_WIDTH = DEFAULT_DURATION * 10;//默认宽度，单位d
     private static final int DEFAULT_POSITION = -1;//未设置时为止，用来判断是否初始化
+    private static int DEFAULT_DURATION = 30;//默认最长裁剪时间长度
+    private static final int DEFAULT_WIDTH = DEFAULT_DURATION * 10;//默认宽度，单位d
     Rect tempRect = new Rect();
     Paint tempPaint = new Paint();
     private int mHeight = dp2px(getContext(), DEFAULT_HEIGHT);//View的总高度
@@ -425,6 +425,11 @@ public class ImageSeekBar extends View {
 
     public int getMaxDuration() {
         return DEFAULT_DURATION;
+    }
+
+    public void setMaxDuration(int duration) {
+
+        DEFAULT_DURATION = duration;
     }
 
     public int getMaxwidth() {

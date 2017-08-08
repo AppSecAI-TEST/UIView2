@@ -8,12 +8,15 @@ import com.angcyo.uiview.Root
 import com.angcyo.uiview.utils.T_
 import com.m3b.rbvideolib.listener.CompressListener
 import com.m3b.rbvideolib.listener.CutterListener
+import com.m3b.rbvideolib.listener.GifMakerListener
 import com.m3b.rbvideolib.listener.InitListener
 import com.m3b.rbvideolib.processor.Compressor
 import com.m3b.rbvideolib.processor.Cutter
+import com.m3b.rbvideolib.processor.GifMaker
 import java.io.File
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
+
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -28,7 +31,10 @@ import java.util.regex.Pattern
  */
 
 object RVideoEdit {
+
+    /**视频裁剪*/
     private var mCutter: Cutter? = null
+
     private fun initCutter(activity: Activity, onLoadSuccess: () -> Unit) {
         if (mCutter == null) {
             mCutter = Cutter(activity)
@@ -47,7 +53,9 @@ object RVideoEdit {
         }
     }
 
+    /**视频压缩*/
     private var mCompressor: Compressor? = null
+
     private fun initCompressor(activity: Activity, onLoadSuccess: () -> Unit) {
         if (mCompressor == null) {
             mCompressor = Compressor(activity)
@@ -66,6 +74,63 @@ object RVideoEdit {
         }
     }
 
+    /**GIF生成*/
+    private var mGifmaker: GifMaker? = null
+
+    private fun initGifMaker(activity: Activity, onLoadSuccess: () -> Unit) {
+        if (mGifmaker == null) {
+            mGifmaker = GifMaker(activity)
+            mGifmaker?.loadBinary(object : InitListener {
+                override fun onLoadSuccess() {
+                    Log.v("###", "load library succeed")
+                    onLoadSuccess.invoke()
+                }
+
+                override fun onLoadFail(reason: String) {
+                    Log.i("###", "load library fail:" + reason)
+                }
+            })
+        } else {
+            onLoadSuccess.invoke()
+        }
+    }
+
+    fun makeGIF(activity: Activity, video_path: String, _outPath: String, listener: OnExecCommandListener?) {
+        initGifMaker(activity) {
+            if (TextUtils.isEmpty(video_path)) {
+                listener?.onExecFail("视频路径不能为空")
+                return@initGifMaker
+            }
+
+            lastpercent = 0
+
+            //String ffpmegString = "-ss 0 -t 3 -i " + _cutPath + " -vf fps=10,scale=150:-1:sws_dither=ed -gifflags -transdiff -y " + _outPath;
+            val ffpmegString = "-threads 8 -ss 0 -t 3 -i $video_path -vf fps=10 -r 15 -y $_outPath"
+
+            val command = ffpmegString.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            mGifmaker?.execCommand(command, object : GifMakerListener {
+
+                override fun onExecFail(reason: String) {
+                    listener?.onExecFail("GIF制作失败")
+                    Log.e("###", reason)
+                    lastpercent = 0
+                }
+
+                override fun onExecStart() {
+                    listener?.onExecStart()
+                }
+
+                override fun onExecSuccess(message: String) {
+                    listener?.onExecSuccess("GIF成功")
+                }
+
+                override fun onExecProgress(message: String) {
+                    Log.e("onProgress", " " + message)
+                    //progressDialog.setProgress((int)getProgress(message,videoLength));
+                }
+            })
+        }
+    }
 
     /**裁剪视频*/
     fun cutAndCompressVideo(activity: Activity, path: String, _outPath: String,
@@ -79,6 +144,10 @@ object RVideoEdit {
             val command = ffpmegString.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
 
             mCutter?.execCommand(command, object : CutterListener {
+                override fun onExecStart() {
+                    listener?.onExecStart()
+                }
+
                 override fun onExecSuccess(message: String) {
                     compressVideo(activity, cutOutPath, _outPath, _logoPath, getVideoLength(cutOutPath), listener)
                 }

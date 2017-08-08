@@ -6,6 +6,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ import com.liulishuo.FDownListener;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.lzy.imagepicker.ImagePicker;
 import com.m3b.rblibrary.RBMediaController;
+import com.m3b.rblibrary.ShapeImageView;
 
 import java.io.File;
 
@@ -195,7 +197,11 @@ public class VideoPlayUIView extends UIIViewImpl {
             }
 
             if (thumbDrawable != null) {
-                previewImageView.setImageDrawable(thumbDrawable);
+                if (thumbDrawable instanceof GradientDrawable && previewImageView instanceof ShapeImageView) {
+                    ((ShapeImageView) previewImageView).setShapeDrawable(thumbDrawable);
+                } else {
+                    previewImageView.setImageDrawable(thumbDrawable);
+                }
             } else if (!TextUtils.isEmpty(thumbImagePath)) {
                 Glide.with(mActivity)
                         .load(thumbImagePath)

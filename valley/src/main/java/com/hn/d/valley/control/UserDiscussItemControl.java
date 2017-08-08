@@ -259,6 +259,18 @@ public class UserDiscussItemControl {
         String hotPackageId = dataListBean.getPackage_id();
         holder.v(R.id.hot_package_view).setVisibility(TextUtils.isEmpty(hotPackageId) ? View.INVISIBLE : View.VISIBLE);
         grabRedBag(hotPackageId, dataListBean.getDiscuss_id());
+        holder.click(R.id.hot_package_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                T_.show("看完视频,领取红包.");
+            }
+        });
+        holder.click(R.id.forward_hot_package_view, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                T_.show("看完视频,领取红包.");
+            }
+        });
 
         //转发动态红包id
         if (isForwardDynamic(dataListBean)) {
