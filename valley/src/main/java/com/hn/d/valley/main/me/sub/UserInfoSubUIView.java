@@ -274,7 +274,11 @@ public class UserInfoSubUIView extends BaseItemUIView {
                     holder.sub(R.id.signature_item).setItemDarkText(mUserInfoBean.getSignature());
                 }
 
+                //年龄
                 holder.sub(R.id.birthday_item).setItemDarkText(mUserInfoBean.getBirthday(getResources()));
+
+                //星座
+                holder.sub(R.id.constellation_item).setItemDarkText(mUserInfoBean.getConstellation());
 
                 if (TextUtils.isEmpty(mUserInfoBean.getAddress())) {
                     holder.sub(R.id.address_item).setItemDarkText(getString(R.string.address_empty_tip));

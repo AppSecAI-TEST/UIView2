@@ -68,19 +68,19 @@ import java.util.List;
 public class UserDetailUIView extends BaseContentUIView {
 
     String to_uid;
-//    @BindView(R.id.scroll_root_layout)
+    //    @BindView(R.id.scroll_root_layout)
     NestedScrollView mScrollRootLayout;
-//    @BindView(R.id.ico_recycler_view)
+    //    @BindView(R.id.ico_recycler_view)
     HnIcoRecyclerView mIcoRecyclerView;
-//    @BindView(R.id.view_pager_placeholder_view)
+    //    @BindView(R.id.view_pager_placeholder_view)
     ImageView mViewPagerPlaceholderView;
-//    @BindView(R.id.view_pager)
+    //    @BindView(R.id.view_pager)
     ViewPager mViewPager;
-//    @BindView(R.id.single_text_indicator_view)
+    //    @BindView(R.id.single_text_indicator_view)
     TextIndicator mSingleTextIndicatorView;
-//    @BindView(R.id.command_item_view)
+    //    @BindView(R.id.command_item_view)
     TextView mCommandItemView;
-//    @BindView(R.id.auth_desc)
+    //    @BindView(R.id.auth_desc)
     TextView mAuthDesc;
     /**
      * 是否是粉丝
@@ -282,7 +282,7 @@ public class UserDetailUIView extends BaseContentUIView {
         }
     }
 
-//    @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
+    //    @OnClick({R.id.qr_code_view, R.id.follow_item_layout, R.id.follower_item_layout})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.qr_code_view://二维码
@@ -331,7 +331,7 @@ public class UserDetailUIView extends BaseContentUIView {
                     mCommandItemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            SessionHelper.startP2PSession(getILayout(),to_uid,SessionTypeEnum.P2P);
+                            SessionHelper.startP2PSession(getILayout(), to_uid, SessionTypeEnum.P2P);
                         }
                     });
                 } else {

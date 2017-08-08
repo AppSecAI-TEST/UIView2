@@ -100,6 +100,20 @@
         android:layout_marginStart="@dimen/base_xhdpi"
         android:background="@color/line_color"/>
 
+    <!--年龄-->
+    <com.angcyo.uiview.widget.ItemSubInfoLayout
+        android:id="@+id/constellation_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/base_xhdpi"
+        app:item_text="星座"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_line"
+        android:layout_marginStart="@dimen/base_xhdpi"
+        android:background="@color/line_color"/>
+
     <com.angcyo.uiview.widget.ItemSubInfoLayout
         android:id="@+id/address_item"
         android:layout_width="match_parent"
