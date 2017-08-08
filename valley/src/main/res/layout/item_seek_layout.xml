@@ -20,12 +20,31 @@
             android:orientation="vertical">
 
             <!--背景图-->
-            <com.hn.d.valley.main.seek.HnSeekGlideImageView
-                android:id="@+id/image_view"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/default_image"/>
+                android:layout_height="@dimen/base_100dpi">
+
+                <com.hn.d.valley.main.seek.HnSeekGlideImageView
+                    android:id="@+id/image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:scaleType="centerCrop"
+                    tools:src="@drawable/default_image"/>
+
+                <TextView
+                    android:id="@+id/show_distance_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="@dimen/base_ldpi"
+                    android:background="@drawable/base_dark_round_little"
+                    android:drawableLeft="@drawable/location_xiuchang_xiao"
+                    android:padding="@dimen/base_mdpi"
+                    android:textColor="@color/base_white"
+                    android:textSize="9sp"
+                    tools:text="1km"/>
+            </FrameLayout>
+
 
             <!--排名, 魅力信息-->
             <LinearLayout

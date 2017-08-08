@@ -222,6 +222,13 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                 //展示图
                 val imageView: GlideImageView = holder.v(R.id.image_view)
 
+                //距离
+                if (dataBean.distance.toFloat() < 1000f) {
+                    holder.tv(R.id.show_distance_view).text = "<1km"
+                } else {
+                    holder.tv(R.id.show_distance_view).text = "${dataBean.distance}km"
+                }
+
                 //排名, 魅力值
                 val charmView: RTextView = holder.v(R.id.charm_view)
                 val rankView: RTextView = holder.v(R.id.rank_view)

@@ -183,6 +183,11 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
 
                 //点赞
                 mViewHolder.click(R.id.show_like_view) {
+                    if (mViewHolder.v<View>(R.id.show_dislike_view).tag != null) {
+                        T_.show("你已经踩过了")
+                        return@click
+                    }
+
                     if (it.tag == null) {
                         it.tag = "like"
                         seekBean.like_cnt = "${seekBean.like_cnt.toInt() + 1}"
@@ -205,6 +210,11 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
 
                 //踩
                 mViewHolder.click(R.id.show_dislike_view) {
+                    if (mViewHolder.v<View>(R.id.show_like_view).tag != null) {
+                        T_.show("你已经点赞过了")
+                        return@click
+                    }
+
                     if (it.tag == null) {
                         it.tag = "dislike"
                         seekBean.dislike_cnt = "${seekBean.dislike_cnt.toInt() + 1}"

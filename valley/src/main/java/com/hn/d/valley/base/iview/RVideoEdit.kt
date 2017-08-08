@@ -105,7 +105,7 @@ object RVideoEdit {
             lastpercent = 0
 
             //String ffpmegString = "-ss 0 -t 3 -i " + _cutPath + " -vf fps=10,scale=150:-1:sws_dither=ed -gifflags -transdiff -y " + _outPath;
-            val ffpmegString = "-threads 8 -ss 0 -t 3 -i $video_path -vf fps=10 -r 15 -y $_outPath"
+            val ffpmegString = "-threads 8 -ss 0 -t 3 -i $video_path -vf fps=25 -r 15 -y $_outPath"
 
             val command = ffpmegString.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             mGifmaker?.execCommand(command, object : GifMakerListener {

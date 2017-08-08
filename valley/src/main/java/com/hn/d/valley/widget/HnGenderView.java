@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.angcyo.uiview.github.pickerview.DateDialog;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.UI;
 import com.angcyo.uiview.widget.RTextView;
@@ -213,6 +214,17 @@ public class HnGenderView extends LinearLayout {
         } else {
             mConstellationTextView.setVisibility(VISIBLE);
             mConstellationTextView.setText(constellation);
+        }
+    }
+
+    public void setGender2(String sex, String birthday /*年龄*/, String constellation /*星座*/, String charm /*魅力*/) {
+        setGender2(sex, DateDialog.getBirthday(birthday), constellation);
+
+        if (TextUtils.isEmpty(charm)) {
+            mCharmTextView.setVisibility(GONE);
+        } else {
+            mCharmTextView.setVisibility(VISIBLE);
+            mCharmTextView.setText(charm);
         }
     }
 

@@ -145,7 +145,10 @@ public class MyQrCodeUIView extends BaseContentUIView {
         imageView.setAuth(userInfoBean.getIs_auth());
 
         HnGenderView genderView = mViewHolder.v(R.id.grade);
-        genderView.setGender(userInfoBean.getSex(), userInfoBean.getGrade());
+        genderView.setGender2(userInfoBean.getSex(),
+                userInfoBean.getBirthday(),
+                userInfoBean.getConstellation(),
+                userInfoBean.getCharm());
 
 //        View authView = mViewHolder.v(R.id.auth);
 //        authView.setVisibility("1".equalsIgnoreCase(userInfoBean.getIs_auth()) ? View.VISIBLE : View.INVISIBLE);
