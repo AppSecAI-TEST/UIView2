@@ -10,10 +10,10 @@ import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.utils.Json;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.ValleyApp;
-import com.hn.d.valley.activity.HnSplashActivity;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.receiver.JPushReceiver;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -23,7 +23,6 @@ import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.start.service.StartService;
 import com.netease.nimlib.sdk.RequestCallbackWrapper;
 import com.netease.nimlib.sdk.ResponseCode;
-import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.orhanobut.hawk.Hawk;
 
@@ -35,6 +34,8 @@ import java.util.Map;
 import cn.jpush.android.api.JPushInterface;
 
 import static com.hn.d.valley.control.AutoLoginControl.AutoLoginBean.LOGIN_PHONE;
+import static com.hn.d.valley.control.AutoLoginControl.AutoLoginBean.LOGIN_QQ;
+import static com.hn.d.valley.control.AutoLoginControl.AutoLoginBean.LOGIN_WX;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -48,17 +49,30 @@ import static com.hn.d.valley.control.AutoLoginControl.AutoLoginBean.LOGIN_PHONE
  * Version: 1.0.0
  */
 public class AutoLoginControl {
+    public static final String AUTO_LOGIN = "login.log";
+
     static final String KEY_LOGIN = "key_login";
     //登录的日期, 每天至少要登录一次
     static final String KEY_LOGIN_DATE = "key_login_date";
     static final String KEY_LOGIN_BEAN = "key_login_bean";
 
     AutoLoginListener mAutoLoginListener;
+    Runnable checkRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (mAutoLoginListener != null) {
+                mAutoLoginListener.onLoginError();
+            }
+
+            mAutoLoginListener = null;
+        }
+    };
 
     private AutoLoginControl() {
     }
 
     public static AutoLoginControl instance() {
+        RUtils.saveToSDCard(AUTO_LOGIN, "请求自动登录实例:");
         return Holder.instance;
     }
 
@@ -109,20 +123,22 @@ public class AutoLoginControl {
         Hawk.put(loginBean.getPhone(), loginBean.getAvatar());
         UserCache.instance().setLoginBean(loginBean);
 
+        RUtils.saveToSDCard(AUTO_LOGIN, "正在登录云信..." + loginBean.getPhone() + " " + loginBean.getYx_token());
+
         //2: 登录云信
         RNim.login(loginBean.getUid(), loginBean.getYx_token(),
                 new RequestCallbackWrapper<LoginInfo>() {
                     @Override
                     public void onResult(int code, LoginInfo result, Throwable exception) {
+                        RUtils.saveToSDCard(AUTO_LOGIN, "云信onResult..." + code);
+                        removeLoginCheck(activity);
                         if (code == ResponseCode.RES_SUCCESS) {
                             if (mAutoLoginListener != null) {
                                 mAutoLoginListener.onLoginSuccess();
                             }
                         } else {
                             T_.show(activity.getResources().getString(R.string.network_exception));
-                            if (mAutoLoginListener != null) {
-                                mAutoLoginListener.onLoginError();
-                            }
+                            onLoginError(activity);
                         }
                     }
                 });
@@ -157,9 +173,7 @@ public class AutoLoginControl {
                     public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                         super.onEnd(isError, isNoNetwork, e);
                         if (isError) {
-                            if (mAutoLoginListener != null) {
-                                mAutoLoginListener.onLoginError();
-                            }
+                            onLoginError(activity);
                         }
                     }
                 });
@@ -178,6 +192,8 @@ public class AutoLoginControl {
         map.put("open_type", open_type);
 
         L.i("正在使用" + (TextUtils.equals(open_type, "1") ? " QQ " : " 微信") + " open_id:" + open_id + " 自动登录.");
+        RUtils.saveToSDCard(AUTO_LOGIN, "正在使用" + (TextUtils.equals(open_type, "1") ? " QQ " : " 微信") + " open_id:" + open_id + " 自动登录.");
+
         loginInner(activity, map);
     }
 
@@ -203,24 +219,58 @@ public class AutoLoginControl {
      */
     public void startLogin(Activity activity, AutoLoginListener listener) {
         mAutoLoginListener = listener;
+        startLoginCheck(activity);
+
         if (canAutoLogin()) {
+            RUtils.saveToSDCard(AUTO_LOGIN, "启动自动登录流程:");
             //自动登录流程
             try {
                 AutoLoginBean autoLoginBean = getAutoLoginBean();
                 if (autoLoginBean.login_type == LOGIN_PHONE) {
+                    RUtils.saveToSDCard(AUTO_LOGIN, "自动登录 手机号码:");
                     loginPhone(activity, autoLoginBean.phone, autoLoginBean.pwd);
-                } else {
+                } else if (autoLoginBean.login_type == LOGIN_QQ || autoLoginBean.login_type == LOGIN_WX) {
+                    RUtils.saveToSDCard(AUTO_LOGIN, "自动登录 第三方平台:" + autoLoginBean.open_id);
                     loginPlatform(activity, autoLoginBean.open_id, String.valueOf(autoLoginBean.login_type));
+                } else {
+                    onLoginError(activity);
                 }
             } catch (Exception e) {
-                if (mAutoLoginListener != null) {
-                    mAutoLoginListener.onLoginError();
-                }
+                onLoginError(activity);
             }
         } else {
-            //正常登录流程
-            HnSplashActivity.launcher(activity, false, StatusCode.LOGINED.getValue());
-            activity.finish();
+            onLoginError(activity);
+//            //正常登录流程
+//            HnSplashActivity.launcher(activity, false, StatusCode.LOGINED.getValue());
+//            activity.finish();
+        }
+    }
+
+    private void onLoginError(Activity activity) {
+        removeLoginCheck(activity);
+        AutoLoginControl.setLogin(false);
+        if (mAutoLoginListener != null) {
+            mAutoLoginListener.onLoginError();
+        }
+    }
+
+
+    /**
+     * 5秒未登录成功, 判为失败
+     */
+    private void startLoginCheck(Activity activity) {
+        try {
+            activity.getWindow().getDecorView().postDelayed(checkRunnable, 5_000);
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void removeLoginCheck(Activity activity) {
+        try {
+            activity.getWindow().getDecorView().removeCallbacks(checkRunnable);
+        } catch (Exception e) {
+
         }
     }
 

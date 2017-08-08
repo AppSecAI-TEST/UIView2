@@ -26,6 +26,8 @@ import com.hwangjr.rxbus.annotation.Subscribe;
 import com.netease.nimlib.sdk.StatusCode;
 import com.orhanobut.hawk.Hawk;
 
+import static com.hn.d.valley.control.AutoLoginControl.AUTO_LOGIN;
+
 //import com.hn.d.valley.main.message.avchat.AVChatControl;
 //import com.hn.d.valley.main.message.avchat.ui.AVChatUIView;
 
@@ -106,8 +108,9 @@ public class HnUIMainActivity extends BaseActivity {
 
                 @Override
                 public void onLoginSuccess() {
-                    showMainUIView();
                     L.w("自动登录成功.");
+                    RUtils.saveToSDCard(AUTO_LOGIN, "自动登录成功");
+                    showMainUIView();
                 }
             });
         }
