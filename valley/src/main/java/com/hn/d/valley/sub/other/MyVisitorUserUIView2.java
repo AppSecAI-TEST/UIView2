@@ -28,6 +28,12 @@ public class MyVisitorUserUIView2 extends UserInfoTimeRecyclerUIView {
     }
 
     @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        initOverEmptyLayout("你还没有访客哦~\n去发布精彩动态, 让更多的人看到你", R.drawable.image_wufangke);
+    }
+
+    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(UserService.class)

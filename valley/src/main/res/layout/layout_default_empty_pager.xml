@@ -8,7 +8,7 @@
     android:visibility="gone"
     tools:visibility="visible">
 
-    <TextView
+    <com.angcyo.uiview.widget.RTextView
         android:id="@+id/default_pager_tip_view"
         style="@style/DarkTextStyle"
         android:layout_width="wrap_content"

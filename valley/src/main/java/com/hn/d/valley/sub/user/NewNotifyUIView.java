@@ -146,6 +146,13 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
     }
 
     @Override
+    protected void initBaseEmptyLayout(View view) {
+        super.initBaseEmptyLayout(view);
+        mViewHolder.tv(R.id.base_empty_tip_view).setText("暂无动态通知哦~");
+        mViewHolder.imgV(R.id.base_empty_image_view).setImageResource(R.drawable.image_wutongzhi);
+    }
+
+    @Override
     protected void inflateRecyclerRootLayout(ContentLayout baseContentLayout, LayoutInflater inflater) {
         View root = inflater.inflate(R.layout.view_member_select, baseContentLayout);
         mRefreshLayout = (RefreshLayout) root.findViewById(R.id.refresh_layout);
@@ -378,13 +385,13 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
                 type = grabedMsg.getExtend_type();
                 int graber = grabedMsg.getGraber();
 
-                media ="grabedmsg";
+                media = "grabedmsg";
                 created = String.valueOf(grabedMsg.getCreated());
                 media_type = type;
                 item_id = grabedMsg.getExtend().getDiscuss_id();
                 fillAvatar(avatarView, graber);
             } else if (attachment instanceof DiscussRewardAttachment) {
-                DiscussRewardMsg rewardmsg = ((DiscussRewardAttachment)attachment).getDiscussRewardMsg();
+                DiscussRewardMsg rewardmsg = ((DiscussRewardAttachment) attachment).getDiscussRewardMsg();
                 media = rewardmsg.getExtend_type();
                 media_type = rewardmsg.getExtend_type();
                 type = rewardmsg.getExtend_type();
@@ -461,15 +468,15 @@ public final class NewNotifyUIView extends SingleRecyclerUIView<IMMessage> {
 
         private void fillAvatar(final SimpleDraweeView avatarView, int graber) {
             RRetrofit.create(UserService.class)
-                .userInfo(Param.buildMap("to_uid:" + graber))
+                    .userInfo(Param.buildMap("to_uid:" + graber))
                     .compose(Rx.transformer(UserInfoBean.class))
-                .subscribe(new RSubscriber<UserInfoBean>() {
-                    @Override
-                    public void onSucceed(UserInfoBean bean) {
-                        super.onSucceed(bean);
-                        DraweeViewUtil.resize(avatarView, bean.getAvatar());
-                    }
-                });
+                    .subscribe(new RSubscriber<UserInfoBean>() {
+                        @Override
+                        public void onSucceed(UserInfoBean bean) {
+                            super.onSucceed(bean);
+                            DraweeViewUtil.resize(avatarView, bean.getAvatar());
+                        }
+                    });
         }
 
         @Override

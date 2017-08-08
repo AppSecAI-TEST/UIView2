@@ -121,6 +121,13 @@ public class DraftManagerUIView extends SingleRecyclerUIView<PublishTaskRealm> {
     }
 
     @Override
+    protected void initBaseEmptyLayout(View view) {
+        super.initBaseEmptyLayout(view);
+        mViewHolder.tv(R.id.base_empty_tip_view).setText("取消发送或者发送失败的动态会存为草稿");
+        mViewHolder.imgV(R.id.base_empty_image_view).setImageResource(R.drawable.image_wucaogaoxiang);
+    }
+
+    @Override
     public RefreshLayout getRefreshLayout() {
         return mViewHolder.v(R.id.refresh_layout);
     }

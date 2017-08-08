@@ -99,6 +99,12 @@ public class MyCollectDynamicStateUIView extends BaseRecyclerUIView<String, User
     }
 
     @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        initOverEmptyLayout("你还没有收藏的内容哦~\n你可以到\"推荐\"看看, 喜欢的内容可以收藏哦", R.drawable.image_shoucang);
+    }
+
+    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(SocialService.class)

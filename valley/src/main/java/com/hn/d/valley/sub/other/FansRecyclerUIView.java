@@ -120,6 +120,11 @@ public class FansRecyclerUIView extends UserInfoRecyclerUIView {
         return uid.equalsIgnoreCase(UserCache.getUserAccount());
     }
 
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        initOverEmptyLayout("你还没有粉丝哦~\n去发布精彩动态, 让更多的人关注你", R.drawable.image_wufensi);
+    }
 
     @Override
     protected void onUILoadData(String page) {

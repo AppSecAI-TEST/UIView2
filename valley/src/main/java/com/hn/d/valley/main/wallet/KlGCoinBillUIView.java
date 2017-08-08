@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.github.utilcode.utils.SpannableStringUtils;
+import com.angcyo.uiview.dialog.UIBottomItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
@@ -20,9 +20,6 @@ import com.hn.d.valley.bean.KlgCoinBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -86,6 +83,12 @@ public class KlGCoinBillUIView extends SingleRecyclerUIView<KlgCoinBean> {
     @Override
     protected boolean isLoadInViewPager() {
         return false;
+    }
+
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        initOverEmptyLayout("暂无龙币记录", R.drawable.image_nothing);
     }
 
     @Override

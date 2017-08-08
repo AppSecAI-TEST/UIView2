@@ -106,6 +106,12 @@ public class MyAlbumUIView extends SingleRecyclerUIView<MyAlbumUIView.AlbumGroup
     }
 
     @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        initOverEmptyLayout(getEmptyTipString(), R.drawable.image_wudongtai);
+    }
+
+    @Override
     protected RExBaseAdapter<String, AlbumGroup, String> initRExBaseAdapter() {
         mAlbumAdapter = new AlbumAdapter2(mActivity);
         return mAlbumAdapter;

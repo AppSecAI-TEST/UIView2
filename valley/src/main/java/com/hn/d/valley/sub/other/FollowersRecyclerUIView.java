@@ -41,6 +41,12 @@ public class FollowersRecyclerUIView extends UserInfoRecyclerUIView {
         }
     }
 
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        initOverEmptyLayout("你还没有关注的人哦~\n你可以到\"推荐\" \"寻觅\"看看, 喜欢就关注TA吧", R.drawable.image_wuguanzhu);
+    }
+
     private boolean isMe() {
         return uid.equalsIgnoreCase(UserCache.getUserAccount());
     }

@@ -1,21 +1,17 @@
 package com.hn.d.valley.main.me.setting;
 
-import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
-import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
-import com.angcyo.uiview.utils.T_;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
-import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.ListModel;
 import com.hn.d.valley.cache.UserCache;
@@ -35,7 +31,7 @@ import com.hn.d.valley.sub.other.SingleRecyclerUIView;
  * 修改备注：
  * Version: 1.0.0
  */
-public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean>{
+public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
 
     public static final int NOT_ALLOW_ACCESS_ME = 2;
     public static final int NOT_ACCESS_OTHER = 1;
@@ -66,10 +62,22 @@ public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean>{
     }
 
     @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        String s;
+        if (type == 1) {
+            s = "添加到此处的用户,\n他们发布的动态将不会出现在你的关注动态中";
+        } else {
+            s = "添加到此处的用户,\n你发布的动态将不会被他们看到";
+        }
+        initOverEmptyLayout(s, R.drawable.image_nothing);
+    }
+
+    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
         add(RRetrofit.create(ContactService.class)
-                .specialList(Param.buildMap("uid:" + UserCache.getUserAccount(),"page:" + page,"type:" + this.type))
+                .specialList(Param.buildMap("uid:" + UserCache.getUserAccount(), "page:" + page, "type:" + this.type))
                 .compose(Rx.transformer(SpecialUserList.class))
                 .subscribe(new SingleRSubscriber<SpecialUserList>(this) {
                     @Override
@@ -83,9 +91,15 @@ public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean>{
                 }));
     }
 
-    private static class SpecialUserList extends ListModel<LikeUserInfoBean> {}
+    @Override
+    protected boolean isLoadInViewPager() {
+        return false;
+    }
 
-    private class BlackListAdapter extends RExBaseAdapter<String,LikeUserInfoBean,String> {
+    private static class SpecialUserList extends ListModel<LikeUserInfoBean> {
+    }
+
+    private class BlackListAdapter extends RExBaseAdapter<String, LikeUserInfoBean, String> {
 
         public BlackListAdapter(Context context) {
             super(context);
@@ -97,7 +111,7 @@ public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean>{
 
             SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-            DraweeViewUtil.setDraweeViewHttp(iv_head,dataBean.getAvatar());
+            DraweeViewUtil.setDraweeViewHttp(iv_head, dataBean.getAvatar());
             tv_friend_name.setText(dataBean.getUsername());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -112,10 +126,5 @@ public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean>{
         protected int getItemLayoutId(int viewType) {
             return R.layout.item_friends_item;
         }
-    }
-
-    @Override
-    protected boolean isLoadInViewPager() {
-        return false;
     }
 }

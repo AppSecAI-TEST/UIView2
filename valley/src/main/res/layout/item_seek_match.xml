@@ -112,6 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="50dp"
                 android:background="@drawable/base_left_round_selector"
                 android:gravity="center_vertical"
                 android:minWidth="@dimen/base_80dpi"

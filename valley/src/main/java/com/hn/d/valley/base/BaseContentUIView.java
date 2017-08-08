@@ -1,9 +1,7 @@
 package com.hn.d.valley.base;
 
 import android.support.annotation.CallSuper;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.angcyo.uiview.base.UIContentView;
 import com.hn.d.valley.R;
@@ -24,15 +22,13 @@ public abstract class BaseContentUIView extends UIContentView {
     boolean isRegister = false;
 
     @Override
-    protected View inflateEmptyLayout(FrameLayout baseRootLayout, LayoutInflater inflater) {
-        return inflater.inflate(R.layout.empty_layout, baseRootLayout);
+    protected int getBaseEmptyLayoutId() {
+        return R.layout.empty_layout;
     }
 
     @Override
-    protected View inflateNonetLayout(FrameLayout baseRootLayout, LayoutInflater inflater) {
-        View view = inflater.inflate(R.layout.no_network_layout, baseRootLayout);
-        initBaseNonetLayout(view);
-        return view;
+    protected int getBaseNonetLayoutId() {
+        return R.layout.no_network_layout;
     }
 
     @Override

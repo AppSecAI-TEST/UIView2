@@ -363,7 +363,10 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
                     @Override
                     public void onViewLoadDataSuccess() {
                         super.onViewLoadDataSuccess();
-                        onEvent(new UpdateDataEvent(0, POS_HOME));
+                        try {
+                            onEvent(new UpdateDataEvent(0, POS_HOME));
+                        } catch (Exception e) {
+                        }
                     }
                 });
 

@@ -23,9 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="请检查网络!"
+            android:gravity="center"
+            android:text="网络貌似不给力~\n请检查您的网络后重试!"
             android:textColor="@color/default_base_border"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <LinearLayout
             android:layout_width="wrap_content"

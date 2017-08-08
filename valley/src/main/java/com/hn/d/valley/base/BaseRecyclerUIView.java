@@ -19,6 +19,7 @@ import com.angcyo.uiview.rsen.RGestureDetector;
 import com.angcyo.uiview.rsen.RefreshLayout;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.RSoftInputLayout;
+import com.angcyo.uiview.widget.RTextView;
 import com.angcyo.uiview.widget.viewpager.UIViewPager;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
@@ -367,6 +368,18 @@ public abstract class BaseRecyclerUIView<H, T, F> extends BaseContentUIView
      */
     protected void onEmptyData(boolean isEmpty) {
         initEmpty(mViewHolder, isEmpty, getEmptyTipString());
+    }
+
+    protected void initOverEmptyLayout(String text, int topIco) {
+        try {
+            final RTextView emptyTipView = mViewHolder.v(R.id.default_pager_tip_view);
+            emptyTipView.setText(text);
+            emptyTipView.setTopIco(topIco);
+            emptyTipView.setCompoundDrawablePadding(getDimensionPixelOffset(R.dimen.base_xhdpi));
+            emptyTipView.setLineSpacing(getDimensionPixelOffset(R.dimen.base_xhdpi), 1f);
+        } catch (Exception e) {
+
+        }
     }
 
     protected String getEmptyTipString() {

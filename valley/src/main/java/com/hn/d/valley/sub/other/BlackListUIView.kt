@@ -2,6 +2,7 @@ package com.hn.d.valley.sub.other
 
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.model.TitleBarPattern
@@ -83,6 +84,12 @@ class BlackListUIView : SingleRecyclerUIView<ReplyListBean.DataListBean>() {
         mRecyclerView = RSwipeRecycleView(mActivity)
         mRefreshLayout.addView(mRecyclerView, ViewGroup.LayoutParams(-1, -1))
         baseContentLayout?.addView(mRefreshLayout, ViewGroup.LayoutParams(-1, -1))
+    }
+
+    override fun initBaseEmptyLayout(view: View) {
+        super.initBaseEmptyLayout(view)
+        mViewHolder.tv(R.id.base_empty_tip_view).text = "黑名单为空\n添加到黑名单的用户无法和你发消息, \n无法关注你和看到你的动态"
+        mViewHolder.imgV(R.id.base_empty_image_view).setImageResource(R.drawable.image_nothing)
     }
 
     override fun onUILoadData(page: String?) {
