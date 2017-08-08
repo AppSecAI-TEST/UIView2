@@ -164,7 +164,7 @@ public class UserDiscussItemControl {
         //用户名
         holder.tv(R.id.username).setText(user_info.getUsername());
         //多少人阅读
-        holder.tv(R.id.view_cnt).setText(dataListBean.getView_cnt());
+        holder.tv(R.id.view_cnt).setText(String.valueOf(1 + Integer.valueOf(dataListBean.getView_cnt())));
         //地址
         holder.tv(R.id.address).setText(dataListBean.getAddress());
         holder.tv(R.id.address).setVisibility(TextUtils.isEmpty(dataListBean.getAddress()) ? View.GONE : View.VISIBLE);
@@ -842,6 +842,8 @@ public class UserDiscussItemControl {
                     @Override
                     public void displayImage(GlideImageView imageView, String url, int width, int height, int imageSize) {
                         imageView.reset();
+                        imageView.setShowGifTip(false);
+                        imageView.setCheckGif(true);
 //                        if (YImageControl.isYellowImage(url)) {
 //                            YImageControl.showYellowImageXiao(imageView);
 //                        } else {

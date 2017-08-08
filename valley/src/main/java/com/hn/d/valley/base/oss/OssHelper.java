@@ -375,6 +375,10 @@ public class OssHelper {
         return "_s_" + width + "x" + height + ".png";
     }
 
+    public static String createImageFileNameGif(int width, int height) {
+        return "_s_" + width + "x" + height + ".gif";
+    }
+
     public static String createVideoFileName(int time) {
         return "_t_" + time + ".mp4";
     }

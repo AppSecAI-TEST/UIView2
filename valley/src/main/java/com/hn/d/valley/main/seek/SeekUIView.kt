@@ -25,6 +25,7 @@ import com.hn.d.valley.base.Param
 import com.hn.d.valley.base.rx.BaseSingleSubscriber
 import com.hn.d.valley.bean.SeekBean
 import com.hn.d.valley.cache.UserCache
+import com.hn.d.valley.control.UserDiscussItemControl
 import com.hn.d.valley.main.me.UserDetailUIView2
 import com.hn.d.valley.service.ShowService
 import com.hn.d.valley.sub.other.SingleRecyclerUIView
@@ -232,9 +233,23 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
                 val userIcoView: HnGlideImageView = holder.v(R.id.user_ico_view)
                 val userNameView: RTextView = holder.v(R.id.user_name_view)
 
+                //需要显示的图片地址
+                var imageUrl: String = RUtils.split(dataBean.images).first()
+
+                /**是否包含视频*/
+                val haveVideo = dataBean.video.isNotEmpty() && dataBean.video.contains("?")
+                if (haveVideo) {
+                    val videoParams = UserDiscussItemControl.getVideoParams(dataBean.video)
+                    val thumbUrl = videoParams[0]
+                    val videoUrl = videoParams[1]
+                    imageUrl = thumbUrl
+                }
+
                 imageView.apply {
                     reset()
-                    url = RUtils.split(dataBean.images).first()
+                    checkGif = true
+                    showAsGifImage = true
+                    url = imageUrl
                 }
 
                 charmView.text = dataBean.charm

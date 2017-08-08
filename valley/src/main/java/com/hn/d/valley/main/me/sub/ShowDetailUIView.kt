@@ -280,6 +280,8 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
 
                 imageView.apply {
                     reset()
+                    checkGif = true
+                    showAsGifImage = true
                     this.url = url
                 }
             }

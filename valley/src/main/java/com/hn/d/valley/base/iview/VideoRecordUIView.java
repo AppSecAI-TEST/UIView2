@@ -128,6 +128,11 @@ public class VideoRecordUIView extends UIBaseView {
      */
     private boolean hasLogo = true;
 
+    /**
+     * 是否截图视频gif
+     */
+    private boolean makeGif = false;
+
     public VideoRecordUIView(Action3<UIIViewImpl, String, String> publishAction) {
         this.publishAction = publishAction;
     }
@@ -455,7 +460,20 @@ public class VideoRecordUIView extends UIBaseView {
     /**
      * 为视频添加时间命名, 为缩略图添加宽高
      */
-    private void fixVideoPath(String videoPath, final File thumbFile, int videoTime /*秒*/, int videoWidth, int videoHeight, int rotationRecord) {
+    private void fixVideoPath(final String videoPath, final File thumbFile,
+                              final int videoTime /*秒*/, final int videoWidth,
+                              final int videoHeight, final int rotationRecord) {
+        HnLoading.show(mParentILayout, false);
+        pauseCamera();
+        postDelayed(160, new Runnable() {
+            @Override
+            public void run() {
+                fixVideoPathDelay(videoPath, thumbFile, videoTime, videoWidth, videoHeight, rotationRecord);
+            }
+        });
+    }
+
+    private void fixVideoPathDelay(String videoPath, final File thumbFile, int videoTime /*秒*/, int videoWidth, int videoHeight, int rotationRecord) {
         final VideoBean videoBean = new VideoBean();
         videoBean.videoPath = videoPath;
         final File videoFile = new File(videoPath);
@@ -493,79 +511,138 @@ public class VideoRecordUIView extends UIBaseView {
 
         if (rotationRecord == 0 || rotationRecord == 180) {
             thumbName = UUID.randomUUID().toString()
-                    + OssHelper.createImageFileName(videoWidth, videoHeight);
+                    + OssHelper.createImageFileNameGif(videoWidth, videoHeight);
         } else {
             thumbName = UUID.randomUUID().toString()
-                    + OssHelper.createImageFileName(videoHeight, videoWidth);
+                    + OssHelper.createImageFileNameGif(videoHeight, videoWidth);
         }
 
         final String parent = videoFile.getParent();
         thumbPath = parent + File.separator + thumbName;
         videoBean.thumbPath = thumbPath;
 
-        HnLoading.show(mParentILayout, false);
-        Observable.just("")
-                .delay(100, TimeUnit.MILLISECONDS)
-                .map(new Func1<String, String>() {
-                    @Override
-                    public String call(String s) {
-                        if (thumbFile == null || !thumbFile.exists()) {
-                            L.i("start--视频截图");
-                            handle(new HandleCallback() {
+        if (makeGif) {
+            final String _out_gif_path = thumbPath;
+            RVideoEdit.INSTANCE.makeGIF(mActivity, videoFile.getAbsolutePath(), _out_gif_path, new OnExecCommandListener() {
+                @Override
+                public void onExecProgress(int progress) {
+
+                }
+
+                @Override
+                public void onExecSuccess(String message) {
+                    L.e("gif 创建成功:" + _out_gif_path);
+                    videoBean.thumbPath = _out_gif_path;
+                    Observable.just("")
+                            .delay(100, TimeUnit.MILLISECONDS)
+                            .map(new Func1<String, String>() {
                                 @Override
-                                public boolean onHandle(int index) {
-                                    L.i("start--视频截图->" + index);
-                                    return BitmapDecoder.extractThumbnail(videoFile.getAbsolutePath(), thumbPath);
+                                public String call(String s) {
+                                    L.i("start--视频重命名");
+                                    handle(new HandleCallback() {
+                                        @Override
+                                        public boolean onHandle(int index) {
+                                            L.i("start--视频重命名:" + index);
+                                            return FileUtils.rename(videoFile, newName);
+                                        }
+                                    });
+
+                                    videoBean.videoPath = parent + File.separator + newName;
+                                    ImagePicker.galleryAddPic(mActivity, new File(videoBean.videoPath));
+
+                                    L.i("视频重命名完成: ->" + videoBean.videoPath);
+                                    return videoBean.videoPath;
                                 }
-                            });
-                            L.i("视频截图完成:" + thumbPath);
-                        } else {
-                            L.i("start--缩略图重命名");
-                            handle(new HandleCallback() {
+                            })
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<String>() {
                                 @Override
-                                public boolean onHandle(int index) {
-                                    L.i("start--缩略图重命名:" + index);
-                                    return FileUtils.rename(thumbFile, thumbName);
-                                }
-                            });
-
-                            videoBean.thumbPath = thumbFile.getParent() + File.separator + thumbName;
-                            L.i("缩略图重命名完成:" + videoBean.thumbPath);
-                        }
-                        return "";
-                    }
-                })
-                .delay(100, TimeUnit.MILLISECONDS)
-                .map(new Func1<String, String>() {
-                    @Override
-                    public String call(String s) {
-                        L.i("start--视频重命名");
-                        handle(new HandleCallback() {
-                            @Override
-                            public boolean onHandle(int index) {
-                                L.i("start--视频重命名:" + index);
-                                return FileUtils.rename(videoFile, newName);
-                            }
-                        });
-
-                        videoBean.videoPath = parent + File.separator + newName;
-                        ImagePicker.galleryAddPic(mActivity, new File(videoBean.videoPath));
-
-                        L.i("视频重命名完成: ->" + videoBean.videoPath);
-                        return videoBean.videoPath;
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String s) {
-                        //startIView(new VideoPlayUIView(thumbPath, s));
-                        HnLoading.hide();
+                                public void call(String s) {
+                                    //startIView(new VideoPlayUIView(thumbPath, s));
+                                    HnLoading.hide();
 //                                    replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(thumbPath, s), publishAction));
-                        onPushAction(videoBean.thumbPath, videoBean.videoPath);
-                    }
-                });
+                                    onPushAction(videoBean.thumbPath, videoBean.videoPath);
+                                }
+                            });
+                }
+
+                @Override
+                public void onExecStart() {
+
+                }
+
+                @Override
+                public void onExecFail(String reason) {
+                    T_.error(reason);
+                    HnLoading.hide();
+                    resumeCamera();
+                }
+            });
+        } else {
+            Observable.just("")
+                    .delay(100, TimeUnit.MILLISECONDS)
+                    .map(new Func1<String, String>() {
+                        @Override
+                        public String call(String s) {
+                            if (thumbFile == null || !thumbFile.exists()) {
+                                L.i("start--视频截图");
+                                handle(new HandleCallback() {
+                                    @Override
+                                    public boolean onHandle(int index) {
+                                        L.i("start--视频截图->" + index);
+                                        return BitmapDecoder.extractThumbnail(videoFile.getAbsolutePath(), thumbPath);
+                                    }
+                                });
+                                L.i("视频截图完成:" + thumbPath);
+                            } else {
+                                L.i("start--缩略图重命名");
+                                handle(new HandleCallback() {
+                                    @Override
+                                    public boolean onHandle(int index) {
+                                        L.i("start--缩略图重命名:" + index);
+                                        return FileUtils.rename(thumbFile, thumbName);
+                                    }
+                                });
+
+                                videoBean.thumbPath = thumbFile.getParent() + File.separator + thumbName;
+                                L.i("缩略图重命名完成:" + videoBean.thumbPath);
+                            }
+                            return "";
+                        }
+                    })
+                    .delay(100, TimeUnit.MILLISECONDS)
+                    .map(new Func1<String, String>() {
+                        @Override
+                        public String call(String s) {
+                            L.i("start--视频重命名");
+                            handle(new HandleCallback() {
+                                @Override
+                                public boolean onHandle(int index) {
+                                    L.i("start--视频重命名:" + index);
+                                    return FileUtils.rename(videoFile, newName);
+                                }
+                            });
+
+                            videoBean.videoPath = parent + File.separator + newName;
+                            ImagePicker.galleryAddPic(mActivity, new File(videoBean.videoPath));
+
+                            L.i("视频重命名完成: ->" + videoBean.videoPath);
+                            return videoBean.videoPath;
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action1<String>() {
+                        @Override
+                        public void call(String s) {
+                            //startIView(new VideoPlayUIView(thumbPath, s));
+                            HnLoading.hide();
+//                                    replaceIView(new PublishDynamicUIView(new PublishDynamicUIView.VideoStatusInfo(thumbPath, s), publishAction));
+                            onPushAction(videoBean.thumbPath, videoBean.videoPath);
+                        }
+                    });
+        }
     }
 
     private void onPushAction(String thumbPath, String videoPath) {
@@ -638,16 +715,32 @@ public class VideoRecordUIView extends UIBaseView {
     @Override
     public void onViewShow(Bundle bundle) {
         super.onViewShow(bundle);
-        mCamera.onResume();
+        resumeCamera();
         autoHide();
     }
 
     @Override
     public void onViewHide() {
         super.onViewHide();
-        mCamera.onPause();
+        pauseCamera();
         if (mIsRecording) {
             mMovieWriter.stopRecording();
+        }
+    }
+
+    private void resumeCamera() {
+        try {
+            mCamera.onResume();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void pauseCamera() {
+        try {
+            mCamera.onPause();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -893,8 +986,12 @@ public class VideoRecordUIView extends UIBaseView {
         }
     }
 
+    public VideoRecordUIView setMakeGif(boolean makeGif) {
+        this.makeGif = makeGif;
+        return this;
+    }
 
-//    /**
+    //    /**
 //     * 开启美颜
 //     */
 //    public void setBeautyed(boolean enable) {

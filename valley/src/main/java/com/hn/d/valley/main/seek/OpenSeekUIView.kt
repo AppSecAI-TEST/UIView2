@@ -18,6 +18,7 @@ import com.angcyo.uiview.utils.RUtils
 import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.utils.UI
 import com.angcyo.uiview.view.UIIViewImpl
+import com.angcyo.uiview.widget.GlideImageView
 import com.bumptech.glide.Glide
 import com.hn.d.valley.BuildConfig
 import com.hn.d.valley.R
@@ -97,6 +98,8 @@ class OpenSeekUIView : BaseItemUIView() {
     override fun createItems(items: MutableList<SingleItem>?) {
         items?.add(object : SingleItem() {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: Item?) {
+
+                //图片九宫格
                 val recyclerView: RDragRecyclerView = holder.v(R.id.recycler_view)
                 photoAdapter = object : RAddPhotoAdapter<Luban.ImageItem>(mActivity) {
                     override fun getAddViewImageResource(position: Int): Int {
@@ -144,6 +147,8 @@ class OpenSeekUIView : BaseItemUIView() {
 
                     })
                 }
+
+                //视频缩略图
                 UI.setView(holder.v(R.id.image_layout), photoAdapter.itemSize, photoAdapter.itemSize)
 
                 recyclerView.adapter = photoAdapter
@@ -152,17 +157,21 @@ class OpenSeekUIView : BaseItemUIView() {
                 }
 
                 //选择视频
+                val glideImageView: GlideImageView = holder.v(R.id.image_view)
+                glideImageView.checkGif = true
+                glideImageView.setShowGifTip(true)
                 holder.click(R.id.image_view) {
                     mParentILayout.startIView(VideoRecordUIView(Action3<UIIViewImpl, String, String> { iView, path, s ->
                         videoInfo = VideoStatusInfo(path, s)
                         oldVideoInfo = null
                         iView.finishIView(iView, UIParam().setUnloadRunnable {
-                            Glide.with(mActivity)
-                                    .load(path)
-                                    .into(holder.imgV(R.id.image_view))
+                            //       Glide.with(mActivity)
+//                                    .load(path)
+//                                    .into(holder.imgV(R.id.image_view))
+                            glideImageView.url = path
                             holder.v<View>(R.id.play_view).visibility = View.VISIBLE
                         })
-                    }))
+                    }).setMakeGif(true))
                 }
 
                 //确定
