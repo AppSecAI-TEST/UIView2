@@ -38,6 +38,7 @@ import com.hn.d.valley.widget.HnGlideImageView;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import rx.functions.Action0;
 import rx.functions.Action1;
 
 import static com.hn.d.valley.main.me.setting.MyQrCodeUIView.createQrCode;
@@ -266,8 +267,7 @@ public class ShareControl {
      * 分享qq/微信好友 二维码
      */
     public static void shareQrcode(final Activity mActivity,
-                                   final SHARE_MEDIA shareMedia
-    ) {
+                                   final SHARE_MEDIA shareMedie, final Action0 action) {
         String userCardSpm = RSA.encode(createUserCardSpm(UserCache.getUserAccount()));
         final String h5_url = String.format("%s/user?to=%s&spm=%s", WAP_URL, UserCache.getUserAccount(), userCardSpm);
         final View rootView = mActivity.getLayoutInflater().inflate(R.layout.view_share_qr_code, null);
@@ -301,7 +301,7 @@ public class ShareControl {
                                     @Override
                                     public void call(Bitmap bitmap) {
                                         qrView.setImageBitmap(bitmap);
-                                        onQrCodeCreateEnd(mActivity, layoutView(ll_share_root, ScreenUtil.dip2px(400),ScreenUtil.dip2px(500)), shareMedia);
+                                        onQrCodeCreateEnd(mActivity, layoutView(ll_share_root, ScreenUtil.dip2px(400), ScreenUtil.dip2px(500)), shareMedie,action);
                                     }
                                 });
                     }
@@ -369,11 +369,11 @@ public class ShareControl {
     }
 
     // 发送到qq / 微信
-    private static void onQrCodeCreateEnd(final Activity activity, Bitmap bitmap, SHARE_MEDIA media) {
+    private static void onQrCodeCreateEnd(final Activity activity, Bitmap bitmap, SHARE_MEDIA media, final Action0 action) {
         UM.shareImage(activity, media, bitmap, new UMShareListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
-
+                action.call();
             }
 
             @Override
@@ -383,12 +383,10 @@ public class ShareControl {
 
             @Override
             public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-
             }
 
             @Override
             public void onCancel(SHARE_MEDIA share_media) {
-
             }
         });
     }

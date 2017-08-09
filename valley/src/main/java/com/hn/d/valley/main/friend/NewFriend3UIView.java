@@ -13,9 +13,12 @@ import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.sub.HnScanUIView;
 import com.hn.d.valley.main.me.setting.MyQrCodeUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
+import com.hn.d.valley.widget.HnLoading;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.List;
+
+import rx.functions.Action0;
 
 import static com.hn.d.valley.control.ShareControl.shareDynamic;
 import static com.hn.d.valley.control.ShareControl.shareQrcode;
@@ -109,7 +112,13 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        shareQrcode(mActivity,SHARE_MEDIA.WEIXIN);
+                        HnLoading.show(mILayout);
+                        shareQrcode(mActivity, SHARE_MEDIA.WEIXIN, new Action0() {
+                            @Override
+                            public void call() {
+                                HnLoading.hide();
+                            }
+                        });
                     }
                 });
                 bindItemView(holder,"邀请微信好友","微信好友",R.drawable.weixin_tianjiahaoyou);
@@ -122,7 +131,13 @@ public class NewFriend3UIView extends ItemRecyclerUIView<ItemRecyclerUIView.View
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        shareQrcode(mActivity,SHARE_MEDIA.QQ);
+                        HnLoading.show(mILayout);
+                        shareQrcode(mActivity, SHARE_MEDIA.QQ, new Action0() {
+                            @Override
+                            public void call() {
+                                HnLoading.hide();
+                            }
+                        });
                     }
                 });
                 bindItemView(holder,"邀请QQ好友","QQ好友",R.drawable.qq_tianjiahaoyou);

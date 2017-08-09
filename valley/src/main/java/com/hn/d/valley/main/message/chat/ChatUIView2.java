@@ -6,7 +6,8 @@ import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.ViewCompat;
@@ -19,9 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
-import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -98,6 +99,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
     protected static final String KEY_ANCHOR = "anchor";
     protected static final String KEY_AITMESSAGES = "aitMessages";
+    private static final int MSG_VOICE_CHANGE = 10001;
 
     protected ExEditText mInputView;
     protected ChatControl2 mChatControl;
@@ -115,7 +117,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     RadioButton mMessageExpressionView;
     RadioButton mMessageAddView;
     TextView mSendView;
-    Chronometer mTimer;
+    ImageView iv_audio_volume;
     TextView mTimerTip;
     LinearLayout mTimerTipContainer;
     FrameLayout mLayoutPlayAudio;
@@ -208,7 +210,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         mMessageExpressionView = v(R.id.message_expression_view);
         mMessageAddView = v(R.id.message_add_view);
         mSendView = v(R.id.send_view);
-        mTimer = v(R.id.timer);
+        iv_audio_volume = v(R.id.iv_audio_volume);
         mTimerTip = v(R.id.timer_tip);
         mTimerTipContainer = v(R.id.timer_tip_container);
         mLayoutPlayAudio = v(R.id.layoutPlayAudio);
@@ -281,7 +283,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             @Override
             public void onStickerSelected(String categoryName, String stickerName) {
 //                T_.show(categoryName + ": " + stickerName);
-                CustomExpressionAttachment attachment = new CustomExpressionAttachment(StickerUtil.stickerSelected(categoryName,stickerName));
+                CustomExpressionAttachment attachment = new CustomExpressionAttachment(StickerUtil.stickerSelected(categoryName, stickerName));
                 IMMessage message = MessageBuilder.createCustomMessage(mSessionId, sessionType, "[动画表情]", attachment);
                 sendMessage(message);
             }
@@ -475,8 +477,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
      */
     private void playAudioRecordAnim() {
         mOverLayout.setVisibility(View.VISIBLE);
-        mTimer.setBase(SystemClock.elapsedRealtime());
-        mTimer.start();
     }
 
     /**
@@ -484,8 +484,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
      */
     private void stopAudioRecordAnim() {
         mOverLayout.setVisibility(View.GONE);
-        mTimer.stop();
-        mTimer.setBase(SystemClock.elapsedRealtime());
     }
 
     /**
@@ -524,6 +522,64 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
             audioMessageHelper = new AudioRecorder(mActivity, RecordType.AAC, AudioRecorder.DEFAULT_MAX_AUDIO_RECORD_TIME_SECOND, this);
         }
     }
+
+    /**
+     * 获得声音的level
+     */
+    public int getVoiceLevel(int maxLevel) {
+        // audioMessageHelper.getCurrentRecordMaxAmplitude()这个是音频的振幅范围，值域是1-32767
+        if (isRecording()) {
+            try {
+                // +1 否则不到7
+                return maxLevel * audioMessageHelper.getCurrentRecordMaxAmplitude() / 32768 + 1;
+            } catch (Exception e) {
+
+            }
+        }
+        return 1;
+    }
+
+    /**
+     * 更新音量图标
+     *
+     * @param level
+     */
+    public void updateVoiceLevel(int level) {
+        L.d("updateVoiceLevel level : " + level);
+        //通过level来找到图片的id，也可以用switch来寻址，但是代码可能会比较长
+        int resId = mActivity.getResources().getIdentifier("yuyin_yinliang_" + level,
+                "drawable", mActivity.getPackageName());
+        iv_audio_volume.setImageResource(resId);
+    }
+
+    /**
+     * 获取音量大小的runnable
+     */
+    private Runnable mVoiceLevelRunnable = new Runnable() {
+        @Override
+        public void run() {
+            while (isRecording()) {
+                L.d("mVoiceLevelRunnable isrecording");
+                try {
+                    Thread.sleep(100);
+                    mStateHandler.sendEmptyMessage(MSG_VOICE_CHANGE);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
+    private Handler mStateHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_VOICE_CHANGE:
+                    updateVoiceLevel(getVoiceLevel(7));
+                    break;
+            }
+        }
+    };
 
     /**
      * 上拉, 下拉
@@ -614,6 +670,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     }
 
     public boolean isRecording() {
+        L.d("audioMessageHelper isrecording");
         return audioMessageHelper != null && audioMessageHelper.isRecording();
     }
 
@@ -908,6 +965,8 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
     public void onRecordStart(File audioFile, RecordType recordType) {
         L.d("chatuiview2", "onRecordStart");
         started = true;
+        //启动音量变化
+        new Thread(mVoiceLevelRunnable).start();
     }
 
     @Override

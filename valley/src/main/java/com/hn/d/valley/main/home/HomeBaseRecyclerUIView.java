@@ -29,18 +29,22 @@ public abstract class HomeBaseRecyclerUIView extends NoTitleBaseRecyclerUIView<U
         return new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
             @Override
             public void getItemOffsets2(Rect outRect, int position, int edge) {
-                if (position == 0 || (mRExBaseAdapter.isEnableLoadMore() &&
-                        position + 1 == mRExBaseAdapter.getItemCount())) {
-                    //第一个, 和倒数第一个都不需要分割线
-
+                if (mRExBaseAdapter.getItemCount() < 10) {
+                    outRect.bottom = getDimensionPixelOffset(R.dimen.base_hdpi);
                 } else {
-                    outRect.top = getDimensionPixelOffset(R.dimen.base_hdpi);
+                    if (position == 0 || (mRExBaseAdapter.isEnableLoadMore() &&
+                            position + 1 == mRExBaseAdapter.getItemCount())) {
+                        //第一个, 和倒数第一个都不需要分割线
+                    } else {
+                        outRect.top = getDimensionPixelOffset(R.dimen.base_hdpi);
+                    }
                 }
             }
 
             @Override
             public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
-                drawTopLine(canvas, paint, itemView, offsetRect, itemCount, position);
+                drawTopLine(canvas, paint, itemView, new Rect(offsetRect), itemCount, position);
+                drawBottomLine(canvas, paint, itemView, new Rect(offsetRect), itemCount, position);
             }
 
             @Override

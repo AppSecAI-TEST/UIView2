@@ -156,7 +156,8 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
         }
         datas.add(invisibleSub);
 
-        mGroupAdapter.addSelectorPosition(mCurrentType.getId() - 1);//默认选中位置
+        mGroupAdapter.addSelectorPosition(datas.indexOf(new SubSection(mCurrentType)));//默认选中位置
+
         mGroupAdapter.setAllDatas(datas);
     }
 
@@ -285,6 +286,19 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
             for (FriendBean item : friendList) {
                 atUsers.add(item.getUid());
             }
+        }
+
+        /**
+         *　通过　section 获取在列中的位置
+         * @param obj
+         * @return
+         */
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof SubSection) {
+                return section.getId() == ((SubSection) obj).section.getId();
+            }
+            return super.equals(obj);
         }
 
         @Override

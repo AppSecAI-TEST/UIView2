@@ -918,4 +918,5 @@
     <string name="text_klg_phone_number">0755-26418647</string>
     <string name="text_klj_email">konglonggu@hotniao.com</string>
     <string name="text_klg_qq">280491671</string>
+    <string name="text_localtion_info">位置信息</string>
 </resources>

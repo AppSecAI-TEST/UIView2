@@ -1,5 +1,7 @@
 package com.hn.d.valley.main.message.audio;
 
+import com.netease.nimlib.sdk.media.record.AudioRecorder;
+
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
  * 项目名称：
@@ -23,9 +25,12 @@ public class AudioRecordManager {
         return Holder.intance;
     }
 
-//    // 获得声音的level
-//    public int getVoiceLevel(int maxLevel) {
-//        // mRecorder.getMaxAmplitude()这个是音频的振幅范围，值域是1-32767
+    public AudioRecorder recorder;
+
+
+    //    // 获得声音的level
+    public int getVoiceLevel(int maxLevel) {
+        // mRecorder.getMaxAmplitude()这个是音频的振幅范围，值域是1-32767
 //        if (isPrepared) {
 //            try {
 //                // 取证+1，否则去不到7
@@ -34,9 +39,9 @@ public class AudioRecordManager {
 //
 //            }
 //        }
-//
-//        return 1;
-//    }
+
+        return 1;
+    }
 
     /** 音量改变的监听器 */
     public interface OnVolumeChangeListener {
