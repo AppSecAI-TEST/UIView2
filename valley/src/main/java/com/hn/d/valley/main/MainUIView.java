@@ -210,8 +210,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
 //        });
         mBottomNavLayout.setOnTabSelectListener(new SimpleTabSelectListener() {
             @Override
-            public void onTabSelect(View tabView, int position) {
-                super.onTabSelect(tabView, position);
+            public void onTabSelect(int position, View tabView) {
                 changePage(position);
                 if (RApplication.isHighDevice) {
                     scaleView(tabView.findViewById(R.id.iv_tab_icon));
@@ -219,8 +218,7 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
             }
 
             @Override
-            public void onTabReselect(View tabView, int position) {
-                super.onTabReselect(tabView, position);
+            public void onTabReselect(int position, View tabView) {
                 if (RApplication.isHighDevice) {
                     scaleView(tabView.findViewById(R.id.iv_tab_icon));
                 }

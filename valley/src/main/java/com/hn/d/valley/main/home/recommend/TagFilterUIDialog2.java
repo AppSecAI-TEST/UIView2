@@ -86,12 +86,19 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
         mRecyclerView.addItemDecoration(new RExItemDecoration(new RExItemDecoration.SingleItemCallback() {
             @Override
             public void getItemOffsets2(Rect outRect, int position, int edge) {
-                outRect.bottom = getDimensionPixelOffset(R.dimen.base_line);
+                int itemCount = mRecyclerView.getAdapter().getItemCount();
+                if (position == itemCount - 1 || position == itemCount - 2) {
+                    //倒数第一个, 第二个不需要分割线
+                    outRect.bottom = 0;
+                } else {
+                    outRect.bottom = getDimensionPixelOffset(R.dimen.base_line);
+                }
             }
 
             @Override
             public void draw(Canvas canvas, TextPaint paint, View itemView, Rect offsetRect, int itemCount, int position) {
-                drawBottomLine(canvas, paint, itemView, offsetRect, itemCount, position);
+                drawBottomMarginLine(canvas, paint, itemView, offsetRect, itemCount, position,
+                        getDimensionPixelOffset(R.dimen.base_xxhdpi), getDimensionPixelOffset(R.dimen.base_xxhdpi));
             }
 
             @Override
@@ -103,7 +110,7 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
         mContentLayout.setOrientation(LinearLayout.VERTICAL);
         int width = (int) (density() * 200);
         LinearLayout.LayoutParams arrowParam = new LinearLayout.LayoutParams(-2, -2);
-        arrowParam.leftMargin = width * 4 / 5;//width / 2;
+        arrowParam.leftMargin = (int) (width * 4 / 5 - 20 * density());//width / 2;
         mContentLayout.addView(mArrowView, arrowParam);
         mContentLayout.addView(mRecyclerView, new ViewGroup.LayoutParams(-2, -2));
 
@@ -169,7 +176,7 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
                 int offset = getDimensionPixelOffset(R.dimen.base_ldpi);
 
                 if (isLast(position)) {
-                    holder.itemView.setPadding(offset, offset, offset, offset);
+                    holder.itemView.setPadding(offset * 2, offset, offset * 2, offset);
                 } else {
                     holder.itemView.setPadding(0, offset, 0, offset);
                 }
