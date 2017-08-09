@@ -60,7 +60,6 @@ public class MsgVHExpression extends MsgViewHolderBase {
 
 //        if (pokerLayout == null) {
             pokerLayout = (PokerLayout) findViewById(R.id.pokerlayout);
-
 //        }
 //        DiceView diceView = (DiceView) findViewById(R.id.diceView);
 
@@ -68,8 +67,6 @@ public class MsgVHExpression extends MsgViewHolderBase {
 
     @Override
     protected void bindContentView() {
-
-
         contentContainer.setBackground(null);
 
         CustomExpressionAttachment expressionAttachment = (CustomExpressionAttachment) message.getAttachment();
@@ -82,6 +79,8 @@ public class MsgVHExpression extends MsgViewHolderBase {
 
         if (expressionMsg.getType() == 3) {
             // 骰子
+            // sending 状态取消
+            statusSendingView.setVisibility(View.GONE);
             draweeView.setVisibility(View.GONE);
             pokerLayout.setVisibility(View.GONE);
             diceLayout.setVisibility(View.VISIBLE);
@@ -93,8 +92,8 @@ public class MsgVHExpression extends MsgViewHolderBase {
                 }
                 JSONObject object = new JSONObject(extend);
                 String dicecount = object.optString("dicecount");
-                String[] split = dicecount.split(",");
-                int[] counts = new int[split.length];
+                final String[] split = dicecount.split(",");
+                final int[] counts = new int[split.length];
                 int i = 0;
                 for (String count : split) {
                     counts[i++] = Integer.valueOf(count);
@@ -117,10 +116,16 @@ public class MsgVHExpression extends MsgViewHolderBase {
 //                        }
 //                    },1000);
                 } else {
-//                    if (animrunning) {
-//                        return;
+//                    if(animrunning) {
+//                        diceLayout.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                diceLayout.init(split.length, counts,false);
+//                            }
+//                        },1000);
+//                    } else {
+                        diceLayout.init(split.length, counts,false);
 //                    }
-                    diceLayout.init(split.length, counts,false);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

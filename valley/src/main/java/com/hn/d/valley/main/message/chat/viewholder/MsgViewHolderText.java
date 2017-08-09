@@ -1,19 +1,27 @@
 package com.hn.d.valley.main.message.chat.viewholder;
 
+import android.support.v4.content.ContextCompat;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.ClickableSpan;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.utils.T_;
+import com.bumptech.glide.Glide;
 import com.hn.d.valley.R;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.emoji.MoonUtil;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.main.wallet.MyWalletUIView;
 import com.hn.d.valley.utils.HtmlFrom;
 import com.hn.d.valley.utils.Regex;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -30,9 +38,6 @@ import java.util.regex.Pattern;
 public class MsgViewHolderText extends MsgViewHolderBase {
 
     TextView contentView;
-    LinearLayout linkLayout;
-    TextView shareContent;
-    HnGlideImageView shareImage;
 
     public MsgViewHolderText(BaseMultiAdapter adapter) {
         super(adapter);
@@ -40,7 +45,7 @@ public class MsgViewHolderText extends MsgViewHolderBase {
 
     @Override
     public void convert(RBaseViewHolder holder, IMMessage data, int position, boolean isScrolling) {
-        super.convert(holder,data,position,isScrolling);
+        super.convert(holder, data, position, isScrolling);
     }
 
     @Override
@@ -51,9 +56,6 @@ public class MsgViewHolderText extends MsgViewHolderBase {
     @Override
     protected void inflateContentView() {
         contentView = (TextView) findViewById(R.id.msg_text_view);
-        linkLayout = (LinearLayout) findViewById(R.id.link_layout);
-        shareContent = (TextView) findViewById(R.id.share_cotent);
-        shareImage = (HnGlideImageView) findViewById(R.id.share_image);
     }
 
     @Override
@@ -63,87 +65,34 @@ public class MsgViewHolderText extends MsgViewHolderBase {
             return;
         }
 
-//        Map<String, Object> extension = message.getRemoteExtension();
-//        if (extension != null) {
-//            String at_text = (String) extension.get("@");
-//            if(at_text.contains(UserCache.instance().getUserInfoBean().getUsername())) {
-//                T_.show(message.getPushContent());
-//            }
-//        }
+        if (MsgVHLink.isLinkMsg(message)) {
+            contentView.setTextColor(ContextCompat.getColor(context,R.color.blue_4777af));
+            contentView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mUIBaseView.startIView(new X5WebUIView(msg));
 
-        Pattern pattern = Patterns.WEB_URL;
-        if (pattern.matcher(msg.toLowerCase().trim()).matches()) {
-            LinkBeanWrap bean = (LinkBeanWrap) contentContainer.getTag();
-            if (bean != null) {
-                if (getViewHolder().getLayoutPosition() != bean.position){
-                    return;
                 }
-                boolean isFetch = bean.isError;
-                if(!isFetch) {
-                    return;
-                }
-                if (bean.linkBean != null) {
-                  processResult(bean.linkBean);
-                } else {
-                    linkLayout.setVisibility(View.GONE);
-                    MoonUtil.show(context, contentView, message.getContent());
-                }
-            } else {
-                requestLink(msg);
-            }
-        } else {
-            linkLayout.setVisibility(View.GONE);
-            MoonUtil.show(context, contentView, message.getContent());
+            });
+            contentView.setText(msg);
+//            SpannableStringUtils.getBuilder(msg).append(msg).setClickSpan(new ClickableSpan() {
+//                @Override
+//                public void onClick(View widget) {
+//                    mUIBaseView.startIView(new X5WebUIView(msg));
+//
+//                }
+//
+//                @Override
+//                public void updateDrawState(TextPaint ds) {
+//                    super.updateDrawState(ds);
+//                    ds.setColor(ContextCompat.getColor(context,R.color.blue_4777af));
+//                    ds.clearShadowLayer();
+//                }
+//            }).create();
+            return;
         }
 
+        MoonUtil.show(context, contentView, message.getContent());
     }
 
-    private void requestLink(String msg) {
-        HtmlFrom.getPageAsyc(msg, new RequestCallback<HtmlFrom.LinkBean>() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onSuccess(HtmlFrom.LinkBean linkBean) {
-                processResult(linkBean);
-                contentContainer.setTag(new LinkBeanWrap(linkBean,false,getViewHolder().getLayoutPosition()));
-            }
-
-            @Override
-            public void onError(String msg) {
-//                contentContainer.setTag(2,false);
-                contentContainer.setTag(new LinkBeanWrap(null,true,getViewHolder().getLayoutPosition()));
-                linkLayout.setVisibility(View.GONE);
-                MoonUtil.show(context, contentView, message.getContent());
-            }
-        });
-    }
-
-    public static class LinkBeanWrap{
-        HtmlFrom.LinkBean linkBean;
-        boolean isError = false;
-        int position;
-
-        public LinkBeanWrap(HtmlFrom.LinkBean linkBean, boolean isError,int position) {
-            this.linkBean = linkBean;
-            this.isError = isError;
-            this.position = position;
-        }
-    }
-
-    private void processResult(HtmlFrom.LinkBean linkBean) {
-        shareContent.setText(linkBean.getTitle());
-        shareImage.setImageUrl(linkBean.getImg());
-        linkLayout.setVisibility(View.VISIBLE);
-        contentView.setVisibility(View.GONE);
-
-        contentContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mUIBaseView.startIView(new X5WebUIView(message.getContent()));
-            }
-        });
-    }
 }

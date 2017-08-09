@@ -573,6 +573,7 @@
     <string name="text_income">收入</string>
     <string name="text_outcome">支出</string>
     <string name="text_msg_notice_refund">由于 %1$s 您发给 %2$s 的红包 ￥ %3$.2f 已退回给你的恐龙谷钱包</string>
+    <string name="text_msg_notice_refund_">由于 %1$s 红包 ￥ %2$.2f 已退回给你的恐龙谷钱包</string>
     <string name="text_notice_refund_shouxufei">提现需支付手续费 %1$.2f 实际到账 %2$.2f 是否确定提现?</string>
     <string name="text_rp_haven_send_you">红包已发给 %s，对方已领取</string>
     <string name="tv_send_waite_receive">红包已发给 %s，等待对方领取</string>

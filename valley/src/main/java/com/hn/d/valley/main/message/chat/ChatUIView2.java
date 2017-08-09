@@ -257,15 +257,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
 
         mChatControl = new ChatControl2(mActivity, mViewHolder, this);
 
-        if (mCustomization != null) {
-            if (!mCustomization.isShowInputPanel()) {
-                RelativeLayout emoji_root_layout = mViewHolder.v(R.id.emoji_root_layout);
-                LinearLayout input_control_layout = mViewHolder.v(R.id.input_control_layout);
-                emoji_root_layout.setVisibility(View.GONE);
-                input_control_layout.setVisibility(View.GONE);
-            }
-        }
-
         mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new IEmoticonSelectedListener() {
             @Override
             public void onEmojiSelected(String emoji) {
@@ -295,6 +286,19 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 sendMessage(message);
             }
         });
+
+        if (mCustomization != null) {
+            if (!mCustomization.isShowInputPanel()) {
+                RelativeLayout emoji_root_layout = mViewHolder.v(R.id.emoji_root_layout);
+                LinearLayout input_control_layout = mViewHolder.v(R.id.input_control_layout);
+                emoji_root_layout.setVisibility(View.GONE);
+                input_control_layout.setVisibility(View.GONE);
+            }
+
+            if (mCustomization.isHideSticker()) {
+                mEmojiLayoutControl.showEmoji();
+            }
+        }
 
         Container container = new Container(mActivity, mSessionId, sessionType, mParentILayout, this);
         mCommandLayoutControl = new CommandLayoutControl(container, mViewHolder, createCommandItems());
@@ -339,6 +343,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     mMessageAddView.setChecked(false);
                     mMessageExpressionView.setChecked(false);
                     SkinUtils.setExpressView(mMessageExpressionView);
+                    SkinUtils.setAddView(mMessageAddView);
                 }
 
                 if (isEmojiShow) {
@@ -776,6 +781,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
                     SkinUtils.setKeyboardView(mMessageExpressionView);
+                    SkinUtils.setAddView(mMessageAddView);
                 } else if (mLastId == R.id.message_expression_view) {
                     if (mChatRootLayout.isEmojiShow()) {
                         RSoftInputLayout.showSoftInput(mInputView);
@@ -791,12 +797,47 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 mEmojiControlLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.message_add_view:
+
+
+                /**
+                 * 1. ex_view  2 add_view
+                 *
+                 * if (!emojishow) {
+                 *      showEmoji()
+                 *      addview.setKeyboard
+                 *      ex_view.setExpress
+                 * } else {
+                 *      showkeyboard()
+                 *      addview.setaddview
+                 *
+                 *  }
+                 *
+                 *
+                 *
+                 */
+
+
+                // EMOJI 未显示
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
+                    SkinUtils.setKeyboardView(mMessageAddView);
+                    SkinUtils.setExpressView(mMessageExpressionView);
                 } else if (mLastId == R.id.message_add_view && mChatRootLayout.isEmojiShow()) {
-                    mChatRootLayout.hideEmojiLayout();
-                    return;
+                    // emoji 已显示
+//                    mChatRootLayout.hideEmojiLayout();
+
+                    if (mChatRootLayout.isKeyboardShow()) {
+                        SkinUtils.setKeyboardView(mMessageAddView);
+                        SkinUtils.setExpressView(mMessageExpressionView);
+                    } else {
+                        SkinUtils.setAddView(mMessageAddView);
+                        SkinUtils.setExpressView(mMessageExpressionView);
+                        RSoftInputLayout.showSoftInput(mInputView);
+                        mLastId = R.id.message_add_view;
+                        return;
+                    }
                 }
+
                 mLastId = R.id.message_add_view;
 
                 mCommandControlLayout.setVisibility(View.VISIBLE);

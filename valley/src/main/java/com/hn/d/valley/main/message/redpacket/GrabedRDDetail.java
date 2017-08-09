@@ -21,6 +21,7 @@ public class GrabedRDDetail {
      * content : 恭喜发财
      * money : 100
      * created : 1488278276
+     * mygrabmoney":18,
      * uid : 60006
      * avatar : http://circleimg.klgwl.com/60006/IMG_20170221_174352.jpg
      * username : 宋大哥
@@ -32,6 +33,16 @@ public class GrabedRDDetail {
     private int money;
     private int created;
     private int uid;
+
+    public int getMygrabmoney() {
+        return mygrabmoney;
+    }
+
+    public void setMygrabmoney(int mygrabmoney) {
+        this.mygrabmoney = mygrabmoney;
+    }
+
+    private int mygrabmoney;
     private String avatar;
     private String username;
     private List<ResultBean> result;

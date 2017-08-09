@@ -17,7 +17,6 @@ import com.angcyo.uiview.skin.SkinHelper;
 import com.angcyo.uiview.utils.ScreenUtil;
 import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.RTextView;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.cache.TeamDataCache;
@@ -174,7 +173,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
 
-        SimpleDraweeView ivItemHead;
+        HnGlideImageView ivItemHead;
         TextView tvFriendName;
 
         private ILayout mLayout;
@@ -182,7 +181,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
         public ContactViewHolder(View itemView, ILayout mLayout) {
             super(itemView);
             //ButterKnife.bind(this, itemView);
-            ivItemHead = (SimpleDraweeView) itemView.findViewById(R.id.iv_item_head);
+            ivItemHead = (HnGlideImageView) itemView.findViewById(R.id.iv_item_head);
             tvFriendName = (TextView) itemView.findViewById(R.id.tv_friend_name);
             this.mLayout = mLayout;
         }
@@ -191,7 +190,8 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
             final FriendBean friendBean = contactItem.getFriendBean();
 //            ivItemHead.setImageUrl(friendBean.getAvatar());
-            DraweeViewUtil.setDraweeViewHttp(ivItemHead,friendBean.getAvatar());
+//            DraweeViewUtil.setDraweeViewHttp(ivItemHead,friendBean.getAvatar());
+            ivItemHead.setImageUrl(friendBean.getAvatar());
 //        tv_friend_name.setText(friendBean.getDefaultMark());
 
             display(tvFriendName, friendBean.getTrueName(), contactItem.getHitInfo());
@@ -208,7 +208,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
 
     public static class GroupVH extends RecyclerView.ViewHolder {
 
-        SimpleDraweeView ivItemHead;
+        HnGlideImageView ivItemHead;
         TextView tvFriendName;
 
         private ILayout mLayout;
@@ -216,7 +216,7 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
         public GroupVH(View itemView, ILayout layout) {
             super(itemView);
             /*ButterKnife.bind(this, itemView);*/
-            ivItemHead = (SimpleDraweeView) itemView.findViewById(R.id.iv_item_head);
+            ivItemHead = (HnGlideImageView) itemView.findViewById(R.id.iv_item_head);
             tvFriendName = (TextView) itemView.findViewById(R.id.tv_friend_name);
             this.mLayout = layout;
         }
@@ -224,7 +224,8 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
         public void onBind(RecordGroupItem item) {
             final GroupBean groupBean = item.getBean();
 //            ivItemHead.setImageUrl(groupBean.getAvatar());
-            DraweeViewUtil.setDraweeViewHttp(ivItemHead,groupBean.getDefaultAvatar());
+//            DraweeViewUtil.setDraweeViewHttp(ivItemHead,groupBean.getDefaultAvatar());
+            ivItemHead.setImageUrl(groupBean.getDefaultAvatar());
 //        tv_friend_name.setText(groupBean.getDefaultName());
             display(tvFriendName, groupBean.getTrueName(), item.hitInfo);
             itemView.setOnClickListener(new View.OnClickListener() {

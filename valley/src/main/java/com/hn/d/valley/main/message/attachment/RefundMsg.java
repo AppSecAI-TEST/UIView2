@@ -33,6 +33,11 @@ public class RefundMsg extends BaseCustomMsg {
     private String transferid;
     private String remark;
     private ExtendBean extend;
+    /**
+     * sub_type : 0
+     */
+
+    private int sub_type;
 
     public String getMsg() {
         return msg;
@@ -96,6 +101,14 @@ public class RefundMsg extends BaseCustomMsg {
 
     public void setExtend(ExtendBean extend) {
         this.extend = extend;
+    }
+
+    public int getSub_type() {
+        return sub_type;
+    }
+
+    public void setSub_type(int sub_type) {
+        this.sub_type = sub_type;
     }
 
     public static class ExtendBean {

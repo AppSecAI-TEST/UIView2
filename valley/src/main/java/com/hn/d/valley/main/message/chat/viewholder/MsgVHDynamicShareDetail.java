@@ -98,7 +98,7 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
 
         String thumbUrl = detailMsg.getPicture();
 
-        pc_layout.setOnClickListener(new View.OnClickListener() {
+        contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mUIBaseView.startIView(new DynamicDetailUIView2(detailMsg.getItem_id()));
@@ -137,14 +137,14 @@ public class MsgVHDynamicShareDetail extends MsgViewHolderBase {
                 final HotInfoListBean bean;
                 bean = Json.from(detailMsg.getCover(), HotInfoListBean.class);
                 tv_pc_name.setText(bean.getTitle());
-                pc_layout.setOnClickListener(new View.OnClickListener() {
+                contentContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         mUIBaseView.startIView(new InformationDetailUIView(bean));
                     }
                 });
             }catch (JsonSyntaxException | NullPointerException e) {
-                pc_layout.setOnClickListener(null);
+                contentContainer.setOnClickListener(null);
                 tv_pc_name.setText(detailMsg.getMsg());
             }
             return;

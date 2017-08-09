@@ -67,7 +67,9 @@ public class MsgVHRefundMsg extends MsgViewHolderBase {
             tv_pc_name.setText(refundMsg.getMsg());
             return;
         }
-        if (refundMsg.getExtend().getTo_uid() == 0) {
+        if (refundMsg.getExtend().getTo_uid() == 0 && refundMsg.getExtend().getTo_gid() == 0) {
+            tv_pc_name.setText(String.format(Locale.CHINA,context.getString(R.string.text_msg_notice_refund_),refundMsg.getReason(),refundMsg.getMoney() / 100f));
+        } else if (refundMsg.getExtend().getTo_uid() == 0) {
             tv_pc_name.setText(String.format(Locale.CHINA,context.getString(R.string.text_msg_notice_refund),refundMsg.getReason()
                     , TeamDataCache.getInstance().getTeamName(refundMsg.getExtend().getTo_gid() + ""),refundMsg.getMoney() / 100f));
         }else {

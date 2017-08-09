@@ -44,7 +44,9 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
     @Override
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setText(mActivity.getString(R.string.text_suaixuan)).setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build()
+                .setText(mActivity.getString(R.string.text_suaixuan))
+                .setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showMoreDialog();
@@ -64,6 +66,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
                 .addItem(getString(R.string.text_all), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        lastId = 0;
                         type = 0;
                         loadData();
                     }
@@ -71,6 +74,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
                 .addItem("充值", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        lastId = 0;
                         type = 1;
                         loadData();
                     }
@@ -78,6 +82,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
                 .addItem("提现", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        lastId = 0;
                         type = 2;
                         loadData();
                     }
@@ -85,6 +90,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
                 .addItem("红包", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        lastId = 0;
                         type = 3;
                         loadData();
                     }
@@ -92,6 +98,7 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
                 .addItem("消费", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        lastId = 0;
                         type = 4;
                         loadData();
                     }
@@ -99,7 +106,16 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
                 .addItem("打赏", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        lastId = 0;
                         type = 5;
+                        loadData();
+                    }
+                })
+                .addItem("奖励", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        lastId = 0;
+                        type = 6;
                         loadData();
                     }
                 })
@@ -115,6 +131,11 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
     protected void onEmptyData(boolean isEmpty) {
         super.onEmptyData(isEmpty);
         initOverEmptyLayout("暂无账单记录", R.drawable.image_nothing);
+    }
+
+    @Override
+    protected void initOverEmptyLayout(String text, int topIco) {
+        super.initOverEmptyLayout(text, topIco);
     }
 
     @Override

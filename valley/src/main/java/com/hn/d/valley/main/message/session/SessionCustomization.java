@@ -20,6 +20,16 @@ public abstract class SessionCustomization implements Serializable{
 
     private boolean showInputPanel = true;
 
+    private boolean hideSticker = false;
+
+    public boolean isHideSticker() {
+        return hideSticker;
+    }
+
+    public void setHideSticker(boolean hideSticker) {
+        this.hideSticker = hideSticker;
+    }
+
     public abstract List<CommandItemInfo> createItems();
 
     public boolean isShowInputPanel() {

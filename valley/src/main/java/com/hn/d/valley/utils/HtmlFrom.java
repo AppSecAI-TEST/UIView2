@@ -38,18 +38,24 @@ public class HtmlFrom {
 
         String title;
         String img;
+        String content;
 
         public String getTitle() {
             return title;
+        }
+
+        public String getContent() {
+            return content;
         }
 
         public String getImg() {
             return img;
         }
 
-        public LinkBean(String title, String img) {
+        public LinkBean(String title, String img,String content) {
             this.title = title;
             this.img = img;
+            this.content = content;
         }
     }
 
@@ -70,7 +76,7 @@ public class HtmlFrom {
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
-//                L.e("getPageAsyc" ,s);
+                L.e("getPageAsyc" ,s);
                 if (TextUtils.isEmpty(s)) {
                     callback.onError("error");
                     return;
@@ -81,8 +87,11 @@ public class HtmlFrom {
 
                 String img = Jsoup.parse(s).select("img").attr("src");
                 String title = Jsoup.parse(s).select("title").text();
-
-                callback.onSuccess(new LinkBean(title,img));
+                String content = Jsoup.parse(s).select("p").text();
+                if (TextUtils.isEmpty(content)) {
+                    content = s;
+                }
+                callback.onSuccess(new LinkBean(title,img,content));
 
             }
 

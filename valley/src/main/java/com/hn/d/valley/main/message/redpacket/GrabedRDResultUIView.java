@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
@@ -108,6 +109,7 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
         return false;
     }
 
+
     @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
@@ -131,26 +133,15 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
 //
 //                }));
 
-
         Observable detail = RRetrofit.create(RedPacketService.class)
-                .detail(Param.buildInfoMap("redid:" + red_id))
+                .detail(Param.buildInfoMap("redid:" + red_id,"uid:" + UserCache.getUserAccount()))
                 .compose(Rx.transformRedPacket(GrabedRDDetail.class));
 
         Observable resultList = RRetrofit.create(RedPacketService.class)
                 .resultlist(Param.buildInfoMap("redid:" + red_id,"limit:20","lastid:" + lastId))
                 .compose(Rx.transformerList(GrabedRDDetail.ResultBean.class,0));
 
-        add(Observable.zip(detail, resultList, new Func2<GrabedRDDetail, List<GrabedRDDetail.ResultBean>, List<GrabedRDDetail.ResultBean>>() {
-            @Override
-            public List<GrabedRDDetail.ResultBean> call(GrabedRDDetail bean, List<GrabedRDDetail.ResultBean> o2) {
-                if (bean == null || bean.getResult().size() == 0) {
-                    grabedRDDetail = bean;
-                } else {
-                    grabedRDDetail = bean;
-                }
-                return o2;
-            }
-        }).subscribe(new SingleRSubscriber<List<GrabedRDDetail.ResultBean>>(this) {
+        SingleRSubscriber subscriber = new SingleRSubscriber<List<GrabedRDDetail.ResultBean>>(this) {
 
             @Override
             protected void onResult(List<GrabedRDDetail.ResultBean> bean) {
@@ -163,7 +154,26 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                     onUILoadDataEnd(bean);
                 }
             }
-        }));
+        };
+
+        if (TextUtils.isEmpty(lastId)) {
+            add(Observable.zip(detail, resultList, new Func2<GrabedRDDetail, List<GrabedRDDetail.ResultBean>, List<GrabedRDDetail.ResultBean>>() {
+                @Override
+                public List<GrabedRDDetail.ResultBean> call(GrabedRDDetail bean, List<GrabedRDDetail.ResultBean> o2) {
+                    if (bean == null || bean.getResult().size() == 0) {
+                        grabedRDDetail = bean;
+                    } else {
+                        grabedRDDetail = bean;
+                    }
+                    return o2;
+                }
+            }).subscribe(subscriber));
+        } else {
+            add(resultList.subscribe(subscriber));
+        }
+
+
+
 
     }
 
@@ -235,34 +245,8 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 tv_username.setText(grabedRDDetail.getUsername());
                 tv_tip.setText(grabedRDDetail.getContent());
 
-            }
-            else if (ITEM_SECTION == getDataItemType(posInData)) {
-                holder.itemView.setBackgroundResource(R.color.chat_bg_color);
-                RTextView tv_left = holder.v(R.id.text_view);
-                RTextView tv_right = holder.v(R.id.right_text_view);
-
-                // 广场领取的视频红包只显示已领取个数
-                if (isSqureRedbag) {
-                    tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count),grabedRDDetail.getResult().size()));
-                } else {
-                    tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count_per_all),grabedRDDetail.getResult().size(),grabedRDDetail.getNum()));
-                }
-                tv_right.setText(String.format(mContext.getString(R.string.text_all_amout),grabedRDDetail.getMoney() / 100f));
-
-            } else {
-                holder.itemView.setBackgroundResource(R.color.default_base_white);
-                HnGlideImageView iv_icon = holder.v(R.id.ico_view);
-                TextView recent_name_view = holder.tv(R.id.recent_name_view);
-                TextView msg_content_view = holder.tv(R.id.msg_content_view);
-                TextView msg_time_view = holder.tv(R.id.msg_time_view);
-                TextView tv_rp_desc = holder.tv(R.id.tv_rp_desc);
-
-                iv_icon.setImageUrl(dataBean.getAvatar());
-                recent_name_view.setText(dataBean.getUsername());
-                msg_content_view.setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000l,true));
-                msg_time_view.setText(dataBean.getMoney() / 100f + "元");
-
-                if (dataBean.getUid() == Integer.valueOf(UserCache.getUserAccount())) {
+                if (grabedRDDetail.getUid() == Integer.valueOf(UserCache.getUserAccount())
+                        && grabedRDDetail.getMygrabmoney() != 0) {
                     tv_red_to_wallet.setVisibility(View.VISIBLE);
                     tv_red_to_wallet.setMovementMethod(LinkMovementMethod.getInstance());
                     tv_red_to_wallet.setText(SpannableStringUtils.getBuilder(getString(R.string.text_already_save))
@@ -280,10 +264,37 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                                 }
                             })
                             .create());
-                    tv_money.setText(SpannableStringUtils.getBuilder(dataBean.getMoney() / 100f + " ")
+                    tv_money.setText(SpannableStringUtils.getBuilder(grabedRDDetail.getMygrabmoney() / 100f + " ")
                             .append("元").setProportion(0.5f)
                             .create());
                 }
+
+            }
+            else if (ITEM_SECTION == getDataItemType(posInData)) {
+                holder.itemView.setBackgroundResource(R.color.chat_bg_color);
+                RTextView tv_left = holder.v(R.id.text_view);
+                RTextView tv_right = holder.v(R.id.right_text_view);
+
+                // 广场领取的视频红包只显示已领取个数
+                if (isSqureRedbag) {
+                    tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count),grabedRDDetail.getGrabnum()));
+                } else {
+                    tv_left.setText(String.format(mContext.getString(R.string.text_grabed_count_per_all),grabedRDDetail.getGrabnum(),grabedRDDetail.getNum()));
+                }
+                tv_right.setText(String.format(mContext.getString(R.string.text_all_amout),grabedRDDetail.getMoney() / 100f));
+
+            } else {
+                holder.itemView.setBackgroundResource(R.color.default_base_white);
+                HnGlideImageView iv_icon = holder.v(R.id.ico_view);
+                TextView recent_name_view = holder.tv(R.id.recent_name_view);
+                TextView msg_content_view = holder.tv(R.id.msg_content_view);
+                TextView msg_time_view = holder.tv(R.id.msg_time_view);
+                TextView tv_rp_desc = holder.tv(R.id.tv_rp_desc);
+
+                iv_icon.setImageUrl(dataBean.getAvatar());
+                recent_name_view.setText(dataBean.getUsername());
+                msg_content_view.setText(TimeUtil.getTimeShowString(dataBean.getCreated() * 1000l,true));
+                msg_time_view.setText(dataBean.getMoney() / 100f + "元");
 
                 if (dataBean.getBest() == 1) {
                     tv_rp_desc.setText(R.string.text_lucky_best);

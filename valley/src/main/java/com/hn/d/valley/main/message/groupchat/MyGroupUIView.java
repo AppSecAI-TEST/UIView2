@@ -31,6 +31,7 @@ import com.hn.d.valley.main.message.session.SessionHelper;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
+import com.hn.d.valley.widget.HnGlideImageView;
 import com.hn.d.valley.widget.HnLoading;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 
@@ -174,10 +175,11 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
 
             //checkNotNull
 
-            SimpleDraweeView glideImageView = holder.v(R.id.iv_item_head);
+            HnGlideImageView glideImageView = holder.v(R.id.iv_item_head);
             TextView tv = holder.tv(R.id.tv_friend_name);
 
-            DraweeViewUtil.setDraweeViewHttp(glideImageView, dataBean.getDefaultAvatar());
+//            DraweeViewUtil.setDraweeViewHttp(glideImageView, dataBean.getDefaultAvatar());
+            glideImageView.setImageUrl(dataBean.getDefaultAvatar());
             tv.setText(dataBean.getTrueName());
 
             final String yxGid = dataBean.getYxGid();
@@ -205,7 +207,6 @@ public class MyGroupUIView extends SingleRecyclerUIView<GroupBean> {
             View.OnClickListener listener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if (getAllSelectorList().size() >= option.selectCountLimit) {
                         if (!isPositionSelector(position)) {
                             T_.show("已达到选中限制");

@@ -11,6 +11,7 @@ import com.hn.d.valley.main.message.attachment.HotSpotInfoAttachment;
 import com.hn.d.valley.main.message.attachment.InviteUploadProfileAttachment;
 import com.hn.d.valley.main.message.attachment.KLGCoinConsumeAttachment;
 import com.hn.d.valley.main.message.attachment.LikeMsgAttachment;
+import com.hn.d.valley.main.message.attachment.LinkMsgAttachment;
 import com.hn.d.valley.main.message.attachment.OnlineVideoForwardAttachment;
 import com.hn.d.valley.main.message.attachment.PersonalCardAttachment;
 import com.hn.d.valley.main.message.attachment.ReceiptsNoticeAttachment;
@@ -33,6 +34,7 @@ import com.hn.d.valley.main.message.chat.viewholder.MsgVHHotSpotInfo;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHInviteUploadProfile;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHKLGCoinConsume;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHLikeMsg;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHLink;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHOnlineVideo;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHReceiptsNoticeMsg;
 import com.hn.d.valley.main.message.chat.viewholder.MsgVHRecharge;
@@ -99,7 +101,6 @@ public class MsgViewHolderFactory {
         register(WithDrawalFailAttachment.class, MsgVHWithDrawalFail.class);
         register(KLGCoinConsumeAttachment.class, MsgVHKLGCoinConsume.class);
         register(RechargeMsgAttachment.class, MsgVHRecharge.class);
-        register(LikeMsgAttachment.class, MsgVHLikeMsg.class);
         register(DynamicMsgAttachment.class, MsgVHDynamicMsg.class);
         register(HotSpotInfoAttachment.class, MsgVHHotSpotInfo.class);
         register(DynamicDetailAttachment.class, MsgVHDynamicShareDetail.class);
@@ -133,11 +134,16 @@ public class MsgViewHolderFactory {
         list.add(MsgViewHolderTip.class);
         // 语音转发viewholder
         list.add(MsgVHForwardAudio.class);
+        // 链接识别vieholder
+        list.add(MsgVHLink.class);
         return list;
     }
 
     public static Class<? extends MsgViewHolderBase> getViewHolderByType(IMMessage message) {
         if (message.getMsgType() == MsgTypeEnum.text) {
+            if(MsgVHLink.isLinkMsg(message) && message.getLocalExtension() != null){
+                return MsgVHLink.class;
+            }
             return MsgViewHolderText.class;
         } else if (message.getMsgType() == MsgTypeEnum.tip) {
 //            return tipMsgViewHolder == null ? MsgViewHolderUnknown.class : tipMsgViewHolder;

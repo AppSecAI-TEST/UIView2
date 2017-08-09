@@ -19,6 +19,7 @@ import com.hn.d.valley.library.fresco.DraweeViewUtil;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.sub.other.SingleRSubscriber;
 import com.hn.d.valley.sub.other.SingleRecyclerUIView;
+import com.hn.d.valley.widget.HnGlideImageView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -109,9 +110,10 @@ public class SpecialListUIView extends SingleRecyclerUIView<LikeUserInfoBean> {
         protected void onBindDataView(RBaseViewHolder holder, int posInData, final LikeUserInfoBean dataBean) {
             super.onBindDataView(holder, posInData, dataBean);
 
-            SimpleDraweeView iv_head = holder.v(R.id.iv_item_head);
+            HnGlideImageView iv_head = holder.v(R.id.iv_item_head);
             TextView tv_friend_name = holder.tv(R.id.tv_friend_name);
-            DraweeViewUtil.setDraweeViewHttp(iv_head, dataBean.getAvatar());
+//            DraweeViewUtil.setDraweeViewHttp(iv_head, dataBean.getAvatar());
+            iv_head.setImageUrl(dataBean.getAvatar());
             tv_friend_name.setText(dataBean.getUsername());
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -38,6 +38,7 @@ import com.hn.d.valley.bean.LoginUserInfo;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.AutoLoginControl;
+import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.main.wallet.WalletHelper;
 import com.hn.d.valley.nim.RNim;
@@ -377,7 +378,6 @@ public class LoginUIView2 extends BaseContentUIView {
                             Anim.band(mPasswordView);
                             return;
                         }
-
                         login(mActivity, mParentILayout, mSubscriptions,
                                 mPhoneView.string(), mPasswordView.string(),
                                 "", "", "", "", "", "");

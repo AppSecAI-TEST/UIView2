@@ -119,6 +119,10 @@ public class DiceView2 extends View {
     }
 
     public void startAnim() {
+        if (!anim) {
+            invalidate();
+            return;
+        }
         flag = false;
         int rv = random.nextInt(dice_res.length);
         ValueAnimator animator = ValueAnimator.ofInt(rv, dice_res.length - 1);
@@ -159,7 +163,7 @@ public class DiceView2 extends View {
             public void onAnimationEnd(Animator animation) {
                 flag = true;
                 Log.v("onAnimationEnd value2", current + "");
-                invalidate();
+                postInvalidate();
             }
         });
         set.start();

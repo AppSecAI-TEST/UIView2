@@ -23,7 +23,10 @@ import com.hn.d.valley.helper.MessageHelper;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ContactItem;
 import com.hn.d.valley.main.friend.GroupBean;
+import com.hn.d.valley.main.message.attachment.CustomExpressionAttachment;
+import com.hn.d.valley.main.message.attachment.CustomExpressionMsg;
 import com.hn.d.valley.main.message.audio.MessageAudioControl;
+import com.hn.d.valley.main.message.chat.viewholder.MsgVHLink;
 import com.hn.d.valley.main.message.groupchat.BaseContactSelectAdapter;
 import com.hn.d.valley.main.message.groupchat.ContactSelectUIVIew;
 import com.hn.d.valley.main.message.groupchat.MyGroupUIView;
@@ -53,6 +56,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.functions.Action1;
 import rx.functions.Action2;
 import rx.functions.Action3;
 
@@ -547,8 +551,18 @@ public class ChatControl2 {
                 if (TextUtils.equals(mSessionId, message.getSessionId())) {
                     // 过滤不需要的消息
                     if(!filterMessages(message)) {
-                        mChatAdapter.appendData(messages);
-                        mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount());
+                        // 是链接消息
+                        if (MsgVHLink.isLinkMsg(message)) {
+                            MsgVHLink.request(message, new Action1<IMMessage>() {
+                                @Override
+                                public void call(IMMessage message) {
+                                    addLastItem(message);
+                                }
+                            });
+                        } else {
+                            addLastItem(message);
+                        }
+
                     }
 
                 } else {
@@ -563,14 +577,23 @@ public class ChatControl2 {
         }
     };
 
+    private void addLastItem(IMMessage message){
+        mChatAdapter.addLastItem(message);
+        mRecyclerView.smoothScrollToPosition(mChatAdapter.getItemCount());
+    }
+
     private boolean filterMessages(IMMessage messages) {
         return SessionHelper.messageFilter(messages);
     }
+
 
     private void sendMsgReceipt() {
 
     }
 
+    /**
+     * 监听消息状态 消息状态改变 notifyitemchanged
+     */
     Observer<IMMessage> mMessageObserver = new Observer<IMMessage>() {
         @Override
         public void onEvent(IMMessage imMessage) {
@@ -585,6 +608,15 @@ public class ChatControl2 {
                     if (item.getAttachment() instanceof AVChatAttachment
                             || item.getAttachment() instanceof AudioAttachment) {
                         item.setAttachment(imMessage.getAttachment());
+                    }
+                    if (item.getAttachment() instanceof CustomExpressionAttachment) {
+                        // 如果是发骰子 不notify 消息状态 因为会打乱动画执行
+                        CustomExpressionMsg expressionMsg = ((CustomExpressionAttachment) item.getAttachment()).getExpressionMsg();
+                        if (expressionMsg.getType() == 3) {
+                            // send 状态取消
+//                        mChatAdapter
+                            return;
+                        }
                     }
                     mChatAdapter.notifyItemChanged(i);
                     break;

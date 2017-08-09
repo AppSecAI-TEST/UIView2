@@ -136,15 +136,14 @@ public class SessionHelper {
                     List<CommandItemInfo> items = new ArrayList<>();
                     items.add(new AVChatCommandItem(AVChatType.AUDIO));
                     items.add(new AVChatCommandItem(AVChatType.VIDEO));
-                    items.add(new LocationCommandItem());
-                    items.add(new PersonalCardCommandItem());
-                    items.add(new GiftCommandItem());
-
                     if (DynamicFuncManager2.instance().dynamicFuncResult != null) {
                         if (DynamicFuncManager2.instance().dynamicFuncResult.isShowWallet()) {
                             items.add(new RedPacketCommandItem());
                         }
                     }
+                    items.add(new GiftCommandItem());
+                    items.add(new PersonalCardCommandItem());
+                    items.add(new LocationCommandItem());
                     return items;
                 }
             };
@@ -164,9 +163,9 @@ public class SessionHelper {
                 @Override
                 public List<CommandItemInfo> createItems() {
                     List<CommandItemInfo> items = new ArrayList<>();
-                    items.add(new LocationCommandItem());
-                    items.add(new PersonalCardCommandItem());
                     items.add(new GiftCommandItem());
+                    items.add(new PersonalCardCommandItem());
+                    items.add(new LocationCommandItem());
 
                     //因为 发红包涉及到 群聊人数 先注释
 //                    items.add(new RedPacketCommandItem());
@@ -187,6 +186,7 @@ public class SessionHelper {
                 }
             };
         }
+        kljCustomization.setHideSticker(true);
         return kljCustomization;
     }
 

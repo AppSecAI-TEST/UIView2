@@ -13,34 +13,6 @@
     <TextView
         android:id="@+id/msg_text_view"
         style="@style/MainTextStyle"
-        android:gravity="left"
+        android:gravity="start"
         tools:text="1231242"/>
-
-    <LinearLayout
-        android:id="@+id/link_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:padding="5dp">
-
-        <com.hn.d.valley.widget.HnGlideImageView
-            android:id="@+id/share_image"
-            android:src="@drawable/rc_ic_def_rich_content"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center_vertical" />
-
-        <TextView
-            android:id="@+id/share_cotent"
-            android:paddingLeft="@dimen/base_ldpi"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:text="@string/about_me"
-            android:lines="3"
-            android:textColor="#999"
-            android:textSize="18sp" />
-    </LinearLayout>
-
 </LinearLayout>

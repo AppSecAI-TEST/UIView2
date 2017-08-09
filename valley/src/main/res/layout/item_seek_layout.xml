@@ -22,12 +22,12 @@
             <!--背景图-->
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/base_100dpi">
+                android:layout_height="wrap_content">
 
                 <com.hn.d.valley.main.seek.HnSeekGlideImageView
                     android:id="@+id/image_view"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     tools:src="@drawable/default_image"/>
 

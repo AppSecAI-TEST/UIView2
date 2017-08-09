@@ -201,6 +201,12 @@ public class BillDetailUIView extends BaseItemUIView {
                     info_rp_detail.setItemDarkText(TimeUtil.getDatetime(billRecord.getCreated() * 1000l));
                     info_transaction_time.setItemText("交易信息");
                     info_transaction_time.setItemDarkText(billRecord.getDescription());
+                } else if (billRecord.getSub_type() == 6) {
+                    info_transaction_type.setItemDarkText("系统奖励");
+                    info_rp_detail.setItemText("交易时间");
+                    info_rp_detail.setItemDarkText(TimeUtil.getDatetime(billRecord.getCreated() * 1000l));
+                    info_transaction_time.setItemText("交易信息");
+                    info_transaction_time.setItemDarkText(billRecord.getDescription());
                 }
 
                 info_transtaction_number.setItemDarkText(billRecord.getPayid());

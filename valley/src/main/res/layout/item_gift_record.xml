@@ -37,7 +37,6 @@
             android:layout_marginEnd="@dimen/base_xhdpi_15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLength="15"
             android:visibility="visible"
             tools:text="15:03" />
 

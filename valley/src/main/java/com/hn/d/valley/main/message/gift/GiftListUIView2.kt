@@ -169,7 +169,7 @@ class GiftListUIView2 : BaseContentUIView {
             user_ico_view!!.setImageThumbUrl(avatar)
             tv_interest_desc!!.text = String.format("送给 %s", userInfo.name)
         } else {
-            RRetrofit.create(UserService::class.java)
+            RRetrofit.create(UserService::class.java,RRetrofit.CacheType.MAX_STALE)
                     .userInfo(Param.buildMap("to_uid:" + account))
                     .compose(Rx.transformer(UserInfoBean::class.java))
                     .subscribe(object : RSubscriber<UserInfoBean>() {

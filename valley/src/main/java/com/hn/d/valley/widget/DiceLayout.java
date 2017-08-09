@@ -53,13 +53,11 @@ public class DiceLayout extends LinearLayout {
         // 如果第二进进来 first true  anim false return
 
 
-        if(first && !anim) {
-            return;
-        }
+//        if(first && !anim) {
+//            return;
+//        }
 
         // first false anim false 不执行动画
-
-
 
         this.diceCount = diceCount;
         this.diceValues = values;
