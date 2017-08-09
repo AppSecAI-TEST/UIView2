@@ -368,7 +368,7 @@
     <string name="default_text">默认</string>
     <string name="klj_info">哈喽, 大家好, 我是恐龙君, 你的专属小秘书, 为你提供全方位的服务.
                             如果有任何不爽或者建议, 欢迎通过以下方式联系我们, 很高兴能给我们提供意见和建议.</string>
-    <string name="line_phone">客户热线</string>
+    <string name="line_phone">客服热线</string>
     <string name="email">邮件</string>
     <string name="qq_qun">QQ群</string>
     <string name="info">资料</string>
@@ -915,4 +915,7 @@
     <string name="text_gain_rebag">领取红包</string>
     <string name="text_check_redbag">查看红包</string>
     <string name="text_redbag_reward">打赏红包</string>
+    <string name="text_klg_phone_number">0755-26418647</string>
+    <string name="text_klj_email">konglonggu@hotniao.com</string>
+    <string name="text_klg_qq">280491671</string>
 </resources>

@@ -178,7 +178,7 @@ public class P2PChatUIView extends ChatUIView2 {
                                 @Override
                                 public void onClick(View v) {
                                     collapseFocuslayout();
-                                    add(RRetrofit.create(UserService.class)
+                                    P2PChatUIView.this.add(RRetrofit.create(UserService.class)
                                             .attention(Param.buildMap("to_uid:" + mSessionId))
                                             .compose(Rx.transformer(String.class))
                                             .subscribe(new BaseSingleSubscriber<String>() {

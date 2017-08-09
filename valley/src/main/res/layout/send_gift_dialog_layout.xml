@@ -31,7 +31,7 @@
                 <TextView
                     android:id="@+id/tv_more_gift"
                     style="@style/DarkTextStyle"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:text="@string/text_more_gift" />
 
             </RelativeLayout>
@@ -40,6 +40,7 @@
 
             <ImageView
                 android:id="@+id/iv_gift_thumb"
+                android:scaleType="centerInside"
                 android:src="@drawable/zhanweitu_1"
                 android:layout_width="109dp"
                 android:layout_height="109dp" />

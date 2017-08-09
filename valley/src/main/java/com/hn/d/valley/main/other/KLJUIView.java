@@ -1,14 +1,19 @@
 package com.hn.d.valley.main.other;
 
 import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.angcyo.github.utilcode.utils.ClipboardUtils;
+import com.angcyo.github.utilcode.utils.PhoneUtils;
 import com.angcyo.uiview.base.Item;
 import com.angcyo.uiview.base.SingleItem;
+import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
 import com.hn.d.valley.main.me.setting.FeedBackUIView;
@@ -50,8 +55,46 @@ public class KLJUIView extends BaseItemUIView {
             public void onBindView(RBaseViewHolder holder, int posInData, Item dataBean) {
                 holder.v(R.id.text_view).setBackground(SkinHelper.getSkin().getThemeMaskBackgroundRoundSelector());
                 HnGlideImageView iv = holder.v(R.id.iv_klj_logo);
-
                 iv.setImageUrl("http://avatorimg.klgwl.com/13/13915.png");
+
+                holder.item(R.id.item_qq_group).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipboardUtils.copyText(getString(R.string.text_klg_qq));
+                        T_.info("已复制到剪贴板!");
+                    }
+                });
+
+                holder.item(R.id.item_phone_number).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startIView(UIDialog.build()
+                                .setDialogContent(getString(R.string.text_third_login_can_not_login))
+                                .setOkListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        startIView(UIDialog.build()
+                                                .setDialogContent(getString(R.string.text_klg_phone_number))
+                                                .setOkListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        PhoneUtils.dial(getString(R.string.text_klg_phone_number));
+                                                    }
+                                                })
+                                                .setGravity(Gravity.CENTER));
+                                    }
+                                })
+                                .setGravity(Gravity.CENTER));
+                    }
+                });
+
+                holder.item(R.id.item_email).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ClipboardUtils.copyText(getString(R.string.text_klj_email));
+                        T_.info("已复制到剪贴板!");
+                    }
+                });
 
                 holder.v(R.id.text_view).setOnClickListener(new View.OnClickListener() {
                     @Override

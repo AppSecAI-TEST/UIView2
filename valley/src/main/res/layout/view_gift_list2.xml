@@ -75,7 +75,7 @@
         android:layout_above="@+id/ll_bottom"
         android:layout_below="@id/rl_top_profile"
         android:layout_centerHorizontal="true"
-        android:padding="@dimen/base_xhdpi_15">
+        android:padding="@dimen/base_ldpi">
 
     </com.angcyo.uiview.recycler.RRecyclerView>
 

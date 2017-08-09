@@ -104,16 +104,17 @@ public class BaseContactSelectUIVIew extends BaseUIView {
     }
 
     private void init() {
-
-        refreshLayout.setRefreshDirection(HnRefreshLayout.TOP);
-        refreshLayout.addOnRefreshListener(new RefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh(@RefreshLayout.Direction int direction) {
-                if (direction == RefreshLayout.TOP) {
-                    loadData();
-                }
-            }
-        });
+        refreshLayout.setPlaceholderView();
+        refreshLayout.setNotifyListener(false);
+//        refreshLayout.setRefreshDirection(HnRefreshLayout.TOP);
+//        refreshLayout.addOnRefreshListener(new RefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh(@RefreshLayout.Direction int direction) {
+//                if (direction == RefreshLayout.TOP) {
+//                    loadData();
+//                }
+//            }
+//        });
 
         buildAdapter();
 

@@ -10,10 +10,12 @@ import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RModelAdapter;
 import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.widget.GlideImageView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.hn.d.valley.R;
 import com.hn.d.valley.bean.FriendBean;
 import com.hn.d.valley.library.fresco.DraweeViewUtil;
+import com.hn.d.valley.widget.HnGlideImageView;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -49,8 +51,9 @@ public class ContactSearchAdapter extends RModelAdapter<FriendBean> {
     @Override
     protected void onBindCommonView(RBaseViewHolder holder, int position, FriendBean bean) {
         holder.tv(R.id.tv_friend_name).setText(bean.getTrueName());
-        SimpleDraweeView imageView = holder.v(R.id.iv_item_head);
-        DraweeViewUtil.setDraweeViewHttp(imageView,bean.getAvatar());
+        HnGlideImageView imageView = holder.v(R.id.iv_item_head);
+//        DraweeViewUtil.setDraweeViewHttp(imageView,bean.getAvatar());
+        imageView.setImageUrl(bean.getAvatar());
     }
 
     @Override

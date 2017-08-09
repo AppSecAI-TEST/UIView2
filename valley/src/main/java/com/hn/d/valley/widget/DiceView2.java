@@ -241,7 +241,7 @@ public class DiceView2 extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (flag) {
-            Log.v("onAni diceValue", diceValue + "");
+//            Log.v("onAni diceValue", diceValue + "");
             canvas.drawBitmap(getBitmap(cover_res[diceValue - 1]), null, mRect, mPaint);
         } else {
             canvas.drawBitmap(getBitmap(dice_res[current]), null, mRect, mPaint);

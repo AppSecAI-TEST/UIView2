@@ -223,6 +223,15 @@ public class VideoPlayUIView extends UIIViewImpl {
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
         //mMediaController.play(path);//开始播放视频
+        if (!TextUtils.isEmpty(hotPackageId)) {
+            mViewHolder.v(R.id.hot_package_view).setVisibility(View.VISIBLE);
+            mViewHolder.click(R.id.hot_package_view, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    T_.show("看完视频,领取红包.");
+                }
+            });
+        }
     }
 
     @Override
@@ -257,6 +266,7 @@ public class VideoPlayUIView extends UIIViewImpl {
         if (mMediaController != null && mMediaController.onBackPressed()) {
             return false;
         }
+        mViewHolder.v(R.id.hot_package_view).setVisibility(View.GONE);
         animToMin();
         finishIView(this, new UIParam(true, true, false));
         return false;

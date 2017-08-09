@@ -19,6 +19,7 @@ import com.angcyo.uiview.net.Rx;
 import com.angcyo.uiview.view.DelayClick;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.UIBaseUIDialog;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
@@ -48,7 +49,7 @@ import static com.hn.d.valley.main.message.redpacket.Constants.LOOT_OUT;
  * 修改备注：
  * Version: 1.0.0
  */
-public class OpenRedPacketUIDialog extends UIIDialogImpl {
+public class OpenRedPacketUIDialog extends UIBaseUIDialog {
 
     public static final String TAG = OpenRedPacketUIDialog.class.getSimpleName();
 
@@ -104,7 +105,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
 
-        RRetrofit.create(RedPacketService.class)
+        add(RRetrofit.create(RedPacketService.class)
                 .detail(Param.buildInfoMap("redid:" + redId))
                 .compose(Rx.transformRedPacket(GrabedRDDetail.class))
                 .subscribe(new BaseSingleSubscriber<GrabedRDDetail>() {
@@ -121,7 +122,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
                             initData(bean);
                         }
                     }
-                });
+                }));
 
     }
 
@@ -227,7 +228,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
     }
 
     private void grabRedpacket() {
-        RRetrofit.create(RedPacketService.class)
+        add(RRetrofit.create(RedPacketService.class)
                 .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
                 .subscribeOn(Schedulers.io())
                 .map(new Func1<ResponseBody, Integer>() {
@@ -321,7 +322,7 @@ public class OpenRedPacketUIDialog extends UIIDialogImpl {
 //                        }
 //                        finishDialog();
                     }
-                });
+                }));
 
     }
 

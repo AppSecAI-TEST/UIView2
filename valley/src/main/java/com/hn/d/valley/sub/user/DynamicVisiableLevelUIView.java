@@ -318,7 +318,8 @@ public class DynamicVisiableLevelUIView extends SingleRecyclerUIView<DynamicVisi
                         ContactSelectUIVIew.start(getILayout(), new BaseContactSelectAdapter.Options(RModelAdapter.MODEL_MULTI)
                                 , atUsers, new Action3<UIBaseRxView, List<AbsContactItem>, RequestCallback>() {
                                     @Override
-                                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems, com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
+                                    public void call(UIBaseRxView uiBaseDataView, List<AbsContactItem> absContactItems
+                                            , com.hn.d.valley.main.message.groupchat.RequestCallback requestCallback) {
                                         requestCallback.onSuccess("");
                                         if (absContactItems.size() > 0) {
                                             canClick = false;

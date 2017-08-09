@@ -343,7 +343,7 @@ public abstract class MsgViewHolderBase<T extends BaseMultiAdapter<V>, V extends
 //            L.e("消息状态:" + status.getValue());
     }
 
-    private boolean needShowTime(long oldTime, long nowTime) {
+    protected boolean needShowTime(long oldTime, long nowTime) {
         return nowTime - oldTime > 60 * 1000;
     }
 

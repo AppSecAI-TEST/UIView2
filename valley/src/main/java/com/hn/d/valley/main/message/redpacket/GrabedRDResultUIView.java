@@ -245,8 +245,8 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                 tv_username.setText(grabedRDDetail.getUsername());
                 tv_tip.setText(grabedRDDetail.getContent());
 
-                if (grabedRDDetail.getUid() == Integer.valueOf(UserCache.getUserAccount())
-                        && grabedRDDetail.getMygrabmoney() != 0) {
+                if (/*grabedRDDetail.getUid() == Integer.valueOf(UserCache.getUserAccount())
+                        && */grabedRDDetail.getMygrabmoney() != 0) {
                     tv_red_to_wallet.setVisibility(View.VISIBLE);
                     tv_red_to_wallet.setMovementMethod(LinkMovementMethod.getInstance());
                     tv_red_to_wallet.setText(SpannableStringUtils.getBuilder(getString(R.string.text_already_save))

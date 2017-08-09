@@ -21,6 +21,7 @@ import com.angcyo.uiview.utils.string.MD5;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.UIBaseUIDialog;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
@@ -46,7 +47,7 @@ import static com.hn.d.valley.main.wallet.WalletHelper.getTransformer;
  * 修改备注：
  * Version: 1.0.0
  */
-public class PayUIDialog extends UIIDialogImpl {
+public class PayUIDialog extends UIBaseUIDialog {
 
     public static final String TAG = PayUIDialog.class.getSimpleName();
 
@@ -146,7 +147,7 @@ public class PayUIDialog extends UIIDialogImpl {
 
     private void passwdConfirm(final String passcode) {
         String encryptPw = MD5.getStringMD5(passcode);
-        RRetrofit.create(WalletService.class)
+        add(RRetrofit.create(WalletService.class)
                 .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + encryptPw))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -177,7 +178,7 @@ public class PayUIDialog extends UIIDialogImpl {
                             }
                         });
                     }
-                });
+                }));
     }
 
     /**
@@ -187,7 +188,7 @@ public class PayUIDialog extends UIIDialogImpl {
      discussid	是	int64	动态id
      */
     private void rewardRedBag() {
-        RRetrofit.create(WalletService.class)
+        add(RRetrofit.create(WalletService.class)
                 .balanceReward(Param.buildInfoMap("uid:" + UserCache.getUserAccount() ,"to_uid:" + params.to_uid,
                          "money:" + (int) params.money, "discussid:" + params.discussid))
                 .compose(getTransformer())
@@ -202,7 +203,7 @@ public class PayUIDialog extends UIIDialogImpl {
                     public void onSucceed(String beans) {
                         parseResult(beans);
                     }
-                });
+                }));
     }
 
 
@@ -225,7 +226,7 @@ public class PayUIDialog extends UIIDialogImpl {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        RRetrofit.create(WalletService.class)
+        add(RRetrofit.create(WalletService.class)
                 .rechargeKlgcoin(Param.buildInfoMap("goods:0", "data:" + jsonObject.toString()))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -240,7 +241,7 @@ public class PayUIDialog extends UIIDialogImpl {
                     public void onSucceed(String beans) {
                         parseResult(beans);
                     }
-                });
+                }));
     }
 
     private void parseResult(ILayout mOtherILayout, String beans, Action1 action) {
@@ -277,7 +278,7 @@ public class PayUIDialog extends UIIDialogImpl {
 
     private void sendRedPacket() {
         String type = checkType();
-        RRetrofit.create(RedPacketService.class)
+        add(RRetrofit.create(RedPacketService.class)
                 .newbag(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "num:" + params.num,
                         "money:" + (int) params.money, "content:" + params.content, type
                         , "random:" + params.random, "extend:" + params.extend))
@@ -304,7 +305,7 @@ public class PayUIDialog extends UIIDialogImpl {
 //                        replaceIView(new P2PStatusRPUIView());
                         parseResult(beans);
                     }
-                });
+                }));
 
     }
 

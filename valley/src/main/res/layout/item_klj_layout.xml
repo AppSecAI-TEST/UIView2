@@ -46,30 +46,33 @@
         android:showDividers="middle">
 
         <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/item_qq_group"
             style="@style/DefaultItemInfoStyle"
             android:layout_width="match_parent"
             android:background="@color/transparent"
-            app:item_dark_text="280491671"
+            app:item_dark_text="@string/text_klg_qq"
             app:item_left_draw_padding="@dimen/base_xhdpi"
             app:item_left_res="@drawable/qq_qun"
             app:item_right_res="@null"
             app:item_text="@string/qq_qun"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/item_phone_number"
             style="@style/DefaultItemInfoStyle"
             android:layout_width="match_parent"
             android:background="@color/transparent"
-            app:item_dark_text="0755-26418647"
+            app:item_dark_text="@string/text_klg_phone_number"
             app:item_left_draw_padding="@dimen/base_xhdpi"
             app:item_left_res="@drawable/customer_hotline"
             app:item_right_res="@null"
             app:item_text="@string/line_phone"/>
 
         <com.angcyo.uiview.widget.ItemInfoLayout
+            android:id="@+id/item_email"
             style="@style/DefaultItemInfoStyle"
             android:layout_width="match_parent"
             android:background="@color/transparent"
-            app:item_dark_text="konglonggu@hotniao.com"
+            app:item_dark_text="@string/text_klj_email"
             app:item_left_draw_padding="@dimen/base_xhdpi"
             app:item_left_res="@drawable/email"
             app:item_right_res="@null"

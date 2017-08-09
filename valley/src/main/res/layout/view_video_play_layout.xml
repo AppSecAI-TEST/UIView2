@@ -9,4 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </com.m3b.rblibrary.RBMediaController>
+
+
+    <com.hn.d.valley.widget.HotPackageView
+        android:id="@+id/hot_package_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="@dimen/base_xxxhdpi"
+        android:layout_marginEnd="@dimen/base_xhdpi"
+        android:visibility="invisible"/>
 </FrameLayout>

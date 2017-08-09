@@ -90,7 +90,7 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
             }
 
             @Override
-            protected void onBindView(RBaseViewHolder holder, int position, final HotSpotInfo.NewsBean news) {
+            protected void onBindView(final RBaseViewHolder holder, int position, final HotSpotInfo.NewsBean news) {
                 ImageView imageView = holder.imgV(R.id.image_view);
                 TextView desc = holder.tv(R.id.tv_desc);
 
@@ -113,6 +113,19 @@ public class MsgVHHotSpotInfo extends MsgViewHolderBase {
                     @Override
                     public void onClick(View v) {
                         mUIBaseView.startIView(new InformationDetailUIView(String.valueOf(news.getId())));
+                    }
+                });
+
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (!onItemLongClick()) {
+                            if (getMsgAdapter().getEventListener() != null) {
+                                getMsgAdapter().getEventListener().onViewHolderLongClick(holder.itemView, view, message);
+                                return true;
+                            }
+                        }
+                        return false;
                     }
                 });
             }

@@ -309,7 +309,9 @@ public class GlobalSearchAdapter2 extends RecyclerView.Adapter<RecyclerView.View
                     if (onTextChangeListener != null) {
                         if ("聊天信息".equals(item.getText())) {
                             GlobalSingleSearchUIView.start(mLayout,onTextChangeListener.textChange(),new GlobalSearchUIView2.Options(false),new int[]{ItemTypes.MSG});
-                        } else {
+                        } else if ("好友".equals(item.getText())) {
+                            GlobalSingleSearchUIView.start(mLayout,onTextChangeListener.textChange(),new GlobalSearchUIView2.Options(false),new int[]{ItemTypes.FRIEND});
+                        }else{
                             GlobalSingleSearchUIView.start(mLayout,onTextChangeListener.textChange(),new GlobalSearchUIView2.Options(false),new int[]{ItemTypes.GROUP});
                         }
                     }

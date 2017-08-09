@@ -143,11 +143,11 @@ public class WelcomeUIView extends BaseContentUIView {
                                 @Override
                                 public void onClick(View v) {
                                     startIView(UIDialog.build()
-                                            .setDialogContent("拨打客服电话:0755-26777170")
+                                            .setDialogContent(String.format("拨打客服电话:%s",getString(R.string.text_klg_phone_number)))
                                             .setOkListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    PhoneUtils.dial("0755-26777170");
+                                                    PhoneUtils.dial(getString(R.string.text_klg_phone_number));
                                                 }
                                             })
                                             .setGravity(Gravity.CENTER));

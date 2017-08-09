@@ -22,6 +22,8 @@ public class RecordContactItem extends ContactItem {
     public RecordContactItem(FriendBean bean, RecordHitInfo hitInfo) {
         super(bean);
         this.hitInfo = hitInfo;
+        // 全局搜索中 标注为好友
+        groupText = "好友";
     }
 
     public RecordHitInfo getHitInfo() {

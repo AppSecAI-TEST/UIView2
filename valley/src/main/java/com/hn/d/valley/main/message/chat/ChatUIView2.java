@@ -463,10 +463,9 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         if (!touched) {
             return;
         }
-
+//        audioMessageHelper.getCurrentRecordMaxAmplitude()
         mRecordView.setText(R.string.record_audio_end);
         mRecordView.setBackgroundResource(R.drawable.shape_round_dark_color);
-
         updateTimerTip(false); // 初始化语音动画状态
         playAudioRecordAnim();
     }

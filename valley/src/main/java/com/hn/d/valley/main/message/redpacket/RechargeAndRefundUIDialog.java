@@ -21,6 +21,7 @@ import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.utils.string.MD5;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.UIBaseUIDialog;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.message.service.RedPacketService;
@@ -49,7 +50,7 @@ import static com.hn.d.valley.main.wallet.WalletHelper.getTransformer;
  * 修改备注：
  * Version: 1.0.0
  */
-public class RechargeAndRefundUIDialog extends UIIDialogImpl {
+public class RechargeAndRefundUIDialog extends UIBaseUIDialog {
 
     public static final String TAG = RechargeAndRefundUIDialog.class.getSimpleName();
 
@@ -116,7 +117,7 @@ public class RechargeAndRefundUIDialog extends UIIDialogImpl {
 
     private void passwdConfirm(final String passcode) {
         String encryptPw = MD5.getStringMD5(passcode);
-        RRetrofit.create(WalletService.class)
+        add(RRetrofit.create(WalletService.class)
                 .passwordConfirm(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "password:" + encryptPw))
                 .compose(getTransformer())
                 .subscribe(new BaseSingleSubscriber<String>() {
@@ -142,7 +143,7 @@ public class RechargeAndRefundUIDialog extends UIIDialogImpl {
                             }
                         });
                     }
-                });
+                }));
     }
 
 
@@ -162,7 +163,7 @@ public class RechargeAndRefundUIDialog extends UIIDialogImpl {
         } else if (type == 1) {
             account = WalletHelper.getInstance().getWalletAccount().getAlipay_userid().split(";;;")[0];
         }
-        RRetrofit.create(WalletService.class)
+        add(RRetrofit.create(WalletService.class)
                 .cashoutRequest(Param.buildInfoMap(
                         "uid:" + UserCache.getUserAccount(),
                         "type:" + type,
@@ -192,7 +193,7 @@ public class RechargeAndRefundUIDialog extends UIIDialogImpl {
                         HnLoading.hide();
                         parseResult(code);
                     }
-                });
+                }));
     }
 
     private void parseResult(ILayout mOtherILayout, String beans, Action1 action) {

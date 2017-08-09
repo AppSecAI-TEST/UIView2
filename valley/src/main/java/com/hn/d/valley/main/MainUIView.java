@@ -452,7 +452,11 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
             if (mHomeUIView != null) {
                 mHomeUIView.onEvent(event);
             }
+        } catch (Exception e) {
 
+        }
+
+        try {
             if (event.num == 0) {
                 mBottomNavLayout.hideMsg(event.position);
             } else if (event.position == POS_HOME) {

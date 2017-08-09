@@ -112,11 +112,15 @@ public class ChangePayPwdUIview extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                     tv_change_pwd_tip.setText(R.string.text_please_input_pwd);
                 }
 
+                if (pay_pwd_type == FIND_PAY_PWD) {
+                    confirmPwd = true;
+                    tv_change_pwd_tip.setText(R.string.text_please_input_new_pwd);
+                }
+
                 passcodeView.setPasscodeEntryListener(new PasscodeView.PasscodeEntryListener() {
                     @Override
                     public void onPasscodeEntered(String passcode) {
-
-                        if (pay_pwd_type == FIND_PAY_PWD || pay_pwd_type == SET_PAY_PWD) {
+                        if (pay_pwd_type == SET_PAY_PWD) {
                             newPwd = passcode;
                             passwordSet();
                             return;

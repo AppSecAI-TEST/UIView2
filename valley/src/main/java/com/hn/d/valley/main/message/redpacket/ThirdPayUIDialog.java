@@ -30,6 +30,7 @@ import com.angcyo.uiview.utils.TimeUtil;
 import com.angcyo.uiview.widget.ItemInfoLayout;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
+import com.hn.d.valley.base.UIBaseUIDialog;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.wallet.WalletService;
@@ -68,7 +69,7 @@ import static com.hn.d.valley.pay_library.alipay.PayConstants.WECHATPAY_ACTION;
  * 修改备注：
  * Version: 1.0.0
  */
-public class ThirdPayUIDialog extends UIIDialogImpl {
+public class ThirdPayUIDialog extends UIBaseUIDialog {
 
     public static final String TAG = ThirdPayUIDialog.class.getSimpleName();
 
@@ -249,7 +250,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     }
 
     private void wechatPrepare(String missionParam) {
-        RRetrofit.create(WalletService.class)
+        add(RRetrofit.create(WalletService.class)
                 .prepare(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
                 .compose(Rx.transformer(String.class))
                 .flatMap(new Func1<String, Observable<String>>() {
@@ -266,7 +267,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                         L.i(TAG, "wechat" + param);
                         wechatPay(param);
                     }
-                });
+                }));
 
     }
 
@@ -333,7 +334,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
     }
 
     private void alipayPrepare(String missionParam) {
-        RRetrofit.create(WalletService.class)
+        add(RRetrofit.create(WalletService.class)
                 .prepare(Param.buildInfoMap("missiontype:" + missionType + "", "missionparam:" + missionParam))
                 .compose(Rx.transformer(String.class))
                 .flatMap(new Func1<String, Observable<String>>() {
@@ -357,7 +358,7 @@ public class ThirdPayUIDialog extends UIIDialogImpl {
                         L.i(TAG, code);
                         alipay(code);
                     }
-                });
+                }));
     }
 
     /**

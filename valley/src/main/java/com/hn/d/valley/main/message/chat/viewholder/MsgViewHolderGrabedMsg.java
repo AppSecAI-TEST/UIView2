@@ -14,6 +14,7 @@ import com.hn.d.valley.main.message.attachment.RedPacketGrabedMsg;
 import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.main.message.redpacket.GrabedRDResultUIView;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 
 /**
  * Created by hewking on 2017/4/9.
@@ -43,6 +44,12 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
         CustomAttachment attachment = (CustomAttachment) message.getAttachment();
         if (attachment == null) {
             return;
+        }
+
+        // 与前一条消息一分钟内 不显示 时间
+        IMMessage preMessage = getMsgAdapter().getAllDatas().get(position - 1);
+        if (!needShowTime(preMessage.getTime(), message.getTime())) {
+            msgTimeView.setVisibility(View.GONE);
         }
 
         GrabedMsgAttachment pcAttachment = (GrabedMsgAttachment) attachment;
@@ -80,6 +87,12 @@ public class MsgViewHolderGrabedMsg extends MsgViewHolderBase {
                     .create());
         }
 
+    }
+
+    @Override
+    protected boolean needShowTime(long oldTime, long nowTime) {
+
+        return super.needShowTime(oldTime, nowTime);
     }
 
     @Override
