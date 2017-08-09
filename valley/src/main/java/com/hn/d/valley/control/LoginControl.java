@@ -249,6 +249,8 @@ public class LoginControl {
                             return;
                         }
 
+                        RUtils.saveToSDCard(AUTO_LOGIN, "loginControl:252:登录成功 " + bean + " " + bean.getUid() + " " + bean.getUsername());
+
                         //第一次登录钱包开户
 //                        if (LoginControl.instance().isFirstRegister()) {
 //                            WalletHelper.getInstance().openAccount(bean.getUid());
