@@ -172,6 +172,7 @@ public class AutoLoginControl {
                     @Override
                     public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                         super.onEnd(isError, isNoNetwork, e);
+                        RUtils.saveToSDCard(AUTO_LOGIN, "loginInner:" + isError + " e:" + e);
                         if (isError) {
                             onLoginError(activity);
                         }

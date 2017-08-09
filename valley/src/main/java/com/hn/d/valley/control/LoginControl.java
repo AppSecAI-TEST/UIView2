@@ -10,6 +10,8 @@ import com.angcyo.uiview.Root;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.RUtils;
+import com.angcyo.uiview.utils.T_;
 import com.angcyo.umeng.UM;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
@@ -30,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.jpush.android.api.JPushInterface;
+
+import static com.hn.d.valley.control.AutoLoginControl.AUTO_LOGIN;
 
 /**
  * Copyright (C) 2016,深圳市红鸟网络科技股份有限公司 All rights reserved.
@@ -70,6 +74,8 @@ public class LoginControl {
                 if (mOnLoginListener != null) {
                     mOnLoginListener.onLoginStart();
                 }
+
+                RUtils.saveToSDCard(AUTO_LOGIN, "mAuthListener:onStart" + share_media);
             }
 
             @Override
@@ -81,14 +87,17 @@ public class LoginControl {
                     }
                     return;
                 }
+                RUtils.saveToSDCard(AUTO_LOGIN, "mAuthListener:onComplete " + openid);
                 login(openid, "", "", "");
             }
 
             @Override
             public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                T_.error(throwable.getMessage());
                 if (mOnLoginListener != null) {
                     mOnLoginListener.onLoginError(throwable);
                 }
+                RUtils.saveToSDCard(AUTO_LOGIN, "mAuthListener:onError " + i + " " + throwable);
             }
 
             @Override
@@ -252,6 +261,7 @@ public class LoginControl {
 
                     @Override
                     public void onError(int code, String msg) {
+                        RUtils.saveToSDCard(AUTO_LOGIN, "loginControl:262:onError " + code + " " + msg);
                         // 用户账号被封
                         if (code == 1067) {
 
@@ -265,6 +275,8 @@ public class LoginControl {
                     @Override
                     public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
                         super.onEnd(isError, isNoNetwork, e);
+                        RUtils.saveToSDCard(AUTO_LOGIN, "loginControl:276:onEnd " + isError + " e:" + e);
+
                         if (isError) {
                             if (isCancel) {
                                 if (mOnLoginListener != null) {

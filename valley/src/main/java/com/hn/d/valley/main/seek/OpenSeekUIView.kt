@@ -112,6 +112,7 @@ class OpenSeekUIView : BaseItemUIView() {
                     setExcludeWidth(getDimensionPixelOffset(R.dimen.base_xxhdpi))
                     setMaxPhotoCount(6)
                     setItemCountLine(3)
+                    setDeleteModel(recyclerView, true)
 
                     setConfigCallback(object : RAddPhotoAdapter.ConfigCallback() {
                         override fun onDisplayImage(imageView: ImageView?, position: Int) {
@@ -126,10 +127,10 @@ class OpenSeekUIView : BaseItemUIView() {
                             }
                         }
 
-                        override fun onImageLongClick(imageView: ImageView?, position: Int): Boolean {
-                            setDeleteModel(recyclerView, true)
-                            return true
-                        }
+//                        override fun onImageLongClick(imageView: ImageView?, position: Int): Boolean {
+//                            setDeleteModel(recyclerView, true)
+//                            return true
+//                        }
 
                         override fun onAddClick(view: View?) {
                             ImagePickerHelper.startImagePicker(mActivity, false, false, true, 6 - oldImages.size)
@@ -170,6 +171,7 @@ class OpenSeekUIView : BaseItemUIView() {
 //                                    .into(holder.imgV(R.id.image_view))
                             glideImageView.url = path
                             holder.v<View>(R.id.play_view).visibility = View.VISIBLE
+                            holder.v<View>(R.id.delete_video_view).visibility = View.VISIBLE
                         })
                     }).setMakeGif(true))
                 }
@@ -189,6 +191,18 @@ class OpenSeekUIView : BaseItemUIView() {
                             .load(it.videoThumbPath)
                             .into(holder.imgV(R.id.image_view))
                     holder.v<View>(R.id.play_view).visibility = View.VISIBLE
+                    holder.v<View>(R.id.delete_video_view).visibility = View.VISIBLE
+                }
+
+                //删除视频
+                holder.click(R.id.delete_video_view) {
+                    video = "empty"
+                    oldVideoInfo = null
+                    videoInfo = null
+                    glideImageView.reset()
+                    glideImageView.setImageResource(R.drawable.shangchuanshiping_2)
+                    holder.v<View>(R.id.play_view).visibility = View.INVISIBLE
+                    holder.v<View>(R.id.delete_video_view).visibility = View.INVISIBLE
                 }
 
                 val oldItems = oldImages.map { Luban.ImageItem(it) }

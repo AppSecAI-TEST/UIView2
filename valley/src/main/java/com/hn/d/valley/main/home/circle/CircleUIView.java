@@ -153,7 +153,11 @@ public class CircleUIView extends HomeBaseRecyclerUIView {
     @Override
     protected void onEmptyData(boolean isEmpty) {
         super.onEmptyData(isEmpty);
-        initOverEmptyLayout(isMe() ? "你还没有发布动态哦" : "TA还没有发布动态哦", R.drawable.image_wudongtai);
+        if (isInSubUIView) {
+            initOverEmptyLayout(isMe() ? "你还没有发布动态哦" : "TA还没有发布动态哦", R.drawable.image_wudongtai);
+        } else {
+            initOverEmptyLayout("你还没有关注用户", R.drawable.image_wudongtai);
+        }
     }
 
     @Override
