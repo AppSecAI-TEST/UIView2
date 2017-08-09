@@ -28,6 +28,7 @@ import com.angcyo.uiview.resources.ResUtil
 import com.angcyo.uiview.skin.SkinHelper
 import com.angcyo.uiview.utils.ThreadExecutor
 import com.angcyo.uiview.utils.file.FileUtil
+import com.angcyo.uiview.view.DelayClick
 import com.angcyo.uiview.view.RClickListener
 import com.facebook.drawee.view.SimpleDraweeView
 import com.hn.d.valley.R
@@ -38,6 +39,7 @@ import com.hn.d.valley.bean.MatchBean
 import com.hn.d.valley.bean.MatchModel
 import com.hn.d.valley.helper.AudioPlayHelper
 import com.hn.d.valley.library.fresco.DraweeViewUtil
+import com.hn.d.valley.main.me.UserDetailUIView2
 import com.hn.d.valley.main.message.audio.BaseAudioControl
 import com.hn.d.valley.main.message.audio.Playable
 import com.hn.d.valley.main.message.session.SessionHelper
@@ -299,6 +301,13 @@ class MatchUIView : BaseContentUIView() {
                     .create()
 
             initVoiceView(holder, bean.voice_introduce)
+
+            holder.delayClick(R.id.card_root_layout, object : DelayClick() {
+                override fun onRClick(view: View?) {
+                    startIView(UserDetailUIView2(bean.uid))
+                }
+
+            })
         }
     }
 }

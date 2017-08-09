@@ -15,8 +15,10 @@
     app:contentPadding="0dp">
 
     <LinearLayout
+        android:id="@+id/card_root_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/base_bg_selector"
         android:orientation="vertical">
 
         <RelativeLayout

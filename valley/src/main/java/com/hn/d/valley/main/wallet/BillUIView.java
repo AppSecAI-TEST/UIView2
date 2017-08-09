@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.angcyo.github.utilcode.utils.SpannableStringUtils;
-import com.angcyo.uiview.dialog.UIBottomItemDialog;
+import com.angcyo.uiview.dialog.UIItemDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
@@ -61,8 +61,8 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
     }
 
     private void showMoreDialog() {
-        UIBottomItemDialog.build()
-                .setUseWxStyle(true)
+        UIItemDialog.build()
+                .setUseFullItem(true)
                 .addItem(getString(R.string.text_all), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

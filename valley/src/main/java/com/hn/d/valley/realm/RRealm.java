@@ -3,7 +3,6 @@ package com.hn.d.valley.realm;
 import android.os.Looper;
 
 import com.angcyo.library.utils.L;
-import com.hn.d.valley.BuildConfig;
 import com.hn.d.valley.ValleyApp;
 
 import io.realm.DynamicRealm;
@@ -220,11 +219,11 @@ public class RRealm {
                 .schemaVersion(1);
 
         RealmConfiguration config;
-        if (BuildConfig.SHOW_DEBUG) {
+//        if (BuildConfig.SHOW_DEBUG) {
             config = builder.deleteRealmIfMigrationNeeded().build();
-        } else {
-            config = builder.build();
-        }
+//        } else {
+//            config = builder.build();
+//        }
 
         Realm.setDefaultConfiguration(config);
     }

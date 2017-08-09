@@ -131,6 +131,15 @@ public class LikeUserInfoBean {
     private String share_type;
     private String constellation;//星座
     private String charm;//魅力值
+    private String birthday;//魅力值
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
 
     /**
      * 新的朋友字段

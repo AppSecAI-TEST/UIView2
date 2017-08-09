@@ -217,6 +217,9 @@ public class HnGenderView extends LinearLayout {
         }
     }
 
+    /**
+     * 性别, 年龄, 星座, 魅力
+     */
     public void setGender2(String sex, String birthday /*年龄*/, String constellation /*星座*/, String charm /*魅力*/) {
         setGender2(sex, DateDialog.getBirthday(birthday), constellation);
 

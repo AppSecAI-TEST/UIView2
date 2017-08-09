@@ -98,7 +98,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
         //标题
         //mViewHolder.tv(R.id.title_view).setText(getString(R.string.dynamic_share_, mDataListBean.getAuthor()));
-        if (isMe(mDataListBean.getUid())) {
+        if (mDataListBean != null && isMe(mDataListBean.getUid())) {
             mViewHolder.v(R.id.me_control_layout).setVisibility(View.VISIBLE);
             mViewHolder.v(R.id.other_control_layout).setVisibility(View.GONE);
 
@@ -279,6 +279,7 @@ public class DynamicShareDialog extends UIIDialogImpl {
 
         //资讯分享
         if (mHotInfoListBean != null) {
+            mViewHolder.v(R.id.klg).setVisibility(View.GONE);
 
             final String detailUrl = InformationDetailUIView.Companion.getDetailShareUrl(mHotInfoListBean.getId());
 
@@ -296,10 +297,14 @@ public class DynamicShareDialog extends UIIDialogImpl {
                 }
             });
 
-            //举报
-            mViewHolder.v(R.id.follow_view).setVisibility(View.INVISIBLE);
+            //关注
+            mViewHolder.v(R.id.follow_view).setVisibility(View.GONE);
 
-            mViewHolder.v(R.id.report_view).setVisibility(View.INVISIBLE);
+            //收藏
+            mViewHolder.v(R.id.collect_view).setVisibility(View.GONE);
+
+            //举报
+            mViewHolder.v(R.id.report_view).setVisibility(View.GONE);
             mViewHolder.v(R.id.report_view).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
