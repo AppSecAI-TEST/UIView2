@@ -8,6 +8,7 @@ import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.utils.RUtils
 import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseItemUIView
+import com.hn.d.valley.control.MainControl
 import com.hn.d.valley.x5.UseAgreementUIView
 
 /**
@@ -40,7 +41,6 @@ class AboutKlgUIView : BaseItemUIView() {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: Item?) {
                 holder.tv(R.id.version_name_view).text = AppUtils.getAppVersionName(mActivity)
 
-
                 holder.click(R.id.user_agreement_view) {
                     startIView(UseAgreementUIView())
                 }
@@ -52,6 +52,9 @@ class AboutKlgUIView : BaseItemUIView() {
                 }
                 holder.click(R.id.email_to_layout) {
                     RUtils.emailTo(mActivity, "support@konglonggu.com")
+                }
+                holder.click(R.id.logo_view) {
+                    MainControl.checkVersion(mParentILayout)
                 }
             }
         })
