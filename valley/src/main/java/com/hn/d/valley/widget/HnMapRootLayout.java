@@ -86,6 +86,10 @@ public class HnMapRootLayout extends LinearLayout {
         return mEnableScale && target instanceof RecyclerView;
     }
 
+    public void setEnableScale(boolean enableScale) {
+        mEnableScale = enableScale;
+    }
+
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
         return super.onNestedPreFling(target, velocityX, velocityY);

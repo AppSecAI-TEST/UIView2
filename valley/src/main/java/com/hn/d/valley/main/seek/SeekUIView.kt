@@ -1,5 +1,6 @@
 package com.hn.d.valley.main.seek
 
+import android.Manifest
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
 import android.support.v7.widget.StaggeredGridLayoutManager
@@ -278,11 +279,12 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
 
     override fun onViewCreate(rootView: View?, param: UIParam?) {
         super.onViewCreate(rootView, param)
-    }
-
-    override fun onViewCreate(rootView: View?) {
-        super.onViewCreate(rootView)
-        RAmap.startLocation(true)
+        mActivity.checkPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            if (it) {
+                RAmap.startLocation(true)
+            }
+        }
     }
 
     override fun onViewShowNotFirst(bundle: Bundle?) {

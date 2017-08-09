@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.maps.model.LatLng;
 import com.angcyo.github.utilcode.utils.ClipboardUtils;
 import com.angcyo.github.utilcode.utils.PhoneUtils;
 import com.angcyo.library.glide.GlideBlurTransformation;
@@ -58,12 +59,14 @@ import com.hn.d.valley.bean.HotInfoListBean;
 import com.hn.d.valley.bean.ILikeData;
 import com.hn.d.valley.bean.LikeUserInfoBean;
 import com.hn.d.valley.bean.UserDiscussListBean;
+import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.main.found.sub.InformationDetailUIView;
 import com.hn.d.valley.main.me.UserDetailUIView2;
 import com.hn.d.valley.main.message.gift.GiftListUIView2;
 import com.hn.d.valley.main.message.redpacket.OpenRedPacketUIDialog;
 import com.hn.d.valley.main.message.redpacket.RewardUIVIew;
+import com.hn.d.valley.main.other.AmapUIView;
 import com.hn.d.valley.service.ContactService;
 import com.hn.d.valley.service.DiscussService;
 import com.hn.d.valley.service.SettingService;
@@ -153,7 +156,7 @@ public class UserDiscussItemControl {
     public static void initItem(final RBaseViewHolder holder, final UserDiscussListBean.DataListBean dataListBean,
                                 @NonNull final CompositeSubscription subscription,
                                 final Action1<Boolean> itemRootAction, final ILayout iLayout, boolean isInDetail, final boolean allowDownload) {
-        LikeUserInfoBean user_info = dataListBean.getUser_info();
+        final LikeUserInfoBean user_info = dataListBean.getUser_info();
 
         //holder.fillView(dataListBean, true);
         //holder.fillView(user_info, true);
@@ -168,6 +171,17 @@ public class UserDiscussItemControl {
         //地址
         holder.tv(R.id.address).setText(dataListBean.getAddress());
         holder.tv(R.id.address).setVisibility(TextUtils.isEmpty(dataListBean.getAddress()) ? View.GONE : View.VISIBLE);
+        holder.click(R.id.address, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng latLng = new LatLng(Double.valueOf(dataListBean.getLat()), Double.valueOf(dataListBean.getLng()));
+                final AmapBean amapBean = new AmapBean();
+                amapBean.latitude = Double.valueOf(dataListBean.getLat());
+                amapBean.longitude = Double.valueOf(dataListBean.getLng());
+                amapBean.address = dataListBean.getAddress();
+                iLayout.startIView(new AmapUIView(null, amapBean, user_info.getAvatar(), false));
+            }
+        });
 
         holder.tv(R.id.fav_cnt).setText(dataListBean.getFav_cnt());
         holder.tv(R.id.forward_cnt).setText(dataListBean.getForward_cnt());

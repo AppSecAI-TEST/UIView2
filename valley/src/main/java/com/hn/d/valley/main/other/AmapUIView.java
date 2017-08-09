@@ -40,6 +40,7 @@ import com.hn.d.valley.bean.realm.AmapBean;
 import com.hn.d.valley.control.AmapControl;
 import com.hn.d.valley.realm.RRealm;
 import com.hn.d.valley.utils.RAmap;
+import com.hn.d.valley.widget.HnMapRootLayout;
 
 import java.util.ArrayList;
 
@@ -128,7 +129,7 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
         mSearchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startIView(new SearchPOIUIView(mBeanAction1,mLastTarget));
+                startIView(new SearchPOIUIView(mBeanAction1, mLastTarget));
             }
         });
 
@@ -138,6 +139,15 @@ public class AmapUIView extends BaseContentUIView implements AMap.OnCameraChange
 
         if (mSend) {
             initBottomLayout();
+        } else {
+            setTitleString("位置信息");
+            ((HnMapRootLayout) v(R.id.root_layout)).setEnableScale(false);
+            v(R.id.layout_search_view).setVisibility(View.GONE);
+            v(R.id.bottom_layout).setVisibility(View.GONE);
+            v(R.id.location_pin).setVisibility(View.GONE);
+            v(R.id.location_info_layout).setVisibility(View.GONE);
+//            v(R.id.bottom_layout).setLayoutParams(new LinearLayout.LayoutParams(0, 0, 0));
+//            v(R.id.map_root_layout).setLayoutParams(new LinearLayout.LayoutParams(-1, -1, 1));
         }
     }
 
