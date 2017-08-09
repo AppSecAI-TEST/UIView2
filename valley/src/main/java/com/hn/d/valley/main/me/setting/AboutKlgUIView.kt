@@ -1,9 +1,9 @@
 package com.hn.d.valley.main.me.setting
 
-import com.angcyo.uiview.base.Item
-import com.angcyo.uiview.base.SingleItem
 import com.angcyo.github.utilcode.utils.AppUtils
 import com.angcyo.github.utilcode.utils.PhoneUtils
+import com.angcyo.uiview.base.Item
+import com.angcyo.uiview.base.SingleItem
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.utils.RUtils
 import com.hn.d.valley.R
@@ -55,5 +55,13 @@ class AboutKlgUIView : BaseItemUIView() {
                 }
             }
         })
+    }
+
+    override fun needTransitionExitAnim(): Boolean {
+        return true
+    }
+
+    override fun needTransitionStartAnim(): Boolean {
+        return true
     }
 }

@@ -196,6 +196,8 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
 
                     if (bean == currentTag) {
                         textView.setTextColor(SkinHelper.getSkin().getThemeSubColor());
+                    } else {
+                        textView.setTextColor(getColor(R.color.main_text_color));
                     }
 
                     textView.setText(bean.getName());
@@ -210,8 +212,6 @@ public class TagFilterUIDialog2 extends UIIDialogImpl {
                     });
                 }
             }
-
-
         });
     }
 

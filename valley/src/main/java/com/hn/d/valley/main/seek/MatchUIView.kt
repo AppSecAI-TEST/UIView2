@@ -310,4 +310,12 @@ class MatchUIView : BaseContentUIView() {
             })
         }
     }
+
+    override fun needTransitionExitAnim(): Boolean {
+        return true
+    }
+
+    override fun needTransitionStartAnim(): Boolean {
+        return true
+    }
 }

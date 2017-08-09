@@ -551,6 +551,16 @@ public class ImagePagerUIView extends UIIViewImpl {
                 });
     }
 
+    @Override
+    public boolean needTransitionExitAnim() {
+        return true;
+    }
+
+    @Override
+    public boolean needTransitionStartAnim() {
+        return true;
+    }
+
     /**
      * 指示器的样式
      */

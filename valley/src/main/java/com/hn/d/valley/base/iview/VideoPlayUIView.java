@@ -424,6 +424,16 @@ public class VideoPlayUIView extends UIIViewImpl {
         return UIBaseView.createClipExitAnim(1f);
     }
 
+    @Override
+    public boolean needTransitionExitAnim() {
+        return true;
+    }
+
+    @Override
+    public boolean needTransitionStartAnim() {
+        return true;
+    }
+
     /**
      * 用来保存视频的监听事件
      */
