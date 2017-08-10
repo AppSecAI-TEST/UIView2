@@ -578,7 +578,7 @@ public class UserDetailUIView2 extends BaseContentUIView {
         //关注, 粉丝
         mViewHolder.tv(R.id.attention_count).setText(RUtils.getShortString(mUserInfoBean.getAttention_count()));
         mViewHolder.tv(R.id.fans_count).setText(RUtils.getShortString(mUserInfoBean.getFans_count()));
-        mViewHolder.tv(R.id.charm_count).setText(mUserInfoBean.getCharm());
+        mViewHolder.tv(R.id.charm_count).setText(RUtils.getShortString(mUserInfoBean.getCharm()));
 
         mViewHolder.click(R.id.attention_count, new View.OnClickListener() {
             @Override

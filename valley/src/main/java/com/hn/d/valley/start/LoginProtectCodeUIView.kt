@@ -1,6 +1,8 @@
 package com.hn.d.valley.start
 
 import android.os.Bundle
+import android.view.View
+import com.angcyo.library.utils.Anim
 import com.angcyo.uiview.base.Item
 import com.angcyo.uiview.base.SingleItem
 import com.angcyo.uiview.net.RRetrofit
@@ -8,7 +10,9 @@ import com.angcyo.uiview.net.Rx
 import com.angcyo.uiview.recycler.RBaseViewHolder
 import com.angcyo.uiview.skin.SkinHelper
 import com.angcyo.uiview.utils.T_
+import com.angcyo.uiview.widget.ExEditText
 import com.angcyo.uiview.widget.PasswordInputEditText
+import com.angcyo.uiview.widget.VerifyButton
 import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseItemUIView
 import com.hn.d.valley.base.Param
@@ -26,7 +30,7 @@ import com.hn.d.valley.service.OtherService
  * 修改备注：
  * Version: 1.0.0
  */
-class LoginProtectCodeUIView(val phone: String, val pwd: String, val open_id: String, val open_type: String, val open_nick: String,
+class LoginProtectCodeUIView(var phone: String, val pwd: String, val open_id: String, val open_type: String, val open_nick: String,
                              val open_avatar: String, val open_sex: String, val type: String) : BaseItemUIView() {
 
     var code = ""
@@ -40,6 +44,26 @@ class LoginProtectCodeUIView(val phone: String, val pwd: String, val open_id: St
     override fun createItems(items: MutableList<SingleItem>) {
         items.add(object : SingleItem() {
             override fun onBindView(holder: RBaseViewHolder, posInData: Int, dataBean: Item?) {
+                val editInputText: ExEditText = holder.v(R.id.edit_text_view)
+                val editLayout: View = holder.v(R.id.edit_layout)
+
+                if (phone.isEmpty()) {
+                    editLayout.visibility = View.VISIBLE
+                }
+
+                val verifyButton = holder.v<VerifyButton>(R.id.verify_view)
+                verifyButton.setOnClickListener(View.OnClickListener {
+                    code = ""
+                    if (!editInputText.isPhone) {
+                        Anim.band(editInputText)
+                        return@OnClickListener
+                    }
+                    verifyButton.run()
+                    phone = editInputText.string()
+                    sendPhoneVerifyCode()
+                    holder.tv(R.id.phone_view).text = phone
+                })
+
                 holder.tv(R.id.phone_view).text = phone
                 holder.tv(R.id.text_tip_view2).setTextColor(SkinHelper.getSkin().themeSubColor)
 
@@ -69,6 +93,10 @@ class LoginProtectCodeUIView(val phone: String, val pwd: String, val open_id: St
     }
 
     private fun sendPhoneVerifyCode() {
+        if (phone.isNullOrEmpty()) {
+            return
+        }
+
         add(RRetrofit.create(OtherService::class.java)
                 .sendPhoneVerifyCode(Param.buildMap("phone:$phone", "type:$type"))
                 .compose(Rx.transformer(String::class.java))

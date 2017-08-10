@@ -182,15 +182,15 @@ public class OpenRedPacketUIDialog extends UIBaseUIDialog {
             }
             if (redpacketStatus == LOOT_OUT) {
                 tvRedContent.setText(R.string.text_rp_already_grabed);
-                tvRedToDetail.setVisibility(View.VISIBLE);
-                tvRedToDetail.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        toResultUIView();
-                        finishDialog();
-                    }
-                });
             }
+            tvRedToDetail.setVisibility(View.VISIBLE);
+            tvRedToDetail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toResultUIView();
+                    finishDialog();
+                }
+            });
             return;
         }
         ivOpen.setOnClickListener(new DelayClick() {

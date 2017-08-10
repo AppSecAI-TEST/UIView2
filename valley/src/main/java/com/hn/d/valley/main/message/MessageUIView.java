@@ -18,6 +18,7 @@ import com.hn.d.valley.main.friend.FriendMenuUIDialog;
 import com.hn.d.valley.main.friend.FriendNewUIView2;
 import com.hn.d.valley.main.friend.FriendUIView;
 import com.hn.d.valley.main.friend.ItemTypes;
+import com.hn.d.valley.main.message.chat.ChatActivity;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
 import com.hn.d.valley.main.message.session.RecentContactsControl;
 import com.hn.d.valley.main.message.session.SessionHelper;
@@ -102,6 +103,7 @@ public class MessageUIView extends BaseUIView {
                             return;
                         }
                         //打开对话界面
+//                        ChatActivity.start(mActivity,recentContact.getContactId());
                         SessionHelper.startP2PSession(mParentILayout, recentContact.getContactId(), recentContact.getSessionType());
                         //HnChatActivity.launcher(mActivity, recentContact.getFromAccount());
                     }

@@ -1,6 +1,8 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -12,11 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.github.utilcode.utils.SpannableStringUtils;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
+import com.angcyo.uiview.resources.ResUtil;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.utils.UI;
 import com.hn.d.valley.R;
@@ -94,6 +98,11 @@ public class NewRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIView.Vi
                 final EditText etContent = holder.v(R.id.et_content);
                 final Button btn_send = holder.v(R.id.btn_send);
                 final TextView tv_cursor = holder.v(R.id.tv_cursor);
+
+                ResUtil.setBgDrawable(btn_send, ResUtil.generateRippleRoundMaskDrawable(getResources()
+                                .getDimensionPixelOffset(com.angcyo.uiview.R.dimen.base_round_little_radius),
+                        Color.WHITE, ContextCompat.getColor(mActivity,R.color.base_red_d85940),ContextCompat.getColor(mActivity,R.color.base_red_c8381f)));
+                btn_send.setEnabled(false);
 
                 TextView tv_notice = holder.v(R.id.item_notice);
                 tv_notice.setMovementMethod(LinkMovementMethod.getInstance());

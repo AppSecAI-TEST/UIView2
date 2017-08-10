@@ -765,6 +765,8 @@ public class VideoRecordUIView extends UIBaseView {
         if (items.size() > 0) {
             final ImageItem item = items.get(0);
             if (item.loadType == ImageDataSource.VIDEO) {
+                //清理选择状态
+                ImagePickerHelper.clearAllSelectedImages();
                 //选择视频后返回
                 VideoPreviewUIView videoPreviewUIView = new VideoPreviewUIView(new UIViewConfig() {
                     @Override

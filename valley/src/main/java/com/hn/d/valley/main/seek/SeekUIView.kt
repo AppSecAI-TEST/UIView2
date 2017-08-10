@@ -10,6 +10,7 @@ import android.view.View
 import com.angcyo.uiview.container.ContentLayout
 import com.angcyo.uiview.container.UIParam
 import com.angcyo.uiview.dialog.UIBottomItemDialog
+import com.angcyo.uiview.dialog.UIDialog
 import com.angcyo.uiview.github.pickerview.DateDialog
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RException
@@ -28,6 +29,7 @@ import com.hn.d.valley.bean.SeekBean
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.control.UserDiscussItemControl
 import com.hn.d.valley.main.me.UserDetailUIView2
+import com.hn.d.valley.main.me.setting.BindPhoneUIView
 import com.hn.d.valley.service.ShowService
 import com.hn.d.valley.sub.other.SingleRecyclerUIView
 import com.hn.d.valley.utils.RAmap
@@ -133,25 +135,37 @@ class SeekUIView : SingleRecyclerUIView<SeekBean>() {
         mViewHolder.click(R.id.button_view) {
             //开启秀场
             //T_.info("测试....")
-            if (needUploadShow) {
-                mParentILayout.startIView(OpenSeekUIView())
+            val phone = UserCache.instance().userInfoBean.phone
+
+            if (TextUtils.isEmpty(phone)) run {
+                UIDialog.build()
+                        .setDialogContent(mActivity.getString(R.string.text_please_bind_phone))
+                        .setOkText(mActivity.getString(R.string.text_bind_phone))
+                        .setCancelText(mActivity.getString(R.string.cancel))
+                        .setCancelListener { }
+                        .setOkListener { mParentILayout.startIView(BindPhoneUIView()) }
+                        .showDialog(mParentILayout)
             } else {
-                add(RRetrofit.create(ShowService::class.java)
-                        .open(Param.buildMap())
-                        .compose(Rx.transformer(String::class.java))
-                        .subscribe(object : BaseSingleSubscriber<String>() {
-                            override fun onSucceed(bean: String?) {
-                                super.onSucceed(bean)
-                                T_.show(bean)
-                                //秀场开启了
-                                controlLayout?.let {
-                                    it.animate()
-                                            .translationY((-it.measuredHeight).toFloat())
-                                            .setDuration(300)
-                                            .start()
+                if (needUploadShow) {
+                    mParentILayout.startIView(OpenSeekUIView())
+                } else {
+                    add(RRetrofit.create(ShowService::class.java)
+                            .open(Param.buildMap())
+                            .compose(Rx.transformer(String::class.java))
+                            .subscribe(object : BaseSingleSubscriber<String>() {
+                                override fun onSucceed(bean: String?) {
+                                    super.onSucceed(bean)
+                                    T_.show(bean)
+                                    //秀场开启了
+                                    controlLayout?.let {
+                                        it.animate()
+                                                .translationY((-it.measuredHeight).toFloat())
+                                                .setDuration(300)
+                                                .start()
+                                    }
                                 }
-                            }
-                        }))
+                            }))
+                }
             }
         }
         mViewHolder.click(R.id.xiehou_view) {

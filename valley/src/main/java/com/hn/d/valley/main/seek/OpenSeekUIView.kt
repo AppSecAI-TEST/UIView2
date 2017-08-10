@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.seek
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import com.angcyo.library.utils.L
@@ -119,10 +120,12 @@ class OpenSeekUIView : BaseItemUIView() {
                             if (allDatas[position].url.isNullOrEmpty()) {
                                 Glide.with(mActivity)
                                         .load(File(allDatas[position].thumbPath))
+                                        .asBitmap()
                                         .into(imageView)
                             } else {
                                 Glide.with(mActivity)
                                         .load(allDatas[position].url)
+                                        .asBitmap()
                                         .into(imageView)
                             }
                         }
@@ -139,11 +142,14 @@ class OpenSeekUIView : BaseItemUIView() {
                         override fun onDeleteClick(view: View?, position: Int): Boolean {
                             val imageItem = allDatas[position]
                             if (imageItem.url.isNullOrEmpty()) {
+                                //删除的是本地选择的图片
                                 ImagePickerHelper.clearSelectedPath(mutableListOf(imageItem.path), false)
                             } else {
+                                //删除的是原来的网络图片
                                 oldImages.remove(imageItem.url)
                             }
-                            return false
+                            deleteItem(position)
+                            return true
                         }
 
                     })
@@ -287,6 +293,15 @@ class OpenSeekUIView : BaseItemUIView() {
     private fun uploadFailed() {
         HnLoading.hide()
         T_.error("上传失败, 请重试.")
+    }
+
+    override fun onViewUnload() {
+        super.onViewUnload()
+        ImagePickerHelper.clearAllSelectedImages()
+    }
+
+    override fun onViewShowFirst(bundle: Bundle?) {
+        super.onViewShowFirst(bundle)
     }
 
     /**调用接口*/

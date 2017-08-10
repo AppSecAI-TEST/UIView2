@@ -267,6 +267,8 @@ public class GrabedRDResultUIView extends SingleRecyclerUIView<GrabedRDDetail.Re
                     tv_money.setText(SpannableStringUtils.getBuilder(grabedRDDetail.getMygrabmoney() / 100f + " ")
                             .append("元").setProportion(0.5f)
                             .create());
+                } else {
+                    tv_money.setVisibility(View.GONE);
                 }
 
             }

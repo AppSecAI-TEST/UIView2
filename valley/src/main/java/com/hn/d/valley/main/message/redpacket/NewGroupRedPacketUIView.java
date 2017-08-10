@@ -1,6 +1,7 @@
 package com.hn.d.valley.main.message.redpacket;
 
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextPaint;
 import android.text.TextUtils;
@@ -127,10 +128,9 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                 final LinearLayout layout_input = holder.v(R.id.item_input);
                 TextView tv_notice = holder.v(R.id.item_notice);
 
-                ResUtil.setBgDrawable(btn_send, ResUtil.generateRippleRoundMaskDrawable(RApplication.getApp()
-                                .getResources()
+                ResUtil.setBgDrawable(btn_send, ResUtil.generateRippleRoundMaskDrawable(getResources()
                                 .getDimensionPixelOffset(com.angcyo.uiview.R.dimen.base_round_little_radius),
-                        Color.WHITE, mActivity.getResources().getColor(R.color.base_red_d85940), mActivity.getResources().getColor(R.color.base_red_c8381f)));
+                        Color.WHITE, ContextCompat.getColor(mActivity,R.color.base_red_d85940),ContextCompat.getColor(mActivity,R.color.base_red_c8381f)));
                 btn_send.setEnabled(false);
 
                 tv_notice.setMovementMethod(LinkMovementMethod.getInstance());
@@ -220,11 +220,13 @@ public class NewGroupRedPacketUIView extends ItemRecyclerUIView<ItemRecyclerUIVi
                         Float money = Float.valueOf(etMoney.getText().toString()) * 100;
                         if (rp_type == 0) {
                             money = count * money;
-
                         }
 
-                        if (money < 0.01 * count) {
-                            T_.show(mActivity.getString(R.string.text_grabed_redpacket_cant_lower));
+                        if (money < 1f * count) {
+                            T_.show(getString(R.string.text_grabed_redpacket_cant_lower));
+                            return;
+                        } else if (money > MAX_REDBAG * 100 * count) {
+                            T_.show(getString(R.string.text_grabed_redpacket_cant_higer));
                             return;
                         }
 

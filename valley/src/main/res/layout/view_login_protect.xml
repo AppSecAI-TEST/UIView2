@@ -9,6 +9,49 @@
     android:orientation="vertical"
     tools:background="@color/base_orange">
 
+
+    <RelativeLayout
+        android:id="@+id/edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_xhdpi"
+        android:paddingEnd="@dimen/base_xhdpi"
+        android:paddingStart="@dimen/base_xhdpi"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.hn.d.valley.widget.HnEditText
+            android:id="@+id/edit_text_view"
+            style="@style/PhoneEditStyle"
+            android:background="@drawable/base_main_color_border_selector"
+            android:hint="请输入绑定的手机号码"
+            android:paddingEnd="@dimen/base_100dpi"
+            android:textColor="@color/main_text_color"
+            android:textColorHint="@color/main_text_color_dark"/>
+
+        <com.angcyo.uiview.widget.SkinLineView
+            android:layout_width="@dimen/base_line"
+            android:layout_height="@dimen/base_xxhdpi"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/base_ldpi"
+            android:layout_toStartOf="@+id/verify_view"
+            android:background="@color/colorAccent"/>
+
+        <com.angcyo.uiview.widget.VerifyButton
+            android:id="@+id/verify_view"
+            style="@style/MainColorTextButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/base_mdpi"
+            android:minWidth="@dimen/base_80dpi"
+            android:paddingBottom="@dimen/base_xhdpi"
+            android:paddingEnd="@dimen/base_ldpi"
+            android:paddingStart="@dimen/base_ldpi"
+            android:paddingTop="@dimen/base_xhdpi"
+            android:text="@string/get_code_text"/>
+    </RelativeLayout>
+
+
     <com.angcyo.uiview.widget.RTextView
         android:id="@+id/phone_view"
         style="@style/MainTextStyle"

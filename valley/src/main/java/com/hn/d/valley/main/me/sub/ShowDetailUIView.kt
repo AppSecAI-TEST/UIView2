@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.angcyo.github.utilcode.utils.SpannableStringUtils
 import com.angcyo.uiview.container.ContentLayout
+import com.angcyo.uiview.dialog.UIDialog
 import com.angcyo.uiview.github.goodview.GoodView
 import com.angcyo.uiview.model.TitleBarPattern
 import com.angcyo.uiview.net.RException
@@ -29,6 +30,7 @@ import com.hn.d.valley.bean.SeekBean
 import com.hn.d.valley.cache.UserCache
 import com.hn.d.valley.control.UserDiscussItemControl
 import com.hn.d.valley.control.VideoStatusInfo
+import com.hn.d.valley.main.me.setting.BindPhoneUIView
 import com.hn.d.valley.main.message.gift.GiftListUIView2
 import com.hn.d.valley.main.seek.HnSeekGlideImageView
 import com.hn.d.valley.main.seek.OpenSeekUIView
@@ -92,25 +94,38 @@ class ShowDetailUIView(val to_uid: String) : SingleRecyclerUIView<String>() {
 
                 //开启秀场
                 mViewHolder.click(R.id.show_empty_button_tip) {
-                    if (needUploadShow) {
-                        mParentILayout.startIView(OpenSeekUIView().apply {
-                            setOnUIViewListener(object : OnUIViewListener() {
-                                override fun onViewUnload(uiview: IView) {
-                                    loadData()
-                                }
-                            })
-                        })
+
+                    val phone = UserCache.instance().userInfoBean.phone
+
+                    if (TextUtils.isEmpty(phone)) run {
+                        UIDialog.build()
+                                .setDialogContent(mActivity.getString(R.string.text_please_bind_phone))
+                                .setOkText(mActivity.getString(R.string.text_bind_phone))
+                                .setCancelText(mActivity.getString(R.string.cancel))
+                                .setCancelListener { }
+                                .setOkListener { mParentILayout.startIView(BindPhoneUIView()) }
+                                .showDialog(mParentILayout)
                     } else {
-                        add(RRetrofit.create(ShowService::class.java)
-                                .open(Param.buildMap())
-                                .compose(Rx.transformer(String::class.java))
-                                .subscribe(object : BaseSingleSubscriber<String>() {
-                                    override fun onSucceed(bean: String?) {
-                                        super.onSucceed(bean)
-                                        T_.show(bean)
+                        if (needUploadShow) {
+                            mParentILayout.startIView(OpenSeekUIView().apply {
+                                setOnUIViewListener(object : OnUIViewListener() {
+                                    override fun onViewUnload(uiview: IView) {
                                         loadData()
                                     }
-                                }))
+                                })
+                            })
+                        } else {
+                            add(RRetrofit.create(ShowService::class.java)
+                                    .open(Param.buildMap())
+                                    .compose(Rx.transformer(String::class.java))
+                                    .subscribe(object : BaseSingleSubscriber<String>() {
+                                        override fun onSucceed(bean: String?) {
+                                            super.onSucceed(bean)
+                                            T_.show(bean)
+                                            loadData()
+                                        }
+                                    }))
+                        }
                     }
                 }
             } else {

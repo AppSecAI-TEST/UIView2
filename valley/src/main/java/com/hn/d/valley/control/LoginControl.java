@@ -10,6 +10,7 @@ import com.angcyo.uiview.Root;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.net.RRetrofit;
 import com.angcyo.uiview.net.Rx;
+import com.angcyo.uiview.utils.Json;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.umeng.UM;
@@ -210,10 +211,10 @@ public class LoginControl {
         return Holder.instance;
     }
 
-    public void login(String open_id, String open_nick,
-                      String open_avatar, String open_sex) {
+    public void login(final String open_id, final String open_nick,
+                      final String open_avatar, final String open_sex) {
 
-        Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         //第三方登录
         map.put("open_id", open_id);
         map.put("open_type", String.valueOf(loginType));
@@ -269,6 +270,8 @@ public class LoginControl {
 
                         } else if (code == 1068) {
 
+                        } else if (code == 1029) {
+
                         } else {
                             super.onError(code, msg);
                         }
@@ -295,9 +298,18 @@ public class LoginControl {
                                 } else if (loginType == TYPE_WX) {
                                     getWxInfo();
                                 }
-                            } else {
+                            } /*else if (e.getCode() == 1029) {
+                                //第三方登录, 用户已被锁定, 有手机号码
+                            } */ else {
+                                OpenLoginBean loginBean = new OpenLoginBean();
+                                loginBean.setOpen_avatar(open_avatar);
+                                loginBean.setOpen_id(open_id);
+                                loginBean.setOpen_nick(open_nick);
+                                loginBean.setOpen_sex(open_sex);
+                                loginBean.setOpen_type(String.valueOf(loginType));
+
                                 if (mOnLoginListener != null) {
-                                    mOnLoginListener.onLoginError(new RException(e.getCode(), e.getMsg(), "no more"));
+                                    mOnLoginListener.onLoginError(new RException(e.getCode(), e.getMsg(), Json.to(loginBean)));
                                 }
                             }
                         }

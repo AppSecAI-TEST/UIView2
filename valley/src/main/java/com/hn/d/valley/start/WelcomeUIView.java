@@ -19,6 +19,7 @@ import com.angcyo.uiview.dialog.UILoading;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.net.RException;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.Json;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.angcyo.uiview.widget.ExEditText;
@@ -30,6 +31,7 @@ import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.realm.LoginBean;
 import com.hn.d.valley.cache.UserCache;
 import com.hn.d.valley.control.LoginControl;
+import com.hn.d.valley.control.OpenLoginBean;
 import com.hn.d.valley.main.me.setting.SetPasswordUIView;
 import com.hn.d.valley.nim.RNim;
 import com.jakewharton.rxbinding.view.RxView;
@@ -135,15 +137,17 @@ public class WelcomeUIView extends BaseContentUIView {
             UILoading.hide();
             exception.printStackTrace();
             if (exception instanceof RException) {
+                int code = ((RException) exception).getCode();
                 // 用户被封
-                if (((RException) exception).getCode() == 1067) {
+                if (code == 1067) {
+                    //第三方登录时，用户被临时锁定(用户未绑定手机)
                     startIView(UIDialog.build()
                             .setDialogContent(getString(R.string.text_third_login_can_not_login))
                             .setOkListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     startIView(UIDialog.build()
-                                            .setDialogContent(String.format("拨打客服电话:%s",getString(R.string.text_klg_phone_number)))
+                                            .setDialogContent(String.format("拨打客服电话:%s", getString(R.string.text_klg_phone_number)))
                                             .setOkListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
@@ -154,6 +158,19 @@ public class WelcomeUIView extends BaseContentUIView {
                                 }
                             })
                             .setGravity(Gravity.CENTER));
+                } else if (code == 1029) {
+                    //第三方登录, 用户已被锁定, 有手机号码
+                    final OpenLoginBean loginBean = Json.from(((RException) exception).getMore(), OpenLoginBean.class);
+                    UIDialog.build()
+                            .setDialogContent(getString(R.string.unlock_tip))
+                            .setOkClick(new UIDialog.OnDialogClick() {
+                                @Override
+                                public void onDialogClick(UIDialog dialog, View clickView) {
+                                    startIView(new LoginProtectCodeUIView("", "", loginBean.getOpen_id(), loginBean.getOpen_type(),
+                                            loginBean.getOpen_nick(), loginBean.getOpen_avatar(), loginBean.getOpen_sex(), "unlock"));
+                                }
+                            })
+                            .showDialog(WelcomeUIView.this);
                 }
             }
         }

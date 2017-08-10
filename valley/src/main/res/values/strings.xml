@@ -560,7 +560,8 @@
     <string name="text_balance_not_enough">余额不足！</string>
     <string name="text_bind_fail">绑定失败</string>
     <string name="text_sure_d">确定( %d )</string>
-    <string name="text_grabed_redpacket_cant_lower">每个人所抢红包不能小于0.01元！</string>
+    <string name="text_grabed_redpacket_cant_lower">平均单个红包不得少于0.01元！</string>
+    <string name="text_grabed_redpacket_cant_higer">平均单个红包不得超过500元！</string>
     <string name="text_rp_already_grabed">红包已经被抢光</string>
     <string name="text_lucky_best">手气最佳</string>
     <string name="text_refound_to_wallet_24hour">24小时未领取的红包，将于2天内退款至你的恐龙谷钱包</string>
@@ -743,7 +744,7 @@
     <string name="about_klg">关于恐龙谷</string>
     <string name="jump_to_maker">去评分</string>
     <string name="call_to">致电客服</string>
-    <string name="email_to">给我们发邮件</string>
+    <string name="email_to">发邮件</string>
     <string name="text_not_allow_access_me">不让TA看我的动态</string>
     <string name="text_not_see_other">不看TA的动态</string>
     <string name="text_dynamic_visiable">权限设置</string>

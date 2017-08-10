@@ -378,7 +378,7 @@ public class ImageSeekBar extends View {
      *
      * @return
      */
-    private int getCropLength() {
+    public int getCropLength() {
         return mRightMarkPosition - mLeftMarkPosition;
     }
 

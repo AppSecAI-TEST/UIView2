@@ -13,6 +13,7 @@ import com.angcyo.uiview.dialog.UIDialog;
 import com.angcyo.uiview.model.TitleBarPattern;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.skin.SkinHelper;
+import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.uiview.utils.T_;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.BaseItemUIView;
@@ -68,31 +69,14 @@ public class KLJUIView extends BaseItemUIView {
                 holder.item(R.id.item_phone_number).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        startIView(UIDialog.build()
-                                .setDialogContent(getString(R.string.text_third_login_can_not_login))
-                                .setOkListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        startIView(UIDialog.build()
-                                                .setDialogContent(getString(R.string.text_klg_phone_number))
-                                                .setOkListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View v) {
-                                                        PhoneUtils.dial(getString(R.string.text_klg_phone_number));
-                                                    }
-                                                })
-                                                .setGravity(Gravity.CENTER));
-                                    }
-                                })
-                                .setGravity(Gravity.CENTER));
+                        PhoneUtils.dial(getString(R.string.text_klg_phone_number));
                     }
                 });
 
                 holder.item(R.id.item_email).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ClipboardUtils.copyText(getString(R.string.text_klj_email));
-                        T_.info("已复制到剪贴板!");
+                        RUtils.emailTo(mActivity, getString(R.string.text_klj_email));
                     }
                 });
 

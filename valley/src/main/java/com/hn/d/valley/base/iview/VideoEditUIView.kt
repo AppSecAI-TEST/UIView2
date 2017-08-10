@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
+import android.support.v4.view.ViewCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,7 @@ import com.angcyo.uiview.resources.ResUtil
 import com.angcyo.uiview.skin.SkinHelper
 import com.angcyo.uiview.utils.T_
 import com.angcyo.uiview.utils.file.AttachmentStore
+import com.angcyo.uiview.widget.RTextView
 import com.bumptech.glide.Glide
 import com.hn.d.valley.R
 import com.hn.d.valley.base.BaseContentUIView
@@ -194,11 +196,15 @@ class VideoEditUIView(val item: ImageItem, val onCommandSuccess: Action1<EditVid
         seekBar.setLeftDrawable(ResUtil.tintDrawable(BitmapDrawable(resources, seekBar.bitmapLeftArrow), SkinHelper.getSkin().themeSubColor))
         seekBar.setRightDrawable(ResUtil.tintDrawable(BitmapDrawable(resources, seekBar.bitmapRightArrow), SkinHelper.getSkin().themeSubColor))
 
+        val cipTimeView: RTextView = mViewHolder.v(R.id.clip_time_view)
+
         seekBar.setOnVideoStateChangeListener(object : ImageSeekBar.OnVideoStateChangeListener {
             override fun onStart(x: Float, y: Float) {
                 mCurrentX = x
                 mCurrentY = y
                 videoView.seekTo(getCurrentTime(mCurrentX, mCurrentY).toInt())
+                cipTimeView.text = (seekBar.cropTime / 1000).toString()
+                ViewCompat.setX(cipTimeView, (x + seekBar.cropLength / 2) - cipTimeView.measuredWidth / 2)
             }
 
             override fun onPause() {

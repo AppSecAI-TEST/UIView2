@@ -25,7 +25,7 @@ import com.hn.d.valley.x5.UseAgreementUIView
 class AboutKlgUIView : BaseItemUIView() {
 
     companion object {
-        const val phone = "0755-26777170"
+        const val phone = "0755-26418647"
     }
 
     override fun getTitleString(): String {
@@ -51,7 +51,7 @@ class AboutKlgUIView : BaseItemUIView() {
                     PhoneUtils.dial(phone)
                 }
                 holder.click(R.id.email_to_layout) {
-                    RUtils.emailTo(mActivity, "support@konglonggu.com")
+                    RUtils.emailTo(mActivity, "konglonggu@hotniao.com")
                 }
                 holder.click(R.id.logo_view) {
                     MainControl.checkVersion(mParentILayout)

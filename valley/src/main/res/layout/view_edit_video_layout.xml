@@ -17,6 +17,20 @@
         android:layout_gravity="bottom"
         android:tag="H"/>
 
+    <com.angcyo.uiview.widget.RTextView
+        android:id="@+id/clip_time_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/base_55dpi"
+        android:shadowColor="@color/default_base_bg_press"
+        android:shadowDx="1.5"
+        android:shadowDy="1.5"
+        android:shadowRadius="1.5"
+        android:tag="%1$ss"
+        android:text="30"
+        android:textColor="@color/base_white"/>
+
     <com.m3b.rbvideolib.ImageSeekBar.ImageSeekBar
         android:id="@+id/seekBar"
         android:layout_width="match_parent"

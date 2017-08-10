@@ -1,5 +1,6 @@
 package com.hn.d.valley.sub.user;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -88,6 +89,7 @@ import com.hn.d.valley.service.SocialService;
 import com.hn.d.valley.utils.HnGlide;
 import com.hn.d.valley.utils.Image;
 import com.hn.d.valley.utils.PhotoPager;
+import com.hn.d.valley.utils.RAmap;
 import com.hn.d.valley.utils.RBus;
 import com.hn.d.valley.widget.HnExEditText;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -660,6 +662,20 @@ public class PublishDynamicUIView2 extends BaseContentUIView {
         mViewHolder.v(R.id.address_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mActivity.checkPermissions(new String[]{
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION},
+                        new Action1<Boolean>() {
+                            @Override
+                            public void call(Boolean aBoolean) {
+                                if (aBoolean ){
+                                    RAmap.startLocation(true);
+                                } else {
+                                    T_.error("对应权限没有打开.");
+                                }
+                            }
+                            });
+
                 startIView(new AmapUIView(new Action1<AmapBean>() {
                     @Override
                     public void call(AmapBean amapBean) {
