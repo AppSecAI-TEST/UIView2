@@ -55,7 +55,7 @@ public class UserCache {
     }
 
     public static String getUserAccount() {
-        return Hawk.get(Constant.USER_ACCOUNT, "");
+        return Hawk.get(Constant.USER_ACCOUNT, "1");
     }
 
     public static void setUserAccount(String account) {

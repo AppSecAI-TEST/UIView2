@@ -144,7 +144,11 @@ public class LoginControl {
                     Action.wechat_register();
                 }
 
+                if (TextUtils.equals(sex, "0")) {
+                    sex = "1";
+                }
                 final String finalSex = sex;
+
                 FDown.build(map.get("profile_image_url"))
                         .setFullPath(Root.getAppInternalFolder("image") + "/" + Root.createFileName(".jpg"))
                         .download(new FDownListener() {
