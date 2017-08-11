@@ -26,7 +26,7 @@
 
         <LinearLayout
             android:id="@+id/timer_tip_container"
-            android:layout_width="150dp"
+            android:layout_width="185dp"
             android:layout_height="@dimen/base_40dpi"
             android:layout_gravity="bottom"
             android:gravity="center">

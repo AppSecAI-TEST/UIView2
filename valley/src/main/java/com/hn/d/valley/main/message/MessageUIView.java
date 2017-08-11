@@ -119,7 +119,7 @@ public class MessageUIView extends BaseUIView {
     @Override
     public void onViewShowFirst(Bundle bundle) {
         super.onViewShowFirst(bundle);
-        SessionSettingDelegate.getInstance().fetchTopList();
+//        SessionSettingDelegate.getInstance().fetchTopList();
 
     }
 
@@ -148,7 +148,7 @@ public class MessageUIView extends BaseUIView {
         ArrayList<TitleBarPattern.TitleBarItem> leftItems = new ArrayList<>();
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
 
-        leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_friends_2).setListener(new View.OnClickListener() {
+        leftItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_friends_3).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mParentILayout.startIView(new FriendUIView());

@@ -183,7 +183,7 @@ public class CommentInputDialog extends UIIDialogImpl {
             }
         });
 
-        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder, new IEmoticonSelectedListener() {
+        mEmojiLayoutControl = new EmojiLayoutControl(mViewHolder,true, new IEmoticonSelectedListener() {
             @Override
             public void onEmojiSelected(String emoji) {
                 if (emoji.equals("/DEL")) {

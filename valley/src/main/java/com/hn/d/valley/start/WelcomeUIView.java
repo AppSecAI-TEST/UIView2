@@ -177,6 +177,7 @@ public class WelcomeUIView extends BaseContentUIView {
 
         @Override
         public void onLoginCancel() {
+            T_.info("授权被取消");
             UILoading.hide();
         }
     };

@@ -198,6 +198,15 @@ public class RecentContactsCache implements ICache {
         return mRecentContactList;
     }
 
+    public RecentContact getRecentContact(String contactId) {
+        for (RecentContact contact : mRecentContactList) {
+            if (contact.getContactId().equals(contactId)) {
+                return contact;
+            }
+        }
+        return null;
+    }
+
     /**
      * 获取被@的消息对象
      * @return

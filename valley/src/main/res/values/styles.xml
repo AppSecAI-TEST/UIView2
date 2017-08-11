@@ -40,6 +40,10 @@
         <item name="android:windowBackground">@drawable/default_720</item>
     </style>
 
+    <style name="MainUITheme" parent="SplashTheme">
+        <item name="android:windowBackground">@color/base_white</item>
+    </style>
+
     <!--图片-->
     <style name="ImageStyle">
         <item name="android:layout_height">match_parent</item>

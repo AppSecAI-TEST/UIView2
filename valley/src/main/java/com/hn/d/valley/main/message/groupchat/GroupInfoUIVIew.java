@@ -29,6 +29,7 @@ import com.hn.d.valley.base.rx.BaseSingleSubscriber;
 import com.hn.d.valley.bean.GroupDescBean;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
+import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.cache.SimpleCallback;
 import com.hn.d.valley.cache.TeamDataCache;
 import com.hn.d.valley.cache.UserCache;
@@ -39,6 +40,8 @@ import com.hn.d.valley.main.message.SessionSettingDelegate;
 import com.hn.d.valley.main.message.chatfile.ChatFileUIView;
 import com.hn.d.valley.main.message.search.ChatRecordSearchUIView;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
+import com.hn.d.valley.main.message.session.RecentContactsControl;
+import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.service.GroupChatService;
 import com.hn.d.valley.sub.other.InputUIView;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
@@ -47,6 +50,7 @@ import com.hn.d.valley.utils.RBus;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.team.TeamService;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.TeamMember;
@@ -305,14 +309,24 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_top_chat));
-                switchCompat.setChecked(SessionSettingDelegate.getInstance().checkTop(mSessionId));
+                RecentContact recentContact = RecentContactsCache.instance().getRecentContact(mSessionId);
+                if (recentContact == null) {
+                    return;
+                }
+                switchCompat.setChecked(RNim.isRecentContactTag(recentContact, RecentContactsControl.IS_TOP));
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        RecentContact recentContact = RecentContactsCache.instance().getRecentContact(mSessionId);
+                        if (recentContact == null) {
+                            return;
+                        }
                         if (isChecked) {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 1);
+//                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 1);
+                            RNim.addRecentContactTag(recentContact, RecentContactsControl.IS_TOP);
                         } else {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 0);
+//                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 0);
+                            RNim.removeRecentContactTag(recentContact, RecentContactsControl.IS_TOP);
                         }
                         RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
                         //callback
@@ -372,7 +386,7 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
                         startInputView(infoLayout, infoLayout.getDarkTextView().getText().toString(), new Action1<String>() {
                             @Override
                             public void call(String s) {
-                                editNickName( s);
+                                editNickName(s);
                             }
                         });
                     }
@@ -436,19 +450,19 @@ public class GroupInfoUIVIew extends ItemRecyclerUIView<ItemRecyclerUIView.ViewI
         }));
 
 //        if (!isSelfAdmin) {
-            items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
-                @Override
-                public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
-                    ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
-                    infoLayout.setItemText(mActivity.getString(R.string.text_report));
-                    infoLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mParentILayout.startIView(new ReportUIView(mGroupDescBean));
-                        }
-                    });
-                }
-            }));
+        items.add(ViewItemInfo.build(new ItemOffsetCallback(left) {
+            @Override
+            public void onBindView(RBaseViewHolder holder, int posInData, ViewItemInfo dataBean) {
+                ItemInfoLayout infoLayout = holder.v(R.id.item_info_layout);
+                infoLayout.setItemText(mActivity.getString(R.string.text_report));
+                infoLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mParentILayout.startIView(new ReportUIView(mGroupDescBean));
+                    }
+                });
+            }
+        }));
 //        }
         bindGroupOwnerFunc(items, line, left);
         jugeGroupOwner(items, line, left);

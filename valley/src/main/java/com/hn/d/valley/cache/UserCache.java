@@ -124,16 +124,16 @@ public class UserCache {
         return mLoginBean;
     }
 
-    public boolean isBindPhone() {
-        LoginBean loginBean = UserCache.instance().getLoginBean();
-        return !TextUtils.isEmpty(loginBean.getPhone());
-    }
-
     /**
      * 缓存用户信息
      */
     public void setLoginBean(LoginBean loginBean) {
         setLoginBean(loginBean, true);
+    }
+
+    public boolean isBindPhone() {
+        LoginBean loginBean = UserCache.instance().getLoginBean();
+        return !TextUtils.isEmpty(loginBean.getPhone());
     }
 
     public void setLoginBean(LoginBean loginBean, boolean save) {
@@ -152,7 +152,7 @@ public class UserCache {
     @UiThread
     public UserInfoBean getUserInfoBean() {
 //        if (mUserInfoBean == null) {
-            mUserInfoBean = getUserInfoBean(getUserAccount());
+        mUserInfoBean = getUserInfoBean(getUserAccount());
 //        }
         return mUserInfoBean;
     }
@@ -176,6 +176,12 @@ public class UserCache {
             return;
         }
         fetchUserInfo(to_uid).subscribe(new BaseSingleSubscriber<UserInfoBean>() {
+
+            @Override
+            public void onError(int code, String msg) {
+
+            }
+
             @Override
             public void onSucceed(UserInfoBean userInfoBean) {
                 L.i("更新用户数据库信息:" + userInfoBean.getUid() + " " + userInfoBean.getUsername() + " 成功.");
@@ -205,8 +211,9 @@ public class UserCache {
                         if (userInfoBean == null) {
                             L.e("fetchUserInfo 拉取用户信息失败. ->即将重试");
                             throw new NullPointerException("fetchUserInfo 拉取用户信息失败.");
+                        } else {
+                            RRealm.save(userInfoBean);
                         }
-                        RRealm.save(userInfoBean);
                         return userInfoBean;
                     }
                 });

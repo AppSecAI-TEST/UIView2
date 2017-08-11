@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uidemo.layout.demo.view.HnCardView;
+import com.angcyo.uidemo.layout.demo.view.HnDiceView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hn.d.valley.R;
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
@@ -32,10 +35,10 @@ import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
 
 public class MsgVHExpression extends MsgViewHolderBase {
 
-    private boolean animrunning;
+//    private boolean animrunning;
     ImageView draweeView;
-    DiceLayout diceLayout;
-    PokerLayout pokerLayout;
+    HnDiceView diceLayout;
+    HnCardView pokerLayout;
 
     public MsgVHExpression(BaseMultiAdapter adapter) {
         super(adapter);
@@ -54,12 +57,12 @@ public class MsgVHExpression extends MsgViewHolderBase {
 //        }
 
 //        if (diceLayout == null) {
-            diceLayout = (DiceLayout) findViewById(R.id.diceLayout);
+            diceLayout = (HnDiceView) findViewById(R.id.diceLayout);
 
 //        }
 
 //        if (pokerLayout == null) {
-            pokerLayout = (PokerLayout) findViewById(R.id.pokerlayout);
+            pokerLayout = (HnCardView) findViewById(R.id.pokerlayout);
 //        }
 //        DiceView diceView = (DiceView) findViewById(R.id.diceView);
 
@@ -106,9 +109,10 @@ public class MsgVHExpression extends MsgViewHolderBase {
                     message.setLocalExtension(localExtension);
                     msgService().updateIMMessage(message);
                     // 动画启动
-                    diceLayout.setFirst(true);
-                    diceLayout.init(split.length, counts,true);
-                    animrunning = true;
+//                    diceLayout.setFirst(true);
+//                    diceLayout.init(split.length, counts,true);
+                    diceLayout.startRoll(UUID.randomUUID().toString(),counts);
+//                    animrunning = true;
 //                    view.postDelayed(new Runnable() {
 //                        @Override
 //                        public void run() {
@@ -124,7 +128,8 @@ public class MsgVHExpression extends MsgViewHolderBase {
 //                            }
 //                        },1000);
 //                    } else {
-                        diceLayout.init(split.length, counts,false);
+//                        diceLayout.init(split.length, counts,false);
+                        diceLayout.setTargetDice(counts);
 //                    }
                 }
             } catch (JSONException e) {
@@ -144,7 +149,7 @@ public class MsgVHExpression extends MsgViewHolderBase {
             try {
                 JSONObject object = new JSONObject(extend);
                 String pokercount = object.optString("pokercount");
-                pokerLayout.init(pokercount);
+                pokerLayout.setTargetCards(pokercount);
 
             } catch (JSONException e) {
                 e.printStackTrace();

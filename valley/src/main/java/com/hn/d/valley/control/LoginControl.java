@@ -17,6 +17,7 @@ import com.angcyo.umeng.UM;
 import com.hn.d.valley.ValleyApp;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.constant.Action;
+import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.base.oss.OssHelper;
 import com.hn.d.valley.base.receiver.JPushReceiver;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -72,6 +73,7 @@ public class LoginControl {
         mAuthListener = new UMAuthListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
+                L.e("call: onStart([share_media])-> ");
                 if (mOnLoginListener != null) {
                     mOnLoginListener.onLoginStart();
                 }
@@ -81,6 +83,7 @@ public class LoginControl {
 
             @Override
             public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+                L.e("call: onComplete([share_media, i, map])-> ");
                 String openid = map.get("openid");
                 if (isCancel) {
                     if (mOnLoginListener != null) {
@@ -94,6 +97,7 @@ public class LoginControl {
 
             @Override
             public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                L.e("call: onError([share_media, i, throwable])-> ");
                 T_.error(throwable.getMessage());
                 if (mOnLoginListener != null) {
                     mOnLoginListener.onLoginError(throwable);
@@ -103,6 +107,7 @@ public class LoginControl {
 
             @Override
             public void onCancel(SHARE_MEDIA share_media, int i) {
+                L.e("call: onCancel([share_media, i])-> ");
                 if (mOnLoginListener != null) {
                     mOnLoginListener.onLoginCancel();
                 }
@@ -112,11 +117,12 @@ public class LoginControl {
         mInfoListener = new UMAuthListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
-
+                L.e("call: onStart([share_media])-> ");
             }
 
             @Override
             public void onComplete(SHARE_MEDIA share_media, int i, final Map<String, String> map) {
+                L.e("call: onComplete([share_media, i, map])-> ");
                 if (isCancel) {
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginCancel();
@@ -149,48 +155,57 @@ public class LoginControl {
                 }
                 final String finalSex = sex;
 
-                FDown.build(map.get("profile_image_url"))
-                        .setFullPath(Root.getAppInternalFolder("image") + "/" + Root.createFileName(".jpg"))
-                        .download(new FDownListener() {
-                            @Override
-                            public void onCompleted(BaseDownloadTask task) {
-                                super.onCompleted(task);
-                                OssHelper.uploadAvatorImg(task.getPath())
-                                        .subscribe(new BaseSingleSubscriber<String>() {
-                                            @Override
-                                            public void onSucceed(String s) {
-                                                login(map.get("openid"), map.get("name"), OssHelper.getAvatorUrl(s), finalSex);
-                                            }
+                String imageUrl = map.get("profile_image_url");
+                L.e("call: onComplete([share_media, i, map])-> 第三方头像地址:" + imageUrl);
+                RUtils.saveToSDCard(AUTO_LOGIN, share_media + " 第三方头像地址:" + imageUrl);
 
-                                            @Override
-                                            public void onError(int code, String msg) {
+                if (!TextUtils.isEmpty(imageUrl) && imageUrl.startsWith("http")) {
+                    FDown.build(imageUrl)
+                            .setFullPath(Root.getAppInternalFolder("image") + "/" + Root.createFileName(".jpg"))
+                            .download(new FDownListener() {
+                                @Override
+                                public void onCompleted(BaseDownloadTask task) {
+                                    super.onCompleted(task);
+                                    OssHelper.uploadAvatorImg(task.getPath())
+                                            .subscribe(new BaseSingleSubscriber<String>() {
+                                                @Override
+                                                public void onSucceed(String s) {
+                                                    login(map.get("openid"), map.get("name"), OssHelper.getAvatorUrl(s), finalSex);
+                                                }
 
-                                            }
+                                                @Override
+                                                public void onError(int code, String msg) {
 
-                                            @Override
-                                            public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
-                                                super.onEnd(isError, isNoNetwork, e);
-                                                if (isError) {
-                                                    if (mOnLoginListener != null) {
-                                                        mOnLoginListener.onLoginError(e);
+                                                }
+
+                                                @Override
+                                                public void onEnd(boolean isError, boolean isNoNetwork, RException e) {
+                                                    super.onEnd(isError, isNoNetwork, e);
+                                                    if (isError) {
+                                                        if (mOnLoginListener != null) {
+                                                            mOnLoginListener.onLoginError(e);
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        });
-                            }
-
-                            @Override
-                            public void onError(BaseDownloadTask task, Throwable e) {
-                                super.onError(task, e);
-                                if (mOnLoginListener != null) {
-                                    mOnLoginListener.onLoginError(e);
+                                            });
                                 }
-                            }
-                        });
+
+                                @Override
+                                public void onError(BaseDownloadTask task, Throwable e) {
+                                    super.onError(task, e);
+                                    if (mOnLoginListener != null) {
+                                        mOnLoginListener.onLoginError(e);
+                                    }
+                                }
+                            });
+                } else {
+                    login(map.get("openid"), map.get("name"), Constant.DEFAULE_AVATER, finalSex);
+                }
             }
 
             @Override
             public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+                L.e("call: onError([share_media, i, throwable])-> ");
                 if (isCancel) {
                     if (mOnLoginListener != null) {
                         mOnLoginListener.onLoginCancel();
@@ -204,6 +219,7 @@ public class LoginControl {
 
             @Override
             public void onCancel(SHARE_MEDIA share_media, int i) {
+                L.e("call: onCancel([share_media, i])-> ");
                 if (mOnLoginListener != null) {
                     mOnLoginListener.onLoginCancel();
                 }

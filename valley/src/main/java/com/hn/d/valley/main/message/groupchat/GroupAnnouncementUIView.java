@@ -94,6 +94,12 @@ public class GroupAnnouncementUIView  extends SingleRecyclerUIView<GroupAnnounce
     }
 
     @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        initOverEmptyLayout("暂无群公告", R.drawable.image_nothing);
+    }
+
+    @Override
     protected void onUILoadData(String page) {
         super.onUILoadData(page);
 

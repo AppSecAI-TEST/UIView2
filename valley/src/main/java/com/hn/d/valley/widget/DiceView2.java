@@ -15,6 +15,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 
 
@@ -37,15 +38,13 @@ import java.util.Random;
  */
 public class DiceView2 extends View {
 
-    public static
-    @DrawableRes
-    int[] dice_res = {R.drawable.shaizi1_0000, R.drawable.shaizi1_0001
-            , R.drawable.shaizi1_0002, R.drawable.shaizi1_0003
-            , R.drawable.shaizi1_0004, R.drawable.shaizi1_0005
-            , R.drawable.shaizi1_0006, R.drawable.shaizi1_0007
-            , R.drawable.shaizi1_0008, R.drawable.shaizi1_0009
-            , R.drawable.shaizi1_0010, R.drawable.shaizi1_0011
-            , R.drawable.shaizi1_0012, R.drawable.shaizi1_0013};
+    public static @DrawableRes int[] dice_res = {R.drawable.shaizi1_0000,R.drawable.shaizi1_0001
+            ,R.drawable.shaizi1_0002,R.drawable.shaizi1_0003
+            ,R.drawable.shaizi1_0004,R.drawable.shaizi1_0005
+            ,R.drawable.shaizi1_0006,R.drawable.shaizi1_0007
+            ,R.drawable.shaizi1_0008,R.drawable.shaizi1_0009
+            ,R.drawable.shaizi1_0010,R.drawable.shaizi1_0011
+            ,R.drawable.shaizi1_0012,R.drawable.shaizi1_0013};
 
     public static @DrawableRes int[]  cover_res = {R.drawable.dice_1,R.drawable.dice_2,R.drawable.dice_3,R.drawable.dice_4,R.drawable.dice_5,R.drawable.dice_6};
 
@@ -233,13 +232,24 @@ public class DiceView2 extends View {
     }
 
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//    }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (flag) {
+//            Log.v("onAni diceValue", diceValue + "");
+            canvas.drawBitmap(getBitmap(cover_res[diceValue - 1]), null, mRect, mPaint);
+        } else {
+            canvas.drawBitmap(getBitmap(dice_res[current]), null, mRect, mPaint);
+        }
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        super.dispatchDraw(canvas);
         if (flag) {
 //            Log.v("onAni diceValue", diceValue + "");
             canvas.drawBitmap(getBitmap(cover_res[diceValue - 1]), null, mRect, mPaint);

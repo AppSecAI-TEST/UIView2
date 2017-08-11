@@ -330,7 +330,7 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
         mChatRootLayout.addOnEmojiLayoutChangeListener(new RSoftInputLayout.OnEmojiLayoutChangeListener() {
             @Override
             public void onEmojiLayoutChange(boolean isEmojiShow, boolean isKeyboardShow, int height) {
-                L.w("表情:" + isEmojiShow + " 键盘:" + isKeyboardShow + " 高度:" + height);
+                //L.w("表情:" + isEmojiShow + " 键盘:" + isKeyboardShow + " 高度:" + height);
                 if (isKeyboardShow) {
                     post(new Runnable() {
                         @Override
@@ -846,6 +846,8 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                     }
                     SkinUtils.setExpressView(mMessageExpressionView);
                     return;
+                } else if (mChatRootLayout.isEmojiShow()) {
+                    SkinUtils.setAddView(mMessageAddView);
                 }
                 mLastId = R.id.message_expression_view;
 
@@ -853,8 +855,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 mEmojiControlLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.message_add_view:
-
-
                 /**
                  * 1. ex_view  2 add_view
                  *
@@ -872,7 +872,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                  *
                  */
 
-
                 // EMOJI 未显示
                 if (!mChatRootLayout.isEmojiShow()) {
                     mChatRootLayout.showEmojiLayout();
@@ -881,7 +880,6 @@ public class ChatUIView2 extends BaseContentUIView implements IAudioRecordCallba
                 } else if (mLastId == R.id.message_add_view && mChatRootLayout.isEmojiShow()) {
                     // emoji 已显示
 //                    mChatRootLayout.hideEmojiLayout();
-
                     if (mChatRootLayout.isKeyboardShow()) {
                         SkinUtils.setKeyboardView(mMessageAddView);
                         SkinUtils.setExpressView(mMessageExpressionView);

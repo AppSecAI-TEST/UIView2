@@ -161,6 +161,10 @@ public class BillUIView extends SingleRecyclerUIView<BillRecord> {
                     @Override
                     public void onSucceed(List<BillRecord> beans) {
                         if (beans == null || beans.size() == 0) {
+                            if (mRExBaseAdapter == null) {
+                                onUILoadDataEnd();
+                                return;
+                            }
                             if (mRExBaseAdapter.isItemEmpty()) {
                                 onUILoadDataEnd();
                             } else {

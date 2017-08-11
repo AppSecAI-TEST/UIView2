@@ -62,6 +62,18 @@ public class GiftRecordUIView extends SingleRecyclerUIView<GiftRecordBean> {
         return new GiftRecordAdapter(mActivity);
     }
 
+    @Override
+    protected void onEmptyData(boolean isEmpty) {
+        super.onEmptyData(isEmpty);
+        String s;
+        if (type == 1) {
+            s = "你还没有收到礼物哦~";
+        } else {
+            s = "你还没有送出礼物哦~\n送出礼物可以提升对方的魅力值,提升TA对你的好感哦！";
+        }
+        initOverEmptyLayout(s, R.drawable.image_nothing);
+    }
+
 
     @Override
     public void loadMoreData() {

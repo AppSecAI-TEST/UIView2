@@ -23,6 +23,7 @@ import com.hn.d.valley.R;
 import com.hn.d.valley.base.constant.Constant;
 import com.hn.d.valley.bean.event.EmptyChatEvent;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
+import com.hn.d.valley.cache.RecentContactsCache;
 import com.hn.d.valley.main.friend.AbsContactItem;
 import com.hn.d.valley.main.friend.ItemTypes;
 import com.hn.d.valley.main.me.UserDetailUIView2;
@@ -36,6 +37,8 @@ import com.hn.d.valley.main.message.groupchat.TeamCreateHelper;
 import com.hn.d.valley.main.message.search.ChatRecordSearchUIView;
 import com.hn.d.valley.main.message.search.DefaultUserInfoProvider;
 import com.hn.d.valley.main.message.search.GlobalSearchUIView2;
+import com.hn.d.valley.main.message.session.RecentContactsControl;
+import com.hn.d.valley.nim.RNim;
 import com.hn.d.valley.sub.other.ItemRecyclerUIView;
 import com.hn.d.valley.sub.user.ReportUIView;
 import com.hn.d.valley.utils.RBus;
@@ -44,6 +47,7 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
+import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 
 import java.util.ArrayList;
@@ -127,15 +131,24 @@ public class P2PInfoUIView extends ItemRecyclerUIView<ItemRecyclerUIView.ViewIte
                 ItemInfoLayout itemInfoLayout = holder.v(R.id.item_info_layout);
                 CompoundButton switchCompat = holder.v(R.id.switch_view);
                 itemInfoLayout.setItemText(mActivity.getString(R.string.text_stick_chat));
-                switchCompat.setChecked(SessionSettingDelegate.getInstance().checkTop(mSessionId));
+                RecentContact recentContact = RecentContactsCache.instance().getRecentContact(mSessionId);
+                if (recentContact == null) {
+                    return;
+                }
+                switchCompat.setChecked(RNim.isRecentContactTag(recentContact, RecentContactsControl.IS_TOP));
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        RecentContact recentContact = RecentContactsCache.instance().getRecentContact(mSessionId);
+                        if (recentContact == null) {
+                            return;
+                        }
                         if (isChecked) {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 1);
-
+//                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 1);
+                            RNim.addRecentContactTag(recentContact, RecentContactsControl.IS_TOP);
                         } else {
-                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 0);
+//                            SessionSettingDelegate.getInstance().setTop(mSessionId, sessionType, 0);
+                            RNim.removeRecentContactTag(recentContact, RecentContactsControl.IS_TOP);
                         }
                         RBus.post(Constant.TAG_UPDATE_RECENT_CONTACTS, new UpdateDataEvent());
 

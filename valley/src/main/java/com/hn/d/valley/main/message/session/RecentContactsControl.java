@@ -401,12 +401,12 @@ public class RecentContactsControl {
                             if (tag == MENU_ADD_TOP) {
                                 RNim.addRecentContactTag(recentContact, IS_TOP);
 
-                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(), recentContact.getSessionType(), 1);
+//                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(), recentContact.getSessionType(), 1);
 
                             } else if (tag == MENU_RM_TOP) {
                                 RNim.removeRecentContactTag(recentContact, IS_TOP);
 
-                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(), recentContact.getSessionType(), 0);
+//                                SessionSettingDelegate.getInstance().setTop(recentContact.getContactId(), recentContact.getSessionType(), 0);
 
                             }
 
@@ -416,6 +416,8 @@ public class RecentContactsControl {
                                     RecentContactsCache.instance().buildCache();
 //                                    setRecentContact(mRecentContactsAdapter.getAllDatas());
                                 }
+
+
                             });
                         }
 
@@ -429,21 +431,21 @@ public class RecentContactsControl {
             Collections.sort(recentContact, new Comparator<RecentContact>() {
                 @Override
                 public int compare(RecentContact o1, RecentContact o2) {
-                    if (SessionSettingDelegate.getInstance().checkTop(o1.getContactId())) {
-                        RNim.addRecentContactTag(o1, IS_TOP);
-                    } else {
-                        if (RNim.isRecentContactTag(o1, IS_TOP)) {
-                            RNim.removeRecentContactTag(o1, IS_TOP);
-                        }
-                    }
-
-                    if (SessionSettingDelegate.getInstance().checkTop(o2.getContactId())) {
-                        RNim.addRecentContactTag(o2, IS_TOP);
-                    } else {
-                        if (RNim.isRecentContactTag(o2, IS_TOP)) {
-                            RNim.removeRecentContactTag(o2, IS_TOP);
-                        }
-                    }
+//                    if (SessionSettingDelegate.getInstance().checkTop(o1.getContactId())) {
+//                        RNim.addRecentContactTag(o1, IS_TOP);
+//                    } else {
+//                        if (RNim.isRecentContactTag(o1, IS_TOP)) {
+//                            RNim.removeRecentContactTag(o1, IS_TOP);
+//                        }
+//                    }
+//
+//                    if (SessionSettingDelegate.getInstance().checkTop(o2.getContactId())) {
+//                        RNim.addRecentContactTag(o2, IS_TOP);
+//                    } else {
+//                        if (RNim.isRecentContactTag(o2, IS_TOP)) {
+//                            RNim.removeRecentContactTag(o2, IS_TOP);
+//                        }
+//                    }
 
                     if (RNim.isRecentContactTag(o2, IS_TOP)) {
                         return 1;

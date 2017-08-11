@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 
 import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.widget.DragPhotoView;
+import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.Root;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.container.ILayout;
@@ -172,6 +173,9 @@ public class ImagePagerUIView extends UIIViewImpl {
     @Override
     public boolean onBackPressed() {
         //animToFinish();
+        if (RApplication.isLowDevice) {
+            return true;
+        }
         animToMin();
         finishIView(this, new UIParam(true, true, false));
         return false;
@@ -181,7 +185,14 @@ public class ImagePagerUIView extends UIIViewImpl {
     public void onViewLoad() {
         super.onViewLoad();
         //startAnimation();
-        animToMax();
+        if (!RApplication.isLowDevice) {
+            animToMax();
+        } else {
+            mMRootLayout.setBackgroundColor(Color.BLACK);
+            if (mImageItems.size() > 1) {
+                showIndicator();
+            }
+        }
         //startAnimation2();
         fullscreen(true, true);
     }
@@ -478,7 +489,7 @@ public class ImagePagerUIView extends UIIViewImpl {
                     public void onAnimationProgress(Animator animation, float progress) {
                         super.onAnimationProgress(animation, progress);
                         mMRootLayout.setBackgroundColor(AnimUtil.evaluateColor(progress, mLastTranColor, Color.TRANSPARENT));
-//                        mMViewPager.setAlpha(0.6f + 1 - progress);
+                        mMViewPager.setAlpha(0.6f + 1 - progress);
                     }
 
                     @Override

@@ -132,7 +132,6 @@ public class MainUIView extends BaseUIView implements SearchUIView.OnJumpToDynam
     @Override
     public void onViewCreate(View rootView) {
         super.onViewCreate(rootView);
-        MainControl.onMainCreate();
     }
 
     @Override

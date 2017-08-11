@@ -22,6 +22,7 @@ import android.widget.ImageView;
 
 import com.angcyo.github.utilcode.utils.FileUtils;
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.base.UIBaseView;
 import com.angcyo.uiview.base.UIViewConfig;
 import com.angcyo.uiview.container.ContentLayout;
@@ -99,7 +100,7 @@ public class VideoRecordUIView extends UIBaseView {
     /**
      * 默认录像level
      */
-    GPUImageMovieWriter.Level DefaultLevel = GPUImageMovieWriter.Level.MEDIUM;
+    GPUImageMovieWriter.Level DefaultLevel = RApplication.isLowDevice ? GPUImageMovieWriter.Level.LOW : GPUImageMovieWriter.Level.MEDIUM;
     long lastSwitchTime = 0l;
     private GPUImage mGPUImage;
     private OrientationEventListener mOrientationEventListener;
@@ -132,6 +133,7 @@ public class VideoRecordUIView extends UIBaseView {
      * 是否截图视频gif
      */
     private boolean makeGif = false;
+    private GPUImageFilter nonFilter;
 
     public VideoRecordUIView(Action3<UIIViewImpl, String, String> publishAction) {
         this.publishAction = publishAction;
@@ -221,7 +223,7 @@ public class VideoRecordUIView extends UIBaseView {
                             animHidePrettyLayout();
                         }
                     }
-                }).setRightMargin(offset))
+                }).setRightMargin(offset).setVisibility(RApplication.isLowDevice ? View.GONE : View.VISIBLE))
                 .addRightItem(TitleBarPattern.buildImage(R.drawable.no_flashlight, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -284,6 +286,7 @@ public class VideoRecordUIView extends UIBaseView {
 
         mCameraHelper = new CameraHelper(mActivity);
         mCamera = new CameraLoader();
+        nonFilter = new GPUImageFilter();
 
         Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.shuiyin_1);
         logofilter = new RBLogoFilter();// left, top, right, bottom
@@ -300,7 +303,12 @@ public class VideoRecordUIView extends UIBaseView {
         if (hasLogo) {
             initFilter.addFilter(logofilter);
         }
-        initFilter.addFilter(magicBeautyFilter);
+        if (!RApplication.isLowDevice) {
+            //getUITitleBarContainer().hideRightItem(0);
+            initFilter.addFilter(magicBeautyFilter);
+        } else {
+            initFilter.addFilter(nonFilter);
+        }
         initFilter.addFilter(mMovieWriter);
         mGPUImage.setFilter(initFilter);
 
@@ -981,7 +989,11 @@ public class VideoRecordUIView extends UIBaseView {
             }
             filters.addFilter(mFilter);
             magicBeautyFilter.setBeautyLevel(currentLevel);
-            filters.addFilter(magicBeautyFilter);
+            if (!RApplication.isLowDevice) {
+                filters.addFilter(magicBeautyFilter);
+            } else {
+                filters.addFilter(nonFilter);
+            }
             filters.addFilter(mMovieWriter);
 
             mGPUImage.setFilter(filters);

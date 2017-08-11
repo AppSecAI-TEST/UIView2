@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.RRecyclerView;
 import com.angcyo.uiview.recycler.adapter.RBaseAdapter;
@@ -86,18 +87,18 @@ public class StickerRecyclerView extends RRecyclerView {
 
             int index = startIndex + position;
             if (index >= category.getStickers().size()) {
-                return ;
+                return;
             }
             final StickerItem sticker = category.getStickers().get(index);
             if (sticker == null) {
-                return ;
+                return;
             }
 
             holder.itemView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mOnEmojiSelectListener != null) {
-                        mOnEmojiSelectListener.onStickerSelected(sticker.getCategory(),sticker.getName());
+                        mOnEmojiSelectListener.onStickerSelected(sticker.getCategory(), sticker.getName());
                     }
                 }
             });
@@ -109,10 +110,26 @@ public class StickerRecyclerView extends RRecyclerView {
             Glide.with(mContext)
 //                    .using(new AssetUriLoader(mContext))
                     .load(Uri.parse(StickerManager.getInstance().getStickerBitmapUri(sticker.getCategory()
-                    , sticker.getName())))
+                            , sticker.getName())))
 //                    .asGif()
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(new GlideDrawableImageViewTarget(thumb_image,1));
+                    .into(new GlideDrawableImageViewTarget(thumb_image, 1));
+
+            if (RApplication.isLowDevice) {
+                Glide.with(mContext)
+                        .load(Uri.parse(StickerManager.getInstance().getStickerBitmapUri(sticker.getCategory()
+                                , sticker.getName())))
+                        .asBitmap()
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(thumb_image);
+            } else {
+                Glide.with(mContext)
+//                    .using(new AssetUriLoader(mContext))
+                        .load(Uri.parse(StickerManager.getInstance().getStickerBitmapUri(sticker.getCategory()
+                                , sticker.getName())))
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .into(new GlideDrawableImageViewTarget(thumb_image, 1));
+            }
 
 //            Bitmap assetBitmap = EmojiManager.loadAssetBitmap(mContext, StickerManager.getInstance().getStickerBitmapUri(sticker.getCategory()
 //                    , sticker.getName()));

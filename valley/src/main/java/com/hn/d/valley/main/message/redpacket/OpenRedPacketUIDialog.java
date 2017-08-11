@@ -228,6 +228,7 @@ public class OpenRedPacketUIDialog extends UIBaseUIDialog {
     }
 
     private void grabRedpacket() {
+        final String extend =  "{\"discuss_id\":\"" + discuss_id + "\"}";
         add(RRetrofit.create(RedPacketService.class)
                 .status(Param.buildInfoMap("uid:" + UserCache.getUserAccount(), "redid:" + redId))
                 .subscribeOn(Schedulers.io())
@@ -241,7 +242,7 @@ public class OpenRedPacketUIDialog extends UIBaseUIDialog {
                     @Override
                     public Observable<Integer> call(Integer code) {
                         if (Constants.CAN_BE_GRAB == code) {
-                            return grabRedBag(redId, discuss_id);
+                            return grabRedBag(redId, extend);
                         } else if (Constants.ALREADY_GRAB == code) {
                             return Observable.just(Constants.ALREADY_GRAB);
                         } else if (Constants.LOOT_OUT == code) {

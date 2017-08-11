@@ -129,4 +129,9 @@ public interface Constant {
      * 热点资讯
      */
     String hot_news = "17";
+
+    /**
+     * 默认的头像地址
+     */
+    String DEFAULE_AVATER = "http://avatorimg.klgwl.com/default/avatar.png";
 }

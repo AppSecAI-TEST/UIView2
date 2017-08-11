@@ -20,7 +20,9 @@ public abstract class BaseSingleSubscriber<T> extends RSubscriber<T> {
     @Override
     public void onError(int code, String msg) {
         super.onError(code, msg);
-        T_.error(msg);
+        if (code >= 0) {
+            T_.error(msg);
+        }
     }
 
     @Override

@@ -63,6 +63,8 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
     private boolean loaded = false;
     private int categoryIndex;
     private boolean withSticker = true;
+    // 过滤制定贴图
+    private boolean isFilter = false;
 
     private Handler uiHandler;
 
@@ -71,7 +73,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
      */
     private int pageCount;
 
-    public EmojiLayoutControl(RBaseViewHolder viewHolder, final IEmoticonSelectedListener listener) {
+    public EmojiLayoutControl(RBaseViewHolder viewHolder,boolean isFilter, IEmoticonSelectedListener listener ) {
         mViewHolder = viewHolder;
         mUIViewPager = mViewHolder.v(R.id.view_pager);
         pageNumberLayout = mViewHolder.v(R.id.layout_scr_bottom);
@@ -79,6 +81,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
         scrollView = mViewHolder.v(R.id.emoj_tab_view_container);
 
         this.listener = listener;
+        this.isFilter = isFilter;
         context = viewHolder.getContext();
 
         this.uiHandler = new Handler(context.getMainLooper());
@@ -95,7 +98,10 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
 
 //        showEmojiGridView();
         show(listener);
+    }
 
+    public EmojiLayoutControl(RBaseViewHolder viewHolder, IEmoticonSelectedListener listener) {
+        this(viewHolder,false,listener);
     }
 
     RPagerAdapter pagerAdapter = new RPagerAdapter() {
@@ -206,7 +212,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
         btn.setCheckedImageId(R.drawable.nim_emoji_icon);
 
         // 贴图
-        List<StickerCategory> categories = manager.getCategories();
+        List<StickerCategory> categories = manager.getCategories(isFilter);
         for (StickerCategory category : categories) {
             btn = addEmoticonTabBtn(index++, tabCheckListener);
             setCheckedButtomImage(btn, category);
@@ -259,7 +265,7 @@ public class EmojiLayoutControl implements IEmoticonCategoryChanged{
 
     private void showEmotPager(int index) {
         if (gifView == null) {
-            gifView = new EmoticonView(context, listener, mUIViewPager, pageNumberLayout);
+            gifView = new EmoticonView(context, listener, isFilter,mUIViewPager, pageNumberLayout);
             gifView.setCategoryChangCheckedCallback(this);
         }
 

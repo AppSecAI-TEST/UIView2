@@ -3,10 +3,12 @@ package com.hn.d.valley.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.angcyo.library.utils.L;
+import com.angcyo.uiview.container.ILayout;
 import com.angcyo.uiview.container.UILayoutImpl;
 import com.angcyo.uiview.utils.RUtils;
 import com.angcyo.umeng.UM;
@@ -74,6 +76,12 @@ public class HnUIMainActivity extends BaseActivity {
         activity.startActivity(intent);
 //        activity.overridePendingTransition(R.anim.base_tran_to_left_enter,
 //                R.anim.base_tran_to_left_exit);
+    }
+
+    @Override
+    protected void initUILayout(ILayout layout) {
+        super.initUILayout(layout);
+        layout.getLayout().setBackgroundColor(Color.WHITE);
     }
 
     @Override

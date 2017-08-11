@@ -414,9 +414,9 @@ public class UserInfoSubUIView extends BaseItemUIView {
 
         public GiftListAdapter(Context context, GiftList giftList) {
             super(context, giftList.getData_list());
-            if (isContact()) {
+//            if (isContact()) {
                 mAllDatas.add(0, new GiftReceiveBean());
-            }
+//            }
         }
 
         @Override

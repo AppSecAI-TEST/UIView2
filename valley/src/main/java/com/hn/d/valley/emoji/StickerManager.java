@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,7 @@ public class StickerManager {
     private List<StickerCategory> stickerCategories = new ArrayList<>();
     private Map<String, StickerCategory> stickerCategoryMap = new HashMap<>();
     private Map<String, Integer> stickerOrder = new HashMap<>(3);
+    private Set<String> stickerFilter = new HashSet<>();
 
     public static StickerManager getInstance() {
         if (instance == null) {
@@ -49,8 +51,9 @@ public class StickerManager {
         return instance;
     }
 
-    public StickerManager() {
+    private StickerManager() {
         initStickerOrder();
+        initStickerFilter();
         loadStickerCategory();
     }
 
@@ -64,6 +67,14 @@ public class StickerManager {
         stickerOrder.put(POCKER, 2);
         stickerOrder.put(CATEGORY_EXPRESSION, 3);
         stickerOrder.put(CATEGORY_HN, 4);
+    }
+
+    /**
+     * 设置贴图过滤资源
+     */
+    private void initStickerFilter() {
+        stickerFilter.add(DICE);
+        stickerFilter.add(POCKER);
     }
 
     public String[] genNameArray(String name) {
@@ -124,8 +135,32 @@ public class StickerManager {
         }
     }
 
+    /**
+     * 过滤类型sticker 类型不显示
+     * @param name
+     * @return
+     */
+    private boolean stickerFilter(String name) {
+        if (stickerFilter.contains(name)) {
+            return true;
+        }
+        return false;
+    }
+
     public synchronized List<StickerCategory> getCategories() {
         return stickerCategories;
+    }
+
+    public synchronized List<StickerCategory> getCategories(boolean isfilter) {
+        if (isfilter) {
+//            List<StickerCategory> result = new ArrayList<>();
+//            for (String categoryName : stickerFilter) {
+//                result.add(getCategory(categoryName));
+//            }
+            return stickerCategories.subList(2,4);
+        } else {
+            return getCategories();
+        }
     }
 
     public synchronized StickerCategory getCategory(String name) {

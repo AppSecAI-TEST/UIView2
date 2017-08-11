@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.angcyo.uiview.recycler.RBaseItemDecoration;
 import com.angcyo.uiview.recycler.RBaseViewHolder;
 import com.angcyo.uiview.recycler.adapter.RExBaseAdapter;
 import com.angcyo.uiview.utils.Json;
+import com.angcyo.uiview.utils.ScreenUtil;
 import com.hn.d.valley.R;
 import com.hn.d.valley.base.Param;
 import com.hn.d.valley.base.rx.BaseSingleSubscriber;
@@ -56,6 +58,8 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
         super.initOnShowContentLayout();
     }
 
+    private boolean isEmpty;
+
     @Override
     protected boolean isLoadInViewPager() {
         return false;
@@ -79,6 +83,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                             onUILoadDataEnd(CustomMessage2LikeUserInfo(bean.getData_list()));
                         }
                     }
+
                 }));
     }
 
@@ -159,6 +164,7 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
 
         static final int FUNC = 10001;
         static final int ADDRESSBOOK = 10002;
+        static final int EMPTY = 10003;
 
         public AddFriendAdpater(Context context, ILayout ILayout, CompositeSubscription subscription) {
             super(context, ILayout, subscription);
@@ -172,6 +178,8 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                     return R.layout.item_recent_search;
                 case ADDRESSBOOK:
                     return R.layout.item_contact_addressbook;
+                case EMPTY:
+                    return R.layout.empty_layout;
             }
             return R.layout.item_contact_info_new;
         }
@@ -183,6 +191,10 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
             }
             if (posInData == 1) {
                 return ADDRESSBOOK;
+            }
+
+            if (posInData == 2 && isEmpty) {
+                return EMPTY;
             }
             return super.getDataItemType(posInData);
         }
@@ -202,7 +214,6 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                 });
 
             } else if (ADDRESSBOOK == getDataItemType(posInData)) {
-
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -216,7 +227,15 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
                 tv_username.setText(R.string.text_context);
                 imgv.setImageResource(R.drawable.address_book_2);
 
-            } else {
+            } else if (EMPTY == getDataItemType((posInData))){
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.v(R.id.base_empty_root_layout).getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                params.topMargin = ScreenUtil.dip2px(20);
+                holder.v(R.id.base_empty_root_layout).setLayoutParams(params);
+                holder.imgV(R.id.base_empty_image_view).setImageResource(R.drawable.image_wufensi);
+                holder.tv(R.id.base_empty_tip_view).setText("当前没有新的好友请求");
+            }else {
                 super.onBindDataView(holder, posInData, dataBean);
 //                holder.itemView.setBackgroundResource(R.color.white);
                 CustomMessageBean.BodyBean bodyBean = dataBean.getBodyBean();
@@ -260,8 +279,10 @@ public class FriendNewUIView2 extends SingleRecyclerUIView<LikeUserInfoBean> {
         public void resetData(List<LikeUserInfoBean> datas) {
             mAllDatas.clear();
             mAllDatas.addAll(onPreProvider());
-            if (datas == null) {
+            if (datas == null || datas.size() == 0) {
 //                this.mAllDatas = new ArrayList<>();
+                isEmpty = true;
+                mAllDatas.add(new LikeUserInfoBean());
             } else {
                 this.mAllDatas.addAll(datas);
             }

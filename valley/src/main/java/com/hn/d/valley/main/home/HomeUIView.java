@@ -37,6 +37,7 @@ import com.hn.d.valley.base.constant.Action;
 import com.hn.d.valley.base.iview.VideoRecordUIView;
 import com.hn.d.valley.bean.event.UpdateDataEvent;
 import com.hn.d.valley.bean.realm.Tag;
+import com.hn.d.valley.control.MainControl;
 import com.hn.d.valley.control.PublishControl;
 import com.hn.d.valley.control.TagsControl;
 import com.hn.d.valley.control.VideoStatusInfo;
@@ -670,6 +671,12 @@ public class HomeUIView extends BaseUIView implements TagLoadStatusCallback {
     @Override
     public void onTagLoadEnd() {
         UIBaseView.safeSetVisibility(mEmptyView, View.GONE);
+    }
+
+    @Override
+    public void onViewCreate(View rootView, UIParam param) {
+        super.onViewCreate(rootView, param);
+        MainControl.onMainCreate();
     }
 
     @Override

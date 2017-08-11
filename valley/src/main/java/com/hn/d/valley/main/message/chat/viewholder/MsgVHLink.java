@@ -18,6 +18,7 @@ import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.ChatUIView2;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
+import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hn.d.valley.utils.HtmlFrom;
 import com.hn.d.valley.x5.X5WebUIView;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
@@ -36,6 +37,8 @@ import static com.hn.d.valley.main.message.chat.ChatUIView2.msgService;
  */
 
 public class MsgVHLink extends MsgViewHolderBase {
+
+    public static final String DYNADIC_URL = "http://wap.klgwl.com/discuss/detail";
 
     RelativeLayout linkLayout;
     TextView shareContent;
@@ -169,8 +172,16 @@ public class MsgVHLink extends MsgViewHolderBase {
         contentContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (message.getContent().contains(DYNADIC_URL)) {
+                    String[] split = message.getContent().split("=");
+                    if(split.length == 2) {
+                        mUIBaseView.startIView(new DynamicDetailUIView2(split[1]));
+                    }                    return;
+                }
                 mUIBaseView.startIView(new X5WebUIView(message.getContent()));
             }
         });
+
+
     }
 }

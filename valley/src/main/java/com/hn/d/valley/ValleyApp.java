@@ -2,6 +2,8 @@ package com.hn.d.valley;
 
 import com.angcyo.github.utilcode.utils.Utils;
 import com.angcyo.library.utils.L;
+import com.angcyo.uidemo.layout.demo.view.HnCardView;
+import com.angcyo.uidemo.layout.demo.view.HnDiceView;
 import com.angcyo.uiview.RApplication;
 import com.angcyo.uiview.Root;
 import com.angcyo.uiview.base.UIBaseView;
@@ -84,7 +86,7 @@ public class ValleyApp extends RApplication {
 
         CrashReport.setIsDevelopmentDevice(this, BuildConfig.DEBUG);
 //        CrashReport.initCrashReport(this, "207e18ac24", false/*BuildConfig.DEBUG*/);
-        Bugly.init(this, "207e18ac24", false);
+        Bugly.init(this, "1106097075", false);
 
         UserCache.instance().getLoginBeanObservable()
                 .subscribe(new Action1<LoginBean>() {
@@ -139,6 +141,9 @@ public class ValleyApp extends RApplication {
 
     protected void clearFresco() {
         try {
+            HnCardView.Companion.clear();
+            HnDiceView.Companion.clear();
+
             if (Fresco.hasBeenInitialized()) {
                 ImagePipeline imagePipeline = Fresco.getImagePipeline();
                 if (imagePipeline != null) {

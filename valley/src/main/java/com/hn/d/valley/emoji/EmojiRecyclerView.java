@@ -82,7 +82,7 @@ public class EmojiRecyclerView extends RRecyclerView {
             final float density = mContext.getResources().getDisplayMetrics().density;
             int width = (int) (density * 28);
             int parentHeight = parent.getMeasuredHeight();
-            int height = (int) (parentHeight / 3);
+            int height = (int) (parentHeight / 3);// 加 20
 
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
             params.addRule(RelativeLayout.CENTER_IN_PARENT);

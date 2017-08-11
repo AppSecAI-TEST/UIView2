@@ -30,7 +30,7 @@ public class FriendUIView extends BaseUIView {
     protected TitleBarPattern getTitleBar() {
         ArrayList<TitleBarPattern.TitleBarItem> rightItems = new ArrayList<>();
 
-        rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.top_add_friends).setListener(new View.OnClickListener() {
+        rightItems.add(TitleBarPattern.TitleBarItem.build().setRes(R.drawable.tianjiahaoyou_haoyou).setListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mParentILayout.startIView(new NewFriend3UIView());

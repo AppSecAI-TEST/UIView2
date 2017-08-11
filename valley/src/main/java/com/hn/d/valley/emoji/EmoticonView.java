@@ -54,10 +54,12 @@ public class EmoticonView {
     private IEmoticonCategoryChanged categoryChangedCallback; // 横向滑动切换时回调picker
     private boolean isShowSticker;                          // 是否显示贴图
     private boolean onNormal = true;                          // 是否正常状态显示 不区分emoji 和自定义表情
+    private boolean isFilter = false;
 
-    public EmoticonView(Context context, IEmoticonSelectedListener mlistener,
+    public EmoticonView(Context context, IEmoticonSelectedListener mlistener,boolean isFilter,
                         ViewPager mCurPage, LinearLayout pageNumberLayout) {
         this.context = context.getApplicationContext();
+        this.isFilter = isFilter;
         this.listener = mlistener;
         this.pageNumberLayout = pageNumberLayout;
         this.emotPager = mCurPage;
@@ -268,7 +270,7 @@ public class EmoticonView {
         categoryDataList.add(null); // 表情
         categoryPageNumberList.add(getCategoryPageCount(null));
 
-        List<StickerCategory> categories = manager.getCategories();
+        List<StickerCategory> categories = manager.getCategories(isFilter);
 
         categoryDataList.addAll(categories); // 贴图
         for (StickerCategory c : categories) {

@@ -22,6 +22,7 @@ import com.hn.d.valley.main.message.chat.BaseMultiAdapter;
 import com.hn.d.valley.main.message.chat.MsgViewHolderBase;
 import com.hn.d.valley.main.message.groupchat.RequestCallback;
 import com.hn.d.valley.main.wallet.MyWalletUIView;
+import com.hn.d.valley.sub.user.DynamicDetailUIView2;
 import com.hn.d.valley.utils.HtmlFrom;
 import com.hn.d.valley.utils.Regex;
 import com.hn.d.valley.widget.HnGlideImageView;
@@ -67,11 +68,18 @@ public class MsgViewHolderText extends MsgViewHolderBase {
 
         if (MsgVHLink.isLinkMsg(message)) {
             contentView.setTextColor(ContextCompat.getColor(context,R.color.blue_4777af));
-            contentView.setOnClickListener(new View.OnClickListener() {
+            //http://wap.klgwl.com/discuss/detail?item_id=7237
+            contentContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (msg.contains(MsgVHLink.DYNADIC_URL)) {
+                        String[] split = msg.split("=");
+                        if(split.length == 2) {
+                            mUIBaseView.startIView(new DynamicDetailUIView2(split[1]));
+                        }
+                        return;
+                    }
                     mUIBaseView.startIView(new X5WebUIView(msg));
-
                 }
             });
             contentView.setText(msg);
@@ -89,10 +97,11 @@ public class MsgViewHolderText extends MsgViewHolderBase {
 //                    ds.clearShadowLayer();
 //                }
 //            }).create();
-            return;
+        } else {
+            contentView.setTextColor(ContextCompat.getColor(context,R.color.main_text_color));
+            MoonUtil.show(context, contentView, message.getContent());
         }
 
-        MoonUtil.show(context, contentView, message.getContent());
     }
 
 }

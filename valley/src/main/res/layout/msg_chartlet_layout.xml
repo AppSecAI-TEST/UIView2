@@ -25,23 +25,23 @@
         <!--android:padding="0dip"-->
         <!--/>-->
 
-    <com.hn.d.valley.widget.DiceLayout
+    <com.angcyo.uidemo.layout.demo.view.HnDiceView
         android:id="@+id/diceLayout"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         >
 
-    </com.hn.d.valley.widget.DiceLayout>
+    </com.angcyo.uidemo.layout.demo.view.HnDiceView>
 
-    <com.hn.d.valley.widget.PokerLayout
+    <com.angcyo.uidemo.layout.demo.view.HnCardView
         android:id="@+id/pokerlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:horizontal_spacing="15dp"
         app:vertical_spacing="0dp"
         >
-    </com.hn.d.valley.widget.PokerLayout>
+    </com.angcyo.uidemo.layout.demo.view.HnCardView>
 
 
 </FrameLayout>
